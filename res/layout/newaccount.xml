@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/settings"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
+                android:padding="10px">
+            
+    <TextView android:id="@+id/l_url" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Wordpress blog URL (path to xmlrpc.php):"/>
+              
+    <EditText android:id="@+id/url" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:minHeight="40px"
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/l_url"/>
+              
+      <TextView android:id="@+id/l_username"  
+        	  android:layout_marginTop="10px"	
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Username:"
+              android:layout_below="@id/url"/>
+              
+    <EditText android:id="@+id/username" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:minHeight="40px" 
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/l_username"/>           
+  
+      <TextView android:id="@+id/l_password"
+              android:layout_marginTop="10px" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Password:"
+              android:layout_below="@id/username"/>
+              
+    <EditText android:id="@+id/password" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:minHeight="40px" 
+              android:password="true"
+              android:background="@android:drawable/editbox_background"
+              android:layout_below="@id/l_password"/>
+
+      <TextView android:id="@+id/l_imagePlacement"
+        		android:layout_marginTop="10px" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Place image:"
+              android:layout_below="@id/password"/>
+              
+        <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:checkedButton="@+id/aboveText"
+        android:id="@+id/imagePlacement"
+        android:layout_below="@id/l_imagePlacement">
+        <RadioButton
+            android:text="Above Text"
+            android:id="@+id/aboveText"
+            />
+        <RadioButton
+            android:text="Below Text"
+            android:id="@+id/belowText" />
+    </RadioGroup>        
+    
+    <TextView android:id="@+id/l_maxImageWidth" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Maximum Image Pixel Width:"
+              android:layout_below="@id/imagePlacement"/>
+              
+     <Spinner android:id="@+id/maxImageWidth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+   android:layout_below="@id/l_maxImageWidth"/>
+   
+        <TextView android:id="@+id/l_centerThumbnail" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_alignParentLeft="true"
+            android:paddingTop="13px"
+              android:text="Align thumbnail to center?: "
+              android:layout_below="@id/maxImageWidth"/>
+              
+<CheckBox android:id="@+id/centerThumbnail"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/l_centerThumbnail"
+            android:layout_toRightOf="@id/l_centerThumbnail"
+            />
+   
+   <TextView  android:id="@+id/l_EULA" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Review End User License Agreement"
+              android:paddingTop="5px"
+              android:paddingBottom="12px"
+              android:textColor="#ff6600"
+              android:layout_below="@id/centerThumbnail"/>
+  
+    <Button android:id="@+id/save" 
+            android:layout_width="80px" 
+            android:layout_height="60px"
+            android:layout_below="@id/l_EULA"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10px"
+            android:text="Save" />
+ 
+    <Button android:id="@+id/cancel"
+     		android:layout_width="80px" 
+            android:layout_height="60px"
+            android:layout_alignTop="@id/save"
+            android:layout_toLeftOf="@id/save"
+            android:text="Cancel" />
+ 
+</RelativeLayout>
+</ScrollView>

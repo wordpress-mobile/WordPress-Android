@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Demonstrates using a relative layout to create a form -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+    
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+				android:background="#e8e8e8"
+                android:paddingLeft="10px"
+                android:paddingRight="10px"
+                android:paddingBottom="10px"> 
+    <TextView android:id="@+id/l_title" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Post Title:"
+              
+                android:textColor="#444444"/>
+              
+    <EditText android:id="@+id/title" 
+    		  android:minHeight="40px"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:autoText="true"
+              android:capitalize="sentences"
+              android:layout_below="@id/l_title"/>
+              
+    <TextView android:id="@+id/l_content" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Post Content:"
+              android:layout_below="@id/title"
+              android:textColor="#444444"/>
+              
+    <EditText android:id="@+id/content"
+    		  android:gravity="top" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:lines="5"
+              android:autoText="true"
+              android:capitalize="sentences"
+              android:layout_below="@id/l_content"/>
+              
+    <Button android:id="@+id/bold" 
+            android:layout_width="50px" 
+            android:layout_height="50px" 
+            android:layout_below="@id/content"
+            android:textStyle="bold"
+            android:textSize="22px"
+            android:text="B" /> 
+            
+    <Button android:id="@+id/em" 
+            android:layout_width="50px" 
+            android:layout_height="50px" 
+            android:layout_alignTop="@id/bold"
+            android:layout_toRightOf="@id/bold"
+            android:textStyle="italic"
+            android:textSize="22px"
+            android:text="I" />
+        
+    <Button android:id="@+id/link" 
+            android:layout_width="80px" 
+            android:layout_height="50px" 
+            android:layout_alignTop="@id/em"
+            android:layout_toRightOf="@id/em"
+            android:textSize="22px"
+            android:textColor="#006699"
+            android:text="link" />  
+            
+    <Button android:id="@+id/bquote" 
+            android:layout_width="120px" 
+            android:layout_height="50px" 
+            android:layout_alignTop="@id/link"
+            android:layout_toRightOf="@id/link"
+            android:textSize="22px"
+            android:text="b-quote" />          
+              
+    <TextView android:id="@+id/l_pictures" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_below="@id/bold"
+              android:text="Pictures:"
+              android:textColor="#444444"/>
+    
+     	<Button android:id="@+id/addPictureButton" 
+            android:layout_width="80px" 
+            android:layout_height="60px"
+            android:layout_below="@id/l_pictures" 
+            android:text="Add"/>
+            
+            <Button android:id="@+id/clearPicture" 
+            android:layout_width="80px" 
+            android:layout_height="60px" 
+            android:layout_alignBottom="@id/addPictureButton"
+            android:layout_toRightOf="@id/addPictureButton"
+            android:text="Clear" />
+            
+            <GridView   
+            		android:id="@+id/gridView"   
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:gravity="fill_vertical"
+                    android:numColumns="3"
+                    android:layout_below="@id/addPictureButton">             
+               </GridView>
+               
+                   <TextView android:id="@+id/l_tags" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Tags (separate tags with commas):"
+                android:textColor="#444444"
+                android:layout_below="@id/gridView"/>
+              
+    <EditText android:id="@+id/tags" 
+    		  android:minHeight="40px"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:autoText="true"
+              android:layout_below="@id/l_tags"/>
+              
+    <TextView android:id="@+id/l_category" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:text="Categories:"
+              android:layout_below="@id/tags"
+              android:textColor="#444444"/>
+              
+     <Spinner android:id="@+id/spinner1"
+        android:layout_width="256px"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+   android:layout_below="@id/l_category"/>
+   
+   <ImageButton android:id="@+id/refreshCategoriesButton" 
+            android:layout_width="48px" 
+            android:layout_height="48px"
+            android:src="@drawable/ic_popup_sync_1"
+            android:layout_alignBottom="@id/spinner1"
+            android:layout_toRightOf="@id/spinner1" />
+       
+     <TextView android:id="@+id/selectedCategories" 
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content"
+              android:text="Selected categories: "
+              android:layout_below="@id/spinner1"
+              android:textColor="#444444"/>       
+     	
+     	<Button android:id="@+id/clearCategories"
+     	    android:layout_below="@id/selectedCategories"
+            android:layout_width="80px" 
+            android:layout_height="60px"
+            android:text="Clear" /> 
+                         
+  <TextView android:id="@+id/l_publish" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_alignParentLeft="true"
+              android:text="Publish? "
+              android:layout_below="@id/clearCategories"
+              android:textColor="#444444"/>          
+                                     
+    <CheckBox android:id="@+id/publish"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:layout_below="@id/l_publish"
+            /> 
+    		  
+    <Button android:id="@+id/post" 
+            android:layout_width="80px" 
+            android:layout_height="60px" 
+            android:layout_below="@id/publish"
+            android:layout_alignParentRight="true"
+            android:text="Save" /> 
+            
+    <Button android:id="@+id/cancel"
+            android:layout_alignTop="@id/post"
+            android:layout_toLeftOf="@id/post" 
+            android:layout_width="100px" 
+            android:layout_height="60px"
+            android:text="Cancel" />           
+            
+    <TextView android:id="@+id/text1"
+    		android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:layout_below="@id/addPictureButton"/>
+              
+
+</RelativeLayout>
+</ScrollView>

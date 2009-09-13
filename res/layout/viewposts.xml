@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:padding="0px"
+                android:background="#e8e8e8"
+                android:orientation="vertical">
+<RelativeLayout 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:background="#444444"
+		android:gravity="center">
+<ImageButton android:id="@+id/newPost" 
+android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+	android:src="@drawable/ic_menu_add">
+</ImageButton>
+<ImageButton android:id="@+id/refresh"
+android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+	android:src="@drawable/ic_popup_sync_1">
+</ImageButton>
+<ImageButton android:id="@+id/moderate"
+android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+	android:src="@drawable/comments"
+	android:layout_centerHorizontal="true">
+</ImageButton>
+</RelativeLayout>
+<TextView android:id="@+id/longPress"
+android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		  android:padding="4px"
+		  android:textColor="#444444"
+		  android:background="#b7b7b7"
+		  android:gravity="center"
+		  android:text="Long press on a post to view actions">
+</TextView>	          
+<ListView android:choiceMode="singleChoice" 
+android:id="@android:id/list"
+android:layout_width="fill_parent" 
+android:layout_height="fill_parent"
+android:textColor="#444444"
+android:divider="@drawable/divider"
+android:cacheColorHint="#00000000">
+</ListView>          
+
+</LinearLayout>

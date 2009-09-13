@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:background="#e8e8e8"
+				android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:padding="0px" 
+                android:orientation="vertical">   
+<TextView
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:padding="4px"
+		  android:textColor="#444444"
+		  android:background="#b7b7b7"
+		  android:gravity="center"
+		android:text="Post Preview:">
+</TextView>        
+<WebView  android:id="@+id/webView"
+ android:layout_width="wrap_content" android:layout_height="fill_parent">
+</WebView>        
+</LinearLayout>
