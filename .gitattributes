@@ -199,6 +199,7 @@ bin/org/xmlrpc/android/XMLRPCException.class -text
 bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
+bin/wordpress-official.apk -text
 bin/wpAndroid[!!-~]2.apk -text
 /default.properties -text
 gen/com/roundhill/androidWP/R.java -text
