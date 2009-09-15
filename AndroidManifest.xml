@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roundhill.androidWP" android:versionCode="34" android:versionName="1.7.3">
     <uses-sdk android:minSdkVersion="2" />
-    <application android:icon="@drawable/logo" android:label="wpToGo" android:debuggable="false">
-        <activity android:label="wpToGo" android:name=".wpAndroid" android:icon="@drawable/logo">
+    <application android:icon="@drawable/logo" android:debuggable="false" android:label="WordPress">
+        <activity android:name=".wpAndroid" android:icon="@drawable/logo" android:label="WordPress">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
