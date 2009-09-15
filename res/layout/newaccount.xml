@@ -106,7 +106,7 @@
               android:text="Review End User License Agreement"
               android:paddingTop="5px"
               android:paddingBottom="12px"
-              android:textColor="#ff6600"
+              android:textColor="#006699"
               android:layout_below="@id/centerThumbnail"/>
   
     <Button android:id="@+id/save" 
