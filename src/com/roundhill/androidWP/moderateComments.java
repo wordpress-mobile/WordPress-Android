@@ -83,7 +83,6 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
             	
             	showDialog(ID_DIALOG_POSTING);
             	
-            	
             	Thread t = new Thread() {
         			String resultCode = "";
     				public void run() {
@@ -150,7 +149,6 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
     				public void callFinished(Object result) {
     					String s = "done";
     					s = result.toString();
-    					dismissDialog(ID_DIALOG_POSTING);
 
     					
 
@@ -168,7 +166,7 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
     	        method.call(params);
             	
             	}
-                
+                dismissDialog(ID_DIALOG_POSTING);
                 changedComments.clear();
                 
            
@@ -213,8 +211,7 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
         	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {
 					String s = "done";
-					s = result.toString();
-					origComments = result;
+					
 					if (result.length == 0){
 						comments = new String[1];
 						authors = new String[1];
@@ -224,7 +221,8 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
 						status[0] = "";
 					}
 					else{
-					
+					s = result.toString();
+					origComments = result;
 					comments = new String[result.length];
 					authors = new String[result.length];
 					status = new String[result.length];
