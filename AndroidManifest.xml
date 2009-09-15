@@ -9,7 +9,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    <activity android:name=".settings" android:label="wpToGo Settings" android:theme="@style/Theme.Translucent"></activity>
+    <activity android:name=".settings" android:theme="@style/Theme.Translucent" android:label="Settings"></activity>
 
 <activity android:name=".link" android:label="Enter a URL" android:theme="@style/Theme.Translucent"></activity>
 <activity android:label="Save Post" android:name="saveName" android:theme="@style/Theme.Translucent"></activity>
