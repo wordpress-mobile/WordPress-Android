@@ -321,14 +321,19 @@ class XMLRPCMethod extends Thread {
 		} catch (final XMLRPCException e) {
 			handler.post(new Runnable() {
 				public void run() {
-
-					Throwable couse = e.getCause();
-					if (couse instanceof HttpHostConnectException) {
-						//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
-					} else {
-						//status.setText("Error " + e.getMessage());
-					}
-					//Log.d("Test", "error", e);
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
+					  dialogBuilder.setTitle("Connection Error");
+		              dialogBuilder.setMessage(e.getMessage());
+		              dialogBuilder.setPositiveButton("Ok",  new
+		            		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Just close the window.
+                    
+                        }
+                    });
+		              dialogBuilder.setCancelable(true);
+		             dialogBuilder.create().show();
+					
 				}
 			});
 		}
@@ -382,7 +387,7 @@ class XMLRPCMethodEditComment extends Thread {
 		} catch (final XMLRPCFault e) {
 			handler.post(new Runnable() {
 				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
+					/*AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
 					  dialogBuilder.setTitle("Connection Error");
 		              dialogBuilder.setMessage(e.getFaultString());
 		              dialogBuilder.setPositiveButton("Ok",  new
@@ -393,7 +398,7 @@ class XMLRPCMethodEditComment extends Thread {
                           }
                       });
 		              dialogBuilder.setCancelable(true);
-		             dialogBuilder.create().show();
+		             dialogBuilder.create().show();*/
 
 				}
 			});

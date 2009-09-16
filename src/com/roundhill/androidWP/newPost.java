@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-
+import android.net.ConnectivityManager;
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -690,17 +690,27 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		publishThis
         };
         
-        Object result = null;
-        try {
-			result = (Object) client.call("metaWeblog.newPost", params);
-		} catch (XMLRPCException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        //check for a data connection
 
-				newID = result.toString();
-				res = "OK";
-			
+
+
+
+        
+
+        
+        	Object result = null;
+        	try {
+			result = (Object) client.call("metaWeblog.newPost", params);
+			newID = result.toString();
+			res = "OK";
+        	} catch (XMLRPCException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+        		res = "noConnection";
+        	}
+
+				
+        
 
         }// if/then for valid settings
         
@@ -1185,11 +1195,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 						
 						Throwable couse = e.getCause();
 						if (couse instanceof HttpHostConnectException) {
-							//pd.dismiss();
 							dismissDialog(newPost.this.ID_DIALOG_POSTING);
-							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
 						} else {
-							//pd.dismiss();
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
 							  dialogBuilder.setTitle("Connection Error");
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
@@ -1537,9 +1544,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			
 			}
 			else if (finalResult.equals("invalidSettings")){
-				/*if (pd.isShowing()){
-					pd.dismiss();
-					}*/
 				dismissDialog(newPost.this.ID_DIALOG_POSTING);
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
 							  dialogBuilder.setTitle("Settings not found!");
@@ -1565,9 +1569,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			
 			}
 			else if (finalResult.equals("emptyFields")){
-				/*if (pd.isShowing()){
-					pd.dismiss();
-					}*/
+
 				dismissDialog(newPost.this.ID_DIALOG_POSTING);
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
 							  dialogBuilder.setTitle("Empty Fields");
@@ -1584,11 +1586,27 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 				             dialogBuilder.create().show();
 			
 			}
+			else if (finalResult.equals("noConnection")){
+
+				dismissDialog(newPost.this.ID_DIALOG_POSTING);
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+							  dialogBuilder.setTitle("Connection Error");
+				              dialogBuilder.setMessage("A connection error as orrcured. Please try again later.");
+				              dialogBuilder.setPositiveButton("OK",  new
+				            		  DialogInterface.OnClickListener() {
+		                            public void onClick(DialogInterface dialog, int whichButton) {
+		                                //Just close the window
+
+		                        
+		                            }
+		                        });
+				              dialogBuilder.setCancelable(true);
+				             dialogBuilder.create().show();
+			
+			}
 			else if (finalResult.equals("OK"))
 			{
-				/*if (pd.isShowing()){
-					pd.dismiss();
-					}*/
+
 				dismissDialog(newPost.this.ID_DIALOG_POSTING);
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
 				  dialogBuilder.setTitle("Post Added");
