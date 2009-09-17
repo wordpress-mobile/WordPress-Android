@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -842,7 +843,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	
         	if (bytes.length > 1000000) //it's a biggie! don't want out of memory crash
         	{
-        		float finWidth = 1000;
+        		float finWidth = 1000;  //just make it around 1000px wide
         		int sample = 0;
 
         		float fWidth = width;
@@ -887,11 +888,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	}
         	else
         	{
-        		float finWidth = finalWidth;
         		int sample = 0;
 
         		float fWidth = width;
-                sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
+                sample= new Double(Math.ceil(fWidth / 1200)).intValue();
                 
         		if(sample == 3){
                     sample = 4;
@@ -903,17 +903,30 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		opts.inSampleSize = sample;
         		opts.inJustDecodeBounds = false;
         		
-        		float percentage = (float) finalWidth / width;
-        		float proportionateHeight = height * percentage;
-        		finalHeight = (int) Math.rint(proportionateHeight);
-        	
                 bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
                 
+                float percentage = (float) finalWidth / bm.getWidth();
+        		float proportionateHeight = bm.getHeight() * percentage;
+        		finalHeight = (int) Math.rint(proportionateHeight);
+        		
+        		float scaleWidth = ((float) finalWidth) / bm.getWidth(); 
+    	        float scaleHeight = ((float) finalHeight) / bm.getHeight(); 
+
                 
+    	        float scaleBy = Math.min(scaleWidth, scaleHeight);
+    	        
+    	        // Create a matrix for the manipulation 
+    	        Matrix matrix = new Matrix(); 
+    	        // Resize the bitmap 
+    	        matrix.postScale(scaleBy, scaleBy); 
+
+    	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
                 
                 bm.recycle(); //free up memory
+                resized.recycle();
                 
                 finalBytes = baos.toByteArray();
         	}
@@ -922,7 +935,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         }
 
             //try and upload the freakin' image
-            //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
             String contentType = "image/jpg";
             Map<String, Object> m = new HashMap<String, Object>();
 

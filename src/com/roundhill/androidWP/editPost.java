@@ -932,37 +932,49 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		finalBytes = bytes;
         	}
         	else
-        	{
-        		float finWidth = finalWidth;
-        		int sample = 0;
+            {
+            		int sample = 0;
 
-        		float fWidth = width;
-                sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
-                
-        		if(sample == 3){
-                    sample = 4;
-        		}
-        		else if(sample > 4 && sample < 8 ){
-                    sample = 8;
-        		}
-        		
-        		opts.inSampleSize = sample;
-        		opts.inJustDecodeBounds = false;
-        		
-        		float percentage = (float) finalWidth / width;
-        		float proportionateHeight = height * percentage;
-        		finalHeight = (int) Math.rint(proportionateHeight);
-        	
-                bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                
-                
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-                
-                bm.recycle(); //free up memory
-                
-                finalBytes = baos.toByteArray();
-        	}
+            		float fWidth = width;
+                    sample= new Double(Math.ceil(fWidth / 1200)).intValue();
+                    
+            		if(sample == 3){
+                        sample = 4;
+            		}
+            		else if(sample > 4 && sample < 8 ){
+                        sample = 8;
+            		}
+            		
+            		opts.inSampleSize = sample;
+            		opts.inJustDecodeBounds = false;
+            		
+                    bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+                    
+                    float percentage = (float) finalWidth / bm.getWidth();
+            		float proportionateHeight = bm.getHeight() * percentage;
+            		finalHeight = (int) Math.rint(proportionateHeight);
+            		
+            		float scaleWidth = ((float) finalWidth) / bm.getWidth(); 
+        	        float scaleHeight = ((float) finalHeight) / bm.getHeight(); 
+
+                    
+        	        float scaleBy = Math.min(scaleWidth, scaleHeight);
+        	        
+        	        // Create a matrix for the manipulation 
+        	        Matrix matrix = new Matrix(); 
+        	        // Resize the bitmap 
+        	        matrix.postScale(scaleBy, scaleBy); 
+
+        	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+                    resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                    
+                    bm.recycle(); //free up memory
+                    resized.recycle();
+                    
+                    finalBytes = baos.toByteArray();
+            	}
         	
             
         }
