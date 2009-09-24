@@ -41,7 +41,7 @@
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
-              android:lines="5"
+              android:minLines="5"
               android:autoText="true"
               android:capitalize="sentences"
               android:layout_below="@id/l_content"/>
