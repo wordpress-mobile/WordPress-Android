@@ -144,7 +144,13 @@ public class editPost extends Activity {
 					EditText titleET = (EditText)findViewById(R.id.title);
 			        titleET.setText(contentHash.get("title").toString());
 			        EditText contentET = (EditText)findViewById(R.id.content);
-			        contentET.setText(contentHash.get("description").toString());
+			        if (contentHash.get("mt_text_more").toString() != ""){
+			        	contentET.setText(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString());
+			        }
+			        else{
+			        	contentET.setText(contentHash.get("description").toString());
+			        }
+			      
 			        EditText tagsET = (EditText)findViewById(R.id.tags);
 			        tagsET.setText(contentHash.get("mt_keywords").toString());
 			        String status = contentHash.get("post_status").toString();
