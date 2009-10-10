@@ -46,7 +46,10 @@
               android:capitalize="sentences"
               android:layout_below="@id/l_content"/>
               
-    <Button android:id="@+id/bold" 
+<view
+class="com.roundhill.androidWP.customButton"
+			 android:id="@+id/bold" 
+			android:textColor="#444444"
             android:layout_width="50px" 
             android:layout_height="50px" 
             android:layout_below="@id/content"
@@ -54,7 +57,10 @@
             android:textSize="22px"
             android:text="B" /> 
             
-    <Button android:id="@+id/em" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/em" 
+			android:textColor="#444444" 
             android:layout_width="50px" 
             android:layout_height="50px" 
             android:layout_alignTop="@id/bold"
@@ -63,7 +69,9 @@
             android:textSize="22px"
             android:text="I" />
         
-    <Button android:id="@+id/link" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/link"
             android:layout_width="80px" 
             android:layout_height="50px" 
             android:layout_alignTop="@id/em"
@@ -72,7 +80,10 @@
             android:textColor="#006699"
             android:text="link" />  
             
-    <Button android:id="@+id/bquote" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/bquote" 
+			android:textColor="#444444" 
             android:layout_width="120px" 
             android:layout_height="50px" 
             android:layout_alignTop="@id/link"
@@ -87,13 +98,19 @@
               android:text="Pictures:"
               android:textColor="#444444"/>
     
-     	<Button android:id="@+id/addPictureButton" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/addPictureButton" 
+			android:textColor="#444444" 
             android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_below="@id/l_pictures" 
             android:text="Add"/>
             
-            <Button android:id="@+id/clearPicture" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/clearPicture" 
+			android:textColor="#444444" 
             android:layout_width="80px" 
             android:layout_height="60px" 
             android:layout_alignBottom="@id/addPictureButton"
@@ -135,9 +152,13 @@
         android:layout_width="256px"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
+        android:textColor="#444444"
+        android:background="@layout/spinner_selector"
    android:layout_below="@id/l_category"/>
    
-   <ImageButton android:id="@+id/refreshCategoriesButton" 
+<view
+class="com.roundhill.androidWP.customImageButton"
+			android:id="@+id/refreshCategoriesButton" 
             android:layout_width="48px" 
             android:layout_height="48px"
             android:src="@drawable/ic_popup_sync_1"
@@ -151,34 +172,44 @@
               android:layout_below="@id/spinner1"
               android:textColor="#444444"/>       
      	
-     	<Button android:id="@+id/clearCategories"
+<view
+class="com.roundhill.androidWP.customButton" 
+			android:textColor="#444444"
+			android:id="@+id/clearCategories"
      	    android:layout_below="@id/selectedCategories"
             android:layout_width="80px" 
             android:layout_height="60px"
             android:text="Clear" /> 
                          
   <TextView android:id="@+id/l_publish" 
+			android:textColor="#444444" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"
               android:text="Publish? "
-              android:layout_below="@id/clearCategories"
-              android:textColor="#444444"/>          
+              android:layout_below="@id/clearCategories"/>          
                                      
     <CheckBox android:id="@+id/publish"
+    android:button="@layout/btn_check"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_below="@id/l_publish"
             /> 
     		  
-    <Button android:id="@+id/post" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/post" 
+			android:textColor="#444444" 
             android:layout_width="80px" 
             android:layout_height="60px" 
             android:layout_below="@id/publish"
             android:layout_alignParentRight="true"
             android:text="Save" /> 
             
-    <Button android:id="@+id/cancel"
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/cancel" 
+			android:textColor="#444444"
             android:layout_alignTop="@id/post"
             android:layout_toLeftOf="@id/post" 
             android:layout_width="100px" 

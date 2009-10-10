@@ -17,6 +17,7 @@ import org.xmlrpc.android.XMLRPCFault;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -63,12 +64,20 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
         super.onCreate(icicle);
        
         setContentView(R.layout.moderatecomments);
+        boolean fromNotification = false;
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
+         fromNotification = extras.getBoolean("fromNotification", false);       		
         }      
+        
+        if (fromNotification) //dismiss the notification 
+        {
+        	NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        	nm.cancel(22 + Integer.valueOf(id));
+        }
         
         this.setTitle(accountName + " - Moderate Comments");
         Vector settings = new Vector();
@@ -531,8 +540,10 @@ private class CommentView extends LinearLayout {
         RadioButton rb1 = new RadioButton(context);
         RadioButton rb2 = new RadioButton(context);
         RadioButton rb3 = new RadioButton(context);
+        rb1.setButtonDrawable(R.layout.radio_group);
+        rb2.setButtonDrawable(R.layout.radio_group);
+        rb3.setButtonDrawable(R.layout.radio_group);
         
- 
         rgCommentStatus.addView(rb3, 0);
         rgCommentStatus.addView(rb2, 0);
         rgCommentStatus.addView(rb1, 0);

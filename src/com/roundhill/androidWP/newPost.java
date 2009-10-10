@@ -145,9 +145,9 @@ public class newPost extends Activity {
         
         
         
-        final Button postButton = (Button) findViewById(R.id.post);
+        final customButton postButton = (customButton) findViewById(R.id.post);
         
-        postButton.setOnClickListener(new Button.OnClickListener() {
+        postButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             
             	
@@ -193,9 +193,9 @@ public class newPost extends Activity {
             }
     });
         
-            final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);   
+            final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
             
-            addPictureButton.setOnClickListener(new Button.OnClickListener() {
+            addPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	Intent photoPickerIntent = new
@@ -207,9 +207,9 @@ public class newPost extends Activity {
                 }
         });
             
-            final Button clearCategories = (Button) findViewById(R.id.clearCategories);   
+            final customButton clearCategories = (customButton) findViewById(R.id.clearCategories);   
             
-            clearCategories.setOnClickListener(new Button.OnClickListener() {
+            clearCategories.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
@@ -220,9 +220,9 @@ public class newPost extends Activity {
                 }
         });
             
-final Button boldButton = (Button) findViewById(R.id.bold);   
+final customButton boldButton = (customButton) findViewById(R.id.bold);   
             
-            boldButton.setOnClickListener(new Button.OnClickListener() {
+            boldButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -266,9 +266,9 @@ final Button boldButton = (Button) findViewById(R.id.bold);
                 }
         });
 
-            final Button linkButton = (Button) findViewById(R.id.link);   
+            final customButton linkButton = (customButton) findViewById(R.id.link);   
             
-linkButton.setOnClickListener(new Button.OnClickListener() {
+linkButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -312,9 +312,9 @@ linkButton.setOnClickListener(new Button.OnClickListener() {
             });
             
             
-final Button emButton = (Button) findViewById(R.id.em);   
+final customButton emButton = (customButton) findViewById(R.id.em);   
             
-            emButton.setOnClickListener(new Button.OnClickListener() {
+            emButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -357,9 +357,9 @@ final Button emButton = (Button) findViewById(R.id.em);
                 }
         });
             
-final Button bquoteButton = (Button) findViewById(R.id.bquote);   
+final customButton bquoteButton = (customButton) findViewById(R.id.bquote);   
             
-            bquoteButton.setOnClickListener(new Button.OnClickListener() {
+            bquoteButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -403,9 +403,9 @@ final Button bquoteButton = (Button) findViewById(R.id.bquote);
         });
             
             
-final Button saveButton = (Button) findViewById(R.id.saveLocally);   
+final customButton saveButton = (customButton) findViewById(R.id.saveLocally);   
             
-            saveButton.setOnClickListener(new Button.OnClickListener() {
+            saveButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	EditText titleET = (EditText)findViewById(R.id.title);
@@ -437,15 +437,15 @@ final Button saveButton = (Button) findViewById(R.id.saveLocally);
                 }
         });
             
-final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
+final customButton clearPictureButton = (customButton) findViewById(R.id.clearPicture);   
             
-			clearPictureButton.setOnClickListener(new Button.OnClickListener() {
+			clearPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
 
 			        imageUrl.clear();
 			        thumbnailUrl.clear();
-			        selectedImageIDs = new Vector();
+			        selectedImageIDs.clear();
 			        selectedImageCtr = 0;
 			        GridView gridview = (GridView) findViewById(R.id.gridView);
 			     	 gridview.setAdapter(null);
@@ -470,7 +470,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        }
 	    	
 	    	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-	        ArrayAdapter<CharSequence> aspnCountries = new ArrayAdapter<CharSequence>(newPost.this, android.R.layout.simple_spinner_item, loadTextArray);
+	        ArrayAdapter<CharSequence> aspnCountries = new ArrayAdapter<CharSequence>(newPost.this, R.layout.spinner_textview, loadTextArray);
 	        
 	          aspnCountries.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	          
@@ -670,10 +670,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         }
         
         contentStruct.put("post_type", "post");
-        contentStruct.put("title", title);
-        contentStruct.put("description", content);
+        contentStruct.put("title", escapeUtils.escapeHtml(title));
+        contentStruct.put("description", escapeUtils.escapeHtml(content));
         if (tags != ""){
-        contentStruct.put("mt_keywords", tags);
+        contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
         }
         if (theCategories.length > 0){
         contentStruct.put("categories", theCategories);
@@ -1489,7 +1489,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	
 				    	//get rid of the thumbnail
 			        
-			        selectedImageIDs = new Vector();
+			        selectedImageIDs.clear();
    
 				}
 				else if (selectedPostID.equals("CANCEL"))
@@ -1522,7 +1522,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			if (finalResult.equals("gotCategories"))
 			{
 		        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-		        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(newPost.this, android.R.layout.simple_spinner_item, textArray);
+		        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(newPost.this, R.layout.spinner_textview, textArray);
 		        
 		        textArray = new ArrayList<CharSequence>();
 		        

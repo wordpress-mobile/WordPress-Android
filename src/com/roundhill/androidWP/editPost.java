@@ -142,17 +142,17 @@ public class editPost extends Activity {
 					HashMap contentHash = (HashMap) result;
 					
 					EditText titleET = (EditText)findViewById(R.id.title);
-			        titleET.setText(contentHash.get("title").toString());
+			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
 			        EditText contentET = (EditText)findViewById(R.id.content);
 			        if (contentHash.get("mt_text_more").toString() != ""){
-			        	contentET.setText(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString());
+			        	contentET.setText(escapeUtils.unescapeHtml(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString()));
 			        }
 			        else{
-			        	contentET.setText(contentHash.get("description").toString());
+			        	contentET.setText(escapeUtils.unescapeHtml(contentHash.get("description").toString()));
 			        }
 			      
 			        EditText tagsET = (EditText)findViewById(R.id.tags);
-			        tagsET.setText(contentHash.get("mt_keywords").toString());
+			        tagsET.setText(escapeUtils.unescapeHtml(contentHash.get("mt_keywords").toString()));
 			        String status = contentHash.get("post_status").toString();
 			        TextView categories = (TextView)findViewById(R.id.selectedCategories);
 			        
@@ -165,7 +165,7 @@ public class editPost extends Activity {
 					        String category = categoriesArray[ctr].toString();
 					        if (!selectedCategories.contains(category))
 		                	{
-					        categories.setText(categories.getText().toString() + category + ", ");
+					        categories.setText(escapeUtils.unescapeHtml(categories.getText().toString() + category + ", "));
 		                	selectedCategories.add(category);
 		                	}
 					        ctr++;					    
@@ -229,9 +229,9 @@ public class editPost extends Activity {
         
         
         
-        final Button postButton = (Button) findViewById(R.id.post);
+        final customButton postButton = (customButton) findViewById(R.id.post);
         
-        postButton.setOnClickListener(new Button.OnClickListener() {
+        postButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             
             	
@@ -255,9 +255,9 @@ public class editPost extends Activity {
             		
             }
         });
-        final ImageButton refreshCategoriesButton = (ImageButton) findViewById(R.id.refreshCategoriesButton);
+        final customImageButton refreshCategoriesButton = (customImageButton) findViewById(R.id.refreshCategoriesButton);
         
-        refreshCategoriesButton.setOnClickListener(new Button.OnClickListener() {
+        refreshCategoriesButton.setOnClickListener(new customImageButton.OnClickListener() {
             public void onClick(View v) {
             	
             	pd = ProgressDialog.show(editPost.this,
@@ -274,9 +274,9 @@ public class editPost extends Activity {
             }
     });
         
-            final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);   
+            final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
             
-            addPictureButton.setOnClickListener(new Button.OnClickListener() {
+            addPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	Intent photoPickerIntent = new
@@ -288,9 +288,9 @@ public class editPost extends Activity {
                 }
         });
             
-            final Button clearCategories = (Button) findViewById(R.id.clearCategories);   
+            final customButton clearCategories = (customButton) findViewById(R.id.clearCategories);   
             
-            clearCategories.setOnClickListener(new Button.OnClickListener() {
+            clearCategories.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
@@ -301,9 +301,9 @@ public class editPost extends Activity {
                 }
         });
             
-final Button boldButton = (Button) findViewById(R.id.bold);   
+final customButton boldButton = (customButton) findViewById(R.id.bold);   
             
-            boldButton.setOnClickListener(new Button.OnClickListener() {
+            boldButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -347,9 +347,9 @@ final Button boldButton = (Button) findViewById(R.id.bold);
                 }
         });
 
-            final Button linkButton = (Button) findViewById(R.id.link);   
+            final customButton linkButton = (customButton) findViewById(R.id.link);   
             
-linkButton.setOnClickListener(new Button.OnClickListener() {
+linkButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -393,9 +393,9 @@ linkButton.setOnClickListener(new Button.OnClickListener() {
             });
             
             
-final Button emButton = (Button) findViewById(R.id.em);   
+final customButton emButton = (customButton) findViewById(R.id.em);   
             
-            emButton.setOnClickListener(new Button.OnClickListener() {
+            emButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -438,9 +438,9 @@ final Button emButton = (Button) findViewById(R.id.em);
                 }
         });
             
-final Button bquoteButton = (Button) findViewById(R.id.bquote);   
+final customButton bquoteButton = (customButton) findViewById(R.id.bquote);   
             
-            bquoteButton.setOnClickListener(new Button.OnClickListener() {
+            bquoteButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -484,9 +484,9 @@ final Button bquoteButton = (Button) findViewById(R.id.bquote);
         });
             
             
-final Button cancelButton = (Button) findViewById(R.id.cancel);   
+final customButton cancelButton = (customButton) findViewById(R.id.cancel);   
             
-            cancelButton.setOnClickListener(new Button.OnClickListener() {
+            cancelButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	finish();             	
@@ -494,9 +494,9 @@ final Button cancelButton = (Button) findViewById(R.id.cancel);
                 
         });
             
-final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
+final customButton clearPictureButton = (customButton) findViewById(R.id.clearPicture);   
             
-			clearPictureButton.setOnClickListener(new Button.OnClickListener() {
+			clearPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
 
@@ -527,7 +527,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        }
 	    	
 	    	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-	        ArrayAdapter<CharSequence> aspnCountries = new ArrayAdapter<CharSequence>(editPost.this, android.R.layout.simple_spinner_item, loadTextArray);
+	        ArrayAdapter<CharSequence> aspnCountries = new ArrayAdapter<CharSequence>(editPost.this, R.layout.spinner_textview, loadTextArray);
 	        
 	          aspnCountries.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	          
@@ -732,10 +732,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         }
         
         contentStruct.put("post_type", "post");
-        contentStruct.put("title", title);
-        contentStruct.put("description", content);
+        contentStruct.put("title", escapeUtils.escapeHtml(title));
+        contentStruct.put("description", escapeUtils.escapeHtml(content));
         if (tags != ""){
-        contentStruct.put("mt_keywords", tags);
+        contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
         }
         if (theCategories.length > 0){
         contentStruct.put("categories", theCategories);
@@ -1141,7 +1141,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 				});
 			} catch (final XMLRPCFault e) {
 				e.printStackTrace();
+				if (pd.isShowing()){
+					pd.dismiss();
+				}
+				else{
 				dismissDialog(editPost.this.ID_DIALOG_POSTING);
+				}
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 						  dialogBuilder.setTitle("Connection Error");
 			              dialogBuilder.setMessage(e.getFaultString());
@@ -1163,10 +1168,20 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 						
 						Throwable couse = e.getCause();
 						if (couse instanceof HttpHostConnectException) {
+							if (pd.isShowing()){
+								pd.dismiss();
+							}
+							else{
 							dismissDialog(editPost.this.ID_DIALOG_POSTING);
+							}
 							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
 						} else {
+							if (pd.isShowing()){
+								pd.dismiss();
+							}
+							else{
 							dismissDialog(editPost.this.ID_DIALOG_POSTING);
+							}
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 							  dialogBuilder.setTitle("Connection Error");
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
@@ -1263,6 +1278,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
 						} else {
 							//pd.dismiss();
+							dismissDialog(editPost.this.ID_DIALOG_POSTING);
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 							  dialogBuilder.setTitle("Connection Error");
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
@@ -1566,7 +1582,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			if (finalResult.equals("gotCategories"))
 			{
 		        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-		        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(editPost.this, android.R.layout.simple_spinner_item, textArray);
+		        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(editPost.this, R.layout.spinner_textview, textArray);
 		        
 		        textArray = new ArrayList<CharSequence>();
 		        

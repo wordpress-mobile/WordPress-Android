@@ -67,9 +67,9 @@ private String id = "";
                 finish();
 		}
         
-final Button okButton = (Button) findViewById(R.id.selectPostOk);
+final customButton okButton = (customButton) findViewById(R.id.selectPostOk);
         
-        okButton.setOnClickListener(new Button.OnClickListener() {
+        okButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
          	 Bundle bundle = new Bundle();
@@ -86,9 +86,9 @@ final Button okButton = (Button) findViewById(R.id.selectPostOk);
             }
         });
         
-final Button delPostsButton = (Button) findViewById(R.id.deletePosts);
+final customButton delPostsButton = (customButton) findViewById(R.id.deletePosts);
         
-		delPostsButton.setOnClickListener(new Button.OnClickListener() {
+		delPostsButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
             	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(selectpost.this);

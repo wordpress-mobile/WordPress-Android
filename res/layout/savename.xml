@@ -20,7 +20,9 @@
               android:text=""
               /> 
               
-    <Button android:id="@+id/ok" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/ok" 
             android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_below="@id/linkText"
@@ -28,7 +30,9 @@
             android:layout_marginLeft="10px"
             android:text="OK" />
  
-    <Button android:id="@+id/cancel"
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/cancel"
      		android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_alignTop="@id/ok"

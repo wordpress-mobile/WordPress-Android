@@ -4,6 +4,10 @@ import java.util.Vector;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,10 +22,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class settings extends Activity {
-	private String id = "";
+	protected static Intent svc = null;
+	private String id = "", accountName = "";
 	private String xmlrpcPath;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,12 @@ public class settings extends Activity {
         if(extras !=null)
         {
          id = extras.getString("id");
+         accountName = extras.getString("accountName");
         }
 		
 		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
 	    ArrayAdapter spinnerArrayAdapter = new ArrayAdapter<Object>(this,
-	        android.R.layout.simple_spinner_item,
+	    		R.layout.spinner_textview,
 	            new String[] { "Original Size", "100", "150", "200" , "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "850", "900", "950", "1000"});
 	    spinner.setAdapter(spinnerArrayAdapter);
 
@@ -65,7 +72,8 @@ public class settings extends Activity {
              dialogBuilder.create().show();
             }
         });
-    	
+		
+		
     	settingsDB settingsDB = new settingsDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);
     	if (categoriesVector != null)
@@ -77,6 +85,7 @@ public class settings extends Activity {
     		String imagePlacement = categoriesVector.get(4).toString();
     		String sCenterThumbnailString = categoriesVector.get(5).toString();
     		String sFullSizeImageString = categoriesVector.get(6).toString();
+    			
     		boolean sFullSizeImage  = false;
     		if (sFullSizeImageString.equals("1")){
     			sFullSizeImage = true;
@@ -86,6 +95,7 @@ public class settings extends Activity {
     		if (sCenterThumbnailString.equals("1")){
     			sCenterThumbnail = true;
     		}
+    		
     		String maxImageWidth = categoriesVector.get(7).toString();
     		
     		String maxImageWidthId = categoriesVector.get(8).toString();
@@ -104,8 +114,10 @@ public class settings extends Activity {
             
             CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
             centerThumbnail.setChecked(sCenterThumbnail);
+            
       
             spinner.setSelection(maxImageWidthIdInt);
+            
             
             if (imagePlacement != null){
             if (imagePlacement.equals("Above Text")){
@@ -122,10 +134,10 @@ public class settings extends Activity {
 
         
         
-        final Button cancelButton = (Button) findViewById(R.id.cancel);
-        final Button saveButton = (Button) findViewById(R.id.save);
+        final customButton cancelButton = (customButton) findViewById(R.id.cancel);
+        final customButton saveButton = (customButton) findViewById(R.id.save);
         
-        saveButton.setOnClickListener(new Button.OnClickListener() {
+        saveButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
                // SharedPreferences settings = getSharedPreferences("wpAndroidSettings", 0);
                // SharedPreferences.Editor editor = settings.edit();
@@ -149,26 +161,10 @@ public class settings extends Activity {
                 CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
                 boolean centerThumbnailValue = centerThumbnail.isChecked();
 
-                
-                
-               /* editor.putString("blogURL", blogURL);
-                editor.putString("username", username);
-                editor.putString("password", password);
-                editor.putString("imagePlacement", buttonValue);
-                editor.putString("maxImageWidth", maxImageWidth);
-                editor.putLong("maxImageWidthId", maxImageWidthId);
-                editor.putBoolean("fullSizeImage", fullSizeImageValue);
-                editor.putBoolean("centerThumbnail", centerThumbnailValue);*/
-                
-
                 settingsDB settingsDB = new settingsDB(settings.this);
                 settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt);
                 
-                
-                // Don't forget to commit your edits!!!
-               // editor.commit();
-                
-                
+        		//exit settings screen
                 Bundle bundle = new Bundle();
                 
                 bundle.putString("returnStatus", "SAVE");
@@ -180,7 +176,7 @@ public class settings extends Activity {
             }
         });   
         
-        cancelButton.setOnClickListener(new Button.OnClickListener() {
+        cancelButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
             	 Bundle bundle = new Bundle();

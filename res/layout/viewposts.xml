@@ -10,23 +10,26 @@
 		android:layout_height="wrap_content"
 		android:background="#444444"
 		android:gravity="center">
-<ImageButton android:id="@+id/newPost" 
+<view
+class="com.roundhill.androidWP.customImageButton" android:id="@+id/newPost" 
 android:layout_width="wrap_content" 
+android:minWidth="30px"
 		android:layout_height="wrap_content"
-	android:src="@drawable/ic_menu_add">
-</ImageButton>
-<ImageButton android:id="@+id/refresh"
+	android:src="@drawable/ic_menu_add"/>
+<view
+class="com.roundhill.androidWP.customImageButton"
+ android:id="@+id/refresh"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
-	android:src="@drawable/ic_popup_sync_1">
-</ImageButton>
-<ImageButton android:id="@+id/moderate"
+	android:src="@drawable/ic_popup_sync_1"/>
+<view
+class="com.roundhill.androidWP.customImageButton"
+	 android:id="@+id/moderate"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 	android:src="@drawable/comments"
-	android:layout_centerHorizontal="true">
-</ImageButton>
+	android:layout_centerHorizontal="true"/>
 </RelativeLayout>
 <TextView android:id="@+id/longPress"
 android:layout_width="fill_parent" 

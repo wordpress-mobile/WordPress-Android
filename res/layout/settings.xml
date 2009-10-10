@@ -53,10 +53,12 @@
         android:id="@+id/imagePlacement"
         android:layout_below="@id/l_imagePlacement">
         <RadioButton
+        android:button="@layout/radio_group"
             android:text="Above Text"
             android:id="@+id/aboveText"
             />
         <RadioButton
+        android:button="@layout/radio_group"
             android:text="Below Text"
             android:id="@+id/belowText" />
     </RadioGroup>        
@@ -71,6 +73,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
+        android:textColor="#444444"
+        android:background="@layout/spinner_selector"
    android:layout_below="@id/l_maxImageWidth"/>
    
         <TextView android:id="@+id/l_centerThumbnail" 
@@ -82,12 +86,13 @@
               android:layout_below="@id/maxImageWidth"/>
               
 <CheckBox android:id="@+id/centerThumbnail"
+			android:button="@layout/btn_check"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/l_centerThumbnail"
             android:layout_toRightOf="@id/l_centerThumbnail"
             />
-   
+     
    <TextView  android:id="@+id/l_EULA" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -97,7 +102,10 @@
               android:textColor="#ff6600"
               android:layout_below="@id/centerThumbnail"/>
   
-    <Button android:id="@+id/save" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/save" 
+			android:textColor="#444444"
             android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_below="@id/l_EULA"
@@ -105,7 +113,10 @@
             android:layout_marginLeft="10px"
             android:text="Save" />
  
-    <Button android:id="@+id/cancel"
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/cancel" 
+			android:textColor="#444444"
      		android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_alignTop="@id/save"

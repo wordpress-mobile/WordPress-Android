@@ -12,7 +12,11 @@ import org.xmlrpc.android.XMLRPCFault;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,7 +66,7 @@ public class viewPosts extends ListActivity {
          accountName = extras.getString("accountName");
         }
         
-        this.setTitle(accountName + " - Recent Posts");
+        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - Recent Posts");
         //query for posts and refresh view
 
 
@@ -73,9 +77,9 @@ public class viewPosts extends ListActivity {
         }
         
 
-            final ImageButton addNewPost = (ImageButton) findViewById(R.id.newPost);   
+            final customImageButton addNewPost = (customImageButton) findViewById(R.id.newPost);   
             
-            addNewPost.setOnClickListener(new Button.OnClickListener() {
+            addNewPost.setOnClickListener(new customImageButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	Intent i = new Intent(viewPosts.this, newPost.class);
@@ -86,9 +90,9 @@ public class viewPosts extends ListActivity {
                 }
         });
             
-final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);   
+final customImageButton refresh = (customImageButton) findViewById(R.id.refresh);   
             
-            refresh.setOnClickListener(new Button.OnClickListener() {
+            refresh.setOnClickListener(new customImageButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	refreshPosts();
@@ -96,9 +100,9 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
                 }
         });
             
-final ImageButton moderate = (ImageButton) findViewById(R.id.moderate);   
+final customImageButton moderate = (customImageButton) findViewById(R.id.moderate);   
             
-            moderate.setOnClickListener(new Button.OnClickListener() {
+            moderate.setOnClickListener(new customImageButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	Intent i = new Intent(viewPosts.this, moderateComments.class);
@@ -150,7 +154,7 @@ final ImageButton moderate = (ImageButton) findViewById(R.id.moderate);
 					    for (int ctr = 0; ctr < result.length; ctr++){
 					    	HashMap<String, String> dbValues = new HashMap();
 					        contentHash = (HashMap) result[ctr];
-					        titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
+					        titles[ctr] = escapeUtils.unescapeHtml(contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>")));
 					        postIDs[ctr] = contentHash.get("postid").toString();
 					        dateCreated[ctr] = contentHash.get("dateCreated").toString();					        
 					        dbValues.put("blogID", id);
@@ -242,7 +246,7 @@ final ImageButton moderate = (ImageButton) findViewById(R.id.moderate);
    	dateCreated = new String[loadedPosts.size()];
 					    for (int i=0; i < loadedPosts.size(); i++){
 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
-					        titles[i] = contentHash.get("title").toString();
+					        titles[i] = escapeUtils.unescapeHtml(contentHash.get("title").toString());
 					        postIDs[i] = contentHash.get("postID").toString();
 					        dateCreated[i] = contentHash.get("postDate").toString();					        
 					    }
@@ -251,6 +255,7 @@ final ImageButton moderate = (ImageButton) findViewById(R.id.moderate);
 					   setListAdapter(new CommentListAdapter(viewPosts.this));
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
+					   listView.setSelector(R.layout.list_selector);
 					   
 					   listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -343,6 +348,7 @@ final ImageButton moderate = (ImageButton) findViewById(R.id.moderate);
          *      android.view.ViewGroup)
          */
         public View getView(int position, View convertView, ViewGroup parent) {
+        	
             CommentView cv;
             if (convertView == null) {
                 cv = new CommentView(mContext, titles[position],
@@ -384,7 +390,7 @@ final ImageButton moderate = (ImageButton) findViewById(R.id.moderate);
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
             tvDate = new TextView(context);
-            //all of this code is ridiculous! I couldn't get the date to parse :(
+            
             String customDate = date;
             tvDate.setText(customDate);
             addView(tvDate, new LinearLayout.LayoutParams(
@@ -563,7 +569,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
     	
     	Bundle bundle = new Bundle();
 		bundle.putString("id", id);
-		
+		bundle.putString("accountName", accountName);
     	Intent i = new Intent(this, settings.class);
     	i.putExtras(bundle);
     	startActivityForResult(i, 0);

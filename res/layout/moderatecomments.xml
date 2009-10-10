@@ -26,13 +26,14 @@ android:cacheColorHint="#00000000">
     android:padding="3px"
     android:background="@drawable/footer_bg"
    >
-     <Button android:id="@+id/moderate"
+<view
+class="com.roundhill.androidWP.customButton"
+ android:id="@+id/moderate"
  android:layout_width="wrap_content" 
  android:layout_height="wrap_content"
  android:text="Apply Changes"
  android:textColor="#006699"
  android:layout_centerHorizontal="true"
- >
-</Button>
+ />
 </LinearLayout>
 </LinearLayout>

@@ -3,11 +3,19 @@ package com.roundhill.androidWP;
 
 import java.util.HashMap;
 import java.util.Vector;
-
+import org.apache.commons.*;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -30,11 +38,11 @@ public class wpAndroid extends Activity {
 	public Vector accounts;
 	public Vector accountNames = new Vector();
 	private String selectedID = "";
+	
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
       
-        
         //verify that the user has accepted the EULA
         boolean eula = checkEULA();
         if (eula == false){
@@ -93,24 +101,28 @@ public void displayAccounts(){
                 LayoutParams.WRAP_CONTENT));
 
 		layout.setOrientation(LinearLayout.VERTICAL);
-		
         
         for (int i = 0; i < accounts.size(); i++) {
             
         	HashMap curHash = (HashMap) accounts.get(i);
         	String curBlogName = curHash.get("blogName").toString();
         	String curUsername = curHash.get("username").toString();
+        	String accountID = curHash.get("id").toString();
         	accountNames.add(i, curBlogName);
         	layout.setBackgroundColor(Color.parseColor("#e8e8e8"));
             
-            
-            final Button buttonView = new Button(this);
+            final customButton buttonView = new customButton(this);
             buttonView.setTextColor(Color.parseColor("#444444"));
             buttonView.setTextSize(18);
-            buttonView.setText(curBlogName + "\n" + "(" + curUsername + ")");
+            buttonView.setText(escapeUtils.unescapeHtml(curBlogName) + "\n" + "(" + curUsername + ")");
             buttonView.setId(i);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams 
+            (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            //params.setMargins(0, 0, 0, 6);
+            buttonView.setLayoutParams(params);
 
-            buttonView.setOnClickListener(new Button.OnClickListener() {
+            
+            buttonView.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	for (int i = 0; i < accounts.size(); i++) {
@@ -161,7 +173,7 @@ public void displayAccounts(){
         textView.setTextSize(12);
         textView.setPadding(0, 20, 0, 0);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText("Select 'Menu' to add another account.");
+        textView.setText("Select 'Menu' to add another account or to configure comment notifications.");
         
         
         
@@ -173,7 +185,7 @@ public void displayAccounts(){
 	}
 	else{
 		setContentView(R.layout.home);
-final Button newAccountButton = (Button) findViewById(R.id.addFirstAccount);   
+final customButton newAccountButton = (customButton) findViewById(R.id.addFirstAccount);   
         
         newAccountButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -183,6 +195,7 @@ final Button newAccountButton = (Button) findViewById(R.id.addFirstAccount);
             	         	
             }
     });  
+
 	}
 }
 //Add settings to menu
@@ -192,6 +205,10 @@ public boolean onCreateOptionsMenu(Menu menu) {
     menu.add(0, 0, 0, "Add Account");
     MenuItem menuItem1 = menu.findItem(0);
     menuItem1.setIcon(R.drawable.ic_menu_preferences);
+    
+    menu.add(0, 1, 0, "Notification Settings");
+    MenuItem menuItem2 = menu.findItem(1);
+    menuItem2.setIcon(R.drawable.ic_menu_notifications);
     
     return true;
 }
@@ -205,9 +222,14 @@ public boolean onOptionsItemSelected(final MenuItem item){
     	startActivityForResult(i, 0);
     	
     	return true;
-    }
+	case 1:
+		Intent i2 = new Intent(this, notificationSettings.class);
+
+		startActivity(i2);
+	
+		return true;
+	}
     return false;
-    
     	
 }
 
@@ -258,7 +280,7 @@ public boolean onContextItemSelected(MenuItem item) {
                  {
                	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
          			  dialogBuilder.setTitle("Error");
-                     dialogBuilder.setMessage("Could not delete account, you may need to reinstall wpToGo.");
+                     dialogBuilder.setMessage("Could not delete account, you may need to reinstall WordPress for Androidª.");
                      dialogBuilder.setPositiveButton("OK",  new
                    		  DialogInterface.OnClickListener() {
                            public void onClick(DialogInterface dialog, int whichButton) {
@@ -290,5 +312,7 @@ public boolean onContextItemSelected(MenuItem item) {
 
 
 }
+
+
 
 

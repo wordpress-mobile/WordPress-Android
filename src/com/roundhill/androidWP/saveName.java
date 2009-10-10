@@ -23,10 +23,10 @@ public class saveName extends Activity {
 		
 		setContentView(R.layout.savename);
 		
-		final Button cancelButton = (Button) findViewById(R.id.cancel);
-        final Button okButton = (Button) findViewById(R.id.ok);
+		final customButton cancelButton = (customButton) findViewById(R.id.cancel);
+        final customButton okButton = (customButton) findViewById(R.id.ok);
         
-        okButton.setOnClickListener(new Button.OnClickListener() {
+        okButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
             	EditText linkTextET = (EditText)findViewById(R.id.linkText);
@@ -44,7 +44,7 @@ public class saveName extends Activity {
             }
         });   
         
-        cancelButton.setOnClickListener(new Button.OnClickListener() {
+        cancelButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
             	 Bundle bundle = new Bundle();

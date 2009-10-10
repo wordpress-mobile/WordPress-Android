@@ -17,14 +17,18 @@
         android:drawSelectorOnTop="true"
    android:layout_below="@id/selectPostLabel"/>
    
-   <Button android:id="@+id/deletePosts" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/deletePosts" 
             android:layout_width="100px" 
             android:layout_height="60px" 
             android:layout_below="@id/selectPost"
             android:layout_alignParentLeft="true"
             android:text="Delete All Saved Posts" />   
    
-       <Button android:id="@+id/selectPostOk" 
+<view
+class="com.roundhill.androidWP.customButton"
+			android:id="@+id/selectPostOk" 
             android:layout_width="80px" 
             android:layout_height="60px" 
             android:layout_below="@id/selectPost"

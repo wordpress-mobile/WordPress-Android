@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.roundhill.androidWP" android:versionCode="34" android:versionName="1.7.3">
+    package="com.roundhill.androidWP" android:versionCode="41" android:versionName="1.8.0">
     <uses-sdk android:minSdkVersion="2" />
     <application android:icon="@drawable/logo" android:debuggable="false" android:label="WordPress">
         <activity android:name=".wpAndroid" android:icon="@drawable/logo" android:label="WordPress">
@@ -22,6 +22,8 @@
 <activity android:name="viewPost"></activity>
 <activity android:name="moderateComments" android:configChanges="keyboardHidden|orientation"></activity>
 
+<activity android:name="notificationSettings" android:label="Notification Settings"></activity>
+<service android:name="commentService" android:label="Comment Service"></service>
 </application>
 
 

@@ -2,7 +2,6 @@
 
 package com.roundhill.androidWP;
 import java.util.HashMap;
-
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -43,11 +42,11 @@ public class newAccount extends Activity {
 		setContentView(R.layout.newaccount);
 		
 		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
-	    ArrayAdapter spinnerArrayAdapter = new ArrayAdapter<Object>(this,
-	        android.R.layout.simple_spinner_item,
+		ArrayAdapter spinnerArrayAdapter = new ArrayAdapter<Object>(this,
+	        R.layout.spinner_textview,
 	            new String[] { "Original Size", "100", "150", "200" , "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "950", "1000"});
 	    spinner.setAdapter(spinnerArrayAdapter);
-
+	    
 		TextView eulaTV = (TextView) this.findViewById(R.id.l_EULA);
 		
 		eulaTV.setOnClickListener(new Button.OnClickListener() {
@@ -68,10 +67,10 @@ public class newAccount extends Activity {
             }
         });  
         
-        final Button cancelButton = (Button) findViewById(R.id.cancel);
-        final Button saveButton = (Button) findViewById(R.id.save);
+        final customButton cancelButton = (customButton) findViewById(R.id.cancel);
+        final customButton saveButton = (customButton) findViewById(R.id.save);
         
-        saveButton.setOnClickListener(new Button.OnClickListener() {
+        saveButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
                 
                 //capture the entered fields *needs validation*
@@ -94,7 +93,6 @@ public class newAccount extends Activity {
                 final int maxImageWidthIdInt = (int) maxImageWidthId;
                 CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
                 final boolean centerThumbnailValue = centerThumbnail.isChecked();
- 
                 //add http to the beginning of the URL if needed
                 if (blogURL.contains("http://") || blogURL.contains("HTTP://")){
                 	
@@ -170,7 +168,7 @@ public class newAccount extends Activity {
     		                }
     		                else{
     		                boolean success = false;
-    		                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt);
+    		                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, false);
     		                
     		                // Don't forget to commit your edits!!!
     		               // editor.commit();
@@ -221,7 +219,7 @@ public class newAccount extends Activity {
             }
         });   
         
-        cancelButton.setOnClickListener(new Button.OnClickListener() {
+        cancelButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
             	 Bundle bundle = new Bundle();
