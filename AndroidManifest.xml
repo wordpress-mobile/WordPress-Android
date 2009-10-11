@@ -24,6 +24,7 @@
 
 <activity android:name="notificationSettings" android:label="Notification Settings"></activity>
 <service android:name="commentService" android:label="Comment Service"></service>
+<receiver android:name="broadcastReceiver"></receiver>
 </application>
 
 

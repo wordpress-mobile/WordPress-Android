@@ -74,44 +74,8 @@ public class commentService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         //Log.i("ServiceStartArguments","Starting #" + startId + ": " + intent.getExtras());
-        Bundle extras = intent.getExtras();
-        if(extras !=null)
-        {
-         accountID = extras.getString("id");
-         accountName = extras.getString("accountName");
-         updateInterval = extras.getString("updateInterval");
-         
-         //configure time interval
-         if (updateInterval.equals("5 Minutes")){
-        	 UPDATE_INTERVAL = 300000;
-         }
-         else if (updateInterval.equals("10 Minutes")){
-        	 UPDATE_INTERVAL = 600000;
-         }
-         else if (updateInterval.equals("15 Minutes")){
-        	 UPDATE_INTERVAL = 900000;
-         }
-         else if (updateInterval.equals("30 Minutes")){
-        	 UPDATE_INTERVAL = 1800000;
-         }
-         else if (updateInterval.equals("1 Hour")){
-        	 UPDATE_INTERVAL = 3600000;
-         }
-         else if (updateInterval.equals("3 Hours")){
-        	 UPDATE_INTERVAL = 10800000;
-         }
-         else if (updateInterval.equals("6 Hours")){
-        	 UPDATE_INTERVAL = 21600000;
-         }
-         else if (updateInterval.equals("12 Hours")){
-        	 UPDATE_INTERVAL = 43200000;
-         }
-         else if (updateInterval.equals("Daily")){
-        	 UPDATE_INTERVAL = 86400000;
-         }
-         
-         
-        }
+       
+
     }
 
 
@@ -121,33 +85,24 @@ public class commentService extends Service {
 
 	  _shutdownService();
 
-	 // if (MAIN_ACTIVITY != null) AppUtils.showToastShort(MAIN_ACTIVITY, "MyService stopped");
 	}
 
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	// service business logic
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 	private void _startService() {
-	  timer.scheduleAtFixedRate(
-	      new TimerTask() {
-	        public void run() {
-	        	
-	          _getWeatherUpdate();
-	        }
-	      },
-	      0,
-	      UPDATE_INTERVAL);
-	  //Log.i(getClass().getSimpleName(), "Timer started!!!");
+
+		Thread t = new Thread() {
+			public void run() {
+	          _getUpdatedComments();
+			}	
+		};
+		t.start();
+	
 	}
 
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	// weather data that the service gets...
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	//public static Hashtable<String, Hashtable<String, String>> DataFromServlet =
-	//    new Hashtable<String, Hashtable<String, String>>();
+
 
 	/** dont forget to fire update to the ui listener */
-	private void _getWeatherUpdate() {
+	private void _getUpdatedComments() {
 		
 		
 		//just notify for now
@@ -164,7 +119,13 @@ public class commentService extends Service {
     	
     	
     	if (notificationAccounts != null){
+    		
+    		if (notificationAccounts.size() == 0){
 
+    			this.stopSelf(); //no accounts wanted notifications, bye!
+    		}
+    		else
+    		{
     		for (int i = 0; i < notificationAccounts.size(); i++)
     		{
     			
@@ -255,6 +216,7 @@ public class commentService extends Service {
 		}
         
     		} //end for loop
+    		}
     	}  // end if
 
 	}

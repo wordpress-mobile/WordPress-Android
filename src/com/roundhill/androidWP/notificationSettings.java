@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import org.apache.commons.*;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -161,6 +163,8 @@ public void displayAccounts(){
 	    save.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
+            	checkCtr = 0;
+            	
             	int listItemCount = cbLayout.getChildCount();
             	for( int i=0;i<listItemCount;i++ ) {
             	    CheckBox cbox = (CheckBox) ((View)cbLayout.getChildAt(i));
@@ -179,40 +183,69 @@ public void displayAccounts(){
             	settingsDB.updateInterval(notificationSettings.this, sInterval.getSelectedItem().toString());
             	
             	if (checkCtr > 0){
-            		//notification testing
-        			if (svc != null){
-            			stopService(svc);
-            			}
-        	        svc = new Intent(notificationSettings.this, commentService.class);
-        	        svc.putExtra("updateInterval", sInterval.getSelectedItem().toString());
-        	        startService(svc);
+
+        	        String updateInterval = sInterval.getSelectedItem().toString();
+        	        int UPDATE_INTERVAL = 3600000;
         	        
-        	        /*NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
-        			  Notification notification = new Notification(R.drawable.logo, "Timer has cycled!", System.currentTimeMillis());
-        			  notificationManager.notify(01234, notification); */
+        	      //configure time interval
+        	         if (updateInterval.equals("5 Minutes")){
+        	        	 UPDATE_INTERVAL = 300000;
+        	         }
+        	         else if (updateInterval.equals("10 Minutes")){
+        	        	 UPDATE_INTERVAL = 600000;
+        	         }
+        	         else if (updateInterval.equals("15 Minutes")){
+        	        	 UPDATE_INTERVAL = 900000;
+        	         }
+        	         else if (updateInterval.equals("30 Minutes")){
+        	        	 UPDATE_INTERVAL = 1800000;
+        	         }
+        	         else if (updateInterval.equals("1 Hour")){
+        	        	 UPDATE_INTERVAL = 3600000;
+        	         }
+        	         else if (updateInterval.equals("3 Hours")){
+        	        	 UPDATE_INTERVAL = 10800000;
+        	         }
+        	         else if (updateInterval.equals("6 Hours")){
+        	        	 UPDATE_INTERVAL = 21600000;
+        	         }
+        	         else if (updateInterval.equals("12 Hours")){
+        	        	 UPDATE_INTERVAL = 43200000;
+        	         }
+        	         else if (updateInterval.equals("Daily")){
+        	        	 UPDATE_INTERVAL = 86400000;
+        	         }
+        	        
+        	        Intent intent = new Intent(notificationSettings.this, broadcastReceiver.class);
+                	PendingIntent pIntent = PendingIntent.getBroadcast(notificationSettings.this, 0, intent, 0);
+                	
+                	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                	
+                	alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (5 * 1000), UPDATE_INTERVAL, pIntent);
         			  
         	        
-        		  		
+        	        final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         		  	//Toast.makeText(settings.this, "Comment Notification Service Started", Toast.LENGTH_LONG);
         	        
         	        commentService.setUpdateListener(new ServiceUpdateUIListener() {
-        	            public void updateUI(final String accountID, final String accountName) {
+        	            public void updateUI(final String uAccountID, final String uAccountName) {
         	              // make sure this runs in the UI thread... since it's messing with views...
         	              runOnUiThread(
         	                  new Runnable() {
         	                    public void run() {
         	                    	
-        	                    	final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        	        		  		ComponentName comp = new ComponentName(getPackageName(), getClass().getName());
-        	        		  		Intent notificationIntent = new Intent(notificationSettings.this, moderateComments.class);
-        	        		  		notificationIntent.putExtra("id", accountID);
-        	        		  		notificationIntent.putExtra("accountName", accountName);
-        	        		  		notificationIntent.putExtra("fromNotification", true);
-        	        		  		final PendingIntent pendingIntent = PendingIntent.getActivity(notificationSettings.this, 0, notificationIntent, 0);
         	                    	
-        	     			  		Notification n = new Notification(R.drawable.wp_logo_small, "New Comment Received", System.currentTimeMillis());
-        	     			  		n.setLatestEventInfo(notificationSettings.this, accountName, "New Comment Received", pendingIntent);
-        	     			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
+        	        		  		Intent notificationIntent = new Intent(notificationSettings.this, moderateComments.class);
+        	        		  		notificationIntent.setData((Uri.parse("custom://wpToGoNotificationIntent"+uAccountID)));
+        	        		  		notificationIntent.putExtra("id", uAccountID);
+        	        		  		notificationIntent.putExtra("accountName", uAccountName);
+        	        		  		notificationIntent.putExtra("fromNotification", true);
+        	        		  		PendingIntent pendingIntent = PendingIntent.getActivity(notificationSettings.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        	     			  		
+        	        		  		
+        	        		  		Notification n = new Notification(R.drawable.wp_logo, "New Comment Received", System.currentTimeMillis());
+        	     			  		n.setLatestEventInfo(notificationSettings.this, uAccountName, "New Comment Received", pendingIntent);
+        	     			  		nm.notify(22 + Integer.valueOf(uAccountID), n); //needs a unique id
         	     			  		
 
         	                    }
@@ -222,17 +255,16 @@ public void displayAccounts(){
         	        //notification testing
         		}
         		else{
-        			if (svc != null){
+
+        						Intent stopIntent = new Intent(notificationSettings.this, broadcastReceiver.class);
+                            	PendingIntent stopPIntent = PendingIntent.getBroadcast(notificationSettings.this, 0, stopIntent, 0);
+                            	//Log.i("wpToGo", "stopping alarm");
+                            	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            	alarmManager.cancel(stopPIntent);
         				
-        				Vector activeNotificationAccounts = settingsDB.getNotificationAccounts(notificationSettings.this);
-        				if (activeNotificationAccounts != null){
-        					if (activeNotificationAccounts.size() < 1){
-        						stopService(svc);  //shut down the service
-        					}
-        				}
         				
         			
-        			}
+        			
         			//Toast.makeText(settings.this, "Comment Notification Service Stopped", Toast.LENGTH_LONG);
 
         		

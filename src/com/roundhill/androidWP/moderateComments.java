@@ -179,7 +179,7 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
                 changedComments.clear();
                 
            
-            Toast.makeText(moderateComments.this, "Comment Moderated Succesfully", 20);
+            Toast.makeText(moderateComments.this, "Comment Moderated Succesfully", 20).show();
             }
             
             	

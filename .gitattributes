@@ -271,6 +271,7 @@ res/values/styles.xml -text
 src/com/roundhill/androidWP/Entities.java -text
 src/com/roundhill/androidWP/IntHashMap.java -text
 src/com/roundhill/androidWP/ServiceUpdateUIListener.java -text
+src/com/roundhill/androidWP/broadcastReceiver.java -text
 src/com/roundhill/androidWP/categoriesDB.java -text
 src/com/roundhill/androidWP/commentService.java -text
 src/com/roundhill/androidWP/customButton.java -text
