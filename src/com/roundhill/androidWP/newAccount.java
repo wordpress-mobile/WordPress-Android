@@ -93,12 +93,9 @@ public class newAccount extends Activity {
                 final int maxImageWidthIdInt = (int) maxImageWidthId;
                 CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
                 final boolean centerThumbnailValue = centerThumbnail.isChecked();
-                //add http to the beginning of the URL if needed
-                if (blogURL.contains("http://") || blogURL.contains("HTTP://")){
-                	
-                }
-                else{
-                	blogURL = "http://" + blogURL;
+                //add http  or http to the beginning of the URL if needed
+                if (!(blogURL.toLowerCase().contains("http://")) && !(blogURL.toLowerCase().contains("https://"))){
+                	blogURL = "http://" + blogURL;  //default to http
                 }
                 
                 String lastChar = blogURL.substring(blogURL.length() - 1, blogURL.length());
