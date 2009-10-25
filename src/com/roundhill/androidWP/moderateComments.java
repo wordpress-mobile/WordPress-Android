@@ -222,12 +222,19 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
 					String s = "done";
 					
 					if (result.length == 0){
-						comments = new String[1];
-						authors = new String[1];
-						status = new String[1];
-						comments[0] = "There's no comments on your blog? Sad.";
-						authors[0] = "";
-						status[0] = "";
+						
+						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
+						  dialogBuilder.setTitle("No Comments Found");
+			              dialogBuilder.setMessage("You don't have any comments on your blog");
+			              dialogBuilder.setPositiveButton("OK",  new
+			            		  DialogInterface.OnClickListener() {
+	                        public void onClick(DialogInterface dialog, int whichButton) {
+	                            // Just close the window.
+	                        	finish();
+	                        }
+	                    });
+			              dialogBuilder.setCancelable(true);
+			             dialogBuilder.create().show();
 					}
 					else{
 					s = result.toString();
@@ -254,9 +261,12 @@ public class moderateComments extends ListActivity implements RadioGroup.OnCheck
 					        commentID[ctr] = contentHash.get("comment_id").toString();
 					        ctr++;
 					    }
+					    
+					    setListAdapter(new CommentListAdapter(moderateComments.this));
+					    
 					}  
 		        
-					 setListAdapter(new CommentListAdapter(moderateComments.this));
+					 
 					 changedComments.clear();
 					 initializing = false;
 

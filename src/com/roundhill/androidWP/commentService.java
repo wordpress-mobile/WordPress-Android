@@ -19,9 +19,11 @@ import android.R.integer;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -36,7 +38,6 @@ public class commentService extends Service {
 	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	// constants
 	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	public static final String ServletUri = "http://danroundhill.com/xmlrpc.php";
 	public static final String response = "true";
 	public static ServiceUpdateUIListener UI_UPDATE_LISTENER;
 	public String accountID = "", accountName = "", updateInterval = "";
@@ -193,7 +194,20 @@ public class commentService extends Service {
 					Log.i("wpToGoCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){
-					UI_UPDATE_LISTENER.updateUI(accountID, accountName); //new comment!
+					//UI_UPDATE_LISTENER.updateUI(accountID, accountName); //new comment!
+					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+					Intent notificationIntent = new Intent(commentService.this, moderateComments.class);
+    		  		notificationIntent.setData((Uri.parse("custom://wpToGoNotificationIntent"+accountID)));
+    		  		notificationIntent.putExtra("id", accountID);
+    		  		notificationIntent.putExtra("accountName", accountName);
+    		  		notificationIntent.putExtra("fromNotification", true);
+    		  		PendingIntent pendingIntent = PendingIntent.getActivity(commentService.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+ 			  		
+    		  		
+    		  		Notification n = new Notification(R.drawable.wp_logo, "New Comment Received", System.currentTimeMillis());
+ 			  		n.setLatestEventInfo(commentService.this, accountName, "New Comment Received", pendingIntent);
+ 			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
+					
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));
 					Log.i("wpToGoCommentService", "found a new comment!");
 				}

@@ -223,36 +223,6 @@ public void displayAccounts(){
                 	
                 	alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (5 * 1000), UPDATE_INTERVAL, pIntent);
         			  
-        	        
-        	        final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        		  	//Toast.makeText(settings.this, "Comment Notification Service Started", Toast.LENGTH_LONG);
-        	        
-        	        commentService.setUpdateListener(new ServiceUpdateUIListener() {
-        	            public void updateUI(final String uAccountID, final String uAccountName) {
-        	              // make sure this runs in the UI thread... since it's messing with views...
-        	              runOnUiThread(
-        	                  new Runnable() {
-        	                    public void run() {
-        	                    	
-        	                    	
-        	        		  		Intent notificationIntent = new Intent(notificationSettings.this, moderateComments.class);
-        	        		  		notificationIntent.setData((Uri.parse("custom://wpToGoNotificationIntent"+uAccountID)));
-        	        		  		notificationIntent.putExtra("id", uAccountID);
-        	        		  		notificationIntent.putExtra("accountName", uAccountName);
-        	        		  		notificationIntent.putExtra("fromNotification", true);
-        	        		  		PendingIntent pendingIntent = PendingIntent.getActivity(notificationSettings.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        	     			  		
-        	        		  		
-        	        		  		Notification n = new Notification(R.drawable.wp_logo, "New Comment Received", System.currentTimeMillis());
-        	     			  		n.setLatestEventInfo(notificationSettings.this, uAccountName, "New Comment Received", pendingIntent);
-        	     			  		nm.notify(22 + Integer.valueOf(uAccountID), n); //needs a unique id
-        	     			  		
-
-        	                    }
-        	                  });
-        	            }
-        	          });
-        	        //notification testing
         		}
         		else{
 
