@@ -229,6 +229,7 @@ res/drawable/btn_radio_on_pressed.png -text
 res/drawable/btn_radio_on_selected.png -text
 res/drawable/comments.png -text
 res/drawable/comments_dark.png -text
+res/drawable/comments_tab.png -text
 res/drawable/divider.png -text
 res/drawable/footer_bg.png -text
 res/drawable/ic_menu_add.png -text
@@ -243,6 +244,8 @@ res/drawable/list_selector_background_focus.9.png -text
 res/drawable/list_selector_background_longpress.9.png -text
 res/drawable/list_selector_background_pressed.9.png -text
 res/drawable/logo.png -text
+res/drawable/on_blog.png -text
+res/drawable/on_device.png -text
 res/drawable/rowbg.png -text
 res/drawable/wp_logo.png -text
 res/drawable/wp_logo_small.png -text
@@ -263,7 +266,9 @@ res/layout/selectpost.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
+res/layout/tabview.xml -text
 res/layout/viewcomments.xml -text
+res/layout/viewlocaldrafts.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
 res/values/strings.xml -text
@@ -280,6 +285,7 @@ src/com/roundhill/androidWP/editPost.java -text
 src/com/roundhill/androidWP/escapeUtils.java -text
 src/com/roundhill/androidWP/eulaDB.java -text
 src/com/roundhill/androidWP/link.java -text
+src/com/roundhill/androidWP/localDraftsDB.java -text
 src/com/roundhill/androidWP/moderateComments.java -text
 src/com/roundhill/androidWP/newAccount.java -text
 src/com/roundhill/androidWP/newPost.java -text
@@ -290,7 +296,9 @@ src/com/roundhill/androidWP/savedPostsDB.java -text
 src/com/roundhill/androidWP/selectpost.java -text
 src/com/roundhill/androidWP/settings.java -text
 src/com/roundhill/androidWP/settingsDB.java -text
+src/com/roundhill/androidWP/tabView.java -text
 src/com/roundhill/androidWP/viewComments.java -text
+src/com/roundhill/androidWP/viewLocalDrafts.java -text
 src/com/roundhill/androidWP/viewPost.java -text
 src/com/roundhill/androidWP/viewPosts.java -text
 src/com/roundhill/androidWP/wpAndroid.java -text

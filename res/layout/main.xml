@@ -204,17 +204,7 @@ class="com.roundhill.androidWP.customButton"
             android:layout_height="60px" 
             android:layout_below="@id/publish"
             android:layout_alignParentRight="true"
-            android:text="POST" /> 
-            
-<view
-class="com.roundhill.androidWP.customButton"
-			android:id="@+id/saveLocally" 
-			android:textColor="#444444"
-            android:layout_alignTop="@id/post"
-            android:layout_toLeftOf="@id/post" 
-            android:layout_width="100px" 
-            android:layout_height="60px"
-            android:text="Save Draft" />           
+            android:text="Save" />           
             
     <TextView android:id="@+id/text1"
     		android:layout_width="fill_parent" 

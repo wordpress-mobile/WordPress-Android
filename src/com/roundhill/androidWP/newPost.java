@@ -149,29 +149,20 @@ public class newPost extends Activity {
         
         postButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
-            
-            	
-            	//pd = ProgressDialog.show(newPost.this,
-                 //       "Adding Post", "Please wait while attempting to add post...", true, false);
-            	showDialog(ID_DIALOG_POSTING);
-            		Thread t = new Thread() {
-            			String resultCode = "";
-        				public void run() {
-							try {
-								Looper.prepare();
-								finalResult = submitPost();
-								
-								mHandler.post(mUpdateResults);
-								
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
 
-        				}
-        			};
-        			t.start();
-            		
+            	boolean result = savePost();
+            	
+            	if (result){
+            		Intent intent = new Intent(newPost.this, tabView.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("accountName", accountName);
+                    intent.putExtra("activateTab", "drafts");
+                    startActivity(intent);
+
+              	  	Toast.makeText(newPost.this, "Saved to local drafts", Toast.LENGTH_SHORT).show();
+                    finish();
+            	}
+	
             }
         });
         final ImageButton refreshCategoriesButton = (ImageButton) findViewById(R.id.refreshCategoriesButton);
@@ -402,41 +393,6 @@ final customButton bquoteButton = (customButton) findViewById(R.id.bquote);
                 }
         });
             
-            
-final customButton saveButton = (customButton) findViewById(R.id.saveLocally);   
-            
-            saveButton.setOnClickListener(new customButton.OnClickListener() {
-                public void onClick(View v) {
-                	
-                	EditText titleET = (EditText)findViewById(R.id.title);
-    		        String postTitle = titleET.getText().toString();
-    		        EditText contentET = (EditText)findViewById(R.id.content);
-    		        String postContent = contentET.getText().toString();
-    		        
-                	 if (postTitle.equals("") || postContent.equals(""))
-     		        {
-     		        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-     					  dialogBuilder.setTitle("Missing Fields");
-     		              dialogBuilder.setMessage("You must enter something in the title and content fields before saving.");
-     		              dialogBuilder.setPositiveButton("OK",  new
-     		            		  DialogInterface.OnClickListener() {
-                               public void onClick(DialogInterface dialog, int whichButton) {
-                                   // Just close the window.
-                           
-                               }
-                           });
-     		              dialogBuilder.setCancelable(true);
-     		             dialogBuilder.create().show();	
-     		        }
-                	 else{
-                	
-                	Intent i = new Intent(newPost.this, saveName.class);
-
-                	startActivityForResult(i, 3);              	
-                	 }          	
-                }
-        });
-            
 final customButton clearPictureButton = (customButton) findViewById(R.id.clearPicture);   
             
 			clearPictureButton.setOnClickListener(new customButton.OnClickListener() {
@@ -569,7 +525,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     }
     
     
-	public String submitPost() throws IOException {
+	public boolean savePost() {
 		
 		
 		//grab the form data
@@ -580,8 +536,10 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         EditText tagsET = (EditText)findViewById(R.id.tags);
         String tags = tagsET.getText().toString();
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
-        Boolean publishThis = false;
-        
+        boolean publishThis = false;
+        String images = "";
+        String categories = "";
+        boolean success = false;
         
 
         Integer blogID = 1; //never changes with wordpress, so far
@@ -601,420 +559,44 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         else {
         
         	//upload the images and return the HTML
-        for (int it = 0; it < selectedImageCtr; it++){
-                
-         imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
+        	for (int it = 0; it < selectedImageCtr; it++){
+           
+        		images += selectedImageIDs.get(it).toString() + ",";
+        		//imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
 
-        }
-        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-        
-        int itemCount = spinner.getCount();
-        String selectedCategory = "Uncategorized";
-        if (itemCount != 0){
-        	selectedCategory = spinner.getSelectedItem().toString();
-        }
-        
-        // categoryID = getCategoryId(selectedCategory);
-        String[] theCategories = new String[selectedCategories.size()];
-        
-        int catSize = selectedCategories.size();
-        
-        for(int i=0; i < selectedCategories.size(); i++)
-        {
-    		theCategories[i] = selectedCategories.get(i).toString();
-        }
-        
-      //
-        settingsDB settingsDB = new settingsDB(this);
-    	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
-    	
-	    	String sURL = "";
-	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-	    	{
-	    		sURL = categoriesVector.get(0).toString();
-	    	}
-	    	else
-	    	{
-	    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-	    	}
-    		String sBlogName = categoriesVector.get(1).toString();
-    		String sUsername = categoriesVector.get(2).toString();
-    		String sPassword = categoriesVector.get(3).toString();
-    		String sImagePlacement = categoriesVector.get(4).toString();
-    		String sCenterThumbnailString = categoriesVector.get(5).toString();
-    		String sFullSizeImageString = categoriesVector.get(6).toString();
-    		
-
-    		boolean centerThumbnail = false;
-    		if (sCenterThumbnailString.equals("1")){
-    			centerThumbnail = true;
-    		}
-    		sMaxImageWidth = categoriesVector.get(7).toString();
-
-        
-        
-        if (publishCB.isChecked())
-        {
-        	publishThis = true;
-        }
-        
-        Map<String, Object> contentStruct = new HashMap<String, Object>();
-      
-        if(imageContent != ""){
-        	if (sImagePlacement.equals("Above Text")){
-        		content = imageContent + content;
         	}
-        	else{
-        		content = content + imageContent;
+        	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+        
+        	int itemCount = spinner.getCount();
+        	String selectedCategory = "Uncategorized";
+        	if (itemCount != 0){
+        		selectedCategory = spinner.getSelectedItem().toString();
         	}
-        }
         
-        contentStruct.put("post_type", "post");
-        contentStruct.put("title", escapeUtils.escapeHtml(title));
-        contentStruct.put("description", escapeUtils.escapeHtml(content));
-        if (tags != ""){
-        contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
-        }
-        if (theCategories.length > 0){
-        contentStruct.put("categories", theCategories);
-        }
+        	// categoryID = getCategoryId(selectedCategory);
+        	String[] theCategories = new String[selectedCategories.size()];
         
-
+        	int catSize = selectedCategories.size();
         
-        client = new XMLRPCClient(sURL);
-        
-        Object[] params = {
-        		1,
-        		sUsername,
-        		sPassword,
-        		contentStruct,
-        		publishThis
-        };
-        
-        //check for a data connection
-
-
-
-
-        
-
-        
-        	Object result = null;
-        	try {
-			result = (Object) client.call("metaWeblog.newPost", params);
-			newID = result.toString();
-			res = "OK";
-        	} catch (XMLRPCException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-        		res = "noConnection";
+        	for(int i=0; i < selectedCategories.size(); i++)
+        	{
+        		categories += selectedCategories.get(i).toString() + ",";
+        		//theCategories[i] = selectedCategories.get(i).toString();
         	}
-
-				
         
-
+        	if (publishCB.isChecked())
+        	{
+        		publishThis = true;
+        	}
+        
+        	//new feature, automatically save a post as a draft just in case the posting fails
+        	localDraftsDB lDraftsDB = new localDraftsDB(this);
+        	success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis);
+        
+        
         }// if/then for valid settings
         
-		return res;
-	}
-
-	public String uploadImage(String imageURL){
-        
-        int finalHeight = 0;
-        
-        //images variables
-
-        
-        //get the settings
-        settingsDB settingsDB = new settingsDB(newPost.this);
-    	Vector categoriesVector = settingsDB.loadSettings(newPost.this, id);   	
-    	
-	    	String sURL = "";
-	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-	    	{
-	    		sURL = categoriesVector.get(0).toString();
-	    	}
-	    	else
-	    	{
-	    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-	    	}
-    		String sUsername = categoriesVector.get(2).toString();
-    		String sPassword = categoriesVector.get(3).toString();
-    		sImagePlacement = categoriesVector.get(4).toString();
-    		String sCenterThumbnailString = categoriesVector.get(5).toString();
-    		
-    		//removed this as a quick fix to get rid of full size upload option
-    		/*if (sFullSizeImageString.equals("1")){
-    			sFullSizeImage = true;
-    		}*/  
-
-    		
-    		if (sCenterThumbnailString.equals("1")){
-    			centerThumbnail = true;
-    		}
-    		sMaxImageWidth = categoriesVector.get(7).toString();
-
-        //new loop for multiple images
-        
-        
-
-        //check for image, and upload it
-
-           client = new XMLRPCClient(sURL);
-
-     	   String curImagePath = "";
-     	   
-     	   
-     		curImagePath = imageURL;
- 
-     	   Uri imageUri = Uri.parse(curImagePath);
-     	   
-     	   String imgID = imageUri.getLastPathSegment();
-     	   long imgID2 = Long.parseLong(imgID);
-     	   
-     	  String[] projection; 
-
-     	  projection = new String[] {
-           		    Images.Media._ID,
-           		    Images.Media.DATA
-           		};
-     	  
-     	  
-     	   Uri imgPath;
-
-     	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-     	   
-     	   
-     	   
-		Cursor cur = managedQuery(imgPath, projection, null, null, null);
-     	  String thumbData = "";
-     	 
-     	  if (cur.moveToFirst()) {
-     		  
-     		int nameColumn, dataColumn, heightColumn, widthColumn;
-     		
-     			nameColumn = cur.getColumnIndex(Images.Media._ID);
-     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);             	            
-           
-           thumbData = cur.getString(dataColumn);
-
-     	  }
-     	   
-     	   File jpeg = new File(thumbData);
-     	   
-     	   imageTitle = jpeg.getName();
-     	  
-     	   byte[] bytes = new byte[(int) jpeg.length()];
-     	   
-     	   DataInputStream in = null;
-		try {
-			in = new DataInputStream(new FileInputStream(jpeg));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-     	   try {
-			in.readFully(bytes);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-     	   try {
-			in.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//create the thumbnail
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-        
-        int width = opts.outWidth;
-        int height = opts.outHeight; 
-        
-        int finalWidth = 500;  //default to this if there's a problem
-        //Change dimensions of thumbnail
-        
-        byte[] finalBytes;
-        
-        if (sMaxImageWidth.equals("Original Size")){
-        	
-        	if (bytes.length > 1000000) //it's a biggie! don't want out of memory crash
-        	{
-        		float finWidth = 1000;  //just make it around 1000px wide
-        		int sample = 0;
-
-        		float fWidth = width;
-                sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
-                
-        		if(sample == 3){
-                    sample = 4;
-        		}
-        		else if(sample > 4 && sample < 8 ){
-                    sample = 8;
-        		}
-        		
-        		opts.inSampleSize = sample;
-        		opts.inJustDecodeBounds = false;
-        		
-        		float percentage = (float) finalWidth / width;
-        		float proportionateHeight = height * percentage;
-        		finalHeight = (int) Math.rint(proportionateHeight);
-        	
-                bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                
-                
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-                
-                bm.recycle(); //free up memory
-                
-                finalBytes = baos.toByteArray();
-        	}
-        	else
-        	{
-        	finalBytes = bytes;
-        	}   	
-        	
-        }
-        else
-        {
-           	finalWidth = Integer.parseInt(sMaxImageWidth);
-        	if (finalWidth > width){
-        		//don't resize
-        		finalBytes = bytes;
-        	}
-        	else
-        	{
-        		int sample = 0;
-
-        		float fWidth = width;
-                sample= new Double(Math.ceil(fWidth / 1200)).intValue();
-                
-        		if(sample == 3){
-                    sample = 4;
-        		}
-        		else if(sample > 4 && sample < 8 ){
-                    sample = 8;
-        		}
-        		
-        		opts.inSampleSize = sample;
-        		opts.inJustDecodeBounds = false;
-        		
-                bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                
-                float percentage = (float) finalWidth / bm.getWidth();
-        		float proportionateHeight = bm.getHeight() * percentage;
-        		finalHeight = (int) Math.rint(proportionateHeight);
-        		
-        		float scaleWidth = ((float) finalWidth) / bm.getWidth(); 
-    	        float scaleHeight = ((float) finalHeight) / bm.getHeight(); 
-
-                
-    	        float scaleBy = Math.min(scaleWidth, scaleHeight);
-    	        
-    	        // Create a matrix for the manipulation 
-    	        Matrix matrix = new Matrix(); 
-    	        // Resize the bitmap 
-    	        matrix.postScale(scaleBy, scaleBy); 
-
-    	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-                
-                bm.recycle(); //free up memory
-                resized.recycle();
-                
-                finalBytes = baos.toByteArray();
-        	}
-        	
-            
-        }
-
-            //try and upload the freakin' image
-            String contentType = "image/jpg";
-            Map<String, Object> m = new HashMap<String, Object>();
-
-            HashMap hPost = new HashMap();
-
-            	
-            m.put("name", imageTitle);
-            m.put("type", contentType);
-            m.put("bits", finalBytes);
-            m.put("overwrite", true);
-
-			client = new XMLRPCClient(sURL);
-        	
-        	XMLRPCMethodImages method = new XMLRPCMethodImages("wp.uploadFile", new XMLRPCMethodCallback() {
-				public void callFinished(Object result) {
-					
-					imgHTML = ""; //start fresh
-					//Looper.myLooper().quit();
-					HashMap contentHash = new HashMap();
-					    
-					contentHash = (HashMap) result;
-
-					String resultURL = contentHash.get("url").toString();
-					
-					String finalImageUrl = "";
-					
-
-		            finalImageUrl = resultURL;
-					
-					//prepare the centering css if desired from user
-			           String centerCSS = " ";
-			           if (centerThumbnail){
-			        	   centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
-			           }
-			           
-			     	   
-				           if (resultURL != null)
-				           {
-
-				   	        	if (sImagePlacement.equals("Above Text")){
-				   	        		
-				   	        		imgHTML +=  "<img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" /><br /><br />";
-				   	        	}
-				   	        	else{
-				   	        		imgHTML +=  "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" />";
-				   	        	}        		
-				           	
-				           		
-				           }
-					
-					
-			           
-				}
-	        });
-        	
-        	Object[] params = {
-	        		1,
-	        		sUsername,
-	        		sPassword,
-	        		m
-	        };
-        	
-        	try {
-				method.call(params);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	
-					        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
-					       // postIDs[ctr] = contentHash.get("postid").toString();
-        	
-        	
-     	  
-     	   
-
-
-        
-		
-        return imgHTML;
+		return success;
 	}
 	
 	public boolean checkSettings(){
@@ -1631,7 +1213,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {
-                          finish();
+                    	  finish();
+                          
                       }
                   });
 	              dialogBuilder.setCancelable(true);
@@ -1639,35 +1222,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			}
 		}
 	};
-	
-	//Add settings to menu
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    super.onCreateOptionsMenu(menu);
-	    menu.add(0, 0, 0, "Load Post");
-	    MenuItem menuItem1 = menu.findItem(0);
-	    menuItem1.setIcon(R.drawable.ic_menu_preferences);
-	    
-	    return true;
-	}
-	
-	//Menu actions
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item){
-	    switch (item.getItemId()) {
-	    case 0:
-	    	
-	    	Bundle savedPosts = new Bundle();
-	    	savedPosts.putString("id", id);
-	    	Intent in = new Intent(this, selectpost.class);
-	    	in.putExtras(savedPosts);
-        	startActivityForResult(in, 4);
-        	
-	    	
-	    	return true;
-	}
-	  return false;	
-	}
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {

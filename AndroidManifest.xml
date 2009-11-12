@@ -25,6 +25,8 @@
 <activity android:name="notificationSettings" android:label="Notification Settings"></activity>
 <service android:name="commentService" android:label="Comment Service"></service>
 <receiver android:name="broadcastReceiver"></receiver>
+<activity android:name="tabView"></activity>
+<activity android:name="viewLocalDrafts"></activity>
 </application>
 
 

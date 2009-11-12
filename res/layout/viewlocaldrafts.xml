@@ -17,29 +17,10 @@ android:layout_width="fill_parent"
 <ListView android:choiceMode="singleChoice" 
 android:id="@android:id/list"
 android:layout_width="fill_parent" 
-android:layout_height="0px"
-android:layout_weight="1"
+android:layout_height="fill_parent"
 android:textColor="#444444"
 android:divider="@drawable/divider"
 android:cacheColorHint="#00000000">
 </ListView>          
-<RelativeLayout 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:background="#444444"
-		android:gravity="bottom">
-<view
-class="com.roundhill.androidWP.customImageButton" android:id="@+id/newPost" 
-android:layout_width="wrap_content" 
-android:minWidth="30px"
-		android:layout_height="wrap_content"
-	android:src="@drawable/ic_menu_add"/>
-<view
-class="com.roundhill.androidWP.customImageButton"
- android:id="@+id/refresh"
-android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-	android:src="@drawable/ic_popup_sync_1"/>
-</RelativeLayout>
+
 </LinearLayout>

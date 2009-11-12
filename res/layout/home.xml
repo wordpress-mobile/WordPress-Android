@@ -1,57 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:background="#e8e8e8">
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:background="#e8e8e8"
-	    android:orientation="vertical"> 
-	    <!--<TextView android:id="@+id/title"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:textSize="28px"     
-	    android:text="WordPress"
-	    android:textColor="#444444"
-	    android:gravity="center_horizontal"/> -->
-	    <ImageView android:id="@+id/wp_logo"
-	                        android:layout_width="fill_parent"
-	   android:layout_height="wrap_content"
-	   android:layout_marginTop="20px"
-	   android:gravity="center"
-	                   android:src="@drawable/wp_logo"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#e8e8e8"> 
+    <TextView android:id="@+id/title"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textSize="28px"	
+    android:text="wpToGo"
+    android:textColor="#444444" 
+    android:gravity="center_horizontal"/> 
 <view
 class="com.roundhill.androidWP.customButton"
-			    android:id="@+id/addFirstAccount" 
-	            android:layout_width="300px" 
-	            android:layout_height="70px"
-	            android:textSize="22px"
-	            android:textColor="#006699"
-	            android:text="Add Account" 
-	            android:layout_gravity="center"
-	            android:layout_marginTop="20px"/>
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:background="#e8e8e8"
-	    android:gravity="bottom|center"
-	    android:padding="4px"
-	    android:layout_marginTop="88px">
-	  <ImageView android:id="@+id/logo"
-	                        android:layout_width="wrap_content"
-	   android:layout_height="wrap_content"
-	                   android:src="@drawable/logo"/> 
-	    <TextView android:id="@+id/blurb"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:textSize="12px"     
-	    android:text="WordPress for Androidâ¢ copyright 2009"
-	    android:textColor="#444444" 
-	    android:layout_alignTop="@id/logo"
-	    android:paddingTop="26px"
-	    android:paddingLeft="8px"
-	    android:layout_toRightOf="@id/logo"/>   
-	</RelativeLayout>
-	</LinearLayout>
-	</ScrollView>
+android:background="@android:color/transparent"
+android:id="@+id/addFirstAccount"
+            android:layout_width="300px" 
+            android:layout_height="150px"
+            android:textSize="22px"
+            android:textColor="#006699"
+            android:text="Add Account" 
+            android:layout_gravity="center"
+            android:layout_marginTop="20px"/>
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#e8e8e8"
+    android:gravity="bottom|center"
+    android:padding="4px">
+  <ImageView android:id="@+id/logo"
+    			android:layout_width="wrap_content"
+   android:layout_height="wrap_content"
+    		   android:src="@drawable/logo"/>  
+    <TextView android:id="@+id/blurb"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textSize="12px"	
+    android:text="copyright 2009 Roundhill Labs"
+    android:textColor="#444444" 
+    android:layout_alignTop="@id/logo"
+    android:paddingTop="26px"
+    android:paddingLeft="8px"
+    android:layout_toRightOf="@id/logo"/> 
+</RelativeLayout>
+</LinearLayout>

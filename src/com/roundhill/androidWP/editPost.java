@@ -69,7 +69,7 @@ public class editPost extends Activity {
 	public Vector thumbnailUrl = new Vector();
 	private final Handler mHandler = new Handler();
 	public String finalResult = null;
-	Vector selectedCategories = new Vector();
+	Vector<String> selectedCategories = new Vector();
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
@@ -81,6 +81,7 @@ public class editPost extends Activity {
 	private Vector imageURLs = new Vector();
     private String accountName = "";
     private String postID = "";
+    private boolean localDraft = false;
     private int ID_DIALOG_POSTING = 1;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
     public Boolean centerThumbnail, xmlrpcError = false;
@@ -97,12 +98,77 @@ public class editPost extends Activity {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
          postID = extras.getString("postID");
+         localDraft = extras.getBoolean("localDraft", false); //was this activity called from viewLocalDrafts.java?
         }
         
         this.setTitle(accountName + " - Edit Post");
         
         //loads the categories from the db if they exist
         loadCategories();
+        
+        if (localDraft){
+        	localDraftsDB lDraftsDB = new localDraftsDB(this);
+        	Vector post = lDraftsDB.loadPost(this, postID);
+        	
+        	HashMap postHashMap = (HashMap) post.get(0);
+        	
+        	EditText titleET = (EditText)findViewById(R.id.title);
+        	EditText contentET = (EditText)findViewById(R.id.content);
+        	
+        	titleET.setText(postHashMap.get("title").toString());
+        	contentET.setText(postHashMap.get("content").toString());
+        	
+        	String picturePaths = postHashMap.get("picturePaths").toString();
+        	if (!picturePaths.equals("")){
+        		String[] pPaths = picturePaths.split(",");
+        		
+        		for (int i = 0; i < pPaths.length; i++)
+        		{
+        			Uri imagePath = Uri.parse(pPaths[i]); 
+        			selectedImageIDs.add(selectedImageCtr, imagePath);
+        	        imageUrl.add(selectedImageCtr, pPaths[i]);
+        	        selectedImageCtr++;
+        	     	  
+        	     	GridView gridview = (GridView) findViewById(R.id.gridView);
+        	     	gridview.setAdapter(new ImageAdapter(this));
+        		}
+        		
+        	}
+        	
+        	String categories = postHashMap.get("categories").toString();
+        	if (!categories.equals("")){
+        		
+        		String[] aCategories = categories.split(",");
+        		
+        		for (int i=0; i < aCategories.length; i++)
+        		{
+        			selectedCategories.add(aCategories[i]);
+        		}
+        		
+        		TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
+        		tvCategories.setText("Selected categories: " + categories);
+        		
+        	}
+        	
+        	String tags = postHashMap.get("tags").toString();
+        	if (!tags.equals("")){
+        		EditText tagsET = (EditText) findViewById(R.id.tags);
+        		tagsET.setText(tags);
+        	}
+        	
+        	int publish = Integer.valueOf(postHashMap.get("publish").toString());
+        	
+        	CheckBox publishCB = (CheckBox) findViewById(R.id.publish);
+        	if (publish == 1){
+        		publishCB.setChecked(true);
+        	}
+        	
+        	
+        	
+        }
+        else{
+        	
+        
         
         settingsDB settingsDB = new settingsDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);
@@ -197,6 +263,8 @@ public class editPost extends Activity {
         method.call(params);
     	
     	}
+    	
+        }
         
         Spinner spinner = (Spinner) findViewById(R.id.spinner1);
         
@@ -234,6 +302,14 @@ public class editPost extends Activity {
         postButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             
+            if(localDraft){
+            	boolean result = savePost();
+            	
+            	if (result){
+            		finish();
+            	}
+            }
+            else{
             	
             	showDialog(ID_DIALOG_POSTING);
             		Thread t = new Thread() {
@@ -252,6 +328,7 @@ public class editPost extends Activity {
         				}
         			};
         			t.start();
+            }
             		
             }
         });
@@ -1724,6 +1801,80 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	public void onConfigurationChanged(Configuration newConfig) {
 		
 		super.onConfigurationChanged(newConfig); 
+	}
+	
+	public boolean savePost() {
+		
+		
+		//grab the form data
+        EditText titleET = (EditText)findViewById(R.id.title);
+        String title = titleET.getText().toString();
+        EditText contentET = (EditText)findViewById(R.id.content);
+        String content = contentET.getText().toString();
+        EditText tagsET = (EditText)findViewById(R.id.tags);
+        String tags = tagsET.getText().toString();
+        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
+        boolean publishThis = false;
+        String images = "";
+        String categories = "";
+        boolean success = false;
+        
+
+        Integer blogID = 1; //never changes with wordpress, so far
+        
+        Vector<Object> myPostVector = new Vector<Object> ();
+        String res = null;
+        //before we do anything, validate that the user has entered settings
+        boolean enteredSettings = checkSettings();
+        
+        if (!enteredSettings){
+        	res = "invalidSettings";
+        }
+        else if (title.equals("") || content.equals(""))
+        {
+        	res = "emptyFields";
+        }
+        else {
+        
+        	//update the images
+        	for (int it = 0; it < selectedImageCtr; it++){
+           
+        		images += selectedImageIDs.get(it).toString() + ",";
+        		//imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
+
+        	}
+        	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+        
+        	int itemCount = spinner.getCount();
+        	String selectedCategory = "Uncategorized";
+        	if (itemCount != 0){
+        		selectedCategory = spinner.getSelectedItem().toString();
+        	}
+        
+        	// categoryID = getCategoryId(selectedCategory);
+        	String[] theCategories = new String[selectedCategories.size()];
+        
+        	int catSize = selectedCategories.size();
+        
+        	for(int i=0; i < selectedCategories.size(); i++)
+        	{
+        		categories += selectedCategories.get(i).toString() + ",";
+        		//theCategories[i] = selectedCategories.get(i).toString();
+        	}
+        
+        	if (publishCB.isChecked())
+        	{
+        		publishThis = true;
+        	}
+        
+        	//new feature, automatically save a post as a draft just in case the posting fails
+        	localDraftsDB lDraftsDB = new localDraftsDB(this);
+        	success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis);
+        
+        
+        }// if/then for valid settings
+        
+		return success;
 	}
     
 }

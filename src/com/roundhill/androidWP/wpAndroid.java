@@ -134,7 +134,7 @@ public void displayAccounts(){
                 		Bundle bundle = new Bundle();
                 		bundle.putString("accountName", accountNames.get(i).toString());
                 		bundle.putString("id", btnHash.get("id").toString());
-                		Intent viewPostsIntent = new Intent(wpAndroid.this, viewPosts.class);
+                		Intent viewPostsIntent = new Intent(wpAndroid.this, tabView.class);
                 		viewPostsIntent.putExtras(bundle);
                     	startActivityForResult(viewPostsIntent , 1);
                 		

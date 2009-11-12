@@ -99,19 +99,6 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
                 	 
                 }
         });
-            
-final customImageButton moderate = (customImageButton) findViewById(R.id.moderate);   
-            
-            moderate.setOnClickListener(new customImageButton.OnClickListener() {
-                public void onClick(View v) {
-                	
-                	Intent i = new Intent(viewPosts.this, moderateComments.class);
-                	i.putExtra("accountName", accountName);
- 	                i.putExtra("id", id);
- 	                startActivityForResult(i, 0);
-                	 
-                }
-        });
         
         
     }
