@@ -7,9 +7,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
-                android:padding="10px">
+                android:padding="10px"
+				android:background="#e8e8e8">
             
     <TextView android:id="@+id/l_url" 
+    		  android:textColor="#444444"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="WordPress blog URL (path to xmlrpc.php):"/>
@@ -21,7 +23,8 @@
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_url"/>
               
-      <TextView android:id="@+id/l_username"  
+      <TextView android:id="@+id/l_username" 
+      		  android:textColor="#444444" 
         	  android:layout_marginTop="10px"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -36,6 +39,7 @@
               android:layout_below="@id/l_username"/>           
   
       <TextView android:id="@+id/l_password"
+      		  android:textColor="#444444"
               android:layout_marginTop="10px" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -51,6 +55,7 @@
               android:layout_below="@id/l_password"/>
 
       <TextView android:id="@+id/l_imagePlacement"
+      		  android:textColor="#444444"
         		android:layout_marginTop="10px" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -68,14 +73,17 @@
         android:button="@layout/radio_group"
             android:text="Above Text"
             android:id="@+id/aboveText"
+            android:textColor="#444444"
             />
         <RadioButton
         android:button="@layout/radio_group"
             android:text="Below Text"
-            android:id="@+id/belowText" />
+            android:id="@+id/belowText"
+            android:textColor="#444444" />
     </RadioGroup>        
     
-    <TextView android:id="@+id/l_maxImageWidth" 
+    <TextView android:id="@+id/l_maxImageWidth"
+    		  android:textColor="#444444" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="Maximum Image Pixel Width:"
@@ -90,6 +98,7 @@
    android:layout_below="@id/l_maxImageWidth"/>
    
         <TextView android:id="@+id/l_centerThumbnail" 
+        	android:textColor="#444444"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"

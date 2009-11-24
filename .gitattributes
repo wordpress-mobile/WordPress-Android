@@ -204,6 +204,7 @@ bin/resources.ap_ -text
 bin/wordpress-official.apk -text
 /default.properties -text
 gen/com/roundhill/androidWP/R.java -text
+res/drawable/app_icon.png -text
 res/drawable/btn_check_off.png -text
 res/drawable/btn_check_off_longpress.png -text
 res/drawable/btn_check_off_pressed.png -text
@@ -231,7 +232,6 @@ res/drawable/comments.png -text
 res/drawable/comments_dark.png -text
 res/drawable/comments_tab.png -text
 res/drawable/divider.png -text
-res/drawable/footer_bg.png -text
 res/drawable/ic_menu_add.png -text
 res/drawable/ic_menu_edit.png -text
 res/drawable/ic_menu_more.png -text
@@ -243,10 +243,10 @@ res/drawable/ic_popup_sync_1.png -text
 res/drawable/list_selector_background_focus.9.png -text
 res/drawable/list_selector_background_longpress.9.png -text
 res/drawable/list_selector_background_pressed.9.png -text
-res/drawable/logo.png -text
 res/drawable/on_blog.png -text
 res/drawable/on_device.png -text
 res/drawable/rowbg.png -text
+res/drawable/wordpress_home.png -text
 res/drawable/wp_logo.png -text
 res/drawable/wp_logo_small.png -text
 res/layout/btn_check.xml -text
@@ -299,6 +299,7 @@ src/com/roundhill/androidWP/settingsDB.java -text
 src/com/roundhill/androidWP/tabView.java -text
 src/com/roundhill/androidWP/viewComments.java -text
 src/com/roundhill/androidWP/viewLocalDrafts.java -text
+src/com/roundhill/androidWP/viewPages.java -text
 src/com/roundhill/androidWP/viewPost.java -text
 src/com/roundhill/androidWP/viewPosts.java -text
 src/com/roundhill/androidWP/wpAndroid.java -text

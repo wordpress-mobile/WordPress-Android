@@ -7,9 +7,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
-                android:padding="10px">
+                android:padding="10px"
+				android:background="#e8e8e8">
               
       <TextView android:id="@+id/l_username"  
+      android:textColor="#444444"
         	  android:layout_marginTop="10px"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -24,6 +26,7 @@
               android:layout_below="@id/l_username"/>           
   
       <TextView android:id="@+id/l_password"
+      android:textColor="#444444"
               android:layout_marginTop="10px" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -39,6 +42,7 @@
               android:layout_below="@id/l_password"/>
 
       <TextView android:id="@+id/l_imagePlacement"
+      android:textColor="#444444"
         		android:layout_marginTop="10px" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -54,16 +58,19 @@
         android:layout_below="@id/l_imagePlacement">
         <RadioButton
         android:button="@layout/radio_group"
+        android:textColor="#444444"
             android:text="Above Text"
             android:id="@+id/aboveText"
             />
         <RadioButton
         android:button="@layout/radio_group"
+        android:textColor="#444444"
             android:text="Below Text"
             android:id="@+id/belowText" />
     </RadioGroup>        
     
-    <TextView android:id="@+id/l_maxImageWidth" 
+    <TextView android:id="@+id/l_maxImageWidth"
+    android:textColor="#444444" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="Maximum thumbnail pixel width:"
@@ -78,6 +85,7 @@
    android:layout_below="@id/l_maxImageWidth"/>
    
         <TextView android:id="@+id/l_centerThumbnail" 
+        android:textColor="#444444"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"
@@ -93,7 +101,7 @@
             android:layout_toRightOf="@id/l_centerThumbnail"
             />
      
-   <TextView  android:id="@+id/l_EULA" 
+   <TextView  android:id="@+id/l_EULA"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="Review End User License Agreement"
@@ -104,7 +112,7 @@
   
 <view
 class="com.roundhill.androidWP.customButton"
-			android:id="@+id/save" 
+			android:id="@+id/save"
 			android:textColor="#444444"
             android:layout_width="80px" 
             android:layout_height="60px"
@@ -115,8 +123,8 @@ class="com.roundhill.androidWP.customButton"
  
 <view
 class="com.roundhill.androidWP.customButton"
-			android:id="@+id/cancel" 
-			android:textColor="#444444"
+android:textColor="#444444"
+			android:id="@+id/cancel"
      		android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_alignTop="@id/save"

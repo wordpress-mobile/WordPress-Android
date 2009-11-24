@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roundhill.androidWP" android:versionCode="41" android:versionName="1.8.0">
     <uses-sdk android:minSdkVersion="2" />
-    <application android:icon="@drawable/logo" android:debuggable="false" android:label="WordPress">
-        <activity android:name=".wpAndroid" android:icon="@drawable/logo" android:label="WordPress">
+    <application android:icon="@drawable/app_icon" android:debuggable="false" android:label="WordPress">
+        <activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:label="WordPress">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -11,14 +11,14 @@
         </activity>
     <activity android:name=".settings" android:theme="@style/Theme.Translucent" android:label="Settings"></activity>
 
-<activity android:name=".link" android:label="Enter a URL" android:theme="@style/Theme.Translucent"></activity>
-<activity android:label="Save Post" android:name="saveName" android:theme="@style/Theme.Translucent"></activity>
-<activity android:label="Load a Saved Post" android:name="selectpost" android:theme="@style/Theme.Translucent"></activity>
+<activity android:name=".link" android:label="Enter a URL"></activity>
+<activity android:label="Save Post" android:name="saveName"></activity>
+<activity android:label="Load a Saved Post" android:name="selectpost"></activity>
 <activity android:name="viewPosts"></activity>
 <activity android:name="viewComments" android:configChanges="keyboardHidden|orientation"></activity>
 <activity android:name="newPost"></activity>
-<activity android:name="newAccount" android:theme="@style/Theme.Translucent"></activity>
-<activity android:theme="@style/Theme.Translucent" android:name="editPost" android:configChanges="keyboardHidden|orientation"></activity>
+<activity android:name="newAccount"></activity>
+<activity android:name="editPost" android:configChanges="keyboardHidden|orientation"></activity>
 <activity android:name="viewPost"></activity>
 <activity android:name="moderateComments" android:configChanges="keyboardHidden|orientation"></activity>
 
@@ -27,6 +27,7 @@
 <receiver android:name="broadcastReceiver"></receiver>
 <activity android:name="tabView"></activity>
 <activity android:name="viewLocalDrafts"></activity>
+<activity android:name="viewPages"></activity>
 </application>
 
 

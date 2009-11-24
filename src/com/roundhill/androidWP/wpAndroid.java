@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -195,6 +196,15 @@ final customButton newAccountButton = (customButton) findViewById(R.id.addFirstA
             	         	
             }
     });  
+        
+        TextView getAccount = (TextView) findViewById(R.id.blurb);
+        
+        getAccount.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+            	
+            	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/signup"))); 
+            }
+        });
 
 	}
 }
