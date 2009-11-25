@@ -24,10 +24,9 @@ public class tabView extends TabActivity {
           activateTab = extras.getString("activateTab");
          }
          
-         Intent tab1 = new Intent(this, viewPosts.class);
-         Intent tab2 = new Intent(this, viewLocalDrafts.class);
-         Intent tab3 = new Intent(this, moderateComments.class);
-         Intent tab4 = new Intent(this, viewPages.class);
+         Intent tab1 = new Intent(this, moderateComments.class);
+         Intent tab2 = new Intent(this, viewPosts.class);
+         Intent tab3 = new Intent(this, viewPages.class);
          
         Bundle bundle = new Bundle();
  		bundle.putString("accountName", accountName);
@@ -36,14 +35,13 @@ public class tabView extends TabActivity {
  		tab1.putExtras(bundle);
  		tab2.putExtras(bundle);
  		tab3.putExtras(bundle);
- 		tab4.putExtras(bundle);
          
          TabHost host = getTabHost();  
          
-         host.addTab(host.newTabSpec("one").setIndicator("On My Blog", getResources().getDrawable(R.drawable.on_blog)).setContent(tab1));  
-         host.addTab(host.newTabSpec("two").setIndicator("Local Drafts", getResources().getDrawable(R.drawable.on_device)).setContent(tab2));
-         host.addTab(host.newTabSpec("three").setIndicator("Comments", getResources().getDrawable(R.drawable.comments_tab)).setContent(tab3));
-         host.addTab(host.newTabSpec("four").setIndicator("Pages", getResources().getDrawable(R.drawable.comments_tab)).setContent(tab4));
+         host.addTab(host.newTabSpec("one").setIndicator("Comments", getResources().getDrawable(R.layout.comment_tab_selector)).setContent(tab1));  
+         host.addTab(host.newTabSpec("two").setIndicator("Posts", getResources().getDrawable(R.layout.posts_tab_selector)).setContent(tab2));
+         host.addTab(host.newTabSpec("three").setIndicator("Pages", getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
+
          if (activateTab != null){
         	 if (activateTab.equals("drafts")){
         	 host.setCurrentTab(1);

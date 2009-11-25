@@ -1,14 +1,17 @@
-//by Dan Roundhill, danroundhill.com/wptogo
+	//by Dan Roundhill, danroundhill.com/wptogo
 package com.roundhill.androidWP;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -37,6 +40,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -48,11 +52,17 @@ public class viewPosts extends ListActivity {
 	private String[] postIDs;
 	private String[] titles;
 	private String[] dateCreated;
+	private String[] draftIDs;
+	private String[] draftTitles;
+	private String[] publish;
+	private Integer[] uploaded;
 	private String id = "";
 	private String accountName = "";
 	Vector postNames = new Vector();
 	int selectedID = 0;
+	int rowID = 0;
 	private int ID_DIALOG_REFRESHING = 1;
+	private boolean inDrafts = false;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -153,6 +163,8 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
 					    
 					    postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
 					    postStoreDB.savePosts(viewPosts.this, dbVector);
+					    
+					    
 			        
 					   setListAdapter(new CommentListAdapter(viewPosts.this));
 					   dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
@@ -237,53 +249,60 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
 					        postIDs[i] = contentHash.get("postID").toString();
 					        dateCreated[i] = contentHash.get("postDate").toString();					        
 					    }
+					    
+					    //add the header
+					    List postIDList = Arrays.asList(postIDs);  
+				    	List newPostIDList = new ArrayList();   
+				    	newPostIDList.add("postsHeader");
+				    	newPostIDList.addAll(postIDList);
+				    	postIDs = (String[]) newPostIDList.toArray(new String[newPostIDList.size()]);
+				    	
+				    	List postTitleList = Arrays.asList(titles);  
+				    	List newPostTitleList = new ArrayList();   
+				    	newPostTitleList.add("Posts");
+				    	newPostTitleList.addAll(postTitleList);
+				    	titles = (String[]) newPostTitleList.toArray(new String[newPostTitleList.size()]);
+				    	
+				    	List dateList = Arrays.asList(dateCreated);  
+				    	List newDateList = new ArrayList();   
+				    	newDateList.add("postsHeader");
+				    	newDateList.addAll(dateList);
+				    	dateCreated = (String[]) newDateList.toArray(new String[newDateList.size()]);
+					    
+					    
+					    //load drafts
+					    boolean drafts = loadDrafts();
+					    
+					    if (drafts){
+					    	
+					    	List draftIDList = Arrays.asList(draftIDs);  
+					    	List newDraftIDList = new ArrayList();   
+					    	newDraftIDList.add("draftsHeader");
+					    	newDraftIDList.addAll(draftIDList);
+					    	draftIDs = (String[]) newDraftIDList.toArray(new String[newDraftIDList.size()]);
+					    	
+					    	List titleList = Arrays.asList(draftTitles);  
+					    	List newTitleList = new ArrayList();   
+					    	newTitleList.add("Local Drafts");
+					    	newTitleList.addAll(titleList);
+					    	draftTitles = (String[]) newTitleList.toArray(new String[newTitleList.size()]);
+					    	
+					    	List publishList = Arrays.asList(publish);  
+					    	List newPublishList = new ArrayList();   
+					    	newPublishList.add("draftsHeader");
+					    	newPublishList.addAll(publishList);
+					    	publish = (String[]) newPublishList.toArray(new String[newPublishList.size()]);
+					    	
+					    	postIDs = mergeStringArrays(draftIDs, postIDs);
+					    	titles = mergeStringArrays(draftTitles, titles);
+					    	dateCreated = mergeStringArrays(publish, dateCreated);
+					    }
 					   
-			        
 					   setListAdapter(new CommentListAdapter(viewPosts.this));
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
-					   
-					   listView.setOnItemClickListener(new OnItemClickListener() {
-
-							public void onNothingSelected(AdapterView<?> arg0) {
-								
-							}
-
-							public void onItemClick(AdapterView<?> arg0, View arg1,
-									int arg2, long arg3) {
-								Intent intent = new Intent(viewPosts.this, editPost.class);
-			                    intent.putExtra("postID", postIDs[(int) arg3]);
-			                    intent.putExtra("postTitle", titles[(int) arg3]);
-			                    intent.putExtra("id", id);
-			                    intent.putExtra("accountName", accountName);
-			                    startActivity(intent);
-								
-							}
-
-			            });
-					   
-	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-	               public void onCreateContextMenu(ContextMenu menu, View v,
-						ContextMenuInfo menuInfo) {
-					// TODO Auto-generated method stub
-	            	   AdapterView.AdapterContextMenuInfo info;
-	                   try {
-	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	                   } catch (ClassCastException e) {
-	                       //Log.e(TAG, "bad menuInfo", e);
-	                       return;
-	                   }
-	                   
-	             selectedID = info.position;
-	                   
-				 menu.setHeaderTitle("Post Actions");
-				 menu.add(0, 0, 0, "Preview Post");
-                 menu.add(0, 1, 0, "View Comments");
-                 menu.add(0, 2, 0, "Edit Post");
-				}
-	          });
+   
    	
 	return true;
     }
@@ -291,8 +310,86 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
    		return false;
    	}
    }
+    
+    
+    private boolean loadDrafts(){ //loads posts from the db
+       	
+        localDraftsDB lDraftsDB = new localDraftsDB(this);
+    	Vector loadedPosts = lDraftsDB.loadPosts(viewPosts.this, id);
+    	if (loadedPosts != null){
+    	draftIDs = new String[loadedPosts.size()];
+    	draftTitles = new String[loadedPosts.size()];
+    	publish = new String[loadedPosts.size()];
+    	uploaded = new Integer[loadedPosts.size()];
+    	
+ 					    for (int i=0; i < loadedPosts.size(); i++){
+ 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
+ 					        draftIDs[i] = contentHash.get("id").toString();
+ 					        draftTitles[i] = escapeUtils.unescapeHtml(contentHash.get("title").toString());
+ 					        publish[i] = contentHash.get("publish").toString();
+ 					        uploaded[i] = (Integer) contentHash.get("uploaded");
+ 					    }
+ 					   
+ 			        /*
+ 					   setListAdapter(new CommentListAdapter(viewPosts.this));
+ 					
+ 					   ListView listView = (ListView) findViewById(android.R.id.list);
+ 					   listView.setSelector(R.layout.list_selector);
+ 					   
+ 					   listView.setOnItemClickListener(new OnItemClickListener() {
+
+ 							public void onNothingSelected(AdapterView<?> arg0) {
+ 								
+ 							}
+
+ 							public void onItemClick(AdapterView<?> arg0, View arg1,
+ 									int arg2, long arg3) {
+ 								Intent intent = new Intent(viewPosts.this, editPost.class);
+ 			                    intent.putExtra("postID", postIDs[(int) arg3]);
+ 			                    intent.putExtra("postTitle", titles[(int) arg3]);
+ 			                    intent.putExtra("id", id);
+ 			                    intent.putExtra("accountName", accountName);
+ 			                    intent.putExtra("localDraft", true);
+ 			                    startActivity(intent);
+ 								
+ 							}
+
+ 			            });
+ 					   
+ 	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+ 	               public void onCreateContextMenu(ContextMenu menu, View v,
+ 						ContextMenuInfo menuInfo) {
+ 					// TODO Auto-generated method stub
+ 	            	   AdapterView.AdapterContextMenuInfo info;
+ 	                   try {
+ 	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+ 	                   } catch (ClassCastException e) {
+ 	                       //Log.e(TAG, "bad menuInfo", e);
+ 	                       return;
+ 	                   }
+ 	                   
+ 	                   
+ 	                   
+ 	                   selectedID = info.targetView.getId();
+ 	                   rowID = info.position;
+ 	                   
+ 				 menu.setHeaderTitle("Post Actions");
+                  menu.add(0, 0, 0, "Edit Draft");
+                  menu.add(0, 1, 0, "Upload Draft to Blog");
+                  menu.add(0, 2, 0, "Delete Draft");
+ 				}
+ 	          });*/
+    	
+ 	return true;
+     }
+    	else{
+    		return false;
+    	}
+    }
 
     private class CommentListAdapter extends BaseAdapter {
+    	
         public CommentListAdapter(Context context) {
             mContext = context;
         }
@@ -337,14 +434,8 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
         public View getView(int position, View convertView, ViewGroup parent) {
         	
             CommentView cv;
-            if (convertView == null) {
-                cv = new CommentView(mContext, titles[position],
+                cv = new CommentView(mContext, postIDs[position], titles[position],
                         dateCreated[position]);
-            } else {
-                cv = (CommentView) convertView;
-                cv.setTitle(titles[position]);
-                cv.setDate(dateCreated[position]);
-            }
 
             return cv;
         }
@@ -360,14 +451,40 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
     }
 
     private class CommentView extends LinearLayout {
-        public CommentView(Context context, String title, String date) {
+        public CommentView(Context context, String postID, String title, String date) {
             super(context);
 
             this.setOrientation(VERTICAL);
             this.setPadding(4, 4, 4, 4);
-
+            
+            if (date.equals("postsHeader") || date.equals("draftsHeader")){
+            	
+            	
+            	this.setPadding(8, 1, 1, 1);
+            	this.setBackgroundColor(Color.parseColor("#999999"));
+            	
+            	tvTitle = new TextView(context);
+                tvTitle.setText(title);
+                tvTitle.setTextSize(23);
+                tvTitle.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
+                tvTitle.setTextColor(Color.parseColor("#EEEEEE"));
+                addView(tvTitle, new LinearLayout.LayoutParams(
+                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                
+                tvDate = new TextView(context);
+                
+                if (date.equals("draftsHeader")){
+                	inDrafts = true;
+                }
+                else if (date.equals("postsHeader")){
+                	inDrafts = false;
+                }
+            }
+            else{
             // Here we build the child views in code. They could also have
             // been specified in an XML file.
+            	
+            	
 
             tvTitle = new TextView(context);
             tvTitle.setText(title);
@@ -382,6 +499,63 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
             tvDate.setText(customDate);
             addView(tvDate, new LinearLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            
+            if (inDrafts){  
+            	//listener for drafts
+            	this.setId(Integer.valueOf(postID));
+        		this.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+  	               public void onCreateContextMenu(ContextMenu menu, View v,
+  						ContextMenuInfo menuInfo) {
+  					// TODO Auto-generated method stub
+  	            	   AdapterView.AdapterContextMenuInfo info;
+  	                   try {
+  	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+  	                   } catch (ClassCastException e) {
+  	                       //Log.e(TAG, "bad menuInfo", e);
+  	                       return;
+  	                   }
+  	                   
+  	                   
+  	                   
+  	                   selectedID = v.getId();
+  	                   
+  	                   //rowID = (int) info.id;
+  	                   //rowID = info.position;
+  	                   
+  				 menu.setHeaderTitle("Draft Actions");
+                   menu.add(1, 0, 0, "Edit Draft");
+                   menu.add(1, 1, 0, "Upload Draft to Blog");
+                   menu.add(1, 2, 0, "Delete Draft");
+  				}
+  	          });
+        	}
+            else{
+            //selection listeners for posts
+            this.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+	               public void onCreateContextMenu(ContextMenu menu, View v,
+						ContextMenuInfo menuInfo) {
+	      
+					// TODO Auto-generated method stub
+	            	   AdapterView.AdapterContextMenuInfo info;
+	                   try {
+	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+	                   } catch (ClassCastException e) {
+	                       //Log.e(TAG, "bad menuInfo", e);
+	                       return;
+	                   }
+	                   
+				 menu.setHeaderTitle("Post Actions");
+				 menu.add(0, 0, 0, "Preview Post");
+               menu.add(0, 1, 0, "View Comments");
+               menu.add(0, 2, 0, "Edit Post");
+				}
+	          });
+            
+            }
+            
+            }
         }
 
         /**
@@ -405,64 +579,6 @@ final customImageButton refresh = (customImageButton) findViewById(R.id.refresh)
     
 interface XMLRPCMethodCallback {
 	void callFinished(Object[] result);
-}
-
-public String parseDate(String date){
-	int hour = Integer.parseInt(date.substring(11, 13));
-    
-    String amPM = "AM";
-    if (hour >= 12){
-    	if (hour > 12){
-    		hour = hour - 12;
-    	}
-    	amPM = "PM";
-    }
-    else if (hour == 0){
-    	hour = 24;
-    	amPM = "AM";
-    }
-    
-    String monthName = date.substring(4, 7);
-    
-    if (monthName.equals("Jan")){
-    	monthName = "January";
-    }
-    else if (monthName.equals("Feb")){
-    	monthName = "February";
-    }
-    else if (monthName.equals("Mar")){
-    	monthName = "March";
-    }
-    else if (monthName.equals("Apr")){
-    	monthName = "April";
-    }
-    else if (monthName.equals("May")){
-    	monthName = "May";
-    }
-    else if (monthName.equals("Jun")){
-    	monthName = "June";
-    }
-    else if (monthName.equals("Jul")){
-    	monthName = "July";
-    }
-    else if (monthName.equals("Aug")){
-    	monthName = "August";
-    }
-    else if (monthName.equals("Sep")){
-    	monthName = "September";
-    }
-    else if (monthName.equals("Oct")){
-    	monthName = "October";
-    }
-    else if (monthName.equals("Nov")){
-    	monthName = "November";
-    }
-    else if (monthName.equals("Dec")){
-    	monthName = "December";
-    }
-    
-    String customDate =  monthName + " " + date.substring(8, 10) + ", " + date.substring(24) + " " + hour + ":" + date.substring(14, 16) + " " + amPM;
-    return customDate;
 }
 
 
@@ -630,7 +746,10 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 @Override
 public boolean onContextItemSelected(MenuItem item) {
 
+	
+	
      /* Switch on the ID of the item, to get what the user selected. */
+	if (item.getGroupId() == 0){
      switch (item.getItemId()) {
      	  case 0:
      		 Intent i0 = new Intent(viewPosts.this, viewPost.class);
@@ -657,7 +776,70 @@ public boolean onContextItemSelected(MenuItem item) {
               startActivity(i2);
         	  return true;
      }
-     return false;
+     
+	}
+	else{
+		switch (item.getItemId()) {
+        case 0:
+      	  Intent i2 = new Intent(viewPosts.this, editPost.class);
+            i2.putExtra("postID", String.valueOf(selectedID));
+            //i2.putExtra("postTitle", titles[rowID]);
+            i2.putExtra("id", id);
+            i2.putExtra("accountName", accountName);
+            i2.putExtra("localDraft", true);
+            startActivity(i2);
+      	  return true;
+        case 1:
+      	 /* showDialog(ID_DIALOG_POSTING);
+      	  
+      	  
+      	  new Thread() {
+                public void run() { 	  
+      	  
+		try {
+			submitResult = submitPost();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+                }
+            }.start(); 
+            	
+            */
+            
+            
+      	  return true;
+        case 2:
+      	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+			  dialogBuilder.setTitle("Delete Post?");
+            dialogBuilder.setMessage("Are you sure you want to delete the draft '" + titles[rowID] + "'?");
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+              	  localDraftsDB lDraftsDB = new localDraftsDB(viewPosts.this);
+              	  
+              	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+              	  loadPosts();
+            
+                }
+            });
+            dialogBuilder.setNegativeButton("Cancel",  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Just close the window.
+            
+                }
+            });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+      	  
+		}
+	}
+	
+	
+	return false;
 }
 
 @Override
@@ -672,6 +854,21 @@ return loadingDialog;
 
 return super.onCreateDialog(id);
 }
+
+public static String[] mergeStringArrays(String array1[], String array2[]) {  
+	if (array1 == null || array1.length == 0)  
+	return array2;  
+	if (array2 == null || array2.length == 0)  
+	return array1;  
+	List array1List = Arrays.asList(array1);  
+	List array2List = Arrays.asList(array2);  
+	List result = new ArrayList(array1List);    
+	List tmp = new ArrayList(array1List);  
+	tmp.retainAll(array2List);  
+	result.removeAll(tmp);  
+	result.addAll(array2List);    
+	return ((String[]) result.toArray(new String[result.size()]));  
+	}
 
 }
 

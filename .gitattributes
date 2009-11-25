@@ -231,6 +231,7 @@ res/drawable/btn_radio_on_selected.png -text
 res/drawable/comments.png -text
 res/drawable/comments_dark.png -text
 res/drawable/comments_tab.png -text
+res/drawable/comments_tab_active.png -text
 res/drawable/divider.png -text
 res/drawable/ic_menu_add.png -text
 res/drawable/ic_menu_edit.png -text
@@ -245,11 +246,16 @@ res/drawable/list_selector_background_longpress.9.png -text
 res/drawable/list_selector_background_pressed.9.png -text
 res/drawable/on_blog.png -text
 res/drawable/on_device.png -text
+res/drawable/pages_tab.png -text
+res/drawable/pages_tab_active.png -text
+res/drawable/posts_tab.png -text
+res/drawable/posts_tab_active.png -text
 res/drawable/rowbg.png -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_logo.png -text
 res/drawable/wp_logo_small.png -text
 res/layout/btn_check.xml -text
+res/layout/comment_tab_selector.xml -text
 res/layout/commentrow.xml -text
 res/layout/edit.xml -text
 res/layout/home.xml -text
@@ -259,7 +265,9 @@ res/layout/list_selector_background_transition.xml -text
 res/layout/main.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/newaccount.xml -text
+res/layout/pages_tab_selector.xml -text
 res/layout/postrow.xml -text
+res/layout/posts_tab_selector.xml -text
 res/layout/radio_group.xml -text
 res/layout/savename.xml -text
 res/layout/selectpost.xml -text

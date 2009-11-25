@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roundhill.androidWP" android:versionCode="41" android:versionName="1.8.0">
     <uses-sdk android:minSdkVersion="2" />
-    <application android:icon="@drawable/app_icon" android:debuggable="false" android:label="WordPress">
+    <application android:icon="@drawable/app_icon" android:label="WordPress" android:debuggable="true">
         <activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:label="WordPress">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +28,7 @@
 <activity android:name="tabView"></activity>
 <activity android:name="viewLocalDrafts"></activity>
 <activity android:name="viewPages"></activity>
+
 </application>
 
 
