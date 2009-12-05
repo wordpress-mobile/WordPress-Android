@@ -3,7 +3,7 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:padding="0px"
-                android:background="#e8e8e8"
+                android:background="#f4f4f4"
                 android:orientation="vertical">
 <TextView android:id="@+id/longPress"
 android:layout_width="fill_parent" 
@@ -20,26 +20,29 @@ android:layout_width="fill_parent"
 android:layout_height="0px"
 android:layout_weight="1"
 android:textColor="#444444"
-android:divider="@drawable/divider"
+android:divider="@drawable/list_divider"
+android:dividerHeight="1px"
 android:cacheColorHint="#00000000">
 </ListView>          
 <RelativeLayout 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
-		android:background="#444444"
-		android:gravity="bottom">
+		android:background="@drawable/bottom_bar"
+		android:gravity="bottom"
+		android:padding="2px">
 <view
-class="com.roundhill.androidWP.customImageButton" android:id="@+id/newPost" 
+class="com.roundhill.androidWP.customMenuButton" android:id="@+id/newPost" 
 android:layout_width="wrap_content" 
-android:minWidth="30px"
-		android:layout_height="wrap_content"
-	android:src="@drawable/ic_menu_add"/>
+		android:layout_height="wrap_content"	
+		android:padding="2px"
+	android:src="@drawable/add"/>
 <view
-class="com.roundhill.androidWP.customImageButton"
+class="com.roundhill.androidWP.customMenuButton"
  android:id="@+id/refresh"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
-	android:src="@drawable/ic_popup_sync_1"/>
+		android:padding="2px"
+	android:src="@drawable/refresh"/>
 </RelativeLayout>
 </LinearLayout>

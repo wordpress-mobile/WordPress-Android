@@ -3,13 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#e8e8e8"> 
-    <ImageView android:id="@+id/home_logo"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:src="@drawable/wordpress_home"
-    android:paddingTop="40px" 
-    android:gravity="center_horizontal"/> 
+    android:background="#e8e8e8">
 <view
 class="com.roundhill.androidWP.customButton"
 android:background="@android:color/transparent"

@@ -3,14 +3,8 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:padding="0px"
-                android:background="#e8e8e8"
-                android:orientation="vertical"> 
-                <TextView android:id="@+id/android:empty"
-                android:textColor="#444444"
-                android:background="#e8e8e8"
-          android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:text="Loading Comments..."/>  
+                android:background="#f4f4f4"
+                android:orientation="vertical">          
 <TextView android:id="@+id/longPress"
 android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
@@ -23,21 +17,24 @@ android:layout_width="fill_parent"
  android:layout_width="fill_parent" android:layout_height="wrap_content"
      android:layout_weight="1.0"
  android:textColor="#444444"
-android:divider="@drawable/divider"
+android:divider="@drawable/list_divider"
+android:dividerHeight="1px"
 android:cacheColorHint="#00000000">
 </ListView>          
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="#444444"
+    android:layout_gravity="right"
+    android:background="@drawable/bottom_bar"
+    android:padding="2px"
    >
 <view
-class="com.roundhill.androidWP.customImageButton"
+class="com.roundhill.androidWP.customMenuButton"
 android:id="@+id/refreshComments"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
-	android:src="@drawable/ic_popup_sync_1"/>
-</LinearLayout>
+		android:padding="2px"
+	android:src="@drawable/refresh"/>
+</RelativeLayout>
 </LinearLayout>

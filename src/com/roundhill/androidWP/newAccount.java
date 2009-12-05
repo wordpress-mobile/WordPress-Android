@@ -9,6 +9,7 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 public class newAccount extends Activity {
 	private XMLRPCClient client;
 	public boolean success = false;
+	public ProgressDialog pd;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -69,6 +71,16 @@ public class newAccount extends Activity {
         
         saveButton.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
+            	
+            	Thread action = new Thread() 
+				{ 
+				  public void run() 
+				  {
+					  pd = ProgressDialog.show(newAccount.this,
+				                "Account Setup", "Attempting to configure account", true, false);
+				  } 
+				}; 
+				runOnUiThread(action);
                 
                 //capture the entered fields *needs validation*
                 EditText urlET = (EditText)findViewById(R.id.url);
@@ -111,7 +123,7 @@ public class newAccount extends Activity {
     					String s = "done";
     					s = result.toString();
     					
-    					
+    					pd.dismiss();
     					String[] blogNames = new String[100];
     					String[] urls = new String[100];
     					
@@ -177,7 +189,7 @@ public class newAccount extends Activity {
 
     		                }
     		                else{
-    		                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
+    		               /* 	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
   							  dialogBuilder.setTitle("Error Creating Account");
   				              dialogBuilder.setMessage("Something bad happened while trying to create your local account.  Please check your settings and try again.");
   				              dialogBuilder.setPositiveButton("Ok",  new
@@ -188,7 +200,7 @@ public class newAccount extends Activity {
   		                          }
   		                      });
   				              dialogBuilder.setCancelable(true);
-  				             dialogBuilder.create().show();
+  				             dialogBuilder.create().show();*/
     		                }
     			      
     					    Bundle bundle = new Bundle();
@@ -285,10 +297,11 @@ public class newAccount extends Activity {
 				handler.post(new Runnable() {
 					public void run() {
 						e.printStackTrace();
+						pd.dismiss();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
 						  dialogBuilder.setTitle("Connection Error");
 			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("Ok",  new
+			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
 	                              // Just close the window.
@@ -306,13 +319,14 @@ public class newAccount extends Activity {
 					public void run() {
 						Throwable couse = e.getCause();
 						e.printStackTrace();
+						pd.dismiss();
 						if (couse instanceof HttpHostConnectException) {
 							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
 						} else {
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
 							  dialogBuilder.setTitle("Connection Error");
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
-				              dialogBuilder.setPositiveButton("Ok",  new
+				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                              // Just close the window.

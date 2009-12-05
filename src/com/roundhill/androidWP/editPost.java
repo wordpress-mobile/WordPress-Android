@@ -1224,18 +1224,26 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				else{
 				dismissDialog(editPost.this.ID_DIALOG_POSTING);
 				}
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+						final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 						  dialogBuilder.setTitle("Connection Error");
 			              dialogBuilder.setMessage(e.getFaultString());
 			              dialogBuilder.setPositiveButton("Ok",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                              // Just close the window.
+	                              finish();
 	                      
 	                          }
 	                      });
 			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
+			              Thread action = new Thread() 
+							{ 
+							  public void run() 
+							  {
+								  dialogBuilder.create().show();
+							  } 
+							}; 
+							runOnUiThread(action);
+			             
 			             
 					
 			} catch (final XMLRPCException e) {
@@ -1259,18 +1267,25 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 							else{
 							dismissDialog(editPost.this.ID_DIALOG_POSTING);
 							}
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+							final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 							  dialogBuilder.setTitle("Connection Error");
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
 				              dialogBuilder.setPositiveButton("Ok",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
-		                              // Just close the window.
+		                              finish();
 		                      
 		                          }
 		                      });
 				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
+				              Thread action = new Thread() 
+								{ 
+								  public void run() 
+								  {
+									  dialogBuilder.create().show();
+								  } 
+								}; 
+								runOnUiThread(action);
 						}
 						//Log.d("Test", "error", e);
 						

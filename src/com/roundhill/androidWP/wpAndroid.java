@@ -56,6 +56,7 @@ public class wpAndroid extends Activity {
                       // User clicked Accept so set that they've agreed to the eula.
                   	eulaDB eulaDB = new eulaDB(wpAndroid.this);
                     eulaDB.setEULA(wpAndroid.this);
+                    displayAccounts();
               
                   }
               });
@@ -68,9 +69,9 @@ public class wpAndroid extends Activity {
             dialogBuilder.setCancelable(false);
            dialogBuilder.create().show();	
         }
-        
+        else{
         displayAccounts();
-        
+        }
          
     		
     }
@@ -163,7 +164,7 @@ public void displayAccounts(){
 	                   	}
 	                   
 	             
-	            	   menu.add(0, 0, 0, "Delete Account");
+	            	   menu.add(0, 0, 0, "Remove Account");
 				}
 	          });
             
@@ -185,26 +186,10 @@ public void displayAccounts(){
         setContentView(sv);
 	}
 	else{
-		setContentView(R.layout.home);
-final customButton newAccountButton = (customButton) findViewById(R.id.addFirstAccount);   
-        
-        newAccountButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	Intent i = new Intent(wpAndroid.this, newAccount.class);
+		//no account, load new account view
+		Intent i = new Intent(wpAndroid.this, newAccount.class);
 
-            	startActivityForResult(i, 0);
-            	         	
-            }
-    });  
-        
-        TextView getAccount = (TextView) findViewById(R.id.blurb);
-        
-        getAccount.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	
-            	startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/signup"))); 
-            }
-        });
+    	startActivityForResult(i, 0);
 
 	}
 }
@@ -272,8 +257,8 @@ public boolean onContextItemSelected(MenuItem item) {
      switch (item.getItemId()) {
      	  case 0:
      		 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
-   		  dialogBuilder.setTitle("Delete Account");
-         dialogBuilder.setMessage("Are you sure you want to delete this account from wpToGo?");
+   		  dialogBuilder.setTitle("Remove Account");
+         dialogBuilder.setMessage("Are you sure you want to remove this account?");
          dialogBuilder.setPositiveButton("Yes",  new
        		  DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int whichButton) {
@@ -282,7 +267,7 @@ public boolean onContextItemSelected(MenuItem item) {
                  boolean deleteSuccess = settingsDB.deleteAccount(wpAndroid.this, selectedID);
                  if (deleteSuccess)
                  {
-               	  Toast.makeText(wpAndroid.this, "Account deleted successfully",
+               	  Toast.makeText(wpAndroid.this, "Account removed successfully",
                              Toast.LENGTH_SHORT).show();
                	  displayAccounts();
                  }
@@ -290,7 +275,7 @@ public boolean onContextItemSelected(MenuItem item) {
                  {
                	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
          			  dialogBuilder.setTitle("Error");
-                     dialogBuilder.setMessage("Could not delete account, you may need to reinstall WordPress for Androidª.");
+                     dialogBuilder.setMessage("Could not remove account, you may need to reinstall WordPress for Androidª.");
                      dialogBuilder.setPositiveButton("OK",  new
                    		  DialogInterface.OnClickListener() {
                            public void onClick(DialogInterface dialog, int whichButton) {

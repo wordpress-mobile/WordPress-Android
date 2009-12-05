@@ -1,6 +1,9 @@
 //by Dan Roundhill, danroundhill.com/wptogo
 package com.roundhill.androidWP;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +21,7 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,6 +40,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 
 public class moderateComments extends ListActivity{
@@ -60,6 +65,7 @@ public class moderateComments extends ListActivity{
 	public boolean initializing = true;
 	public int selectedID = 0;
 	public int rowID = 0;
+	public ProgressDialog pd;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -82,11 +88,15 @@ public class moderateComments extends ListActivity{
         
         this.setTitle(accountName + " - Moderate Comments");
         
-        refreshComments();
+        boolean loadedComments = loadComments();
         
-        final customImageButton refresh = (customImageButton) findViewById(R.id.refreshComments);   
+        if (!loadedComments){
+        	refreshComments();
+        }
         
-        refresh.setOnClickListener(new customImageButton.OnClickListener() {
+        final customMenuButton refresh = (customMenuButton) findViewById(R.id.refreshComments);   
+        
+        refresh.setOnClickListener(new customMenuButton.OnClickListener() {
             public void onClick(View v) {
             	
             	refreshComments();
@@ -96,7 +106,93 @@ public class moderateComments extends ListActivity{
     }
     
     
+private boolean loadComments() {
+	postStoreDB postStoreDB = new postStoreDB(this);
+    Vector loadedPosts = postStoreDB.loadComments(moderateComments.this, id);
+ 	if (loadedPosts != null){
+ 	authors = new String[loadedPosts.size()];
+ 	commentID = new String[loadedPosts.size()];
+ 	comments = new String[loadedPosts.size()];
+ 	dateCreated = new String[loadedPosts.size()];
+ 	status = new String[loadedPosts.size()];
+					    for (int i=0; i < loadedPosts.size(); i++){
+					        HashMap contentHash = (HashMap) loadedPosts.get(i);
+					        allComments.put(contentHash.get("commentID").toString(), contentHash);
+					        authors[i] = escapeUtils.unescapeHtml(contentHash.get("author").toString());
+					        commentID[i] = contentHash.get("commentID").toString();
+					        comments[i] = contentHash.get("comment").toString();
+					        dateCreated[i] = contentHash.get("commentDate").toString();		
+					        status[i] = contentHash.get("status").toString();
+					    }
+					   
+			        
+					   setListAdapter(new CommentListAdapter(moderateComments.this));
+					
+					   ListView listView = (ListView) findViewById(android.R.id.list);
+					   listView.setSelector(R.layout.list_selector);
+					   
+					   listView.setOnItemClickListener(new OnItemClickListener() {
+
+							public void onNothingSelected(AdapterView<?> arg0) {
+								
+							}
+
+							public void onItemClick(AdapterView<?> arg0, View arg1,
+									int arg2, long arg3) {
+								Intent intent = new Intent(moderateComments.this, editPost.class);
+			                    //intent.putExtra("pageID", pageIDs[(int) arg3]);
+			                    //intent.putExtra("postTitle", titles[(int) arg3]);
+			                    intent.putExtra("id", id);
+			                    intent.putExtra("accountName", accountName);
+			                    startActivity(intent);
+								
+							}
+
+			            });
+					   
+	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+	               public void onCreateContextMenu(ContextMenu menu, View v,
+						ContextMenuInfo menuInfo) {
+					// TODO Auto-generated method stub
+	            	   AdapterView.AdapterContextMenuInfo info;
+	                   try {
+	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+	                   } catch (ClassCastException e) {
+	                       //Log.e(TAG, "bad menuInfo", e);
+	                       return;
+	                   }
+	                   
+	                   selectedID = info.targetView.getId();
+	                   rowID = info.position;
+	                   
+				 menu.setHeaderTitle("Comment Actions");
+                 menu.add(0, 0, 0, "Mark Approved");
+                 menu.add(0, 1, 0, "Mark Unapproved");
+                 menu.add(0, 2, 0, "Mark Spam");
+				}
+	          });
+ 	
+	return true;
+  }
+ 	else{
+ 		return false;
+ 	}
+	}
+
+
 private void refreshComments() {
+	
+	Thread action = new Thread() 
+	{ 
+	  public void run() 
+	  {
+		  pd = ProgressDialog.show(moderateComments.this,
+	                "Refresh Comments", "Attempting to get comments", true, false);
+	  } 
+	}; 
+	runOnUiThread(action);
+	
 	Vector settings = new Vector();
     settingsDB settingsDB = new settingsDB(this);
 	settings = settingsDB.loadSettings(this, id); 
@@ -128,7 +224,7 @@ private void refreshComments() {
     	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
 				String s = "done";
-				
+				pd.dismiss();
 				if (result.length == 0){
 					
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
@@ -138,7 +234,7 @@ private void refreshComments() {
 		            		  DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             // Just close the window.
-                        	finish();
+                        	
                         }
                     });
 		              dialogBuilder.setCancelable(true);
@@ -157,48 +253,36 @@ private void refreshComments() {
 				
 				HashMap contentHash = new HashMap();
 				    
-				int ctr = 0;
-				
-				//loop this!
-				    for (Object item : result){
-				        contentHash = (HashMap) result[ctr];
-				        allComments.put(contentHash.get("comment_id").toString(), contentHash);
-				        comments[ctr] = contentHash.get("content").toString();
-				        authors[ctr] = contentHash.get("author").toString();
-				        status[ctr] = contentHash.get("status").toString();
-				        commentID[ctr] = contentHash.get("comment_id").toString();
-				        ctr++;
-				    }
 				    
-				    setListAdapter(new CommentListAdapter(moderateComments.this));
-				    
-				    ListView listView = (ListView) findViewById(android.R.id.list);
-					   listView.setSelector(R.layout.list_selector);
+				    Vector dbVector = new Vector();
+					
+					//loop this!
+					    for (int ctr = 0; ctr < result.length; ctr++){
+					    	HashMap<String, String> dbValues = new HashMap();
+					        contentHash = (HashMap) result[ctr];
+					        allComments.put(contentHash.get("comment_id").toString(), contentHash);
+					        comments[ctr] = contentHash.get("content").toString();
+					        authors[ctr] = contentHash.get("author").toString();
+					        status[ctr] = contentHash.get("status").toString();
+					        commentID[ctr] = contentHash.get("comment_id").toString();
+					        dateCreated[ctr] = contentHash.get("date_created_gmt").toString();
+					        authorURL[ctr] = contentHash.get("author_url").toString();
+					        authorEmail[ctr] = contentHash.get("author_email").toString();
+					        dbValues.put("blogID", id);
+					        dbValues.put("commentID", commentID[ctr]);
+					        dbValues.put("author", authors[ctr]);
+					        dbValues.put("comment", comments[ctr]);
+					        dbValues.put("commentDate", dateCreated[ctr]);
+					        dbValues.put("status", status[ctr]);
+					        dbValues.put("url", authorURL[ctr]);
+					        dbValues.put("email", authorEmail[ctr]);
+					        dbVector.add(ctr, dbValues);
+					    }
+					    
+					    postStoreDB postStoreDB = new postStoreDB(moderateComments.this);
+					    postStoreDB.saveComments(moderateComments.this, dbVector);
 					   
-					   listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-			               public void onCreateContextMenu(ContextMenu menu, View v,
-								ContextMenuInfo menuInfo) {
-							// TODO Auto-generated method stub
-			            	   AdapterView.AdapterContextMenuInfo info;
-			                   try {
-			                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			                   } catch (ClassCastException e) {
-			                       //Log.e(TAG, "bad menuInfo", e);
-			                       return;
-			                   }
-			                   
-			                   
-			                   
-			                   selectedID = info.targetView.getId();
-			                   rowID = info.position;
-			                   
-						 menu.setHeaderTitle("Comment Actions");
-		                 menu.add(0, 0, 0, "Mark Approved");
-		                 menu.add(0, 1, 0, "Mark Unapproved");
-		                 menu.add(0, 2, 0, "Mark Spam");
-						}
-			          });
+					   loadComments();
 				    
 				}  
 	        
@@ -256,6 +340,7 @@ class XMLRPCMethod extends Thread {
 		} catch (final XMLRPCFault e) {
 			handler.post(new Runnable() {
 				public void run() {
+					pd.dismiss();
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
 					  dialogBuilder.setTitle("Connection Error");
 		              dialogBuilder.setMessage(e.getFaultString());
@@ -274,6 +359,7 @@ class XMLRPCMethod extends Thread {
 		} catch (final XMLRPCException e) {
 			handler.post(new Runnable() {
 				public void run() {
+					pd.dismiss();
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateComments.this);
 					  dialogBuilder.setTitle("Connection Error");
 		              dialogBuilder.setMessage(e.getMessage());
@@ -456,10 +542,9 @@ private class CommentView extends LinearLayout {
         // been specified in an XML file.
 
         tvAuthor = new TextView(context);
-        tvAuthor.setTextColor(Color.parseColor("#444444"));
+        tvAuthor.setTextColor(Color.parseColor("#777777"));
         tvAuthor.setPadding(4, 4, 4, 0);
         tvAuthor.setText(author);
-        tvAuthor.setTextSize(10);
         addView(tvAuthor, new LinearLayout.LayoutParams(
                 LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
@@ -472,6 +557,7 @@ private class CommentView extends LinearLayout {
         
         tvStatus = new TextView(context);
         tvStatus.setPadding(4, 4, 4, 4);
+        tvStatus.setTextSize(10);
         if (status.equals("approve")){
         tvStatus.setTextColor(Color.parseColor("#006505"));
         tvStatus.setText("Approved");
@@ -499,6 +585,7 @@ private class CommentView extends LinearLayout {
         tvComment.setText(comment);
     }
     public void setStatus(String status) {
+    	tvStatus.setTextSize(10);
     	if (status.equals("approve")){
             tvStatus.setTextColor(Color.parseColor("#006505"));
             tvStatus.setText("Approved");
@@ -609,18 +696,19 @@ private void changeCommentStatus(final String newStatus, final int selCommentID)
         		HashMap contentHash, postHash = new HashMap();
         		contentHash = (HashMap) allComments.get(sSelCommentID);
 		        postHash.put("status", newStatus);
-		        Date blah = new Date();
-		        try {
-					blah.setTime(blah.parse(contentHash.get("date_created_gmt").toString()));
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        postHash.put("date_created_gmt", blah);
-		        postHash.put("content", contentHash.get("content"));
+		        Date d = new Date();
+		        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
+		        String cDate = contentHash.get("commentDate").toString().replace("America/Los_Angeles", "GMT");
+		        try{  
+		        	d = sdf.parse(cDate);
+		        } catch (ParseException pe){  
+		            pe.printStackTrace();  
+		        }  
+		        postHash.put("date_created_gmt", d);
+		        postHash.put("content", contentHash.get("comment"));
 		        postHash.put("author", contentHash.get("author"));
-		        postHash.put("author_url", contentHash.get("author_url"));
-		        postHash.put("author_email", contentHash.get("author_email"));
+		        postHash.put("author_url", contentHash.get("url"));
+		        postHash.put("author_email", contentHash.get("email"));
 
 		        
 	        Object[] params = {

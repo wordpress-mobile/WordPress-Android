@@ -81,9 +81,9 @@ public class viewPages extends ListActivity {
         }
         
 
-            final customImageButton addNewPost = (customImageButton) findViewById(R.id.newPost);   
+            final customMenuButton addNewPost = (customMenuButton) findViewById(R.id.newPost);   
             
-            addNewPost.setOnClickListener(new customImageButton.OnClickListener() {
+            addNewPost.setOnClickListener(new customMenuButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	Intent i = new Intent(viewPages.this, newPost.class);
@@ -94,9 +94,9 @@ public class viewPages extends ListActivity {
                 }
         });
             
-final customImageButton refresh = (customImageButton) findViewById(R.id.refresh);   
+final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);   
             
-            refresh.setOnClickListener(new customImageButton.OnClickListener() {
+            refresh.setOnClickListener(new customMenuButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	refreshPages();
@@ -670,7 +670,7 @@ public boolean onContextItemSelected(MenuItem item) {
 protected Dialog onCreateDialog(int id) {
 if(id == ID_DIALOG_REFRESHING){
 ProgressDialog loadingDialog = new ProgressDialog(this);
-loadingDialog.setMessage("Please wait while refreshing posts...");
+loadingDialog.setMessage("Please wait while refreshing pages...");
 loadingDialog.setIndeterminate(true);
 loadingDialog.setCancelable(true);
 return loadingDialog;
