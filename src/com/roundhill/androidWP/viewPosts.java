@@ -258,6 +258,8 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 	                   }
 	                   
 	             selectedID = info.position;
+	             
+	             menu.clear();
 	            	   menu.add(0, 0, 0, "Preview Post");
 	                   menu.add(0, 1, 0, "View Comments");
 	                   menu.add(0, 2, 0, "Edit Post");
@@ -549,6 +551,10 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
   	                   //rowID = (int) info.id;
   	                   //rowID = info.position;
   	                   
+  	                   selectedID = v.getId();
+  	                   
+  	             menu.clear();
+  	             
   				 menu.setHeaderTitle("Draft Actions");
                    menu.add(1, 0, 0, "Edit Draft");
                    menu.add(1, 1, 0, "Upload Draft to Blog");
