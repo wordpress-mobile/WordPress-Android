@@ -7,15 +7,11 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
-
 import com.roundhill.androidWP.editPost.XMLRPCMethodCallback;
-
-import android.R.integer;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;

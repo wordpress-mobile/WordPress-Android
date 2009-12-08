@@ -3,8 +3,8 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:padding="0px"
-                android:background="#f4f4f4"
-                android:orientation="vertical">          
+                android:background="#F4F4F4"
+                android:orientation="vertical">           
 <TextView android:id="@+id/longPress"
 android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
@@ -14,7 +14,7 @@ android:layout_width="fill_parent"
 		  android:gravity="center"
 		  android:text="Long press on a comment to view actions"></TextView>         
 <ListView android:choiceMode="singleChoice" android:id="@android:id/list"
- android:layout_width="fill_parent" android:layout_height="wrap_content"
+ android:layout_width="fill_parent" android:layout_height="fill_parent"
      android:layout_weight="1.0"
  android:textColor="#444444"
 android:divider="@drawable/list_divider"

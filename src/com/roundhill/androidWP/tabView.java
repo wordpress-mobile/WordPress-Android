@@ -24,7 +24,7 @@ public class tabView extends TabActivity {
           activateTab = extras.getString("activateTab");
          }
          
-         Intent tab1 = new Intent(this, moderateComments.class);
+         Intent tab1 = new Intent(this, moderateCommentsTab.class);
          Intent tab2 = new Intent(this, viewPosts.class);
          Intent tab3 = new Intent(this, viewPages.class);
          

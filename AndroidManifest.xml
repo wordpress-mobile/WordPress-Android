@@ -29,12 +29,14 @@
 <activity android:name="viewLocalDrafts"></activity>
 <activity android:name="viewPages"></activity>
 
+<activity android:name="moderateCommentsTab" android:configChanges="keyboardHidden|orientation"></activity>
 </application>
 
 
 
 
 <uses-permission xmlns:android="http://schemas.android.com/apk/res/android" android:name="android.permission.INTERNET"></uses-permission>
+
 
 
 

@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal"
+	android:padding="4px"
+	android:cacheColorHint="#00000000"
+	>
+	<ImageView android:id="@+id/avatar"
+		android:layout_width="48px"
+		android:layout_height="48px"
+	/>
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingLeft="4px"
+		>
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_weight="1"
+			android:gravity="center_vertical"
+			>
+			<TextView android:id="@+id/name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="left"
+				android:textStyle="bold"
+				android:singleLine="true"
+				android:ellipsize="end"
+				android:textColor="#444444"
+				android:padding="0px"
+			/>
+			<TextView android:id="@+id/created_at"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:gravity="left"
+				android:singleLine="true"
+				android:ellipsize="end"
+				android:padding="0px"
+				android:textSize="10px"
+			/>
+			<TextView android:id="@+id/comment"
+		android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:singleLine="false"
+			android:textColor="#666666"
+			android:maxLines="6"
+			android:ellipsize="end"
+		/>
+		<TextView android:id="@+id/status"
+		android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:singleLine="true"
+		/>
+		</LinearLayout>
+	</LinearLayout>
+	
+</LinearLayout>

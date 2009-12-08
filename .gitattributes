@@ -2,6 +2,10 @@
 /.classpath -text
 /.project -text
 /AndroidManifest.xml -text
+/CWAC-AdapterWrapper.jar -text
+/CWAC-Bus.jar -text
+/CWAC-Cache.jar -text
+/CWAC-Task.jar -text
 bin/classes.dex -text
 bin/com/roundhill/androidWP/R$attr.class -text
 bin/com/roundhill/androidWP/R$drawable.class -text
@@ -250,6 +254,7 @@ res/drawable/menu_button.9.png -text
 res/drawable/menu_button_bg.9.png -text
 res/drawable/pages_tab.png -text
 res/drawable/pages_tab_active.png -text
+res/drawable/placeholder.png -text
 res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
@@ -270,6 +275,7 @@ res/layout/pages_tab_selector.xml -text
 res/layout/postrow.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/radio_group.xml -text
+res/layout/row.xml -text
 res/layout/savename.xml -text
 res/layout/selectpost.xml -text
 res/layout/settings.xml -text
@@ -282,6 +288,11 @@ res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
+src/com/commonsware/cwac/thumbnail/ThumbnailActivity.java -text
+src/com/commonsware/cwac/thumbnail/ThumbnailAdapter.java -text
+src/com/commonsware/cwac/thumbnail/ThumbnailBus.java -text
+src/com/commonsware/cwac/thumbnail/ThumbnailMessage.java -text
+src/com/roundhill/androidWP/DrawableManager.java -text
 src/com/roundhill/androidWP/Entities.java -text
 src/com/roundhill/androidWP/IntHashMap.java -text
 src/com/roundhill/androidWP/ServiceUpdateUIListener.java -text
@@ -297,6 +308,7 @@ src/com/roundhill/androidWP/eulaDB.java -text
 src/com/roundhill/androidWP/link.java -text
 src/com/roundhill/androidWP/localDraftsDB.java -text
 src/com/roundhill/androidWP/moderateComments.java -text
+src/com/roundhill/androidWP/moderateCommentsTab.java -text
 src/com/roundhill/androidWP/newAccount.java -text
 src/com/roundhill/androidWP/newPost.java -text
 src/com/roundhill/androidWP/notificationSettings.java -text

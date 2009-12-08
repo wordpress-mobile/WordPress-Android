@@ -1,6 +1,14 @@
 //by Dan Roundhill, danroundhill.com/wptogo
 package com.roundhill.androidWP;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +22,11 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
+import com.commonsware.cwac.thumbnail.ThumbnailBus;
+import com.commonsware.cwac.thumbnail.ThumbnailMessage;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -23,11 +36,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +53,11 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -66,6 +86,8 @@ public class moderateComments extends ListActivity{
 	public int selectedID = 0;
 	public int rowID = 0;
 	public ProgressDialog pd;
+	private ThumbnailAdapter thumbs=null;
+	private static final int[] IMAGE_IDS = {R.id.selectedCategories};
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -115,6 +137,7 @@ private boolean loadComments() {
  	comments = new String[loadedPosts.size()];
  	dateCreated = new String[loadedPosts.size()];
  	status = new String[loadedPosts.size()];
+ 	authorEmail = new String[loadedPosts.size()];
 					    for (int i=0; i < loadedPosts.size(); i++){
 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
 					        allComments.put(contentHash.get("commentID").toString(), contentHash);
@@ -123,10 +146,18 @@ private boolean loadComments() {
 					        comments[i] = contentHash.get("comment").toString();
 					        dateCreated[i] = contentHash.get("commentDate").toString();		
 					        status[i] = contentHash.get("status").toString();
+					        authorEmail[i] = contentHash.get("email").toString();
 					    }
 					   
+					    try {
+					    	ThumbnailBus bus = new ThumbnailBus();
+							thumbs=new ThumbnailAdapter(this, new CommentListAdapter(this),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 			        
-					   setListAdapter(new CommentListAdapter(moderateComments.this));
+					   setListAdapter(thumbs);
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
@@ -508,19 +539,24 @@ private class CommentListAdapter extends BaseAdapter {
     	CommentView cv;
         if (convertView == null) {
             cv = new CommentView(mContext, authors[position],
-                    comments[position], status[position], commentID[position]);
+                    comments[position], status[position], commentID[position], authorEmail[position]);
         } else {
             cv = (CommentView) convertView;
+            cv.setGravatar(authorEmail[position]);
             cv.setAuthor(authors[position]);
             cv.setComment(comments[position]);
-            cv.setStatus(status[position]);
+            //cv.setStatus(status[position]);
             cv.setId(Integer.valueOf(commentID[position]));
         }
         
         changedComments.clear();
+        
         return cv;
+    	
+    	
+    	
     }
-
+    
     /**
      * Remember our context so we can use it when constructing views.
      */
@@ -531,31 +567,70 @@ private class CommentListAdapter extends BaseAdapter {
      */
 }
 
-private class CommentView extends LinearLayout {
-    public CommentView(Context context, String author, String comment, String status, String commentID) {
+private class CommentView extends RelativeLayout {
+	public Vector gravatars = new Vector();
+    public CommentView(Context context, String author, String comment, String status, String commentID, String email) {
         super(context);
-
-        this.setOrientation(VERTICAL);
+        
+        //this.setOrientation(VERTICAL);
         this.setId(Integer.valueOf(commentID));
-
+        
         // Here we build the child views in code. They could also have
         // been specified in an XML file.
-
+        
+        final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=40&d=identicon";
+        
+        
+        
+        
+        
+        ivGravatar = new ImageView(context);
+        ivGravatar.setPadding(4, 4, 4, 4);
+        ivGravatar.setId(100);
+        ivGravatar.setTag(gravatarURL);
+        LayoutParams imgRLParams = new RelativeLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
+        
+        imgRLParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        imgRLParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        imgRLParams.setMargins(0,0,6,0);
+        
+        
+        addView(ivGravatar, imgRLParams);
+        
+        
         tvAuthor = new TextView(context);
         tvAuthor.setTextColor(Color.parseColor("#777777"));
         tvAuthor.setPadding(4, 4, 4, 0);
         tvAuthor.setText(author);
-        addView(tvAuthor, new LinearLayout.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        tvAuthor.setId(1001);
+        //tvAuthor.setGravity(Gravity.CENTER_VERTICAL);
+        LayoutParams authorRLParams = new RelativeLayout.LayoutParams(
+                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        
+        authorRLParams.addRule(RelativeLayout.RIGHT_OF, ivGravatar.getId());
+        authorRLParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        authorRLParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
         tvComment = new TextView(context);
-        tvComment.setTextColor(Color.parseColor("#444444"));
         tvComment.setPadding(4, 4, 4, 4);
         tvComment.setText(comment);
-        addView(tvComment, new LinearLayout.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+        RelativeLayout.LayoutParams commentRLParams = new RelativeLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
+                
+        commentRLParams.addRule(RelativeLayout.RIGHT_OF, ivGravatar.getId());
+        commentRLParams.addRule(RelativeLayout.BELOW, tvAuthor.getId());
+        commentRLParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         
-        tvStatus = new TextView(context);
+        addView(tvComment, commentRLParams);
+        
+        
+        
+        
+        addView(tvAuthor, authorRLParams);
+        
+       /* tvStatus = new TextView(context);
         tvStatus.setPadding(4, 4, 4, 4);
         tvStatus.setTextSize(10);
         if (status.equals("approve")){
@@ -570,15 +645,34 @@ private class CommentView extends LinearLayout {
             tvStatus.setTextColor(Color.parseColor("#FF0000"));
             tvStatus.setText("Spam");
             }
-        addView(tvStatus, new LinearLayout.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        
+        RelativeLayout.LayoutParams statusRLParams = new RelativeLayout.LayoutParams(
+                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+
+        statusRLParams.addRule(RelativeLayout.BELOW, ivGravatar.getId());
+        
+        addView(tvStatus, statusRLParams);*/
     
     }
 
     /**
      * Convenience methods
      */
-    public void setAuthor(String authorName) {
+   
+    public void setGravatar(final String email) {
+    	final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=40&d=identicon";
+    	
+    	//getAvatar().setImageResource(R.drawable.placeholder);
+		ivGravatar.setTag(gravatarURL);
+    	
+    	
+    }
+    protected void refreshUI() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setAuthor(String authorName) {
         tvAuthor.setText(authorName);
     }
     public void setComment(String comment) {
@@ -602,7 +696,8 @@ private class CommentView extends LinearLayout {
 
     private TextView tvAuthor;
     private TextView tvComment;
-    private TextView tvStatus;   
+    private TextView tvStatus;
+    private ImageView ivGravatar;
 }
 
 @Override
@@ -698,7 +793,7 @@ private void changeCommentStatus(final String newStatus, final int selCommentID)
 		        postHash.put("status", newStatus);
 		        Date d = new Date();
 		        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
-		        String cDate = contentHash.get("commentDate").toString().replace("America/Los_Angeles", "GMT");
+		        String cDate = contentHash.get("commentDate").toString().replace("America/Los_Angeles", "PDT");
 		        try{  
 		        	d = sdf.parse(cDate);
 		        } catch (ParseException pe){  
@@ -756,6 +851,50 @@ private void changeCommentStatus(final String newStatus, final int selCommentID)
  
 	
 }
+
+public static String getMd5Hash(String input) {
+    try     {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1,messageDigest);
+            String md5 = number.toString(16);
+       
+            while (md5.length() < 32)
+                    md5 = "0" + md5;
+       
+            return md5;
+    } catch(NoSuchAlgorithmException e) {
+            Log.e("MD5", e.getMessage());
+            return null;
+    }
+}
+
+public Bitmap getGravatar( String urlstr )
+{
+    try
+    {
+        URL url;
+        url = new URL( urlstr );
+
+        HttpURLConnection c = ( HttpURLConnection ) url.openConnection();
+        c.setDoInput( true );
+        c.connect();
+        InputStream is = c.getInputStream();
+        Bitmap img;
+        img = BitmapFactory.decodeStream( is );
+        return img;
+    }
+    catch ( MalformedURLException e )
+    {
+        Log.d( "RemoteImageHandler", "fetchImage passed invalid URL: " + urlstr );
+    }
+    catch ( IOException e )
+    {
+        Log.d( "RemoteImageHandler", "fetchImage IO exception: " + e );
+    }
+    return null;
+}
+
 
 }
 
