@@ -62,7 +62,7 @@ public class moderateCommentsTab extends ListActivity {
 	private SharedPreferences prefs=null;
 	//private Twitter client=null;
 	private ThumbnailAdapter thumbs=null;
-	private ArrayList<TimelineEntry> model=null;
+	private ArrayList<CommentEntry> model=null;
 	private XMLRPCClient client;
 	private String id = "";
 	private String postID = "";
@@ -129,30 +129,32 @@ public class moderateCommentsTab extends ListActivity {
 		postStoreDB postStoreDB = new postStoreDB(this);
 	    Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
 	 	if (loadedPosts != null){
-	 	String author, commentID, comment, dateCreated, status, authorEmail;
-	 	model=new ArrayList<TimelineEntry>();
+	 	String author, commentID, comment, dateCreated, status, authorEmail, postTitle;
+	 	model=new ArrayList<CommentEntry>();
 						    for (int i=0; i < loadedPosts.size(); i++){
 						        HashMap contentHash = (HashMap) loadedPosts.get(i);
 						        allComments.put(contentHash.get("commentID").toString(), contentHash);
 						        author = escapeUtils.unescapeHtml(contentHash.get("author").toString());
 						        commentID = contentHash.get("commentID").toString();
-						        comment = contentHash.get("comment").toString();
+						        comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
 						        dateCreated = contentHash.get("commentDate").toString();		
 						        status = contentHash.get("status").toString();
-						        authorEmail = contentHash.get("email").toString();
+						        authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
+						        postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
 						        
 						        //add to model
-						        model.add(new TimelineEntry(commentID, 
+						        model.add(new CommentEntry(commentID, 
 						        		author,
 						        		dateCreated,
 						        		comment,
 						        		status,
+						        		postTitle,
 						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=48&d=identicon")));
 						    }
 						   
 						    try {
 						    	ThumbnailBus bus = new ThumbnailBus();
-								thumbs=new ThumbnailAdapter(this, new TimelineAdapter(),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
+								thumbs=new ThumbnailAdapter(this, new CommentAdapter(),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -277,7 +279,7 @@ public class moderateCommentsTab extends ListActivity {
 					else{
 					s = result.toString();
 					origComments = result;
-					String author, commentID, comment, dateCreated, status, authorEmail, authorURL;
+					String author, commentID, comment, dateCreated, status, authorEmail, authorURL, postTitle;
 					
 					HashMap contentHash = new HashMap();
 					    
@@ -296,6 +298,7 @@ public class moderateCommentsTab extends ListActivity {
 						        dateCreated = contentHash.get("date_created_gmt").toString();
 						        authorURL = contentHash.get("author_url").toString();
 						        authorEmail = contentHash.get("author_email").toString();
+						        postTitle = contentHash.get("post_title").toString();
 						        dbValues.put("blogID", id);
 						        dbValues.put("commentID", commentID);
 						        dbValues.put("author", author);
@@ -304,6 +307,7 @@ public class moderateCommentsTab extends ListActivity {
 						        dbValues.put("status", status);
 						        dbValues.put("url", authorURL);
 						        dbValues.put("email", authorEmail);
+						        dbValues.put("postTitle", postTitle);
 						        dbVector.add(ctr, dbValues);
 						        
 						        
@@ -361,44 +365,46 @@ public class moderateCommentsTab extends ListActivity {
 			.show();
 	}
 	
-	class TimelineEntry {
+	class CommentEntry {
 		String commentID="";
 		String name="";
 		String createdAt="";
 		String status="";
 		String comment="";
+		String postTitle="";
 		URI profileImageUrl=null;
 		
-		TimelineEntry(String commentID, String name, String createdAt,
-									String comment, String status, URI profileImageUrl) {
+		CommentEntry(String commentID, String name, String createdAt,
+									String comment, String status, String postTitle, URI profileImageUrl) {
 			this.commentID=commentID;
 			this.name=name;
 			this.createdAt=createdAt;
 			this.status=status;
 			this.comment=comment;
+			this.postTitle=postTitle;
 			this.profileImageUrl=profileImageUrl;
 		}
 	}
 	
-	class TimelineAdapter extends ArrayAdapter<TimelineEntry> {
-		 TimelineAdapter() {
+	class CommentAdapter extends ArrayAdapter<CommentEntry> {
+		 CommentAdapter() {
 			super(moderateCommentsTab.this, R.layout.row, model);
 		}
 		
 		public View getView(int position, View convertView,
 												ViewGroup parent) {
 			View row=convertView;
-			TimelineEntryWrapper wrapper=null;
+			CommentEntryWrapper wrapper=null;
 			
 			if (row==null) {													
 				LayoutInflater inflater=getLayoutInflater();
 				
 				row=inflater.inflate(R.layout.row, null);
-				wrapper=new TimelineEntryWrapper(row);
+				wrapper=new CommentEntryWrapper(row);
 				row.setTag(wrapper);
 			}
 			else {
-				wrapper=(TimelineEntryWrapper)row.getTag();
+				wrapper=(CommentEntryWrapper)row.getTag();
 			}
 			
 			wrapper.populateFrom(getItem(position));
@@ -407,23 +413,25 @@ public class moderateCommentsTab extends ListActivity {
 		}
 	}
 	
-	class TimelineEntryWrapper {
+	class CommentEntryWrapper {
 		private TextView name=null;
 		private TextView createdAt=null;
 		private TextView comment=null;
 		private TextView status=null;
+		private TextView postTitle=null;
 		private ImageView avatar=null;
 		private View row=null;
 		
-		TimelineEntryWrapper(View row) {
+		CommentEntryWrapper(View row) {
 			this.row=row;
 			
 		}
 		
-		void populateFrom(TimelineEntry s) {
+		void populateFrom(CommentEntry s) {
 			getName().setText(s.name);
 			getCreatedAt().setText(s.createdAt);
 			getComment().setText(s.comment);
+			getPostTitle().setText("on " + s.postTitle);
 			
 			row.setId(Integer.valueOf(s.commentID));
 			
@@ -488,6 +496,14 @@ public class moderateCommentsTab extends ListActivity {
 			status.setTextSize(10);
 			
 			return(status);
+		}
+		
+		TextView getPostTitle() {
+			if (postTitle==null) {
+				postTitle=(TextView)row.findViewById(R.id.postTitle);
+			}
+			
+			return(postTitle);
 		}
 		
 		ImageView getAvatar() {

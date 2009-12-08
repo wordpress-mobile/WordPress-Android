@@ -13,7 +13,7 @@ public class postStoreDB {
 
 	private static final String CREATE_TABLE_POSTSTORE = "create table if not exists poststore (blogID text, postID text, title text, postDate text);";
 	private static final String CREATE_TABLE_PAGES = "create table if not exists pages (blogID text, pageID text, parentID text, title text, pageDate text);";
-	private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, commentID text, author text, comment text, commentDate text, status text, url text, email text);";
+	private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, commentID text, author text, comment text, commentDate text, status text, url text, email text, postTitle text);";
 	private static final String POSTSTORE_TABLE = "poststore";
 	private static final String PAGES_TABLE = "pages";
 	private static final String COMMENTS_TABLE = "comments";
@@ -158,7 +158,7 @@ public class postStoreDB {
 	public Vector loadComments(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector returnVector = new Vector();
-		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "commentID", "author", "comment", "commentDate", "status", "url", "email"}, "blogID=" + blogID, null, null, null, null);
+		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "commentID", "author", "comment", "commentDate", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -183,6 +183,7 @@ public class postStoreDB {
 		returnHash.put("status", c.getString(5));
 		returnHash.put("url", c.getString(6));
 		returnHash.put("email", c.getString(7));
+		returnHash.put("postTitle", c.getString(8));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();
@@ -216,6 +217,7 @@ public class postStoreDB {
 			values.put("status", thisHash.get("status").toString());
 			values.put("url", thisHash.get("url").toString());
 			values.put("email", thisHash.get("email").toString());
+			values.put("postTitle", thisHash.get("postTitle").toString());
 			returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
 		}
 		
