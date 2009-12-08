@@ -17,7 +17,7 @@
 <activity android:name="viewPosts"></activity>
 <activity android:name="viewComments" android:configChanges="keyboardHidden|orientation"></activity>
 <activity android:name="newPost"></activity>
-<activity android:name="newAccount"></activity>
+<activity android:name="newAccount" android:label="WordPress for Android™"></activity>
 <activity android:name="editPost" android:configChanges="keyboardHidden|orientation"></activity>
 <activity android:name="viewPost"></activity>
 <activity android:name="moderateComments" android:configChanges="keyboardHidden|orientation"></activity>

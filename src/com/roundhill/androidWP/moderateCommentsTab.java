@@ -160,31 +160,11 @@ public class moderateCommentsTab extends ListActivity {
 								e1.printStackTrace();
 							}
 				        
-						   
+							   setListAdapter(thumbs);				   
 						
 						   ListView listView = (ListView) findViewById(android.R.id.list);
 						   listView.setSelector(R.layout.list_selector);
-						   
-						   setListAdapter(thumbs);
-						   
-						   listView.setOnItemClickListener(new OnItemClickListener() {
 
-								public void onNothingSelected(AdapterView<?> arg0) {
-									
-								}
-
-								public void onItemClick(AdapterView<?> arg0, View arg1,
-										int arg2, long arg3) {
-									Intent intent = new Intent(moderateCommentsTab.this, editPost.class);
-				                    //intent.putExtra("pageID", pageIDs[(int) arg3]);
-				                    //intent.putExtra("postTitle", titles[(int) arg3]);
-				                    intent.putExtra("id", id);
-				                    intent.putExtra("accountName", accountName);
-				                    startActivity(intent);
-									
-								}
-
-				            });
 						   
 		        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
