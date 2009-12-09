@@ -207,7 +207,6 @@ bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
 bin/wordpress-official.apk -text
 /default.properties -text
-gen/com/roundhill/androidWP/R.java -text
 res/drawable/add.png -text
 res/drawable/app_icon.png -text
 res/drawable/bottom_bar.9.png -text
