@@ -21,7 +21,7 @@
               /> 
               
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/ok" 
             android:layout_width="80px" 
             android:layout_height="60px"
@@ -31,7 +31,7 @@ class="com.roundhill.androidWP.customButton"
             android:text="OK" />
  
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/cancel"
      		android:layout_width="80px" 
             android:layout_height="60px"

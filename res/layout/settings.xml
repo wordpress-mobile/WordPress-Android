@@ -111,7 +111,7 @@
               android:layout_below="@id/centerThumbnail"/>
   
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/save"
 			android:textColor="#444444"
             android:layout_width="80px" 
@@ -122,7 +122,7 @@ class="com.roundhill.androidWP.customButton"
             android:text="Save" />
  
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 android:textColor="#444444"
 			android:id="@+id/cancel"
      		android:layout_width="80px" 

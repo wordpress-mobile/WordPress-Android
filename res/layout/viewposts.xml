@@ -31,13 +31,13 @@ android:cacheColorHint="#00000000">
 		android:gravity="bottom"
 		android:padding="2px">
 <view
-class="com.roundhill.androidWP.customMenuButton" android:id="@+id/newPost" 
+class="org.wordpress.android.customMenuButton" android:id="@+id/newPost" 
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"	
 		android:padding="2px"
 	android:src="@drawable/add"/>
 <view
-class="com.roundhill.androidWP.customMenuButton"
+class="org.wordpress.android.customMenuButton"
  android:id="@+id/refresh"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"

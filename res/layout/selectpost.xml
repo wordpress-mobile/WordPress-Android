@@ -18,7 +18,7 @@
    android:layout_below="@id/selectPostLabel"/>
    
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/deletePosts" 
             android:layout_width="100px" 
             android:layout_height="60px" 
@@ -27,7 +27,7 @@ class="com.roundhill.androidWP.customButton"
             android:text="Delete All Saved Posts" />   
    
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/selectPostOk" 
             android:layout_width="80px" 
             android:layout_height="60px" 

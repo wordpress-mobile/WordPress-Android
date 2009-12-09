@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:background="#e8e8e8">
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 android:background="@android:color/transparent"
 android:id="@+id/addFirstAccount"
             android:layout_width="240px" 

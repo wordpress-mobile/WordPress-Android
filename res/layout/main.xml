@@ -47,7 +47,7 @@
               android:layout_below="@id/l_content"/>
               
 <view
-class="com.roundhill.androidWP.customButton"  
+class="org.wordpress.android.customButton"  
 			android:id="@+id/bold"  
 			android:textColor="#444444"
             android:layout_width="50px" 
@@ -57,7 +57,7 @@ class="com.roundhill.androidWP.customButton"
             android:textSize="22px"
             android:text="B" />           
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/em"  
 			android:textColor="#444444"
             android:layout_width="50px" 
@@ -69,7 +69,7 @@ class="com.roundhill.androidWP.customButton"
             android:text="I" />
         
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			 android:id="@+id/link" 
             android:layout_width="80px" 
             android:layout_height="50px" 
@@ -80,7 +80,7 @@ class="com.roundhill.androidWP.customButton"
             android:text="link" />  
             
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/bquote"  
 			android:textColor="#444444"
             android:layout_width="120px" 
@@ -98,7 +98,7 @@ class="com.roundhill.androidWP.customButton"
               android:textColor="#444444"/>
     
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/addPictureButton"  
 			android:textColor="#444444"
             android:layout_width="80px" 
@@ -107,7 +107,7 @@ class="com.roundhill.androidWP.customButton"
             android:text="Add"/>
             
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/clearPicture"  
 			android:textColor="#444444"
             android:layout_width="80px" 
@@ -156,7 +156,7 @@ class="com.roundhill.androidWP.customButton"
    android:layout_below="@id/l_category"/>
    
 <view
-class="com.roundhill.androidWP.customImageButton"
+class="org.wordpress.android.customImageButton"
 		android:id="@+id/refreshCategoriesButton"  
 			android:textColor="#444444"
             android:layout_width="48px" 
@@ -173,7 +173,7 @@ class="com.roundhill.androidWP.customImageButton"
               android:textColor="#444444"/>       
      	
 <view
-class="com.roundhill.androidWP.customButton" 
+class="org.wordpress.android.customButton" 
 			android:textColor="#444444"
 			android:id="@+id/clearCategories"
      	    android:layout_below="@id/selectedCategories"
@@ -197,7 +197,7 @@ class="com.roundhill.androidWP.customButton"
             /> 
     		  
 <view
-class="com.roundhill.androidWP.customButton"
+class="org.wordpress.android.customButton"
 			android:id="@+id/post" 
 			android:textColor="#444444"
             android:layout_width="80px" 
