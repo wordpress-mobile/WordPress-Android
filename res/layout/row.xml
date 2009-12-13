@@ -32,7 +32,7 @@
 				android:textColor="#444444"
 				android:padding="0px"
 			/>
-			<TextView android:id="@+id/created_at"
+			<TextView android:id="@+id/email_url"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"

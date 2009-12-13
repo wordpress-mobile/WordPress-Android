@@ -281,6 +281,7 @@ res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/tabview.xml -text
+res/layout/view_comment.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewlocaldrafts.xml -text
 res/layout/viewpost.xml -text
@@ -318,6 +319,7 @@ src/org/wordpress/android/selectpost.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
 src/org/wordpress/android/tabView.java -text
+src/org/wordpress/android/viewComment.java -text
 src/org/wordpress/android/viewComments.java -text
 src/org/wordpress/android/viewLocalDrafts.java -text
 src/org/wordpress/android/viewPages.java -text

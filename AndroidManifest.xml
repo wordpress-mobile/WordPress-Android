@@ -30,6 +30,7 @@
 <activity android:name="viewPages"></activity>
 
 <activity android:name="moderateCommentsTab" android:configChanges="keyboardHidden|orientation"></activity>
+<activity android:name="viewComment" android:theme="@android:style/Theme.Dialog"></activity>
 </application>
 
 

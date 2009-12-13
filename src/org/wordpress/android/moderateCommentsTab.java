@@ -102,6 +102,17 @@ public class moderateCommentsTab extends ListActivity {
         boolean loadedComments = loadComments();
         
         if (!loadedComments){
+        	
+        	Thread action = new Thread() 
+    		{ 
+    		  public void run() 
+    		  {
+    			  pd = ProgressDialog.show(moderateCommentsTab.this,
+    		                "Refresh Comments", "Attempting to get comments", true, false);
+    		  } 
+    		}; 
+    		runOnUiThread(action);
+        	
         	refreshComments();
         }
         
@@ -109,7 +120,15 @@ public class moderateCommentsTab extends ListActivity {
         
         refresh.setOnClickListener(new customMenuButton.OnClickListener() {
             public void onClick(View v) {
-            	
+            	Thread action = new Thread() 
+        		{ 
+        		  public void run() 
+        		  {
+        			  pd = ProgressDialog.show(moderateCommentsTab.this,
+        		                "Refresh Comments", "Attempting to get comments", true, false);
+        		  } 
+        		}; 
+        		runOnUiThread(action);
             	refreshComments();
             	 
             }
@@ -129,7 +148,7 @@ public class moderateCommentsTab extends ListActivity {
 		postStoreDB postStoreDB = new postStoreDB(this);
 	    Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
 	 	if (loadedPosts != null){
-	 	String author, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, postTitle;
+	 	String author, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 	 	model=new ArrayList<CommentEntry>();
 						    for (int i=0; i < loadedPosts.size(); i++){
 						        HashMap contentHash = (HashMap) loadedPosts.get(i);
@@ -141,6 +160,7 @@ public class moderateCommentsTab extends ListActivity {
 						        dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
 						        status = contentHash.get("status").toString();
 						        authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
+						        authorURL = escapeUtils.unescapeHtml(contentHash.get("url").toString());
 						        postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
 						        
 						        //add to model
@@ -150,6 +170,8 @@ public class moderateCommentsTab extends ListActivity {
 						        		comment,
 						        		status,
 						        		postTitle,
+						        		authorURL,
+						        		authorEmail,
 						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=48&d=identicon")));
 						    }
 						   
@@ -166,6 +188,28 @@ public class moderateCommentsTab extends ListActivity {
 						   ListView listView = (ListView) findViewById(android.R.id.list);
 						   listView.setSelector(R.layout.list_selector);
 
+						   listView.setOnItemClickListener(new OnItemClickListener() {
+
+								public void onNothingSelected(AdapterView<?> arg0) {
+									
+								}
+
+								public void onItemClick(AdapterView<?> arg0, View arg1,
+										int arg2, long arg3) {
+									Intent intent = new Intent(moderateCommentsTab.this, viewComment.class);
+				                    //intent.putExtra("pageID", pageIDs[(int) arg3]);
+				                    //intent.putExtra("postTitle", titles[(int) arg3]);
+				                    intent.putExtra("id", id);
+				                    intent.putExtra("accountName", accountName);
+				                    intent.putExtra("comment", model.get((int) arg3).comment);
+				                    intent.putExtra("name", model.get((int) arg3).name);
+				                    intent.putExtra("email", model.get((int) arg3).authorEmail);
+				                    intent.putExtra("url", model.get((int) arg3).authorURL);
+				                    startActivity(intent);
+									
+								}
+
+				            });
 						   
 		        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
@@ -200,16 +244,6 @@ public class moderateCommentsTab extends ListActivity {
 
 	private void refreshComments() {
 		
-		Thread action = new Thread() 
-		{ 
-		  public void run() 
-		  {
-			  pd = ProgressDialog.show(moderateCommentsTab.this,
-		                "Refresh Comments", "Attempting to get comments", true, false);
-		  } 
-		}; 
-		runOnUiThread(action);
-		
 		Vector settings = new Vector();
 	    settingsDB settingsDB = new settingsDB(this);
 		settings = settingsDB.loadSettings(this, id); 
@@ -241,7 +275,10 @@ public class moderateCommentsTab extends ListActivity {
 	    	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {
 					String s = "done";
+					if (pd.isShowing())
+					{
 					pd.dismiss();
+					}
 					if (result.length == 0){
 						
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
@@ -364,22 +401,24 @@ public class moderateCommentsTab extends ListActivity {
 	class CommentEntry {
 		String commentID="";
 		String name="";
-		String createdAt="";
+		String emailURL="";
 		String status="";
 		String comment="";
 		String postTitle="";
+		String authorURL="";
+		String authorEmail="";
 		URI profileImageUrl=null;
 		
-		CommentEntry(String commentID, String name, String createdAt,
-									String comment, String status, String postTitle, URI profileImageUrl) {
+		CommentEntry(String commentID, String name, String emailURL,
+									String comment, String status, String postTitle, String authorURL, String authorEmail, URI profileImageUrl) {
 			this.commentID=commentID;
 			this.name=name;
-
-			
-			this.createdAt=createdAt;
+			this.emailURL=authorEmail;
 			this.status=status;
 			this.comment=comment;
 			this.postTitle=postTitle;
+			this.authorURL=authorURL;
+			this.authorEmail=authorEmail;
 			this.profileImageUrl=profileImageUrl;
 		}
 	}
@@ -413,7 +452,7 @@ public class moderateCommentsTab extends ListActivity {
 	
 	class CommentEntryWrapper {
 		private TextView name=null;
-		private TextView createdAt=null;
+		private TextView emailURL=null;
 		private TextView comment=null;
 		private TextView status=null;
 		private TextView postTitle=null;
@@ -427,7 +466,14 @@ public class moderateCommentsTab extends ListActivity {
 		
 		void populateFrom(CommentEntry s) {
 			getName().setText(s.name);
-			getCreatedAt().setText(s.createdAt);
+			
+			String fEmailURL = s.authorURL;
+			// use the required email address if the commenter didn't leave a url
+			if (fEmailURL == ""){
+				fEmailURL = s.emailURL;
+			}
+			
+			getEmailURL().setText(fEmailURL);
 			getComment().setText(s.comment);
 			getPostTitle().setText("on " + s.postTitle);
 			
@@ -470,12 +516,12 @@ public class moderateCommentsTab extends ListActivity {
 			return(name);
 		}
 		
-		TextView getCreatedAt() {
-			if (createdAt==null) {
-				createdAt=(TextView)row.findViewById(R.id.created_at);
+		TextView getEmailURL() {
+			if (emailURL==null) {
+				emailURL=(TextView)row.findViewById(R.id.email_url);
 			}
 			
-			return(createdAt);
+			return(emailURL);
 		}
 		
 		TextView getComment() {
@@ -567,7 +613,10 @@ public class moderateCommentsTab extends ListActivity {
 			} catch (final XMLRPCFault e) {
 				handler.post(new Runnable() {
 					public void run() {
+						if (pd.isShowing())
+						{
 						pd.dismiss();
+						}
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						  dialogBuilder.setTitle("Connection Error");
 			              dialogBuilder.setMessage(e.getFaultString());
@@ -586,7 +635,10 @@ public class moderateCommentsTab extends ListActivity {
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
+						if (pd.isShowing())
+						{
 						pd.dismiss();
+						}
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						  dialogBuilder.setTitle("Connection Error");
 			              dialogBuilder.setMessage(e.getMessage());
@@ -818,6 +870,7 @@ public class moderateCommentsTab extends ListActivity {
 					{ 
 					  public void run() 
 					  {
+						  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
 						  refreshComments();				  } 
 					}; 
 					this.runOnUiThread(action2);

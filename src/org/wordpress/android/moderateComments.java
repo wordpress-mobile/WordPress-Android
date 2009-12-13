@@ -161,7 +161,9 @@ private boolean loadComments() {
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
-					   
+					   listView.setItemsCanFocus(false);
+
+
 					   listView.setOnItemClickListener(new OnItemClickListener() {
 
 							public void onNothingSelected(AdapterView<?> arg0) {
@@ -170,7 +172,7 @@ private boolean loadComments() {
 
 							public void onItemClick(AdapterView<?> arg0, View arg1,
 									int arg2, long arg3) {
-								Intent intent = new Intent(moderateComments.this, editPost.class);
+								Intent intent = new Intent(moderateComments.this, viewComment.class);
 			                    //intent.putExtra("pageID", pageIDs[(int) arg3]);
 			                    //intent.putExtra("postTitle", titles[(int) arg3]);
 			                    intent.putExtra("id", id);
@@ -539,7 +541,7 @@ private class CommentListAdapter extends BaseAdapter {
     	CommentView cv;
         if (convertView == null) {
             cv = new CommentView(mContext, authors[position],
-                    comments[position], status[position], commentID[position], authorEmail[position]);
+                    comments[position], status[position], commentID[position], authorEmail[position], authorURL[position]);
         } else {
             cv = (CommentView) convertView;
             cv.setGravatar(authorEmail[position]);
@@ -569,7 +571,7 @@ private class CommentListAdapter extends BaseAdapter {
 
 private class CommentView extends RelativeLayout {
 	public Vector gravatars = new Vector();
-    public CommentView(Context context, String author, String comment, String status, String commentID, String email) {
+    public CommentView(Context context, String author, String comment, String status, String commentID, String email, String url) {
         super(context);
         
         //this.setOrientation(VERTICAL);
