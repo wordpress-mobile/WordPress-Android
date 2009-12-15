@@ -20,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -574,6 +575,83 @@ public class moderateCommentsTab extends ListActivity {
 	            Log.e("MD5", e.getMessage());
 	            return null;
 	    }
+	}
+	
+	//Add settings to menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    super.onCreateOptionsMenu(menu);
+	    menu.add(0, 0, 0, "Blog Settings");
+	    MenuItem menuItem1 = menu.findItem(0);
+	    menuItem1.setIcon(R.drawable.ic_menu_preferences);
+	    menu.add(0, 1, 0, "Delete Blog");
+	    MenuItem menuItem2 = menu.findItem(1);
+	    menuItem2.setIcon(R.drawable.ic_notification_clear_all);
+	    
+	    return true;
+	}
+	//Menu actions
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item){
+	    switch (item.getItemId()) {
+	    case 0:
+	    	
+	    	Bundle bundle = new Bundle();
+			bundle.putString("id", id);
+			bundle.putString("accountName", accountName);
+	    	Intent i = new Intent(this, settings.class);
+	    	i.putExtras(bundle);
+	    	startActivityForResult(i, 0);
+	    	
+	    	return true;
+		case 1:
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+			  dialogBuilder.setTitle("Delete Account");
+	      dialogBuilder.setMessage("Are you sure you want to delete this blog from wpToGo?");
+	      dialogBuilder.setPositiveButton("Yes",  new
+	    		  DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int whichButton) {
+	                // User clicked Accept so set that they've agreed to the eula.
+	            	settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+	              boolean deleteSuccess = settingsDB.deleteAccount(moderateCommentsTab.this, id);
+	              if (deleteSuccess)
+	              {
+	            	  Toast.makeText(moderateCommentsTab.this, "Blog deleted successfully",
+	                          Toast.LENGTH_SHORT).show();
+	            	  finish();
+	              }
+	              else
+	              {
+	            	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+	      			  dialogBuilder.setTitle("Error");
+	                  dialogBuilder.setMessage("Could not delete blog, you may need to reinstall wpToGo.");
+	                  dialogBuilder.setPositiveButton("OK",  new
+	                		  DialogInterface.OnClickListener() {
+	                        public void onClick(DialogInterface dialog, int whichButton) {
+	                            // just close the dialog
+	                        	
+	                    
+	                        }
+	                    });
+	                  dialogBuilder.setCancelable(true);
+	                 dialogBuilder.create().show();
+	              }
+	        
+	            }
+	        });
+	      dialogBuilder.setNegativeButton("No", new
+	    		  DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int whichButton) {
+	                finish();  //goodbye!
+	            }
+	        });
+	      dialogBuilder.setCancelable(false);
+	     dialogBuilder.create().show();
+		
+		
+		return true;
+	}
+	  return false;	
 	}
 	
 	interface XMLRPCMethodCallback {

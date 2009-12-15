@@ -9,7 +9,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    <activity android:name=".settings" android:theme="@style/Theme.Translucent" android:label="Settings"></activity>
+    <activity android:name=".settings" android:label="Settings"></activity>
 
 <activity android:name=".link" android:label="Enter a URL"></activity>
 <activity android:label="Save Post" android:name="saveName"></activity>
