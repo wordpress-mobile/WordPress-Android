@@ -89,6 +89,7 @@ public class moderateCommentsTab extends ListActivity {
         {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
+         pd = new ProgressDialog(this);
          fromNotification = extras.getBoolean("fromNotification", false);       		
         }      
         
@@ -96,6 +97,7 @@ public class moderateCommentsTab extends ListActivity {
         {
         	NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         	nm.cancel(22 + Integer.valueOf(id));
+        	refreshComments();
         }
         
         this.setTitle(accountName + " - Moderate Comments");

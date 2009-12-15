@@ -58,7 +58,7 @@
 			android:layout_height="wrap_content"
 			android:singleLine="false"
 			android:textColor="#666666"
-			android:maxLines="6"
+			android:maxLines="5"
 			android:ellipsize="end"
 		/>
 		<TextView android:id="@+id/status"

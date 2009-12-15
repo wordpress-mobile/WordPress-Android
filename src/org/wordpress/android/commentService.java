@@ -129,7 +129,7 @@ public class commentService extends Service {
     			
     			accountID = notificationAccounts.get(i).toString();
     			accountName = settingsDB.getAccountName(this, accountID);
-    			Log.i("wpToGoCommentService", "Checking Comments for " + accountName);
+    			Log.i("WordPressCommentService", "Checking Comments for " + accountName);
 
     	Vector settings = settingsDB.loadSettings(this, accountID);
     	final int latestCommentID = settingsDB.getLatestCommentID(this, accountID);
@@ -188,12 +188,12 @@ public class commentService extends Service {
 				String commentID = contentHash.get("comment_id").toString();
 				if (latestCommentID == 0){
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));
-					Log.i("wpToGoCommentService", "comment was zero");
+					Log.i("WordPressCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){
 					//UI_UPDATE_LISTENER.updateUI(accountID, accountName); //new comment!
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-					Intent notificationIntent = new Intent(commentService.this, moderateComments.class);
+					Intent notificationIntent = new Intent(commentService.this, tabView.class);
     		  		notificationIntent.setData((Uri.parse("custom://wpToGoNotificationIntent"+accountID)));
     		  		notificationIntent.putExtra("id", accountID);
     		  		notificationIntent.putExtra("accountName", accountName);
@@ -206,10 +206,10 @@ public class commentService extends Service {
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));
-					Log.i("wpToGoCommentService", "found a new comment!");
+					Log.i("WordPressCommentService", "found a new comment!");
 				}
 				else{
-					Log.i("wpToGoCommentService", "no new comments");
+					Log.i("WordPressCommentService", "no new comments");
 				}
 
 				}  

@@ -10,6 +10,7 @@ public class tabView extends TabActivity {
 	private String id = "";
 	private String accountName = "";
 	private String activateTab = "";
+	boolean fromNotification = false;
 	
 	     @Override  
      public void onCreate(Bundle savedInstanceState) {  
@@ -22,6 +23,7 @@ public class tabView extends TabActivity {
           id = extras.getString("id");
           accountName = extras.getString("accountName");
           activateTab = extras.getString("activateTab");
+          fromNotification = extras.getBoolean("fromNotification", false);   
          }
          
          Intent tab1 = new Intent(this, moderateCommentsTab.class);
@@ -31,6 +33,10 @@ public class tabView extends TabActivity {
         Bundle bundle = new Bundle();
  		bundle.putString("accountName", accountName);
  		bundle.putString("id", id);
+ 		
+ 		if (fromNotification){
+ 			bundle.putBoolean("fromNotification", true);
+ 		}
  		
  		tab1.putExtras(bundle);
  		tab2.putExtras(bundle);

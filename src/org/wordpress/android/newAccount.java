@@ -43,8 +43,9 @@ public class newAccount extends Activity {
 		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
 		ArrayAdapter spinnerArrayAdapter = new ArrayAdapter<Object>(this,
 	        R.layout.spinner_textview,
-	            new String[] { "Original Size", "100", "150", "200" , "250", "300", "350", "400", "450", "500", "550", "600", "650", "700", "750", "800", "900", "950", "1000"});
-	    spinner.setAdapter(spinnerArrayAdapter);
+	            new String[] { "Original Size", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"});
+	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(spinnerArrayAdapter);
 	    
 		TextView eulaTV = (TextView) this.findViewById(R.id.l_EULA);
 		

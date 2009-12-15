@@ -2,8 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/settings"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="none">
+    android:layout_height="fill_parent"
+    android:scrollbars="none"
+    android:background="#e8e8e8">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
