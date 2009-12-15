@@ -296,6 +296,7 @@ src/org/wordpress/android/DrawableManager.java -text
 src/org/wordpress/android/Entities.java -text
 src/org/wordpress/android/IntHashMap.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
+src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/broadcastReceiver.java -text
 src/org/wordpress/android/categoriesDB.java -text
 src/org/wordpress/android/commentService.java -text

@@ -176,39 +176,40 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 
 					HashMap contentHash = new HashMap();
 					    
-					titles = new String[result.length];
-					postIDs = new String[result.length];
-					dateCreated = new String[result.length];
-					dateCreatedFormatted = new String[result.length];
+					String rTitles[] = new String[result.length];
+					String rPostIDs[] = new String[result.length];
+					String rDateCreated[] = new String[result.length];
+					String rDateCreatedFormatted[] = new String[result.length];
 					Vector dbVector = new Vector();
 					
 					//loop this!
 					    for (int ctr = 0; ctr < result.length; ctr++){
 					    	HashMap<String, String> dbValues = new HashMap();
 					        contentHash = (HashMap) result[ctr];
-					        titles[ctr] = escapeUtils.unescapeHtml(contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>")));
-					        postIDs[ctr] = contentHash.get("postid").toString();
-					        dateCreated[ctr] = contentHash.get("dateCreated").toString();
+					        rTitles[ctr] = escapeUtils.unescapeHtml(contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>")));
+					        rPostIDs[ctr] = contentHash.get("postid").toString();
+					        rDateCreated[ctr] = contentHash.get("dateCreated").toString();
 					        
 					      //make the date pretty
 					        Date d = new Date();
 							SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); 
-					        String cDate = dateCreated[ctr].replace("America/Los_Angeles", "PST");
+					        String cDate = rDateCreated[ctr].replace("America/Los_Angeles", "PST");
 					        try{  
 					        	d = sdf.parse(cDate);
 					        	SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 
-					        	dateCreatedFormatted[ctr] = sdfOut.format(d);
+					        	rDateCreatedFormatted[ctr] = sdfOut.format(d);
 					        } catch (ParseException pe){  
 					            pe.printStackTrace();
-					            dateCreatedFormatted[ctr] = dateCreated[ctr];  //just make it the ugly date if it doesn't work
+					            rDateCreatedFormatted[ctr] = rDateCreated[ctr];  //just make it the ugly date if it doesn't work
 					        } 
 					        
 					        dbValues.put("blogID", id);
-					        dbValues.put("postID", postIDs[ctr]);
-					        dbValues.put("title", titles[ctr]);
-					        dbValues.put("postDate", dateCreated[ctr]);
-					        dbValues.put("postDateFormatted", dateCreatedFormatted[ctr]);
+					        dbValues.put("postID", rPostIDs[ctr]);
+					        dbValues.put("title", rTitles[ctr]);
+					        dbValues.put("postDate", rDateCreated[ctr]);
+					        dbValues.put("postDateFormatted", rDateCreatedFormatted[ctr]);
 					        dbVector.add(ctr, dbValues);
+					        
 					    }
 					    
 					    postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
@@ -231,59 +232,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 	        
 	        method.call(params);
 	        
-	        ListView listView = (ListView) findViewById(android.R.id.list);
 	        
-	        listView.setOnLongClickListener(new OnLongClickListener(){
-				public boolean onLongClick(View v)  {
-					// TODO Auto-generated method stub
-					
-					return false;
-				}
-		           
-	        });
-	        
-	        
-	        listView.setOnItemClickListener(new OnItemClickListener() {
-
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					Intent intent = new Intent(viewPosts.this, editPost.class);
-                    intent.putExtra("postID", postIDs[(int) arg3]);
-                    intent.putExtra("postTitle", titles[(int) arg3]);
-                    intent.putExtra("id", id);
-                    intent.putExtra("accountName", accountName);
-                    startActivity(intent);
-					
-				}
-
-            });
-	        
-	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-	               public void onCreateContextMenu(ContextMenu menu, View v,
-						ContextMenuInfo menuInfo) {
-					// TODO Auto-generated method stub
-	            	   AdapterView.AdapterContextMenuInfo info;
-	                   try {
-	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	                   } catch (ClassCastException e) {
-	                       //Log.e(TAG, "bad menuInfo", e);
-	                       return;
-	                   }
-	                   
-	             selectedID = info.position;
-	             
-	             menu.clear();
-	            	   menu.add(0, 0, 0, "Preview Post");
-	                   menu.add(0, 1, 0, "View Comments");
-	                   menu.add(0, 2, 0, "Edit Post");
-				}
-	          }); 
     }
     
     private boolean loadPosts(){ //loads posts from the db

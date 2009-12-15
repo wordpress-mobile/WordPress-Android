@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="41" android:versionName="1.8.0" package="org.wordpress.android">
     <uses-sdk android:minSdkVersion="2" />
-    <application android:icon="@drawable/app_icon" android:label="WordPress" android:debuggable="true">
+    <application android:icon="@drawable/app_icon" android:label="WordPress" android:debuggable="true" android:name="WordPress">
         <activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:label="WordPress">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
