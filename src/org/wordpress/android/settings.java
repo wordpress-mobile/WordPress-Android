@@ -49,27 +49,6 @@ public class settings extends Activity {
 	            new String[] { "Original Size", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"});
 	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    spinner.setAdapter(spinnerArrayAdapter);
-
-		TextView eulaTV = (TextView) this.findViewById(R.id.l_EULA);
-		
-		eulaTV.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	
-    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(settings.this);
-  			  dialogBuilder.setTitle("End User License Agreement");
-              dialogBuilder.setMessage(R.string.EULA);
-              dialogBuilder.setPositiveButton("OK",  new
-            		  DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // just close the window.
-    
-                    }
-                });
-              dialogBuilder.setCancelable(true);
-             dialogBuilder.create().show();
-            }
-        });
-		
 		
     	settingsDB settingsDB = new settingsDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);

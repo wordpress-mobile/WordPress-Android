@@ -38,34 +38,7 @@ public class newAccount extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.newaccount);
-		
-		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
-		ArrayAdapter spinnerArrayAdapter = new ArrayAdapter<Object>(this,
-	        R.layout.spinner_textview,
-	            new String[] { "Original Size", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"});
-	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(spinnerArrayAdapter);
-	    
-		TextView eulaTV = (TextView) this.findViewById(R.id.l_EULA);
-		
-		eulaTV.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	
-    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
-  			  dialogBuilder.setTitle("End User License Agreement");
-              dialogBuilder.setMessage(R.string.EULA);
-              dialogBuilder.setPositiveButton("OK",  new
-            		  DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // just close the window.
-    
-                    }
-                });
-              dialogBuilder.setCancelable(true);
-             dialogBuilder.create().show();
-            }
-        });  
+		setContentView(R.layout.newaccount);		
         
         final customButton cancelButton = (customButton) findViewById(R.id.cancel);
         final customButton saveButton = (customButton) findViewById(R.id.save);
@@ -91,18 +64,6 @@ public class newAccount extends Activity {
                 EditText passwordET = (EditText)findViewById(R.id.password);
                 final String password = passwordET.getText().toString();
                 
-                
-                RadioGroup imageRG = (RadioGroup)findViewById(R.id.imagePlacement);
-                RadioButton checkedRB = (RadioButton)findViewById(imageRG.getCheckedRadioButtonId());
-                final String buttonValue = checkedRB.getText().toString();
-                final boolean fullSizeImageValue = false;
-                
-                Spinner spinner = (Spinner)findViewById(R.id.maxImageWidth);
-                final String maxImageWidth = spinner.getSelectedItem().toString();
-                long maxImageWidthId = spinner.getSelectedItemId();
-                final int maxImageWidthIdInt = (int) maxImageWidthId;
-                CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
-                final boolean centerThumbnailValue = centerThumbnail.isChecked();
                 //add http  or http to the beginning of the URL if needed
                 if (!(blogURL.toLowerCase().contains("http://")) && !(blogURL.toLowerCase().contains("https://"))){
                 	blogURL = "http://" + blogURL;  //default to http
@@ -175,7 +136,8 @@ public class newAccount extends Activity {
     		                }
     		                else{
     		                boolean success = false;
-    		                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, false);
+    		                //default to 500 pixel image, centered above text
+    		                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, "Above Text", true, false, "500", 5, false);
     		                
     		                // Don't forget to commit your edits!!!
     		               // editor.commit();

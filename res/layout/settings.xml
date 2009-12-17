@@ -101,15 +101,6 @@
             android:layout_alignTop="@id/l_centerThumbnail"
             android:layout_toRightOf="@id/l_centerThumbnail"
             />
-     
-   <TextView  android:id="@+id/l_EULA"
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Review End User License Agreement"
-              android:paddingTop="5px"
-              android:paddingBottom="12px"
-              android:textColor="#ff6600"
-              android:layout_below="@id/centerThumbnail"/>
   
 <view
 class="org.wordpress.android.customButton"
@@ -117,7 +108,7 @@ class="org.wordpress.android.customButton"
 			android:textColor="#444444"
             android:layout_width="80px" 
             android:layout_height="60px"
-            android:layout_below="@id/l_EULA"
+            android:layout_below="@id/centerThumbnail"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
             android:text="Save" />

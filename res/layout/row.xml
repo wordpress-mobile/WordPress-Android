@@ -53,21 +53,20 @@
 				android:textSize="10px"
 			/>
 			<TextView android:id="@+id/comment"
-		android:orientation="vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:singleLine="false"
-			android:textColor="#666666"
-			android:maxLines="5"
-			android:ellipsize="end"
+				android:orientation="vertical"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:singleLine="false"
+				android:textColor="#666666"
+				android:maxLines="5"
+				android:ellipsize="end"
 		/>
 		<TextView android:id="@+id/status"
-		android:orientation="vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:singleLine="true"
+				android:orientation="vertical"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:singleLine="true"
 		/>
 		</LinearLayout>
 	</LinearLayout>
-	
 </LinearLayout>

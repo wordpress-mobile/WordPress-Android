@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TabHost;
@@ -56,4 +57,10 @@ public class tabView extends TabActivity {
          
 
      }  
+	     
+	     @Override
+	     public void onConfigurationChanged(Configuration newConfig) {
+	       //ignore orientation change
+	       super.onConfigurationChanged(newConfig);
+	     } 
  }

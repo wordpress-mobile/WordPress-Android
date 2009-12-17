@@ -26,6 +26,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -1235,6 +1236,12 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
 	return super.onCreateDialog(id);
 	}
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      //ignore orientation change
+      super.onConfigurationChanged(newConfig);
+    } 
 	
 }
 

@@ -18,6 +18,7 @@
               android:text="WordPress blog URL (path to xmlrpc.php):"/>
               
     <EditText android:id="@+id/url" 
+    		  android:inputType="textUri"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:minHeight="40px"
@@ -53,76 +54,7 @@
               android:minHeight="40px" 
               android:password="true"
               android:background="@android:drawable/editbox_background"
-              android:layout_below="@id/l_password"/>
-
-      <TextView android:id="@+id/l_imagePlacement"
-      		  android:textColor="#444444"
-        		android:layout_marginTop="10px" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Place image:"
-              android:layout_below="@id/password"/>
-              
-        <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:checkedButton="@+id/aboveText"
-        android:id="@+id/imagePlacement"
-        android:layout_below="@id/l_imagePlacement">
-        <RadioButton
-        android:button="@layout/radio_group"
-            android:text="Above Text"
-            android:id="@+id/aboveText"
-            android:textColor="#444444"
-            />
-        <RadioButton
-        android:button="@layout/radio_group"
-            android:text="Below Text"
-            android:id="@+id/belowText"
-            android:textColor="#444444" />
-    </RadioGroup>        
-    
-    <TextView android:id="@+id/l_maxImageWidth"
-    		  android:textColor="#444444" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Maximum Image Pixel Width:"
-              android:layout_below="@id/imagePlacement"/>
-              
-     <Spinner android:id="@+id/maxImageWidth"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:textColor="#444444"
-        android:background="@layout/spinner_selector"
-   android:layout_below="@id/l_maxImageWidth"/>
-   
-        <TextView android:id="@+id/l_centerThumbnail" 
-        	android:textColor="#444444"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
-            android:paddingTop="13px"
-              android:text="Align thumbnail to center?: "
-              android:layout_below="@id/maxImageWidth"/>
-              
-<CheckBox android:id="@+id/centerThumbnail"
-			android:button="@layout/btn_check"
-     		android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/l_centerThumbnail"
-            android:layout_toRightOf="@id/l_centerThumbnail"
-            />
-   
-   <TextView  android:id="@+id/l_EULA" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="Review End User License Agreement"
-              android:paddingTop="5px"
-              android:paddingBottom="12px"
-              android:textColor="#ff6600"
-              android:layout_below="@id/centerThumbnail"/>
+              android:layout_below="@id/l_password"/>     
   
 <view
 class="org.wordpress.android.customButton"
@@ -130,7 +62,7 @@ class="org.wordpress.android.customButton"
 			android:textColor="#444444"
             android:layout_width="80px" 
             android:layout_height="60px"
-            android:layout_below="@id/l_EULA"
+            android:layout_below="@id/password"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
             android:text="Save" />

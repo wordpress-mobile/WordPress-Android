@@ -11,7 +11,8 @@
               android:text="Enter a URL:"
               android:textStyle="bold"
               />
-    <EditText android:id="@+id/linkText" 
+    <EditText android:id="@+id/linkText"
+    		  android:inputType="textUri" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
               android:minHeight="40px" 
@@ -20,7 +21,9 @@
               android:text="http://"
               /> 
               
-    <Button android:id="@+id/ok" 
+<view
+class="org.wordpress.android.customButton" 
+			android:id="@+id/ok" 
             android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_below="@id/linkText"
@@ -28,7 +31,9 @@
             android:layout_marginLeft="10px"
             android:text="OK" />
  
-    <Button android:id="@+id/cancel"
+<view
+class="org.wordpress.android.customButton"
+		    android:id="@+id/cancel"
      		android:layout_width="80px" 
             android:layout_height="60px"
             android:layout_alignTop="@id/ok"
