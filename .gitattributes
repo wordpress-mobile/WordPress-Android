@@ -263,6 +263,7 @@ res/layout/btn_check.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/commentrow.xml -text
 res/layout/edit.xml -text
+res/layout/editpage.xml -text
 res/layout/home.xml -text
 res/layout/link.xml -text
 res/layout/list_selector.xml -text
@@ -270,6 +271,7 @@ res/layout/list_selector_background_transition.xml -text
 res/layout/main.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/newaccount.xml -text
+res/layout/newpage.xml -text
 res/layout/pages_tab_selector.xml -text
 res/layout/postrow.xml -text
 res/layout/posts_tab_selector.xml -text
@@ -303,6 +305,7 @@ src/org/wordpress/android/commentService.java -text
 src/org/wordpress/android/customButton.java -text
 src/org/wordpress/android/customImageButton.java -text
 src/org/wordpress/android/customMenuButton.java -text
+src/org/wordpress/android/editPage.java -text
 src/org/wordpress/android/editPost.java -text
 src/org/wordpress/android/escapeUtils.java -text
 src/org/wordpress/android/eulaDB.java -text
@@ -311,6 +314,7 @@ src/org/wordpress/android/localDraftsDB.java -text
 src/org/wordpress/android/moderateComments.java -text
 src/org/wordpress/android/moderateCommentsTab.java -text
 src/org/wordpress/android/newAccount.java -text
+src/org/wordpress/android/newPage.java -text
 src/org/wordpress/android/newPost.java -text
 src/org/wordpress/android/notificationSettings.java -text
 src/org/wordpress/android/postStoreDB.java -text

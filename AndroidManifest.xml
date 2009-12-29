@@ -9,15 +9,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    <activity android:name=".settings" android:label="Settings"></activity>
-
+<activity android:name=".settings" android:label="Settings" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name=".link" android:theme="@android:style/Theme.Dialog" android:label="Enter a URL"></activity>
 <activity android:label="Save Post" android:name="saveName"></activity>
 <activity android:label="Load a Saved Post" android:name="selectpost"></activity>
 <activity android:name="viewPosts"></activity>
 <activity android:name="viewComments" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="newPost" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="newAccount" android:label="WordPress for Android™"></activity>
+<activity android:name="newAccount" android:label="WordPress for Android™" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="editPost" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="viewPost"></activity>
 <activity android:name="moderateComments" android:configChanges="keyboardHidden|orientation"></activity>
@@ -32,6 +31,8 @@
 
 <activity android:name="moderateCommentsTab" android:configChanges="keyboardHidden|orientation"></activity>
 <activity android:name="viewComment" android:theme="@android:style/Theme.Dialog"></activity>
+<activity android:name="newPage"></activity>
+<activity android:name="editPage"></activity>
 </application>
 
 

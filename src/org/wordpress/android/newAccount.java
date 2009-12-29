@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -307,4 +308,10 @@ public class newAccount extends Activity {
 		}
 		
 	}
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      //ignore orientation change
+      super.onConfigurationChanged(newConfig);
+    } 
 }

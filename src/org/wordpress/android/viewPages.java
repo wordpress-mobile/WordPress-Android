@@ -1,13 +1,25 @@
-//by Dan Roundhill, danroundhill.com/wptogo
+	//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
+import org.wordpress.android.viewLocalDrafts.XMLRPCMethodCallback;
+import org.wordpress.android.viewLocalDrafts.XMLRPCMethodImages;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -20,12 +32,19 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore.Images;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +56,11 @@ import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -48,24 +69,39 @@ import android.widget.AdapterView.OnItemClickListener;
 public class viewPages extends ListActivity {
     /** Called when the activity is first created. */
 	private XMLRPCClient client;
-	private String[] pageIDs;
+	private String[] postIDs;
 	private String[] titles;
 	private String[] dateCreated;
 	private String[] dateCreatedFormatted;
-	private String[] parentIDs;
+	private String[] draftIDs;
+	private String[] draftTitles;
+	private String[] publish;
+	private Integer[] uploaded;
 	private String id = "";
 	private String accountName = "";
+	private String newID = "";
 	Vector postNames = new Vector();
 	int selectedID = 0;
+	int rowID = 0;
 	private int ID_DIALOG_REFRESHING = 1;
+	private int ID_DIALOG_POSTING = 2;
+	Vector selectedCategories = new Vector();
+	private boolean inDrafts = false;
+	private Vector<Uri> selectedImageIDs = new Vector();
+	private int selectedImageCtr = 0;
+    public String imgHTML = "";
+    public String sImagePlacement = "";
+    public String sMaxImageWidth = "";
+    public boolean centerThumbnail = false;
+    public Vector imageUrl = new Vector();
+    public String imageTitle = null;
+    public boolean thumbnailOnly, secondPass, xmlrpcError = false;
+    public String submitResult = "";
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
       
         setContentView(R.layout.viewposts);
-        
-        TextView longPress = (TextView) findViewById(R.id.longPress);
-        longPress.setText("Long press on a page to view actions");
         
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
@@ -74,8 +110,8 @@ public class viewPages extends ListActivity {
          accountName = extras.getString("accountName");
         }
         
-        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - View Pages");
-        //query for posts and refresh view
+        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - Pages");
+        //query for pages and refresh view
 
 
         boolean loadedPages = loadPages();
@@ -90,7 +126,7 @@ public class viewPages extends ListActivity {
             addNewPost.setOnClickListener(new customMenuButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	Intent i = new Intent(viewPages.this, newPost.class);
+                	Intent i = new Intent(viewPages.this, newPage.class);
                 	i.putExtra("accountName", accountName);
  	                i.putExtra("id", id);
  	                startActivityForResult(i, 0);
@@ -140,50 +176,50 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 
 					HashMap contentHash = new HashMap();
 					    
-					titles = new String[result.length];
-					pageIDs = new String[result.length];
-					dateCreated = new String[result.length];
-					dateCreatedFormatted = new String[result.length];
-					parentIDs = new String[result.length];
+					String rTitles[] = new String[result.length];
+					String rPostIDs[] = new String[result.length];
+					String rDateCreated[] = new String[result.length];
+					String rDateCreatedFormatted[] = new String[result.length];
+					String rParentID[] = new String[result.length];
 					Vector dbVector = new Vector();
 					
 					//loop this!
 					    for (int ctr = 0; ctr < result.length; ctr++){
 					    	HashMap<String, String> dbValues = new HashMap();
 					        contentHash = (HashMap) result[ctr];
-					        titles[ctr] = escapeUtils.unescapeHtml(contentHash.get("page_title").toString());
-					        pageIDs[ctr] = contentHash.get("page_id").toString();
-					        dateCreated[ctr] = contentHash.get("dateCreated").toString();	
-					        parentIDs[ctr] = contentHash.get("page_parent_id").toString();	
-					        
+					        rTitles[ctr] = escapeUtils.unescapeHtml(contentHash.get("page_title").toString());
+					        rPostIDs[ctr] = contentHash.get("page_id").toString();
+					        rDateCreated[ctr] = contentHash.get("dateCreated").toString();
+					        rParentID[ctr] = contentHash.get("page_parent_id").toString();
 					      //make the date pretty
 					        Date d = new Date();
 							SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); 
-					        String cDate = dateCreated[ctr].replace("America/Los_Angeles", "PST");
+					        String cDate = rDateCreated[ctr].replace("America/Los_Angeles", "PST");
 					        try{  
 					        	d = sdf.parse(cDate);
 					        	SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 
-					        	dateCreatedFormatted[ctr] = sdfOut.format(d);
+					        	rDateCreatedFormatted[ctr] = sdfOut.format(d);
 					        } catch (ParseException pe){  
 					            pe.printStackTrace();
-					            dateCreatedFormatted[ctr] = dateCreated[ctr];  //just make it the ugly date if it doesn't work
+					            rDateCreatedFormatted[ctr] = rDateCreated[ctr];  //just make it the ugly date if it doesn't work
 					        } 
 					        
 					        dbValues.put("blogID", id);
-					        dbValues.put("pageID", pageIDs[ctr]);
-					        dbValues.put("parentID", parentIDs[ctr]);
-					        dbValues.put("title", titles[ctr]);
-					        dbValues.put("pageDate", dateCreated[ctr]);
-					        dbValues.put("pageDateFormatted", dateCreatedFormatted[ctr]);
+					        dbValues.put("pageID", rPostIDs[ctr]);
+					        dbValues.put("title", rTitles[ctr]);
+					        dbValues.put("pageDate", rDateCreated[ctr]);
+					        dbValues.put("pageDateFormatted", rDateCreatedFormatted[ctr]);
+					        dbValues.put("parentID", rParentID[ctr]);
 					        dbVector.add(ctr, dbValues);
+					        
 					    }
 					    
 					    postStoreDB postStoreDB = new postStoreDB(viewPages.this);
 					    postStoreDB.savePages(viewPages.this, dbVector);
-					   
-			        
-					   setListAdapter(new CommentListAdapter(viewPages.this));
+					    
+					    
 					   dismissDialog(viewPages.this.ID_DIALOG_REFRESHING);
+					   loadPages();
 			        
 				}
 	        });
@@ -196,122 +232,84 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 	        
 	        method.call(params);
 	        
-	        ListView listView = (ListView) findViewById(android.R.id.list);
 	        
-	        listView.setOnLongClickListener(new OnLongClickListener(){
-				public boolean onLongClick(View v)  {
-					// TODO Auto-generated method stub
-					
-					return false;
-				}
-		           
-	        });
-	        
-	        
-	        listView.setOnItemClickListener(new OnItemClickListener() {
-
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					Intent intent = new Intent(viewPages.this, editPost.class);
-                    intent.putExtra("postID", pageIDs[(int) arg3]);
-                    intent.putExtra("postTitle", titles[(int) arg3]);
-                    intent.putExtra("id", id);
-                    intent.putExtra("accountName", accountName);
-                    startActivity(intent);
-					
-				}
-
-            });
-	        
-	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-	               public void onCreateContextMenu(ContextMenu menu, View v,
-						ContextMenuInfo menuInfo) {
-					// TODO Auto-generated method stub
-	            	   AdapterView.AdapterContextMenuInfo info;
-	                   try {
-	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	                   } catch (ClassCastException e) {
-	                       //Log.e(TAG, "bad menuInfo", e);
-	                       return;
-	                   }
-	                   
-	             selectedID = info.position;
-	            	   menu.add(0, 0, 0, "Preview Post");
-	                   menu.add(0, 1, 0, "View Comments");
-	                   menu.add(0, 2, 0, "Edit Post");
-				}
-	          }); 
     }
     
     private boolean loadPages(){ //loads posts from the db
    	
        postStoreDB postStoreDB = new postStoreDB(this);
-      Vector loadedPosts = postStoreDB.loadPages(viewPages.this, id);
+   	Vector loadedPosts = postStoreDB.loadPages(viewPages.this, id);
    	if (loadedPosts != null){
    	titles = new String[loadedPosts.size()];
-   	pageIDs = new String[loadedPosts.size()];
+   	postIDs = new String[loadedPosts.size()];
    	dateCreated = new String[loadedPosts.size()];
    	dateCreatedFormatted = new String[loadedPosts.size()];
 					    for (int i=0; i < loadedPosts.size(); i++){
 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
 					        titles[i] = escapeUtils.unescapeHtml(contentHash.get("title").toString());
-					        pageIDs[i] = contentHash.get("pageID").toString();
-					        dateCreated[i] = contentHash.get("pageDate").toString();
+					        postIDs[i] = contentHash.get("pageID").toString();
+					        dateCreated[i] = contentHash.get("pageDate").toString();	
 					        dateCreatedFormatted[i] = contentHash.get("pageDateFormatted").toString();
 					    }
+					    
+					    //add the header
+					    List postIDList = Arrays.asList(postIDs);  
+				    	List newPostIDList = new ArrayList();   
+				    	newPostIDList.add("postsHeader");
+				    	newPostIDList.addAll(postIDList);
+				    	postIDs = (String[]) newPostIDList.toArray(new String[newPostIDList.size()]);
+				    	
+				    	List postTitleList = Arrays.asList(titles);  
+				    	List newPostTitleList = new ArrayList();   
+				    	newPostTitleList.add("Posts");
+				    	newPostTitleList.addAll(postTitleList);
+				    	titles = (String[]) newPostTitleList.toArray(new String[newPostTitleList.size()]);
+				    	
+				    	List dateList = Arrays.asList(dateCreated);  
+				    	List newDateList = new ArrayList();   
+				    	newDateList.add("postsHeader");
+				    	newDateList.addAll(dateList);
+				    	dateCreated = (String[]) newDateList.toArray(new String[newDateList.size()]);
+					    
+				    	List dateFormattedList = Arrays.asList(dateCreatedFormatted);  
+				    	List newDateFormattedList = new ArrayList();   
+				    	newDateFormattedList.add("postsHeader");
+				    	newDateFormattedList.addAll(dateFormattedList);
+				    	dateCreatedFormatted = (String[]) newDateFormattedList.toArray(new String[newDateFormattedList.size()]);
+					    
+					    //load drafts
+					    boolean drafts = loadDrafts();
+					    
+					    if (drafts){
+					    	
+					    	List draftIDList = Arrays.asList(draftIDs);  
+					    	List newDraftIDList = new ArrayList();   
+					    	newDraftIDList.add("draftsHeader");
+					    	newDraftIDList.addAll(draftIDList);
+					    	draftIDs = (String[]) newDraftIDList.toArray(new String[newDraftIDList.size()]);
+					    	
+					    	List titleList = Arrays.asList(draftTitles);  
+					    	List newTitleList = new ArrayList();   
+					    	newTitleList.add("Local Drafts");
+					    	newTitleList.addAll(titleList);
+					    	draftTitles = (String[]) newTitleList.toArray(new String[newTitleList.size()]);
+					    	
+					    	List publishList = Arrays.asList(publish);  
+					    	List newPublishList = new ArrayList();   
+					    	newPublishList.add("draftsHeader");
+					    	newPublishList.addAll(publishList);
+					    	publish = (String[]) newPublishList.toArray(new String[newPublishList.size()]);
+					    	
+					    	postIDs = mergeStringArrays(draftIDs, postIDs);
+					    	titles = mergeStringArrays(draftTitles, titles);
+					    	dateCreatedFormatted = mergeStringArrays(publish, dateCreatedFormatted);
+					    }
 					   
-			        
 					   setListAdapter(new CommentListAdapter(viewPages.this));
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
-					   
-					   listView.setOnItemClickListener(new OnItemClickListener() {
-
-							public void onNothingSelected(AdapterView<?> arg0) {
-								
-							}
-
-							public void onItemClick(AdapterView<?> arg0, View arg1,
-									int arg2, long arg3) {
-								Intent intent = new Intent(viewPages.this, editPost.class);
-			                    intent.putExtra("pageID", pageIDs[(int) arg3]);
-			                    intent.putExtra("postTitle", titles[(int) arg3]);
-			                    intent.putExtra("id", id);
-			                    intent.putExtra("accountName", accountName);
-			                    startActivity(intent);
-								
-							}
-
-			            });
-					   
-	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-	               public void onCreateContextMenu(ContextMenu menu, View v,
-						ContextMenuInfo menuInfo) {
-					// TODO Auto-generated method stub
-	            	   AdapterView.AdapterContextMenuInfo info;
-	                   try {
-	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	                   } catch (ClassCastException e) {
-	                       //Log.e(TAG, "bad menuInfo", e);
-	                       return;
-	                   }
-	                   
-	             selectedID = info.position;
-	                   
-				 menu.setHeaderTitle("Post Actions");
-				 menu.add(0, 0, 0, "Preview Page");
-                 menu.add(0, 1, 0, "View Comments");
-                 menu.add(0, 2, 0, "Edit Page");
-				}
-	          });
+   
    	
 	return true;
     }
@@ -319,8 +317,35 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
    		return false;
    	}
    }
+    
+    
+    private boolean loadDrafts(){ //loads drafts from the db
+       	
+        localDraftsDB lDraftsDB = new localDraftsDB(this);
+    	Vector loadedPosts = lDraftsDB.loadPageDrafts(viewPages.this, id);
+    	if (loadedPosts != null){
+    	draftIDs = new String[loadedPosts.size()];
+    	draftTitles = new String[loadedPosts.size()];
+    	publish = new String[loadedPosts.size()];
+    	uploaded = new Integer[loadedPosts.size()];
+    	
+ 					    for (int i=0; i < loadedPosts.size(); i++){
+ 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
+ 					        draftIDs[i] = contentHash.get("id").toString();
+ 					        draftTitles[i] = escapeUtils.unescapeHtml(contentHash.get("title").toString());
+ 					        publish[i] = contentHash.get("publish").toString();
+ 					        uploaded[i] = (Integer) contentHash.get("uploaded");
+ 					    }
+    	
+ 	return true;
+     }
+    	else{
+    		return false;
+    	}
+    }
 
     private class CommentListAdapter extends BaseAdapter {
+    	
         public CommentListAdapter(Context context) {
             mContext = context;
         }
@@ -332,7 +357,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
          * @see android.widget.ListAdapter#getCount()
          */
         public int getCount() {
-            return pageIDs.length;
+            return postIDs.length;
         }
 
         /**
@@ -365,14 +390,8 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         public View getView(int position, View convertView, ViewGroup parent) {
         	
             CommentView cv;
-            if (convertView == null) {
-                cv = new CommentView(mContext, titles[position],
-                        dateCreatedFormatted[position]);
-            } else {
-                cv = (CommentView) convertView;
-                cv.setTitle(titles[position]);
-                cv.setDate(dateCreatedFormatted[position]);
-            }
+                cv = new CommentView(mContext, postIDs[position], titles[position],
+                        dateCreatedFormatted[position], position);
 
             return cv;
         }
@@ -388,14 +407,40 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     }
 
     private class CommentView extends LinearLayout {
-        public CommentView(Context context, String title, String date) {
+        public CommentView(Context context, String postID, String title, String date, int position) {
             super(context);
 
             this.setOrientation(VERTICAL);
             this.setPadding(4, 4, 4, 4);
-
+            
+            if (date.equals("postsHeader") || date.equals("draftsHeader")){
+            	
+            	
+            	this.setPadding(8, 0, 0, 0);
+            	this.setBackgroundColor(Color.parseColor("#999999"));
+            	
+            	tvTitle = new TextView(context);
+                tvTitle.setText(title);
+                tvTitle.setTextSize(21);
+                tvTitle.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
+                tvTitle.setTextColor(Color.parseColor("#EEEEEE"));
+                addView(tvTitle, new LinearLayout.LayoutParams(
+                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                
+                tvDate = new TextView(context);
+                
+                if (date.equals("draftsHeader")){
+                	inDrafts = true;
+                }
+                else if (date.equals("postsHeader")){
+                	inDrafts = false;
+                }
+            }
+            else{
             // Here we build the child views in code. They could also have
             // been specified in an XML file.
+            	
+            	
 
             tvTitle = new TextView(context);
             tvTitle.setText(title);
@@ -406,10 +451,50 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 
             tvDate = new TextView(context);
             
-            String customDate = date;
+            final String customDate = date;
             tvDate.setText(customDate);
             addView(tvDate, new LinearLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+             
+            	//listener for drafts
+            	this.setId(Integer.valueOf(postID));
+            	this.setTag(position);
+        		this.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+  	               public void onCreateContextMenu(ContextMenu menu, View v,
+  						ContextMenuInfo menuInfo) {
+  					// TODO Auto-generated method stub
+  	            	   AdapterView.AdapterContextMenuInfo info;
+  	                   try {
+  	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+  	                   } catch (ClassCastException e) {
+  	                       //Log.e(TAG, "bad menuInfo", e);
+  	                       return;
+  	                   }
+  	                   
+  	                   //rowID = (int) info.id;
+  	                   //rowID = info.position;
+  	                   rowID = Integer.parseInt(v.getTag().toString());
+  	                   selectedID = v.getId();
+  	                   
+  	             menu.clear();
+  	           if(customDate.equals("1") || customDate.equals("0")){
+  				 menu.setHeaderTitle("Draft Actions");
+                   menu.add(1, 0, 0, "Edit Draft");
+                   menu.add(1, 1, 0, "Upload Draft to Blog");
+                   menu.add(1, 2, 0, "Delete Draft");
+  	           }
+  	           else{
+                   menu.setHeaderTitle("Page Actions");
+  				 menu.add(0, 0, 0, "Preview Page");
+                 menu.add(0, 1, 0, "View Comments");
+                 menu.add(0, 2, 0, "Edit Page");
+  	           }
+  				}
+  	          });
+        	
+            
+            }
         }
 
         /**
@@ -430,67 +515,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         private TextView tvDate;
     }
     
-    
+   
 interface XMLRPCMethodCallback {
 	void callFinished(Object[] result);
-}
-
-public String parseDate(String date){
-	int hour = Integer.parseInt(date.substring(11, 13));
-    
-    String amPM = "AM";
-    if (hour >= 12){
-    	if (hour > 12){
-    		hour = hour - 12;
-    	}
-    	amPM = "PM";
-    }
-    else if (hour == 0){
-    	hour = 24;
-    	amPM = "AM";
-    }
-    
-    String monthName = date.substring(4, 7);
-    
-    if (monthName.equals("Jan")){
-    	monthName = "January";
-    }
-    else if (monthName.equals("Feb")){
-    	monthName = "February";
-    }
-    else if (monthName.equals("Mar")){
-    	monthName = "March";
-    }
-    else if (monthName.equals("Apr")){
-    	monthName = "April";
-    }
-    else if (monthName.equals("May")){
-    	monthName = "May";
-    }
-    else if (monthName.equals("Jun")){
-    	monthName = "June";
-    }
-    else if (monthName.equals("Jul")){
-    	monthName = "July";
-    }
-    else if (monthName.equals("Aug")){
-    	monthName = "August";
-    }
-    else if (monthName.equals("Sep")){
-    	monthName = "September";
-    }
-    else if (monthName.equals("Oct")){
-    	monthName = "October";
-    }
-    else if (monthName.equals("Nov")){
-    	monthName = "November";
-    }
-    else if (monthName.equals("Dec")){
-    	monthName = "December";
-    }
-    
-    String customDate =  monthName + " " + date.substring(8, 10) + ", " + date.substring(24) + " " + hour + ":" + date.substring(14, 16) + " " + amPM;
-    return customDate;
 }
 
 
@@ -647,58 +674,714 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 	switch(requestCode) {
 	case 0:
-	    //displayAccounts();
-	    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
-		//refreshPosts();
+	    loadPages();
 	    break;
+	case 1:
+		loadPages();
+		break;
 	}
-
 }
+
+
 
 @Override
 public boolean onContextItemSelected(MenuItem item) {
 
+	
+	
      /* Switch on the ID of the item, to get what the user selected. */
+	if (item.getGroupId() == 0){
      switch (item.getItemId()) {
      	  case 0:
      		 Intent i0 = new Intent(viewPages.this, viewPost.class);
-             i0.putExtra("postID", pageIDs[selectedID]);
-             i0.putExtra("postTitle", titles[selectedID]);
+             i0.putExtra("postID", String.valueOf(selectedID));
+             //i0.putExtra("postTitle", titles[selectedID]);
              i0.putExtra("id", id);
              i0.putExtra("accountName", accountName);
              startActivity(i0);
              return true;
           case 1:     
         	  Intent i = new Intent(viewPages.this, viewComments.class);
-              i.putExtra("postID", pageIDs[selectedID]);
-              i.putExtra("postTitle", titles[selectedID]);
+              i.putExtra("postID", String.valueOf(selectedID));
+              //i.putExtra("postTitle", titles[selectedID]);
               i.putExtra("id", id);
               i.putExtra("accountName", accountName);
               startActivity(i);
               return true; 
           case 2:
-        	  Intent i2 = new Intent(viewPages.this, editPost.class);
-              i2.putExtra("postID", pageIDs[selectedID]);
-              i2.putExtra("postTitle", titles[selectedID]);
+        	  Intent i2 = new Intent(viewPages.this, editPage.class);
+              i2.putExtra("postID", String.valueOf(selectedID));
+              //i2.putExtra("postTitle", titles[selectedID]);
               i2.putExtra("id", id);
               i2.putExtra("accountName", accountName);
               startActivity(i2);
         	  return true;
      }
-     return false;
+     
+	}
+	else{
+		switch (item.getItemId()) {
+        case 0:
+      	  Intent i2 = new Intent(viewPages.this, editPage.class);
+            i2.putExtra("postID", String.valueOf(selectedID));
+            //i2.putExtra("postTitle", titles[rowID]);
+            i2.putExtra("id", id);
+            i2.putExtra("accountName", accountName);
+            i2.putExtra("localDraft", true);
+            startActivityForResult(i2, 1);
+      	  return true;
+        case 1:
+      	  showDialog(ID_DIALOG_POSTING);
+      	  
+      	  
+      	  new Thread() {
+                public void run() { 	  
+      	  
+		try {
+			submitResult = submitPost();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+                }
+            }.start(); 
+            	
+            
+            
+            
+      	  return true;
+        case 2:
+      	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPages.this);
+			  dialogBuilder.setTitle("Delete Draft?");
+            dialogBuilder.setMessage("Are you sure you want to delete the draft '" + titles[rowID] + "'?");
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+              	  localDraftsDB lDraftsDB = new localDraftsDB(viewPages.this);
+              	  
+              	  lDraftsDB.deletePageDraft(viewPages.this, String.valueOf(selectedID));
+              	  loadPages();
+            
+                }
+            });
+            dialogBuilder.setNegativeButton("Cancel",  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Just close the window.
+            
+                }
+            });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+      	  
+		}
+	}
+	
+	
+	return false;
 }
 
 @Override
 protected Dialog onCreateDialog(int id) {
 if(id == ID_DIALOG_REFRESHING){
 ProgressDialog loadingDialog = new ProgressDialog(this);
-loadingDialog.setMessage("Please wait while refreshing pages...");
+loadingDialog.setMessage("Please wait while refreshing pages");
 loadingDialog.setIndeterminate(true);
 loadingDialog.setCancelable(true);
 return loadingDialog;
 }
+else if (id == ID_DIALOG_POSTING){
+	ProgressDialog loadingDialog = new ProgressDialog(this);
+	loadingDialog.setMessage("Attempting to upload page");
+	loadingDialog.setIndeterminate(true);
+	loadingDialog.setCancelable(true);
+	return loadingDialog;
+	}
 
 return super.onCreateDialog(id);
+}
+
+public static String[] mergeStringArrays(String array1[], String array2[]) {  
+	if (array1 == null || array1.length == 0)  
+	return array2;  
+	if (array2 == null || array2.length == 0)  
+	return array1;  
+	List array1List = Arrays.asList(array1);  
+	List array2List = Arrays.asList(array2);  
+	List result = new ArrayList(array1List);    
+	List tmp = new ArrayList(array1List);  
+	tmp.retainAll(array2List);  
+	result.addAll(array2List);    
+	return ((String[]) result.toArray(new String[result.size()]));  
+	}
+
+
+public String submitPost() throws IOException {
+	
+	
+	//grab the form data
+	final localDraftsDB lDraftsDB = new localDraftsDB(this);
+	Vector post = lDraftsDB.loadPageDraft(this, String.valueOf(selectedID));
+	
+	HashMap postHashMap = (HashMap) post.get(0);
+	
+	EditText titleET = (EditText)findViewById(R.id.title);
+	EditText contentET = (EditText)findViewById(R.id.content);
+	
+	String title = postHashMap.get("title").toString();
+	String content = postHashMap.get("content").toString();
+	
+	String picturePaths = postHashMap.get("picturePaths").toString();
+	
+	if (!picturePaths.equals("")){
+		String[] pPaths = picturePaths.split(",");
+		
+		for (int i = 0; i < pPaths.length; i++)
+		{
+			Uri imagePath = Uri.parse(pPaths[i]); 
+			selectedImageIDs.add(selectedImageCtr, imagePath);
+	        imageUrl.add(selectedImageCtr, pPaths[i]);
+	        selectedImageCtr++;
+		}
+		
+	}
+	
+	int publish = Integer.valueOf(postHashMap.get("publish").toString());
+	
+	
+    Boolean publishThis = false;
+    
+    if (publish == 1){
+    	publishThis = true;
+    }
+    String imageContent = "";
+    //upload the images and return the HTML
+    for (int it = 0; it < selectedImageCtr; it++){
+        
+        imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
+
+        }
+
+    Integer blogID = 1; //never changes with wordpress, so far
+    
+    Vector<Object> myPostVector = new Vector<Object> ();
+    String res = null;
+    //before we do anything, validate that the user has entered settings
+    boolean enteredSettings = checkSettings();
+ 
+    if (!enteredSettings){
+    	res = "invalidSettings";
+    }
+    else if (title.equals("") || content.equals(""))
+    {
+    	res = "emptyFields";
+    }
+    else {
+    
+    // categoryID = getCategoryId(selectedCategory);
+    String[] theCategories = new String[selectedCategories.size()];
+    
+    int catSize = selectedCategories.size();
+    
+    for(int i=0; i < selectedCategories.size(); i++)
+    {
+		theCategories[i] = selectedCategories.get(i).toString();
+    }
+    
+  //
+    settingsDB settingsDB = new settingsDB(this);
+	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
+	
+    	String sURL = "";
+    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
+    	{
+    		sURL = categoriesVector.get(0).toString();
+    	}
+    	else
+    	{
+    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
+    	}
+		String sUsername = categoriesVector.get(2).toString();
+		String sPassword = categoriesVector.get(3).toString();
+		String sImagePlacement = categoriesVector.get(4).toString();
+		String sCenterThumbnailString = categoriesVector.get(5).toString();
+		String sFullSizeImageString = categoriesVector.get(6).toString();
+		boolean sFullSizeImage  = false;
+		if (sFullSizeImageString.equals("1")){
+			sFullSizeImage = true;
+		}
+
+		boolean centerThumbnail = false;
+		if (sCenterThumbnailString.equals("1")){
+			centerThumbnail = true;
+		}
+    
+    Map<String, Object> contentStruct = new HashMap<String, Object>();
+  
+    if(imageContent != ""){
+    	if (sImagePlacement.equals("Above Text")){
+    		content = imageContent + content;
+    	}
+    	else{
+    		content = content + imageContent;
+    	}
+    }
+    
+    contentStruct.put("post_type", "page");
+    contentStruct.put("title", escapeUtils.escapeHtml(title));
+    contentStruct.put("description", escapeUtils.escapeHtml(content));
+    
+
+    
+    client = new XMLRPCClient(sURL);
+    
+    Object[] params = {
+    		1,
+    		sUsername,
+    		sPassword,
+    		contentStruct,
+    		publishThis
+    };
+    
+    Object result = null;
+    try {
+		result = (Object) client.call("metaWeblog.newPost", params);
+	} catch (XMLRPCException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+			newID = result.toString();
+			res = "OK";
+			dismissDialog(ID_DIALOG_POSTING);
+			
+			Thread action = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPages.this);
+	  			  dialogBuilder.setTitle("Success");
+	              dialogBuilder.setMessage("Page ID #" + newID + " added successfully");
+	              dialogBuilder.setPositiveButton("OK",  new
+	            		  DialogInterface.OnClickListener() {
+	                  public void onClick(DialogInterface dialog, int whichButton) {
+	                      // Just close the window.
+	                	  
+	                	  boolean isInteger = false;
+	                	  
+	                	  try {
+							int i = Integer.parseInt(newID);
+							isInteger = true;
+						} catch (NumberFormatException e) {
+							
+						}
+	                	  
+	                	  if (isInteger)
+	                	  {
+	                		  //post made it, so let's delete the draft
+	                	  lDraftsDB.deletePageDraft(viewPages.this, String.valueOf(selectedID));
+	                	  refreshPages();
+	                	  }
+	              
+	                  }
+	              });
+	              dialogBuilder.setCancelable(true);
+	             dialogBuilder.create().show();
+
+			  } 
+			}; 
+			this.runOnUiThread(action);
+          	  
+            
+
+    }// if/then for valid settings
+    
+	return res;
+}
+
+public boolean checkSettings(){
+	//see if the user has any saved preferences
+	 settingsDB settingsDB = new settingsDB(this);
+    	Vector categoriesVector = settingsDB.loadSettings(this, id);
+    	String sURL = null, sUsername = null, sPassword = null;
+    	if (categoriesVector != null){
+    		sURL = categoriesVector.get(0).toString();
+    		sUsername = categoriesVector.get(1).toString();
+    		sPassword = categoriesVector.get(2).toString();
+    	}
+
+    boolean validSettings = false;
+    
+    if ((sURL != "" && sUsername != "" && sPassword != "") && (sURL != null && sUsername != null && sPassword != null)){
+    	validSettings = true;
+    }
+    
+    return validSettings;
+}
+
+public String uploadImage(String imageURL){
+    
+    int finalHeight = 0;
+    
+    //images variables
+
+    
+    //get the settings
+    settingsDB settingsDB = new settingsDB(viewPages.this);
+	Vector categoriesVector = settingsDB.loadSettings(viewPages.this, id);   	
+	
+    	String sURL = "";
+    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
+    	{
+    		sURL = categoriesVector.get(0).toString();
+    	}
+    	else
+    	{
+    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
+    	}
+		String sUsername = categoriesVector.get(2).toString();
+		String sPassword = categoriesVector.get(3).toString();
+		sImagePlacement = categoriesVector.get(4).toString();
+		String sCenterThumbnailString = categoriesVector.get(5).toString();
+		
+		//removed this as a quick fix to get rid of full size upload option
+		/*if (sFullSizeImageString.equals("1")){
+			sFullSizeImage = true;
+		}*/  
+
+		
+		if (sCenterThumbnailString.equals("1")){
+			centerThumbnail = true;
+		}
+		sMaxImageWidth = categoriesVector.get(7).toString();
+
+    //new loop for multiple images
+    
+    
+
+    //check for image, and upload it
+
+       client = new XMLRPCClient(sURL);
+
+ 	   String curImagePath = "";
+ 	   
+ 	   
+ 		curImagePath = imageURL;
+
+ 	   Uri imageUri = Uri.parse(curImagePath);
+ 	   
+ 	   String imgID = imageUri.getLastPathSegment();
+ 	   long imgID2 = Long.parseLong(imgID);
+ 	   
+ 	  String[] projection; 
+
+ 	  projection = new String[] {
+       		    Images.Media._ID,
+       		    Images.Media.DATA
+       		};
+ 	  
+ 	  
+ 	   Uri imgPath;
+
+ 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+ 	   
+ 	   
+ 	   
+	Cursor cur = managedQuery(imgPath, projection, null, null, null);
+ 	  String thumbData = "";
+ 	 
+ 	  if (cur.moveToFirst()) {
+ 		  
+ 		int nameColumn, dataColumn, heightColumn, widthColumn;
+ 		
+ 			nameColumn = cur.getColumnIndex(Images.Media._ID);
+ 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);             	            
+       
+       thumbData = cur.getString(dataColumn);
+
+ 	  }
+ 	   
+ 	   File jpeg = new File(thumbData);
+ 	   
+ 	   imageTitle = jpeg.getName();
+ 	  
+ 	   byte[] bytes = new byte[(int) jpeg.length()];
+ 	   
+ 	   DataInputStream in = null;
+	try {
+		in = new DataInputStream(new FileInputStream(jpeg));
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+ 	   try {
+		in.readFully(bytes);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+ 	   try {
+		in.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	//create the thumbnail
+	BitmapFactory.Options opts = new BitmapFactory.Options();
+    opts.inJustDecodeBounds = true;
+    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+    
+    int width = opts.outWidth;
+    int height = opts.outHeight; 
+    
+    int finalWidth = 500;  //default to this if there's a problem
+    //Change dimensions of thumbnail
+    
+    byte[] finalBytes;
+    
+    if (sMaxImageWidth.equals("Original Size")){
+    	if (bytes.length > 1000000) //it's a biggie! don't want out of memory crash
+    	{
+    		float finWidth = 1000;
+    		int sample = 0;
+
+    		float fWidth = width;
+            sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
+            
+    		if(sample == 3){
+                sample = 4;
+    		}
+    		else if(sample > 4 && sample < 8 ){
+                sample = 8;
+    		}
+    		
+    		opts.inSampleSize = sample;
+    		opts.inJustDecodeBounds = false;
+    		
+    		float percentage = (float) finalWidth / width;
+    		float proportionateHeight = height * percentage;
+    		finalHeight = (int) Math.rint(proportionateHeight);
+    	
+            bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+            
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+            bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+            
+            bm.recycle(); //free up memory
+            
+            finalBytes = baos.toByteArray();
+    	}
+    	else
+    	{
+    	finalBytes = bytes;
+    	} 
+    	
+    }
+    else
+    {
+       	finalWidth = Integer.parseInt(sMaxImageWidth);
+    	if (finalWidth > width){
+    		//don't resize
+    		finalBytes = bytes;
+    	}
+    	else
+        {
+        		int sample = 0;
+
+        		float fWidth = width;
+                sample= new Double(Math.ceil(fWidth / 1200)).intValue();
+                
+        		if(sample == 3){
+                    sample = 4;
+        		}
+        		else if(sample > 4 && sample < 8 ){
+                    sample = 8;
+        		}
+        		
+        		opts.inSampleSize = sample;
+        		opts.inJustDecodeBounds = false;
+        		
+                bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+                
+                float percentage = (float) finalWidth / bm.getWidth();
+        		float proportionateHeight = bm.getHeight() * percentage;
+        		finalHeight = (int) Math.rint(proportionateHeight);
+        		
+        		float scaleWidth = ((float) finalWidth) / bm.getWidth(); 
+    	        float scaleHeight = ((float) finalHeight) / bm.getHeight(); 
+
+                
+    	        float scaleBy = Math.min(scaleWidth, scaleHeight);
+    	        
+    	        // Create a matrix for the manipulation 
+    	        Matrix matrix = new Matrix(); 
+    	        // Resize the bitmap 
+    	        matrix.postScale(scaleBy, scaleBy); 
+
+    	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+                resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                
+                bm.recycle(); //free up memory
+                resized.recycle();
+                
+                finalBytes = baos.toByteArray();
+        	}
+    	
+        
+    }
+
+        //try and upload the freakin' image
+        //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
+        String contentType = "image/jpg";
+        Map<String, Object> m = new HashMap<String, Object>();
+
+        HashMap hPost = new HashMap();
+
+        	
+        m.put("name", imageTitle);
+        m.put("type", contentType);
+        m.put("bits", finalBytes);
+        m.put("overwrite", true);
+
+		client = new XMLRPCClient(sURL);
+    	
+    	XMLRPCMethodImages method = new XMLRPCMethodImages("wp.uploadFile", new XMLRPCMethodCallbackImages() {
+			public void callFinished(Object result) {
+				
+				imgHTML = ""; //start fresh
+				//Looper.myLooper().quit();
+				HashMap contentHash = new HashMap();
+				    
+				contentHash = (HashMap) result;
+
+				String resultURL = contentHash.get("url").toString();
+				
+				String finalImageUrl = "";
+				
+
+	            finalImageUrl = resultURL;
+				
+				//prepare the centering css if desired from user
+		           String centerCSS = " ";
+		           if (centerThumbnail){
+		        	   centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
+		           }
+		           
+		     	   
+			           if (resultURL != null)
+			           {
+
+			   	        	if (sImagePlacement.equals("Above Text")){
+			   	        		
+			   	        		imgHTML +=  "<img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" /><br /><br />";
+			   	        	}
+			   	        	else{
+			   	        		imgHTML +=  "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" />";
+			   	        	}        		
+			           	
+			           		
+			           }
+				
+				
+		           
+			}
+        });
+    	
+    	Object[] params = {
+        		1,
+        		sUsername,
+        		sPassword,
+        		m
+        };
+    	
+    	try {
+			method.call(params);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+				        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
+				       // postIDs[ctr] = contentHash.get("postid").toString();
+
+    return imgHTML;
+}
+
+interface XMLRPCMethodCallbackImages {
+	void callFinished(Object result);
+}
+
+class XMLRPCMethodImages extends Thread {
+	private String method;
+	private Object[] params;
+	private Handler handler;
+	private XMLRPCMethodCallbackImages callBack;
+	public XMLRPCMethodImages(String method, XMLRPCMethodCallbackImages callBack) {
+		this.method = method;
+		this.callBack = callBack;
+		
+		//handler = new Handler();
+		
+	}
+	public void call() throws InterruptedException {
+		call(null);
+	}
+	public void call(Object[] params) throws InterruptedException {		
+		this.params = params;
+		this.method = method;
+		//start();
+		//join();
+		final Object result;
+		try {
+			result = (Object) client.call(method, params);
+			callBack.callFinished(result);
+		} catch (XMLRPCException e) {
+			xmlrpcError = true;
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void run() {
+		
+		try {
+			final long t0 = System.currentTimeMillis();
+			final Object result;
+			result = (Object) client.call(method, params);
+			final long t1 = System.currentTimeMillis();
+			handler.post(new Runnable() {
+				public void run() {
+
+					callBack.callFinished(result);
+				
+				
+				}
+			});
+		} catch (final XMLRPCFault e) {
+					//pd.dismiss();
+					e.printStackTrace();
+		             
+				
+		} catch (final XMLRPCException e) {
+			
+			handler.post(new Runnable() {
+				public void run() {
+					
+					Throwable couse = e.getCause();
+					e.printStackTrace();
+					
+					//Log.d("Test", "error", e);
+					
+				}
+			});
+		}
+		
+	}
 }
 
 }

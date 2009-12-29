@@ -16,8 +16,7 @@ public class tabView extends TabActivity {
 	     @Override  
      public void onCreate(Bundle savedInstanceState) {  
          super.onCreate(savedInstanceState);
-         requestWindowFeature(Window.FEATURE_NO_TITLE); 
-   
+         requestWindowFeature(Window.FEATURE_NO_TITLE);
          Bundle extras = getIntent().getExtras();
          if(extras !=null)
          {

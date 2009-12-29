@@ -278,12 +278,11 @@ public class moderateCommentsTab extends ListActivity {
 	    	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {
 					String s = "done";
-					if (pd.isShowing())
-					{
-					pd.dismiss();
-					}
 					if (result.length == 0){
-						
+						if (pd.isShowing())
+						{
+						pd.dismiss();
+						}
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						  dialogBuilder.setTitle("No Comments Found");
 			              dialogBuilder.setMessage("You don't have any comments on your blog");
@@ -353,6 +352,11 @@ public class moderateCommentsTab extends ListActivity {
 						    postStoreDB.saveComments(moderateCommentsTab.this, dbVector);
 						   
 						   loadComments();
+						   
+						   if (pd.isShowing())
+							{
+							pd.dismiss();
+							}
 					    
 					}  
 		        

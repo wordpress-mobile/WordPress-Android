@@ -319,7 +319,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
    }
     
     
-    private boolean loadDrafts(){ //loads posts from the db
+    private boolean loadDrafts(){ //loads drafts from the db
        	
         localDraftsDB lDraftsDB = new localDraftsDB(this);
     	Vector loadedPosts = lDraftsDB.loadPosts(viewPosts.this, id);
@@ -442,7 +442,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         	
             CommentView cv;
                 cv = new CommentView(mContext, postIDs[position], titles[position],
-                        dateCreatedFormatted[position]);
+                        dateCreatedFormatted[position], position);
 
             return cv;
         }
@@ -458,7 +458,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     }
 
     private class CommentView extends LinearLayout {
-        public CommentView(Context context, String postID, String title, String date) {
+        public CommentView(Context context, String postID, String title, String date, int position) {
             super(context);
 
             this.setOrientation(VERTICAL);
@@ -502,16 +502,16 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 
             tvDate = new TextView(context);
             
-            String customDate = date;
+            final String customDate = date;
             tvDate.setText(customDate);
             addView(tvDate, new LinearLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             
-            if (inDrafts){  
+ 
             	//listener for drafts
             	this.setId(Integer.valueOf(postID));
+            	this.setTag(position);
         		this.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
   	               public void onCreateContextMenu(ContextMenu menu, View v,
   						ContextMenuInfo menuInfo) {
   					// TODO Auto-generated method stub
@@ -526,47 +526,30 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
   	                   //rowID = (int) info.id;
   	                   //rowID = info.position;
   	                   
+  	                   rowID = Integer.parseInt(v.getTag().toString());
   	                   selectedID = v.getId();
   	                   
   	             menu.clear();
   	             
+  	             if(customDate.equals("1") || customDate.equals("0")){
   				 menu.setHeaderTitle("Draft Actions");
                    menu.add(1, 0, 0, "Edit Draft");
                    menu.add(1, 1, 0, "Upload Draft to Blog");
                    menu.add(1, 2, 0, "Delete Draft");
+  	             }
+  	             else{
+  	            	menu.setHeaderTitle("Post Actions");
+                    menu.add(0, 0, 0, "Preview Post");
+                    menu.add(0, 1, 0, "View Comments");
+                    menu.add(0, 2, 0, "Edit Post");
+  	             }
   				}
   	          });
+        		
         	}
-            else{
-            //selection listeners for posts
-            	this.setId(Integer.valueOf(postID));
-            this.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+            
+            }
 
-	               public void onCreateContextMenu(ContextMenu menu, View v,
-						ContextMenuInfo menuInfo) {
-	      
-					// TODO Auto-generated method stub
-	            	   AdapterView.AdapterContextMenuInfo info;
-	                   try {
-	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	                   } catch (ClassCastException e) {
-	                       //Log.e(TAG, "bad menuInfo", e);
-	                       return;
-	                   }
-	                   
-	                   selectedID = v.getId();
-	                   
-				 menu.setHeaderTitle("Post Actions");
-				 menu.add(0, 0, 0, "Preview Post");
-               menu.add(0, 1, 0, "View Comments");
-               menu.add(0, 2, 0, "Edit Post");
-				}
-	          });
-            
-            }
-            
-            }
-        }
 
         /**
          * Convenience method to set the title of a SpeechView

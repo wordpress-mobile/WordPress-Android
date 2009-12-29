@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -186,5 +187,10 @@ public class settings extends Activity {
 		  return false; // propagate this keyevent
 		}
 	
-
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      //ignore orientation change
+      super.onConfigurationChanged(newConfig);
+    } 
+	
 }

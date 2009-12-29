@@ -141,7 +141,9 @@ class XMLRPCSerializer {
 			try {
 				obj = dateFormat.parseObject(value);
 			} catch (ParseException e) {
-				throw new IOException("Cannot deserialize dateTime " + value); 
+				e.printStackTrace();
+				obj = value;
+				//throw new IOException("Cannot deserialize dateTime " + value); 
 			}
 		} else
 		if (typeNodeName.equals(TYPE_BASE64)) {
