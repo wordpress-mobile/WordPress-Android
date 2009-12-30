@@ -17,7 +17,7 @@ public class localDraftsDB {
 	private static final String LOCALDRAFTS_TABLE = "localdrafts";
 	private static final String LOCALPAGEDRAFTS_TABLE = "localpagedrafts";
 	private static final String DATABASE_NAME = "wordpress";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 

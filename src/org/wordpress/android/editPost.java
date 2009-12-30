@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -38,19 +39,14 @@ import android.os.Handler;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Selection;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -99,7 +95,7 @@ public class editPost extends Activity {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
          postID = extras.getString("postID");
-         localDraft = extras.getBoolean("localDraft", false); //was this activity called from viewLocalDrafts.java?
+         localDraft = extras.getBoolean("localDraft", false); 
         }
         
         this.setTitle(accountName + " - Edit Post");
@@ -227,7 +223,6 @@ public class editPost extends Activity {
 			        
 			        if (categoriesArray != null){
 			        	int ctr = 0;
-			        	String conCategories = "";
 					    for (Object item : categoriesArray){
 					        String category = categoriesArray[ctr].toString();
 					        if (!selectedCategories.contains(category))
@@ -248,10 +243,6 @@ public class editPost extends Activity {
 			        }
 			        
 				}
-
-	        
-				 
-
 			}
         });
         Object[] params = {
@@ -850,11 +841,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
 	public String uploadImage(String imageURL){
         
-        int finalHeight = 0;
-        
-        //images variables
-
-        
         //get the settings
         settingsDB settingsDB = new settingsDB(editPost.this);
     	Vector categoriesVector = settingsDB.loadSettings(editPost.this, id);   	
@@ -957,112 +943,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		}
 		
 		//create the thumbnail
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-        
-        int width = opts.outWidth;
-        int height = opts.outHeight; 
-        
-        int finalWidth = 500;  //default to this if there's a problem
-        //Change dimensions of thumbnail
-        
-        byte[] finalBytes;
-        
-        if (sMaxImageWidth.equals("Original Size")){
-        	if (bytes.length > 1000000) //it's a biggie! don't want out of memory crash
-        	{
-        		float finWidth = 1000;
-        		int sample = 0;
-
-        		float fWidth = width;
-                sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
-                
-        		if(sample == 3){
-                    sample = 4;
-        		}
-        		else if(sample > 4 && sample < 8 ){
-                    sample = 8;
-        		}
-        		
-        		opts.inSampleSize = sample;
-        		opts.inJustDecodeBounds = false;
-        		
-        		float percentage = (float) finalWidth / width;
-        		float proportionateHeight = height * percentage;
-        		finalHeight = (int) Math.rint(proportionateHeight);
-        	
-                bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                
-                
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-                
-                bm.recycle(); //free up memory
-                
-                finalBytes = baos.toByteArray();
-        	}
-        	else
-        	{
-        	finalBytes = bytes;
-        	} 
-        	
-        }
-        else
-        {
-           	finalWidth = Integer.parseInt(sMaxImageWidth);
-        	if (finalWidth > width){
-        		//don't resize
-        		finalBytes = bytes;
-        	}
-        	else
-            {
-            		int sample = 0;
-
-            		float fWidth = width;
-                    sample= new Double(Math.ceil(fWidth / 1200)).intValue();
-                    
-            		if(sample == 3){
-                        sample = 4;
-            		}
-            		else if(sample > 4 && sample < 8 ){
-                        sample = 8;
-            		}
-            		
-            		opts.inSampleSize = sample;
-            		opts.inJustDecodeBounds = false;
-            		
-                    bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                    
-                    float percentage = (float) finalWidth / bm.getWidth();
-            		float proportionateHeight = bm.getHeight() * percentage;
-            		finalHeight = (int) Math.rint(proportionateHeight);
-            		
-            		float scaleWidth = ((float) finalWidth) / bm.getWidth(); 
-        	        float scaleHeight = ((float) finalHeight) / bm.getHeight(); 
-
-                    
-        	        float scaleBy = Math.min(scaleWidth, scaleHeight);
-        	        
-        	        // Create a matrix for the manipulation 
-        	        Matrix matrix = new Matrix(); 
-        	        // Resize the bitmap 
-        	        matrix.postScale(scaleBy, scaleBy); 
-
-        	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                    resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-                    
-                    bm.recycle(); //free up memory
-                    resized.recycle();
-                    
-                    finalBytes = baos.toByteArray();
-            	}
-        	
-            
-        }
-
+		byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
+		
             //try and upload the freakin' image
             //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
             String contentType = "image/jpg";
@@ -1111,12 +993,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				   	        	else{
 				   	        		imgHTML +=  "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" />";
 				   	        	}        		
-				           	
-				           		
+    		
 				           }
-					
-					
-			           
+  
 				}
 	        });
         	
@@ -1134,16 +1013,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				e.printStackTrace();
 			}
         	
-					        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
-					       // postIDs[ctr] = contentHash.get("postid").toString();
-        	
-        	
-     	  
-     	   
 
-
-        
-		
         return imgHTML;
 	}
 
@@ -1572,100 +1442,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			}
 			}
 			break;
-		case 3:
-			String saveName = extras.getString("saveName");
-			
-			if (saveName.equals("CANCEL") != true && saveName.equals("") != true && saveName.equals(null) != true){
-				
-		        EditText titleET = (EditText)findViewById(R.id.title);
-		        String postTitle = titleET.getText().toString();
-		        EditText contentET = (EditText)findViewById(R.id.content);
-		        String postContent = contentET.getText().toString();
-
-		        TextView categoriesTV = (TextView)findViewById(R.id.selectedCategories);
-			    String categoriesValue = categoriesTV.getText().toString();
-		        	
-		        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
-		        boolean publish = publishCB.isChecked();
-			        
-                savedPostsDB postsDB = new savedPostsDB(editPost.this);
-                boolean savePostResult = postsDB.savePost(this, saveName, id, postTitle, postContent, categoriesValue, publish);	        	
-		        if (savePostResult == false){
-		        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-					  dialogBuilder.setTitle("Post Not Saved");
-		              dialogBuilder.setMessage("Duplicate post save names were found. Please save your posts with unique names.");
-		              dialogBuilder.setPositiveButton("OK",  new
-		            		  DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            //Just close the window
-
-                        }
-                    });
-		              dialogBuilder.setCancelable(true);
-		             dialogBuilder.create().show();
-		        }
-					
-			}
-			break;
-		case 4:
-			String selectedPostID = extras.getString("selectedSaveName");
-			
-				
-				if (selectedPostID.equals("noPostsFound") != true && selectedPostID.equals("CANCEL") != true){
-					savedPostsDB postsDB2 = new savedPostsDB(editPost.this);
-					Vector postFields = postsDB2.loadPost(this, selectedPostID, id);
-					EditText titleET = (EditText)findViewById(R.id.title);
-			        EditText contentET = (EditText)findViewById(R.id.content);
-			        TextView categoriesTV = (TextView)findViewById(R.id.selectedCategories);
-			        	
-			        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
-			        
-			        titleET.setText(postFields.get(0).toString());
-			        contentET.setText(postFields.get(1).toString());
-			        if (postFields.get(2) != null)
-			        {
-			        	categoriesTV.setText(postFields.get(2).toString());
-			        }
-			        else
-			        {
-			        	categoriesTV.setText("Selected categories: ");
-			        }
-			        
-			        boolean publish  = false;
-			        if (postFields.get(3) != null)
-			        {
-		    		if (postFields.get(3).equals("1")){
-		    			publish = true;
-		    		}
-			        }
-			        publishCB.setChecked(publish);
-	
-				    	//get rid of the thumbnail
-			        
-			        selectedImageIDs = new Vector();
-   
-				}
-				else if (selectedPostID.equals("CANCEL"))
-				{
-					//don't do anything
-				}
-				else
-				{
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-					  dialogBuilder.setTitle("No Posts Found");
-		              dialogBuilder.setMessage("No saved posts were found.");
-		              dialogBuilder.setPositiveButton("OK",  new
-		            		  DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                              //Just close the window
-
-                          }
-                      });
-		              dialogBuilder.setCancelable(true);
-		             dialogBuilder.create().show();
-				}
-		        
-		        break;
 		}
 	}//end null check
 	}
@@ -1770,35 +1546,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			}
 		}
 	};
-	
-	//Add settings to menu
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    super.onCreateOptionsMenu(menu);
-	    menu.add(0, 0, 0, "Load Post");
-	    MenuItem menuItem1 = menu.findItem(0);
-	    menuItem1.setIcon(R.drawable.ic_menu_preferences);
-	    
-	    return true;
-	}
-	
-	//Menu actions
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item){
-	    switch (item.getItemId()) {
-	    case 0:
-	    	
-	    	Bundle savedPosts = new Bundle();
-	    	savedPosts.putString("id", id);
-	    	Intent in = new Intent(this, selectpost.class);
-	    	in.putExtras(savedPosts);
-        	startActivityForResult(in, 4);
-        	
-	    	
-	    	return true;
-	}
-	  return false;	
-	}
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {

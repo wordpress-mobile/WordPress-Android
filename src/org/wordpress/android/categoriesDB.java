@@ -16,8 +16,8 @@ public class categoriesDB {
 
 
 	private static final String CATEGORIES_TABLE = "cats";
-	private static final String DATABASE_NAME = "wpToGo";
-	private static final int DATABASE_VERSION = 2;
+	private static final String DATABASE_NAME = "wordpress";
+	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 

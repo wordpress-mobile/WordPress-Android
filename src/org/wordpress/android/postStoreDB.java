@@ -17,8 +17,8 @@ public class postStoreDB {
 	private static final String POSTSTORE_TABLE = "poststore";
 	private static final String PAGES_TABLE = "pages";
 	private static final String COMMENTS_TABLE = "comments";
-	private static final String DATABASE_NAME = "wpToGo";
-	private static final int DATABASE_VERSION = 2;
+	private static final String DATABASE_NAME = "wordpress";
+	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 

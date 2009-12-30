@@ -15,13 +15,10 @@ import android.view.View.OnClickListener;
 public class settingsDB {
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
-			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
-	private static final String ADD_COLUMNID = "ALTER TABLE accounts ADD lastCommentId integer";
-	private static final String ADD_RUNSERVICE = "ALTER TABLE accounts ADD runService boolean";
-	private static final String ADD_INTERVAL = "ALTER TABLE eula ADD interval text";
+			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean, interval text);";
 	private static final String SETTINGS_TABLE = "accounts";
-	private static final String DATABASE_NAME = "wpToGo";
-	private static final int DATABASE_VERSION = 3;
+	private static final String DATABASE_NAME = "wordpress";
+	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 
@@ -29,14 +26,8 @@ public class settingsDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//db.execSQL("DROP TABLE IF EXISTS "+ SETTINGS_TABLE);
 		db.execSQL(CREATE_TABLE_SETTINGS);
-		int version = db.getVersion();
-		if (version == 0)
-		{
-			db.execSQL(ADD_COLUMNID);
-			db.execSQL(ADD_RUNSERVICE);
-			db.execSQL(ADD_INTERVAL);
-			db.setVersion(1);
-		}
+		db.setVersion(1); //set to initial version
+
 		db.close();
 		
 	}

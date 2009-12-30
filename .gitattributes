@@ -1,6 +1,7 @@
 * text=auto !eol
 /.classpath -text
 /.project -text
+.settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
 /CWAC-AdapterWrapper.jar -text
 /CWAC-Bus.jar -text
@@ -233,10 +234,8 @@ res/drawable/btn_radio_on.png -text
 res/drawable/btn_radio_on_longpress.png -text
 res/drawable/btn_radio_on_pressed.png -text
 res/drawable/btn_radio_on_selected.png -text
-res/drawable/comments_dark.png -text
 res/drawable/comments_tab.png -text
 res/drawable/comments_tab_active.png -text
-res/drawable/divider.png -text
 res/drawable/ic_menu_add.png -text
 res/drawable/ic_menu_edit.png -text
 res/drawable/ic_menu_more.png -text
@@ -257,7 +256,6 @@ res/drawable/placeholder.png -text
 res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
-res/drawable/rowbg.png -text
 res/drawable/wp_logo.png -text
 res/layout/btn_check.xml -text
 res/layout/comment_tab_selector.xml -text
@@ -309,18 +307,15 @@ src/org/wordpress/android/editPage.java -text
 src/org/wordpress/android/editPost.java -text
 src/org/wordpress/android/escapeUtils.java -text
 src/org/wordpress/android/eulaDB.java -text
+src/org/wordpress/android/imageHelper.java -text
 src/org/wordpress/android/link.java -text
 src/org/wordpress/android/localDraftsDB.java -text
-src/org/wordpress/android/moderateComments.java -text
 src/org/wordpress/android/moderateCommentsTab.java -text
 src/org/wordpress/android/newAccount.java -text
 src/org/wordpress/android/newPage.java -text
 src/org/wordpress/android/newPost.java -text
 src/org/wordpress/android/notificationSettings.java -text
 src/org/wordpress/android/postStoreDB.java -text
-src/org/wordpress/android/saveName.java -text
-src/org/wordpress/android/savedPostsDB.java -text
-src/org/wordpress/android/selectpost.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
 src/org/wordpress/android/tabView.java -text

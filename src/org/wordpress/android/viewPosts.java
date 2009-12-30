@@ -336,57 +336,6 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
  					        publish[i] = contentHash.get("publish").toString();
  					        uploaded[i] = (Integer) contentHash.get("uploaded");
  					    }
- 					   
- 			        /*
- 					   setListAdapter(new CommentListAdapter(viewPosts.this));
- 					
- 					   ListView listView = (ListView) findViewById(android.R.id.list);
- 					   listView.setSelector(R.layout.list_selector);
- 					   
- 					   listView.setOnItemClickListener(new OnItemClickListener() {
-
- 							public void onNothingSelected(AdapterView<?> arg0) {
- 								
- 							}
-
- 							public void onItemClick(AdapterView<?> arg0, View arg1,
- 									int arg2, long arg3) {
- 								Intent intent = new Intent(viewPosts.this, editPost.class);
- 			                    intent.putExtra("postID", postIDs[(int) arg3]);
- 			                    intent.putExtra("postTitle", titles[(int) arg3]);
- 			                    intent.putExtra("id", id);
- 			                    intent.putExtra("accountName", accountName);
- 			                    intent.putExtra("localDraft", true);
- 			                    startActivity(intent);
- 								
- 							}
-
- 			            });
- 					   
- 	        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
- 	               public void onCreateContextMenu(ContextMenu menu, View v,
- 						ContextMenuInfo menuInfo) {
- 					// TODO Auto-generated method stub
- 	            	   AdapterView.AdapterContextMenuInfo info;
- 	                   try {
- 	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
- 	                   } catch (ClassCastException e) {
- 	                       //Log.e(TAG, "bad menuInfo", e);
- 	                       return;
- 	                   }
- 	                   
- 	                   
- 	                   
- 	                   selectedID = info.targetView.getId();
- 	                   rowID = info.position;
- 	                   
- 				 menu.setHeaderTitle("Post Actions");
-                  menu.add(0, 0, 0, "Edit Draft");
-                  menu.add(0, 1, 0, "Upload Draft to Blog");
-                  menu.add(0, 2, 0, "Delete Draft");
- 				}
- 	          });*/
     	
  	return true;
      }
@@ -1094,12 +1043,7 @@ public boolean checkSettings(){
 }
 
 public String uploadImage(String imageURL){
-    
-    int finalHeight = 0;
-    
-    //images variables
-
-    
+	
     //get the settings
     settingsDB settingsDB = new settingsDB(viewPosts.this);
 	Vector categoriesVector = settingsDB.loadSettings(viewPosts.this, id);   	
@@ -1202,111 +1146,7 @@ public String uploadImage(String imageURL){
 	}
 	
 	//create the thumbnail
-	BitmapFactory.Options opts = new BitmapFactory.Options();
-    opts.inJustDecodeBounds = true;
-    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-    
-    int width = opts.outWidth;
-    int height = opts.outHeight; 
-    
-    int finalWidth = 500;  //default to this if there's a problem
-    //Change dimensions of thumbnail
-    
-    byte[] finalBytes;
-    
-    if (sMaxImageWidth.equals("Original Size")){
-    	if (bytes.length > 1000000) //it's a biggie! don't want out of memory crash
-    	{
-    		float finWidth = 1000;
-    		int sample = 0;
-
-    		float fWidth = width;
-            sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
-            
-    		if(sample == 3){
-                sample = 4;
-    		}
-    		else if(sample > 4 && sample < 8 ){
-                sample = 8;
-    		}
-    		
-    		opts.inSampleSize = sample;
-    		opts.inJustDecodeBounds = false;
-    		
-    		float percentage = (float) finalWidth / width;
-    		float proportionateHeight = height * percentage;
-    		finalHeight = (int) Math.rint(proportionateHeight);
-    	
-            bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-            
-            
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-            bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-            
-            bm.recycle(); //free up memory
-            
-            finalBytes = baos.toByteArray();
-    	}
-    	else
-    	{
-    	finalBytes = bytes;
-    	} 
-    	
-    }
-    else
-    {
-       	finalWidth = Integer.parseInt(sMaxImageWidth);
-    	if (finalWidth > width){
-    		//don't resize
-    		finalBytes = bytes;
-    	}
-    	else
-        {
-        		int sample = 0;
-
-        		float fWidth = width;
-                sample= new Double(Math.ceil(fWidth / 1200)).intValue();
-                
-        		if(sample == 3){
-                    sample = 4;
-        		}
-        		else if(sample > 4 && sample < 8 ){
-                    sample = 8;
-        		}
-        		
-        		opts.inSampleSize = sample;
-        		opts.inJustDecodeBounds = false;
-        		
-                bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-                
-                float percentage = (float) finalWidth / bm.getWidth();
-        		float proportionateHeight = bm.getHeight() * percentage;
-        		finalHeight = (int) Math.rint(proportionateHeight);
-        		
-        		float scaleWidth = ((float) finalWidth) / bm.getWidth(); 
-    	        float scaleHeight = ((float) finalHeight) / bm.getHeight(); 
-
-                
-    	        float scaleBy = Math.min(scaleWidth, scaleHeight);
-    	        
-    	        // Create a matrix for the manipulation 
-    	        Matrix matrix = new Matrix(); 
-    	        // Resize the bitmap 
-    	        matrix.postScale(scaleBy, scaleBy); 
-
-    	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-                
-                bm.recycle(); //free up memory
-                resized.recycle();
-                
-                finalBytes = baos.toByteArray();
-        	}
-    	
-        
-    }
+	byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
 
         //try and upload the freakin' image
         //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
