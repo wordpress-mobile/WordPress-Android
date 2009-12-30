@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 public class settingsDB {
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
-			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean, interval text);";
+			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
 	private static final int DATABASE_VERSION = 1;

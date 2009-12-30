@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class eulaDB {
 
 	private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
-			+ "read integer not null);";
+			+ "read integer not null, interval text);";
 
 	private static final String EULA_TABLE = "eula";
 	private static final String DATABASE_NAME = "wordpress";

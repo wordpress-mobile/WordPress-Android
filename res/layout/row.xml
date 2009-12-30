@@ -41,6 +41,7 @@
 				android:ellipsize="end"
 				android:padding="0px"
 				android:textSize="10px"
+				android:textColor="#666666"
 			/>
 			<TextView android:id="@+id/postTitle"
 				android:layout_width="wrap_content"
@@ -51,13 +52,14 @@
 				android:ellipsize="end"
 				android:padding="0px"
 				android:textSize="10px"
+				android:textColor="#666666"
 			/>
 			<TextView android:id="@+id/comment"
 				android:orientation="vertical"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:singleLine="false"
-				android:textColor="#666666"
+				android:textColor="#444444"
 				android:maxLines="5"
 				android:ellipsize="end"
 		/>
