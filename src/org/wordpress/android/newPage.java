@@ -425,6 +425,198 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
       super.onConfigurationChanged(newConfig);
     } 
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data != null)
+		{
+
+		Bundle extras = data.getExtras();
+
+		switch(requestCode) {
+		case 0:
+		    String title = extras.getString("returnStatus");
+		    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
+		    break;
+		case 1:
+		    Uri imagePath = data.getData();   
+		    String imgPath2 = imagePath.getEncodedPath();
+		   
+	           
+	           //for gridview
+	           selectedImageIDs.add(selectedImageCtr, imagePath);
+	           //for submission
+	           imageUrl.add(selectedImageCtr, imgPath2);
+	           //thumbnailUrl.add(selectedImageCtr, Images.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/" + thumbIdString);
+	           //new
+	           //thumbnailUrl.add(selectedImageCtr, thumbPath);
+	           selectedImageCtr++;
+	           //thumbData = cur.getString(dataColumn);
+	     	 // }
+	     	  
+	     	 GridView gridview = (GridView) findViewById(R.id.gridView);
+	     	 //org.wordpress.android.newPost ia = new org.wordpress.android.newPost();
+			gridview.setAdapter(new ImageAdapter(this));
+
+		    
+		    break;
+		case 2:
+			String linkText = extras.getString("linkText");
+			if (linkText.equals("http://") != true){
+				
+			
+			if (linkText.equals("CANCEL") != true){
+
+			TextView contentText = (TextView) findViewById(R.id.content);
+
+        	int selectionStart = contentText.getSelectionStart();
+        	
+        	int selectionEnd = contentText.getSelectionEnd();
+        	
+        	if (selectionStart > selectionEnd){
+        		int temp = selectionEnd;
+        		selectionEnd = selectionStart;
+        		selectionStart = temp;
+        	}
+        	
+			String textToLink = contentText.getText().toString().substring(selectionStart, selectionEnd); 
+    		textToLink = "<a href=\"" + linkText + "\">"+ textToLink + "</a>";
+    		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
+    		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
+    		contentText.setText(firstHalf + textToLink + lastHalf);
+    		Editable etext = (Editable) contentText.getText(); 
+    		Selection.setSelection(etext, selectionStart + textToLink.length());
+			}
+			}
+			break;
+		}
+	}//end null check
+	}
+	
+	public class ImageAdapter extends BaseAdapter {
+	    private Context mContext;
+
+	    public ImageAdapter(Context c) {
+	        mContext = c;
+	    }
+
+	    public int getCount() {
+	        return selectedImageIDs.size();
+	    }
+
+	    public Object getItem(int position) {
+	        return null;
+	    }
+
+	    public long getItemId(int position) {
+	        return 0;
+	    }
+
+	    // create a new ImageView for each item referenced by the Adapter
+	    public View getView(int position, View convertView, ViewGroup parent) {
+	        ImageView imageView;
+	        if (convertView == null) {  // if it's not recycled, initialize some attributes
+	            imageView = new ImageView(mContext);
+	            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+	            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+	            imageView.setPadding(8, 8, 8, 8);
+	        } else {
+	            imageView = (ImageView) convertView;
+	        }
+	        Uri tempURI = (Uri) selectedImageIDs.get(position);
+	     	   
+	        String[] projection = new String[] {
+	      		    Images.Thumbnails._ID,
+	      		    Images.Thumbnails.DATA
+	      		};
+	     	   
+			Cursor cur = managedQuery(tempURI, projection, null, null, null);
+	     	  String thumbData = "";
+	     	 
+	     	  if (cur.moveToFirst()) {
+	     		  
+	     		int nameColumn, dataColumn, heightColumn, widthColumn;
+	     		
+	     			nameColumn = cur.getColumnIndex(Images.Media._ID);
+	     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+	     		             	            
+	           
+	           thumbData = cur.getString(dataColumn);
+
+	     	  }
+	     	   
+	     	   File jpeg = new File(thumbData);
+	     	   
+	     	   imageTitle = jpeg.getName();
+	     	  
+	     	   byte[] bytes = new byte[(int) jpeg.length()];
+	     	   
+	     	   DataInputStream in = null;
+			try {
+				in = new DataInputStream(new FileInputStream(jpeg));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	     	   try {
+				in.readFully(bytes);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	     	   try {
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//create the thumbnail
+			
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+	        opts.inJustDecodeBounds = true;
+	        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+	        
+	        int width = opts.outHeight;
+	        int height = opts.outWidth;
+	        
+	        float percentage = (float) 100 / width;
+       		float proportionateHeight = height * percentage;
+       		int finalHeight = (int) Math.rint(proportionateHeight);
+
+	        
+	     // calculate the scale - in this case = 0.4f
+	        float scaleWidth = ((float) 100) / width;
+	        float scaleHeight = ((float) finalHeight) / height;
+	       
+	        float finWidth = 200;
+    		int sample = 0;
+
+    		float fWidth = width;
+            sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
+            
+    		if(sample == 3){
+                sample = 4;
+    		}
+    		else if(sample > 4 && sample < 8 ){
+                sample = 8;
+    		}
+	        
+    		opts.inSampleSize = sample;
+	        opts.inJustDecodeBounds = false;
+	        
+	        Bitmap resizedBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts); 
+	        
+	        imageView.setImageBitmap(resizedBitmap);
+	        
+	        //resizedBitmap.recycle(); //free up memory
+	        
+	        return imageView;
+	    }
+	    
+	}
+	
 }
 
 

@@ -305,7 +305,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    	dateCreatedFormatted = mergeStringArrays(publish, dateCreatedFormatted);
 					    }
 					   
-					   setListAdapter(new CommentListAdapter(viewPages.this));
+					   setListAdapter(new PageListAdapter(viewPages.this));
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
@@ -344,9 +344,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     	}
     }
 
-    private class CommentListAdapter extends BaseAdapter {
+    private class PageListAdapter extends BaseAdapter {
     	
-        public CommentListAdapter(Context context) {
+        public PageListAdapter(Context context) {
             mContext = context;
         }
 
@@ -389,8 +389,8 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
          */
         public View getView(int position, View convertView, ViewGroup parent) {
         	
-            CommentView cv;
-                cv = new CommentView(mContext, postIDs[position], titles[position],
+            PageView cv;
+                cv = new PageView(mContext, postIDs[position], titles[position],
                         dateCreatedFormatted[position], position);
 
             return cv;
@@ -406,8 +406,8 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
          */
     }
 
-    private class CommentView extends LinearLayout {
-        public CommentView(Context context, String postID, String title, String date, int position) {
+    private class PageView extends LinearLayout {
+        public PageView(Context context, String postID, String title, String date, int position) {
             super(context);
 
             this.setOrientation(VERTICAL);
@@ -672,14 +672,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	// TODO Auto-generated method stub
 	super.onActivityResult(requestCode, resultCode, data);
 
-	switch(requestCode) {
-	case 0:
-	    loadPages();
-	    break;
-	case 1:
 		loadPages();
-		break;
-	}
+
 }
 
 

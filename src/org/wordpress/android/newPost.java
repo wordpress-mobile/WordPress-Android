@@ -1,7 +1,6 @@
 //by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,9 +9,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
-import android.net.ConnectivityManager;
+
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -22,7 +20,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,26 +27,20 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Selection;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -161,6 +152,25 @@ public class newPost extends Activity {
 	
             }
         });
+        
+final customImageButton refreshCategoriesButton = (customImageButton) findViewById(R.id.refreshCategoriesButton);
+        
+        refreshCategoriesButton.setOnClickListener(new customImageButton.OnClickListener() {
+            public void onClick(View v) {
+            	
+            	pd = ProgressDialog.show(newPost.this,
+                        "Refreshing Categories", "Attempting to refresh categories from the wordpress site...", true, true);
+            	Thread th = new Thread() {
+    				public void run() {					
+    				    finalResult = getCategories();	
+    				    
+    				    mHandler.post(mUpdateResults);
+    				    
+    				}
+    			};
+    			th.start();
+            }
+    });
         
             final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
             
