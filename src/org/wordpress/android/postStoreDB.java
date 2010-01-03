@@ -33,6 +33,8 @@ public class postStoreDB {
 
 	public boolean savePosts(Context ctx, Vector postValues) {
 		boolean returnValue = false;
+		if (postValues.size() != 0)
+		{
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		HashMap firstHash = (HashMap) postValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
@@ -52,6 +54,7 @@ public class postStoreDB {
 		
 		
 		db.close();
+		}
 		return (returnValue);
 	}
 

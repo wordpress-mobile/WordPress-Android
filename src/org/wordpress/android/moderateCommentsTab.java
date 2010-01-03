@@ -372,7 +372,7 @@ public class moderateCommentsTab extends ListActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		
-		thumbs.close();
+		//thumbs.close();
 	}
 	
 	@Override
