@@ -46,10 +46,9 @@ public class viewComments extends ListActivity {
          id = extras.getString("id");
          postID = extras.getString("postID");
          accountName = extras.getString("accountName");
-         postTitle = extras.getString("postTitle");
         }      
         
-        this.setTitle(postTitle + " - View Comments");
+        this.setTitle(accountName + " - View Comments");
         Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);

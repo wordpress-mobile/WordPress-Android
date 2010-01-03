@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="41" android:versionName="1.8.0" package="org.wordpress.android">
-    <uses-sdk android:minSdkVersion="2" />
+    package="org.wordpress.android" android:versionName="1.0.0" android:versionCode="1">
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
     <application android:icon="@drawable/app_icon" android:label="WordPress" android:debuggable="true" android:name="WordPress">
         <activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:label="WordPress">
             <intent-filter>
@@ -14,7 +14,7 @@
 <activity android:name="viewPosts"></activity>
 <activity android:name="viewComments" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="newPost" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="newAccount" android:label="WordPress for Android™" android:configChanges="orientation|keyboardHidden"></activity>
+<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden" android:label="WordPress - Add Account"></activity>
 <activity android:name="editPost" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="viewPost"></activity>
 <activity android:name="notificationSettings" android:label="Notification Settings"></activity>
@@ -29,7 +29,9 @@
 <activity android:name="editPage"></activity>
 </application>
 
-
+<supports-screens android:smallScreens="true"
+                  android:normalScreens="true"
+                  android:largeScreens="true" />
 
 
 <uses-permission xmlns:android="http://schemas.android.com/apk/res/android" android:name="android.permission.INTERNET"></uses-permission>

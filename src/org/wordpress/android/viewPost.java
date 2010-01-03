@@ -39,13 +39,12 @@ public class viewPost extends Activity {
          id = extras.getString("id");
          postID = extras.getString("postID");
          accountName = extras.getString("accountName");
-         postTitle = extras.getString("postTitle");
         }   
         
         pd = ProgressDialog.show(viewPost.this,
-                "Getting Preview", "Getting post preview...", true, false);
+                "Getting Preview", "Attempting to get preview", true, false);
         
-        this.setTitle(postTitle + " - View Post");
+        this.setTitle(accountName + " - Preview");
         Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);

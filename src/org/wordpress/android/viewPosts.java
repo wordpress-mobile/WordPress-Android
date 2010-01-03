@@ -64,6 +64,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 
 public class viewPosts extends ListActivity {
@@ -97,6 +98,7 @@ public class viewPosts extends ListActivity {
     public String imageTitle = null;
     public boolean thumbnailOnly, secondPass, xmlrpcError = false;
     public String submitResult = "";
+    public int totalDrafts = 0;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -309,6 +311,42 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
+					   
+					   listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+			               public void onCreateContextMenu(ContextMenu menu, View v,
+								ContextMenuInfo menuInfo) {
+							// TODO Auto-generated method stub
+			            	   AdapterView.AdapterContextMenuInfo info;
+			                   try {
+			                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+			                   } catch (ClassCastException e) {
+			                       //Log.e(TAG, "bad menuInfo", e);
+			                       return;
+			                   }
+			                   
+			                   selectedID = info.targetView.getId();
+			                   rowID = info.position;
+			                   
+			                   if ((rowID != 0 && (rowID > 0 && (rowID != (totalDrafts + 1)))) || totalDrafts == 0){
+			                	   if (totalDrafts > 0 && rowID <= totalDrafts){
+			                	   		menu.clear();
+			                	   		menu.setHeaderTitle("Draft Actions");
+			                	   		menu.add(1, 0, 0, "Edit Draft");
+			                	   		menu.add(1, 1, 0, "Upload Draft to Blog");
+			                	   		menu.add(1, 2, 0, "Delete Draft");            	             
+			                	   }
+			                	   else{
+			                		   menu.clear();
+			                	   		menu.setHeaderTitle("Post Actions");
+			                	   		menu.add(0, 0, 0, "Preview Post");
+			                	   		menu.add(0, 1, 0, "View Comments");
+			                	   		menu.add(0, 2, 0, "Edit Post");
+			                	   }
+			                   }
+			                   
+						}
+			          });
    
    	
 	return true;
@@ -328,6 +366,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     	draftTitles = new String[loadedPosts.size()];
     	publish = new String[loadedPosts.size()];
     	uploaded = new Integer[loadedPosts.size()];
+    	totalDrafts = loadedPosts.size();
     	
  					    for (int i=0; i < loadedPosts.size(); i++){
  					        HashMap contentHash = (HashMap) loadedPosts.get(i);
@@ -340,6 +379,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
  	return true;
      }
     	else{
+    		totalDrafts = 0;
     		return false;
     	}
     }
@@ -451,7 +491,16 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 
             tvDate = new TextView(context);
             
-            final String customDate = date;
+            String customDate = date;
+            
+            if (customDate.equals("1")){
+            	customDate = "Publish: Yes";
+            	tvDate.setTextColor(Color.parseColor("#006505"));
+            }
+            else if (customDate.equals("0")){
+            	customDate = "Publish: No";
+            }
+
             tvDate.setText(customDate);
             addView(tvDate, new LinearLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -460,40 +509,6 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             	//listener for drafts
             	this.setId(Integer.valueOf(postID));
             	this.setTag(position);
-        		this.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-  	               public void onCreateContextMenu(ContextMenu menu, View v,
-  						ContextMenuInfo menuInfo) {
-  					// TODO Auto-generated method stub
-  	            	   AdapterView.AdapterContextMenuInfo info;
-  	                   try {
-  	                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-  	                   } catch (ClassCastException e) {
-  	                       //Log.e(TAG, "bad menuInfo", e);
-  	                       return;
-  	                   }
-  	                   
-  	                   //rowID = (int) info.id;
-  	                   //rowID = info.position;
-  	                   
-  	                   rowID = Integer.parseInt(v.getTag().toString());
-  	                   selectedID = v.getId();
-  	                   
-  	             menu.clear();
-  	             
-  	             if(customDate.equals("1") || customDate.equals("0")){
-  				 menu.setHeaderTitle("Draft Actions");
-                   menu.add(1, 0, 0, "Edit Draft");
-                   menu.add(1, 1, 0, "Upload Draft to Blog");
-                   menu.add(1, 2, 0, "Delete Draft");
-  	             }
-  	             else{
-  	            	menu.setHeaderTitle("Post Actions");
-                    menu.add(0, 0, 0, "Preview Post");
-                    menu.add(0, 1, 0, "View Comments");
-                    menu.add(0, 2, 0, "Edit Post");
-  	             }
-  				}
-  	          });
         		
         	}
             
@@ -559,8 +574,8 @@ class XMLRPCMethod extends Thread {
 					dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 					  dialogBuilder.setTitle("Connection Error");
-		              dialogBuilder.setMessage(e.getFaultString());
-		              dialogBuilder.setPositiveButton("Ok",  new
+		              dialogBuilder.setMessage(e.getMessage());
+		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
                           public void onClick(DialogInterface dialog, int whichButton) {
                               // Just close the window.
@@ -579,7 +594,7 @@ class XMLRPCMethod extends Thread {
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 					  dialogBuilder.setTitle("Connection Error");
 		              dialogBuilder.setMessage(e.getMessage());
-		              dialogBuilder.setPositiveButton("Ok",  new
+		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             // Just close the window.
