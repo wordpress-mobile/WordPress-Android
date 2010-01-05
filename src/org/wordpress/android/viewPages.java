@@ -104,6 +104,9 @@ public class viewPages extends ListActivity {
       
         setContentView(R.layout.viewposts);
         
+        TextView longPress = (TextView) findViewById(R.id.longPress);
+        longPress.setText("Long press on a page to view actions");
+        
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {

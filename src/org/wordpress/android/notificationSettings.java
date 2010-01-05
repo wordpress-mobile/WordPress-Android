@@ -140,6 +140,7 @@ public void displayAccounts(){
 	    ArrayAdapter<Object> sIntervalArrayAdapter = new ArrayAdapter<Object>(this,
 	    		R.layout.spinner_textview,
 	            new String[] { "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes" , "1 Hour", "3 Hours", "6 Hours", "12 Hours", "Daily"});
+	    sIntervalArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    sInterval.setAdapter(sIntervalArrayAdapter);
 	    
 	    String interval = settingsDB.getInterval(this);
