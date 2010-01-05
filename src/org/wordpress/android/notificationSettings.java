@@ -158,8 +158,6 @@ public void displayAccounts(){
 	    save.setLayoutParams(params2);
 	    save.setTextColor(Color.parseColor("#444444"));
         save.setTextSize(18);
-        save.setWidth(80);
-        save.setHeight(60);
 	    save.setText("Save");
 	    
 	    save.setOnClickListener(new customButton.OnClickListener() {

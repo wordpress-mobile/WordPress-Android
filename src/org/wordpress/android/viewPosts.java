@@ -797,14 +797,14 @@ public boolean onContextItemSelected(MenuItem item) {
 protected Dialog onCreateDialog(int id) {
 if(id == ID_DIALOG_REFRESHING){
 ProgressDialog loadingDialog = new ProgressDialog(this);
-loadingDialog.setMessage("Please wait while refreshing posts...");
+loadingDialog.setMessage("Please wait while refreshing posts");
 loadingDialog.setIndeterminate(true);
 loadingDialog.setCancelable(true);
 return loadingDialog;
 }
 else if (id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage("Attempting to upload post...");
+	loadingDialog.setMessage("Attempting to upload post");
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;

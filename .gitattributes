@@ -259,10 +259,8 @@ res/drawable/refresh.png -text
 res/drawable/wp_logo.png -text
 res/layout/btn_check.xml -text
 res/layout/comment_tab_selector.xml -text
-res/layout/commentrow.xml -text
 res/layout/edit.xml -text
 res/layout/editpage.xml -text
-res/layout/home.xml -text
 res/layout/link.xml -text
 res/layout/list_selector.xml -text
 res/layout/list_selector_background_transition.xml -text
@@ -275,8 +273,6 @@ res/layout/postrow.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/radio_group.xml -text
 res/layout/row.xml -text
-res/layout/savename.xml -text
-res/layout/selectpost.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
