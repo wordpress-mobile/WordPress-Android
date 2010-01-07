@@ -450,7 +450,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         public PostView(Context context, String postID, String title, String date, int position) {
             super(context);
 
+
             this.setOrientation(VERTICAL);
+            this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_bg_posts));
             this.setPadding(4, 4, 4, 4);
             
             if (date.equals("postsHeader") || date.equals("draftsHeader")){

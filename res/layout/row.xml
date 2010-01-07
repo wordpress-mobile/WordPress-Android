@@ -3,10 +3,12 @@
 	android:layout_height="fill_parent"
 	android:orientation="horizontal"
 	android:padding="4px"
+	android:background="@drawable/list_bg"
 	>
 	<ImageView android:id="@+id/avatar"
-		android:layout_width="48px"
-		android:layout_height="48px"
+		android:layout_width="60px"
+		android:layout_height="60px"
+		android:padding="3px"
 	/>
 	<LinearLayout
 		android:layout_width="fill_parent"
@@ -40,7 +42,7 @@
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:padding="0px"
-				android:textSize="10px"
+				android:textSize="6pt"
 				android:textColor="#666666"
 			/>
 			<TextView android:id="@+id/postTitle"
@@ -51,7 +53,7 @@
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:padding="0px"
-				android:textSize="10px"
+				android:textSize="6pt"
 				android:textColor="#666666"
 			/>
 			<TextView android:id="@+id/comment"

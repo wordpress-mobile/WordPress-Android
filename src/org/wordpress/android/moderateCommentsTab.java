@@ -61,7 +61,6 @@ public class moderateCommentsTab extends ListActivity {
 	private ArrayList<CommentEntry> model=null;
 	private XMLRPCClient client;
 	private String id = "";
-	private String postID = "";
 	private String accountName = "";
 	private String postTitle = "";
 	public Object[] origComments;
@@ -69,9 +68,11 @@ public class moderateCommentsTab extends ListActivity {
 	public HashMap allComments = new HashMap();
 	private HashMap changedComments = new HashMap();
 	public int ID_DIALOG_POSTING = 1;
+	public int ID_DIALOG_REPLYING = 2;
 	public boolean initializing = true;
 	public int selectedID = 0;
 	public int rowID = 0;
+	private String selectedPostID = "";
 	public ProgressDialog pd;
 	
 	@Override
@@ -146,13 +147,14 @@ public class moderateCommentsTab extends ListActivity {
 		postStoreDB postStoreDB = new postStoreDB(this);
 	    Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
 	 	if (loadedPosts != null){
-	 	String author, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+	 	String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 	 	model=new ArrayList<CommentEntry>();
 						    for (int i=0; i < loadedPosts.size(); i++){
 						        HashMap contentHash = (HashMap) loadedPosts.get(i);
 						        allComments.put(contentHash.get("commentID").toString(), contentHash);
 						        author = escapeUtils.unescapeHtml(contentHash.get("author").toString());
 						        commentID = contentHash.get("commentID").toString();
+						        postID = contentHash.get("postID").toString();
 						        comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
 						        dateCreated = contentHash.get("commentDate").toString();
 						        dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
@@ -162,7 +164,8 @@ public class moderateCommentsTab extends ListActivity {
 						        postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
 						        
 						        //add to model
-						        model.add(new CommentEntry(commentID, 
+						        model.add(new CommentEntry(postID,
+						        		commentID, 
 						        		author,
 						        		dateCreatedFormatted,
 						        		comment,
@@ -170,7 +173,7 @@ public class moderateCommentsTab extends ListActivity {
 						        		postTitle,
 						        		authorURL,
 						        		authorEmail,
-						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=48&d=identicon")));
+						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
 						    }
 						   
 						    try {
@@ -187,7 +190,7 @@ public class moderateCommentsTab extends ListActivity {
 						   listView.setSelector(R.layout.list_selector);
 
 						   listView.setOnItemClickListener(new OnItemClickListener() {
-
+							   
 								public void onNothingSelected(AdapterView<?> arg0) {
 									
 								}
@@ -210,7 +213,7 @@ public class moderateCommentsTab extends ListActivity {
 				            });
 						   
 		        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
+		        	
 		               public void onCreateContextMenu(ContextMenu menu, View v,
 							ContextMenuInfo menuInfo) {
 						// TODO Auto-generated method stub
@@ -224,11 +227,13 @@ public class moderateCommentsTab extends ListActivity {
 		                   
 		                   selectedID = info.targetView.getId();
 		                   rowID = info.position;
+		                   selectedPostID = model.get(info.position).postID;
 		                   
 					 menu.setHeaderTitle("Comment Actions");
 	                 menu.add(0, 0, 0, "Mark Approved");
 	                 menu.add(0, 1, 0, "Mark Unapproved");
 	                 menu.add(0, 2, 0, "Mark Spam");
+	                 menu.add(0, 3, 0, "Reply");
 					}
 		          });
 	 	
@@ -294,7 +299,7 @@ public class moderateCommentsTab extends ListActivity {
 					else{
 					s = result.toString();
 					origComments = result;
-					String author, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+					String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 					
 					HashMap contentHash = new HashMap();
 					    
@@ -309,6 +314,7 @@ public class moderateCommentsTab extends ListActivity {
 						        comment = contentHash.get("content").toString();
 						        author = contentHash.get("author").toString();
 						        status = contentHash.get("status").toString();
+						        postID = contentHash.get("post_id").toString();
 						        commentID = contentHash.get("comment_id").toString();
 						        dateCreated = contentHash.get("date_created_gmt").toString();
 						        authorURL = contentHash.get("author_url").toString();
@@ -329,6 +335,7 @@ public class moderateCommentsTab extends ListActivity {
 						        } 
 						        
 						        dbValues.put("blogID", id);
+						        dbValues.put("postID", postID);
 						        dbValues.put("commentID", commentID);
 						        dbValues.put("author", author);
 						        dbValues.put("comment", comment);
@@ -397,6 +404,7 @@ public class moderateCommentsTab extends ListActivity {
 	}
 	
 	class CommentEntry {
+		String postID="";
 		String commentID="";
 		String name="";
 		String emailURL="";
@@ -407,8 +415,9 @@ public class moderateCommentsTab extends ListActivity {
 		String authorEmail="";
 		URI profileImageUrl=null;
 		
-		CommentEntry(String commentID, String name, String emailURL,
+		CommentEntry(String postID, String commentID, String name, String emailURL,
 									String comment, String status, String postTitle, String authorURL, String authorEmail, URI profileImageUrl) {
+			this.postID=postID;
 			this.commentID=commentID;
 			this.name=name;
 			this.emailURL=authorEmail;
@@ -819,12 +828,19 @@ public class moderateCommentsTab extends ListActivity {
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage("Moderating Comment...");
+	loadingDialog.setMessage("Moderating Comment");
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(false);
 	return loadingDialog;
 	}
-
+	else if (id == ID_DIALOG_REPLYING){
+		ProgressDialog loadingDialog = new ProgressDialog(this);
+		loadingDialog.setMessage("Replying to Comment");
+		loadingDialog.setIndeterminate(true);
+		loadingDialog.setCancelable(false);
+		return loadingDialog;
+	}
+	
 	return super.onCreateDialog(id);
 	}
 
@@ -867,6 +883,14 @@ public class moderateCommentsTab extends ListActivity {
 	        	  changeCommentStatus("spam", selectedID);
 	                  }
 	              }.start();
+	             return true;
+	          case 3:
+	        	  Intent i = new Intent(this, replyToComment.class);
+	        	  i.putExtra("commentID", selectedID);
+	        	  i.putExtra("accountName", accountName);
+	        	  i.putExtra("postID", selectedPostID);
+	        	  startActivityForResult(i, 0);
+	        	  
 	             return true;
 	        	  
 	     }
@@ -960,11 +984,130 @@ public class moderateCommentsTab extends ListActivity {
 	        	
 	        	
 			//};
-			//t.start();	
-			
-			
-			
-	 
+			//t.start();		
+	}
+	
+	private void replyToComment(final String postID, final int commentID, final String comment) {
+
+    	//Thread t = new Thread() {
+			//public void run() {
+			//Looper.prepare();
 		
+    	Vector settings = new Vector();
+        settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+    	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
+    
+    	String sURL = "";
+    	if (settings.get(0).toString().contains("xmlrpc.php"))
+    	{
+    		sURL = settings.get(0).toString();
+    	}
+    	else
+    	{
+    		sURL = settings.get(0).toString() + "xmlrpc.php";
+    	}
+		String sUsername = settings.get(2).toString();
+		String sPassword = settings.get(3).toString();
+    	
+    	client = new XMLRPCClient(sURL);
+    	
+    	ListView lv = getListView(); 
+    	
+    	Object curListItem;
+    	ListAdapter la = lv.getAdapter();
+    	
+        
+    		HashMap replyHash = new HashMap();
+	        replyHash.put("comment_parent", commentID);
+	        replyHash.put("content", comment);
+	        replyHash.put("author", "");
+	        replyHash.put("author_url", "");
+	        replyHash.put("author_email", "");
+
+	        
+        Object[] params = {
+        		1,
+        		sUsername,
+        		sPassword,
+        		Integer.valueOf(postID),
+        		replyHash
+        };
+        
+        Object result = null;
+        try {
+    		result = (Object) client.call("wp.newComment", params);
+    		dismissDialog(ID_DIALOG_REPLYING);
+    		Thread action = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  Toast.makeText(moderateCommentsTab.this, "Reply Added Succesfully", Toast.LENGTH_SHORT).show();
+			  } 
+			}; 
+			this.runOnUiThread(action);
+			Thread action2 = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+				  refreshComments();				  } 
+			}; 
+			this.runOnUiThread(action2);
+			
+    	} catch (XMLRPCException e) {
+    		dismissDialog(ID_DIALOG_REPLYING);
+    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+			  dialogBuilder.setTitle("Connection Error");
+            dialogBuilder.setMessage(e.getMessage());
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int whichButton) {
+                  // Just close the window.
+              	
+              }
+          });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+    	}
+    
+    //}
+    
+    	
+    	
+	//};
+	//t.start();		
+}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data != null)
+		{
+
+		Bundle extras = data.getExtras();
+
+		switch(requestCode) {
+		case 0:
+		    final String returnText = extras.getString("replyText");
+		    
+		    if (!returnText.equals("CANCEL")){
+		    	final String postID = extras.getString("postID");
+		    	final int commentID = extras.getInt("commentID");
+		    	showDialog(ID_DIALOG_REPLYING);
+					  				  
+					  new Thread(new Runnable(){
+						  public void run(){
+							  Looper.prepare();
+							  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+							  replyToComment(postID, commentID, returnText);
+						  }
+						  }).start();
+		    }
+		    
+		    
+		    break;
+		}
+		}
 	}
 }

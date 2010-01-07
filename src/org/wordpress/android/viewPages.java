@@ -453,6 +453,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 
             this.setOrientation(VERTICAL);
             this.setPadding(4, 4, 4, 4);
+            this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_bg_posts));
             
             if (date.equals("postsHeader") || date.equals("draftsHeader")){
             	

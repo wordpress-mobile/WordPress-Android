@@ -27,6 +27,7 @@
 <activity android:name="viewComment" android:theme="@android:style/Theme.Dialog"></activity>
 <activity android:name="newPage"></activity>
 <activity android:name="editPage"></activity>
+<activity android:name="replyToComment" android:theme="@android:style/Theme.Dialog"></activity>
 </application>
 
 <supports-screens android:smallScreens="true"

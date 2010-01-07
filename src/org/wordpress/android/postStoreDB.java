@@ -13,7 +13,7 @@ public class postStoreDB {
 
 	private static final String CREATE_TABLE_POSTSTORE = "create table if not exists poststore (blogID text, postID text, title text, postDate text, postDateFormatted text);";
 	private static final String CREATE_TABLE_PAGES = "create table if not exists pages (blogID text, pageID text, parentID text, title text, pageDate text, pageDateFormatted text);";
-	private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, commentID text, author text, comment text, commentDate text, commentDateFormatted text, status text, url text, email text, postTitle text);";
+	private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, postID text, commentID text, author text, comment text, commentDate text, commentDateFormatted text, status text, url text, email text, postTitle text);";
 	private static final String POSTSTORE_TABLE = "poststore";
 	private static final String PAGES_TABLE = "pages";
 	private static final String COMMENTS_TABLE = "comments";
@@ -165,7 +165,7 @@ public class postStoreDB {
 	public Vector loadComments(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector returnVector = new Vector();
-		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "commentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
+		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "commentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -183,15 +183,16 @@ public class postStoreDB {
 		if (c.getString(0) != null){
 		HashMap returnHash = new HashMap();
 		returnHash.put("blogID", c.getString(0));
-		returnHash.put("commentID", c.getString(1));
-		returnHash.put("author", c.getString(2));
-		returnHash.put("comment", c.getString(3));
-		returnHash.put("commentDate", c.getString(4));
-		returnHash.put("commentDateFormatted", c.getString(5));
-		returnHash.put("status", c.getString(6));
-		returnHash.put("url", c.getString(7));
-		returnHash.put("email", c.getString(8));
-		returnHash.put("postTitle", c.getString(9));
+		returnHash.put("postID", c.getInt(1));
+		returnHash.put("commentID", c.getString(2));
+		returnHash.put("author", c.getString(3));
+		returnHash.put("comment", c.getString(4));
+		returnHash.put("commentDate", c.getString(5));
+		returnHash.put("commentDateFormatted", c.getString(6));
+		returnHash.put("status", c.getString(7));
+		returnHash.put("url", c.getString(8));
+		returnHash.put("email", c.getString(9));
+		returnHash.put("postTitle", c.getString(10));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();
@@ -218,6 +219,7 @@ public class postStoreDB {
 			ContentValues values = new ContentValues();
 			HashMap thisHash = (HashMap) pageValues.get(i);
 			values.put("blogID", thisHash.get("blogID").toString());
+			values.put("postID", thisHash.get("postID").toString());
 			values.put("commentID", thisHash.get("commentID").toString());
 			values.put("author", thisHash.get("author").toString());
 			values.put("comment", thisHash.get("comment").toString());

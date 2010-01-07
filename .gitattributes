@@ -244,6 +244,8 @@ res/drawable/ic_menu_preferences.png -text
 res/drawable/ic_menu_rotate.png -text
 res/drawable/ic_notification_clear_all.png -text
 res/drawable/ic_popup_sync_1.png -text
+res/drawable/list_bg.xml -text
+res/drawable/list_bg_posts.xml -text
 res/drawable/list_divider.xml -text
 res/drawable/list_selector_background_focus.9.png -text
 res/drawable/list_selector_background_longpress.9.png -text
@@ -272,6 +274,7 @@ res/layout/pages_tab_selector.xml -text
 res/layout/postrow.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/radio_group.xml -text
+res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
@@ -313,6 +316,7 @@ src/org/wordpress/android/newPage.java -text
 src/org/wordpress/android/newPost.java -text
 src/org/wordpress/android/notificationSettings.java -text
 src/org/wordpress/android/postStoreDB.java -text
+src/org/wordpress/android/replyToComment.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
 src/org/wordpress/android/tabView.java -text
