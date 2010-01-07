@@ -12,7 +12,11 @@ android:layout_width="fill_parent"
 		  android:textColor="#444444"
 		  android:background="#b7b7b7"
 		  android:gravity="center"
-		  android:text="Long press on a post to view actions">
+		  android:text="Long press on a post to view actions"
+		  android:shadowColor="#FFFFFF"
+		  android:shadowDx="0"
+		  android:shadowDy=".5"
+		  android:shadowRadius="1">
 </TextView>	          
 <ListView android:choiceMode="singleChoice" 
 android:id="@android:id/list"

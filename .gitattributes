@@ -245,7 +245,7 @@ res/drawable/ic_menu_rotate.png -text
 res/drawable/ic_notification_clear_all.png -text
 res/drawable/ic_popup_sync_1.png -text
 res/drawable/list_bg.xml -text
-res/drawable/list_bg_posts.xml -text
+res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
 res/drawable/list_selector_background_focus.9.png -text
 res/drawable/list_selector_background_longpress.9.png -text
@@ -258,6 +258,7 @@ res/drawable/placeholder.png -text
 res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
+res/drawable/title_bg.xml -text
 res/drawable/wp_logo.png -text
 res/layout/btn_check.xml -text
 res/layout/comment_tab_selector.xml -text
@@ -280,6 +281,7 @@ res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/tabview.xml -text
+res/layout/title.xml -text
 res/layout/view_comment.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewlocaldrafts.xml -text

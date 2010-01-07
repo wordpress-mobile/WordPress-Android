@@ -3,7 +3,7 @@
 	android:layout_height="fill_parent"
 	android:orientation="horizontal"
 	android:padding="4px"
-	android:background="@drawable/list_bg"
+	android:background="@drawable/list_bg_selector"
 	>
 	<ImageView android:id="@+id/avatar"
 		android:layout_width="60px"

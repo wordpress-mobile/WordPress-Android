@@ -25,6 +25,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup.LayoutParams;
@@ -44,7 +45,7 @@ public class wpAndroid extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-      
+        
         //verify that the user has accepted the EULA
         boolean eula = checkEULA();
         if (eula == false){

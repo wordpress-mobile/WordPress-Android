@@ -9,7 +9,7 @@
     <TextView android:id="@+id/replyLabel"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:text="Reply:"
+              android:text="Enter reply:"
               android:textStyle="bold"
               />
     <EditText android:id="@+id/replyText" 
@@ -21,6 +21,7 @@
               android:capitalize="sentences"
               android:layout_below="@id/replyLabel"
               android:background="@android:drawable/editbox_background"
+              android:layout_marginBottom="6px"
               /> 
               
 <view
