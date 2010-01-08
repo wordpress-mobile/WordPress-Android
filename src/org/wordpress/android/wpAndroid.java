@@ -241,7 +241,15 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 	switch(requestCode) {
 	case 0:
-	    displayAccounts();
+		settingsDB settingsDB = new settingsDB(this);
+		accounts = settingsDB.getAccounts(this);
+		
+		if (accounts.size() == 0){
+			finish();
+		}
+		else{
+		displayAccounts();
+		}
 	    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
 	    break;
 	}

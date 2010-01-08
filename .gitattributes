@@ -258,7 +258,9 @@ res/drawable/placeholder.png -text
 res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
+res/drawable/splash_bg.xml -text
 res/drawable/title_bg.xml -text
+res/drawable/wordpress_home.png -text
 res/drawable/wp_logo.png -text
 res/layout/btn_check.xml -text
 res/layout/comment_tab_selector.xml -text
@@ -280,6 +282,7 @@ res/layout/row.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
+res/layout/splashscreen.xml -text
 res/layout/tabview.xml -text
 res/layout/title.xml -text
 res/layout/view_comment.xml -text
@@ -321,6 +324,7 @@ src/org/wordpress/android/postStoreDB.java -text
 src/org/wordpress/android/replyToComment.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
+src/org/wordpress/android/splashScreen.java -text
 src/org/wordpress/android/tabView.java -text
 src/org/wordpress/android/viewComment.java -text
 src/org/wordpress/android/viewComments.java -text

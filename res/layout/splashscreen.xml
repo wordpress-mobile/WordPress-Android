@@ -1,0 +1,21 @@
+<LinearLayout android:id="@+id/LinearLayout01" 
+android:layout_width="fill_parent" 
+android:layout_height="fill_parent" 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:gravity="center|center" 
+android:background="#DDDDDD" 
+android:orientation="vertical">
+<ImageView android:paddingLeft="20dip" android:paddingRight="20dip" android:scaleType="centerInside" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/wordpress_logo" android:src="@drawable/wordpress_home"></ImageView>
+<TextView android:text="@+id/TextView01" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content" 
+android:layout_marginBottom="20dip"
+android:shadowDx="1" 
+android:shadowDy="0" 
+android:shadowRadius="1" 
+android:shadowColor="#FFFFFF" 
+android:textColor="#444444"
+android:textSize="9pt"
+android:id="@+id/versionNumber" android:gravity="bottom">
+</TextView>
+</LinearLayout>
