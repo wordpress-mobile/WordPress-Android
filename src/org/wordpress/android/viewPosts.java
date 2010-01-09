@@ -328,22 +328,21 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 			                   selectedID = info.targetView.getId();
 			                   rowID = info.position;
 			                   
-			                   if ((rowID != 0 && (rowID > 0 && (rowID != (totalDrafts + 1)))) || totalDrafts == 0){
-			                	   if (totalDrafts > 0 && rowID <= totalDrafts){
-			                	   		menu.clear();
-			                	   		menu.setHeaderTitle("Draft Actions");
-			                	   		menu.add(1, 0, 0, "Edit Draft");
-			                	   		menu.add(1, 1, 0, "Upload Draft to Blog");
-			                	   		menu.add(1, 2, 0, "Delete Draft");            	             
-			                	   }
-			                	   else{
-			                		   menu.clear();
-			                	   		menu.setHeaderTitle("Post Actions");
-			                	   		menu.add(0, 0, 0, "Preview Post");
-			                	   		menu.add(0, 1, 0, "View Comments");
-			                	   		menu.add(0, 2, 0, "Edit Post");
-			                	   }
+			                   if (totalDrafts > 0 && rowID <= totalDrafts && rowID != 0){
+			                	   menu.clear();
+			                	   menu.setHeaderTitle("Draft Actions");
+			                	   menu.add(1, 0, 0, "Edit Draft");
+			                	   menu.add(1, 1, 0, "Upload Draft to Blog");
+			                	   menu.add(1, 2, 0, "Delete Draft");            	             
 			                   }
+			                   else if(rowID == 1 || ((rowID != (totalDrafts + 1)) && rowID != 0)){
+			                	   menu.clear();
+			                	   menu.setHeaderTitle("Post Actions");
+			                	   menu.add(0, 0, 0, "Preview Post");
+			                	   menu.add(0, 1, 0, "View Comments");
+			                	   menu.add(0, 2, 0, "Edit Post");
+			                   }
+
 			                   
 						}
 			          });
