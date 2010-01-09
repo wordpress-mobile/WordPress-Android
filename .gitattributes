@@ -262,6 +262,7 @@ res/drawable/splash_bg.xml -text
 res/drawable/title_bg.xml -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_logo.png -text
+res/layout-large-notlong-port-hdpi-finger-keyssoft-qwerty-trackball-800x480/splashscreen.xml -text
 res/layout/btn_check.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/edit.xml -text

@@ -8,7 +8,7 @@
 	<ImageView android:id="@+id/avatar"
 		android:layout_width="60px"
 		android:layout_height="60px"
-		android:padding="3px"
+		android:padding="4dip"
 	/>
 	<LinearLayout
 		android:layout_width="fill_parent"
@@ -33,6 +33,8 @@
 				android:ellipsize="end"
 				android:textColor="#444444"
 				android:padding="0px"
+				android:text="Hello"
+				android:layout_marginBottom="-2dip"
 			/>
 			<TextView android:id="@+id/email_url"
 				android:layout_width="wrap_content"
@@ -44,17 +46,21 @@
 				android:padding="0px"
 				android:textSize="6pt"
 				android:textColor="#666666"
+				android:text="test"
+				android:layout_marginBottom="-4dip"
 			/>
 			<TextView android:id="@+id/postTitle"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
+				android:layout_margin="0px"
 				android:gravity="left"
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:padding="0px"
 				android:textSize="6pt"
 				android:textColor="#666666"
+				android:text="testing"
 			/>
 			<TextView android:id="@+id/comment"
 				android:orientation="vertical"
@@ -70,6 +76,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:singleLine="true"
+				android:layout_marginBottom="10dip"
 		/>
 		</LinearLayout>
 	</LinearLayout>
