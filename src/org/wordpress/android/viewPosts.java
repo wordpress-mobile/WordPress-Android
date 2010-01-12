@@ -455,11 +455,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             this.setPadding(4, 4, 4, 4);
             
             if (date.equals("postsHeader") || date.equals("draftsHeader")){
-            	
-            	
+
+            	this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_header_bg));
             	this.setPadding(8, 0, 0, 0);
-            	this.setBackgroundColor(Color.parseColor("#999999"));
-            	
             	tvTitle = new TextView(context);
                 tvTitle.setText(title);
                 tvTitle.setTextSize(21);
@@ -487,10 +485,12 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             tvTitle.setText(title);
             tvTitle.setTextSize(20);
             tvTitle.setTextColor(Color.parseColor("#444444"));
+            tvTitle.setPadding(4, 0, 0, 0);
             addView(tvTitle, new LinearLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 
             tvDate = new TextView(context);
+            tvDate.setTextColor(Color.parseColor("#888888"));
             
             String customDate = date;
             
@@ -503,6 +503,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             }
 
             tvDate.setText(customDate);
+            tvDate.setPadding(4, 0, 0, 0);
             addView(tvDate, new LinearLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             
@@ -690,8 +691,14 @@ public boolean onOptionsItemSelected(final MenuItem item){
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	// TODO Auto-generated method stub
 	super.onActivityResult(requestCode, resultCode, data);
-
+	switch (requestCode) {
+		case 0:
 		loadPosts();
+		break;
+		case 1:
+		refreshPosts();
+		break;
+	}
 
 }
 
@@ -725,7 +732,7 @@ public boolean onContextItemSelected(MenuItem item) {
               //i2.putExtra("postTitle", titles[selectedID]);
               i2.putExtra("id", id);
               i2.putExtra("accountName", accountName);
-              startActivity(i2);
+              startActivityForResult(i2,1);
         	  return true;
      }
      
@@ -739,7 +746,7 @@ public boolean onContextItemSelected(MenuItem item) {
             i2.putExtra("id", id);
             i2.putExtra("accountName", accountName);
             i2.putExtra("localDraft", true);
-            startActivity(i2);
+            startActivityForResult(i2,0);
       	  return true;
         case 1:
       	  showDialog(ID_DIALOG_POSTING);
