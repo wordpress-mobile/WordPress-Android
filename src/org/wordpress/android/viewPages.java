@@ -843,9 +843,6 @@ public String submitPost() throws IOException {
 	
 	HashMap postHashMap = (HashMap) post.get(0);
 	
-	EditText titleET = (EditText)findViewById(R.id.title);
-	EditText contentET = (EditText)findViewById(R.id.content);
-	
 	String title = postHashMap.get("title").toString();
 	String content = postHashMap.get("content").toString();
 	
