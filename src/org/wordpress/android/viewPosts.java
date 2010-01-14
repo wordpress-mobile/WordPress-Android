@@ -690,13 +690,22 @@ public boolean onOptionsItemSelected(final MenuItem item){
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	// TODO Auto-generated method stub
 	super.onActivityResult(requestCode, resultCode, data);
-	switch (requestCode) {
+	Bundle extras = data.getExtras();
+	String returnResult = extras.getString("returnStatus");
+	
+	if (returnResult != null){
+		switch (requestCode) {
 		case 0:
-		loadPosts();
-		break;
+			if (returnResult.equals("OK")){
+				loadPosts();
+			}
+			break;
 		case 1:
-		refreshPosts();
-		break;
+			if (returnResult.equals("OK")){
+				refreshPosts();
+			}
+			break;
+		}
 	}
 
 }

@@ -466,7 +466,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             	this.setPadding(4, 0, 0, 0);
             	tvTitle = (TextView) inflatedView.findViewById(R.id.title);
             	ly.removeView(ly.findViewById(R.id.title));
-                tvTitle.setText(title);
+                tvTitle.setText(escapeUtils.unescapeHtml(title));
                 tvTitle.setTextSize(21);
                 tvTitle.setTextColor(Color.parseColor("#EEEEEE"));
                 tvTitle.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
@@ -484,7 +484,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             else{
             tvTitle = (TextView) inflatedView.findViewById(R.id.title);
             ly.removeView(ly.findViewById(R.id.title));
-            tvTitle.setText(title);
+            tvTitle.setText(escapeUtils.unescapeHtml(title));
             tvTitle.setTextSize(20);
             tvTitle.setTextColor(Color.parseColor("#444444"));
             addView(tvTitle);
@@ -686,15 +686,23 @@ public boolean onOptionsItemSelected(final MenuItem item){
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	// TODO Auto-generated method stub
 	super.onActivityResult(requestCode, resultCode, data);
-
-	switch (requestCode) {
-	case 0:
-	loadPages();
-	break;
-	case 1:
-	refreshPages();
-	break;
-}
+	Bundle extras = data.getExtras();
+	String returnResult = extras.getString("returnStatus");
+	
+	if (returnResult != null){
+		switch (requestCode) {
+		case 0:
+			if (returnResult.equals("OK")){
+				loadPages();
+			}
+			break;
+		case 1:
+			if (returnResult.equals("OK")){
+				refreshPages();
+			}
+			break;
+		}
+	}
 
 }
 

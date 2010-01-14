@@ -607,7 +607,7 @@ public class moderateCommentsTab extends ListActivity {
 			bundle.putString("accountName", accountName);
 	    	Intent i = new Intent(this, settings.class);
 	    	i.putExtras(bundle);
-	    	startActivityForResult(i, 0);
+	    	startActivityForResult(i, 1);
 	    	
 	    	return true;
 		case 1:

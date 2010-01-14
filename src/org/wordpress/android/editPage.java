@@ -39,6 +39,7 @@ import android.os.Handler;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Selection;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -224,7 +225,13 @@ public class editPage extends Activity {
             	boolean result = savePost();
             	
             	if (result){
-            		finish();
+            		Bundle bundle = new Bundle();
+                    
+                    bundle.putString("returnStatus", "OK");
+                    Intent mIntent = new Intent();
+                    mIntent.putExtras(bundle);
+                    setResult(RESULT_OK, mIntent);
+                    finish();  
             	}
             }
             else{
@@ -454,10 +461,17 @@ final customButton cancelButton = (customButton) findViewById(R.id.cancel);
             cancelButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	finish();             	
+                	Bundle bundle = new Bundle();
+                    
+                    bundle.putString("returnStatus", "CANCEL");
+                    Intent mIntent = new Intent();
+                    mIntent.putExtras(bundle);
+                    setResult(RESULT_OK, mIntent);
+                    finish();          	
                 	}          	
                 
         });
+            
             
 final customButton clearPictureButton = (customButton) findViewById(R.id.clearPicture);   
             
@@ -865,7 +879,13 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			              dialogBuilder.setPositiveButton("Ok",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                              finish();
+	                        	  Bundle bundle = new Bundle();
+	                              
+	                              bundle.putString("returnStatus", "CANCEL");
+	                              Intent mIntent = new Intent();
+	                              mIntent.putExtras(bundle);
+	                              setResult(RESULT_OK, mIntent);
+	                              finish();  
 	                      
 	                          }
 	                      });
@@ -908,7 +928,13 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				              dialogBuilder.setPositiveButton("Ok",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
-		                              finish();
+		                        	  Bundle bundle = new Bundle();
+		                              
+		                              bundle.putString("returnStatus", "CANCEL");
+		                              Intent mIntent = new Intent();
+		                              mIntent.putExtras(bundle);
+		                              setResult(RESULT_OK, mIntent);
+		                              finish();  
 		                      
 		                          }
 		                      });
@@ -1268,7 +1294,13 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {
-                          finish();
+                    	  Bundle bundle = new Bundle();
+                          
+                          bundle.putString("returnStatus", "OK");
+                          Intent mIntent = new Intent();
+                          mIntent.putExtras(bundle);
+                          setResult(RESULT_OK, mIntent);
+                          finish();  
                       }
                   });
 	              dialogBuilder.setCancelable(true);
@@ -1349,6 +1381,22 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         
 		return success;
 	}
+	
+	@Override public boolean onKeyDown(int i, KeyEvent event) {
+
+		  // only intercept back button press
+		  if (i == KeyEvent.KEYCODE_BACK) {
+         	 Bundle bundle = new Bundle();
+             
+             bundle.putString("returnStatus", "CANCEL");
+             Intent mIntent = new Intent();
+             mIntent.putExtras(bundle);
+             setResult(RESULT_OK, mIntent);
+             finish();
+		  }
+
+		  return false; // propagate this keyevent
+		}
     
 }
 
