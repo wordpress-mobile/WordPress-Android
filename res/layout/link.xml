@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
-                android:padding="10px"
+                android:padding="10dip"
                 android:layout_gravity="center_vertical">
             
     <TextView android:id="@+id/linkLabel"
@@ -28,7 +28,8 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_below="@id/linkText"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="10dip"
+            android:textSize="20dip"
             android:text="OK" />
  
 <view
@@ -38,6 +39,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/ok"
             android:layout_toLeftOf="@id/ok"
+            android:textSize="20dip"
             android:text="Cancel" />          
 
 </RelativeLayout>

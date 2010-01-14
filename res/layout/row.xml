@@ -2,19 +2,20 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="horizontal"
-	android:padding="4px"
+	android:padding="4dip"
 	android:background="@drawable/list_bg_selector"
 	>
 	<ImageView android:id="@+id/avatar"
-		android:layout_width="60px"
-		android:layout_height="60px"
+		android:layout_width="60dip"
+		android:layout_height="60dip"
 		android:padding="4dip"
 	/>
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:paddingLeft="4px"
+		android:paddingLeft="4dip"
+		android:paddingRight="4dip"
 		>
 		<LinearLayout
 			android:layout_width="wrap_content"

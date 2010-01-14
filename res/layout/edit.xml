@@ -10,9 +10,9 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
 				android:background="#e8e8e8"
-                android:paddingLeft="10px"
-                android:paddingRight="10px"
-                android:paddingBottom="10px"> 
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingBottom="10dip"> 
     <TextView android:id="@+id/l_title" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
@@ -21,7 +21,7 @@
                 android:textColor="#444444"/>
               
     <EditText android:id="@+id/title" 
-    		  android:minHeight="40px"
+    		  android:minHeight="40dip"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
@@ -54,7 +54,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content" 
             android:layout_below="@id/content"
             android:textStyle="bold"
-            android:textSize="22px"
+            android:textSize="22dip"
             android:text="B" /> 
             
 <view
@@ -66,7 +66,7 @@ class="org.wordpress.android.customButton"
             android:layout_alignTop="@id/bold"
             android:layout_toRightOf="@id/bold"
             android:textStyle="italic"
-            android:textSize="22px"
+            android:textSize="22dip"
             android:text="I" />
         
 <view
@@ -76,7 +76,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/em"
             android:layout_toRightOf="@id/em"
-            android:textSize="22px"
+            android:textSize="22dip"
             android:textColor="#006699"
             android:text="link" />  
             
@@ -88,7 +88,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/link"
             android:layout_toRightOf="@id/link"
-            android:textSize="22px"
+            android:textSize="22dip"
             android:text="b-quote" />          
               
     <TextView android:id="@+id/l_pictures" 
@@ -105,6 +105,7 @@ class="org.wordpress.android.customButton"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/l_pictures" 
+            android:textSize="20dip"
             android:text="Add"/>
             
 <view
@@ -115,6 +116,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/addPictureButton"
             android:layout_toRightOf="@id/addPictureButton"
+            android:textSize="20dip"
             android:text="Clear" />
             
             <GridView   
@@ -134,7 +136,7 @@ class="org.wordpress.android.customButton"
                 android:layout_below="@id/gridView"/>
               
     <EditText android:id="@+id/tags" 
-    		  android:minHeight="40px"
+    		  android:minHeight="40dip"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
@@ -149,7 +151,7 @@ class="org.wordpress.android.customButton"
               android:textColor="#444444"/>
               
      <Spinner android:id="@+id/spinner1"
-        android:layout_width="256px"
+        android:layout_width="256dip"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
         android:textColor="#444444"
@@ -163,6 +165,7 @@ class="org.wordpress.android.customImageButton"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_popup_sync_1"
             android:layout_alignBottom="@id/spinner1"
+            android:textSize="20dip"
             android:layout_toRightOf="@id/spinner1" />
        
      <TextView android:id="@+id/selectedCategories" 
@@ -179,6 +182,7 @@ class="org.wordpress.android.customButton"
      	    android:layout_below="@id/selectedCategories"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
+            android:textSize="20dip"
             android:text="Clear" /> 
                          
   <TextView android:id="@+id/l_publish" 
@@ -204,6 +208,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content" 
             android:layout_below="@id/publish"
             android:layout_alignParentRight="true"
+            android:textSize="20dip"
             android:text="Save" /> 
             
 <view
@@ -214,6 +219,7 @@ class="org.wordpress.android.customButton"
             android:layout_toLeftOf="@id/post" 
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
+            android:textSize="20dip"
             android:text="Cancel" />           
             
     <TextView android:id="@+id/text1"

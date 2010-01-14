@@ -46,6 +46,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore.Images;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -450,26 +451,28 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     private class PageView extends LinearLayout {
         public PageView(Context context, String postID, String title, String date, int position) {
             super(context);
-
+            
             this.setOrientation(VERTICAL);
             this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_bg_selector));
             this.setPadding(4, 4, 4, 4);
             
-            
+            LayoutInflater inflater=getLayoutInflater();
+        	View inflatedView = inflater.inflate(R.layout.row_post_page, null);
+        	LinearLayout ly = (LinearLayout) inflatedView.findViewById (R.id.row_post_root);
+        	
             if (date.equals("postsHeader") || date.equals("draftsHeader")){
             	
             	this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_header_bg));
-            	this.setPadding(8, 0, 0, 0);
-            	
-            	tvTitle = new TextView(context);
+            	this.setPadding(4, 0, 0, 0);
+            	tvTitle = (TextView) inflatedView.findViewById(R.id.title);
+            	ly.removeView(ly.findViewById(R.id.title));
                 tvTitle.setText(title);
                 tvTitle.setTextSize(21);
-                tvTitle.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
                 tvTitle.setTextColor(Color.parseColor("#EEEEEE"));
-                addView(tvTitle, new LinearLayout.LayoutParams(
-                        LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                tvTitle.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
+                addView(tvTitle);
                 
-                tvDate = new TextView(context);
+                tvDate = (TextView) inflatedView.findViewById(R.id.date);
                 
                 if (date.equals("draftsHeader")){
                 	inDrafts = true;
@@ -479,21 +482,15 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
                 }
             }
             else{
-            // Here we build the child views in code. They could also have
-            // been specified in an XML file.
-            	
-            	
-
-            tvTitle = new TextView(context);
+            tvTitle = (TextView) inflatedView.findViewById(R.id.title);
+            ly.removeView(ly.findViewById(R.id.title));
             tvTitle.setText(title);
             tvTitle.setTextSize(20);
             tvTitle.setTextColor(Color.parseColor("#444444"));
-            tvTitle.setPadding(4, 0, 0, 0);
-            addView(tvTitle, new LinearLayout.LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            addView(tvTitle);
 
-            tvDate = new TextView(context);
-            tvDate.setTextColor(Color.parseColor("#888888"));
+            tvDate = (TextView) inflatedView.findViewById(R.id.date);
+            ly.removeView(ly.findViewById(R.id.date));
             String customDate = date;
             
             if (customDate.equals("1")){
@@ -505,9 +502,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             }
             
             tvDate.setText(customDate);
-            tvDate.setPadding(4, 0, 0, 0);
-            addView(tvDate, new LinearLayout.LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            addView(tvDate);
              
             	//listener for drafts
             	this.setId(Integer.valueOf(postID));

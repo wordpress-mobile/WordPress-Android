@@ -8,7 +8,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
-                android:padding="10px"
+                android:padding="10dip"
 				android:background="#e8e8e8">
             
     <TextView android:id="@+id/l_url" 
@@ -21,13 +21,13 @@
     		  android:inputType="textUri"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:minHeight="40px"
+              android:minHeight="40dip"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_url"/>
               
       <TextView android:id="@+id/l_username" 
       		  android:textColor="#444444" 
-        	  android:layout_marginTop="10px"	
+        	  android:layout_marginTop="10dip"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="Username:"
@@ -36,13 +36,13 @@
     <EditText android:id="@+id/username" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:minHeight="40px" 
+              android:minHeight="40dip" 
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_username"/>           
   
       <TextView android:id="@+id/l_password"
       		  android:textColor="#444444"
-              android:layout_marginTop="10px" 
+              android:layout_marginTop="10dip" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="Password:"
@@ -51,7 +51,7 @@
     <EditText android:id="@+id/password" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:minHeight="40px" 
+              android:minHeight="40dip" 
               android:password="true"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_password"/>     
@@ -64,7 +64,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="10dip"
             android:text="Save" />
  
 <view

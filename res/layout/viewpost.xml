@@ -8,7 +8,7 @@ android:background="#e8e8e8"
 <TextView
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
-		android:padding="4px"
+		android:padding="4dip"
 		  android:textColor="#444444"
 		  android:background="#b7b7b7"
 		  android:gravity="center"

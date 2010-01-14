@@ -275,11 +275,11 @@ res/layout/moderatecomments.xml -text
 res/layout/newaccount.xml -text
 res/layout/newpage.xml -text
 res/layout/pages_tab_selector.xml -text
-res/layout/postrow.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/radio_group.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
+res/layout/row_post_page.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text

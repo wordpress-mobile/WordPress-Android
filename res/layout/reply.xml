@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
-                android:padding="10px"
+                android:padding="10dip"
                 android:layout_gravity="center_vertical">
    
             
@@ -15,13 +15,13 @@
     <EditText android:id="@+id/replyText" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:minHeight="40px" 
+              android:minHeight="40dip" 
               android:minLines="2"
               android:autoText="true"
               android:capitalize="sentences"
               android:layout_below="@id/replyLabel"
               android:background="@android:drawable/editbox_background"
-              android:layout_marginBottom="6px"
+              android:layout_marginBottom="6dip"
               /> 
               
 <view
@@ -31,7 +31,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_below="@id/replyText"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="10dip"
             android:text="Send Reply" />
  
 <view

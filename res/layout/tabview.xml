@@ -18,13 +18,11 @@
             <TextView 
                 android:id="@+id/textview1"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:text="this is a tab" />
+                android:layout_height="fill_parent" />
             <TextView 
                 android:id="@+id/textview2"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:text="this is another tab" />
+                android:layout_height="fill_parent" />
     	</FrameLayout>
     </LinearLayout>
 </TabHost>
