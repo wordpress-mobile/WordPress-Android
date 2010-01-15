@@ -1,45 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.wordpress.android" android:versionName="1.0.0" android:versionCode="1">
-    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-    <application android:icon="@drawable/app_icon" android:label="WordPress" android:debuggable="true" android:name="WordPress">
-<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:label="WordPress"></activity>
-<activity android:name=".settings" android:label="Settings" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name=".link" android:theme="@android:style/Theme.Dialog" android:label="Enter a URL"></activity>
-<activity android:name="viewPosts"></activity>
-<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="newPost" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden" android:label="WordPress - Add Account"></activity>
-<activity android:name="editPost" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="viewPost"></activity>
-<activity android:name="notificationSettings" android:label="Notification Settings"></activity>
-<service android:name="commentService" android:label="Comment Service"></service>
-<receiver android:name="broadcastReceiver"></receiver>
-<activity android:name="tabView" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="viewLocalDrafts"></activity>
-<activity android:name="viewPages"></activity>
-<activity android:name="moderateCommentsTab" android:configChanges="keyboardHidden|orientation"></activity>
-<activity android:name="viewComment" android:theme="@android:style/Theme.Dialog"></activity>
-<activity android:name="newPage"></activity>
-<activity android:name="editPage"></activity>
-<activity android:name="replyToComment" android:theme="@android:style/Theme.Dialog"></activity>
-<activity android:icon="@drawable/app_icon" android:name="splashScreen" android:theme="@android:style/Theme.NoTitleBar">
-	<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-    </intent-filter>
-</activity>
-</application>
+	package="org.wordpress.android" android:versionName="1.0.0"
+	android:versionCode="1">
+	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
+	<application android:icon="@drawable/app_icon"
+		android:label="WordPress" android:debuggable="true" android:name="WordPress">
+		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon"
+			android:label="WordPress" />
+		<activity android:name=".settings" android:label="Settings"
+			android:configChanges="orientation|keyboardHidden" />
+		<activity android:name=".link" android:theme="@android:style/Theme.Dialog"
+			android:label="Enter a URL" />
+		<activity android:name="viewPosts" />
+		<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="newPost" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden"
+			android:label="WordPress - Add Account" />
+		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="viewPost" />
+		<activity android:name="notificationSettings" android:label="Notification Settings" />
+		<service android:name="commentService" android:label="Comment Service" />
+		<receiver android:name="broadcastReceiver" />
+		<activity android:name="tabView" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="viewLocalDrafts" />
+		<activity android:name="viewPages" />
+		<activity android:name="moderateCommentsTab"
+			android:configChanges="keyboardHidden|orientation" />
+		<activity android:name="viewComment" android:theme="@android:style/Theme.Dialog" />
+		<activity android:name="newPage" />
+		<activity android:name="editPage" />
+		<activity android:name="replyToComment" android:theme="@android:style/Theme.Dialog" />
+		<activity android:icon="@drawable/app_icon" android:name="splashScreen"
+			android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
-<supports-screens android:smallScreens="true"
-                  android:normalScreens="true"
-                  android:largeScreens="true" />
+		<receiver android:name=".broadcastReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
 
+			</intent-filter>
+		</receiver>
 
-<uses-permission xmlns:android="http://schemas.android.com/apk/res/android" android:name="android.permission.INTERNET"></uses-permission>
+	</application>
 
-
-
-
-
+	<supports-screens android:smallScreens="true"
+		android:normalScreens="true" android:largeScreens="true" />
+	<uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
+		android:name="android.permission.INTERNET" />
 </manifest> 
