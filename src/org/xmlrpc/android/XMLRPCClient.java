@@ -1,6 +1,8 @@
 package org.xmlrpc.android;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URI;
@@ -336,8 +338,16 @@ public class XMLRPCClient {
 			// setup pull parser
 			XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 			entity = response.getEntity();
-			Reader reader = new InputStreamReader(entity.getContent());
-			pullParser.setInput(reader);
+			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
+			PushbackInputStream is = new PushbackInputStream(entity.getContent());
+			int bomCheck = is.read();			
+			if (bomCheck != 239){
+				is.unread(bomCheck);
+			}
+			else{
+				is.skip(2);
+			}
+			pullParser.setInput(is, "UTF-8");
 			
 			// lets start pulling...
 			pullParser.nextTag();
