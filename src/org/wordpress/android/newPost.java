@@ -1153,13 +1153,34 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
 		  // only intercept back button press
 		  if (i == KeyEvent.KEYCODE_BACK) {
-     	 Bundle bundle = new Bundle();
-         
-         bundle.putString("returnStatus", "CANCEL");
-         Intent mIntent = new Intent();
-         mIntent.putExtras(bundle);
-         setResult(RESULT_OK, mIntent);
-         finish();
+			  
+			  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+			  dialogBuilder.setTitle("Cancel Draft");
+              dialogBuilder.setMessage("Are you sure you want to cancel this draft?");
+              dialogBuilder.setPositiveButton("Yes",  new
+            		  DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    	Bundle bundle = new Bundle();
+                        
+                        bundle.putString("returnStatus", "CANCEL");
+                        Intent mIntent = new Intent();
+                        mIntent.putExtras(bundle);
+                        setResult(RESULT_OK, mIntent);
+                        finish();
+
+                
+                    }
+                });
+              dialogBuilder.setNegativeButton("No",  new
+            		  DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    	//just close the dialog window
+
+                    }
+                });
+              dialogBuilder.setCancelable(true);
+             dialogBuilder.create().show();
+     	 
 		  }
 
 		  return false; // propagate this keyevent

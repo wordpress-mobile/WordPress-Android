@@ -18,11 +18,16 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.wordpress.android.R;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Xml;
+import android.widget.TextView;
 
 
 /**
@@ -89,7 +94,9 @@ public class XMLRPCClient {
 	 */
 	public XMLRPCClient(URI uri) {
 		postMethod = new HttpPost(uri);
-		postMethod.addHeader("Content-Type", "text/xml");
+		postMethod.addHeader("Content-Type", "text/xml");		
+		//UPDATE THE VERSION NUMBER BEFORE RELEASE!
+		postMethod.addHeader("User-Agent", "wp-android/0.9.1");
 		
 		// WARNING
 		// I had to disable "Expect: 100-Continue" header since I had 
