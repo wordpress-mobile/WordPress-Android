@@ -2,7 +2,6 @@ package org.wordpress.android;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.Button;
 
@@ -29,7 +28,7 @@ public class customButton extends Button{
 		}
 		
 	//sets the button image based on whether the button in its pressed state
-	//
+
 	super.onDraw(canvas);
 	}
 

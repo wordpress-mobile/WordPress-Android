@@ -11,12 +11,10 @@ import java.security.NoSuchAlgorithmException;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class viewComment extends Activity {
 	
@@ -52,7 +50,6 @@ public class viewComment extends Activity {
 		{ 
 		  public void run() 
 		  {
-			  //ivGravatar.setImageDrawable(getDrawable(gravatarURL));
 			  w.setFeatureDrawable(Window.FEATURE_LEFT_ICON, getDrawable(gravatarURL));
 		  } 
 		}; 
@@ -62,17 +59,10 @@ public class viewComment extends Activity {
         this.setTitle(name);
         
         final ImageView ivGravatar = (ImageView) findViewById(R.id.gravatar);
-        
-        
-        
-        
-         
-		
+
 		TextView tvComment = (TextView) findViewById(R.id.comment);
 		
 		tvComment.setText(comment);
-		
-		
 
 	}
 	

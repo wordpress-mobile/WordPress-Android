@@ -4,10 +4,8 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 
 public class tabView extends TabActivity {
 	private String id = "";

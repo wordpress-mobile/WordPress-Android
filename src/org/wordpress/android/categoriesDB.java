@@ -1,5 +1,3 @@
-//by Dan Roundhill, danroundhill.com/wptogo
-
 package org.wordpress.android;
 
 import java.util.Vector;

@@ -36,7 +36,7 @@ public class splashScreen extends Activity {
         
         new Handler().postDelayed(new Runnable(){ 
             public void run() { 
-                 /* Create an Intent that will start the Menu-Activity. */ 
+                 /* Create an Intent that will start the Main WordPress Activity. */ 
                  Intent mainIntent = new Intent(splashScreen.this,wpAndroid.class); 
                  splashScreen.this.startActivity(mainIntent); 
                  splashScreen.this.finish(); 

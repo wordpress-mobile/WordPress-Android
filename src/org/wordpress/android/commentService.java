@@ -1,34 +1,23 @@
 package org.wordpress.android;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
-import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.editPost.XMLRPCMethodCallback;
+
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 public class commentService extends Service {
 
@@ -102,13 +91,6 @@ public class commentService extends Service {
 	/** dont forget to fire update to the ui listener */
 	private void _getUpdatedComments() {
 		
-		
-		//just notify for now
-		/*Intent appIntent = new Intent(this, com.roundhill.androidWP.wpAndroid.class); 
-		  
-		  */
-		
-
 		//Log.i(getClass().getSimpleName(), "Timer Cycled!");
 		
 		settingsDB settingsDB = new settingsDB(this);
@@ -152,8 +134,6 @@ public class commentService extends Service {
         hPost.put("status", "");
         hPost.put("post_id", "");
         hPost.put("number", 1);
-		
-    	//Log.i("wpToGoCommentService", "XMLRPCTIME!");
 
         Object[] params = {
         		1,
@@ -291,7 +271,6 @@ public class commentService extends Service {
 						
 						Throwable couse = e.getCause();
 						e.printStackTrace();
-						//Log.d("Test", "error", e);
 						
 					}
 				});
@@ -300,6 +279,4 @@ public class commentService extends Service {
 		}
 	}
 
-	}//end class MyService
-
-
+}

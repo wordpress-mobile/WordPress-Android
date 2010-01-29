@@ -1,9 +1,5 @@
-//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
-
-
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +28,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,8 +35,6 @@ import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -511,14 +504,13 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
             }
 
-        Integer blogID = 1; //never changes with wordpress, so far
+        Integer blogID = 1; //never changes with WordPress, so far
         
         Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;
+        
         //before we do anything, validate that the user has entered settings
         boolean enteredSettings = checkSettings();
-        
-        
         
         if (!enteredSettings){
         	res = "invalidSettings";
@@ -711,8 +703,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		//create the thumbnail
 		byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
 
-            //try and upload the freakin' image
-            //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
+            //attempt to upload the image
             String contentType = "image/jpg";
             Map<String, Object> m = new HashMap<String, Object>();
 
@@ -781,17 +772,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        	
-					        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
-					       // postIDs[ctr] = contentHash.get("postid").toString();
-        	
-        	
-     	  
-     	   
 
-
-        
-		
         return imgHTML;
 	}
 
@@ -948,7 +929,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 								}; 
 								runOnUiThread(action);
 						}
-						//Log.d("Test", "error", e);
 						
 					}
 				});
@@ -966,8 +946,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			this.method = method;
 			this.callBack = callBack;
 			
-			//handler = new Handler();
-			
 		}
 		public void call() throws InterruptedException {
 			call(null);
@@ -975,8 +953,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		public void call(Object[] params) throws InterruptedException {		
 			this.params = params;
 			this.method = method;
-			//start();
-			//join();
+
 			final Object result;
 			try {
 				result = (Object) client.call(method, params);
@@ -998,8 +975,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 					public void run() {
 
 						callBack.callFinished(result);
-					
-					
+
 					}
 				});
 			} catch (final XMLRPCFault e) {
@@ -1145,8 +1121,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
        		float proportionateHeight = height * percentage;
        		int finalHeight = (int) Math.rint(proportionateHeight);
 
-	        
-	     // calculate the scale - in this case = 0.4f
 	        float scaleWidth = ((float) 100) / width;
 	        float scaleHeight = ((float) finalHeight) / height;
 	       
@@ -1170,8 +1144,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	        
 	        imageView.setImageBitmap(resizedBitmap);
 	        
-	        //resizedBitmap.recycle(); //free up memory
-	        
 	        return imageView;
 	    }
 	    
@@ -1189,7 +1161,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		switch(requestCode) {
 		case 0:
 		    String title = extras.getString("returnStatus");
-		    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
 		    break;
 		case 1:
 			Uri imagePath = data.getData();   
@@ -1246,7 +1217,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				              dialogBuilder.setPositiveButton("Yes",  new
 				            		  DialogInterface.OnClickListener() {
 		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // User clicked Yes so delete the contexts.
+		                                
 		                            	Intent i = new Intent(editPage.this, settings.class);
 
 		                            	startActivityForResult(i, 0);
@@ -1256,7 +1227,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				              dialogBuilder.setNegativeButton("No", new
 				            		  DialogInterface.OnClickListener() {
 		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // User clicked No so don't delete (do nothing).
+		                                //just close the window
 		                            }
 		                        });
 				              dialogBuilder.setCancelable(true);
@@ -1342,7 +1313,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean success = false;
         
 
-        Integer blogID = 1; //never changes with wordpress, so far
+        Integer blogID = 1;
         
         Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;
@@ -1400,7 +1371,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
                         setResult(RESULT_OK, mIntent);
                         finish();
 
-                
                     }
                 });
               dialogBuilder.setNegativeButton("No",  new

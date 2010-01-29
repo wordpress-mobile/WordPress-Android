@@ -56,7 +56,6 @@ public class moderateCommentsTab extends ListActivity {
 	private static final String FETCH_ACTION="com.commonsware.cwac.cache.demo.FETCH_ACTION";
 	private static final int[] IMAGE_IDS={R.id.avatar};
 	private SharedPreferences prefs=null;
-	//private Twitter client=null;
 	private ThumbnailAdapter thumbs=null;
 	private ArrayList<CommentEntry> model=null;
 	private XMLRPCClient client;
@@ -386,10 +385,6 @@ public class moderateCommentsTab extends ListActivity {
 	public Object onRetainNonConfigurationInstance() {
 		return(model);
 	}
-	
-	/*private ThumbnailBus getBus() {
-		return(((Application)getApplication()).getBus());		
-	}*/
 	
 	private void goBlooey(Throwable t) {
 		Log.e("WordPress", "Exception!", t);
@@ -816,8 +811,6 @@ public class moderateCommentsTab extends ListActivity {
 	                    });
 			              dialogBuilder.setCancelable(true);
 			             dialogBuilder.create().show();
-						
-						//Log.d("Test", "error", e);
 					}
 				});
 			}
@@ -899,9 +892,6 @@ public class moderateCommentsTab extends ListActivity {
 
 	private void changeCommentStatus(final String newStatus, final int selCommentID) {
 
-	        	//Thread t = new Thread() {
-					//public void run() {
-					//Looper.prepare();
 	    		String sSelCommentID = String.valueOf(selCommentID);
 	        	Vector settings = new Vector();
 	            settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
@@ -977,21 +967,11 @@ public class moderateCommentsTab extends ListActivity {
 		    	} catch (XMLRPCException e) {
 		    		dismissDialog(ID_DIALOG_POSTING);
 		    		e.printStackTrace();
-		    	}
-	        
-	        //}
-	        
-	        	
-	        	
-			//};
-			//t.start();		
+		    	}	
 	}
 	
 	private void replyToComment(final String postID, final int commentID, final String comment) {
 
-    	//Thread t = new Thread() {
-			//public void run() {
-			//Looper.prepare();
 		
     	Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
@@ -1069,13 +1049,7 @@ public class moderateCommentsTab extends ListActivity {
             dialogBuilder.setCancelable(true);
            dialogBuilder.create().show();
     	}
-    
-    //}
-    
-    	
-    	
-	//};
-	//t.start();		
+    		
 }
 	
 	@Override

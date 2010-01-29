@@ -1,35 +1,21 @@
-//copyright Dan Roundhill, 11/10/2008
 package org.wordpress.android;
 
 import java.util.HashMap;
 import java.util.Vector;
-import org.apache.commons.*;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -272,7 +258,7 @@ public boolean onContextItemSelected(MenuItem item) {
          dialogBuilder.setPositiveButton("Yes",  new
        		  DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int whichButton) {
-                   // User clicked Accept so set that they've agreed to the eula.
+                   // remove the account
                	settingsDB settingsDB = new settingsDB(wpAndroid.this);
                  boolean deleteSuccess = settingsDB.deleteAccount(wpAndroid.this, selectedID);
                  if (deleteSuccess)
@@ -285,7 +271,7 @@ public boolean onContextItemSelected(MenuItem item) {
                  {
                	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
          			  dialogBuilder.setTitle("Error");
-                     dialogBuilder.setMessage("Could not remove account, you may need to reinstall WordPress for Androidª.");
+                     dialogBuilder.setMessage("Could not remove account, you may need to reinstall WordPress");
                      dialogBuilder.setPositiveButton("OK",  new
                    		  DialogInterface.OnClickListener() {
                            public void onClick(DialogInterface dialog, int whichButton) {

@@ -10,7 +10,7 @@ public class broadcastReceiver extends BroadcastReceiver {
 	
 	public void onReceive(Context context, Intent intent) {
 
-		//Log.i("wpToGo", "alarm cycled");
+	//Log.i("WordPress", "alarm cycled");
 	context.stopService(new Intent(context, commentService.class));
 	context.startService(new Intent(context, commentService.class));
 	

@@ -1,12 +1,10 @@
-//by Dan Roundhill, danroundhill.com/wptogo
-
 package org.wordpress.android;
+
 import java.util.HashMap;
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -17,15 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -107,7 +97,6 @@ public class newAccount extends Activity {
     					    ctr++;
     					    
     		                settingsDB settingsDB = new settingsDB(newAccount.this);
-    		                //settingsDB.saveSettings(newAccount.this, blogURL, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt);
     		                
     		                //check if this blog is already set up
     		                boolean noMatch = false;
@@ -140,8 +129,6 @@ public class newAccount extends Activity {
     		                //default to 500 pixel image, centered above text
     		                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, "Above Text", true, false, "500", 5, false);
     		                
-    		                // Don't forget to commit your edits!!!
-    		               // editor.commit();
     		                
     		                }
     		                
@@ -285,7 +272,7 @@ public class newAccount extends Activity {
 						e.printStackTrace();
 						pd.dismiss();
 						if (couse instanceof HttpHostConnectException) {
-							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
+
 						} else {
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
 							  dialogBuilder.setTitle("Connection Error");

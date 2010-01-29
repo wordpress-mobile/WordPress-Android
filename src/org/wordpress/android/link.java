@@ -1,4 +1,3 @@
-//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
 import android.app.Activity;
@@ -8,8 +7,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-
-
 
 public class link extends Activity {
 

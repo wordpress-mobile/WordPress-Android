@@ -2,41 +2,23 @@ package org.wordpress.android;
 
 import java.util.HashMap;
 import java.util.Vector;
-import org.apache.commons.*;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class notificationSettings extends Activity {
@@ -228,16 +210,8 @@ public void displayAccounts(){
 
         						Intent stopIntent = new Intent(notificationSettings.this, broadcastReceiver.class);
                             	PendingIntent stopPIntent = PendingIntent.getBroadcast(notificationSettings.this, 0, stopIntent, 0);
-                            	//Log.i("wpToGo", "stopping alarm");
                             	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                            	alarmManager.cancel(stopPIntent);
-        				
-        				
-        			
-        			
-        			//Toast.makeText(settings.this, "Comment Notification Service Stopped", Toast.LENGTH_LONG);
-
-        		
+                            	alarmManager.cancel(stopPIntent);        		
             	}
             	
             	finish();
@@ -255,8 +229,3 @@ public void displayAccounts(){
 
 
 }
-
-
-
-
-

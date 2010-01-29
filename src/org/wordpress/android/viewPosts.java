@@ -1,7 +1,5 @@
-	//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.viewLocalDrafts.XMLRPCMethodCallback;
-import org.wordpress.android.viewLocalDrafts.XMLRPCMethodImages;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -27,20 +22,13 @@ import org.xmlrpc.android.XMLRPCFault;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,19 +41,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
-import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 
 public class viewPosts extends ListActivity {
@@ -390,43 +371,18 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             mContext = context;
         }
 
-        /**
-         * The number of items in the list is determined by the number of speeches
-         * in our array.
-         * 
-         * @see android.widget.ListAdapter#getCount()
-         */
         public int getCount() {
             return postIDs.length;
         }
 
-        /**
-         * Since the data comes from an array, just returning the index is
-         * sufficent to get at the data. If we were using a more complex data
-         * structure, we would return whatever object represents one row in the
-         * list.
-         * 
-         * @see android.widget.ListAdapter#getItem(int)
-         */
         public Object getItem(int position) {
             return position;
         }
 
-        /**
-         * Use the array index as a unique id.
-         * 
-         * @see android.widget.ListAdapter#getItemId(int)
-         */
         public long getItemId(int position) {
             return position;
         }
 
-        /**
-         * Make a SpeechView to hold each row.
-         * 
-         * @see android.widget.ListAdapter#getView(int, android.view.View,
-         *      android.view.ViewGroup)
-         */
         public View getView(int position, View convertView, ViewGroup parent) {
         	
             PostView cv;
@@ -436,14 +392,8 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             return cv;
         }
 
-        /**
-         * Remember our context so we can use it when constructing views.
-         */
         private Context mContext;
         
-        /**
-         * Our data, part 1.
-         */
     }
 
     private class PostView extends LinearLayout {
@@ -481,8 +431,6 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
                 }
             }
             else{
-            // Here we build the child views in code. They could also have
-            // been specified in an XML file.
             	
             tvTitle = (TextView) inflatedView.findViewById(R.id.title);
             ly.removeView(ly.findViewById(R.id.title));
@@ -515,17 +463,10 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             
             }
 
-
-        /**
-         * Convenience method to set the title of a SpeechView
-         */
         public void setTitle(String titleName) {
             tvTitle.setText(titleName);
         }
 
-        /**
-         * Convenience method to set the dialogue of a SpeechView
-         */
         public void setDate(String date) {
             tvDate.setText(date);
         }
@@ -1095,10 +1036,6 @@ public String uploadImage(String imageURL){
 		}
 		sMaxImageWidth = categoriesVector.get(7).toString();
 
-    //new loop for multiple images
-    
-    
-
     //check for image, and upload it
 
        client = new XMLRPCClient(sURL);
@@ -1170,8 +1107,7 @@ public String uploadImage(String imageURL){
 	//create the thumbnail
 	byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
 
-        //try and upload the freakin' image
-        //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
+        //attempt to upload the image
         String contentType = "image/jpg";
         Map<String, Object> m = new HashMap<String, Object>();
 
@@ -1240,9 +1176,6 @@ public String uploadImage(String imageURL){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-				        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
-				       // postIDs[ctr] = contentHash.get("postid").toString();
 
     return imgHTML;
 }
@@ -1259,9 +1192,6 @@ class XMLRPCMethodImages extends Thread {
 	public XMLRPCMethodImages(String method, XMLRPCMethodCallbackImages callBack) {
 		this.method = method;
 		this.callBack = callBack;
-		
-		//handler = new Handler();
-		
 	}
 	public void call() throws InterruptedException {
 		call(null);
@@ -1269,8 +1199,6 @@ class XMLRPCMethodImages extends Thread {
 	public void call(Object[] params) throws InterruptedException {		
 		this.params = params;
 		this.method = method;
-		//start();
-		//join();
 		final Object result;
 		try {
 			result = (Object) client.call(method, params);

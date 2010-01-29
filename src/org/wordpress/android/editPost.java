@@ -1,9 +1,5 @@
-//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
-
-
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +28,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -336,7 +331,7 @@ public class editPost extends Activity {
             public void onClick(View v) {
             	
             	pd = ProgressDialog.show(editPost.this,
-                        "Refreshing Categories", "Attempting to refresh categories from the wordpress site...", true, true);
+                        "Refreshing Categories", "Attempting to refresh categories", true, true);
             	Thread th = new Thread() {
     				public void run() {					
     				    finalResult = getCategories();	
@@ -669,12 +664,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				res = null;
 			}
 								   
-        
-        
-       // HashMap categoryNames = (HashMap) result[0];
-        
-            //Vector categoryIds = (Vector) result;
-            
             int size = result.length;
             
             //initialize database
@@ -882,10 +871,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     		}
     		sMaxImageWidth = categoriesVector.get(7).toString();
 
-        //new loop for multiple images
-        
-        
-
         //check for image, and upload it
 
            client = new XMLRPCClient(sURL);
@@ -957,8 +942,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		//create the thumbnail
 		byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
 		
-            //try and upload the freakin' image
-            //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
+            //attempt to upload the image
             String contentType = "image/jpg";
             Map<String, Object> m = new HashMap<String, Object>();
 
@@ -1148,7 +1132,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 							else{
 							dismissDialog(editPost.this.ID_DIALOG_POSTING);
 							}
-							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
+
 						} else {
 							if (pd.isShowing()){
 								pd.dismiss();
@@ -1200,8 +1184,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			this.method = method;
 			this.callBack = callBack;
 			
-			//handler = new Handler();
-			
 		}
 		public void call() throws InterruptedException {
 			call(null);
@@ -1209,8 +1191,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		public void call(Object[] params) throws InterruptedException {		
 			this.params = params;
 			this.method = method;
-			//start();
-			//join();
 			final Object result;
 			try {
 				result = (Object) client.call(method, params);
@@ -1613,7 +1593,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean success = false;
         
 
-        Integer blogID = 1; //never changes with wordpress, so far
+        Integer blogID = 1;
         
         Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;

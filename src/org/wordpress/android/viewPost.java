@@ -1,14 +1,11 @@
-//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
 import java.util.HashMap;
 import java.util.Vector;
-
 import org.apache.http.conn.HttpHostConnectException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -163,7 +160,6 @@ class XMLRPCMethod extends Thread {
 					} else {
 						//status.setText("Error " + e.getMessage());
 					}
-					//Log.d("Test", "error", e);
 				}
 			});
 		}

@@ -104,15 +104,6 @@ public class postStoreDB {
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
-		/*Vector returnVector = new Vector();
-		for (int i = 0; i < numRows; ++i) {
-			String category_name = c.getString(2);
-			if (category_name != null)
-			{	
-			returnVector.add(category_name);
-			}
-			c.moveToNext();
-		}*/
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
@@ -169,15 +160,6 @@ public class postStoreDB {
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
-		/*Vector returnVector = new Vector();
-		for (int i = 0; i < numRows; ++i) {
-			String category_name = c.getString(2);
-			if (category_name != null)
-			{	
-			returnVector.add(category_name);
-			}
-			c.moveToNext();
-		}*/
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){

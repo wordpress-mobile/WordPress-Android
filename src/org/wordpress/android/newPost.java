@@ -1,4 +1,3 @@
-//by Dan Roundhill, danroundhill.com/wptogo
 package org.wordpress.android;
 
 import java.io.DataInputStream;
@@ -166,7 +165,7 @@ final customImageButton refreshCategoriesButton = (customImageButton) findViewBy
             public void onClick(View v) {
             	
             	pd = ProgressDialog.show(newPost.this,
-                        "Refreshing Categories", "Attempting to refresh categories from the wordpress site...", true, true);
+                        "Refreshing Categories", "Attempting to refresh categories", true, true);
             	Thread th = new Thread() {
     				public void run() {					
     				    finalResult = getCategories();	
@@ -537,7 +536,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean success = false;
         
 
-        Integer blogID = 1; //never changes with wordpress, so far
+        Integer blogID = 1;
         
         Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;
@@ -557,7 +556,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         	for (int it = 0; it < selectedImageCtr; it++){
            
         		images += selectedImageIDs.get(it).toString() + ",";
-        		//imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
 
         	}
         	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
@@ -690,7 +688,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 						if (couse instanceof HttpHostConnectException) {
 							//pd.dismiss();
 							dismissDialog(newPost.this.ID_DIALOG_POSTING);
-							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
 						} else {
 							//pd.dismiss();
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);

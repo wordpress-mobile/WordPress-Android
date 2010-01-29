@@ -157,8 +157,7 @@ final customButton boldButton = (customButton) findViewById(R.id.bold);
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // just close the dialog
-                            	
-                        
+
                             }
                         });
                       dialogBuilder.setCancelable(true);
@@ -348,7 +347,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean success = false;
         
 
-        Integer blogID = 1; //never changes with wordpress, so far
+        Integer blogID = 1;
         
         Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;
@@ -368,7 +367,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         	for (int it = 0; it < selectedImageCtr; it++){
            
         		images += selectedImageIDs.get(it).toString() + ",";
-        		//imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
 
         	}
         

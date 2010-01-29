@@ -156,15 +156,7 @@ public class settingsDB {
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
-		/*Vector returnVector = new Vector();
-		for (int i = 0; i < numRows; ++i) {
-			String category_name = c.getString(2);
-			if (category_name != null)
-			{	
-			returnVector.add(category_name);
-			}
-			c.moveToNext();
-		}*/
+
 		Vector returnVector = new Vector();
 		if (c.getString(0) != null){
 		returnVector.add(c.getString(0));
