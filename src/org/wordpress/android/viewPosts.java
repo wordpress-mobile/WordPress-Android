@@ -157,6 +157,23 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 				public void callFinished(Object[] result) {
 					String s = "done";
 					s = result.toString();
+					
+					if (result.length == 0){
+						dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
+						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+						  dialogBuilder.setTitle("No Posts Found");
+			              dialogBuilder.setMessage("You don't have any posts on your blog");
+			              dialogBuilder.setPositiveButton("OK",  new
+			            		  DialogInterface.OnClickListener() {
+	                        public void onClick(DialogInterface dialog, int whichButton) {
+	                            // Just close the window.
+	                        	
+	                        }
+	                    });
+			              dialogBuilder.setCancelable(true);
+			             dialogBuilder.create().show();
+					}
+					else{
 
 					HashMap contentHash = new HashMap();
 					    
@@ -202,6 +219,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    
 					   dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
 					   loadPosts();
+					}
 			        
 				}
 	        });
