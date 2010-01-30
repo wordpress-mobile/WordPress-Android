@@ -557,7 +557,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
     menu.add(0, 0, 0, "Blog Settings");
     MenuItem menuItem1 = menu.findItem(0);
     menuItem1.setIcon(R.drawable.ic_menu_preferences);
-    menu.add(0, 1, 0, "Delete Blog");
+    menu.add(0, 1, 0, "Remove Blog");
     MenuItem menuItem2 = menu.findItem(1);
     menuItem2.setIcon(R.drawable.ic_notification_clear_all);
     
@@ -579,8 +579,8 @@ public boolean onOptionsItemSelected(final MenuItem item){
     	return true;
 	case 1:
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-		  dialogBuilder.setTitle("Delete Account");
-      dialogBuilder.setMessage("Are you sure you want to delete this blog from wpToGo?");
+		  dialogBuilder.setTitle("Remove Blog");
+      dialogBuilder.setMessage("Are you sure you want to remove this blog?");
       dialogBuilder.setPositiveButton("Yes",  new
     		  DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -589,7 +589,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
               boolean deleteSuccess = settingsDB.deleteAccount(viewPosts.this, id);
               if (deleteSuccess)
               {
-            	  Toast.makeText(viewPosts.this, "Blog deleted successfully",
+            	  Toast.makeText(viewPosts.this, "Blog removed successfully",
                           Toast.LENGTH_SHORT).show();
             	  finish();
               }
@@ -597,7 +597,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
               {
             	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
       			  dialogBuilder.setTitle("Error");
-                  dialogBuilder.setMessage("Could not delete blog, you may need to reinstall wpToGo.");
+                  dialogBuilder.setMessage("Could not remove blog, you may need to reinstall WordPress.");
                   dialogBuilder.setPositiveButton("OK",  new
                 		  DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -615,7 +615,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
       dialogBuilder.setNegativeButton("No", new
     		  DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                finish();  //goodbye!
+            	//just close the window
             }
         });
       dialogBuilder.setCancelable(false);

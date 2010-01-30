@@ -49,4 +49,8 @@
 		android:normalScreens="true" android:largeScreens="true" />
 	<uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
 		android:name="android.permission.INTERNET" />
+		<uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
+		android:name="android.permission.READ_PHONE_STATE" />
+
+
 </manifest> 

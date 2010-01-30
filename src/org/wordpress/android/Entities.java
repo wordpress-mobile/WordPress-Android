@@ -25,7 +25,7 @@ import java.util.TreeMap;
  */
 class Entities {
 
-    private static final String[][] BASIC_ARRAY = {}; //disabled for wpToGo
+    private static final String[][] BASIC_ARRAY = {}; //disabled for wordpress for android
     	//{{"quot", "34"}, // " - double-quote
         //{"amp", "38"}, // & - ampersand
         //{"lt", "60"}, // < - less-than

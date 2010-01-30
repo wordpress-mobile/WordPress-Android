@@ -174,7 +174,7 @@ public class commentService extends Service {
 					//UI_UPDATE_LISTENER.updateUI(accountID, accountName); //new comment!
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					Intent notificationIntent = new Intent(commentService.this, tabView.class);
-    		  		notificationIntent.setData((Uri.parse("custom://wpToGoNotificationIntent"+accountID)));
+    		  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+accountID)));
     		  		notificationIntent.putExtra("id", accountID);
     		  		notificationIntent.putExtra("accountName", accountName);
     		  		notificationIntent.putExtra("fromNotification", true);

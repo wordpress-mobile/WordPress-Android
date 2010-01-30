@@ -15,7 +15,7 @@
     		  android:textColor="#444444"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="WordPress blog URL (path to xmlrpc.php):"/>
+              android:text="Blog URL:"/>
               
     <EditText android:id="@+id/url" 
     		  android:inputType="textUri"

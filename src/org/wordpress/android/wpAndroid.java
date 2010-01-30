@@ -1,13 +1,32 @@
 package org.wordpress.android;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
@@ -81,6 +100,7 @@ public void displayAccounts(){
 	
 	
 	if (accounts.size() > 0){
+		checkStats(accounts.size());
 		ScrollView sv = new ScrollView(this);
 		sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));
@@ -181,6 +201,137 @@ public void displayAccounts(){
 
 	}
 }
+private void checkStats(final int numBlogs) {
+	
+	
+	eulaDB eulaDB = new eulaDB(this);
+	long lastStatsDate = eulaDB.getStatsDate(this);
+	long now = System.currentTimeMillis();
+
+	if ((now - lastStatsDate) > 604800000){  //works for first check as well
+		new Thread() {
+	        public void run() { 	  
+	        uploadStats(numBlogs);
+	        }
+	    }.start();
+		eulaDB.setStatsDate(this);
+	}
+	
+}
+
+
+
+private void uploadStats(int numBlogs) {
+	
+	//gather all of the device info
+	
+    PackageManager pm = getPackageManager();
+    String app_version = "";
+    try {
+		try {
+			PackageInfo pi = pm.getPackageInfo("org.wordpress.android", 0);
+			app_version = pi.versionName;
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			app_version = "N/A";
+		}
+		
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		String device_uuid = tm.getDeviceId();
+		if (device_uuid == null){
+			device_uuid = "N/A";
+		}
+		String device_language = getResources().getConfiguration().locale.getLanguage();
+		String mobile_country_code = tm.getNetworkCountryIso();
+		String mobile_network_number = tm.getNetworkOperator();
+		int network_type = tm.getNetworkType();
+		
+		//get the network type string
+		String mobile_network_type = "N/A";
+		switch (network_type) {
+		case 0: 
+			mobile_network_type = "TYPE_UNKNOWN";
+			break;
+		case 1: 
+			mobile_network_type = "GPRS";
+			break;	
+		case 2: 
+			mobile_network_type = "EDGE";
+			break;	
+		case 3: 
+			mobile_network_type = "UMTS";
+			break;	
+		case 4: 
+			mobile_network_type = "CDMA";
+			break;	
+		case 5: 
+			mobile_network_type = "EVDO_0";
+			break;
+		case 6: 
+			mobile_network_type = "EVDO_A";
+			break;
+		case 7: 
+			mobile_network_type = "1xRTT";
+			break;
+		case 8: 
+			mobile_network_type = "HSDPA";
+			break;
+		case 9: 
+			mobile_network_type = "HSUPA";
+			break;
+		case 10: 
+			mobile_network_type = "HSPA";
+			break;
+		}
+		
+		String device_version = android.os.Build.VERSION.RELEASE;
+		
+		if (device_version == null){
+			device_version = "N/A";
+		}
+		int num_blogs = numBlogs;
+		
+		//post the data
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost("http://api.wordpress.org/androidapp/update-check/1.0/");
+		post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("device_uuid", device_uuid));
+		pairs.add(new BasicNameValuePair("app_version", app_version));
+		pairs.add(new BasicNameValuePair("device_language", device_language));
+		pairs.add(new BasicNameValuePair("mobile_country_code", mobile_country_code));
+		pairs.add(new BasicNameValuePair("mobile_network_number", mobile_network_number));
+		pairs.add(new BasicNameValuePair("mobile_network_type", mobile_network_type));
+		pairs.add(new BasicNameValuePair("device_version", device_version));
+		pairs.add(new BasicNameValuePair("num_blogs", String.valueOf(num_blogs)));
+		try {
+			post.setEntity(new UrlEncodedFormEntity(pairs));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			HttpResponse response = client.execute(post);
+			int responseCode = response.getStatusLine().getStatusCode();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	
+}
+
+
+
 //Add settings to menu
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {

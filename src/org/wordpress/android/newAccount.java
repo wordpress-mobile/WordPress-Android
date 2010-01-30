@@ -105,7 +105,7 @@ public class newAccount extends Activity {
     		                if (noMatch){
     		                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
     							  dialogBuilder.setTitle("Account Already Exists");
-    				              dialogBuilder.setMessage("There is already a wpToGo account for this wordpress blog configured.");
+    				              dialogBuilder.setMessage("There is already a WordPress account for this wordpress blog configured.");
     				              dialogBuilder.setPositiveButton("Ok",  new
     				            		  DialogInterface.OnClickListener() {
     		                          public void onClick(DialogInterface dialog, int whichButton) {
@@ -251,7 +251,11 @@ public class newAccount extends Activity {
 						pd.dismiss();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
 						  dialogBuilder.setTitle("Connection Error");
-			              dialogBuilder.setMessage(e.getFaultString());
+						  String message = e.getMessage();
+						  if (message.equals("HTTP status code: 404 != 200")){
+							  message = "xmlrpc.php not found, please check your path";
+						  }
+			              dialogBuilder.setMessage(message);
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
@@ -276,7 +280,11 @@ public class newAccount extends Activity {
 						} else {
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
 							  dialogBuilder.setTitle("Connection Error");
-				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
+							  String message = e.getMessage();
+							  if (message.equals("HTTP status code: 404 != 200")){
+								  message = "xmlrpc.php not found, please check your path";
+							  }
+				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
