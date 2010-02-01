@@ -27,6 +27,7 @@ public class postStoreDB {
 		db.execSQL(CREATE_TABLE_POSTSTORE);
 		db.execSQL(CREATE_TABLE_PAGES);
 		db.execSQL(CREATE_TABLE_COMMENTS);
+		db.setVersion(DATABASE_VERSION);
 		db.close();
 	}
 

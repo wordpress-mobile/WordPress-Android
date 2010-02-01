@@ -22,7 +22,7 @@ public class localDraftsDB {
 
 	public localDraftsDB(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-
+		db.setVersion(DATABASE_VERSION);
 		db.execSQL(CREATE_TABLE_LOCALDRAFTS);
 		db.execSQL(CREATE_TABLE_LOCALPAGEDRAFTS);
 		db.close();

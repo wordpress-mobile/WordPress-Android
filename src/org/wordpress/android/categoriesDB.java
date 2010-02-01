@@ -23,6 +23,7 @@ public class categoriesDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//db.execSQL("DROP TABLE IF EXISTS "+ CATEGORIES_TABLE);
 		db.execSQL(CREATE_TABLE_CATEGORIES);
+		db.setVersion(DATABASE_VERSION);
 		
 		db.close();
 	}
