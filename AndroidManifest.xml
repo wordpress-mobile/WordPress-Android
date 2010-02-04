@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.wordpress.android" android:versionCode="1" android:versionName="1.0.0">
+	package="org.wordpress.android" android:versionName="1.0.1" android:versionCode="2">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 	<application android:icon="@drawable/app_icon"
 		android:label="WordPress" android:debuggable="true" android:name="WordPress">
@@ -26,10 +26,10 @@
 		<activity android:name="moderateCommentsTab"
 			android:configChanges="keyboardHidden|orientation" />
 		<activity android:name="viewComment" android:theme="@android:style/Theme.Dialog" />
-		<activity android:name="newPage" />
-		<activity android:name="editPage" />
+		<activity android:name="newPage" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="editPage" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="replyToComment" android:theme="@android:style/Theme.Dialog" />
-		<activity android:icon="@drawable/app_icon" android:name="splashScreen"
+		<activity android:icon="@drawable/app_icon" android:screenOrientation="portrait" android:name="splashScreen"
 			android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />

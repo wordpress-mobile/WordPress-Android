@@ -30,7 +30,7 @@ public class escapeUtils {
 	        if (string == null) {
 	            return;
 	        }
-	        Entities.HTML40.escape(writer, string);
+	        Entities.HTML40_escape.escape(writer, string);
 	    }
 
     public static String unescapeHtml(String str) {

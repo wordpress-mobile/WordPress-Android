@@ -41,7 +41,7 @@ public class viewPost extends Activity {
         pd = ProgressDialog.show(viewPost.this,
                 "Getting Preview", "Attempting to get preview", true, false);
         
-        this.setTitle(accountName + " - Preview");
+        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - Preview");
         Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);
@@ -75,9 +75,10 @@ public class viewPost extends Activity {
 					WebView wv = (WebView) findViewById(R.id.webView);
 					
 					String mimetype = "text/html";
-					String encoding = "UTF-8";
+					String encoding = "utf-8";
 
-					wv.loadData(HTML, mimetype, encoding);
+					//wv.loadData(HTML, mimetype, encoding);
+					wv.loadDataWithBaseURL(null, HTML, mimetype, encoding, "about:blank");
 					wv.clearCache(true);
 
 				}

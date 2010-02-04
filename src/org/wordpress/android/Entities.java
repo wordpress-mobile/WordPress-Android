@@ -25,12 +25,12 @@ import java.util.TreeMap;
  */
 class Entities {
 
-    private static final String[][] BASIC_ARRAY = {}; //disabled for wordpress for android
-    	//{{"quot", "34"}, // " - double-quote
-        //{"amp", "38"}, // & - ampersand
-        //{"lt", "60"}, // < - less-than
-        //{"gt", "62"}, // > - greater-than
-    //};
+    private static final String[][] BASIC_ARRAY = {
+    	{"quot", "34"}, // " - double-quote
+        {"amp", "38"}, // & - ampersand
+        {"lt", "60"}, // < - less-than
+        {"gt", "62"} // > - greater-than
+    };
 
     private static final String[][] APOS_ARRAY = {{"apos", "39"}, // XML apostrophe
     };
@@ -353,7 +353,7 @@ class Entities {
      * </p>
      */
     public static final Entities HTML40;
-
+    public static final Entities HTML40_escape;
     static {
         XML = new Entities();
         XML.addEntities(BASIC_ARRAY);
@@ -369,6 +369,8 @@ class Entities {
     static {
         HTML40 = new Entities();
         fillWithHtml40Entities(HTML40);
+        HTML40_escape = new Entities();
+        fillWithHtml40EntitiesEscape(HTML40);
     }
 
     /**
@@ -381,6 +383,12 @@ class Entities {
      */
     static void fillWithHtml40Entities(Entities entities) {
         entities.addEntities(BASIC_ARRAY);
+        entities.addEntities(ISO8859_1_ARRAY);
+        entities.addEntities(HTML40_ARRAY);
+    }
+    
+    static void fillWithHtml40EntitiesEscape(Entities entities) {
+        //entities.addEntities(BASIC_ARRAY);
         entities.addEntities(ISO8859_1_ARRAY);
         entities.addEntities(HTML40_ARRAY);
     }
