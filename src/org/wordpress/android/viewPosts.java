@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -41,12 +41,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 
 public class viewPosts extends ListActivity {
@@ -237,6 +241,13 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 	        
     }
     
+    public Map<String,?> createItem(String title, String caption) {  
+        Map<String,String> item = new HashMap<String,String>();  
+        item.put("title", title);  
+        item.put("caption", caption);  
+        return item;  
+    } 
+    
     private boolean loadPosts(){ //loads posts from the db
    	
        postStoreDB postStoreDB = new postStoreDB(this);
@@ -308,9 +319,23 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    }
 					   
 					   setListAdapter(new PostListAdapter(viewPosts.this));
-					
+
 					   ListView listView = (ListView) findViewById(android.R.id.list);
 					   listView.setSelector(R.layout.list_selector);
+					   
+					   listView.setOnItemClickListener(new OnItemClickListener() {
+						   
+							public void onNothingSelected(AdapterView<?> arg0) {
+								
+							}
+
+							public void onItemClick(AdapterView<?> arg0, View arg1,
+									int arg2, long arg3) {
+								//don't do anything
+								
+							}
+
+			            });
 					   
 					   listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
@@ -355,6 +380,27 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
    	}
    }
     
+    class ViewWrapper {
+    	View base;
+    	TextView title=null;
+    	TextView date=null;
+    	ViewWrapper(View base) {
+    	this.base=base;
+    	}
+    	TextView getTitle() {
+    		if (title==null) {
+    		title=(TextView)base.findViewById(R.id.title);
+    		}
+    		return(title);
+    		}
+    		TextView getDate() {
+    		if (date==null) {
+    		date=(TextView)base.findViewById(R.id.date);
+    		}
+    		return(date);
+    		}
+    		}
+    
     
     private boolean loadDrafts(){ //loads drafts from the db
        	
@@ -383,8 +429,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     	}
     }
 
+
     private class PostListAdapter extends BaseAdapter {
-    	
+    	private int dateHeight;
         public PostListAdapter(Context context) {
             mContext = context;
         }
@@ -402,97 +449,71 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-        	
-            PostView cv;
-                cv = new PostView(mContext, postIDs[position], titles[position],
-                        dateCreatedFormatted[position], position);
+        	View pv=convertView;
+        	ViewWrapper wrapper=null;
+        	if (pv==null) {
+        		LayoutInflater inflater=getLayoutInflater();
+        		pv=inflater.inflate(R.layout.row_post_page, parent, false);
+        		wrapper=new ViewWrapper(pv);
+        		if (position == 0){
+        		dateHeight = wrapper.getDate().getHeight();
+        		}
+        		pv.setTag(wrapper);
+        	wrapper=new ViewWrapper(pv);
+        	pv.setTag(wrapper);
+        	}
+        	else {
+        	wrapper=(ViewWrapper)pv.getTag();      	
+        	}
+        	String date = dateCreatedFormatted[position];
+        	if (date.equals("postsHeader") || date.equals("draftsHeader")){
 
-            return cv;
+            	pv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_header_bg));
+            	
+                wrapper.getTitle().setTextColor(Color.parseColor("#EEEEEE"));
+                wrapper.getTitle().setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
+                wrapper.getDate().setHeight(0);
+                
+                if (date.equals("draftsHeader")){
+                	inDrafts = true;
+                	date = "";
+                }
+                else if (date.equals("postsHeader")){
+                	inDrafts = false;
+                	date = "";
+                }
+            }
+        	else{
+        		pv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
+        		wrapper.getTitle().setTextColor(Color.parseColor("#444444"));
+        		wrapper.getTitle().setShadowLayer(0, 0, 0, Color.parseColor("#444444"));
+        		wrapper.getDate().setTextColor(Color.parseColor("#888888"));
+        		pv.setId(Integer.valueOf(postIDs[position]));
+        		if (wrapper.getDate().getHeight() == 0){
+        			wrapper.getDate().setHeight((int) wrapper.getTitle().getTextSize() + wrapper.getDate().getPaddingBottom());
+        		}
+        		String customDate = date;
+                
+                if (customDate.equals("1")){
+                	customDate = "Publish: Yes";
+                	wrapper.getDate().setTextColor(Color.parseColor("#006505"));
+                }
+                else if (customDate.equals("0")){
+                	customDate = "Publish: No";
+                }
+                date = customDate;
+        		
+        	}
+        	wrapper.getTitle().setText(titles[position]);
+        	wrapper.getDate().setText(date);
+        	
+        	return pv;
+
         }
 
         private Context mContext;
         
     }
-
-    private class PostView extends LinearLayout {
-        public PostView(Context context, String postID, String title, String date, int position) {
-            super(context);
-            
-            this.setOrientation(VERTICAL);
-            this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_bg_selector));
-            this.setPadding(4, 4, 4, 4);
-            
-            LayoutInflater inflater=getLayoutInflater();
-        	View inflatedView = inflater.inflate(R.layout.row_post_page, null);
-        	LinearLayout ly = (LinearLayout) inflatedView.findViewById (R.id.row_post_root);
-            
-            if (date.equals("postsHeader") || date.equals("draftsHeader")){
-
-            	this.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.list_header_bg));
-            	this.setPadding(4, 0, 0, 0);
-            	tvTitle = (TextView) inflatedView.findViewById(R.id.title);
-            	ly.removeView(ly.findViewById(R.id.title));
-                tvTitle.setText(title);
-                tvTitle.setTextSize(21);
-                tvTitle.setTextColor(Color.parseColor("#EEEEEE"));
-                tvTitle.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
-                addView(tvTitle);
-                
-                tvDate = (TextView) inflatedView.findViewById(R.id.date);
-                
-                
-                if (date.equals("draftsHeader")){
-                	inDrafts = true;
-                }
-                else if (date.equals("postsHeader")){
-                	inDrafts = false;
-                }
-            }
-            else{
-            	
-            tvTitle = (TextView) inflatedView.findViewById(R.id.title);
-            ly.removeView(ly.findViewById(R.id.title));
-            tvTitle.setText(title);
-            tvTitle.setTextSize(20);
-            tvTitle.setTextColor(Color.parseColor("#444444"));
-            addView(tvTitle);
-
-            tvDate = (TextView) inflatedView.findViewById(R.id.date);
-            ly.removeView(ly.findViewById(R.id.date));
-            String customDate = date;
-            
-            if (customDate.equals("1")){
-            	customDate = "Publish: Yes";
-            	tvDate.setTextColor(Color.parseColor("#006505"));
-            }
-            else if (customDate.equals("0")){
-            	customDate = "Publish: No";
-            }
-
-            tvDate.setText(customDate);
-            addView(tvDate);
-            
- 
-            	//listener for drafts
-            	this.setId(Integer.valueOf(postID));
-            	this.setTag(position);
-        		
-        	}
-            
-            }
-
-        public void setTitle(String titleName) {
-            tvTitle.setText(titleName);
-        }
-
-        public void setDate(String date) {
-            tvDate.setText(date);
-        }
-
-        private TextView tvTitle;
-        private TextView tvDate;
-    }
-    
    
 interface XMLRPCMethodCallback {
 	void callFinished(Object[] result);

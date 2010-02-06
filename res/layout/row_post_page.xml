@@ -1,7 +1,7 @@
 <LinearLayout android:id="@+id/row_post_root" xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:orientation="horizontal"
+	android:orientation="vertical"
 	android:padding="4dip"
 	android:background="@drawable/list_bg_selector"
 	>
@@ -12,6 +12,7 @@
 				android:paddingLeft="6dip"
 				android:paddingRight="6dip"
 				android:paddingBottom="3dip"
+				android:textSize="20dip"
 			/>
 			<TextView android:id="@+id/date"
 				android:layout_width="wrap_content"
