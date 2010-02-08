@@ -1003,6 +1003,12 @@ public String submitPost() throws IOException {
 	                	  
 	                	  if (isInteger)
 	                	  {
+	                		
+	                		//reset variables
+	                		selectedImageIDs.clear();
+	              	        imageUrl.clear();
+	              	        selectedImageCtr = 0;
+	              	        selectedCategories.clear();
 	                		  //post made it, so let's delete the draft
 	                	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
 	                	  refreshPosts();

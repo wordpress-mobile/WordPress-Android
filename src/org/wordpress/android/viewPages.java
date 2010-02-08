@@ -959,7 +959,12 @@ public String submitPost() throws IOException {
 	                	  
 	                	  if (isInteger)
 	                	  {
-	                		  //post made it, so let's delete the draft
+	                		  
+	                		//reset variables
+		                	selectedImageIDs.clear();
+		              	    imageUrl.clear();
+		              	    selectedImageCtr = 0;
+	                		//post made it, so let's delete the draft
 	                	  lDraftsDB.deletePageDraft(viewPages.this, String.valueOf(selectedID));
 	                	  refreshPages();
 	                	  }

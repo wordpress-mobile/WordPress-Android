@@ -11,11 +11,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -189,7 +191,15 @@ public class newAccount extends Activity {
             }
         });
         
+        customButton signUp = (customButton) findViewById(R.id.wordpressdotcom);
         
+        signUp.setOnClickListener(new customButton.OnClickListener() {
+            public void onClick(View v) {
+            	
+            	Intent signupIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/signup")); 
+            	startActivity(signupIntent);
+            }
+        });
         
      
 	}

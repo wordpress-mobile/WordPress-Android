@@ -76,6 +76,26 @@ class="org.wordpress.android.customButton"
             android:layout_alignTop="@id/save"
             android:layout_toLeftOf="@id/save"
             android:text="Cancel" />
- 
+            
+<TextView android:id="@+id/l_wordpressdotcom"
+      		android:textColor="#444444"
+      		android:shadowColor="#FFFFFF"
+      		android:shadowDx="0"
+      		android:shadowDy="1"
+      		android:shadowRadius="1" 
+      		android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dip" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:text="Don't yet have a blog?"
+            android:layout_below="@id/cancel"/>
+<view class="org.wordpress.android.customButton"
+			android:textColor="#444444"
+			android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+			android:id="@+id/wordpressdotcom"
+     		android:text="Get a free blog at WordPress.com"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/l_wordpressdotcom"/>
 </RelativeLayout>
 </ScrollView>
