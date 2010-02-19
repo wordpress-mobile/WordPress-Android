@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.wordpress.android" android:versionName="1.0.1" android:versionCode="2">
+	package="org.wordpress.android" android:versionName="1.0.2" android:versionCode="3">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 	<application android:icon="@drawable/app_icon"
 		android:label="WordPress" android:debuggable="true" android:name="WordPress">
@@ -13,18 +13,17 @@
 		<activity android:name="viewPosts" />
 		<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="newPost" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden"
-			android:label="WordPress - Add Account" />
+		<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="viewPost" />
 		<activity android:name="notificationSettings" android:label="Notification Settings" />
 		<service android:name="commentService" android:label="Comment Service" />
 		<receiver android:name="broadcastReceiver" />
 		<activity android:name="tabView" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="viewLocalDrafts" />
+		
 		<activity android:name="viewPages" />
-		<activity android:name="moderateCommentsTab"
-			android:configChanges="keyboardHidden|orientation" />
+		<activity android:name="moderateCommentsTab" 
+			android:configChanges="keyboardHidden|orientation"/>
 		<activity android:name="viewComment" android:theme="@android:style/Theme.Dialog" />
 		<activity android:name="newPage" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="editPage" android:configChanges="orientation|keyboardHidden" />
