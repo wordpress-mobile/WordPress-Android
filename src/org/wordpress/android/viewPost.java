@@ -39,9 +39,9 @@ public class viewPost extends Activity {
         }   
         
         pd = ProgressDialog.show(viewPost.this,
-                "Getting Preview", "Attempting to get preview", true, false);
+        		getResources().getText(R.string.getting_preview), getResources().getText(R.string.getting_preview_attempting), true, false);
         
-        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - Preview");
+        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.getting_preview));
         Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);
@@ -137,9 +137,9 @@ class XMLRPCMethod extends Thread {
 				public void run() {
 					pd.dismiss();
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPost.this);
-					  dialogBuilder.setTitle("Connection Error");
+					  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 		              dialogBuilder.setMessage(e.getFaultString());
-		              dialogBuilder.setPositiveButton("Ok",  new
+		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
                           public void onClick(DialogInterface dialog, int whichButton) {
                               // Just close the window.

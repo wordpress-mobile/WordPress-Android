@@ -47,7 +47,7 @@ public class viewComments extends ListActivity {
          accountName = extras.getString("accountName");
         }      
         
-        this.setTitle(accountName + " - View Comments");
+        this.setTitle(accountName + " - " + getResources().getText(R.string.view_comments));
         Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);
@@ -90,7 +90,7 @@ public class viewComments extends ListActivity {
 					if (result.length == 0){
 						comments = new String[1];
 						authors = new String[1];
-						comments[0] = "There are no approved comments for this post";
+						comments[0] = getResources().getText(R.string.no_approved_comments).toString();
 						authors[0] = "";
 					}
 					else{
@@ -167,9 +167,9 @@ class XMLRPCMethod extends Thread {
 			handler.post(new Runnable() {
 				public void run() {
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewComments.this);
-					  dialogBuilder.setTitle("Connection Error");
+					  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 		              dialogBuilder.setMessage(e.getFaultString());
-		              dialogBuilder.setPositiveButton("Ok",  new
+		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
                           public void onClick(DialogInterface dialog, int whichButton) {
                               // Just close the window.

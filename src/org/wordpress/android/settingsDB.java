@@ -17,22 +17,34 @@ public class settingsDB {
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
-	private static final int DATABASE_VERSION = 1;
-
+	private static final int DATABASE_VERSION = 2;
+	
+	//for capturing blogID, trac ticket #
+	private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
+	private static final String UPDATE_BLOGID = "update accounts set blogId = 1;"; //set them all to 1 if updating
+	
+	
 	private SQLiteDatabase db;
 
 	public settingsDB(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//db.execSQL("DROP TABLE IF EXISTS "+ SETTINGS_TABLE);
 		db.execSQL(CREATE_TABLE_SETTINGS);
-		db.setVersion(1); //set to initial version
+		int test = db.getVersion();
+		
+		if (db.getVersion() <= 1){ //user is new install or running v1.0.0 or v1.0.1
+			db.execSQL(ADD_BLOGID);
+			db.execSQL(UPDATE_BLOGID);
+		}
+
+		db.setVersion(DATABASE_VERSION); //set to latest revision
 
 		db.close();
 		
 	}
 
 	
-	public boolean addAccount(Context ctx, String url, String blogName, String username, String password, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean runService) {
+	public boolean addAccount(Context ctx, String url, String blogName, String username, String password, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean runService, int blogId) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -45,15 +57,17 @@ public class settingsDB {
 		values.put("maxImageWidth", maxImageWidth);
 		values.put("maxImageWidthId", maxImageWidthId);
 		values.put("runService", runService);
+		values.put("blogId", blogId);
 		boolean returnValue = db.insert(SETTINGS_TABLE, null, values) > 0;
 		db.close();
 		return (returnValue);
 	}	
 	public Vector getAccounts(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "username", "runService"}, null, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "username", "runService", "blogId"}, null, null, null, null, null);
 		String id;
 		String blogName, username;
+		int blogId;
 		int runService;
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -64,6 +78,7 @@ public class settingsDB {
 			blogName = c.getString(1);
 			username = c.getString(2);
 			runService = c.getInt(3);
+			blogId = c.getInt(4);
 			if (id != null)
 			{	
 				HashMap thisHash = new HashMap();
@@ -72,6 +87,7 @@ public class settingsDB {
 				thisHash.put("blogName", blogName);
 				thisHash.put("username", username);
 				thisHash.put("runService", runService);
+				thisHash.put("blogId", blogId);
 				accounts.add(thisHash);
 			}
 			c.moveToNext();
@@ -151,7 +167,7 @@ public class settingsDB {
 	public Vector loadSettings(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService"}, "id=" + id, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId"}, "id=" + id, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -168,6 +184,7 @@ public class settingsDB {
 		returnVector.add(c.getString(7));
 		returnVector.add(c.getInt(8));
 		returnVector.add(c.getInt(9));
+		returnVector.add(c.getInt(10));
 		}
 		else
 		{

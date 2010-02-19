@@ -88,7 +88,7 @@ public class editPage extends Activity {
          localDraft = extras.getBoolean("localDraft", false);
         }
         
-        this.setTitle(accountName + " - Edit Page");
+        this.setTitle(accountName + " - " + getResources().getText(R.string.edit_page));
         
         if (localDraft){
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
@@ -153,7 +153,7 @@ public class editPage extends Activity {
     	if (setTitle.equals("")){
     	
     	pd = ProgressDialog.show(editPage.this,
-                "Getting Page", "Please wait while attempting to get page (note - pictures will not be loaded)", true, false);
+        			getResources().getText(R.string.getting_page), getResources().getText(R.string.please_wait_getting_page), true, false);
     	
     	XMLRPCMethod method = new XMLRPCMethod("metaWeblog.getPost", new XMLRPCMethodCallback() {
 			public void callFinished(Object result) {
@@ -285,8 +285,8 @@ final customButton boldButton = (customButton) findViewById(R.id.bold);
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text first in order to bold it. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_bold) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -331,8 +331,8 @@ linkButton.setOnClickListener(new customButton.OnClickListener() {
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text first in order to link it. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_link) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -377,8 +377,8 @@ final customButton emButton = (customButton) findViewById(R.id.em);
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text in order to emphasize it. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_emphasize) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -422,8 +422,8 @@ final customButton bquoteButton = (customButton) findViewById(R.id.bquote);
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text in order to place it in a blockquote. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_blockquote) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -547,8 +547,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     		if (sCenterThumbnailString.equals("1")){
     			centerThumbnail = true;
     		}
-    		
-    		
 
         
         
@@ -631,6 +629,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     			centerThumbnail = true;
     		}
     		sMaxImageWidth = categoriesVector.get(7).toString();
+    		
+    		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
 
         //check for image, and upload it
 
@@ -760,7 +760,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	        });
         	
         	Object[] params = {
-	        		1,
+	        		sBlogId,
 	        		sUsername,
 	        		sPassword,
 	        		m
@@ -855,9 +855,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				dismissDialog(editPage.this.ID_DIALOG_POSTING);
 				}
 						final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-						  dialogBuilder.setTitle("Connection Error");
+						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("Ok",  new
+			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
 	                        	  Bundle bundle = new Bundle();
@@ -904,9 +904,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 							dismissDialog(editPage.this.ID_DIALOG_POSTING);
 							}
 							final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-							  dialogBuilder.setTitle("Connection Error");
+							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
-				              dialogBuilder.setPositiveButton("Ok",  new
+				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                        	  Bundle bundle = new Bundle();
@@ -982,9 +982,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 						//pd.dismiss();
 						dismissDialog(editPage.this.ID_DIALOG_POSTING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-						  dialogBuilder.setTitle("Connection Error");
+						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("Ok",  new
+			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
 	                              // Just close the window.
@@ -1009,9 +1009,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 							//pd.dismiss();
 							dismissDialog(editPage.this.ID_DIALOG_POSTING);
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-							  dialogBuilder.setTitle("Connection Error");
+							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
-				              dialogBuilder.setPositiveButton("Ok",  new
+				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                              // Just close the window.
@@ -1212,8 +1212,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			if (finalResult.equals("invalidSettings")){
 				dismissDialog(editPage.this.ID_DIALOG_POSTING);			
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-							  dialogBuilder.setTitle("Settings not found!");
-				              dialogBuilder.setMessage("Some required settings were not found.  Load settings now?");
+							  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
+				              dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
 				              dialogBuilder.setPositiveButton("Yes",  new
 				            		  DialogInterface.OnClickListener() {
 		                            public void onClick(DialogInterface dialog, int whichButton) {
@@ -1237,8 +1237,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			else if (finalResult.equals("emptyFields")){
 				dismissDialog(editPage.this.ID_DIALOG_POSTING);				
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-							  dialogBuilder.setTitle("Empty Fields");
-				              dialogBuilder.setMessage("Title and Content are required fields. Please enter something to your page before submitting!");
+							  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
+				              dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
 				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
 		                            public void onClick(DialogInterface dialog, int whichButton) {
@@ -1255,12 +1255,12 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			{
 				dismissDialog(editPage.this.ID_DIALOG_POSTING);	
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-				  dialogBuilder.setTitle("Page Edited");
+				  dialogBuilder.setTitle(getResources().getText(R.string.page_edited));
 				  if (xmlrpcError){
-					  dialogBuilder.setMessage("Page edited successfully, but an error was encountered when uploading images");  
+					  dialogBuilder.setMessage(getResources().getText(R.string.page_edited_image_error));  
 				  }
 				  else{
-	              dialogBuilder.setMessage("Page edited successfully");
+	              dialogBuilder.setMessage(getResources().getText(R.string.page_edited_successfully));
 				  }
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {
@@ -1284,7 +1284,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage("Attempting to edit page");
+	loadingDialog.setMessage(getResources().getText(R.string.attempting_edit_page));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;
@@ -1358,9 +1358,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		  // only intercept back button press
 		  if (i == KeyEvent.KEYCODE_BACK) {
 			  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPage.this);
-			  dialogBuilder.setTitle("Cancel Edit");
-              dialogBuilder.setMessage("Are you sure you want to cancel editing this page?");
-              dialogBuilder.setPositiveButton("Yes",  new
+			  dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
+              dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_page));
+              dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
             		  DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	Bundle bundle = new Bundle();
@@ -1373,7 +1373,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
                     }
                 });
-              dialogBuilder.setNegativeButton("No",  new
+              dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
             		  DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	//just close the dialog window

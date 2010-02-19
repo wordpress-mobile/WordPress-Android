@@ -87,7 +87,7 @@ public class newPage extends Activity {
          accountName = extras.getString("accountName");
         }
         
-        this.setTitle(accountName + " - New Page");
+        this.setTitle(accountName + " - " + getResources().getText(R.string.new_page));
         
         //clear up some variables
         selectedImageIDs.clear();
@@ -104,7 +104,7 @@ public class newPage extends Activity {
             	
             	if (result){
 
-              	  	Toast.makeText(newPage.this, "Saved to local drafts", Toast.LENGTH_SHORT).show();
+              	  	Toast.makeText(newPage.this, getResources().getText(R.string.saved_to_local_drafts), Toast.LENGTH_SHORT).show();
               	  	Bundle bundle = new Bundle();
                   
                   bundle.putString("returnStatus", "OK");
@@ -150,13 +150,14 @@ final customButton boldButton = (customButton) findViewById(R.id.bold);
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text first in order to bold it. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_bold) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // just close the dialog
-
+                            	
+                        
                             }
                         });
                       dialogBuilder.setCancelable(true);
@@ -195,8 +196,8 @@ linkButton.setOnClickListener(new customButton.OnClickListener() {
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text first in order to link it. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_link) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -241,8 +242,8 @@ final customButton emButton = (customButton) findViewById(R.id.em);
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text in order to emphasize it. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_emphasize) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -286,8 +287,8 @@ final customButton bquoteButton = (customButton) findViewById(R.id.bquote);
                 	
                 	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
                 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
-          			  dialogBuilder.setTitle("No text selected");
-                      dialogBuilder.setMessage("Please select some text in order to place it in a blockquote. You can select text by holding the shift key and scrolling.");
+                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
+                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_blockquote) + " " + getResources().getText(R.string.howto_select_text));
                       dialogBuilder.setPositiveButton("OK",  new
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -607,9 +608,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		  // only intercept back button press
 		  if (i == KeyEvent.KEYCODE_BACK) {
 			  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
-			  dialogBuilder.setTitle("Cancel Draft");
-              dialogBuilder.setMessage("Are you sure you want to cancel this draft?");
-              dialogBuilder.setPositiveButton("Yes",  new
+			  dialogBuilder.setTitle(getResources().getText(R.string.cancel_draft));
+              dialogBuilder.setMessage(getResources().getText(R.string.sure_cancel_draft));
+              dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
             		  DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	Bundle bundle = new Bundle();
@@ -623,7 +624,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
                 
                     }
                 });
-              dialogBuilder.setNegativeButton("No",  new
+              dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
             		  DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	//just close the dialog window

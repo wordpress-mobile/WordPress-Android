@@ -13,7 +13,6 @@ public class eulaDB {
 
 	private static final String EULA_TABLE = "eula";
 	private static final String DATABASE_NAME = "wordpress";
-	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 
@@ -21,7 +20,6 @@ public class eulaDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//db.execSQL("DROP TABLE IF EXISTS "+ CATEGORIES_TABLE);
 		db.execSQL(CREATE_TABLE_EULA);
-		db.setVersion(DATABASE_VERSION);
 		
 		db.close();
 	}

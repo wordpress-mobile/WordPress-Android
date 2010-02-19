@@ -21,7 +21,7 @@ public class replyToComment extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.reply);
-		setTitle("Reply to Comment");
+		setTitle(getResources().getText(R.string.reply_to_comment));
 		
 		Bundle extras = getIntent().getExtras();
         if(extras !=null)
@@ -42,8 +42,8 @@ public class replyToComment extends Activity {
             	
             	if (replyText.equals("")){
             		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(replyToComment.this);
-					  dialogBuilder.setTitle("Required Fields");
-		              dialogBuilder.setMessage("Please enter something in the reply field");
+					  dialogBuilder.setTitle(getResources().getText(R.string.reply_required));
+		              dialogBuilder.setMessage(getResources().getText(R.string.reply_please_enter));
 		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
                       public void onClick(DialogInterface dialog, int whichButton) {

@@ -4,17 +4,25 @@ import java.io.PushbackInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.wordpress.android.ConnectionClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
@@ -75,7 +83,7 @@ public class XMLRPCClient {
 	private static final String TAG_FAULT_CODE = "faultCode";
 	private static final String TAG_FAULT_STRING = "faultString";
 
-	private HttpClient client;
+	private ConnectionClient client;
 	private HttpPost postMethod;
 	private XmlSerializer serializer;
 	private HttpParams httpParams;
@@ -88,7 +96,7 @@ public class XMLRPCClient {
 		postMethod = new HttpPost(uri);
 		postMethod.addHeader("Content-Type", "text/xml");		
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE!
-		postMethod.addHeader("User-Agent", "wp-android/1.0.1");
+		postMethod.addHeader("User-Agent", "wp-android/1.0.2");
 		
 		// WARNING
 		// I had to disable "Expect: 100-Continue" header since I had 
@@ -96,7 +104,44 @@ public class XMLRPCClient {
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
 		
-		client = new DefaultHttpClient();
+		//username & password not needed
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("", "");
+		
+		if (uri.getScheme() != null){
+			if(uri.getScheme().equals("https")) { 
+				if(uri.getPort() == -1)
+					try {
+						client = new ConnectionClient(creds, 443);
+					} catch (KeyManagementException e) {
+						client = new ConnectionClient(creds); 
+					} catch (NoSuchAlgorithmException e) {
+						client = new ConnectionClient(creds); 
+					} catch (KeyStoreException e) {
+						client = new ConnectionClient(creds); 
+					} catch (UnrecoverableKeyException e) {
+						client = new ConnectionClient(creds); 
+					}
+					else
+						try {
+							client = new ConnectionClient(creds, uri.getPort());
+						} catch (KeyManagementException e) {
+							client = new ConnectionClient(creds); 
+						} catch (NoSuchAlgorithmException e) {
+							client = new ConnectionClient(creds); 
+						} catch (KeyStoreException e) {
+							client = new ConnectionClient(creds); 
+						} catch (UnrecoverableKeyException e) {
+							client = new ConnectionClient(creds); 
+						} 
+			} 
+			else {
+				client = new ConnectionClient(creds); 
+			}
+		}
+		else{
+			client = new ConnectionClient(creds);
+		}
+		
 		serializer = Xml.newSerializer();
 	}
 	
@@ -323,13 +368,20 @@ public class XMLRPCClient {
 			HttpEntity entity = new StringEntity(bodyWriter.toString());
 			postMethod.setEntity(entity);
 			
+			//set timeout to 20 seconds, does it need to be set for both client and method?
+			client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+	        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
+			postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+			postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
+			
 			// execute HTTP POST request
 			HttpResponse response = client.execute(postMethod);
 
 			// check status code
 			int statusCode = response.getStatusLine().getStatusCode();
+			
 			if (statusCode != HttpStatus.SC_OK) {
-				throw new XMLRPCException("HTTP status code: " + statusCode + " != " + HttpStatus.SC_OK);
+				throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
 			}
 
 			// parse response stuff
@@ -339,13 +391,14 @@ public class XMLRPCClient {
 			entity = response.getEntity();
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
-			int bomCheck = is.read();			
-			if (bomCheck != 239){
-				is.unread(bomCheck);
+			
+			//get rid of junk characters before xml respons.  60 = '<'
+			int bomCheck = is.read();
+			while (bomCheck != 60){
+				bomCheck = is.read();
 			}
-			else{
-				is.skip(2);
-			}
+			is.unread(bomCheck);
+			
 			pullParser.setInput(is, "UTF-8");
 			
 			// lets start pulling...

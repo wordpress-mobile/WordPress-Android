@@ -41,12 +41,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,13 +62,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class viewPosts extends ListActivity {
     /** Called when the activity is first created. */
 	private XMLRPCClient client;
-	private String[] postIDs;
-	private String[] titles;
-	private String[] dateCreated;
-	private String[] dateCreatedFormatted;
-	private String[] draftIDs;
-	private String[] draftTitles;
-	private String[] publish;
+	private String[] postIDs, titles, dateCreated, dateCreatedFormatted, draftIDs, draftTitles, publish;
 	private Integer[] uploaded;
 	private String id = "";
 	private String accountName = "";
@@ -70,7 +70,6 @@ public class viewPosts extends ListActivity {
 	Vector postNames = new Vector();
 	int selectedID = 0;
 	int rowID = 0;
-	private int ID_DIALOG_REFRESHING = 1;
 	private int ID_DIALOG_POSTING = 2;
 	Vector selectedCategories = new Vector();
 	private boolean inDrafts = false;
@@ -98,10 +97,7 @@ public class viewPosts extends ListActivity {
          accountName = extras.getString("accountName");
         }
         
-        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - Recent Posts");
         //query for posts and refresh view
-
-
         boolean loadedPosts = loadPosts();
         
         if (!loadedPosts){
@@ -136,7 +132,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     }
     
     private void refreshPosts(){
-    	showDialog(ID_DIALOG_REFRESHING);
+    	showProgressBar();
     	Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);
@@ -153,6 +149,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     	}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
+		int sBlogId = Integer.parseInt(settings.get(10).toString());
         
         	
         	client = new XMLRPCClient(sURL);
@@ -163,10 +160,10 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					s = result.toString();
 					
 					if (result.length == 0){
-						dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
+						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-						  dialogBuilder.setTitle("No Posts Found");
-			              dialogBuilder.setMessage("You don't have any posts on your blog");
+						  dialogBuilder.setTitle(getResources().getText(R.string.posts_not_found));
+			              dialogBuilder.setMessage(getResources().getText(R.string.posts_no_posts));
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                        public void onClick(DialogInterface dialog, int whichButton) {
@@ -221,7 +218,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    postStoreDB.savePosts(viewPosts.this, dbVector);
 					    
 					    
-					   dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
+					   closeProgressBar();
 					   loadPosts();
 					}
 			        
@@ -229,7 +226,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 	        });
 	        Object[] params = {
 	        		"spacer",
-	        		1,
+	        		sBlogId,
 	        		sUsername,
 	        		sPassword,
 	        		30
@@ -250,13 +247,22 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     
     private boolean loadPosts(){ //loads posts from the db
    	
-       postStoreDB postStoreDB = new postStoreDB(this);
-   	Vector loadedPosts = postStoreDB.loadPosts(viewPosts.this, id);
-   	if (loadedPosts != null){
-   	titles = new String[loadedPosts.size()];
-   	postIDs = new String[loadedPosts.size()];
-   	dateCreated = new String[loadedPosts.size()];
-   	dateCreatedFormatted = new String[loadedPosts.size()];
+    	postStoreDB postStoreDB = new postStoreDB(this);
+    	Vector loadedPosts = postStoreDB.loadPosts(viewPosts.this, id);
+   	
+    	if (loadedPosts != null){
+    	titles = new String[loadedPosts.size()];
+    	postIDs = new String[loadedPosts.size()];
+    	dateCreated = new String[loadedPosts.size()];
+    	dateCreatedFormatted = new String[loadedPosts.size()];
+    	}
+    	else{
+    		titles = new String[0];
+        	postIDs = new String[0];
+        	dateCreated = new String[0];
+        	dateCreatedFormatted = new String[0];
+    	}
+    	if (loadedPosts != null){
 					    for (int i=0; i < loadedPosts.size(); i++){
 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
 					        titles[i] = escapeUtils.unescapeHtml(contentHash.get("title").toString());
@@ -274,7 +280,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 				    	
 				    	List postTitleList = Arrays.asList(titles);  
 				    	List newPostTitleList = new ArrayList();   
-				    	newPostTitleList.add("Posts");
+				    	newPostTitleList.add(getResources().getText(R.string.tab_posts));
 				    	newPostTitleList.addAll(postTitleList);
 				    	titles = (String[]) newPostTitleList.toArray(new String[newPostTitleList.size()]);
 				    	
@@ -289,7 +295,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 				    	newDateFormattedList.add("postsHeader");
 				    	newDateFormattedList.addAll(dateFormattedList);
 				    	dateCreatedFormatted = (String[]) newDateFormattedList.toArray(new String[newDateFormattedList.size()]);
-					    
+   	}
 					    //load drafts
 					    boolean drafts = loadDrafts();
 					    
@@ -303,7 +309,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    	
 					    	List titleList = Arrays.asList(draftTitles);  
 					    	List newTitleList = new ArrayList();   
-					    	newTitleList.add("Local Drafts");
+					    	newTitleList.add(getResources().getText(R.string.local_drafts));
 					    	newTitleList.addAll(titleList);
 					    	draftTitles = (String[]) newTitleList.toArray(new String[newTitleList.size()]);
 					    	
@@ -313,11 +319,13 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    	newPublishList.addAll(publishList);
 					    	publish = (String[]) newPublishList.toArray(new String[newPublishList.size()]);
 					    	
-					    	postIDs = mergeStringArrays(draftIDs, postIDs);
-					    	titles = mergeStringArrays(draftTitles, titles);
-					    	dateCreatedFormatted = mergeStringArrays(publish, dateCreatedFormatted);
+					    	postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
+					    	titles = StringHelper.mergeStringArrays(draftTitles, titles);
+					    	dateCreatedFormatted = StringHelper.mergeStringArrays(publish, dateCreatedFormatted);
 					    }
-					   
+					    
+					    if (loadedPosts != null || drafts == true )
+					    {
 					   setListAdapter(new PostListAdapter(viewPosts.this));
 
 					   ListView listView = (ListView) findViewById(android.R.id.list);
@@ -355,29 +363,29 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 			                   
 			                   if (totalDrafts > 0 && rowID <= totalDrafts && rowID != 0){
 			                	   menu.clear();
-			                	   menu.setHeaderTitle("Draft Actions");
-			                	   menu.add(1, 0, 0, "Edit Draft");
-			                	   menu.add(1, 1, 0, "Upload Draft to Blog");
-			                	   menu.add(1, 2, 0, "Delete Draft");            	             
+			                	   menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
+			                	   menu.add(1, 0, 0, getResources().getText(R.string.edit_draft));
+			                	   menu.add(1, 1, 0, getResources().getText(R.string.upload));
+			                	   menu.add(1, 2, 0, getResources().getText(R.string.delete_draft));            	             
 			                   }
 			                   else if(rowID == 1 || ((rowID != (totalDrafts + 1)) && rowID != 0)){
 			                	   menu.clear();
-			                	   menu.setHeaderTitle("Post Actions");
-			                	   menu.add(0, 0, 0, "Preview Post");
-			                	   menu.add(0, 1, 0, "View Comments");
-			                	   menu.add(0, 2, 0, "Edit Post");
+			                	   menu.setHeaderTitle(getResources().getText(R.string.post_actions));
+			                	   menu.add(0, 0, 0, getResources().getText(R.string.preview_post));
+			                	   menu.add(0, 1, 0, getResources().getText(R.string.view_comments));
+			                	   menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
 			                   }
 
 			                   
 						}
 			          });
    
-   	
-	return true;
-    }
-   	else{
-   		return false;
-   	}
+		        return true;
+		    }
+			else{
+				return false;
+			}
+	
    }
     
     class ViewWrapper {
@@ -495,11 +503,11 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         		String customDate = date;
                 
                 if (customDate.equals("1")){
-                	customDate = "Publish: Yes";
+                	customDate = getResources().getText(R.string.publish_yes).toString();
                 	wrapper.getDate().setTextColor(Color.parseColor("#006505"));
                 }
                 else if (customDate.equals("0")){
-                	customDate = "Publish: No";
+                	customDate = getResources().getText(R.string.publish_no).toString();
                 }
                 date = customDate;
         		
@@ -552,9 +560,10 @@ class XMLRPCMethod extends Thread {
 		} catch (final XMLRPCFault e) {
 			handler.post(new Runnable() {
 				public void run() {
-					dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
+					closeProgressBar();
+					if (e.getFaultCode() != 500){
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-					  dialogBuilder.setTitle("Connection Error");
+					  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 		              dialogBuilder.setMessage(e.getMessage());
 		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
@@ -565,15 +574,20 @@ class XMLRPCMethod extends Thread {
                       });
 		              dialogBuilder.setCancelable(true);
 		             dialogBuilder.create().show();
-
+					}
+					else{
+						postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
+						postStoreDB.clearPosts(viewPosts.this, id);
+						loadPosts();
+					}
 				}
 			});
 		} catch (final XMLRPCException e) {
 			handler.post(new Runnable() {
 				public void run() {
-					dismissDialog(viewPosts.this.ID_DIALOG_REFRESHING);
+					closeProgressBar();
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-					  dialogBuilder.setTitle("Connection Error");
+					  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 		              dialogBuilder.setMessage(e.getMessage());
 		              dialogBuilder.setPositiveButton("OK",  new
 		            		  DialogInterface.OnClickListener() {
@@ -593,10 +607,10 @@ class XMLRPCMethod extends Thread {
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    menu.add(0, 0, 0, "Blog Settings");
+    menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
     MenuItem menuItem1 = menu.findItem(0);
     menuItem1.setIcon(R.drawable.ic_menu_preferences);
-    menu.add(0, 1, 0, "Remove Blog");
+    menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
     MenuItem menuItem2 = menu.findItem(1);
     menuItem2.setIcon(R.drawable.ic_notification_clear_all);
     
@@ -618,9 +632,9 @@ public boolean onOptionsItemSelected(final MenuItem item){
     	return true;
 	case 1:
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-		  dialogBuilder.setTitle("Remove Blog");
-      dialogBuilder.setMessage("Are you sure you want to remove this blog?");
-      dialogBuilder.setPositiveButton("Yes",  new
+		  dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+      dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+      dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
     		  DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // User clicked Accept so set that they've agreed to the eula.
@@ -628,15 +642,15 @@ public boolean onOptionsItemSelected(final MenuItem item){
               boolean deleteSuccess = settingsDB.deleteAccount(viewPosts.this, id);
               if (deleteSuccess)
               {
-            	  Toast.makeText(viewPosts.this, "Blog removed successfully",
+            	  Toast.makeText(viewPosts.this, getResources().getText(R.string.blog_removed_successfully),
                           Toast.LENGTH_SHORT).show();
             	  finish();
               }
               else
               {
             	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-      			  dialogBuilder.setTitle("Error");
-                  dialogBuilder.setMessage("Could not remove blog, you may need to reinstall WordPress.");
+      			  dialogBuilder.setTitle(getResources().getText(R.string.error));
+                  dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
                   dialogBuilder.setPositiveButton("OK",  new
                 		  DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -651,7 +665,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
         
             }
         });
-      dialogBuilder.setNegativeButton("No", new
+      dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
     		  DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             	//just close the window
@@ -760,9 +774,9 @@ public boolean onContextItemSelected(MenuItem item) {
       	  return true;
         case 2:
       	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-			  dialogBuilder.setTitle("Delete Post?");
-            dialogBuilder.setMessage("Are you sure you want to delete the draft '" + titles[rowID] + "'?");
-            dialogBuilder.setPositiveButton("OK",  new
+			  dialogBuilder.setTitle(getResources().getText(R.string.delete_draft));
+            dialogBuilder.setMessage(getResources().getText(R.string.delete_sure) + " '" + titles[rowID] + "'?");
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
           		  DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
               	  localDraftsDB lDraftsDB = new localDraftsDB(viewPosts.this);
@@ -772,7 +786,7 @@ public boolean onContextItemSelected(MenuItem item) {
             
                 }
             });
-            dialogBuilder.setNegativeButton("Cancel",  new
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
           		  DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Just close the window.
@@ -791,16 +805,9 @@ public boolean onContextItemSelected(MenuItem item) {
 
 @Override
 protected Dialog onCreateDialog(int id) {
-if(id == ID_DIALOG_REFRESHING){
-ProgressDialog loadingDialog = new ProgressDialog(this);
-loadingDialog.setMessage("Please wait while refreshing posts");
-loadingDialog.setIndeterminate(true);
-loadingDialog.setCancelable(true);
-return loadingDialog;
-}
-else if (id == ID_DIALOG_POSTING){
+if (id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage("Attempting to upload post");
+	loadingDialog.setMessage(getResources().getText(R.string.post_attempt_upload));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;
@@ -808,20 +815,6 @@ else if (id == ID_DIALOG_POSTING){
 
 return super.onCreateDialog(id);
 }
-
-public static String[] mergeStringArrays(String array1[], String array2[]) {  
-	if (array1 == null || array1.length == 0)  
-	return array2;  
-	if (array2 == null || array2.length == 0)  
-	return array1;  
-	List array1List = Arrays.asList(array1);  
-	List array2List = Arrays.asList(array2);  
-	List result = new ArrayList(array1List);    
-	List tmp = new ArrayList(array1List);  
-	tmp.retainAll(array2List);  
-	result.addAll(array2List);    
-	return ((String[]) result.toArray(new String[result.size()]));  
-	}
 
 
 public String submitPost() throws IOException {
@@ -934,6 +927,8 @@ public String submitPost() throws IOException {
 		if (sCenterThumbnailString.equals("1")){
 			centerThumbnail = true;
 		}
+		
+		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
     
     Map<String, Object> contentStruct = new HashMap<String, Object>();
   
@@ -956,12 +951,10 @@ public String submitPost() throws IOException {
     contentStruct.put("categories", theCategories);
     }
     
-
-    
     client = new XMLRPCClient(sURL);
     
     Object[] params = {
-    		1,
+    		sBlogId,
     		sUsername,
     		sPassword,
     		contentStruct,
@@ -985,8 +978,13 @@ public String submitPost() throws IOException {
 			  public void run() 
 			  {
 				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-	  			  dialogBuilder.setTitle("Success");
-	              dialogBuilder.setMessage("Post #" + newID + " added successfully");
+	  			  dialogBuilder.setTitle(getResources().getText(R.string.success));
+	  			if (xmlrpcError){
+					  dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.post_edited_image_error));  
+				  }
+				  else{
+	              dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.post_edited_successfully));
+				  }
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {
 	                  public void onClick(DialogInterface dialog, int whichButton) {
@@ -1009,6 +1007,7 @@ public String submitPost() throws IOException {
 	              	        imageUrl.clear();
 	              	        selectedImageCtr = 0;
 	              	        selectedCategories.clear();
+	              	        xmlrpcError = false;
 	                		  //post made it, so let's delete the draft
 	                	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
 	                	  refreshPosts();
@@ -1082,6 +1081,8 @@ public String uploadImage(String imageURL){
 		sMaxImageWidth = categoriesVector.get(7).toString();
 
     //check for image, and upload it
+		
+		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
 
        client = new XMLRPCClient(sURL);
 
@@ -1209,7 +1210,7 @@ public String uploadImage(String imageURL){
         });
     	
     	Object[] params = {
-        		1,
+        		sBlogId,
         		sUsername,
         		sPassword,
         		m
@@ -1289,6 +1290,51 @@ class XMLRPCMethodImages extends Thread {
 		}
 		
 	}
+}
+
+public void showProgressBar() {
+	AnimationSet set = new AnimationSet(true);
+
+    Animation animation = new AlphaAnimation(0.0f, 1.0f);
+    animation.setDuration(500);
+    set.addAnimation(animation);
+
+    animation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
+    );
+    animation.setDuration(500);
+    set.addAnimation(animation);
+
+    LayoutAnimationController controller =
+            new LayoutAnimationController(set, 0.5f);
+    RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
+    loading.setVisibility(View.VISIBLE);
+    loading.setLayoutAnimation(controller);
+}
+
+public void closeProgressBar() {
+
+    AnimationSet set = new AnimationSet(true);
+
+    Animation animation = new AlphaAnimation(0.0f, 1.0f);
+    animation.setDuration(500);
+    set.addAnimation(animation);
+
+    animation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, -1.0f
+    );
+    animation.setDuration(500);
+    set.addAnimation(animation);
+
+    LayoutAnimationController controller =
+            new LayoutAnimationController(set, 0.5f);
+    RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
+    
+    loading.setLayoutAnimation(controller);
+    
+    loading.setVisibility(View.INVISIBLE);
 }
 
 }

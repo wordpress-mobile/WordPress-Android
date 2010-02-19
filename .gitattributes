@@ -296,11 +296,15 @@ src/com/commonsware/cwac/thumbnail/ThumbnailActivity.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailAdapter.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailBus.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailMessage.java -text
+src/org/wordpress/android/ConnectionClient.java -text
 src/org/wordpress/android/DrawableManager.java -text
 src/org/wordpress/android/Entities.java -text
 src/org/wordpress/android/ImageAdapter.java -text
 src/org/wordpress/android/IntHashMap.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
+src/org/wordpress/android/StringHelper.java -text
+src/org/wordpress/android/TrustAllManager.java -text
+src/org/wordpress/android/TrustAllSSLSocketFactory.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/broadcastReceiver.java -text
 src/org/wordpress/android/categoriesDB.java -text
@@ -328,7 +332,6 @@ src/org/wordpress/android/splashScreen.java -text
 src/org/wordpress/android/tabView.java -text
 src/org/wordpress/android/viewComment.java -text
 src/org/wordpress/android/viewComments.java -text
-src/org/wordpress/android/viewLocalDrafts.java -text
 src/org/wordpress/android/viewPages.java -text
 src/org/wordpress/android/viewPost.java -text
 src/org/wordpress/android/viewPosts.java -text

@@ -55,9 +55,9 @@ public class wpAndroid extends Activity {
         boolean eula = checkEULA();
         if (eula == false){
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
-			  dialogBuilder.setTitle("End User License Agreement");
-            dialogBuilder.setMessage(R.string.EULA);
-            dialogBuilder.setPositiveButton("Accept",  new
+			  dialogBuilder.setTitle(R.string.eula);
+            dialogBuilder.setMessage(R.string.eula_content);
+            dialogBuilder.setPositiveButton(R.string.accept,  new
           		  DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int whichButton) {
                       // User clicked Accept so set that they've agreed to the eula.
@@ -67,7 +67,7 @@ public class wpAndroid extends Activity {
               
                   }
               });
-            dialogBuilder.setNegativeButton("Decline", new
+            dialogBuilder.setNegativeButton(R.string.decline, new
           		  DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int whichButton) {
                       finish();  //goodbye!
@@ -183,7 +183,7 @@ public void displayAccounts(){
         textView.setTextSize(12);
         textView.setPadding(0, 20, 0, 0);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText("Select 'Menu' to add another account or to configure comment notifications.");
+        textView.setText(R.string.hint_menu_to_add_acc);
         
         
         
@@ -427,8 +427,6 @@ public boolean onContextItemSelected(MenuItem item) {
                    		  DialogInterface.OnClickListener() {
                            public void onClick(DialogInterface dialog, int whichButton) {
                                // just close the dialog
-                           	
-                       
                            }
                        });
                      dialogBuilder.setCancelable(true);
@@ -440,7 +438,7 @@ public boolean onContextItemSelected(MenuItem item) {
          dialogBuilder.setNegativeButton("No", new
        		  DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int whichButton) {
-                   finish();  //goodbye!
+                   //just close the window
                }
            });
          dialogBuilder.setCancelable(false);

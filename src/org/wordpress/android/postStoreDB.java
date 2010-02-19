@@ -17,7 +17,6 @@ public class postStoreDB {
 	private static final String PAGES_TABLE = "pages";
 	private static final String COMMENTS_TABLE = "comments";
 	private static final String DATABASE_NAME = "wordpress";
-	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 
@@ -27,7 +26,6 @@ public class postStoreDB {
 		db.execSQL(CREATE_TABLE_POSTSTORE);
 		db.execSQL(CREATE_TABLE_PAGES);
 		db.execSQL(CREATE_TABLE_COMMENTS);
-		db.setVersion(DATABASE_VERSION);
 		db.close();
 	}
 
@@ -217,6 +215,21 @@ public class postStoreDB {
 		
 		db.close();
 		return (returnValue);
+		
+	}
+
+	public void clearPages(Context ctx, String blogID) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		//delete existing values
+		db.delete(PAGES_TABLE, "blogID=" + blogID, null);
+		db.close();
+	}
+
+	public void clearPosts(Context ctx, String blogID) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		//delete existing values
+		db.delete(POSTSTORE_TABLE, "blogID=" + blogID, null);
+		db.close();
 		
 	}
 

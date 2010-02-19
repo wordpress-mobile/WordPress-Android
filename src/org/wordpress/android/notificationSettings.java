@@ -69,7 +69,7 @@ public void displayAccounts(){
         textView.setTextSize(12);
         textView.setPadding(0, 20, 0, 0);
         textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText("Select which blogs to receive comment notifications:");
+        textView.setText(getResources().getText(R.string.notifications_select));
 
         layout.addView(textView);
         
@@ -112,7 +112,7 @@ public void displayAccounts(){
         textView2.setTextSize(12);
         textView2.setPadding(0, 20, 0, 0);
         textView2.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView2.setText("Update interval:");
+        textView2.setText(getResources().getText(R.string.notifications_interval));
 
         layout.addView(textView2);
         

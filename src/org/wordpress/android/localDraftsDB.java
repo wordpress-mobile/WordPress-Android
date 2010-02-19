@@ -16,13 +16,11 @@ public class localDraftsDB {
 	private static final String LOCALDRAFTS_TABLE = "localdrafts";
 	private static final String LOCALPAGEDRAFTS_TABLE = "localpagedrafts";
 	private static final String DATABASE_NAME = "wordpress";
-	private static final int DATABASE_VERSION = 1;
 
 	private SQLiteDatabase db;
 
 	public localDraftsDB(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		db.setVersion(DATABASE_VERSION);
 		db.execSQL(CREATE_TABLE_LOCALDRAFTS);
 		db.execSQL(CREATE_TABLE_LOCALPAGEDRAFTS);
 		db.close();

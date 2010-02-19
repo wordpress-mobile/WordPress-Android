@@ -38,11 +38,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,7 +61,6 @@ import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 public class moderateCommentsTab extends ListActivity {
-	private static final String FETCH_ACTION="com.commonsware.cwac.cache.demo.FETCH_ACTION";
 	private static final int[] IMAGE_IDS={R.id.avatar};
 	private SharedPreferences prefs=null;
 	private ThumbnailAdapter thumbs=null;
@@ -101,7 +108,7 @@ public class moderateCommentsTab extends ListActivity {
         
         if (!loadedComments){
         	
-        	Thread action = new Thread() 
+        	/*Thread action = new Thread() 
     		{ 
     		  public void run() 
     		  {
@@ -109,7 +116,7 @@ public class moderateCommentsTab extends ListActivity {
     		                "Refresh Comments", "Attempting to get comments", true, false);
     		  } 
     		}; 
-    		runOnUiThread(action);
+    		runOnUiThread(action);*/
         	
         	refreshComments();
         }
@@ -118,7 +125,7 @@ public class moderateCommentsTab extends ListActivity {
         
         refresh.setOnClickListener(new customMenuButton.OnClickListener() {
             public void onClick(View v) {
-            	Thread action = new Thread() 
+            	/*Thread action = new Thread() 
         		{ 
         		  public void run() 
         		  {
@@ -126,7 +133,7 @@ public class moderateCommentsTab extends ListActivity {
         		                "Refresh Comments", "Attempting to get comments", true, false);
         		  } 
         		}; 
-        		runOnUiThread(action);
+        		runOnUiThread(action);*/
             	refreshComments();
             	 
             }
@@ -245,7 +252,10 @@ public class moderateCommentsTab extends ListActivity {
 
 
 	private void refreshComments() {
-		
+
+        showProgressBar();
+        
+        
 		Vector settings = new Vector();
 	    settingsDB settingsDB = new settingsDB(this);
 		settings = settingsDB.loadSettings(this, id); 
@@ -261,6 +271,7 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
+		int sBlogId = Integer.parseInt(settings.get(10).toString());
 	        
 	        HashMap hPost = new HashMap();
 	        hPost.put("status", "");
@@ -277,23 +288,13 @@ public class moderateCommentsTab extends ListActivity {
 	    	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {
 					String s = "done";
+					closeProgressBar();
 					if (result.length == 0){
+						// no comments found
 						if (pd.isShowing())
 						{
 						pd.dismiss();
 						}
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle("No Comments Found");
-			              dialogBuilder.setMessage("You don't have any comments on your blog");
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                        public void onClick(DialogInterface dialog, int whichButton) {
-	                            // Just close the window.
-	                        	
-	                        }
-	                    });
-			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
 					}
 					else{
 					s = result.toString();
@@ -304,7 +305,6 @@ public class moderateCommentsTab extends ListActivity {
 					    
 					    
 					    Vector dbVector = new Vector();
-						
 						//loop this!
 						    for (int ctr = 0; ctr < result.length; ctr++){
 						    	HashMap<String, String> dbValues = new HashMap();
@@ -351,7 +351,7 @@ public class moderateCommentsTab extends ListActivity {
 						    
 						    postStoreDB postStoreDB = new postStoreDB(moderateCommentsTab.this);
 						    postStoreDB.saveComments(moderateCommentsTab.this, dbVector);
-						   
+
 						   loadComments();
 						   
 						   if (pd.isShowing())
@@ -364,7 +364,7 @@ public class moderateCommentsTab extends ListActivity {
 				}
 	        });
 	        Object[] params = {
-	        		1,
+	        		sBlogId,
 	        		sUsername,
 	        		sPassword,
 	        		hPost
@@ -374,6 +374,51 @@ public class moderateCommentsTab extends ListActivity {
 			
 		}
 	
+	public void showProgressBar() {
+		AnimationSet set = new AnimationSet(true);
+
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(500);
+        set.addAnimation(animation);
+
+        animation = new TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
+        );
+        animation.setDuration(500);
+        set.addAnimation(animation);
+
+        LayoutAnimationController controller =
+                new LayoutAnimationController(set, 0.5f);
+        RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
+        loading.setVisibility(View.VISIBLE);
+        loading.setLayoutAnimation(controller);
+	}
+
+	public void closeProgressBar() {
+
+        AnimationSet set = new AnimationSet(true);
+
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(500);
+        set.addAnimation(animation);
+
+        animation = new TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, -1.0f
+        );
+        animation.setDuration(500);
+        set.addAnimation(animation);
+
+        LayoutAnimationController controller =
+                new LayoutAnimationController(set, 0.5f);
+        RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
+        
+        loading.setLayoutAnimation(controller);
+        
+        loading.setVisibility(View.INVISIBLE);
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -477,22 +522,22 @@ public class moderateCommentsTab extends ListActivity {
 			
 			getEmailURL().setText(fEmailURL);
 			getComment().setText(s.comment);
-			getPostTitle().setText("on " + s.postTitle);
+			getPostTitle().setText(getResources().getText(R.string.on) + " " + s.postTitle);
 			
 			row.setId(Integer.valueOf(s.commentID));
 			
 			String prettyComment,textColor = "";
 			
 			if (s.status.equals("spam")){
-				prettyComment = "Spam";
+				prettyComment = getResources().getText(R.string.spam).toString();
 				textColor = "#FF0000";
 			}
 			else if (s.status.equals("hold")){
-				prettyComment = "Unapproved";
+				prettyComment = getResources().getText(R.string.unapproved).toString();
 				textColor = "#D54E21";
 			}
 			else{
-				prettyComment = "Approved";
+				prettyComment = getResources().getText(R.string.approved).toString();
 				textColor = "#006505";
 			}
 			
@@ -582,10 +627,10 @@ public class moderateCommentsTab extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    super.onCreateOptionsMenu(menu);
-	    menu.add(0, 0, 0, "Blog Settings");
+	    menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
 	    MenuItem menuItem1 = menu.findItem(0);
 	    menuItem1.setIcon(R.drawable.ic_menu_preferences);
-	    menu.add(0, 1, 0, "Remove Blog");
+	    menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
 	    MenuItem menuItem2 = menu.findItem(1);
 	    menuItem2.setIcon(R.drawable.ic_notification_clear_all);
 	    
@@ -607,9 +652,9 @@ public class moderateCommentsTab extends ListActivity {
 	    	return true;
 		case 1:
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-			  dialogBuilder.setTitle("Remove Blog");
-	      dialogBuilder.setMessage("Are you sure you want to remove this blog?");
-	      dialogBuilder.setPositiveButton("Yes",  new
+			  dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+	      dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+	      dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
 	    		  DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int whichButton) {
 	                // User clicked Accept so set that they've agreed to the eula.
@@ -617,15 +662,15 @@ public class moderateCommentsTab extends ListActivity {
 	              boolean deleteSuccess = settingsDB.deleteAccount(moderateCommentsTab.this, id);
 	              if (deleteSuccess)
 	              {
-	            	  Toast.makeText(moderateCommentsTab.this, "Blog removed successfully",
+	            	  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.blog_removed_successfully),
 	                          Toast.LENGTH_SHORT).show();
 	            	  finish();
 	              }
 	              else
 	              {
 	            	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-	      			  dialogBuilder.setTitle("Error");
-	                  dialogBuilder.setMessage("Could not remove blog, you may need to reinstall WordPress.");
+	      			  dialogBuilder.setTitle(getResources().getText(R.string.error));
+	                  dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
 	                  dialogBuilder.setPositiveButton("OK",  new
 	                		  DialogInterface.OnClickListener() {
 	                        public void onClick(DialogInterface dialog, int whichButton) {
@@ -640,10 +685,10 @@ public class moderateCommentsTab extends ListActivity {
 	        
 	            }
 	        });
-	      dialogBuilder.setNegativeButton("No", new
+	      dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
 	    		  DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int whichButton) {
-	                //just close the window
+	            	//just close the window
 	            }
 	        });
 	      dialogBuilder.setCancelable(false);
@@ -696,8 +741,9 @@ public class moderateCommentsTab extends ListActivity {
 						{
 						pd.dismiss();
 						}
+						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle("Connection Error");
+						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 			              dialogBuilder.setMessage(e.getFaultString());
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
@@ -718,8 +764,9 @@ public class moderateCommentsTab extends ListActivity {
 						{
 						pd.dismiss();
 						}
+						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle("Connection Error");
+						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 			              dialogBuilder.setMessage(e.getMessage());
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
@@ -779,7 +826,7 @@ public class moderateCommentsTab extends ListActivity {
 					public void run() {
 						dismissDialog(ID_DIALOG_POSTING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle("Connection Error");
+						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 			              dialogBuilder.setMessage(e.getFaultString());
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
@@ -800,7 +847,7 @@ public class moderateCommentsTab extends ListActivity {
 						Throwable couse = e.getCause();
 						dismissDialog(ID_DIALOG_POSTING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle("Connection Error");
+						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 			              dialogBuilder.setMessage(e.getMessage());
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
@@ -821,14 +868,14 @@ public class moderateCommentsTab extends ListActivity {
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage("Moderating Comment");
+	loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(false);
 	return loadingDialog;
 	}
 	else if (id == ID_DIALOG_REPLYING){
 		ProgressDialog loadingDialog = new ProgressDialog(this);
-		loadingDialog.setMessage("Replying to Comment");
+		loadingDialog.setMessage(getResources().getText(R.string.replying_comment));
 		loadingDialog.setIndeterminate(true);
 		loadingDialog.setCancelable(false);
 		return loadingDialog;
@@ -908,6 +955,7 @@ public class moderateCommentsTab extends ListActivity {
 	        	}
 	    		String sUsername = settings.get(2).toString();
 	    		String sPassword = settings.get(3).toString();
+	    		int sBlogId = Integer.parseInt(settings.get(10).toString());
 	        	
 	        	client = new XMLRPCClient(sURL);
 	        	
@@ -936,7 +984,7 @@ public class moderateCommentsTab extends ListActivity {
 
 			        
 		        Object[] params = {
-		        		1,
+		        		sBlogId,
 		        		sUsername,
 		        		sPassword,
 		        		sSelCommentID,
@@ -951,7 +999,7 @@ public class moderateCommentsTab extends ListActivity {
 					{ 
 					  public void run() 
 					  {
-						  Toast.makeText(moderateCommentsTab.this, "Comment Moderated Succesfully", Toast.LENGTH_SHORT).show();
+						  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
 					  } 
 					}; 
 					this.runOnUiThread(action);
@@ -988,6 +1036,7 @@ public class moderateCommentsTab extends ListActivity {
     	}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
+		int sBlogId = Integer.parseInt(settings.get(10).toString());
     	
     	client = new XMLRPCClient(sURL);
     	
@@ -1006,7 +1055,7 @@ public class moderateCommentsTab extends ListActivity {
 
 	        
         Object[] params = {
-        		1,
+        		sBlogId,
         		sUsername,
         		sPassword,
         		Integer.valueOf(postID),
@@ -1021,7 +1070,7 @@ public class moderateCommentsTab extends ListActivity {
 			{ 
 			  public void run() 
 			  {
-				  Toast.makeText(moderateCommentsTab.this, "Reply Added Succesfully", Toast.LENGTH_SHORT).show();
+				  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.reply_added), Toast.LENGTH_SHORT).show();
 			  } 
 			}; 
 			this.runOnUiThread(action);
@@ -1037,7 +1086,7 @@ public class moderateCommentsTab extends ListActivity {
     	} catch (XMLRPCException e) {
     		dismissDialog(ID_DIALOG_REPLYING);
     		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-			  dialogBuilder.setTitle("Connection Error");
+			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
             dialogBuilder.setMessage(e.getMessage());
             dialogBuilder.setPositiveButton("OK",  new
           		  DialogInterface.OnClickListener() {

@@ -44,9 +44,9 @@ public class tabView extends TabActivity {
          
          TabHost host = getTabHost();  
          
-         host.addTab(host.newTabSpec("one").setIndicator("Comments", getResources().getDrawable(R.layout.comment_tab_selector)).setContent(tab1));  
-         host.addTab(host.newTabSpec("two").setIndicator("Posts", getResources().getDrawable(R.layout.posts_tab_selector)).setContent(tab2));
-         host.addTab(host.newTabSpec("three").setIndicator("Pages", getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
+         host.addTab(host.newTabSpec("one").setIndicator(getResources().getText(R.string.tab_comments), getResources().getDrawable(R.layout.comment_tab_selector)).setContent(tab1));  
+         host.addTab(host.newTabSpec("two").setIndicator(getResources().getText(R.string.tab_posts), getResources().getDrawable(R.layout.posts_tab_selector)).setContent(tab2));
+         host.addTab(host.newTabSpec("three").setIndicator(getResources().getText(R.string.tab_pages), getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
 
          if (activateTab != null){
         	 if (activateTab.equals("drafts")){
