@@ -248,6 +248,7 @@ res/drawable/list_bg.xml -text
 res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
 res/drawable/list_header_bg.xml -text
+res/drawable/list_loading.xml -text
 res/drawable/list_selector_background_focus.9.png -text
 res/drawable/list_selector_background_longpress.9.png -text
 res/drawable/list_selector_background_pressed.9.png -text
