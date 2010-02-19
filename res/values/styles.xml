@@ -63,5 +63,14 @@
     <style name="TextAppearance.Theme.PlainText" parent="android:TextAppearance.Theme">
         <item name="android:textStyle">normal</item>
     </style>
+    
+    <style name="Theme.WordPress">
+        <item name="android:progressBarStyle">@android:style/Widget.ProgressBar.Inverse</item>
+		<item name="android:progressBarStyleSmall">@android:style/Widget.ProgressBar.Small.Inverse</item>
+		<item name="android:progressBarStyleLarge">@android:style/Widget.ProgressBar.Large.Inverse</item>
+		<item name="android:progressBarStyleInverse">@android:style/Widget.ProgressBar</item>
+		<item name="android:progressBarStyleSmallInverse">@android:style/Widget.ProgressBar.Small</item>
+		<item name="android:progressBarStyleLargeInverse">@android:style/Widget.ProgressBar.Large</item> 
+    </style>
 
 </resources>
