@@ -30,12 +30,13 @@
         	  android:layout_marginTop="10dip"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Username:"
+              android:text="@string/username"
               android:layout_below="@id/url"/>
               
     <EditText android:id="@+id/username" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
+              android:singleLine="true"
               android:minHeight="40dip" 
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_username"/>           
@@ -45,12 +46,13 @@
               android:layout_marginTop="10dip" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Password:"
+              android:text="@string/password"
               android:layout_below="@id/username"/>
               
     <EditText android:id="@+id/password" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
+              android:singleLine="true"
               android:minHeight="40dip" 
               android:password="true"
               android:background="@android:drawable/editbox_background"
@@ -65,7 +67,7 @@ class="org.wordpress.android.customButton"
             android:layout_below="@id/password"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dip"
-            android:text="Save" />
+            android:text="@string/save" />
  
 <view
 class="org.wordpress.android.customButton"
@@ -75,7 +77,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/save"
             android:layout_toLeftOf="@id/save"
-            android:text="Cancel" />
+            android:text="@string/cancel" />
             
 <TextView android:id="@+id/l_wordpressdotcom"
       		android:textColor="#444444"
@@ -87,14 +89,14 @@ class="org.wordpress.android.customButton"
             android:layout_marginTop="30dip" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
-            android:text="Don't yet have a blog?"
+            android:text="@string/dont_yet_have_a_blog"
             android:layout_below="@id/cancel"/>
 <view class="org.wordpress.android.customButton"
 			android:textColor="#444444"
 			android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
 			android:id="@+id/wordpressdotcom"
-     		android:text="Get a free blog at WordPress.com"
+     		android:text="@string/get_free_blog"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/l_wordpressdotcom"/>
 </RelativeLayout>

@@ -16,9 +16,7 @@
     <TextView android:id="@+id/l_title" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Post Title:"
-              
-                android:textColor="#444444"/>
+              android:textColor="#444444" android:text="@string/post_title"/>
               
     <EditText android:id="@+id/title" 
     		  android:minHeight="40dip"
@@ -32,9 +30,8 @@
     <TextView android:id="@+id/l_content" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Post Content:"
               android:layout_below="@id/title"
-              android:textColor="#444444"/>
+              android:textColor="#444444" android:text="@string/post_content"/>
               
     <EditText android:id="@+id/content"
     		  android:gravity="top" 
@@ -95,8 +92,7 @@ class="org.wordpress.android.customButton"
               android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
               android:layout_below="@id/bold"
-              android:text="Pictures:"
-              android:textColor="#444444"/>
+              android:textColor="#444444" android:text="@string/pictures"/>
     
 <view
 class="org.wordpress.android.customButton"
@@ -105,8 +101,7 @@ class="org.wordpress.android.customButton"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/l_pictures" 
-            android:textSize="20dip"
-            android:text="Add"/>
+            android:textSize="20dip" android:text="@string/add"/>
             
 <view
 class="org.wordpress.android.customButton"
@@ -116,8 +111,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/addPictureButton"
             android:layout_toRightOf="@id/addPictureButton"
-            android:textSize="20dip"
-            android:text="Clear" />
+            android:textSize="20dip" android:text="@string/clear"/>
             
             <GridView   
             		android:id="@+id/gridView"   
@@ -131,9 +125,8 @@ class="org.wordpress.android.customButton"
                    <TextView android:id="@+id/l_tags" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Tags (separate tags with commas):"
-                android:textColor="#444444"
-                android:layout_below="@id/gridView"/>
+              android:textColor="#444444"
+                android:layout_below="@id/gridView" android:text="@string/tags_separate_with_commas"/>
               
     <EditText android:id="@+id/tags" 
     		  android:minHeight="40dip"
@@ -146,9 +139,8 @@ class="org.wordpress.android.customButton"
     <TextView android:id="@+id/l_category" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Categories:"
               android:layout_below="@id/tags"
-              android:textColor="#444444"/>
+              android:textColor="#444444" android:text="@string/categories"/>
               
      <Spinner android:id="@+id/spinner1"
         android:layout_width="256dip"
@@ -171,7 +163,7 @@ class="org.wordpress.android.customImageButton"
      <TextView android:id="@+id/selectedCategories" 
               android:layout_width="wrap_content" 
               android:layout_height="wrap_content"
-              android:text="Selected categories: "
+              android:text="@string/selected_categories"
               android:layout_below="@id/spinner1"
               android:textColor="#444444"/>       
      	
@@ -190,7 +182,7 @@ class="org.wordpress.android.customButton"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"
-              android:text="Publish? "
+              android:text="@string/publish"
               android:layout_below="@id/clearCategories"/>          
                                      
     <CheckBox android:id="@+id/publish"
@@ -209,7 +201,7 @@ class="org.wordpress.android.customButton"
             android:layout_below="@id/publish"
             android:layout_alignParentRight="true"
             android:textSize="20dip"
-            android:text="Save" /> 
+            android:text="@string/save" /> 
             
 <view
 class="org.wordpress.android.customButton"
@@ -220,7 +212,7 @@ class="org.wordpress.android.customButton"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:textSize="20dip"
-            android:text="Cancel" />           
+            android:text="@string/cancel" />           
             
     <TextView android:id="@+id/text1"
     		android:layout_width="fill_parent" 

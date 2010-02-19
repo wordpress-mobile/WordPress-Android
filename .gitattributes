@@ -286,10 +286,8 @@ res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/splashscreen.xml -text
 res/layout/tabview.xml -text
-res/layout/title.xml -text
 res/layout/view_comment.xml -text
 res/layout/viewcomments.xml -text
-res/layout/viewlocaldrafts.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
 res/values/strings.xml -text

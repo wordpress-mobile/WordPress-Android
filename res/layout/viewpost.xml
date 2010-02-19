@@ -12,7 +12,7 @@ android:background="#e8e8e8"
 		  android:textColor="#444444"
 		  android:background="#b7b7b7"
 		  android:gravity="center"
-		android:text="Post Preview:">
+		android:text="@string/post_preview">
 </TextView>        
 <WebView  android:id="@+id/webView"
  android:layout_width="wrap_content" android:layout_height="fill_parent">

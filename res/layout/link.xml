@@ -8,7 +8,7 @@
     <TextView android:id="@+id/linkLabel"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:text="Enter a URL:"
+              android:text="@string/link_enter_url"
               android:textStyle="bold"
               />
     <EditText android:id="@+id/linkText"
@@ -40,6 +40,6 @@ class="org.wordpress.android.customButton"
             android:layout_alignTop="@id/ok"
             android:layout_toLeftOf="@id/ok"
             android:textSize="20dip"
-            android:text="Cancel" />          
+            android:text="@string/cancel" />          
 
 </RelativeLayout>

@@ -1,33 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:padding="0px"
-                android:background="#f4f4f4"
-                android:orientation="vertical">
-<TextView android:id="@+id/longPress"
+                android:background="#F4F4F4"
+                android:orientation="vertical">    
+<RelativeLayout  
+			  android:id="@+id/mainRL" 
+			  android:layout_width="wrap_content" 
+              android:layout_height="wrap_content"
+              android:layout_weight="1.0">       
+<!--  <TextView android:id="@+id/longPress"
 android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
-		  android:padding="4px"
+		  android:padding="4dip"
 		  android:textColor="#444444"
 		  android:background="#b7b7b7"
 		  android:gravity="center"
-		  android:text="Long press on a post to view actions"
+		  android:text="Long press on a comment to view actions"
 		  android:shadowColor="#FFFFFF"
 		  android:shadowDx="0"
 		  android:shadowDy=".5"
 		  android:shadowRadius="1">
-</TextView>	          
-<ListView android:choiceMode="singleChoice" 
-android:id="@android:id/list"
-android:layout_width="fill_parent" 
-android:layout_height="0px"
-android:layout_weight="1"
-android:textColor="#444444"
+</TextView> -->        
+<ListView android:choiceMode="singleChoice" android:id="@android:id/list"
+ android:layout_width="fill_parent" android:layout_height="fill_parent"
+ android:textColor="#444444"
 android:divider="@drawable/list_divider"
 android:dividerHeight="1dip"
 android:cacheColorHint="#00000000">
-</ListView>          
+</ListView>
+<RelativeLayout android:layout_above="@id/mainRL"
+			  android:id="@+id/loading" 
+			  android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"            
+              
+              android:visibility="invisible">  
+              <LinearLayout android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="#AA111111"
+              android:padding="8dip"
+              android:gravity="center">       
+	<ProgressBar 
+				android:id="@+id/progress"
+				android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+                <TextView 	
+                android:textColor="#FFFFFF"
+                android:shadowColor="#000000"
+		  		android:shadowDx="0"
+		  		android:shadowDy=".5"
+		  		android:shadowRadius="1"
+				android:layout_toRightOf="@id/progress"
+				android:layout_marginLeft="8dip"
+				android:text="@string/loading"
+				android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"/>
+ 				</LinearLayout>
+</RelativeLayout> 
+</RelativeLayout>    
 <RelativeLayout 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"

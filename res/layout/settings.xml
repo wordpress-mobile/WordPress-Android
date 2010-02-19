@@ -16,13 +16,13 @@
         	  android:layout_marginTop="10dip"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Username:"
-              android:layout_below="@id/url"/>
+              android:layout_below="@id/url" android:text="@string/username"/>
               
     <EditText android:id="@+id/username" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
               android:minHeight="40dip" 
+              android:singleLine="true"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_username"/>           
   
@@ -31,13 +31,13 @@
               android:layout_marginTop="10dip" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Password:"
-              android:layout_below="@id/username"/>
+              android:layout_below="@id/username" android:text="@string/password"/>
               
     <EditText android:id="@+id/password" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
               android:minHeight="40dip" 
+              android:singleLine="true"
               android:password="true"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_password"/>
@@ -47,8 +47,7 @@
         		android:layout_marginTop="10dip" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Place image:"
-              android:layout_below="@id/password"/>
+              android:layout_below="@id/password" android:text="@string/place_image"/>
               
         <RadioGroup
         android:layout_width="fill_parent"
@@ -60,22 +59,19 @@
         <RadioButton
         android:button="@layout/radio_group"
         android:textColor="#444444"
-            android:text="Above Text"
             android:id="@+id/aboveText"
-            />
+            android:text="@string/above_text"/>
         <RadioButton
         android:button="@layout/radio_group"
         android:textColor="#444444"
-            android:text="Below Text"
-            android:id="@+id/belowText" />
+            android:id="@+id/belowText" android:text="@string/below_text"/>
     </RadioGroup>        
     
     <TextView android:id="@+id/l_maxImageWidth"
     android:textColor="#444444" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Maximum thumbnail pixel width:"
-              android:layout_below="@id/imagePlacement"/>
+              android:layout_below="@id/imagePlacement" android:text="@string/max_thumbnail_px_width"/>
               
      <Spinner android:id="@+id/maxImageWidth"
         android:layout_width="fill_parent"
@@ -91,8 +87,7 @@
             android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"
             android:paddingTop="13dip"
-              android:text="Align thumbnail to center?: "
-              android:layout_below="@id/maxImageWidth"/>
+              android:layout_below="@id/maxImageWidth" android:text="@string/align_thumb_to_center"/>
               
 <CheckBox android:id="@+id/centerThumbnail"
 			android:button="@layout/btn_check"
@@ -110,8 +105,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_below="@id/centerThumbnail"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dip"
-            android:text="Save" />
+            android:layout_marginLeft="10dip" android:text="@string/save"/>
  
 <view
 class="org.wordpress.android.customButton"
@@ -120,8 +114,7 @@ android:textColor="#444444"
      		android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/save"
-            android:layout_toLeftOf="@id/save"
-            android:text="Cancel" />
+            android:layout_toLeftOf="@id/save" android:text="@string/cancel"/>
  
 </RelativeLayout>
 </ScrollView>

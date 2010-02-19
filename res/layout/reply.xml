@@ -9,7 +9,7 @@
     <TextView android:id="@+id/replyLabel"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:text="Enter reply:"
+              android:text="@string/reply_enter"
               android:textStyle="bold"
               />
     <EditText android:id="@+id/replyText" 
@@ -17,6 +17,7 @@
               android:layout_height="wrap_content"
               android:minHeight="40dip" 
               android:minLines="2"
+              android:maxLines="4"
               android:autoText="true"
               android:capitalize="sentences"
               android:layout_below="@id/replyLabel"
@@ -32,7 +33,7 @@ class="org.wordpress.android.customButton"
             android:layout_below="@id/replyText"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dip"
-            android:text="Send Reply" />
+            android:text="@string/reply_send" />
  
 <view
 class="org.wordpress.android.customButton"
@@ -41,6 +42,6 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/ok"
             android:layout_toLeftOf="@id/ok"
-            android:text="Cancel" />          
+            android:text="@string/cancel" />          
 
 </RelativeLayout>

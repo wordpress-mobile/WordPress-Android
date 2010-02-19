@@ -34,7 +34,6 @@
 				android:ellipsize="end"
 				android:textColor="#444444"
 				android:padding="0px"
-				android:text="Hello"
 				android:layout_marginBottom="-2dip"
 			/>
 			<TextView android:id="@+id/email_url"
@@ -47,7 +46,6 @@
 				android:padding="0px"
 				android:textSize="6pt"
 				android:textColor="#666666"
-				android:text="test"
 				android:layout_marginBottom="-4dip"
 			/>
 			<TextView android:id="@+id/postTitle"
@@ -61,7 +59,6 @@
 				android:padding="0px"
 				android:textSize="6pt"
 				android:textColor="#666666"
-				android:text="testing"
 			/>
 			<TextView android:id="@+id/comment"
 				android:orientation="vertical"
