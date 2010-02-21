@@ -439,7 +439,27 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean enteredSettings = checkSettings();
 
         if (!enteredSettings){
-        	returnMessage = "invalidSettings";
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
+            dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+          		  DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      // User clicked Yes so delete the contexts.
+                  	Intent i = new Intent(newPost.this, settings.class);
+
+                  	startActivityForResult(i, 0);
+              
+                  }
+              });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
+          		  DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      // User clicked No so don't delete (do nothing).
+                  }
+              });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
         }
         else{
         	settingsDB settingsDB = new settingsDB(this);
@@ -544,11 +564,41 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean enteredSettings = checkSettings();
         
         if (!enteredSettings){
-        	res = "invalidSettings";
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
+            dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+          		  DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      // User clicked Yes so delete the contexts.
+                  	Intent i = new Intent(newPost.this, settings.class);
+
+                  	startActivityForResult(i, 0);
+              
+                  }
+              });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
+          		  DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      // User clicked No so don't delete (do nothing).
+                  }
+              });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
         }
         else if (title.equals("") || content.equals(""))
         {
-        	res = "emptyFields";
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
+            dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      //Just close the window
+                  }
+              });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
         }
         else {
         
@@ -1034,95 +1084,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				              dialogBuilder.setCancelable(true);
 				             dialogBuilder.create().show();
 			
-			}
-			else if (finalResult.equals("invalidSettings")){
-				dismissDialog(newPost.this.ID_DIALOG_POSTING);
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
-				              dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
-				              dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // User clicked Yes so delete the contexts.
-		                            	Intent i = new Intent(newPost.this, settings.class);
-
-		                            	startActivityForResult(i, 0);
-		                        
-		                            }
-		                        });
-				              dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // User clicked No so don't delete (do nothing).
-		                            }
-		                        });
-				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
-			
-			}
-			else if (finalResult.equals("emptyFields")){
-
-				dismissDialog(newPost.this.ID_DIALOG_POSTING);
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
-				              dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
-				              dialogBuilder.setPositiveButton("OK",  new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                //Just close the window
-
-		                        
-		                            }
-		                        });
-				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
-			
-			}
-			else if (finalResult.equals("noConnection")){
-
-				dismissDialog(newPost.this.ID_DIALOG_POSTING);
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-				              dialogBuilder.setMessage(getResources().getText(R.string.connection_error_occured));
-				              dialogBuilder.setPositiveButton("OK",  new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                //Just close the window
-
-		                        
-		                            }
-		                        });
-				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
-			
-			}
-			else if (finalResult.equals("OK"))
-			{
-
-				dismissDialog(newPost.this.ID_DIALOG_POSTING);
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-				  dialogBuilder.setTitle(getResources().getText(R.string.post_added));
-				  if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error));  
-				  }
-				  else{
-	              dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully));
-				  }
-	              dialogBuilder.setPositiveButton("OK",  new
-	            		  DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int whichButton) {
-                    	  Bundle bundle = new Bundle();
-                          
-                          bundle.putString("returnStatus", "OK");
-                          Intent mIntent = new Intent();
-                          mIntent.putExtras(bundle);
-                          setResult(RESULT_OK, mIntent);
-                          finish();
-                          
-                      }
-                  });
-	              dialogBuilder.setCancelable(true);
-	             dialogBuilder.create().show();
 			}
 		}
 	};

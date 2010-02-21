@@ -172,7 +172,7 @@ public void displayAccounts(){
 	                   	}
 	                   
 	             
-	            	   menu.add(0, 0, 0, "Remove Account");
+	            	   menu.add(0, 0, 0, getResources().getText(R.string.remove_account));
 				}
 	          });
             
@@ -336,11 +336,11 @@ private void uploadStats(int numBlogs) {
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    menu.add(0, 0, 0, "Add Account");
+    menu.add(0, 0, 0, getResources().getText(R.string.add_account));
     MenuItem menuItem1 = menu.findItem(0);
     menuItem1.setIcon(R.drawable.ic_menu_preferences);
     
-    menu.add(0, 1, 0, "Notification Settings");
+    menu.add(0, 1, 0, getResources().getText(R.string.notification_settings));
     MenuItem menuItem2 = menu.findItem(1);
     menuItem2.setIcon(R.drawable.ic_menu_notifications);
     
@@ -404,9 +404,9 @@ public boolean onContextItemSelected(MenuItem item) {
      switch (item.getItemId()) {
      	  case 0:
      		 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
-   		  dialogBuilder.setTitle("Remove Account");
-         dialogBuilder.setMessage("Are you sure you want to remove this account?");
-         dialogBuilder.setPositiveButton("Yes",  new
+   		  dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
        		  DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int whichButton) {
                    // remove the account
@@ -414,15 +414,15 @@ public boolean onContextItemSelected(MenuItem item) {
                  boolean deleteSuccess = settingsDB.deleteAccount(wpAndroid.this, selectedID);
                  if (deleteSuccess)
                  {
-               	  Toast.makeText(wpAndroid.this, "Account removed successfully",
+               	  Toast.makeText(wpAndroid.this, getResources().getText(R.string.account_removed_successfully),
                              Toast.LENGTH_SHORT).show();
                	  displayAccounts();
                  }
                  else
                  {
                	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wpAndroid.this);
-         			  dialogBuilder.setTitle("Error");
-                     dialogBuilder.setMessage("Could not remove account, you may need to reinstall WordPress");
+         			  dialogBuilder.setTitle(getResources().getText(R.string.error));
+                     dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
                      dialogBuilder.setPositiveButton("OK",  new
                    		  DialogInterface.OnClickListener() {
                            public void onClick(DialogInterface dialog, int whichButton) {
@@ -433,12 +433,6 @@ public boolean onContextItemSelected(MenuItem item) {
                     dialogBuilder.create().show();
                  }
            
-               }
-           });
-         dialogBuilder.setNegativeButton("No", new
-       		  DialogInterface.OnClickListener() {
-               public void onClick(DialogInterface dialog, int whichButton) {
-                   //just close the window
                }
            });
          dialogBuilder.setCancelable(false);

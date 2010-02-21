@@ -355,11 +355,41 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         boolean enteredSettings = checkSettings();
         
         if (!enteredSettings){
-        	res = "invalidSettings";
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
+          dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
+          dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // User clicked Yes so delete the contexts.
+                	Intent i = new Intent(newPage.this, settings.class);
+
+                	startActivityForResult(i, 0);
+            
+                }
+            });
+          dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // User clicked No so don't delete (do nothing).
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
         }
         else if (title.equals("") || content.equals(""))
         {
-        	res = "emptyFields";
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPage.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
+          dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
+          dialogBuilder.setPositiveButton("OK",  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //Just close the window
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
         }
         else {
         
