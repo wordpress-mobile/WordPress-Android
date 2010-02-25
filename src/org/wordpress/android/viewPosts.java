@@ -980,10 +980,10 @@ public String submitPost() throws IOException {
 				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 	  			  dialogBuilder.setTitle(getResources().getText(R.string.success));
 	  			if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.post_edited_image_error));  
+					  dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error));  
 				  }
 				  else{
-	              dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.post_edited_successfully));
+	              dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully));
 				  }
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {

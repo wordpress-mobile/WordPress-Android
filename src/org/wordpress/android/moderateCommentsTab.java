@@ -235,11 +235,11 @@ public class moderateCommentsTab extends ListActivity {
 		                   rowID = info.position;
 		                   selectedPostID = model.get(info.position).postID;
 		                   
-					 menu.setHeaderTitle("Comment Actions");
-	                 menu.add(0, 0, 0, "Mark Approved");
-	                 menu.add(0, 1, 0, "Mark Unapproved");
-	                 menu.add(0, 2, 0, "Mark Spam");
-	                 menu.add(0, 3, 0, "Reply");
+					 menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
+	                 menu.add(0, 0, 0, getResources().getText(R.string.mark_approved));
+	                 menu.add(0, 1, 0, getResources().getText(R.string.mark_unapproved));
+	                 menu.add(0, 2, 0, getResources().getText(R.string.mark_spam));
+	                 menu.add(0, 3, 0, getResources().getText(R.string.reply));
 					}
 		          });
 	 	
