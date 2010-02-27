@@ -181,8 +181,8 @@ public class commentService extends Service {
     		  		PendingIntent pendingIntent = PendingIntent.getActivity(commentService.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
  			  		
     		  		
-    		  		Notification n = new Notification(R.drawable.wp_logo, "New Comment Received", System.currentTimeMillis());
- 			  		n.setLatestEventInfo(commentService.this, accountName, "New Comment Received", pendingIntent);
+    		  		Notification n = new Notification(R.drawable.wp_logo, getResources().getText(R.string.new_comment), System.currentTimeMillis());
+ 			  		n.setLatestEventInfo(commentService.this, accountName, getResources().getText(R.string.new_comment), pendingIntent);
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));

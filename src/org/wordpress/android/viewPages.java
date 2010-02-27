@@ -694,6 +694,7 @@ public boolean onContextItemSelected(MenuItem item) {
              //i0.putExtra("postTitle", titles[selectedID]);
              i0.putExtra("id", id);
              i0.putExtra("accountName", accountName);
+             i0.putExtra("isPage", true);
              startActivity(i0);
              return true;
           case 1:     

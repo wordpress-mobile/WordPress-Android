@@ -135,8 +135,8 @@
   <string name="unapproved">Unapproved</string>
   <string name="spam">Spam</string>
   <string name="moderate_comments">Moderate Comments</string>
-  <string name="moderating_comment">Moderation Comment</string>
-  <string name="replying_comment">Replying to Comment</string>
+  <string name="moderating_comment">Moderating comment</string>
+  <string name="replying_comment">Replying to comment</string>
   <string name="comment_moderated">Comment Moderated Successfully</string>
   <string name="reply_added">Reply Added Successfully</string>
   
@@ -156,6 +156,7 @@
   <string name="page_actions">Page Actions</string>
   <string name="preview_page">Preview Page</string>
   <string name="page_attempt_upload">Attempting to upload page</string>
+  <string name="page_preview">Page Preview:</string>
   
   <!--  post actions -->
   <string name="post_actions">Post Actions</string>
@@ -191,4 +192,5 @@
   <string name="hour">hour</string>
   <string name="hours">hours</string>
   <string name="daily">daily</string>
+  <string name="new_comment">New Comment Received</string>
 </resources>

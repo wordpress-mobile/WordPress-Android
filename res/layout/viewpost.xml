@@ -6,6 +6,7 @@ android:background="#e8e8e8"
                 android:padding="0px" 
                 android:orientation="vertical">   
 <TextView
+		android:id="@+id/postPreview"
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"
 		android:padding="4dip"

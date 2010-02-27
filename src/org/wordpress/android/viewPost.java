@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 
 public class viewPost extends Activity {
@@ -24,6 +25,7 @@ public class viewPost extends Activity {
 	private String postID = "";
 	private String accountName = "";
 	private String postTitle = "";
+	private boolean isPage = false;
 	public ProgressDialog pd;
     @Override
     public void onCreate(Bundle icicle) {
@@ -36,12 +38,22 @@ public class viewPost extends Activity {
          id = extras.getString("id");
          postID = extras.getString("postID");
          accountName = extras.getString("accountName");
+         isPage = extras.getBoolean("isPage");
         }   
         
         pd = ProgressDialog.show(viewPost.this,
         		getResources().getText(R.string.getting_preview), getResources().getText(R.string.getting_preview_attempting), true, false);
+        if (isPage){
+        	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_page));
+        	TextView postPreview = (TextView) findViewById(R.id.postPreview);
+        	postPreview.setText(getResources().getText(R.string.page_preview));
+        }
+        else{
+        	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_post));
+        }
         
-        this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.getting_preview));
+        
+        
         Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);
