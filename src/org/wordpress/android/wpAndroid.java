@@ -435,6 +435,13 @@ public boolean onContextItemSelected(MenuItem item) {
            
                }
            });
+         	dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
+         		  DialogInterface.OnClickListener() {
+               public void onClick(DialogInterface dialog, int whichButton) {
+                   // Just close the window.
+           
+               }
+           });
          dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
    	

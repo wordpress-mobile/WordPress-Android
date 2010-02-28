@@ -15,7 +15,7 @@ android:shadowDy="0"
 android:shadowRadius="1" 
 android:shadowColor="#FFFFFF" 
 android:textColor="#444444"
-android:textSize="18dip"
+android:textSize="22dip"
 android:id="@+id/versionNumber" android:gravity="bottom">
 </TextView>
 </LinearLayout>
