@@ -290,6 +290,7 @@ res/layout/view_comment.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
+res/values-de/strings.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
 src/com/commonsware/cwac/thumbnail/ThumbnailActivity.java -text
