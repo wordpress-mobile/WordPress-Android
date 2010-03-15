@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="horizontal"
@@ -23,6 +23,7 @@
 			android:orientation="vertical"
 			android:layout_weight="1"
 			android:gravity="center_vertical"
+			android:layout_marginLeft="60dip"
 			>
 			<TextView android:id="@+id/name"
 				android:layout_width="wrap_content"
@@ -30,6 +31,7 @@
 				android:layout_weight="1"
 				android:gravity="left"
 				android:textStyle="bold"
+				android:textSize="18dip"
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:textColor="#444444"
@@ -44,9 +46,9 @@
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:padding="0px"
-				android:textSize="6pt"
+				android:textSize="12dip"
 				android:textColor="#666666"
-				android:layout_marginBottom="-4dip"
+				android:textColorLink="#21759b"
 			/>
 			<TextView android:id="@+id/postTitle"
 				android:layout_width="wrap_content"
@@ -57,17 +59,23 @@
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:padding="0px"
-				android:textSize="6pt"
+				android:textSize="12dip"
 				android:textColor="#666666"
 			/>
-			<TextView android:id="@+id/comment"
+		</LinearLayout>
+	</LinearLayout>
+	<TextView android:id="@+id/comment"
 				android:orientation="vertical"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:singleLine="false"
 				android:textColor="#444444"
-				android:maxLines="5"
+				android:maxLines="2"
+				android:minLines="2"
 				android:ellipsize="end"
+				android:layout_below="@id/avatar"
+				android:paddingLeft="4dip"
+				android:paddingRight="4dip"
 		/>
 		<TextView android:id="@+id/status"
 				android:orientation="vertical"
@@ -75,7 +83,7 @@
 				android:layout_height="wrap_content"
 				android:singleLine="true"
 				android:layout_marginBottom="4dip"
+				android:layout_below="@id/comment"
+				android:paddingLeft="4dip"
 		/>
-		</LinearLayout>
-	</LinearLayout>
-</LinearLayout>
+</RelativeLayout>

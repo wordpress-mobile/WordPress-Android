@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
-    android:padding="6dip"
-    >
-<ImageView android:id="@+id/gravatar" android:layout_width="fill_parent" android:layout_height="wrap_content"></ImageView>
-<ScrollView android:layout_width="fill_parent" android:layout_height="fill_parent">
-<TextView android:gravity="left" android:textColor="#F4F4F4" android:id="@+id/comment" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal"
+	android:padding="4dip"
+	>
+<ImageView android:id="@+id/gravatar" 
+android:layout_width="100dip" 
+android:layout_height="100dip"
+android:src="@drawable/placeholder">
+</ImageView>
+<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingLeft="4dip"
+		android:paddingRight="4dip"
+		>
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_weight="1"
+			android:gravity="center_vertical"
+			android:layout_marginLeft="100dip"
+			>
+			<TextView android:gravity="left" android:id="@+id/name" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
+			<TextView android:gravity="left" android:id="@+id/email" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
+			<TextView android:gravity="left" android:id="@+id/url" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
+		</LinearLayout>
+	</LinearLayout>
+<ScrollView android:layout_below="@id/gravatar" android:layout_width="fill_parent" android:layout_height="fill_parent">
+<TextView android:gravity="left" android:id="@+id/comment" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
 </ScrollView>
-</LinearLayout>
+</RelativeLayout>

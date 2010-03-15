@@ -77,7 +77,7 @@ public class editPost extends Activity {
     private boolean localDraft = false;
     private int ID_DIALOG_POSTING = 1;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
-    public Boolean centerThumbnail, xmlrpcError = false;
+    public Boolean centerThumbnail, xmlrpcError = false, isPage = false;;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -92,16 +92,48 @@ public class editPost extends Activity {
          accountName = extras.getString("accountName");
          postID = extras.getString("postID");
          localDraft = extras.getBoolean("localDraft", false); 
+         isPage = extras.getBoolean("isPage", false);
         }
         
-        this.setTitle(accountName + " - " + getResources().getText(R.string.edit_post));
+        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
+        
+        
+        //remove categories and tags if editing a page
+        if (isPage){  
+        	TextView tvTitle = (TextView) findViewById(R.id.l_title);
+        	tvTitle.setText(getResources().getText(R.string.page_title));
+        	TextView tvContent = (TextView) findViewById(R.id.l_content);
+        	tvTitle.setText(getResources().getText(R.string.page_content));
+        	TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
+    		EditText tagsET = (EditText) findViewById(R.id.tags);
+    		TextView tvCategoriesLabel = (TextView) findViewById(R.id.l_category);
+    		Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+    		TextView tvTagsLabel = (TextView) findViewById(R.id.l_tags);
+    		customImageButton btnRefresh = (customImageButton) findViewById(R.id.refreshCategoriesButton);
+    		customButton btnClear = (customButton) findViewById(R.id.clearCategories);
+    		tvCategories.setVisibility(View.GONE);
+    		tagsET.setVisibility(View.GONE);
+    		tvCategoriesLabel.setVisibility(View.GONE);
+    		spinner.setVisibility(View.GONE);
+    		tvTagsLabel.setVisibility(View.GONE);
+    		btnRefresh.setVisibility(View.GONE);
+    		btnClear.setVisibility(View.GONE);
+        }
         
         //loads the categories from the db if they exist
+        if (!isPage){
         loadCategories();
+        }
         
         if (localDraft){
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
-        	Vector post = lDraftsDB.loadPost(this, postID);
+        	Vector post;
+        	if (isPage){
+        		post = lDraftsDB.loadPageDraft(this, postID);
+        	}
+        	else{
+        		post = lDraftsDB.loadPost(this, postID);
+        	}
         	
         	HashMap postHashMap = (HashMap) post.get(0);
         	
@@ -128,25 +160,27 @@ public class editPost extends Activity {
         		
         	}
         	
-        	String categories = postHashMap.get("categories").toString();
-        	if (!categories.equals("")){
-        		
-        		String[] aCategories = categories.split(",");
-        		
-        		for (int i=0; i < aCategories.length; i++)
-        		{
-        			selectedCategories.add(aCategories[i]);
-        		}
-        		
-        		TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-        		tvCategories.setText("Selected categories: " + categories);
-        		
-        	}
-        	
-        	String tags = postHashMap.get("tags").toString();
-        	if (!tags.equals("")){
-        		EditText tagsET = (EditText) findViewById(R.id.tags);
-        		tagsET.setText(tags);
+        	if (!isPage){
+		    	String categories = postHashMap.get("categories").toString();
+		    	if (!categories.equals("")){
+		    		
+		    		String[] aCategories = categories.split(",");
+		    		
+		    		for (int i=0; i < aCategories.length; i++)
+		    		{
+		    			selectedCategories.add(aCategories[i]);
+		    		}
+		    		
+		    		TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
+		    		tvCategories.setText("Selected categories: " + categories);
+		    		
+		    	}
+		    	
+		    	String tags = postHashMap.get("tags").toString();
+		    	if (!tags.equals("")){
+		    		EditText tagsET = (EditText) findViewById(R.id.tags);
+		    		tagsET.setText(tags);
+		    	}
         	}
         	
         	int publish = Integer.valueOf(postHashMap.get("publish").toString());
@@ -160,9 +194,7 @@ public class editPost extends Activity {
         	
         }
         else{
-        	
-        
-        
+
         settingsDB settingsDB = new settingsDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);
     	String sURL = "";
@@ -186,7 +218,7 @@ public class editPost extends Activity {
     	if (setTitle.equals("")){
     	
     	pd = ProgressDialog.show(editPost.this,
-    			getResources().getText(R.string.getting_post), getResources().getText(R.string.please_wait_getting_post), true, false);
+    			getResources().getText((isPage) ? R.string.getting_page : R.string.getting_post), getResources().getText((isPage) ? R.string.please_wait_getting_page : R.string.please_wait_getting_post), true, false);
     	
     	XMLRPCMethod method = new XMLRPCMethod("metaWeblog.getPost", new XMLRPCMethodCallback() {
 			public void callFinished(Object result) {
@@ -210,24 +242,29 @@ public class editPost extends Activity {
 			        	contentET.setText(escapeUtils.unescapeHtml(contentHash.get("description").toString()));
 			        }
 			      
-			        EditText tagsET = (EditText)findViewById(R.id.tags);
-			        tagsET.setText(escapeUtils.unescapeHtml(contentHash.get("mt_keywords").toString()));
+			        
 			        String status = contentHash.get("post_status").toString();
-			        TextView categories = (TextView)findViewById(R.id.selectedCategories);
 			        
-			        Object categoriesArray[] = (Object[]) contentHash.get("categories");
+			        if (!isPage){
+				        EditText tagsET = (EditText)findViewById(R.id.tags);
+				        tagsET.setText(escapeUtils.unescapeHtml(contentHash.get("mt_keywords").toString()));
+				        TextView categories = (TextView)findViewById(R.id.selectedCategories);
 			        
-			        if (categoriesArray != null){
-			        	int ctr = 0;
-					    for (Object item : categoriesArray){
-					        String category = categoriesArray[ctr].toString();
-					        if (!selectedCategories.contains(category))
-		                	{
-					        categories.setText(escapeUtils.unescapeHtml(categories.getText().toString() + category + ", "));
-		                	selectedCategories.add(category);
-		                	}
-					        ctr++;					    
-			        }			  
+			        
+				        Object categoriesArray[] = (Object[]) contentHash.get("categories");
+				        
+				        if (categoriesArray != null){
+				        	int ctr = 0;
+						    for (Object item : categoriesArray){
+						        String category = categoriesArray[ctr].toString();
+						        if (!selectedCategories.contains(category))
+			                	{
+						        categories.setText(escapeUtils.unescapeHtml(categories.getText().toString() + category + ", "));
+			                	selectedCategories.add(category);
+			                	}
+						        ctr++;					    
+				        }			  
+				        }
 			        }
 			        
 			        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
@@ -1536,10 +1573,10 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 				  dialogBuilder.setTitle(getResources().getText(R.string.post_edited));
 				  if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText(R.string.post_edited_image_error));  
+					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_image_error : R.string.post_edited_image_error));  
 				  }
 				  else{
-	              dialogBuilder.setMessage(getResources().getText(R.string.post_edited_successfully));
+	              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_successfully : R.string.post_edited_successfully));
 				  }
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {
@@ -1563,7 +1600,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage(getResources().getText(R.string.attempting_edit_post));
+	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.attempting_edit_page : R.string.attempting_edit_post));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;
@@ -1586,16 +1623,16 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
         String content = contentET.getText().toString();
+        String tags = "";
+        if (!isPage){
         EditText tagsET = (EditText)findViewById(R.id.tags);
-        String tags = tagsET.getText().toString();
+        tags = tagsET.getText().toString();
+        }
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         boolean publishThis = false;
         String images = "";
         String categories = "";
         boolean success = false;
-        
-
-        Integer blogID = 1;
         
         Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;
@@ -1618,23 +1655,25 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         		//imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
 
         	}
-        	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-        
-        	int itemCount = spinner.getCount();
-        	String selectedCategory = "Uncategorized";
-        	if (itemCount != 0){
-        		selectedCategory = spinner.getSelectedItem().toString();
-        	}
-        
-        	// categoryID = getCategoryId(selectedCategory);
-        	String[] theCategories = new String[selectedCategories.size()];
-        
-        	int catSize = selectedCategories.size();
-        
-        	for(int i=0; i < selectedCategories.size(); i++)
-        	{
-        		categories += selectedCategories.get(i).toString() + ",";
-        		//theCategories[i] = selectedCategories.get(i).toString();
+        	if (!isPage){
+	        	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+	        
+	        	int itemCount = spinner.getCount();
+	        	String selectedCategory = "Uncategorized";
+	        	if (itemCount != 0){
+	        		selectedCategory = spinner.getSelectedItem().toString();
+	        	}
+	        
+	        	// categoryID = getCategoryId(selectedCategory);
+	        	String[] theCategories = new String[selectedCategories.size()];
+	        
+	        	int catSize = selectedCategories.size();
+	        
+	        	for(int i=0; i < selectedCategories.size(); i++)
+	        	{
+	        		categories += selectedCategories.get(i).toString() + ",";
+	        		//theCategories[i] = selectedCategories.get(i).toString();
+	        	}
         	}
         
         	if (publishCB.isChecked())
@@ -1644,7 +1683,12 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         
         	//new feature, automatically save a post as a draft just in case the posting fails
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
+        	if (isPage){
+        		success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
+        	}
+        	else{
         	success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis);
+        	}
         
         
         }// if/then for valid settings
@@ -1658,7 +1702,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		  if (i == KeyEvent.KEYCODE_BACK) {
 			  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 			  dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-              dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit));
+              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
               dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
             		  DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {

@@ -82,7 +82,7 @@ public class newPost extends Activity {
     public int imgLooper;
     public String imageContent = "";
     public String imgHTML = "";
-    public boolean thumbnailOnly, secondPass, xmlrpcError = false;
+    public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -95,47 +95,103 @@ public class newPost extends Activity {
         {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
+         isPage = extras.getBoolean("isPage", false);
         }
         
-        this.setTitle(accountName + " - " + getResources().getText(R.string.new_post));
+        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
         
-        //loads the categories from the db if they exist
-        loadCategories();
+      //remove categories and tags if creating a page
+        if (isPage){  
+        	TextView tvTitle = (TextView) findViewById(R.id.l_title);
+        	tvTitle.setText(getResources().getText(R.string.page_title));
+        	TextView tvContent = (TextView) findViewById(R.id.l_content);
+        	tvTitle.setText(getResources().getText(R.string.page_content));
+        	TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
+    		EditText tagsET = (EditText) findViewById(R.id.tags);
+    		TextView tvCategoriesLabel = (TextView) findViewById(R.id.l_category);
+    		Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+    		TextView tvTagsLabel = (TextView) findViewById(R.id.l_tags);
+    		customImageButton btnRefresh = (customImageButton) findViewById(R.id.refreshCategoriesButton);
+    		customButton btnClear = (customButton) findViewById(R.id.clearCategories);
+    		tvCategories.setVisibility(View.GONE);
+    		tagsET.setVisibility(View.GONE);
+    		tvCategoriesLabel.setVisibility(View.GONE);
+    		spinner.setVisibility(View.GONE);
+    		tvTagsLabel.setVisibility(View.GONE);
+    		btnRefresh.setVisibility(View.GONE);
+    		btnClear.setVisibility(View.GONE);
+        }
         
-        //clear up some variables
+      //clear up some variables
         selectedImageIDs.clear();
         selectedImageCtr = 0;
         
-        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+        //loads the categories from the db if they exist
+        if (!isPage){
+	        loadCategories();
+	
+	        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+	        
+	       
+	        spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+	            public void onItemSelected(AdapterView parent, View v,
+	                      int position, long id) {
+	            	
+	            	
+	            	if (newStart != true)
+	            	{
+	                	String selectedItem = parent.getItemAtPosition(position).toString();	
+	                	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
+	                	if (!selectedCategories.contains(selectedItem))
+	                	{
+	                	selectedCategoriesTV.setText(selectedCategoriesTV.getText().toString() + selectedItem + ", ");
+	                	selectedCategories.add(selectedItem);
+	                	}
+	            	}
+	            	else
+	            	{
+	            		newStart = false;
+	            	}
+	            }
+	
+	            public void onNothingSelected(AdapterView arg0) {
+	                 
+	            }
+	        }); 
         
-       
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-            public void onItemSelected(AdapterView parent, View v,
-                      int position, long id) {
-            	
-            	
-            	if (newStart != true)
-            	{
-                	String selectedItem = parent.getItemAtPosition(position).toString();	
-                	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-                	if (!selectedCategories.contains(selectedItem))
-                	{
-                	selectedCategoriesTV.setText(selectedCategoriesTV.getText().toString() + selectedItem + ", ");
-                	selectedCategories.add(selectedItem);
-                	}
-            	}
-            	else
-            	{
-            		newStart = false;
-            	}
-            }
-
-            public void onNothingSelected(AdapterView arg0) {
-                 
-            }
-     }); 
-        
-        
+	        final customImageButton refreshCategoriesButton = (customImageButton) findViewById(R.id.refreshCategoriesButton);
+	        
+	        refreshCategoriesButton.setOnClickListener(new customImageButton.OnClickListener() {
+	            public void onClick(View v) {
+	            	
+	            	pd = ProgressDialog.show(newPost.this,
+	            			getResources().getText(R.string.refreshing_categories), getResources().getText(R.string.attempting_categories_refresh), true, true);
+	            	Thread th = new Thread() {
+	    				public void run() {					
+	    				    finalResult = getCategories();	
+	    				    
+	    				    mHandler.post(mUpdateResults);
+	    				    
+	    				}
+	    			};
+	    			th.start();
+	            }
+	        });
+	        
+	        final customButton clearCategories = (customButton) findViewById(R.id.clearCategories);   
+	        
+	        clearCategories.setOnClickListener(new customButton.OnClickListener() {
+	            public void onClick(View v) {
+	            	 
+	            	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
+	
+	            	selectedCategoriesTV.setText("Selected categories: ");
+	            	
+	            	selectedCategories.clear();
+	            }
+	        });
+	        
+    }
         
         final customButton postButton = (customButton) findViewById(R.id.post);
         
@@ -159,25 +215,6 @@ public class newPost extends Activity {
             }
         });
         
-final customImageButton refreshCategoriesButton = (customImageButton) findViewById(R.id.refreshCategoriesButton);
-        
-        refreshCategoriesButton.setOnClickListener(new customImageButton.OnClickListener() {
-            public void onClick(View v) {
-            	
-            	pd = ProgressDialog.show(newPost.this,
-            			getResources().getText(R.string.refreshing_categories), getResources().getText(R.string.attempting_categories_refresh), true, true);
-            	Thread th = new Thread() {
-    				public void run() {					
-    				    finalResult = getCategories();	
-    				    
-    				    mHandler.post(mUpdateResults);
-    				    
-    				}
-    			};
-    			th.start();
-            }
-    });
-        
             final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
             
             addPictureButton.setOnClickListener(new customButton.OnClickListener() {
@@ -189,19 +226,6 @@ final customImageButton refreshCategoriesButton = (customImageButton) findViewBy
                 	
                 	startActivityForResult(photoPickerIntent, 1); 
                 	 
-                }
-        });
-            
-            final customButton clearCategories = (customButton) findViewById(R.id.clearCategories);   
-            
-            clearCategories.setOnClickListener(new customButton.OnClickListener() {
-                public void onClick(View v) {
-                	 
-                	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-
-                	selectedCategoriesTV.setText("Selected categories: ");
-                	
-                	selectedCategories.clear();
                 }
         });
             
@@ -547,9 +571,12 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
         String content = contentET.getText().toString();
+        String tags = "";
+        if (!isPage){
         EditText tagsET = (EditText)findViewById(R.id.tags);
-        String tags = tagsET.getText().toString();
-        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
+        tags = tagsET.getText().toString();
+        }
+        CheckBox publishCB = (CheckBox)findViewById(R.id.publish); 
         boolean publishThis = false;
         String images = "";
         String categories = "";
@@ -608,6 +635,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         		images += selectedImageIDs.get(it).toString() + ",";
 
         	}
+        	if (!isPage){
         	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
         
         	int itemCount = spinner.getCount();
@@ -626,6 +654,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         		categories += selectedCategories.get(i).toString() + ",";
         		//theCategories[i] = selectedCategories.get(i).toString();
         	}
+        	}
         
         	if (publishCB.isChecked())
         	{
@@ -634,7 +663,12 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         
         	//new feature, automatically save a post as a draft just in case the posting fails
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
-        	success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis);
+        	if (isPage){
+        		success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
+        	}
+        	else{
+        		success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis);
+        	}
         
         
         }// if/then for valid settings
@@ -1092,7 +1126,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage("Attempting to add post...");
+	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;

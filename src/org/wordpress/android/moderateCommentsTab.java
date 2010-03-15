@@ -179,7 +179,7 @@ public class moderateCommentsTab extends ListActivity {
 						        		postTitle,
 						        		authorURL,
 						        		authorEmail,
-						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
+						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=http://gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=60")));
 						    }
 						   
 						    try {

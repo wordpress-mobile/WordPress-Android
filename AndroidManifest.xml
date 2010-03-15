@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.wordpress.android" android:versionCode="4" android:versionName="1.0.3">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-	<application android:icon="@drawable/app_icon"
+	<application android:icon="@drawable/app_icon" android:theme="@style/Theme.WordPress"
 		android:label="WordPress" android:debuggable="true" android:name="WordPress">
 		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon"
 			android:label="WordPress" />
@@ -10,7 +10,7 @@
 			android:configChanges="orientation|keyboardHidden" />
 		<activity android:name=".link" android:theme="@android:style/Theme.Dialog"
 			android:label="Enter a URL" />
-		<activity android:name="viewPosts" />
+		<activity android:name="viewPosts" android:theme="@style/Theme.TabView"/>
 		<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="newPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden"/>
@@ -19,14 +19,9 @@
 		<activity android:name="notificationSettings" android:label="Notification Settings" />
 		<service android:name="commentService" android:label="Comment Service" />
 		<receiver android:name="broadcastReceiver" />
-		<activity android:name="tabView" android:configChanges="orientation|keyboardHidden" />
-		
-		<activity android:name="viewPages" />
-		<activity android:name="moderateCommentsTab" 
-			android:configChanges="keyboardHidden|orientation"/>
-		<activity android:name="viewComment" android:theme="@android:style/Theme.Dialog" />
-		<activity android:name="newPage" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="editPage" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="tabView" android:theme="@style/Theme.TabView" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="moderateCommentsTab" android:configChanges="keyboardHidden|orientation"/>
+		<activity android:name="viewComment" />
 		<activity android:name="replyToComment" android:theme="@android:style/Theme.Dialog" />
 		<activity android:icon="@drawable/app_icon" android:screenOrientation="portrait" android:name="splashScreen"
 			android:theme="@android:style/Theme.NoTitleBar">

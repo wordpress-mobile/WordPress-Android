@@ -11,6 +11,9 @@ import java.security.NoSuchAlgorithmException;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
@@ -23,6 +26,41 @@ public class viewComment extends Activity {
 	private String accountName = "";
 	private String email = "";
 	private String name = "";
+	private String url = "";
+	private Drawable d;
+	
+	private Handler handler = new Handler() {
+
+
+		public void handleMessage(Message msg) {
+
+		super.handleMessage(msg);
+
+		final ImageView ivGravatar = (ImageView) findViewById(R.id.gravatar);
+		ivGravatar.setImageDrawable(d);
+
+		}
+
+		};
+		
+		private void getGravatar(final String gravatarURL) {
+
+			//progressDialog = ProgressDialog.show(Main.this, "", "Doing...");
+
+			new Thread() {
+
+			public void run() {
+
+			d = getDrawable(gravatarURL);
+
+			handler.sendEmptyMessage(0);
+
+			}
+
+			}.start();
+
+			}
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +74,7 @@ public class viewComment extends Activity {
          comment = extras.getString("comment");
          email = extras.getString("email");
          name = extras.getString("name");
+         url = extras.getString("url");
         } 
         
         final Window w = getWindow();
@@ -43,26 +82,31 @@ public class viewComment extends Activity {
         
         setContentView(R.layout.view_comment);
         
-        final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=64&d=identicon";
-
+        final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=100&d=identicon";
         
-        Thread action = new Thread() 
-		{ 
-		  public void run() 
-		  {
-			  w.setFeatureDrawable(Window.FEATURE_LEFT_ICON, getDrawable(gravatarURL));
-		  } 
-		}; 
-		this.runOnUiThread(action);
-        
+        getGravatar(gravatarURL);        
         
         this.setTitle(name);
         
-        final ImageView ivGravatar = (ImageView) findViewById(R.id.gravatar);
-
+        TextView tvName = (TextView) findViewById(R.id.name);
+        
+        tvName.setText(name);
+        
+        TextView tvEmail = (TextView) findViewById(R.id.email);
+        
+        tvEmail.setText(email);
+        Linkify.addLinks(tvEmail, Linkify.ALL);
+        
+        if (url != ""){
+        	TextView tvURL = (TextView) findViewById(R.id.url);
+        	tvURL.setText(url);
+            Linkify.addLinks(tvURL, Linkify.ALL);
+        }
+        
 		TextView tvComment = (TextView) findViewById(R.id.comment);
 		
 		tvComment.setText(comment);
+		Linkify.addLinks(tvComment, Linkify.ALL);
 
 	}
 	

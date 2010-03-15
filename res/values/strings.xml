@@ -64,7 +64,7 @@
   <string name="post_edited">Post edited</string>
   <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading images</string>
   <string name="post_edited_successfully">Post edited successfully</string>
-  <string name="attempting_edit_post">Attempting to edit Post...</string>
+  <string name="attempting_edit_post">Attempting to edit Post</string>
   <string name="cancel_edit">Cancel Edit</string>
   <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?</string>
   <string name="saved_to_local_drafts">Saved to local drafts</string>
@@ -85,7 +85,7 @@
   <string name="page_edited">Page Edited</string>
   <string name="page_edited_image_error">Page edited successfully, but an error was encountered when uploading images.</string>
   <string name="page_edited_successfully">Page edited successfully</string>
-  <string name="attempting_edit_page">Attempting to edit Page...</string>
+  <string name="attempting_edit_page">Attempting to edit Page</string>
   <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
   <string name="new_page">New Page</string>
   

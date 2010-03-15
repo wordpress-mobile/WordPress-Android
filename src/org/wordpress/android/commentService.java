@@ -182,6 +182,11 @@ public class commentService extends Service {
  			  		
     		  		
     		  		Notification n = new Notification(R.drawable.wp_logo, getResources().getText(R.string.new_comment), System.currentTimeMillis());
+    		  		n.defaults |= Notification.DEFAULT_SOUND;
+    		  		n.ledARGB = 0xff0000ff;
+    		  		n.ledOnMS = 100;
+    		  		n.ledOffMS = 5000;
+    		  		n.flags |= Notification.FLAG_SHOW_LIGHTS;
  			  		n.setLatestEventInfo(commentService.this, accountName, getResources().getText(R.string.new_comment), pendingIntent);
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					

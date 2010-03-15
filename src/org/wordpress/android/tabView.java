@@ -28,7 +28,7 @@ public class tabView extends TabActivity {
          
          Intent tab1 = new Intent(this, moderateCommentsTab.class);
          Intent tab2 = new Intent(this, viewPosts.class);
-         Intent tab3 = new Intent(this, viewPages.class);
+         Intent tab3 = new Intent(this, viewPosts.class);
          
         Bundle bundle = new Bundle();
  		bundle.putString("accountName", accountName);
@@ -39,7 +39,8 @@ public class tabView extends TabActivity {
  		}
  		
  		tab1.putExtras(bundle);
- 		tab2.putExtras(bundle);
+ 		tab2.putExtras(bundle);		
+ 		bundle.putBoolean("viewPages", true); 		
  		tab3.putExtras(bundle);
          
          TabHost host = getTabHost();  

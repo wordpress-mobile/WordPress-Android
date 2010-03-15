@@ -84,6 +84,7 @@ public class viewPosts extends ListActivity {
     public boolean thumbnailOnly, secondPass, xmlrpcError = false;
     public String submitResult = "";
     public int totalDrafts = 0;
+    public boolean isPage = false;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -95,6 +96,7 @@ public class viewPosts extends ListActivity {
         {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
+         isPage = extras.getBoolean("viewPages");
         }
         
         //query for posts and refresh view
@@ -113,6 +115,9 @@ public class viewPosts extends ListActivity {
                 	Intent i = new Intent(viewPosts.this, newPost.class);
                 	i.putExtra("accountName", accountName);
  	                i.putExtra("id", id);
+ 	                if (isPage){
+ 	                	i.putExtra("isPage", true);
+ 	                }
  	                startActivityForResult(i, 0);
                 	 
                 }
@@ -154,7 +159,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         	
         	client = new XMLRPCClient(sURL);
         	
-        	XMLRPCMethod method = new XMLRPCMethod("blogger.getRecentPosts", new XMLRPCMethodCallback() {
+        	XMLRPCMethod method = new XMLRPCMethod((isPage) ? "wp.getPageList" : "blogger.getRecentPosts", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {
 					String s = "done";
 					s = result.toString();
@@ -162,8 +167,8 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					if (result.length == 0){
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.posts_not_found));
-			              dialogBuilder.setMessage(getResources().getText(R.string.posts_no_posts));
+						  dialogBuilder.setTitle(getResources().getText((isPage) ? R.string.pages_not_found: R.string.posts_not_found));
+			              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.pages_no_pages: R.string.posts_no_posts));
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                        public void onClick(DialogInterface dialog, int whichButton) {
@@ -182,15 +187,24 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					String rPostIDs[] = new String[result.length];
 					String rDateCreated[] = new String[result.length];
 					String rDateCreatedFormatted[] = new String[result.length];
+					String rParentID[] = new String[result.length];
 					Vector dbVector = new Vector();
 					
 					//loop this!
 					    for (int ctr = 0; ctr < result.length; ctr++){
 					    	HashMap<String, String> dbValues = new HashMap();
 					        contentHash = (HashMap) result[ctr];
-					        rTitles[ctr] = escapeUtils.unescapeHtml(contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>")));
-					        rPostIDs[ctr] = contentHash.get("postid").toString();
-					        rDateCreated[ctr] = contentHash.get("dateCreated").toString();
+					        if (isPage){
+					        	rTitles[ctr] = escapeUtils.unescapeHtml(contentHash.get("page_title").toString());
+						        rPostIDs[ctr] = contentHash.get("page_id").toString();
+						        rDateCreated[ctr] = contentHash.get("dateCreated").toString();
+						        rParentID[ctr] = contentHash.get("page_parent_id").toString();	
+					        }
+					        else{
+					        	rTitles[ctr] = escapeUtils.unescapeHtml(contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>")));
+					        	rPostIDs[ctr] = contentHash.get("postid").toString();
+					        	rDateCreated[ctr] = contentHash.get("dateCreated").toString();
+					        }
 					        
 					      //make the date pretty
 					        Date d = new Date();
@@ -205,17 +219,29 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					            rDateCreatedFormatted[ctr] = rDateCreated[ctr];  //just make it the ugly date if it doesn't work
 					        } 
 					        
+					        postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
 					        dbValues.put("blogID", id);
-					        dbValues.put("postID", rPostIDs[ctr]);
 					        dbValues.put("title", rTitles[ctr]);
-					        dbValues.put("postDate", rDateCreated[ctr]);
-					        dbValues.put("postDateFormatted", rDateCreatedFormatted[ctr]);
-					        dbVector.add(ctr, dbValues);
+					        
+					        if (isPage){	
+						        dbValues.put("pageID", rPostIDs[ctr]);		        
+						        dbValues.put("pageDate", rDateCreated[ctr]);
+						        dbValues.put("pageDateFormatted", rDateCreatedFormatted[ctr]);
+						        dbValues.put("parentID", rParentID[ctr]);
+						        dbVector.add(ctr, dbValues);
+						        postStoreDB.savePages(viewPosts.this, dbVector);
+					        }
+					        else{
+					        	dbValues.put("postID", rPostIDs[ctr]);
+					        	dbValues.put("postDate", rDateCreated[ctr]);
+					        	dbValues.put("postDateFormatted", rDateCreatedFormatted[ctr]);
+					        	dbVector.add(ctr, dbValues);
+					        	postStoreDB.savePosts(viewPosts.this, dbVector);
+					        }
+					        
 					        
 					    }
 					    
-					    postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
-					    postStoreDB.savePosts(viewPosts.this, dbVector);
 					    
 					    
 					   closeProgressBar();
@@ -224,16 +250,27 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 			        
 				}
 	        });
-	        Object[] params = {
-	        		"spacer",
-	        		sBlogId,
-	        		sUsername,
-	        		sPassword,
-	        		30
-	        };
+        	if (isPage){
+        		Object[] params = {
+    	        		sBlogId,
+    	        		sUsername,
+    	        		sPassword,
+    	        };
+        		method.call(params);
+        	}
+        	else{
+        		Object[] params = {
+        				"spacer",
+        				sBlogId,
+        				sUsername,
+        				sPassword,
+        				30
+        		};
+        		method.call(params);
+        	}
 	        
 	        
-	        method.call(params);
+	        
 	        
 	        
     }
@@ -248,7 +285,13 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     private boolean loadPosts(){ //loads posts from the db
    	
     	postStoreDB postStoreDB = new postStoreDB(this);
-    	Vector loadedPosts = postStoreDB.loadPosts(viewPosts.this, id);
+    	Vector loadedPosts;
+    	if (isPage){
+    		loadedPosts = postStoreDB.loadPages(viewPosts.this, id);	
+    	}
+    	else{
+    		loadedPosts = postStoreDB.loadPosts(viewPosts.this, id);
+    	}
    	
     	if (loadedPosts != null){
     	titles = new String[loadedPosts.size()];
@@ -266,9 +309,17 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					    for (int i=0; i < loadedPosts.size(); i++){
 					        HashMap contentHash = (HashMap) loadedPosts.get(i);
 					        titles[i] = escapeUtils.unescapeHtml(contentHash.get("title").toString());
+					        if (isPage){
+					        	postIDs[i] = contentHash.get("pageID").toString();
+					        	dateCreated[i] = contentHash.get("pageDate").toString();	
+						        dateCreatedFormatted[i] = contentHash.get("pageDateFormatted").toString();
+					        }
+					        else{
 					        postIDs[i] = contentHash.get("postID").toString();
 					        dateCreated[i] = contentHash.get("postDate").toString();	
 					        dateCreatedFormatted[i] = contentHash.get("postDateFormatted").toString();
+					        }
+					        
 					    }
 					    
 					    //add the header
@@ -280,7 +331,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 				    	
 				    	List postTitleList = Arrays.asList(titles);  
 				    	List newPostTitleList = new ArrayList();   
-				    	newPostTitleList.add(getResources().getText(R.string.tab_posts));
+				    	newPostTitleList.add(getResources().getText((isPage) ? R.string.tab_pages : R.string.tab_posts));
 				    	newPostTitleList.addAll(postTitleList);
 				    	titles = (String[]) newPostTitleList.toArray(new String[newPostTitleList.size()]);
 				    	
@@ -370,10 +421,21 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 			                   }
 			                   else if(rowID == 1 || ((rowID != (totalDrafts + 1)) && rowID != 0)){
 			                	   menu.clear();
-			                	   menu.setHeaderTitle(getResources().getText(R.string.post_actions));
-			                	   menu.add(0, 0, 0, getResources().getText(R.string.preview_post));
-			                	   menu.add(0, 1, 0, getResources().getText(R.string.view_comments));
-			                	   menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
+			                	   
+			                	   if (isPage){
+			                		   menu.setHeaderTitle(getResources().getText(R.string.page_actions));
+				                	   menu.add(2, 0, 0, getResources().getText(R.string.preview_page));
+				                	   menu.add(2, 1, 0, getResources().getText(R.string.view_comments));
+				                	   menu.add(2, 2, 0, getResources().getText(R.string.edit_page));
+			                	   }
+			                	   else{
+			                		   menu.setHeaderTitle(getResources().getText(R.string.post_actions));
+			                		   menu.add(0, 0, 0, getResources().getText(R.string.preview_post));
+			                		   menu.add(0, 1, 0, getResources().getText(R.string.view_comments));
+				                	   menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
+			                	   }
+			                	   
+			                	   
 			                   }
 
 			                   
@@ -413,7 +475,13 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     private boolean loadDrafts(){ //loads drafts from the db
        	
         localDraftsDB lDraftsDB = new localDraftsDB(this);
-    	Vector loadedPosts = lDraftsDB.loadPosts(viewPosts.this, id);
+        Vector loadedPosts;
+        if (isPage){
+        	loadedPosts = lDraftsDB.loadPageDrafts(viewPosts.this, id);
+        }
+        else{
+        	loadedPosts = lDraftsDB.loadPosts(viewPosts.this, id);
+        }
     	if (loadedPosts != null){
     	draftIDs = new String[loadedPosts.size()];
     	draftTitles = new String[loadedPosts.size()];
@@ -739,6 +807,37 @@ public boolean onContextItemSelected(MenuItem item) {
      }
      
 	}
+	else if (item.getGroupId() == 2){
+	     switch (item.getItemId()) {
+	     	  case 0:
+	     		 Intent i0 = new Intent(viewPosts.this, viewPost.class);
+	             i0.putExtra("postID", String.valueOf(selectedID));
+	             //i0.putExtra("postTitle", titles[selectedID]);
+	             i0.putExtra("id", id);
+	             i0.putExtra("accountName", accountName);
+	             i0.putExtra("isPage", true);
+	             startActivity(i0);
+	             return true;
+	          case 1:     
+	        	  Intent i = new Intent(viewPosts.this, viewComments.class);
+	              i.putExtra("postID", String.valueOf(selectedID));
+	              //i.putExtra("postTitle", titles[selectedID]);
+	              i.putExtra("id", id);
+	              i.putExtra("accountName", accountName);
+	              startActivity(i);
+	              return true; 
+	          case 2:
+	        	  Intent i2 = new Intent(viewPosts.this, editPost.class);
+	              i2.putExtra("postID", String.valueOf(selectedID));
+	              //i2.putExtra("postTitle", titles[selectedID]);
+	              i2.putExtra("id", id);
+	              i2.putExtra("accountName", accountName);
+	              i2.putExtra("isPage", true);
+	              startActivityForResult(i2,1);
+	        	  return true;
+	     }
+	     
+		}
 	else{
 		switch (item.getItemId()) {
         case 0:
@@ -746,6 +845,9 @@ public boolean onContextItemSelected(MenuItem item) {
             i2.putExtra("postID", String.valueOf(selectedID));
             //i2.putExtra("postTitle", titles[rowID]);
             i2.putExtra("id", id);
+            if (isPage){
+            	i2.putExtra("isPage", true);
+            }
             i2.putExtra("accountName", accountName);
             i2.putExtra("localDraft", true);
             startActivityForResult(i2,0);
@@ -767,10 +869,6 @@ public boolean onContextItemSelected(MenuItem item) {
 		
                 }
             }.start(); 
-            	
-            
-            
-            
       	  return true;
         case 2:
       	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
@@ -780,8 +878,12 @@ public boolean onContextItemSelected(MenuItem item) {
           		  DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
               	  localDraftsDB lDraftsDB = new localDraftsDB(viewPosts.this);
-              	  
-              	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+              	  if (isPage){
+              		  lDraftsDB.deletePageDraft(viewPosts.this, String.valueOf(selectedID)); 
+              	  }
+              	  else{
+              		  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+              	  }
               	  loadPosts();
             
                 }
@@ -807,7 +909,7 @@ public boolean onContextItemSelected(MenuItem item) {
 protected Dialog onCreateDialog(int id) {
 if (id == ID_DIALOG_POSTING){
 	ProgressDialog loadingDialog = new ProgressDialog(this);
-	loadingDialog.setMessage(getResources().getText(R.string.post_attempt_upload));
+	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;
@@ -822,7 +924,13 @@ public String submitPost() throws IOException {
 	
 	//grab the form data
 	final localDraftsDB lDraftsDB = new localDraftsDB(this);
-	Vector post = lDraftsDB.loadPost(this, String.valueOf(selectedID));
+	Vector post;
+	if (isPage){
+		post = lDraftsDB.loadPageDraft(this, String.valueOf(selectedID));
+	}
+	else{
+		post = lDraftsDB.loadPost(this, String.valueOf(selectedID));
+	}
 	
 	HashMap postHashMap = (HashMap) post.get(0);
 	
@@ -844,20 +952,22 @@ public String submitPost() throws IOException {
 		
 	}
 	
-	String categories = postHashMap.get("categories").toString();
-	if (!categories.equals("")){
-		
-		String[] aCategories = categories.split(",");
-		
-		for (int i=0; i < aCategories.length; i++)
-		{
-			selectedCategories.add(aCategories[i]);
+	String tags = "";
+	if (!isPage){
+		String categories = postHashMap.get("categories").toString();
+		if (!categories.equals("")){
+			
+			String[] aCategories = categories.split(",");
+			
+			for (int i=0; i < aCategories.length; i++)
+			{
+				selectedCategories.add(aCategories[i]);
+			}
+			
 		}
 		
+		tags = postHashMap.get("tags").toString();
 	}
-	
-	String tags = postHashMap.get("tags").toString();
-	
 	int publish = Integer.valueOf(postHashMap.get("publish").toString());
 	
 	
@@ -873,8 +983,6 @@ public String submitPost() throws IOException {
         imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
 
         }
-
-    Integer blogID = 1; //never changes with wordpress, so far
     
     Vector<Object> myPostVector = new Vector<Object> ();
     String res = null;
@@ -941,14 +1049,16 @@ public String submitPost() throws IOException {
     	}
     }
     
-    contentStruct.put("post_type", "post");
+    contentStruct.put("post_type", (isPage) ? "page" : "post");
     contentStruct.put("title", escapeUtils.escapeHtml(title));
     contentStruct.put("description", escapeUtils.escapeHtml(content));
-    if (tags != ""){
-    contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
-    }
-    if (theCategories.length > 0){
-    contentStruct.put("categories", theCategories);
+    if (!isPage){
+	    if (tags != ""){
+	    contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
+	    }
+	    if (theCategories.length > 0){
+	    contentStruct.put("categories", theCategories);
+	    }
     }
     
     client = new XMLRPCClient(sURL);
@@ -980,10 +1090,10 @@ public String submitPost() throws IOException {
 				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 	  			  dialogBuilder.setTitle(getResources().getText(R.string.success));
 	  			if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error));  
+					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error));  
 				  }
 				  else{
-	              dialogBuilder.setMessage(getResources().getText(R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully));
+	              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully));
 				  }
 	              dialogBuilder.setPositiveButton("OK",  new
 	            		  DialogInterface.OnClickListener() {
@@ -1009,7 +1119,12 @@ public String submitPost() throws IOException {
 	              	        selectedCategories.clear();
 	              	        xmlrpcError = false;
 	                		  //post made it, so let's delete the draft
-	                	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+	              	      if (isPage){
+	              	    	  lDraftsDB.deletePageDraft(viewPosts.this, String.valueOf(selectedID));
+	              	      }
+	              	      else {
+	              	    	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+	              	      }
 	                	  refreshPosts();
 	                	  }
 	              

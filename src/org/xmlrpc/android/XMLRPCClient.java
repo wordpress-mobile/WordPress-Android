@@ -368,11 +368,11 @@ public class XMLRPCClient {
 			HttpEntity entity = new StringEntity(bodyWriter.toString());
 			postMethod.setEntity(entity);
 			
-			//set timeout to 20 seconds, does it need to be set for both client and method?
-			client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
-	        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
-			postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
-			postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
+			//set timeout to 40 seconds, does it need to be set for both client and method?
+			client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
+	        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
+			postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
+			postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
 			
 			// execute HTTP POST request
 			HttpResponse response = client.execute(postMethod);
@@ -392,7 +392,7 @@ public class XMLRPCClient {
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
 			
-			//get rid of junk characters before xml respons.  60 = '<'
+			//get rid of junk characters before xml response.  60 = '<'
 			int bomCheck = is.read();
 			while (bomCheck != 60){
 				bomCheck = is.read();

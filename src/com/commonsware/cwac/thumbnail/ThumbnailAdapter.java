@@ -19,6 +19,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Bitmap.Config;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +39,8 @@ public class ThumbnailAdapter extends AdapterWrapper {
 	private int[] imageIds;
 	private SimpleWebImageCache<ThumbnailBus, ThumbnailMessage> cache=null;
 	private Activity host=null;
-	
+	Bitmap bdRounded;
+
 	/**
 		* Constructor wrapping a supplied ListAdapter
     */
@@ -114,10 +117,47 @@ public class ThumbnailAdapter extends AdapterWrapper {
 				public void run() {
 					if (image.getTag()!=null &&
 							image.getTag().toString().equals(message.getUrl())) {
-							image.setImageDrawable(cache.get(message.getUrl()));
+						
+							BitmapDrawable bd = (BitmapDrawable) cache.get(message.getUrl());
+							bdRounded = getRoundedCornerBitmap(bd.getBitmap());
+							if (bdRounded != null){
+								image.setImageBitmap(bdRounded);
+							}
+							else{
+								image.setImageDrawable(cache.get(message.getUrl()));
+							}
 					}
 				}
 			});
 		}
 	};
+	
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+		
+		if (bitmap != null)
+		{
+	    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(), Config.ARGB_8888);
+	    Canvas canvas = new Canvas(output);
+	 
+	    final int color = 0xff424242;
+	    final Paint paint = new Paint();
+	    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+	    final RectF rectF = new RectF(rect);
+	    final float roundPx = 8;
+	 
+	    paint.setAntiAlias(true);
+	    canvas.drawARGB(0, 0, 0, 0);
+	    paint.setColor(color);
+	    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+	 
+	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+	    canvas.drawBitmap(bitmap, rect, rect, paint);
+	 
+	    return output;
+		}
+		else 
+		{
+			return bitmap;
+		}
+	  }
 }
