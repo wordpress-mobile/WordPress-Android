@@ -9,12 +9,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Vector;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -209,7 +211,10 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					      //make the date pretty
 					        Date d = new Date();
 							SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); 
-					        String cDate = rDateCreated[ctr].replace("America/Los_Angeles", "PST");
+							Calendar cal = Calendar.getInstance();
+							TimeZone tz = cal.getTimeZone();
+
+					        String cDate = rDateCreated[ctr].replace(tz.getID(), tz.getDisplayName(true, TimeZone.SHORT));
 					        try{  
 					        	d = sdf.parse(cDate);
 					        	SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 
