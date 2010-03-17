@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.wordpress.android" android:versionCode="4" android:versionName="1.0.3">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-	<application android:icon="@drawable/app_icon" android:theme="@style/Theme.WordPress"
+	<application android:icon="@drawable/app_icon" android:theme="@android:style/Theme.Light"
 		android:label="WordPress" android:debuggable="true" android:name="WordPress">
 		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon"
 			android:label="WordPress" />
@@ -37,7 +37,8 @@
 			</intent-filter>
 		</receiver>
 
-	</application>
+	<activity android:name="selectMedia" android:theme="@android:style/Theme.Dialog"></activity>
+</application>
 
 	<supports-screens android:smallScreens="true"
 		android:normalScreens="true" android:largeScreens="true" />
@@ -45,6 +46,8 @@
 		android:name="android.permission.INTERNET" />
 		<uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
 		android:name="android.permission.READ_PHONE_STATE" />
-
-
+	<uses-permission xmlns:android="http://schemas.android.com/apk/res/android" 
+		android:name="android.permission.CAMERA"></uses-permission>
+	<uses-permission xmlns:android="http://schemas.android.com/apk/res/android" 
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 </manifest> 

@@ -211,7 +211,7 @@ public class newAccount extends Activity {
 	                if (blogName == ""){
 	                	blogName = "(No Blog Title)";
 	                }
-	                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, "Above Text", true, false, "500", 5, false, blogId);
+	                success = settingsDB.addAccount(newAccount.this, blogURL, blogName, username, password, "Above Text", true, true, "500", 5, false, blogId);
 	                
 	                
 	                }

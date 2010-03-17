@@ -87,6 +87,7 @@ public class viewPosts extends ListActivity {
     public String submitResult = "";
     public int totalDrafts = 0;
     public boolean isPage = false;
+    public Vector thumbnailUrl = new Vector();
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -983,11 +984,7 @@ public String submitPost() throws IOException {
     }
     String imageContent = "";
     //upload the images and return the HTML
-    for (int it = 0; it < selectedImageCtr; it++){
-        
-        imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
-
-        }
+    imageContent =  uploadImages();
     
     Vector<Object> myPostVector = new Vector<Object> ();
     String res = null;
@@ -1169,11 +1166,22 @@ public boolean checkSettings(){
     return validSettings;
 }
 
-public String uploadImage(String imageURL){
+public String uploadImages(){
 	
+    Vector<Object> myPictureVector = new Vector<Object> ();
+    String returnedImageURL = null;
+    String imageRes = null;
+    String content = "";
+    int thumbWidth = 0, thumbHeight = 0, finalHeight = 0;
+    
+    //images variables
+    String finalThumbnailUrl = null;
+    String finalImageUrl = null;
+    String uploadImagePath = "";
+    
     //get the settings
-    settingsDB settingsDB = new settingsDB(viewPosts.this);
-	Vector categoriesVector = settingsDB.loadSettings(viewPosts.this, id);   	
+    settingsDB settingsDB = new settingsDB(this);
+	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
 	
     	String sURL = "";
     	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
@@ -1184,33 +1192,44 @@ public String uploadImage(String imageURL){
     	{
     		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
     	}
+		String sBlogName = categoriesVector.get(1).toString();
 		String sUsername = categoriesVector.get(2).toString();
 		String sPassword = categoriesVector.get(3).toString();
-		sImagePlacement = categoriesVector.get(4).toString();
+		String sImagePlacement = categoriesVector.get(4).toString();
 		String sCenterThumbnailString = categoriesVector.get(5).toString();
-		
-		//removed this as a quick fix to get rid of full size upload option
-		/*if (sFullSizeImageString.equals("1")){
+		String sFullSizeImageString = categoriesVector.get(6).toString();
+		boolean sFullSizeImage  = false;
+		if (sFullSizeImageString.equals("1")){
 			sFullSizeImage = true;
-		}*/  
+		}
 
-		
+		boolean centerThumbnail = false;
 		if (sCenterThumbnailString.equals("1")){
 			centerThumbnail = true;
 		}
-		sMaxImageWidth = categoriesVector.get(7).toString();
+		String sMaxImageWidth = categoriesVector.get(7).toString();
+		
+		String thumbnailURL = "";
+    //new loop for multiple images
+    
+    for (int it = 0; it < selectedImageCtr; it++){
 
     //check for image, and upload it
-		
-		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
-
+    if (imageUrl.get(it) != null)
+    {
        client = new XMLRPCClient(sURL);
-
+ 	   
+ 	   String sXmlRpcMethod = "wp.uploadFile";
  	   String curImagePath = "";
  	   
- 	   
- 		curImagePath = imageURL;
+ 	   for (int i = 0; i < 2; i++){
+ 		   
 
+ 		 curImagePath = imageUrl.get(it).toString();
+ 		   
+ 		if (i == 0 || sFullSizeImage)
+ 		{
+ 	   
  	   Uri imageUri = Uri.parse(curImagePath);
  	   
  	   String imgID = imageUri.getLastPathSegment();
@@ -1223,22 +1242,20 @@ public String uploadImage(String imageURL){
        		    Images.Media.DATA
        		};
  	  
- 	  
  	   Uri imgPath;
 
  	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
- 	   
- 	   
- 	   
-	Cursor cur = managedQuery(imgPath, projection, null, null, null);
+
+	Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
  	  String thumbData = "";
  	 
  	  if (cur.moveToFirst()) {
  		  
  		int nameColumn, dataColumn, heightColumn, widthColumn;
- 		
  			nameColumn = cur.getColumnIndex(Images.Media._ID);
- 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);             	            
+ 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+
+       String imgPath4 = imgPath.getEncodedPath();              	            
        
        thumbData = cur.getString(dataColumn);
 
@@ -1249,6 +1266,7 @@ public String uploadImage(String imageURL){
  	   imageTitle = jpeg.getName();
  	  
  	   byte[] bytes = new byte[(int) jpeg.length()];
+ 	   byte[] finalBytes;
  	   
  	   DataInputStream in = null;
 	try {
@@ -1270,38 +1288,84 @@ public String uploadImage(String imageURL){
 		e.printStackTrace();
 	}
 	
-	//create the thumbnail
-	byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
-
-        //attempt to upload the image
+	if (i == 0){
+		  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
+	   }
+	   else{
+		  finalBytes = bytes;
+	   }
+ 	   	
+        //try and upload the freakin' image
+        //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
         String contentType = "image/jpg";
         Map<String, Object> m = new HashMap<String, Object>();
 
         HashMap hPost = new HashMap();
-
-        	
         m.put("name", imageTitle);
         m.put("type", contentType);
         m.put("bits", finalBytes);
         m.put("overwrite", true);
-
-		client = new XMLRPCClient(sURL);
-    	
-    	XMLRPCMethodImages method = new XMLRPCMethodImages("wp.uploadFile", new XMLRPCMethodCallbackImages() {
-			public void callFinished(Object result) {
+        
+        Object[] params = {
+        		1,
+        		sUsername,
+        		sPassword,
+        		m
+        };
+        
+        Object result = null;
+        
+        try {
+			result = (Object) client.call("wp.uploadFile", params);
+		} catch (XMLRPCException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			e.getMessage();
+			xmlrpcError = true;
+			break;
+		}
 				
-				imgHTML = ""; //start fresh
-				//Looper.myLooper().quit();
 				HashMap contentHash = new HashMap();
 				    
 				contentHash = (HashMap) result;
 
 				String resultURL = contentHash.get("url").toString();
 				
-				String finalImageUrl = "";
-				
+				if (i == 0){
+	            	finalThumbnailUrl = resultURL;
+	            }
+	            else{
+	            	if (sFullSizeImage){
+	            	finalImageUrl = resultURL;
+	            	}
+	            	else
+	            	{
+	            		finalImageUrl = "";
+	            	}
+	            }
 
-	            finalImageUrl = resultURL;
+	           int finalWidth = 500;  //default to this if there's a problem
+	           //Change dimensions of thumbnail
+	           if (sMaxImageWidth.equals("Original Size")){
+	           	finalWidth = thumbWidth;
+	           	finalHeight = thumbHeight;
+	           }
+	           else
+	           {
+	              	finalWidth = Integer.parseInt(sMaxImageWidth);
+	           	if (finalWidth > thumbWidth){
+	           		//don't resize
+	           		finalWidth = thumbWidth;
+	           		finalHeight = thumbHeight;
+	           	}
+	           	else
+	           	{
+	           		float percentage = (float) finalWidth / thumbWidth;
+	           		float proportionateHeight = thumbHeight * percentage;
+	           		finalHeight = (int) Math.rint(proportionateHeight);
+	           	}
+	           }
+				
 				
 				//prepare the centering css if desired from user
 		           String centerCSS = " ";
@@ -1310,40 +1374,53 @@ public String uploadImage(String imageURL){
 		           }
 		           
 		     	   
+		           if (i != 0 && sFullSizeImage)
+		           {
 			           if (resultURL != null)
 			           {
 
 			   	        	if (sImagePlacement.equals("Above Text")){
 			   	        		
-			   	        		imgHTML +=  "<img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" /><br /><br />";
+			   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a><br /><br />";
 			   	        	}
 			   	        	else{
-			   	        		imgHTML +=  "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" />";
+			   	        		content = content + "<br /><a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
 			   	        	}        		
 			           	
 			           		
 			           }
-				
-				
-		           
-			}
-        });
-    	
-    	Object[] params = {
-        		sBlogId,
-        		sUsername,
-        		sPassword,
-        		m
-        };
-    	
-    	try {
-			method.call(params);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		           }
+		           else{
+			           if (i == 0 && sFullSizeImage == false && resultURL != null)
+			           {
 
-    return imgHTML;
+			   	        	if (sImagePlacement.equals("Above Text")){
+			   	        		
+			   	        		content = content + "<img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /><br /><br />";
+			   	        	}
+			   	        	else{
+			   	        		content = content + "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" />";
+			   	        	}        		
+			           	
+			           		
+			           }
+		           }
+				        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
+				       // postIDs[ctr] = contentHash.get("postid").toString();
+        
+        
+ 	   }  //end if statement
+ 	   
+       
+       
+ 	  }//end image check
+ 	   
+    }//end image stuff
+    }//end new for loop
+
+    
+    
+    return content;
 }
 
 interface XMLRPCMethodCallbackImages {
@@ -1399,11 +1476,8 @@ class XMLRPCMethodImages extends Thread {
 			
 			handler.post(new Runnable() {
 				public void run() {
-					
-					Throwable couse = e.getCause();
+
 					e.printStackTrace();
-					
-					//Log.d("Test", "error", e);
 					
 				}
 			});

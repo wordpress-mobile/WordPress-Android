@@ -62,7 +62,7 @@
     	<item name="android:windowBackground">@android:drawable/screen_background_light</item>
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:textColorPrimary">#464646</item>  
-        <item name="android:textColorSecondary">#464646</item>
+        <item name="android:textColorSecondary">#464646</item>        
     </style>
     
     <style name="Theme.TabView">

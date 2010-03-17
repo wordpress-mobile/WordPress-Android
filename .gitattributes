@@ -280,6 +280,7 @@ res/layout/radio_group.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/row_post_page.xml -text
+res/layout/select_media.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_selector.xml -text
 res/layout/spinner_textview.xml -text
@@ -326,6 +327,7 @@ src/org/wordpress/android/newPost.java -text
 src/org/wordpress/android/notificationSettings.java -text
 src/org/wordpress/android/postStoreDB.java -text
 src/org/wordpress/android/replyToComment.java -text
+src/org/wordpress/android/selectMedia.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
 src/org/wordpress/android/splashScreen.java -text

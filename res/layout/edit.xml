@@ -64,7 +64,8 @@ class="org.wordpress.android.customButton"
             android:layout_toRightOf="@id/bold"
             android:textStyle="italic"
             android:textSize="22dip"
-            android:text="I" />
+            android:paddingRight="2dip"
+            android:text="I " />
         
 <view
 class="org.wordpress.android.customButton"
@@ -186,7 +187,6 @@ class="org.wordpress.android.customButton"
               android:layout_below="@id/clearCategories"/>          
                                      
     <CheckBox android:id="@+id/publish"
-    android:button="@layout/btn_check"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_below="@id/l_publish"

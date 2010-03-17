@@ -220,11 +220,10 @@ public class newPost extends Activity {
             addPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	Intent photoPickerIntent = new
-                	Intent(Intent.ACTION_PICK);
-                	photoPickerIntent.setType("image/*");
-                	
-                	startActivityForResult(photoPickerIntent, 1); 
+                	//Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                	//photoPickerIntent.setType("image/*");
+                	Intent photoPickerIntent = new Intent(newPost.this, selectMedia.class);
+                	startActivityForResult(photoPickerIntent, 3); 
                 	 
                 }
         });
@@ -1021,6 +1020,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		{
 
 		Bundle extras = data.getExtras();
+		GridView gridview = (GridView) findViewById(R.id.gridView);
 
 		switch(requestCode) {
 		case 0:
@@ -1028,24 +1028,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
 		    break;
 		case 1:
-		    Uri imagePath = data.getData();   
-		    String imgPath2 = imagePath.getEncodedPath();
-		   
-	           
-	           //for gridview
-	           selectedImageIDs.add(selectedImageCtr, imagePath);
-	           //for submission
-	           imageUrl.add(selectedImageCtr, imgPath2);
-	           //thumbnailUrl.add(selectedImageCtr, Images.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/" + thumbIdString);
-	           //new
-	           //thumbnailUrl.add(selectedImageCtr, thumbPath);
-	           selectedImageCtr++;
-	           //thumbData = cur.getString(dataColumn);
-	     	 // }
-	     	  
-	     	 GridView gridview = (GridView) findViewById(R.id.gridView);
-	     	 gridview.setAdapter(new ImageAdapter(this));
-
 		    
 		    break;
 		case 2:
@@ -1076,7 +1058,49 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     		Selection.setSelection(etext, selectionStart + textToLink.length());
 			}
 			}
-			break;
+			break;			
+		case 3:
+			int returnType = extras.getInt("returnType");
+			
+			if (returnType == 0){
+		    String imageURIString = extras.getString("imageURI");  
+		    Uri imageUri = Uri.parse(imageURIString);
+		    String imgPath = imageUri.getEncodedPath();
+		   
+	           
+	           //for gridview
+	           selectedImageIDs.add(selectedImageCtr, imageUri);
+	           //for submission
+	           imageUrl.add(selectedImageCtr, imgPath);
+	           //thumbnailUrl.add(selectedImageCtr, Images.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/" + thumbIdString);
+	           //new
+	           //thumbnailUrl.add(selectedImageCtr, thumbPath);
+	           selectedImageCtr++;
+	           //thumbData = cur.getString(dataColumn);
+	     	 // }
+	     	  
+	     	 gridview.setAdapter(new ImageAdapter(this));
+			}
+			else{
+				Uri imagePath = data.getData();   
+			    String imgPath2 = imagePath.getEncodedPath();
+			   
+		           
+		           //for gridview
+		           selectedImageIDs.add(selectedImageCtr, imagePath);
+		           //for submission
+		           imageUrl.add(selectedImageCtr, imgPath2);
+		           //thumbnailUrl.add(selectedImageCtr, Images.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/" + thumbIdString);
+		           //new
+		           //thumbnailUrl.add(selectedImageCtr, thumbPath);
+		           selectedImageCtr++;
+		           //thumbData = cur.getString(dataColumn);
+		     	 // }
+		     	  
+		     	 gridview.setAdapter(new ImageAdapter(this));
+			}
+		    
+		    break;
 		}
 	}//end null check
 	}

@@ -51,7 +51,7 @@ public class imageHelper {
                 
                 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                bm.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                bm.compress(Bitmap.CompressFormat.JPEG, 85, baos);
                 
                 bm.recycle(); //free up memory
                 
@@ -107,7 +107,7 @@ public class imageHelper {
         	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                    resized.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                    resized.compress(Bitmap.CompressFormat.JPEG, 85, baos);
                     
                     bm.recycle(); //free up memory
                     resized.recycle();

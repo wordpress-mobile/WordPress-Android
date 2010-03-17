@@ -20,11 +20,11 @@ public class customButton extends Button{
 		
 		if (isFocused()) 
 		{
-			setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_default_selected));
+			setBackgroundDrawable(getResources().getDrawable(android.R.drawable.btn_default));
 		} 
 		else 
 		{
-			setBackgroundDrawable(getResources().getDrawable(isPressed()?R.drawable.btn_default_selected : R.drawable.btn_default_normal));
+			setBackgroundDrawable(getResources().getDrawable(isPressed()?android.R.drawable.btn_default : android.R.drawable.btn_default));
 		}
 		
 	//sets the button image based on whether the button in its pressed state

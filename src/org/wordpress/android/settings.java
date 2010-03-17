@@ -82,6 +82,9 @@ public class settings extends Activity {
             CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
             centerThumbnail.setChecked(sCenterThumbnail);
             
+            CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
+            fullSize.setChecked(sFullSizeImage);
+            
       
             spinner.setSelection(maxImageWidthIdInt);
             
@@ -119,7 +122,8 @@ public class settings extends Activity {
                 RadioGroup imageRG = (RadioGroup)findViewById(R.id.imagePlacement);
                 RadioButton checkedRB = (RadioButton)findViewById(imageRG.getCheckedRadioButtonId());
                 String buttonValue = checkedRB.getText().toString();
-                boolean fullSizeImageValue = false;
+                CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
+                boolean fullSizeImageValue = fullSize.isChecked();
                 
                 Spinner spinner = (Spinner)findViewById(R.id.maxImageWidth);
                 String maxImageWidth = spinner.getSelectedItem().toString();

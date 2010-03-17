@@ -64,7 +64,7 @@ class="org.wordpress.android.customButton"
             android:layout_toRightOf="@id/bold"
             android:textStyle="italic"
             android:textSize="22dip"
-            android:text="I" />
+            android:text="I " />
         
 <view
 class="org.wordpress.android.customButton"
@@ -152,7 +152,6 @@ class="org.wordpress.android.customButton"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
         android:textColor="#444444"
-        android:background="@layout/spinner_selector"
    android:layout_below="@id/l_category"/>
    
 <view
@@ -191,7 +190,6 @@ class="org.wordpress.android.customButton"
               android:textColor="#444444"/>          
                                      
     <CheckBox android:id="@+id/publish"
-    android:button="@layout/btn_check"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_below="@id/l_publish"
@@ -207,12 +205,5 @@ class="org.wordpress.android.customButton"
             android:layout_alignParentRight="true"
             android:textSize="20dip"
             android:text="@string/save" />           
-            
-    <TextView android:id="@+id/text1"
-    		android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:layout_below="@id/addPictureButton"/>
-              
-
 </RelativeLayout>
 </ScrollView>

@@ -57,12 +57,10 @@
         android:id="@+id/imagePlacement"
         android:layout_below="@id/l_imagePlacement">
         <RadioButton
-        android:button="@layout/radio_group"
         android:textColor="#444444"
             android:id="@+id/aboveText"
             android:text="@string/above_text"/>
         <RadioButton
-        android:button="@layout/radio_group"
         android:textColor="#444444"
             android:id="@+id/belowText" android:text="@string/below_text"/>
     </RadioGroup>        
@@ -78,7 +76,6 @@
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
         android:textColor="#444444"
-        android:background="@layout/spinner_selector"
    android:layout_below="@id/l_maxImageWidth"/>
    
         <TextView android:id="@+id/l_centerThumbnail" 
@@ -90,12 +87,28 @@
               android:layout_below="@id/maxImageWidth" android:text="@string/align_thumb_to_center"/>
               
 <CheckBox android:id="@+id/centerThumbnail"
-			android:button="@layout/btn_check"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/l_centerThumbnail"
             android:layout_toRightOf="@id/l_centerThumbnail"
+            android:layout_marginRight="2dip"
             />
+            
+            <TextView android:id="@+id/l_fullSizeImage" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_alignParentLeft="true"
+            android:paddingTop="13px"
+              android:text="@string/upload_full_size_image"
+              android:layout_below="@id/centerThumbnail"/>
+              
+<CheckBox android:id="@+id/fullSizeImage"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/l_fullSizeImage"
+            android:layout_toRightOf="@id/l_fullSizeImage"
+            android:layout_marginRight="2dip"
+            /> 
   
 <view
 class="org.wordpress.android.customButton"
@@ -103,7 +116,7 @@ class="org.wordpress.android.customButton"
 			android:textColor="#444444"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
-            android:layout_below="@id/centerThumbnail"
+            android:layout_below="@id/fullSizeImage"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dip" android:text="@string/save"/>
  

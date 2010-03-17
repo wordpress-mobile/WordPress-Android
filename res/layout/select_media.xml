@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+              
+<view
+class="org.wordpress.android.customButton" 
+			android:id="@+id/selectPhoto" 
+            android:layout_width="fill_parent"  
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:text="@string/select_photo" />
+ 
+<view
+class="org.wordpress.android.customButton"
+		    android:id="@+id/takePhoto"
+     		android:layout_width="fill_parent"  
+            android:layout_height="wrap_content"
+			android:padding="10dip"
+            android:text="@string/take_photo" />          
+
+</LinearLayout>
