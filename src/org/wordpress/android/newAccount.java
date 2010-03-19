@@ -145,8 +145,6 @@ public class newAccount extends Activity {
         	fBlogURL = blogURL + "/xmlrpc.php";
         }
         
-        
-        
         //verify settings
         client = new XMLRPCClient(fBlogURL);
     	
@@ -218,15 +216,11 @@ public class newAccount extends Activity {
 	                
 			} //end loop
 				    
-				    if (success){
-	                	Toast.makeText(newAccount.this, getResources().getText(R.string.account_added),
-	                            Toast.LENGTH_SHORT).show();
-	                }
-	                else{
-	               /* 	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
-						  dialogBuilder.setTitle("Error Creating Account");
-			              dialogBuilder.setMessage("Something bad happened while trying to create your local account.  Please check your settings and try again.");
-			              dialogBuilder.setPositiveButton("Ok",  new
+				    if (result.length == 0){
+				    	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
+						  dialogBuilder.setTitle("No Blogs Found");
+			              dialogBuilder.setMessage("No blogs were found for that account.");
+			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
 	                              // Just close the window.
@@ -234,9 +228,9 @@ public class newAccount extends Activity {
 	                          }
 	                      });
 			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();*/
-	                }
-		      
+			             dialogBuilder.create().show();
+				    }
+				    else{
 				    Bundle bundle = new Bundle();
 	                
 	                bundle.putString("returnStatus", "SAVE");
@@ -244,6 +238,7 @@ public class newAccount extends Activity {
 	                mIntent.putExtras(bundle);
 	                setResult(RESULT_OK, mIntent);
 	                finish();
+				    }
 		        
 			}
         });

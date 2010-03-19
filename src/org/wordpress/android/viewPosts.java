@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore.Images;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,6 +89,7 @@ public class viewPosts extends ListActivity {
     public int totalDrafts = 0;
     public boolean isPage = false;
     public Vector thumbnailUrl = new Vector();
+    boolean largeScreen = false;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -107,6 +109,13 @@ public class viewPosts extends ListActivity {
         
         if (!loadedPosts){
         	refreshPosts();
+        }
+        
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        if (width > 480 || height > 480){
+        	largeScreen = true;
         }
         
 
@@ -390,13 +399,10 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					   
 					   listView.setOnItemClickListener(new OnItemClickListener() {
 						   
-							public void onNothingSelected(AdapterView<?> arg0) {
-								
-							}
 
 							public void onItemClick(AdapterView<?> arg0, View arg1,
 									int arg2, long arg3) {
-								//don't do anything
+								arg1.performLongClick();
 								
 							}
 
@@ -547,6 +553,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
         	else {
         	wrapper=(ViewWrapper)pv.getTag();      	
         	}
+        	
         	String date = dateCreatedFormatted[position];
         	if (date.equals("postsHeader") || date.equals("draftsHeader")){
 
@@ -554,6 +561,14 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             	
                 wrapper.getTitle().setTextColor(Color.parseColor("#EEEEEE"));
                 wrapper.getTitle().setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
+                if (largeScreen){
+                	wrapper.getTitle().setPadding(12, 0, 12, 3);
+                }
+                else{
+                	wrapper.getTitle().setPadding(8, 0, 8, 2);
+                }
+                wrapper.getTitle().setTextScaleX(1.2f);
+                wrapper.getTitle().setTextSize(17);
                 wrapper.getDate().setHeight(0);
                 
                 if (date.equals("draftsHeader")){
@@ -567,8 +582,16 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
             }
         	else{
         		pv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
+        		if (largeScreen){
+        			wrapper.getTitle().setPadding(12, 12, 12, 0);
+        		}
+        		else{
+        			wrapper.getTitle().setPadding(8, 8, 8, 0);
+        		}
         		wrapper.getTitle().setTextColor(Color.parseColor("#444444"));
         		wrapper.getTitle().setShadowLayer(0, 0, 0, Color.parseColor("#444444"));
+        		wrapper.getTitle().setTextScaleX(1.0f);
+        		wrapper.getTitle().setTextSize(16);
         		wrapper.getDate().setTextColor(Color.parseColor("#888888"));
         		pv.setId(Integer.valueOf(postIDs[position]));
         		if (wrapper.getDate().getHeight() == 0){
@@ -1272,19 +1295,16 @@ public String uploadImages(){
 	try {
 		in = new DataInputStream(new FileInputStream(jpeg));
 	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
  	   try {
 		in.readFully(bytes);
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
  	   try {
 		in.close();
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	
@@ -1295,8 +1315,7 @@ public String uploadImages(){
 		  finalBytes = bytes;
 	   }
  	   	
-        //try and upload the freakin' image
-        //imageRes = service.ping(sURL + "/xmlrpc.php", sXmlRpcMethod, myPictureVector);
+        //try to upload the image
         String contentType = "image/jpg";
         Map<String, Object> m = new HashMap<String, Object>();
 
@@ -1405,10 +1424,7 @@ public String uploadImages(){
 			           		
 			           }
 		           }
-				        //titles[ctr] = contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>"));
-				       // postIDs[ctr] = contentHash.get("postid").toString();
-        
-        
+                
  	   }  //end if statement
  	   
        
@@ -1418,8 +1434,6 @@ public String uploadImages(){
     }//end image stuff
     }//end new for loop
 
-    
-    
     return content;
 }
 

@@ -64,9 +64,9 @@ public class settingsDB {
 	}	
 	public Vector getAccounts(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "username", "runService", "blogId"}, null, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "username", "runService", "blogId", "url"}, null, null, null, null, null);
 		String id;
-		String blogName, username;
+		String blogName, username, url;
 		int blogId;
 		int runService;
 		int numRows = c.getCount();
@@ -79,6 +79,7 @@ public class settingsDB {
 			username = c.getString(2);
 			runService = c.getInt(3);
 			blogId = c.getInt(4);
+			url = c.getString(5);
 			if (id != null)
 			{	
 				HashMap thisHash = new HashMap();
@@ -88,6 +89,7 @@ public class settingsDB {
 				thisHash.put("username", username);
 				thisHash.put("runService", runService);
 				thisHash.put("blogId", blogId);
+				thisHash.put("url", url);
 				accounts.add(thisHash);
 			}
 			c.moveToNext();

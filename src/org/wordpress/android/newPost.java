@@ -28,11 +28,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Selection;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -83,6 +88,7 @@ public class newPost extends Activity {
     public String imageContent = "";
     public String imgHTML = "";
     public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false;
+    public String SD_CARD_TEMP_DIR = "";
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -215,15 +221,14 @@ public class newPost extends Activity {
             }
         });
         
-            final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
+            final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);
+            
+            registerForContextMenu(addPictureButton);
             
             addPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	//Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                	//photoPickerIntent.setType("image/*");
-                	Intent photoPickerIntent = new Intent(newPost.this, selectMedia.class);
-                	startActivityForResult(photoPickerIntent, 3); 
+                	addPictureButton.performLongClick();
                 	 
                 }
         });
@@ -443,11 +448,11 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	        }
 	    	
 	    	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-	        ArrayAdapter<CharSequence> aspnCountries = new ArrayAdapter<CharSequence>(newPost.this, R.layout.spinner_textview, loadTextArray);
+	        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(newPost.this, R.layout.spinner_textview, loadTextArray);
 	        
-	          aspnCountries.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	          categories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	          
-	          spinner.setAdapter(aspnCountries);    
+	          spinner.setAdapter(categories);    
     	}
     	
     }
@@ -1016,14 +1021,14 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null)
+		if (data != null || requestCode == 4)
 		{
-
-		Bundle extras = data.getExtras();
-		GridView gridview = (GridView) findViewById(R.id.gridView);
+			Bundle extras;
+			GridView gridview = (GridView) findViewById(R.id.gridView);
 
 		switch(requestCode) {
 		case 0:
+			extras = data.getExtras();
 		    String title = extras.getString("returnStatus");
 		    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
 		    break;
@@ -1031,6 +1036,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		    
 		    break;
 		case 2:
+			extras = data.getExtras();
 			String linkText = extras.getString("linkText");
 			if (linkText.equals("http://") != true){
 				
@@ -1060,48 +1066,58 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			}
 			break;			
 		case 3:
-			int returnType = extras.getInt("returnType");
-			
-			if (returnType == 0){
-		    String imageURIString = extras.getString("imageURI");  
-		    Uri imageUri = Uri.parse(imageURIString);
+ 
+		    Uri imageUri = data.getData();
 		    String imgPath = imageUri.getEncodedPath();
-		   
-	           
-	           //for gridview
-	           selectedImageIDs.add(selectedImageCtr, imageUri);
-	           //for submission
-	           imageUrl.add(selectedImageCtr, imgPath);
-	           //thumbnailUrl.add(selectedImageCtr, Images.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/" + thumbIdString);
-	           //new
-	           //thumbnailUrl.add(selectedImageCtr, thumbPath);
-	           selectedImageCtr++;
-	           //thumbData = cur.getString(dataColumn);
-	     	 // }
+   
+           selectedImageIDs.add(selectedImageCtr, imageUri);
+           imageUrl.add(selectedImageCtr, imgPath);
+           selectedImageCtr++;
+
 	     	  
 	     	 gridview.setAdapter(new ImageAdapter(this));
-			}
-			else{
-				Uri imagePath = data.getData();   
-			    String imgPath2 = imagePath.getEncodedPath();
-			   
-		           
-		           //for gridview
-		           selectedImageIDs.add(selectedImageCtr, imagePath);
-		           //for submission
-		           imageUrl.add(selectedImageCtr, imgPath2);
-		           //thumbnailUrl.add(selectedImageCtr, Images.Thumbnails.EXTERNAL_CONTENT_URI.toString() + "/" + thumbIdString);
-		           //new
-		           //thumbnailUrl.add(selectedImageCtr, thumbPath);
-		           selectedImageCtr++;
-		           //thumbData = cur.getString(dataColumn);
-		     	 // }
-		     	  
-		     	 gridview.setAdapter(new ImageAdapter(this));
-			}
-		    
-		    break;
+	     	 break;
+		case 4:
+			if (resultCode == Activity.RESULT_OK) {
+
+                // http://code.google.com/p/android/issues/detail?id=1480
+
+                // on activity return
+                File f = new File(SD_CARD_TEMP_DIR);
+                try {
+                    Uri capturedImage =
+                        Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),
+                                        f.getAbsolutePath(), null, null));
+
+
+                        Log.i("camera", "Selected image: " + capturedImage.toString());
+
+                    //f.delete();
+                    
+                    Bundle bundle = new Bundle();
+                    
+                    bundle.putString("imageURI", capturedImage.toString());
+                    
+                    selectedImageIDs.add(selectedImageCtr, capturedImage);
+                    imageUrl.add(selectedImageCtr, capturedImage.toString());
+                    selectedImageCtr++;
+
+         	     	 gridview.setAdapter(new ImageAdapter(this));
+       
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+        }
+        else {
+                Log.i("Camera", "Result code was " + resultCode);
+
+        }
+
+		     	break;
 		}
+		
 	}//end null check
 	}
 	
@@ -1201,5 +1217,58 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
 		  return false; // propagate this keyevent
 		}
+	
+	public void onCreateContextMenu(
+			      ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo)
+			   {
+				menu.setHeaderTitle(getResources().getText(R.string.add_media));
+				menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
+				menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+			   }
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item){
+	    switch (item.getItemId()) {
+	    case 0:
+	    	
+	    	Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        	photoPickerIntent.setType("image/*");
+        	
+        	startActivityForResult(photoPickerIntent, 3);
+	    	
+	    	return true;
+		case 1:
+			String state = android.os.Environment.getExternalStorageState();
+            if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
+                try {
+					throw new IOException("SD Card is not mounted.  It is " + state + ".");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+
+        	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
+        	Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        	takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
+        	                File(SD_CARD_TEMP_DIR)));
+        	
+        	// make sure the directory we plan to store the recording in exists
+            File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
+            if (!directory.exists() && !directory.mkdirs()) {
+              try {
+				throw new IOException("Path to file could not be created.");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            }
+
+        	startActivityForResult(takePictureFromCameraIntent, 4); 
+		
+		return true;
+	}
+	  return false;	
+	}
 	
 }

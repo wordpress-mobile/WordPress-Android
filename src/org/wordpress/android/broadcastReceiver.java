@@ -17,4 +17,10 @@ public class broadcastReceiver extends BroadcastReceiver {
 	//context.startService(svc);
 
 	}
+	
+	public void onCancel(Context context, Intent intent) {
+
+		context.stopService(new Intent(context, commentService.class));
+
 	}
+}

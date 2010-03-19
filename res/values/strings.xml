@@ -14,6 +14,7 @@
   <string name="place_image">Place image:</string>
   <string name="password">Password:</string>
   <string name="get_free_blog">Get a free blog at WordPress.com</string>
+  <string name="blogs">Blogs</string>
   
   <!--  general strings -->
   <string name="app_name">WordPress</string>
@@ -32,12 +33,12 @@
   <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or to configure comment notifications.</string>
   <string name="add_account">Add Account</string>
   <string name="notification_settings">Notification settings</string>
-  <string name="sure_to_remove_account">Are you sure you want to remove this account?</string>
+  <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="account_removed_successfully">Account removed successfully</string>
   <string name="error">Error</string>
-  <string name="could_not_remove_account">Could not remove account, you may need to reinstall WordPress.</string>
+  <string name="could_not_remove_account">Could not remove blog.</string>
   <string name="edit_page">Edit Page</string>
   <string name="getting_page">Getting page</string>
   <string name="please_wait_getting_page">Please wait while attempting to get page (note - pictures will not be loaded)</string>
@@ -140,11 +141,12 @@
   <string name="replying_comment">Replying to comment</string>
   <string name="comment_moderated">Comment Moderated Successfully</string>
   <string name="reply_added">Reply Added Successfully</string>
+  <string name="view_comment_from">View Comment from</string>
   
   <!--  context menu -->
   <string name="blog_settings">Blog Settings</string>
-  <string name="remove_account">Remove Account</string>
-  <string name="blog_removed_successfully">Account Removed Successfully</string>
+  <string name="remove_account">Remove Blog</string>
+  <string name="blog_removed_successfully">Blog Removed Successfully</string>
   
   <!--  draft actions -->
   <string name="draft_actions">Draft Actions</string>

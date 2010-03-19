@@ -9,12 +9,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ public class viewComment extends Activity {
 	private String email = "";
 	private String name = "";
 	private String url = "";
+	private String date = "";
 	private Drawable d;
 	
 	private Handler handler = new Handler() {
@@ -44,8 +47,6 @@ public class viewComment extends Activity {
 		};
 		
 		private void getGravatar(final String gravatarURL) {
-
-			//progressDialog = ProgressDialog.show(Main.this, "", "Doing...");
 
 			new Thread() {
 
@@ -75,6 +76,7 @@ public class viewComment extends Activity {
          email = extras.getString("email");
          name = extras.getString("name");
          url = extras.getString("url");
+         date = extras.getString("date");
         } 
         
         final Window w = getWindow();
@@ -82,31 +84,42 @@ public class viewComment extends Activity {
         
         setContentView(R.layout.view_comment);
         
-        final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=100&d=identicon";
+        final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=200&d=identicon";
         
         getGravatar(gravatarURL);        
         
-        this.setTitle(name);
+        this.setTitle(getResources().getText(R.string.view_comment_from) + " " + name);
         
         TextView tvName = (TextView) findViewById(R.id.name);
         
         tvName.setText(name);
         
         TextView tvEmail = (TextView) findViewById(R.id.email);
+        if (!email.equals("")){
+	        tvEmail.setText(email);
+	        Linkify.addLinks(tvEmail, Linkify.ALL);
+        }
+        else{
+        	tvEmail.setVisibility(View.GONE);
+        }
         
-        tvEmail.setText(email);
-        Linkify.addLinks(tvEmail, Linkify.ALL);
-        
-        if (url != ""){
-        	TextView tvURL = (TextView) findViewById(R.id.url);
+        TextView tvURL = (TextView) findViewById(R.id.url);
+        if (!url.equals("")){
         	tvURL.setText(url);
             Linkify.addLinks(tvURL, Linkify.ALL);
+        }
+        else{
+        	tvURL.setVisibility(View.GONE);
         }
         
 		TextView tvComment = (TextView) findViewById(R.id.comment);
 		
 		tvComment.setText(comment);
 		Linkify.addLinks(tvComment, Linkify.ALL);
+		
+		TextView tvDate = (TextView) findViewById(R.id.date);
+		
+		tvDate.setText(date);
 
 	}
 	
@@ -141,4 +154,10 @@ public class viewComment extends Activity {
 	            return null;
 	    }
 	}
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      //ignore orientation change
+      super.onConfigurationChanged(newConfig);
+    } 
 }

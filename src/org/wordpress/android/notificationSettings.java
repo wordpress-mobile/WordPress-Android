@@ -92,7 +92,6 @@ public void displayAccounts(){
             checkBox.setText(escapeUtils.unescapeHtml(curBlogName));
             checkBox.setId(Integer.valueOf(accountID));
             params.setMargins(0, 0, 0, 6);
-            checkBox.setButtonDrawable(R.layout.btn_check);
             checkBox.setLayoutParams(params);
             
             if (runService == 1){
@@ -118,7 +117,6 @@ public void displayAccounts(){
         
         final Spinner sInterval = new Spinner(this);
         sInterval.setLayoutParams(params);
-        sInterval.setBackgroundResource(R.layout.spinner_selector);
 	    ArrayAdapter<Object> sIntervalArrayAdapter = new ArrayAdapter<Object>(this,
 	    		R.layout.spinner_textview,
 	            new String[] { "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes" , "1 Hour", "3 Hours", "6 Hours", "12 Hours", "Daily"});
@@ -211,7 +209,11 @@ public void displayAccounts(){
         						Intent stopIntent = new Intent(notificationSettings.this, broadcastReceiver.class);
                             	PendingIntent stopPIntent = PendingIntent.getBroadcast(notificationSettings.this, 0, stopIntent, 0);
                             	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                            	alarmManager.cancel(stopPIntent);        		
+                            	alarmManager.cancel(stopPIntent); 
+                            	
+                            	Intent service = new Intent(notificationSettings.this, commentService.class);
+                            	stopService(service);
+
             	}
             	
             	finish();

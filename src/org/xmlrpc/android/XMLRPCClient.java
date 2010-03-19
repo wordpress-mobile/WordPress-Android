@@ -9,16 +9,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.Map;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -26,52 +22,7 @@ import org.wordpress.android.ConnectionClient;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
-
 import android.util.Xml;
-
-
-/**
- * XMLRPCClient allows to call remote XMLRPC method.
- * 
- * <p>
- * The following table shows how XML-RPC types are mapped to java call parameters/response values.
- * </p>
- * 
- * <p>
- * <table border="2" align="center" cellpadding="5">
- * <thead><tr><th>XML-RPC Type</th><th>Call Parameters</th><th>Call Response</th></tr></thead>
- * 
- * <tbody>
- * <td>int, i4</td><td>byte<br />Byte<br />short<br />Short<br />int<br />Integer</td><td>int<br />Integer</td>
- * </tr>
- * <tr>
- * <td>i8</td><td>long<br />Long</td><td>long<br />Long</td>
- * </tr>
- * <tr>
- * <td>double</td><td>float<br />Float<br />double<br />Double</td><td>double<br />Double</td>
- * </tr>
- * <tr>
- * <td>string</td><td>String</td><td>String</td>
- * </tr>
- * <tr>
- * <td>boolean</td><td>boolean<br />Boolean</td><td>boolean<br />Boolean</td>
- * </tr>
- * <tr>
- * <td>dateTime.iso8601</td><td>java.util.Date<br />java.util.Calendar</td><td>java.util.Date</td>
- * </tr>
- * <tr>
- * <td>base64</td><td>byte[]</td><td>byte[]</td>
- * </tr>
- * <tr>
- * <td>array</td><td>java.util.List&lt;Object&gt;<br />Object[]</td><td>Object[]</td>
- * </tr>
- * <tr>
- * <td>struct</td><td>java.util.Map&lt;String, Object&gt;</td><td>java.util.Map&lt;String, Object&gt;</td>
- * </tr>
- * </tbody>
- * </table>
- * </p>
- */
 
 public class XMLRPCClient {
 	private static final String TAG_METHOD_CALL = "methodCall";
@@ -96,7 +47,7 @@ public class XMLRPCClient {
 		postMethod = new HttpPost(uri);
 		postMethod.addHeader("Content-Type", "text/xml");		
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE!
-		postMethod.addHeader("User-Agent", "wp-android/1.0.2");
+		postMethod.addHeader("User-Agent", "wp-android/1.1");
 		
 		// WARNING
 		// I had to disable "Expect: 100-Continue" header since I had 

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
+import org.wordpress.android.newPost.ImageAdapter;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -30,11 +31,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Selection;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -77,7 +83,8 @@ public class editPost extends Activity {
     private boolean localDraft = false;
     private int ID_DIALOG_POSTING = 1;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
-    public Boolean centerThumbnail, xmlrpcError = false, isPage = false;;
+    public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
+    public String SD_CARD_TEMP_DIR = "";
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -383,14 +390,12 @@ public class editPost extends Activity {
         
             final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
             
+            registerForContextMenu(addPictureButton);
+            
             addPictureButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	Intent photoPickerIntent = new
-                	Intent(Intent.ACTION_PICK);
-                	photoPickerIntent.setType("image/*");
-                	
-                	startActivityForResult(photoPickerIntent, 1); 
+                	addPictureButton.performLongClick();
                 	 
                 }
         });
@@ -596,13 +601,32 @@ final customButton cancelButton = (customButton) findViewById(R.id.cancel);
             cancelButton.setOnClickListener(new customButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	Bundle bundle = new Bundle();
-                    
-                    bundle.putString("returnStatus", "CANCEL");
-                    Intent mIntent = new Intent();
-                    mIntent.putExtras(bundle);
-                    setResult(RESULT_OK, mIntent);
-                    finish();             	
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+      			  dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
+                    dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
+                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+                  		  DialogInterface.OnClickListener() {
+                          public void onClick(DialogInterface dialog, int whichButton) {
+                          	Bundle bundle = new Bundle();
+                              
+                              bundle.putString("returnStatus", "CANCEL");
+                              Intent mIntent = new Intent();
+                              mIntent.putExtras(bundle);
+                              setResult(RESULT_OK, mIntent);
+                              finish();
+
+                      
+                          }
+                      });
+                    dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
+                  		  DialogInterface.OnClickListener() {
+                          public void onClick(DialogInterface dialog, int whichButton) {
+                          	//just close the dialog window
+
+                          }
+                      });
+                    dialogBuilder.setCancelable(true);
+                   dialogBuilder.create().show();            	
                 	}          	
                 
         });
@@ -749,15 +773,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         Boolean publishThis = false;
         String imageContent = "";
         //upload the images and return the HTML
-        for (int it = 0; it < selectedImageCtr; it++){
-            
-            imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
+        imageContent =  uploadImages();
 
-            }
-
-        Integer blogID = 1; //never changes with wordpress, so far
-        
-        Vector<Object> myPostVector = new Vector<Object> ();
         String res = null;
         //before we do anything, validate that the user has entered settings
         boolean enteredSettings = checkSettings();
@@ -817,11 +834,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     		if (sCenterThumbnailString.equals("1")){
     			centerThumbnail = true;
     		}
-    		
-    		
 
-        
-        
         if (publishCB.isChecked())
         {
         	publishThis = true;
@@ -877,12 +890,23 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		return res;
 	}
 
-	public String uploadImage(String imageURL){
-        
-        //get the settings
-        settingsDB settingsDB = new settingsDB(editPost.this);
-    	Vector categoriesVector = settingsDB.loadSettings(editPost.this, id);   	
-    	
+	public String uploadImages(){
+		
+	    Vector<Object> myPictureVector = new Vector<Object> ();
+	    String returnedImageURL = null;
+	    String imageRes = null;
+	    String content = "";
+	    int thumbWidth = 0, thumbHeight = 0, finalHeight = 0;
+	    
+	    //images variables
+	    String finalThumbnailUrl = null;
+	    String finalImageUrl = null;
+	    String uploadImagePath = "";
+	    
+	    //get the settings
+	    settingsDB settingsDB = new settingsDB(this);
+		Vector categoriesVector = settingsDB.loadSettings(this, id);   	
+		
 	    	String sURL = "";
 	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
 	    	{
@@ -892,124 +916,176 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	    	{
 	    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
 	    	}
-    		String sUsername = categoriesVector.get(2).toString();
-    		String sPassword = categoriesVector.get(3).toString();
-    		sImagePlacement = categoriesVector.get(4).toString();
-    		String sCenterThumbnailString = categoriesVector.get(5).toString();
-    		
-    		//removed this as a quick fix to get rid of full size upload option
-    		/*if (sFullSizeImageString.equals("1")){
-    			sFullSizeImage = true;
-    		}*/  
+			String sBlogName = categoriesVector.get(1).toString();
+			String sUsername = categoriesVector.get(2).toString();
+			String sPassword = categoriesVector.get(3).toString();
+			String sImagePlacement = categoriesVector.get(4).toString();
+			String sCenterThumbnailString = categoriesVector.get(5).toString();
+			String sFullSizeImageString = categoriesVector.get(6).toString();
+			boolean sFullSizeImage  = false;
+			if (sFullSizeImageString.equals("1")){
+				sFullSizeImage = true;
+			}
 
-    		
-    		if (sCenterThumbnailString.equals("1")){
-    			centerThumbnail = true;
-    		}
-    		sMaxImageWidth = categoriesVector.get(7).toString();
-    		
-    		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
+			boolean centerThumbnail = false;
+			if (sCenterThumbnailString.equals("1")){
+				centerThumbnail = true;
+			}
+			String sMaxImageWidth = categoriesVector.get(7).toString();
+			
+			String thumbnailURL = "";
+	    //new loop for multiple images
+	    
+	    for (int it = 0; it < selectedImageCtr; it++){
 
-        //check for image, and upload it
+	    //check for image, and upload it
+	    if (imageUrl.get(it) != null)
+	    {
+	       client = new XMLRPCClient(sURL);
+	 	   
+	 	   String sXmlRpcMethod = "wp.uploadFile";
+	 	   String curImagePath = "";
+	 	   
+	 	   for (int i = 0; i < 2; i++){
+	 		   
 
-           client = new XMLRPCClient(sURL);
+	 		 curImagePath = imageUrl.get(it).toString();
+	 		   
+	 		if (i == 0 || sFullSizeImage)
+	 		{
+	 	   
+	 	   Uri imageUri = Uri.parse(curImagePath);
+	 	   
+	 	   String imgID = imageUri.getLastPathSegment();
+	 	   long imgID2 = Long.parseLong(imgID);
+	 	   
+	 	  String[] projection; 
 
-     	   String curImagePath = "";
-     	   
-     	   
-     		curImagePath = imageURL;
- 
-     	   Uri imageUri = Uri.parse(curImagePath);
-     	   
-     	   String imgID = imageUri.getLastPathSegment();
-     	   long imgID2 = Long.parseLong(imgID);
-     	   
-     	  String[] projection; 
+	 	  projection = new String[] {
+	       		    Images.Media._ID,
+	       		    Images.Media.DATA
+	       		};
+	 	  
+	 	   Uri imgPath;
 
-     	  projection = new String[] {
-           		    Images.Media._ID,
-           		    Images.Media.DATA
-           		};
-     	  
-     	  
-     	   Uri imgPath;
+	 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
 
-     	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-     	   
-     	   
-     	   
-		Cursor cur = managedQuery(imgPath, projection, null, null, null);
-     	  String thumbData = "";
-     	 
-     	  if (cur.moveToFirst()) {
-     		  
-     		int nameColumn, dataColumn, heightColumn, widthColumn;
-     		
-     			nameColumn = cur.getColumnIndex(Images.Media._ID);
-     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);             	            
-           
-           thumbData = cur.getString(dataColumn);
+		Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+	 	  String thumbData = "";
+	 	 
+	 	  if (cur.moveToFirst()) {
+	 		  
+	 		int nameColumn, dataColumn, heightColumn, widthColumn;
+	 			nameColumn = cur.getColumnIndex(Images.Media._ID);
+	 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
 
-     	  }
-     	   
-     	   File jpeg = new File(thumbData);
-     	   
-     	   imageTitle = jpeg.getName();
-     	  
-     	   byte[] bytes = new byte[(int) jpeg.length()];
-     	   
-     	   DataInputStream in = null;
+	       String imgPath4 = imgPath.getEncodedPath();              	            
+	       
+	       thumbData = cur.getString(dataColumn);
+
+	 	  }
+	 	   
+	 	   File jpeg = new File(thumbData);
+	 	   
+	 	   imageTitle = jpeg.getName();
+	 	  
+	 	   byte[] bytes = new byte[(int) jpeg.length()];
+	 	   byte[] finalBytes;
+	 	   
+	 	   DataInputStream in = null;
 		try {
 			in = new DataInputStream(new FileInputStream(jpeg));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-     	   try {
+	 	   try {
 			in.readFully(bytes);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-     	   try {
+	 	   try {
 			in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		//create the thumbnail
-		byte[] finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
-		
-            //attempt to upload the image
-            String contentType = "image/jpg";
-            Map<String, Object> m = new HashMap<String, Object>();
+		if (i == 0){
+			  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
+		   }
+		   else{
+			  finalBytes = bytes;
+		   }
+	 	   	
+	        //try to upload the image
+	        String contentType = "image/jpg";
+	        Map<String, Object> m = new HashMap<String, Object>();
 
-            HashMap hPost = new HashMap();
-
-            	
-            m.put("name", imageTitle);
-            m.put("type", contentType);
-            m.put("bits", finalBytes);
-            m.put("overwrite", true);
-
-			client = new XMLRPCClient(sURL);
-        	
-        	XMLRPCMethodImages method = new XMLRPCMethodImages("wp.uploadFile", new XMLRPCMethodCallback() {
-				public void callFinished(Object result) {
+	        HashMap hPost = new HashMap();
+	        m.put("name", imageTitle);
+	        m.put("type", contentType);
+	        m.put("bits", finalBytes);
+	        m.put("overwrite", true);
+	        
+	        Object[] params = {
+	        		1,
+	        		sUsername,
+	        		sPassword,
+	        		m
+	        };
+	        
+	        Object result = null;
+	        
+	        try {
+				result = (Object) client.call("wp.uploadFile", params);
+			} catch (XMLRPCException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				e.getMessage();
+				xmlrpcError = true;
+				break;
+			}
 					
-					imgHTML = ""; //start fresh
-					//Looper.myLooper().quit();
 					HashMap contentHash = new HashMap();
 					    
 					contentHash = (HashMap) result;
 
 					String resultURL = contentHash.get("url").toString();
 					
-					String finalImageUrl = "";
-					
+					if (i == 0){
+		            	finalThumbnailUrl = resultURL;
+		            }
+		            else{
+		            	if (sFullSizeImage){
+		            	finalImageUrl = resultURL;
+		            	}
+		            	else
+		            	{
+		            		finalImageUrl = "";
+		            	}
+		            }
 
-		            finalImageUrl = resultURL;
+		           int finalWidth = 500;  //default to this if there's a problem
+		           //Change dimensions of thumbnail
+		           if (sMaxImageWidth.equals("Original Size")){
+		           	finalWidth = thumbWidth;
+		           	finalHeight = thumbHeight;
+		           }
+		           else
+		           {
+		              	finalWidth = Integer.parseInt(sMaxImageWidth);
+		           	if (finalWidth > thumbWidth){
+		           		//don't resize
+		           		finalWidth = thumbWidth;
+		           		finalHeight = thumbHeight;
+		           	}
+		           	else
+		           	{
+		           		float percentage = (float) finalWidth / thumbWidth;
+		           		float proportionateHeight = thumbHeight * percentage;
+		           		finalHeight = (int) Math.rint(proportionateHeight);
+		           	}
+		           }
+					
 					
 					//prepare the centering css if desired from user
 			           String centerCSS = " ";
@@ -1018,38 +1094,48 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			           }
 			           
 			     	   
+			           if (i != 0 && sFullSizeImage)
+			           {
 				           if (resultURL != null)
 				           {
 
 				   	        	if (sImagePlacement.equals("Above Text")){
 				   	        		
-				   	        		imgHTML +=  "<img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" /><br /><br />";
+				   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a><br /><br />";
 				   	        	}
 				   	        	else{
-				   	        		imgHTML +=  "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalImageUrl + "\" />";
+				   	        		content = content + "<br /><a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
 				   	        	}        		
-    		
+				           	
+				           		
 				           }
-  
-				}
-	        });
-        	
-        	Object[] params = {
-	        		sBlogId,
-	        		sUsername,
-	        		sPassword,
-	        		m
-	        };
-        	
-        	try {
-				method.call(params);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	
+			           }
+			           else{
+				           if (i == 0 && sFullSizeImage == false && resultURL != null)
+				           {
 
-        return imgHTML;
+				   	        	if (sImagePlacement.equals("Above Text")){
+				   	        		
+				   	        		content = content + "<img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /><br /><br />";
+				   	        	}
+				   	        	else{
+				   	        		content = content + "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" />";
+				   	        	}        		
+				           	
+				           		
+				           }
+			           }
+	                
+	 	   }  //end if statement
+	 	   
+	       
+	       
+	 	  }//end image check
+	 	   
+	    }//end image stuff
+	    }//end new for loop
+
+	    return content;
 	}
 
 	
@@ -1434,29 +1520,22 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null)
+		if (data != null || requestCode == 4)
 		{
-
-		Bundle extras = data.getExtras();
+			Bundle extras;
+			GridView gridview = (GridView) findViewById(R.id.gridView);
 
 		switch(requestCode) {
 		case 0:
+			extras = data.getExtras();
 		    String title = extras.getString("returnStatus");
 		    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
 		    break;
 		case 1:
-			Uri imagePath = data.getData();   
-		    String imgPath2 = imagePath.getEncodedPath();
-
-	        selectedImageIDs.add(selectedImageCtr, imagePath);
-	        imageUrl.add(selectedImageCtr, imgPath2);
-	        selectedImageCtr++;
-	     	  
-	     	GridView gridview = (GridView) findViewById(R.id.gridView);
-	     	gridview.setAdapter(new ImageAdapter(this));
-
+		    
 		    break;
 		case 2:
+			extras = data.getExtras();
 			String linkText = extras.getString("linkText");
 			if (linkText.equals("http://") != true){
 				
@@ -1484,8 +1563,60 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
     		Selection.setSelection(etext, selectionStart + textToLink.length());
 			}
 			}
-			break;
+			break;			
+		case 3:
+ 
+		    Uri imageUri = data.getData();
+		    String imgPath = imageUri.getEncodedPath();
+   
+           selectedImageIDs.add(selectedImageCtr, imageUri);
+           imageUrl.add(selectedImageCtr, imgPath);
+           selectedImageCtr++;
+
+	     	  
+	     	 gridview.setAdapter(new ImageAdapter(this));
+	     	 break;
+		case 4:
+			if (resultCode == Activity.RESULT_OK) {
+
+                // http://code.google.com/p/android/issues/detail?id=1480
+
+                // on activity return
+                File f = new File(SD_CARD_TEMP_DIR);
+                try {
+                    Uri capturedImage =
+                        Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),
+                                        f.getAbsolutePath(), null, null));
+
+
+                        Log.i("camera", "Selected image: " + capturedImage.toString());
+
+                    //f.delete();
+                    
+                    Bundle bundle = new Bundle();
+                    
+                    bundle.putString("imageURI", capturedImage.toString());
+                    
+                    selectedImageIDs.add(selectedImageCtr, capturedImage);
+                    imageUrl.add(selectedImageCtr, capturedImage.toString());
+                    selectedImageCtr++;
+
+         	     	 gridview.setAdapter(new ImageAdapter(this));
+       
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+        }
+        else {
+                Log.i("Camera", "Result code was " + resultCode);
+
+        }
+
+		     	break;
 		}
+		
 	}//end null check
 	}
 	
@@ -1652,7 +1783,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         	for (int it = 0; it < selectedImageCtr; it++){
            
         		images += selectedImageIDs.get(it).toString() + ",";
-        		//imageContent +=  uploadImage(selectedImageIDs.get(it).toString());
 
         	}
         	if (!isPage){
@@ -1730,6 +1860,59 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
 		  return false; // propagate this keyevent
 		}
+	
+	public void onCreateContextMenu(
+		      ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo)
+		   {
+			menu.setHeaderTitle(getResources().getText(R.string.add_media));
+			menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
+			menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+		   }
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item){
+	    switch (item.getItemId()) {
+	    case 0:
+	    	
+	    	Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        	photoPickerIntent.setType("image/*");
+        	
+        	startActivityForResult(photoPickerIntent, 3);
+	    	
+	    	return true;
+		case 1:
+			String state = android.os.Environment.getExternalStorageState();
+            if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
+                try {
+					throw new IOException("SD Card is not mounted.  It is " + state + ".");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+
+        	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
+        	Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        	takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
+        	                File(SD_CARD_TEMP_DIR)));
+        	
+        	// make sure the directory we plan to store the recording in exists
+            File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
+            if (!directory.exists() && !directory.mkdirs()) {
+              try {
+				throw new IOException("Path to file could not be created.");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            }
+
+        	startActivityForResult(takePictureFromCameraIntent, 4); 
+		
+		return true;
+	}
+	  return false;	
+	}
     
 }
 

@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,38 +15,63 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.wordpress.android.moderateCommentsTab.CommentAdapter;
+import org.wordpress.android.viewPosts.ViewWrapper;
+
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
+import com.commonsware.cwac.thumbnail.ThumbnailBus;
+import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 
-public class wpAndroid extends Activity {
+public class wpAndroid extends ListActivity {
     /** Called when the activity is first created. */
 	public Vector accounts;
 	public Vector accountNames = new Vector();
+	public String[] accountIDs;
+	public String[] blogNames;
+	public String[] accountUsers;
+	public String[] blavatars;
 	private String selectedID = "";
+	private ThumbnailAdapter thumbs=null;
+	private static final int[] IMAGE_IDS={R.id.blavatar};
 	
     @Override
     public void onCreate(Bundle icicle) {
@@ -78,9 +104,7 @@ public class wpAndroid extends Activity {
         }
         else{
         displayAccounts();
-        }
-         
-    		
+        }  		
     }
     
     
@@ -94,9 +118,62 @@ public class wpAndroid extends Activity {
     }
     
 public void displayAccounts(){
+	
+	setContentView(R.layout.home);
+	setTitle(getResources().getText(R.string.app_name) + " - " + getResources().getText(R.string.blogs));
+    
 	//settings time!
     settingsDB settingsDB = new settingsDB(this);
 	accounts = settingsDB.getAccounts(this);
+	
+	 ListView listView = (ListView) findViewById(android.R.id.list);
+	 
+	/* TextView tv = new TextView(this);
+     tv.setText("Blogs");
+     tv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_header_bg));
+ 	 tv.setTextSize(20);
+ 	 tv.setPadding(4, 4, 4, 4);
+     tv.setTextColor(Color.parseColor("#EEEEEE"));
+     tv.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
+     listView.addHeaderView(tv, null, false);*/
+
+
+	   listView.setOnItemClickListener(new OnItemClickListener() {
+		   
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+
+			public void onItemClick(AdapterView<?> arg0, View row,int position, long id) {
+				Bundle bundle = new Bundle();
+        		bundle.putString("accountName", blogNames[position]);
+        		bundle.putString("id", String.valueOf(row.getId()));
+        		Intent viewPostsIntent = new Intent(wpAndroid.this, tabView.class);
+        		viewPostsIntent.putExtras(bundle);
+            	startActivityForResult(viewPostsIntent , 1);
+				
+			}
+			
+			
+
+      });
+
+	   listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+           public void onCreateContextMenu(ContextMenu menu, View v,
+				ContextMenuInfo menuInfo) {
+
+        	   AdapterView.AdapterContextMenuInfo info =
+                   (AdapterView.AdapterContextMenuInfo) menuInfo;
+        	   
+        	   View row = info.targetView;
+        	   
+        	   selectedID = String.valueOf(row.getId());
+               
+         
+        	   menu.add(0, 0, 0, getResources().getText(R.string.remove_account));
+		}
+      });
 	
 	
 	if (accounts.size() > 0){
@@ -112,86 +189,32 @@ public void displayAccounts(){
 
 		layout.setOrientation(LinearLayout.VERTICAL);
         
+		blogNames = new String[accounts.size()];
+		accountIDs = new String[accounts.size()];
+		accountUsers = new String[accounts.size()];
+		blavatars = new String[accounts.size()];
+		
         for (int i = 0; i < accounts.size(); i++) {
             
         	HashMap curHash = (HashMap) accounts.get(i);
-        	String curBlogName = curHash.get("blogName").toString();
-        	String curUsername = curHash.get("username").toString();
-        	String accountID = curHash.get("id").toString();
-        	accountNames.add(i, curBlogName);
-        	layout.setBackgroundColor(Color.parseColor("#e8e8e8"));
-            
-            final customButton buttonView = new customButton(this);
-            buttonView.setTextColor(Color.parseColor("#444444"));
-            buttonView.setTextSize(18);
-            buttonView.setText(escapeUtils.unescapeHtml(curBlogName) + "\n" + "(" + curUsername + ")");
-            buttonView.setId(i);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams 
-            (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            //params.setMargins(0, 0, 0, 6);
-            buttonView.setLayoutParams(params);
-
-            
-            buttonView.setOnClickListener(new customButton.OnClickListener() {
-                public void onClick(View v) {
-                	
-                	for (int i = 0; i < accounts.size(); i++) {
-                	HashMap btnHash = (HashMap) accounts.get(i);
-                	String btnText = buttonView.getText().toString();
-                	
-                	if (i == buttonView.getId()){
-                		
-                		Bundle bundle = new Bundle();
-                		bundle.putString("accountName", accountNames.get(i).toString());
-                		bundle.putString("id", btnHash.get("id").toString());
-                		Intent viewPostsIntent = new Intent(wpAndroid.this, tabView.class);
-                		viewPostsIntent.putExtras(bundle);
-                    	startActivityForResult(viewPostsIntent , 1);
-                		
-                	}
-                	}
-                	
-                }
-            });
-            
-            
-            buttonView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-	               public void onCreateContextMenu(ContextMenu menu, View v,
-						ContextMenuInfo menuInfo) {
-
-	                   for (int i = 0; i < accounts.size(); i++) {
-	                   	HashMap btnHash = (HashMap) accounts.get(i);
-	                   	String btnText = buttonView.getText().toString();
-	                   	
-	                   	if (i == buttonView.getId()){
-	                   		
-	                   		selectedID = btnHash.get("id").toString();
-	                   		
-	                   	}
-	                   	}
-	                   
-	             
-	            	   menu.add(0, 0, 0, getResources().getText(R.string.remove_account));
-				}
-	          });
-            
-            layout.addView(buttonView);  
+        	blogNames[i] = curHash.get("blogName").toString();
+        	accountUsers[i] = curHash.get("username").toString();
+        	accountIDs[i] = curHash.get("id").toString();
+        	String url = curHash.get("url").toString();
+        	url = url.replace("http://", "");
+        	url = url.replace("https://", "");
+        	String[] urlSplit = url.split("/");
+        	url = urlSplit[0];
+        	url = "http://gravatar.com/blavatar/" + moderateCommentsTab.getMd5Hash(url.trim()) + "?s=60&d=404";
+        	blavatars[i] = url;
+        	accountNames.add(i, blogNames[i]);
+        	
         } 
-        TextView textView = new TextView(this);
-        textView.setTextColor(Color.parseColor("#444444"));
-        textView.setTextSize(12);
-        textView.setPadding(0, 20, 0, 0);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText(R.string.hint_menu_to_add_acc);
         
-        
-        
-        layout.addView(textView);
-        
-        sv.addView(layout);
-        
-        setContentView(sv);
+        ThumbnailBus bus = new ThumbnailBus();
+		thumbs=new ThumbnailAdapter(this, new HomeListAdapter(this),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
+
+        setListAdapter(thumbs);
 	}
 	else{
 		//no account, load new account view
@@ -451,6 +474,102 @@ public boolean onContextItemSelected(MenuItem item) {
      return false;
 }
 
+private class HomeListAdapter extends BaseAdapter {
+	private int usenameHeight;
+    public HomeListAdapter(Context context) {
+        mContext = context;
+    }
+
+    public int getCount() {
+        return accounts.size();
+    }
+
+    public Object getItem(int position) {
+        return position;
+    }
+
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+    	View pv=convertView;
+    	ViewWrapper wrapper=null;
+    	if (pv==null) {
+    		LayoutInflater inflater=getLayoutInflater();
+    		pv=inflater.inflate(R.layout.home_row, parent, false);
+    		wrapper=new ViewWrapper(pv);
+    		if (position == 0){
+    			usenameHeight = wrapper.getBlogUsername().getHeight();
+    		}
+    		pv.setTag(wrapper);
+    	wrapper=new ViewWrapper(pv);
+    	pv.setTag(wrapper);
+    	}
+    	else {
+    	wrapper=(ViewWrapper)pv.getTag();      	
+    	}
+    	String username= accountUsers[position];
+    	pv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
+		pv.setId(Integer.valueOf(accountIDs[position]));
+		if (wrapper.getBlogUsername().getHeight() == 0){
+			wrapper.getBlogUsername().setHeight((int) wrapper.getBlogName().getTextSize() + wrapper.getBlogUsername().getPaddingBottom());
+		}
+
+    	wrapper.getBlogName().setText(escapeUtils.unescapeHtml(blogNames[position]));
+    	wrapper.getBlogUsername().setText(escapeUtils.unescapeHtml(username));
+    	
+    	if (wrapper.getBlavatar()!=null) {
+			try {
+				wrapper.getBlavatar().setImageResource(R.drawable.app_icon);
+				wrapper.getBlavatar().setTag(blavatars[position]);
+			}
+			catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
+    	
+    	return pv;
+
+    }
+
+    private Context mContext;
+    
+}
+
+class ViewWrapper {
+	View base;
+	TextView blogName=null;
+	TextView blogUsername=null;
+	ImageView blavatar=null;
+	ViewWrapper(View base) {
+	this.base=base;
+	}
+	TextView getBlogName() {
+			if (blogName==null) {
+			blogName=(TextView)base.findViewById(R.id.blogName);
+			}
+			return(blogName);
+			}
+		TextView getBlogUsername() {
+			if (blogUsername==null) {
+				blogUsername=(TextView)base.findViewById(R.id.blogUser);
+			}
+			return(blogUsername);
+			}
+		ImageView getBlavatar() {
+			if (blavatar==null) {
+				blavatar=(ImageView)base.findViewById(R.id.blavatar);
+			}
+			return(blavatar);
+		}
+}
+
+@Override
+public void onConfigurationChanged(Configuration newConfig) {
+  //ignore orientation change
+  super.onConfigurationChanged(newConfig);
+} 
 
 }
 

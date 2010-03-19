@@ -107,17 +107,7 @@ public class moderateCommentsTab extends ListActivity {
         boolean loadedComments = loadComments();
         
         if (!loadedComments){
-        	
-        	/*Thread action = new Thread() 
-    		{ 
-    		  public void run() 
-    		  {
-    			  pd = ProgressDialog.show(moderateCommentsTab.this,
-    		                "Refresh Comments", "Attempting to get comments", true, false);
-    		  } 
-    		}; 
-    		runOnUiThread(action);*/
-        	
+        	        	
         	refreshComments();
         }
         
@@ -125,15 +115,7 @@ public class moderateCommentsTab extends ListActivity {
         
         refresh.setOnClickListener(new customMenuButton.OnClickListener() {
             public void onClick(View v) {
-            	/*Thread action = new Thread() 
-        		{ 
-        		  public void run() 
-        		  {
-        			  pd = ProgressDialog.show(moderateCommentsTab.this,
-        		                "Refresh Comments", "Attempting to get comments", true, false);
-        		  } 
-        		}; 
-        		runOnUiThread(action);*/
+
             	refreshComments();
             	 
             }
@@ -179,7 +161,7 @@ public class moderateCommentsTab extends ListActivity {
 						        		postTitle,
 						        		authorURL,
 						        		authorEmail,
-						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=http://gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=60")));
+						        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
 						    }
 						   
 						    try {
@@ -212,6 +194,7 @@ public class moderateCommentsTab extends ListActivity {
 				                    intent.putExtra("name", model.get((int) arg3).name);
 				                    intent.putExtra("email", model.get((int) arg3).authorEmail);
 				                    intent.putExtra("url", model.get((int) arg3).authorURL);
+				                    intent.putExtra("date", model.get((int) arg3).dateCreatedFormatted);
 				                    startActivity(intent);
 									
 								}
@@ -453,9 +436,10 @@ public class moderateCommentsTab extends ListActivity {
 		String postTitle="";
 		String authorURL="";
 		String authorEmail="";
+		String dateCreatedFormatted="";
 		URI profileImageUrl=null;
 		
-		CommentEntry(String postID, String commentID, String name, String emailURL,
+		CommentEntry(String postID, String commentID, String name, String dateCreatedFormatted,
 									String comment, String status, String postTitle, String authorURL, String authorEmail, URI profileImageUrl) {
 			this.postID=postID;
 			this.commentID=commentID;
@@ -467,6 +451,7 @@ public class moderateCommentsTab extends ListActivity {
 			this.authorURL=authorURL;
 			this.authorEmail=authorEmail;
 			this.profileImageUrl=profileImageUrl;
+			this.dateCreatedFormatted=dateCreatedFormatted;
 		}
 	}
 	
@@ -490,7 +475,7 @@ public class moderateCommentsTab extends ListActivity {
 			else {
 				wrapper=(CommentEntryWrapper)row.getTag();
 			}
-			
+			row.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
 			wrapper.populateFrom(getItem(position));
 			
 			return(row);
@@ -513,7 +498,7 @@ public class moderateCommentsTab extends ListActivity {
 		
 		void populateFrom(CommentEntry s) {
 			getName().setText(s.name);
-			
+		
 			String fEmailURL = s.authorURL;
 			// use the required email address if the commenter didn't leave a url
 			if (fEmailURL == ""){
