@@ -147,6 +147,21 @@ public class commentService extends Service {
 				String s = "done";
 				//Log.i(getClass().getSimpleName(), "made it to callback");
 				settingsDB settingsDB = new settingsDB(commentService.this);
+				HashMap notificationOptions = settingsDB.getNotificationOptions(commentService.this);
+				boolean sound = false, vibrate = false, light = false;
+				
+				//there must be a less dorky way of pulling a boolean value from a db?
+				if (notificationOptions != null){
+					if (notificationOptions.get("sound").toString().equals("1")){
+						sound = true;
+					}
+					if (notificationOptions.get("vibrate").toString().equals("1")){
+						vibrate = true;
+					}
+					if (notificationOptions.get("light").toString().equals("1")){
+						light = true;
+					}
+				}
 				if (result.length == 0){
 
 				}
@@ -179,14 +194,20 @@ public class commentService extends Service {
     		  		notificationIntent.putExtra("accountName", accountName);
     		  		notificationIntent.putExtra("fromNotification", true);
     		  		PendingIntent pendingIntent = PendingIntent.getActivity(commentService.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
- 			  		
-    		  		
+ 			  			  		
     		  		Notification n = new Notification(R.drawable.wp_logo, getResources().getText(R.string.new_comment), System.currentTimeMillis());
+    		  		if (sound){
     		  		n.defaults |= Notification.DEFAULT_SOUND;
+    		  		}
+    		  		if (vibrate){
+    		  			n.defaults |= Notification.DEFAULT_VIBRATE;
+    		  		}
+    		  		if (light){
     		  		n.ledARGB = 0xff0000ff;
-    		  		n.ledOnMS = 100;
+    		  		n.ledOnMS = 1000;
     		  		n.ledOffMS = 5000;
     		  		n.flags |= Notification.FLAG_SHOW_LIGHTS;
+    		  		}
  			  		n.setLatestEventInfo(commentService.this, accountName, getResources().getText(R.string.new_comment), pendingIntent);
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					

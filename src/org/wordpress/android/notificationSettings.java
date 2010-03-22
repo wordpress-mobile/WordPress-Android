@@ -41,7 +41,20 @@ public void displayAccounts(){
 	//settings time!
     final settingsDB settingsDB = new settingsDB(this);
 	accounts = settingsDB.getAccounts(this);
+	HashMap notificationOptions = settingsDB.getNotificationOptions(this);
+	boolean sound = false, vibrate = false, light = false;
 	
+	if (notificationOptions != null){
+		if (notificationOptions.get("sound").toString().equals("1")){
+			sound = true;
+		}
+		if (notificationOptions.get("vibrate").toString().equals("1")){
+			vibrate = true;
+		}
+		if (notificationOptions.get("light").toString().equals("1")){
+			light = true;
+		}
+	}
 	
 	if (accounts.size() > 0){
 		ScrollView sv = new ScrollView(this);
@@ -134,6 +147,48 @@ public void displayAccounts(){
 	    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams 
         (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
 	    
+	    final LinearLayout nOptionsLayout = new LinearLayout(this);
+		
+	    nOptionsLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+                LayoutParams.WRAP_CONTENT));
+
+	    nOptionsLayout.setOrientation(LinearLayout.VERTICAL);
+	    
+	    CheckBox soundCB = new CheckBox(this);
+	    soundCB.setTag("soundCB");
+	    soundCB.setTextColor(Color.parseColor("#444444"));
+	    soundCB.setTextSize(18);
+	    soundCB.setText(escapeUtils.unescapeHtml("Play notification sound"));
+        params.setMargins(0, 0, 0, 6);
+        soundCB.setLayoutParams(params);
+        soundCB.setChecked(sound);
+        
+        nOptionsLayout.addView(soundCB);
+        
+        CheckBox vibrateCB = new CheckBox(this);
+        vibrateCB.setTag("vibrateCB");
+        vibrateCB.setTextColor(Color.parseColor("#444444"));
+        vibrateCB.setTextSize(18);
+        vibrateCB.setText(escapeUtils.unescapeHtml("Vibrate"));
+        params.setMargins(0, 0, 0, 6);
+        vibrateCB.setLayoutParams(params);
+        vibrateCB.setChecked(vibrate);
+        
+        nOptionsLayout.addView(vibrateCB);
+        
+        CheckBox lightCB = new CheckBox(this);
+        lightCB.setTag("lightCB");
+        lightCB.setTextColor(Color.parseColor("#444444"));
+        lightCB.setTextSize(18);
+        lightCB.setText(escapeUtils.unescapeHtml("Blink notification light"));
+        params.setMargins(0, 0, 0, 6);
+        lightCB.setLayoutParams(params);
+        lightCB.setChecked(light);
+        
+        nOptionsLayout.addView(lightCB);
+        
+        layout.addView(nOptionsLayout);
+	    
 	    final customButton save = new customButton(this);
 	    save.setLayoutParams(params2);
 	    save.setTextColor(Color.parseColor("#444444"));
@@ -143,24 +198,38 @@ public void displayAccounts(){
 	    save.setOnClickListener(new customButton.OnClickListener() {
             public void onClick(View v) {
             	
+            	boolean sound = false, vibrate = false, light = false;
             	checkCtr = 0;
             	
             	int listItemCount = cbLayout.getChildCount();
             	for( int i=0;i<listItemCount;i++ ) {
             	    CheckBox cbox = (CheckBox) ((View)cbLayout.getChildAt(i));
-            	    int id = cbox.getId();
-            	    if( cbox.isChecked() ) {   
-            	    	checkCtr++;
-            	        settingsDB.updateNotificationFlag(notificationSettings.this, id, true);
-            	        Log.i("CommentService", "Service enabled for " + cbox.getText());
-            	    }
-            	    else{
-            	        settingsDB.updateNotificationFlag(notificationSettings.this, id, false);
-            	    }
-
+            	    	int id = cbox.getId();
+                	    if( cbox.isChecked() ) {   
+                	    	checkCtr++;
+                	        settingsDB.updateNotificationFlag(notificationSettings.this, id, true);
+                	        Log.i("CommentService", "Service enabled for " + cbox.getText());
+                	    }
+                	    else{
+                	        settingsDB.updateNotificationFlag(notificationSettings.this, id, false);
+                	    }
             	}
             	
-            	settingsDB.updateInterval(notificationSettings.this, sInterval.getSelectedItem().toString());
+            	int noOptionsItemCount = nOptionsLayout.getChildCount();
+            	for( int i=0;i<noOptionsItemCount;i++ ) {
+            	    CheckBox cbox = (CheckBox) ((View)nOptionsLayout.getChildAt(i));
+	        	    if (cbox.getTag().equals("soundCB")){
+		    			sound = cbox.isChecked();
+		    		}
+		    		else if (cbox.getTag().equals("vibrateCB")){
+		    			vibrate = cbox.isChecked();
+		    		}
+		    		else if (cbox.getTag().equals("lightCB")){
+		    			light = cbox.isChecked();
+		    		}
+            	}
+
+            	settingsDB.updateNotificationSettings(notificationSettings.this, sInterval.getSelectedItem().toString(), sound, vibrate, light);
             	
             	if (checkCtr > 0){
 

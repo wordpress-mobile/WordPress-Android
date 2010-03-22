@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content">
+
+<TextView android:id="@+id/l_notification" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+              android:text="When a notification is received:"/>
+              
+<CheckBox android:id="@+id/sound"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="Play a sound"
+            />
+<CheckBox android:id="@+id/vibrate"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="Vibrate device"
+            />
+<CheckBox android:id="@+id/light"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:text="Blink notification light"
+            />
+
+</LinearLayout>

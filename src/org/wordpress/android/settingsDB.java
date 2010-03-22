@@ -17,11 +17,17 @@ public class settingsDB {
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
-	private static final int DATABASE_VERSION = 2;
+	
+	private static final int DATABASE_VERSION = 3;
 	
 	//for capturing blogID, trac ticket #
 	private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
 	private static final String UPDATE_BLOGID = "update accounts set blogId = 1;"; //set them all to 1 if updating
+	
+	//add notification options
+	private static final String ADD_SOUND_OPTION = "alter table eula add sound boolean default false;";
+	private static final String ADD_VIBRATE_OPTION = "alter table eula add vibrate boolean default false;";
+	private static final String ADD_LIGHT_OPTION = "alter table eula add light boolean default false;";
 	
 	
 	private SQLiteDatabase db;
@@ -35,6 +41,14 @@ public class settingsDB {
 		if (db.getVersion() <= 1){ //user is new install or running v1.0.0 or v1.0.1
 			db.execSQL(ADD_BLOGID);
 			db.execSQL(UPDATE_BLOGID);
+			db.execSQL(ADD_SOUND_OPTION);
+			db.execSQL(ADD_VIBRATE_OPTION);
+			db.execSQL(ADD_LIGHT_OPTION);
+		}
+		else if (db.getVersion()  == 2){
+			db.execSQL(ADD_SOUND_OPTION);
+			db.execSQL(ADD_VIBRATE_OPTION);
+			db.execSQL(ADD_LIGHT_OPTION);
 		}
 
 		db.setVersion(DATABASE_VERSION); //set to latest revision
@@ -284,10 +298,13 @@ public class settingsDB {
 		
 	}
 	
-	public void updateInterval(Context ctx, String interval) {
+	public void updateNotificationSettings(Context ctx, String interval, boolean sound, boolean vibrate, boolean light) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("interval", interval);
+		values.put("sound", sound);
+		values.put("vibrate", vibrate);
+		values.put("light", light);
 
 		boolean returnValue = db.update("eula", values, null, null) > 0;
 		
@@ -312,6 +329,31 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
 		return returnValue;
 		
+	}
+	
+	public HashMap getNotificationOptions(Context ctx) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		Cursor c = db.query("eula", new String[] { "id", "sound", "vibrate", "light"}, "id=0", null, null, null, null);
+		int sound, vibrate, light;
+		HashMap thisHash = new HashMap();
+		int numRows = c.getCount();
+		if (numRows >= 1){
+		c.moveToFirst();
+			
+		sound = c.getInt(1);
+		vibrate = c.getInt(2);
+		light = c.getInt(3);
+		
+		thisHash.put("sound", sound);
+		thisHash.put("vibrate", vibrate);
+		thisHash.put("light", light);
+		
+		}
+
+		c.close();
+		db.close();
+		
+		return thisHash;
 	}
 
 }

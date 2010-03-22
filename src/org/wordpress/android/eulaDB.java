@@ -1,5 +1,8 @@
 package org.wordpress.android;
 
+import java.util.HashMap;
+import java.util.Vector;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

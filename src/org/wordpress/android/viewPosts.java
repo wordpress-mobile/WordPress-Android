@@ -256,11 +256,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					        
 					        
 					    }
-					    
-					    
-					    
-					   closeProgressBar();
+
 					   loadPosts();
+					   closeProgressBar();
 					}
 			        
 				}
