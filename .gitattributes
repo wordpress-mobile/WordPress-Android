@@ -5,7 +5,6 @@
 /AndroidManifest.xml -text
 /CWAC-AdapterWrapper.jar -text
 /CWAC-Bus.jar -text
-/CWAC-Cache.jar -text
 /CWAC-Task.jar -text
 bin/WordPress.apk -text
 bin/classes.dex -text
@@ -273,6 +272,10 @@ res/values-in/strings.xml -text
 res/values-sk/strings.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
+src/com/commonsware/cwac/cache/AsyncCache.java -text
+src/com/commonsware/cwac/cache/CacheBase.java -text
+src/com/commonsware/cwac/cache/SimpleWebImageCache.java -text
+src/com/commonsware/cwac/cache/WebImageCache.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailActivity.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailAdapter.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailBus.java -text

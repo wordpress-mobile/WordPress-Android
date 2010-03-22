@@ -205,7 +205,7 @@ public void displayAccounts(){
         	url = url.replace("https://", "");
         	String[] urlSplit = url.split("/");
         	url = urlSplit[0];
-        	url = "http://gravatar.com/blavatar/" + moderateCommentsTab.getMd5Hash(url.trim()) + "?s=60&d=http://s.wordpress.org/about/images/logo-blue/blue-m.png";
+        	url = "http://gravatar.com/blavatar/" + moderateCommentsTab.getMd5Hash(url.trim()) + "?s=60&d=404";
         	blavatars[i] = url;
         	accountNames.add(i, blogNames[i]);
         	
