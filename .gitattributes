@@ -236,6 +236,7 @@ res/drawable/placeholder.png -text
 res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
+res/drawable/spinner_white_48.png -text
 res/drawable/title_bg.xml -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_logo.png -text

@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore.Images;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -149,7 +150,9 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
     }
     
     private void refreshPosts(){
+
     	showProgressBar();
+
     	Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
     	settings = settingsDB.loadSettings(this, id);
@@ -201,7 +204,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					String rDateCreatedFormatted[] = new String[result.length];
 					String rParentID[] = new String[result.length];
 					Vector dbVector = new Vector();
-					
+					postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
 					//loop this!
 					    for (int ctr = 0; ctr < result.length; ctr++){
 					    	HashMap<String, String> dbValues = new HashMap();
@@ -216,11 +219,13 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					        	rTitles[ctr] = escapeUtils.unescapeHtml(contentHash.get("content").toString().substring(contentHash.get("content").toString().indexOf("<title>") + 7, contentHash.get("content").toString().indexOf("</title>")));
 					        	rPostIDs[ctr] = contentHash.get("postid").toString();
 					        	rDateCreated[ctr] = contentHash.get("dateCreated").toString();
+					        	
 					        }
 					        
 					      //make the date pretty
 					        Date d = new Date();
 							SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); 
+							
 							Calendar cal = Calendar.getInstance();
 							TimeZone tz = cal.getTimeZone();
 
@@ -234,7 +239,7 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					            rDateCreatedFormatted[ctr] = rDateCreated[ctr];  //just make it the ugly date if it doesn't work
 					        } 
 					        
-					        postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
+					        
 					        dbValues.put("blogID", id);
 					        dbValues.put("title", rTitles[ctr]);
 					        
@@ -243,19 +248,25 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 						        dbValues.put("pageDate", rDateCreated[ctr]);
 						        dbValues.put("pageDateFormatted", rDateCreatedFormatted[ctr]);
 						        dbValues.put("parentID", rParentID[ctr]);
-						        dbVector.add(ctr, dbValues);
-						        postStoreDB.savePages(viewPosts.this, dbVector);
+						        dbVector.add(ctr, dbValues);						        
 					        }
 					        else{
 					        	dbValues.put("postID", rPostIDs[ctr]);
 					        	dbValues.put("postDate", rDateCreated[ctr]);
 					        	dbValues.put("postDateFormatted", rDateCreatedFormatted[ctr]);
 					        	dbVector.add(ctr, dbValues);
-					        	postStoreDB.savePosts(viewPosts.this, dbVector);
+					        	
 					        }
-					        
-					        
+     
+					    }//end for loop
+					    
+					    if (isPage){
+					    	postStoreDB.savePages(viewPosts.this, dbVector);	
 					    }
+					    else{
+					    	postStoreDB.savePosts(viewPosts.this, dbVector);
+					    }
+					    
 
 					   loadPosts();
 					   closeProgressBar();
