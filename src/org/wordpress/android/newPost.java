@@ -925,7 +925,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 		     	break;
 		     	
 		case 5:
-			
+			if (resultCode == RESULT_OK){
 			extras = data.getExtras();
 			String cats = extras.getString("selectedCategories");
 			long[] checkedCats = extras.getLongArray("checkedItems");
@@ -933,7 +933,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 			checkedCategories = checkedCats;
 			TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
 			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + cats);
-
+			}
 	     	break;
 		}
 		

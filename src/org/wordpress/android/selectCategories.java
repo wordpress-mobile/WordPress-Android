@@ -108,7 +108,7 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
 
                 Intent mIntent = new Intent();
                 mIntent.putExtras(bundle);
-                setResult(RESULT_OK, mIntent);
+                setResult(RESULT_CANCELED, mIntent);
                 finish();
             	
             }
@@ -143,7 +143,7 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
         loadTextArray.clear();
         categoriesDB categoriesDB = new categoriesDB(this);
     	Vector categoriesVector = categoriesDB.loadCategories(this, id);
-    	if (categoriesVector != null)
+    	if (categoriesVector.size() > 0)
     	{
 
 	    	for(int i=0; i < categoriesVector.size(); i++)
@@ -179,6 +179,20 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
 	        	
 	        	}
 	        }
+    	}
+    	else{
+    		//go get the categories!
+    		pd = ProgressDialog.show(selectCategories.this,
+        			getResources().getText(R.string.refreshing_categories), getResources().getText(R.string.attempting_categories_refresh), true, true);
+        	Thread th = new Thread() {
+				public void run() {					
+				    finalResult = getCategories();	
+				    
+				    mHandler.post(mUpdateResults);
+				    
+				}
+			};
+			th.start();
     	}
 		
 	}

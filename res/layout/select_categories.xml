@@ -44,6 +44,6 @@ class="org.wordpress.android.customImageButton"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:src="@drawable/ic_popup_sync_1"
-            android:layout_toLeftOf="@id/categories_done" />
+            android:layout_centerInParent="true" />
 </RelativeLayout>
 </LinearLayout>
