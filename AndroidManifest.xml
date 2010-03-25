@@ -35,6 +35,7 @@
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
+<activity android:name="selectCategories"></activity>
 </application>
 
 	<supports-screens android:smallScreens="true"

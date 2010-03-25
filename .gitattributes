@@ -240,6 +240,7 @@ res/drawable/title_bg.xml -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_logo.png -text
 res/drawable/wp_logo_home.png -text
+res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/edit.xml -text
 res/layout/home.xml -text
@@ -257,6 +258,7 @@ res/layout/posts_tab_selector.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/row_post_page.xml -text
+res/layout/select_categories.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/splashscreen.xml -text
@@ -308,6 +310,7 @@ src/org/wordpress/android/newPost.java -text
 src/org/wordpress/android/notificationSettings.java -text
 src/org/wordpress/android/postStoreDB.java -text
 src/org/wordpress/android/replyToComment.java -text
+src/org/wordpress/android/selectCategories.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
 src/org/wordpress/android/splashScreen.java -text

@@ -1035,8 +1035,6 @@ public String submitPost() throws IOException {
     // categoryID = getCategoryId(selectedCategory);
     String[] theCategories = new String[selectedCategories.size()];
     
-    int catSize = selectedCategories.size();
-    
     for(int i=0; i < selectedCategories.size(); i++)
     {
 		theCategories[i] = selectedCategories.get(i).toString();

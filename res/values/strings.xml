@@ -2,6 +2,7 @@
 <resources>
   <!--  form labels -->
   <string name="categories">Categories:</string>
+  <string name="select_categories">Select Categories</string>
   <string name="tags_separate_with_commas">Tags (separate tags with commas):</string>
   <string name="pictures">Pictures:</string>
   <string name="post_content">Post Content:</string>

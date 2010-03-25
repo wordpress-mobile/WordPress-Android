@@ -84,7 +84,7 @@ public class editPost extends Activity {
     private int ID_DIALOG_POSTING = 1;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
     public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
-    public String SD_CARD_TEMP_DIR = "";
+    public String SD_CARD_TEMP_DIR = "", categories = "";
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -114,22 +114,13 @@ public class editPost extends Activity {
         	TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
     		EditText tagsET = (EditText) findViewById(R.id.tags);
     		TextView tvCategoriesLabel = (TextView) findViewById(R.id.l_category);
-    		Spinner spinner = (Spinner) findViewById(R.id.spinner1);
     		TextView tvTagsLabel = (TextView) findViewById(R.id.l_tags);
-    		customImageButton btnRefresh = (customImageButton) findViewById(R.id.refreshCategoriesButton);
-    		customButton btnClear = (customButton) findViewById(R.id.clearCategories);
+    		customButton selectCategories = (customButton) findViewById(R.id.selectCategories);
+    		selectCategories.setVisibility(View.GONE);
     		tvCategories.setVisibility(View.GONE);
     		tagsET.setVisibility(View.GONE);
     		tvCategoriesLabel.setVisibility(View.GONE);
-    		spinner.setVisibility(View.GONE);
     		tvTagsLabel.setVisibility(View.GONE);
-    		btnRefresh.setVisibility(View.GONE);
-    		btnClear.setVisibility(View.GONE);
-        }
-        
-        //loads the categories from the db if they exist
-        if (!isPage){
-        loadCategories();
         }
         
         if (localDraft){
@@ -168,7 +159,8 @@ public class editPost extends Activity {
         	}
         	
         	if (!isPage){
-		    	String categories = postHashMap.get("categories").toString();
+        		
+		    	categories = postHashMap.get("categories").toString();
 		    	if (!categories.equals("")){
 		    		
 		    		String[] aCategories = categories.split(",");
@@ -182,6 +174,22 @@ public class editPost extends Activity {
 		    		tvCategories.setText("Selected categories: " + categories);
 		    		
 		    	}
+		    	
+		    	customButton selectCategories = (customButton) findViewById(R.id.selectCategories);   
+    	        
+    	        selectCategories.setOnClickListener(new customButton.OnClickListener() {
+    	            public void onClick(View v) {
+    	            	 
+    	            	Bundle bundle = new Bundle();
+    					bundle.putString("id", id);
+    					if (categories != ""){
+    					bundle.putString("categoriesCSV", categories);
+    					}
+    			    	Intent i = new Intent(editPost.this, selectCategories.class);
+    			    	i.putExtras(bundle);
+    			    	startActivityForResult(i, 5);
+    	            }
+    	        });
 		    	
 		    	String tags = postHashMap.get("tags").toString();
 		    	if (!tags.equals("")){
@@ -255,23 +263,47 @@ public class editPost extends Activity {
 			        if (!isPage){
 				        EditText tagsET = (EditText)findViewById(R.id.tags);
 				        tagsET.setText(escapeUtils.unescapeHtml(contentHash.get("mt_keywords").toString()));
-				        TextView categories = (TextView)findViewById(R.id.selectedCategories);
+				        TextView categoriesTV = (TextView)findViewById(R.id.selectedCategories);
 			        
 			        
 				        Object categoriesArray[] = (Object[]) contentHash.get("categories");
 				        
 				        if (categoriesArray != null){
 				        	int ctr = 0;
+				        	categories = "";
 						    for (Object item : categoriesArray){
 						        String category = categoriesArray[ctr].toString();
 						        if (!selectedCategories.contains(category))
 			                	{
-						        categories.setText(escapeUtils.unescapeHtml(categories.getText().toString() + category + ", "));
+						        categories += category + ",";
 			                	selectedCategories.add(category);
 			                	}
 						        ctr++;					    
-				        }			  
+				        }	
+						    categories = categories.trim();
+			            	if (categories.endsWith(",")){
+			            		categories = categories.substring(0, categories.length() - 1);
+			            	}
+			            	if (categories != ""){
+			            	categoriesTV.setText(getResources().getText(R.string.select_categories) + " " + categories);
+			            	}
 				        }
+				        
+				        customButton selectCategories = (customButton) findViewById(R.id.selectCategories);   
+		    	        
+		    	        selectCategories.setOnClickListener(new customButton.OnClickListener() {
+		    	            public void onClick(View v) {
+		    	            	 
+		    	            	Bundle bundle = new Bundle();
+		    					bundle.putString("id", id);
+		    					if (categories != ""){
+		    					bundle.putString("categoriesCSV", categories);
+		    					}
+		    			    	Intent i = new Intent(editPost.this, selectCategories.class);
+		    			    	i.putExtras(bundle);
+		    			    	startActivityForResult(i, 5);
+		    	            }
+		    	        });
 			        }
 			        
 			        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
@@ -296,36 +328,7 @@ public class editPost extends Activity {
     	
     	}
     	
-        }
-        
-        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-        
-       
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-            public void onItemSelected(AdapterView parent, View v,
-                      int position, long id) {
-            	
-            	
-            	if (newStart != true)
-            	{
-                	String selectedItem = parent.getItemAtPosition(position).toString();	
-                	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-                	if (!selectedCategories.contains(selectedItem))
-                	{
-                	selectedCategoriesTV.setText(selectedCategoriesTV.getText().toString() + selectedItem + ", ");
-                	selectedCategories.add(selectedItem);
-                	}
-            	}
-            	else
-            	{
-            		newStart = false;
-            	}
-            }
-
-            public void onNothingSelected(AdapterView arg0) {
-                 
-            }
-     }); 
+        } 
         
         
         
@@ -369,24 +372,6 @@ public class editPost extends Activity {
             		
             }
         });
-        final customImageButton refreshCategoriesButton = (customImageButton) findViewById(R.id.refreshCategoriesButton);
-        
-        refreshCategoriesButton.setOnClickListener(new customImageButton.OnClickListener() {
-            public void onClick(View v) {
-            	
-            	pd = ProgressDialog.show(editPost.this,
-            			getResources().getText(R.string.refreshing_categories), getResources().getText(R.string.attempting_categories_refresh), true, true);
-            	Thread th = new Thread() {
-    				public void run() {					
-    				    finalResult = getCategories();	
-    				    
-    				    mHandler.post(mUpdateResults);
-    				    
-    				}
-    			};
-    			th.start();	 
-            }
-    });
         
             final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
             
@@ -397,19 +382,6 @@ public class editPost extends Activity {
                 	
                 	addPictureButton.performLongClick();
                 	 
-                }
-        });
-            
-            final customButton clearCategories = (customButton) findViewById(R.id.clearCategories);   
-            
-            clearCategories.setOnClickListener(new customButton.OnClickListener() {
-                public void onClick(View v) {
-                	 
-                	TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-
-                	selectedCategoriesTV.setText("Selected categories: ");
-                	
-                	selectedCategories.clear();
                 }
         });
             
@@ -651,113 +623,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
             
     }
     
-    public void loadCategories(){
-    	//for loading categories from the DB
-    	categoriesDB categoriesDB = new categoriesDB(this);
-    	Vector categoriesVector = categoriesDB.loadCategories(this, id);
-    	if (categoriesVector != null)
-    	{
-
-	    	for(int i=0; i < categoriesVector.size(); i++)
-	        {
-	    		loadTextArray.add(categoriesVector.get(i).toString());
-	        }
-	    	
-	    	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-	        ArrayAdapter<CharSequence> aspnCountries = new ArrayAdapter<CharSequence>(editPost.this, R.layout.spinner_textview, loadTextArray);
-	        
-	          aspnCountries.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	          
-	          spinner.setAdapter(aspnCountries);    
-    	}
-    	
-    }
-    
-    public String getCategories(){
-    	
-    	//gets the categories via xmlrpc call to wp blog
-    	
-        String returnMessage = "";
-       
-        
-        Vector res;
-        //check for the settings
-        boolean enteredSettings = checkSettings();
-        
-        String errormsg = "";
-        if (!enteredSettings){
-        	returnMessage = "invalidSettings";
-        }
-        else{
-        	settingsDB settingsDB = new settingsDB(this);
-        	Vector categoriesVector = settingsDB.loadSettings(this, id);
-        	
-        	String sURL = "";
-        	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-        	{
-        		sURL = categoriesVector.get(0).toString();
-        	}
-        	else
-        	{
-        		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-        	}
-        		String sUsername = categoriesVector.get(2).toString();
-        		String sPassword = categoriesVector.get(3).toString();
-        		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
-
-        
-        	Object result[] = null;
-        	
-        	Object[] params = {
-            		sBlogId,
-            		sUsername,
-            		sPassword,
-            };
-        	
-            client = new XMLRPCClient(sURL);
-            
-            try {
-				result = (Object[]) client.call("wp.getCategories", params);
-			} catch (XMLRPCException e) {
-				// TODO Auto-generated catch block
-				e.getMessage();
-				e.printStackTrace();
-				res = null;
-			}
-								   
-            int size = result.length;
-            
-            //initialize database
-            categoriesDB categoriesDB = new categoriesDB(this);
-            //wipe out the categories table
-            categoriesDB.clearCategories(this, id);
-            
-            for(int i=0; i<size; i++)
-            {
-              HashMap curHash = (HashMap) result[i];
-              
-              String categoryName = curHash.get("categoryName").toString();
-              String categoryID = curHash.get("categoryId").toString();
-              
-              int convertedCategoryID = Integer.parseInt(categoryID);
-              
-              categoriesDB.insertCategory(this, id, convertedCategoryID, categoryName);
-              
-              //populate the spinner with the category names
-              
-              textArray.add(categoryName);
-              
-            }
-            
-            returnMessage = "gotCategories";
-            newStart = true;
-        
-        
-        } //end valid url
-        return returnMessage;
-    	
-    }
-    
     
 	public String submitPost() throws IOException {
 		
@@ -789,25 +654,11 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         	res = "emptyFields";
         }
         else {
-        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-        
-        int itemCount = spinner.getCount();
-        String selectedCategory = "Uncategorized";
-        if (itemCount != 0){
-        	selectedCategory = spinner.getSelectedItem().toString();
-        }
-        
+        String selectedCategory = "";
+
         // categoryID = getCategoryId(selectedCategory);
-        String[] theCategories = new String[selectedCategories.size()];
-        
-        int catSize = selectedCategories.size();
-        
-        for(int i=0; i < selectedCategories.size(); i++)
-        {
-    		theCategories[i] = selectedCategories.get(i).toString();
-        }
-        
-      //
+        String[] theCategories = categories.split(",");
+
         settingsDB settingsDB = new settingsDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
     	
@@ -1615,6 +1466,15 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         }
 
 		     	break;
+		case 5:
+			 
+			extras = data.getExtras();
+			String cats = extras.getString("selectedCategories");
+			categories = cats;
+			TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
+			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + cats);
+           
+	     	break;
 		}
 		
 	}//end null check
@@ -1622,41 +1482,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	
 	final Runnable mUpdateResults = new Runnable() {
 		public void run() {
-			if (finalResult.equals("gotCategories"))
-			{
-		        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-		        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(editPost.this, R.layout.spinner_textview, textArray);
-		        
-		        textArray = new ArrayList<CharSequence>();
-		        
-		          categories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		         
-
-		          spinner.setAdapter(categories);
-		          if (pd.isShowing()){
-						pd.dismiss();
-						}
-				Toast.makeText(editPost.this, "Categories refreshed!", Toast.LENGTH_SHORT).show();
-			}
-			else if (finalResult.equals("categoryFault")){
-				if (pd.isShowing()){
-					pd.dismiss();
-					}		
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.category_refresh_error));
-				              dialogBuilder.setMessage(categoryErrorMsg);
-				              dialogBuilder.setPositiveButton("OK",  new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // Just close the window.
-		                        
-		                            }
-		                        });
-				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
-			
-			}
-			else if (finalResult.equals("invalidSettings")){
+			if (finalResult.equals("invalidSettings")){
 				dismissDialog(editPost.this.ID_DIALOG_POSTING);			
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
@@ -1762,7 +1588,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         boolean publishThis = false;
         String images = "";
-        String categories = "";
         boolean success = false;
         
         Vector<Object> myPostVector = new Vector<Object> ();
@@ -1786,14 +1611,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 
         	}
         	if (!isPage){
-	        	Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-	        
-	        	int itemCount = spinner.getCount();
-	        	String selectedCategory = "Uncategorized";
-	        	if (itemCount != 0){
-	        		selectedCategory = spinner.getSelectedItem().toString();
-	        	}
-	        
+	        	/*String selectedCategory = "";
+
 	        	// categoryID = getCategoryId(selectedCategory);
 	        	String[] theCategories = new String[selectedCategories.size()];
 	        
@@ -1803,7 +1622,8 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
 	        	{
 	        		categories += selectedCategories.get(i).toString() + ",";
 	        		//theCategories[i] = selectedCategories.get(i).toString();
-	        	}
+	        	}*/
+	        	
         	}
         
         	if (publishCB.isChecked())
@@ -1817,7 +1637,7 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         		success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
         	}
         	else{
-        	success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis);
+        		success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis);
         	}
         
         

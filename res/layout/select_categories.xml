@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:padding="0px"
+                android:background="#F4F4F4"
+                android:orientation="vertical">   
+<RelativeLayout  
+			  android:id="@+id/mainRL" 
+			  android:layout_width="wrap_content" 
+              android:layout_height="wrap_content"
+              android:layout_weight="1.0">         
+<ListView android:id="@android:id/list"
+ android:layout_width="fill_parent" android:layout_height="fill_parent"
+ android:textColor="#444444"
+android:divider="@drawable/list_divider"
+android:dividerHeight="1px"
+android:choiceMode="multipleChoice"
+android:cacheColorHint="#00000000">
+</ListView>
+</RelativeLayout>
+<RelativeLayout 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:gravity="bottom"
+		android:padding="4dip"
+		android:background="@drawable/bottom_bar">
+<view
+class="org.wordpress.android.customButton" android:id="@+id/categories_cancel" 
+android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:text="Cancel"/>
+<view
+class="org.wordpress.android.customButton"
+ android:id="@+id/categories_done"
+android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:text="Done"/>
+<view
+class="org.wordpress.android.customImageButton"
+		android:id="@+id/refreshCategoriesButton"  
+			android:textColor="#444444"
+            android:layout_width="wrap_content"  
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_popup_sync_1"
+            android:layout_toLeftOf="@id/categories_done" />
+</RelativeLayout>
+</LinearLayout>

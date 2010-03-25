@@ -145,49 +145,35 @@ class="org.wordpress.android.customButton"
               android:layout_height="wrap_content" 
               android:text="@string/categories"
               android:layout_below="@id/tags"
-              android:textColor="#444444"/>
+              android:textColor="#444444"
+              android:layout_marginTop="10dip"/>
               
-     <Spinner android:id="@+id/spinner1"
-        android:layout_width="256dip"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:textColor="#444444"
-   android:layout_below="@id/l_category"/>
-   
-<view
-class="org.wordpress.android.customImageButton"
-		android:id="@+id/refreshCategoriesButton"  
+  <view
+class="org.wordpress.android.customButton" 
 			android:textColor="#444444"
+			android:id="@+id/selectCategories"
+     	    android:layout_below="@id/l_category"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_popup_sync_1"
-            android:layout_alignBottom="@id/spinner1"
-            android:layout_toRightOf="@id/spinner1" />
+            android:textSize="20dip"
+            android:text="@string/select_categories" />
        
      <TextView android:id="@+id/selectedCategories" 
               android:layout_width="wrap_content" 
               android:layout_height="wrap_content"
               android:text="@string/selected_categories"
-              android:layout_below="@id/spinner1"
+              android:layout_below="@id/selectCategories"
               android:textColor="#444444"/>       
      	
-<view
-class="org.wordpress.android.customButton" 
-			android:textColor="#444444"
-			android:id="@+id/clearCategories"
-     	    android:layout_below="@id/selectedCategories"
-            android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
-            android:textSize="20dip"
-            android:text="@string/clear" /> 
                          
   <TextView android:id="@+id/l_publish" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"
               android:text="@string/publish"
-              android:layout_below="@id/clearCategories"
-              android:textColor="#444444"/>          
+              android:layout_below="@id/selectedCategories"
+              android:textColor="#444444"
+              android:layout_marginTop="10dip"/>          
                                      
     <CheckBox android:id="@+id/publish"
      		android:layout_width="wrap_content" 
