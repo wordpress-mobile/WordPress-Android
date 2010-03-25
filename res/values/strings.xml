@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <!--  account setup -->
+  <string name="required_fields">Required Fields</string>
+  <string name="url_username_password_required">Blog URL, Username and Password are all required fields.</string>
+
   <!--  form labels -->
   <string name="categories">Categories:</string>
   <string name="select_categories">Select Categories</string>

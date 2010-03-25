@@ -114,13 +114,29 @@ public class newAccount extends Activity {
         EditText passwordET = (EditText)findViewById(R.id.password);
         final String password = passwordET.getText().toString();
         
+        if (blogURL.equals("") || username.equals("") || password.equals("")){
+        	pd.dismiss();
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.required_fields));
+            dialogBuilder.setMessage(getResources().getText(R.string.url_username_password_required));
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                	
+                }
+            });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+        }
+        else{
+        
         //add http  or http to the beginning of the URL if needed
         if (!(blogURL.toLowerCase().contains("http://")) && !(blogURL.toLowerCase().contains("https://"))){
         	blogURL = "http://" + blogURL;  //default to http
         }
         
         String fBlogURL = "";
-        //attempt to get the XMLRPC via RSD
+        //attempt to get the XMLRPC URL via RSD
 
         String rsdUrl = getRSDMetaTagHref(blogURL);
 		  
@@ -249,7 +265,7 @@ public class newAccount extends Activity {
         
         
         method.call(params);
-		
+        }	
 	}
 
 	@Override public boolean onKeyDown(int i, KeyEvent event) {

@@ -113,10 +113,12 @@ public class newPost extends Activity {
         	tvTitle.setText(getResources().getText(R.string.page_title));
         	TextView tvContent = (TextView) findViewById(R.id.l_content);
         	tvTitle.setText(getResources().getText(R.string.page_content));
+        	customButton selectCategories = (customButton) findViewById(R.id.selectCategories);
         	TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
     		EditText tagsET = (EditText) findViewById(R.id.tags);
     		TextView tvCategoriesLabel = (TextView) findViewById(R.id.l_category);
     		TextView tvTagsLabel = (TextView) findViewById(R.id.l_tags);
+    		selectCategories.setVisibility(View.GONE);
     		tvCategories.setVisibility(View.GONE);
     		tagsET.setVisibility(View.GONE);
     		tvCategoriesLabel.setVisibility(View.GONE);
