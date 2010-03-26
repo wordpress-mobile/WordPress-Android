@@ -7,9 +7,11 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -285,9 +287,15 @@ public class moderateCommentsTab extends ListActivity {
 					String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 					
 					HashMap contentHash = new HashMap();
+					Vector dbVector = new Vector();
+					
+					Date d = new Date();
+					SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					Calendar cal = Calendar.getInstance();
+					TimeZone tz = cal.getTimeZone();
+					String shortDisplayName = "";
+					shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
 					    
-					    
-					    Vector dbVector = new Vector();
 						//loop this!
 						    for (int ctr = 0; ctr < result.length; ctr++){
 						    	HashMap<String, String> dbValues = new HashMap();
@@ -304,9 +312,7 @@ public class moderateCommentsTab extends ListActivity {
 						        postTitle = contentHash.get("post_title").toString();
 						        
 						        //make the date pretty
-						        Date d = new Date();
-								SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); 
-						        String cDate = dateCreated.replace("America/Los_Angeles", "PST");
+						        String cDate = dateCreated.replace(tz.getID(), shortDisplayName);
 						        try{  
 						        	d = sdf.parse(cDate);
 						        	SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 

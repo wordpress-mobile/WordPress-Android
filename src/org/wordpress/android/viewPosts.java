@@ -205,6 +205,13 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					String rParentID[] = new String[result.length];
 					Vector dbVector = new Vector();
 					postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
+					Date d = new Date();
+					SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					Calendar cal = Calendar.getInstance();
+					TimeZone tz = cal.getTimeZone();
+					String shortDisplayName = "";
+					shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
+					
 					//loop this!
 					    for (int ctr = 0; ctr < result.length; ctr++){
 					    	HashMap<String, String> dbValues = new HashMap();
@@ -223,13 +230,11 @@ final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);
 					        }
 					        
 					      //make the date pretty
-					        Date d = new Date();
-							SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); 
+					        
 							
-							Calendar cal = Calendar.getInstance();
-							TimeZone tz = cal.getTimeZone();
+							
 
-					        String cDate = rDateCreated[ctr].replace(tz.getID(), tz.getDisplayName(true, TimeZone.SHORT));
+					        String cDate = rDateCreated[ctr].replace(tz.getID(), shortDisplayName);
 					        try{  
 					        	d = sdf.parse(cDate);
 					        	SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 
