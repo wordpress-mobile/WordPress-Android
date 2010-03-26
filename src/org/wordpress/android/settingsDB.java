@@ -324,7 +324,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			returnValue = c.getString(0);
 			}
 		}
-		
+		c.close();
 		db.close();
 
 		return returnValue;
