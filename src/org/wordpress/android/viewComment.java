@@ -126,9 +126,21 @@ public class viewComment extends Activity {
 	public Drawable getDrawable(String imgUrl) { 
         try { 
                  URL url = new URL(imgUrl); 
-                 InputStream is = (InputStream) url.getContent(); 
-                 Drawable d = Drawable.createFromStream(is, "src"); 
-                return d; 
+                 InputStream is = null;
+				try {
+					is = (InputStream) url.getContent();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				if (is != null){
+					Drawable d = Drawable.createFromStream(is, "src");
+					return d;
+				}
+				else{
+					return null;
+				}
+                 
          } catch (MalformedURLException e) { 
                  e.printStackTrace(); 
                  return null; 

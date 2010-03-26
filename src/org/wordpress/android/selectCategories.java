@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -12,10 +13,14 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
@@ -29,7 +34,7 @@ public class selectCategories extends ListActivity {
 	String id = "", categoriesCSV = "";
 	long[] checkedCategories;
 	private XMLRPCClient client;
-	String finalResult = "";
+	String finalResult = "", addCategoryResult = "";
 	ProgressDialog pd;
 	public String categoryErrorMsg = "";
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
@@ -55,9 +60,22 @@ public class selectCategories extends ListActivity {
       
         loadCategories();
         
-    	customButton done = (customButton) findViewById(R.id.categories_done);
+//    	Button to add a Category
+        final customMenuButton addCategory = (customMenuButton) findViewById(R.id.newCategory);   
+        addCategory.setOnClickListener(new customButton.OnClickListener() {
+        	public void onClick(View v) {
+        		
+        		Bundle bundle = new Bundle();
+            	bundle.putString("id", id);
+                Intent i = new Intent(selectCategories.this, addCategory.class);
+        		i.putExtras(bundle);
+        		startActivityForResult(i, 0);
+        	}
+        });
+        
+    	customMenuButtonText done = (customMenuButtonText) findViewById(R.id.categories_done);
     	
-    	done.setOnClickListener(new customButton.OnClickListener() {
+    	done.setOnClickListener(new customMenuButtonText.OnClickListener() {
             public void onClick(View v) {
             	String selectedCategories = "";
             	long checkedItems[] = lv.getCheckItemIds();
@@ -97,45 +115,6 @@ public class selectCategories extends ListActivity {
             
             
         });
-    	
-customButton cancel = (customButton) findViewById(R.id.categories_cancel);
-    	
-    	cancel.setOnClickListener(new customButton.OnClickListener() {
-            public void onClick(View v) {
-
-            	
-            	Bundle bundle = new Bundle();
-
-                Intent mIntent = new Intent();
-                mIntent.putExtras(bundle);
-                setResult(RESULT_CANCELED, mIntent);
-                finish();
-            	
-            }
-            
-            
-        });
-    	
-    	final customImageButton refreshCategoriesButton = (customImageButton) findViewById(R.id.refreshCategoriesButton);
-        
-        refreshCategoriesButton.setOnClickListener(new customImageButton.OnClickListener() {
-            public void onClick(View v) {
-            	
-            	pd = ProgressDialog.show(selectCategories.this,
-            			getResources().getText(R.string.refreshing_categories), getResources().getText(R.string.attempting_categories_refresh), true, true);
-            	Thread th = new Thread() {
-    				public void run() {					
-    				    finalResult = getCategories();	
-    				    
-    				    mHandler.post(mUpdateResults);
-    				    
-    				}
-    			};
-    			th.start();
-            }
-        });
-        
-        
 
 }
     
@@ -199,8 +178,36 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
 
 	final Runnable mUpdateResults = new Runnable() {
 		public void run() {
-			if (finalResult.equals("gotCategories"))
-			{
+			if (finalResult.equals("addCategory_success")){
+				if (pd.isShowing())
+				{
+					pd.dismiss();
+				}
+				
+				loadCategories();
+				
+				Toast.makeText(selectCategories.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
+			}
+			if (finalResult.equals("addCategory_failed")){
+				if (pd.isShowing())
+				{
+					pd.dismiss();
+				}
+				
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(selectCategories.this);
+				  dialogBuilder.setTitle(getResources().getText(R.string.adding_cat_failed));
+	              dialogBuilder.setMessage(getResources().getText(R.string.adding_cat_failed_check));
+	              dialogBuilder.setPositiveButton("OK",  new
+	            		  DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int whichButton) {
+                          // Just close the window.
+                  
+                      }
+                  });
+	              dialogBuilder.setCancelable(true);
+	             dialogBuilder.create().show();
+			}
+			else if (finalResult.equals("gotCategories")){
 		          if (pd.isShowing()){
 						pd.dismiss();
 						}
@@ -208,7 +215,8 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
 				Toast.makeText(selectCategories.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
 			}
 			else if (finalResult.equals("categoryFault")){
-				if (pd.isShowing()){
+				if (pd.isShowing())
+					{
 					pd.dismiss();
 					}	
 				
@@ -226,6 +234,8 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
 				             dialogBuilder.create().show();
 			
 			}
+				
+			
 		}
 	};
 	
@@ -349,12 +359,179 @@ customButton cancel = (customButton) findViewById(R.id.categories_cancel);
  
         boolean validSettings = false;
         
-        if ((sURL != "" && sUsername != "" && sPassword != "") && (sURL != null && sUsername != null && sPassword != null)){
+        if (((sURL != "") && (sUsername != "") && (sPassword != "")) && ((sURL != null) && (sUsername != null) && (sPassword != null))){
         	validSettings = true;
         }
         
         return validSettings;
 	}
+    
+    /**
+     * function addCategory
+     * @param String category_name
+     * @return
+     * @description Adds a new category
+     */
+    public String addCategory(String category_name, String category_slug, String category_desc, int parent_id) {
+    	//	Return string
+    	String returnString = "";
+    	
+    	//	Load settings
+    	settingsDB settingsDB = new settingsDB(this);
+    	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+    	
+    	//	Check if Blog-URL contains the "xmlrpc.php"
+    	String sURL = "";
+    	if (settingsVector.get(0).toString().contains("xmlrpc.php")) {
+    		sURL = settingsVector.get(0).toString();
+    	}
+    	else {
+    		sURL = settingsVector.get(0).toString() + "xmlrpc.php";
+    	}
+    	
+		String sUsername = settingsVector.get(2).toString();
+		String sPassword = settingsVector.get(3).toString();
+		int sBlogId = Integer.parseInt(settingsVector.get(10).toString());
+    
+		//	Store the parameters for wp.addCategory
+	    Map<String, Object> struct = new HashMap<String, Object>();
+	    struct.put("name", category_name);
+	    struct.put("slug", category_slug);
+	    struct.put("description", category_desc);
+	    struct.put("parent_id", parent_id);
+
+	    client = new XMLRPCClient(sURL);
+	    
+	    Object[] params = {
+	    		sBlogId,
+	    		sUsername,
+	    		sPassword,
+	    		struct
+	    };
+	    
+	    Object result = null;
+	    try {
+			result = client.call("wp.newCategory", params);
+		} catch (XMLRPCException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+		if (result == null) {
+			returnString = "addCategory_failed";
+		}
+		else {	//	Category successfully created. "result" is the ID of the new category.
+			//	Initialize the category database
+            categoriesDB categoriesDB = new categoriesDB(this);
+            //	Convert "result" (= category_id) from type Object to int
+            int category_id = Integer.parseInt(result.toString());
+            //	Insert the new category into database
+            categoriesDB.insertCategory(this, id, category_id, category_name);
+			
+			returnString = "addCategory_success";
+		}
+		
+    	return returnString;
+    }
+    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data != null)
+		{
+
+		final Bundle extras = data.getExtras();
+
+		switch(requestCode) {
+		case 0:
+
+			//	Add category
+			String resultTitle,resultMessage = "";
+			
+			//	Does the user want to continue, or did he press "dismiss"?
+			if (extras.getString("continue").equals("TRUE")) {
+				//	Get name, slug and desc from Intent
+				final String category_name = extras.getString("category_name");
+				final String category_slug = extras.getString("category_slug");
+				final String category_desc = extras.getString("category_desc");
+				final int parent_id = extras.getInt("parent_id");
+				
+				if (loadTextArray.contains(category_name)) {
+					//	A category with the specified name does already exist.
+					resultTitle = getResources().getText(R.string.duplicated_cat).toString();
+					resultMessage = getResources().getText(R.string.cat_already_exists).toString();
+				}
+				else {
+					//	Add the category
+					pd = ProgressDialog.show(selectCategories.this,
+		        			getResources().getText(R.string.cat_adding_category), getResources().getText(R.string.cat_attempt_add_category), true, true);
+					Thread th = new Thread() {
+	    				public void run() {					
+	    				    finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
+	    				    
+					if (finalResult.equals("addCategory_success")) {
+						//	Add category to spinner
+						loadTextArray.add(category_name);
+						
+					}
+					
+					mHandler.post(mUpdateResults);
+					
+					}
+	    			};
+	    			th.start();
+	    			
+			}
+					
+				
+
+			break;
+		}
+	}//end null check
+	}
+	
+}
+	
+	//Add settings to menu
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    super.onCreateOptionsMenu(menu);
+	    menu.add(0, 0, 0, getResources().getText(R.string.refresh_categories));
+	    MenuItem menuItem1 = menu.findItem(0);
+	    menuItem1.setIcon(R.drawable.ic_menu_rotate);
+	    
+	    return true;
+	}
+	//Menu actions
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item){
+	    switch (item.getItemId()) {
+	    case 0:
+	    	pd = ProgressDialog.show(selectCategories.this,
+        			getResources().getText(R.string.refreshing_categories), getResources().getText(R.string.attempting_categories_refresh), true, true);
+        	Thread th = new Thread() {
+				public void run() {					
+				    finalResult = getCategories();	
+				    
+				    mHandler.post(mUpdateResults);
+				    
+				}
+			};
+			th.start();
+	    	
+	    	return true;
+		}
+	    return false;
+	    	
+	}
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      //ignore orientation change
+      super.onConfigurationChanged(newConfig);
+    } 
+	
 }
 
 

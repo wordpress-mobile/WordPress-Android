@@ -136,6 +136,12 @@ public void displayAccounts(){
      tv.setTextColor(Color.parseColor("#EEEEEE"));
      tv.setShadowLayer(1, 1, 1, Color.parseColor("#444444"));
      listView.addHeaderView(tv, null, false);*/
+	 
+	 ImageView iv = new ImageView(this);
+	 iv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_divider));
+	 listView.addFooterView(iv);
+	 listView.setVerticalFadingEdgeEnabled(false);
+	 listView.setVerticalScrollBarEnabled(false);
 
 
 	   listView.setOnItemClickListener(new OnItemClickListener() {
@@ -361,7 +367,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
     menu.add(0, 0, 0, getResources().getText(R.string.add_account));
     MenuItem menuItem1 = menu.findItem(0);
-    menuItem1.setIcon(R.drawable.ic_menu_preferences);
+    menuItem1.setIcon(R.drawable.ic_menu_add);
     
     menu.add(0, 1, 0, getResources().getText(R.string.notification_settings));
     MenuItem menuItem2 = menu.findItem(1);

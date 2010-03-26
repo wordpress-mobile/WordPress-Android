@@ -3,6 +3,7 @@
 
   <!--  account setup -->
   <string name="required_fields">Required Fields</string>
+  <string name="required_field">Required Field</string>
   <string name="url_username_password_required">Blog URL, Username and Password are all required fields.</string>
 
   <!--  form labels -->
@@ -207,4 +208,21 @@
   <string name="select_photo">Select a photo from gallery</string>
   <string name="take_photo">Take a new photo</string>
   <string name="add_media">Add Media</string>
+  
+  <!--  category management -->
+  <string name="refresh_categories">Refresh Categories</string>
+  <string name="add_new_category">Add New Category</string>
+  <string name="category_name">Category Name:</string>
+  <string name="category_slug">Category Slug (optional):</string>
+  <string name="category_desc">Category Description (optional):</string>
+  <string name="category_parent">Category Parent (optional):</string>
+  <string name="none">None</string>
+  <string name="adding_cat_failed">Adding category failed.</string>
+  <string name="adding_cat_failed_check">Please check your settings and your WordPress database.</string>
+  <string name="adding_cat_success">Category successfully added.</string>
+  <string name="duplicated_cat">Duplicated category</string>
+  <string name="cat_already_exists">A category with the name you specified does already exist.</string>
+  <string name="cat_name_required">The name field must be set.</string>
+  <string name="cat_adding_category">Adding Category</string>
+  <string name="cat_attempt_add_category">Attempting to add category</string>
 </resources>

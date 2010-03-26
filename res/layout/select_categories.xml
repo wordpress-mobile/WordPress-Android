@@ -26,24 +26,25 @@ android:cacheColorHint="#00000000">
 		android:padding="4dip"
 		android:background="@drawable/bottom_bar">
 <view
-class="org.wordpress.android.customButton" android:id="@+id/categories_cancel" 
+class="org.wordpress.android.customMenuButton" android:id="@+id/newCategory" 
 android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:text="Cancel"/>
+		android:layout_height="wrap_content"	
+		android:padding="2dip"
+	android:src="@drawable/add"/>
 <view
-class="org.wordpress.android.customButton"
+class="org.wordpress.android.customMenuButtonText"
  android:id="@+id/categories_done"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
-		android:text="Done"/>
-<view
-class="org.wordpress.android.customImageButton"
-		android:id="@+id/refreshCategoriesButton"  
-			android:textColor="#444444"
-            android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_popup_sync_1"
-            android:layout_centerInParent="true" />
+		android:text="Done"
+		android:padding="2dip"
+		android:textStyle="bold"
+		android:textSize="20dip"
+		android:textColor="#FFFFFF"
+		android:shadowColor="#000000"
+  		android:shadowDx="0"
+  		android:shadowDy="-.5"
+  		android:shadowRadius="1"/>
 </RelativeLayout>
 </LinearLayout>

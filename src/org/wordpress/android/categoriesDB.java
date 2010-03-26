@@ -58,13 +58,13 @@ public class categoriesDB {
 		return returnVector;
 	}
 	
-	public String getCategoryId(Context ctx, String id, String category){
+	public int getCategoryId(Context ctx, String id, String category){
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] {"wp_id"}, "category_name=\"" + category + "\" AND blog_id=" + id, null, null, null, null);
 		c.moveToFirst();
-		String categoryID = "";
-		categoryID = c.getString(0);
+		int categoryID = 0;
+		categoryID = c.getInt(0);
 		db.close();
 		return categoryID;
 	}
