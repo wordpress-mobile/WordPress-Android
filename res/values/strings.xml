@@ -222,11 +222,11 @@
   <string name="category_parent">Category Parent (optional):</string>
   <string name="none">None</string>
   <string name="adding_cat_failed">Adding category failed.</string>
-  <string name="adding_cat_failed_check">Please check your settings and your WordPress database.</string>
-  <string name="adding_cat_success">Category successfully added.</string>
+  <string name="adding_cat_failed_check">Please check your settings and try again.</string>
+  <string name="adding_cat_success">Category added successfully.</string>
   <string name="duplicated_cat">Duplicated category</string>
-  <string name="cat_already_exists">A category with the name you specified does already exist.</string>
-  <string name="cat_name_required">The name field must be set.</string>
+  <string name="cat_already_exists">A category with the name you specified already exists.</string>
+  <string name="cat_name_required">The Category Name field is required.</string>
   <string name="cat_adding_category">Adding Category</string>
   <string name="cat_attempt_add_category">Attempting to add category</string>
 </resources>
