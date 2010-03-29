@@ -146,6 +146,7 @@
   <string name="moderate_comments">Moderate Comments</string>
   <string name="moderating_comment">Moderating comment</string>
   <string name="replying_comment">Replying to comment</string>
+  <string name="deleting_comment">Deleting comment</string>
   <string name="comment_moderated">Comment Moderated Successfully</string>
   <string name="reply_added">Reply Added Successfully</string>
   <string name="view_comment_from">View Comment from</string>
@@ -179,6 +180,9 @@
   <string name="mark_unapproved">Mark Unapproved</string>
   <string name="mark_spam">Mark Spam</string>
   <string name="reply">Reply</string>
+  <string name="delete">Delete</string>
+  <string name="approve">Approve</string>
+  <string name="unapprove">Unapprove</string>
   
   <!-- publish yes/no -->
   <string name="publish_yes">Publish: Yes</string>

@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,6 +31,9 @@ public class viewComment extends Activity {
 	private String name = "";
 	private String url = "";
 	private String date = "";
+	private String status = "";
+	private String comment_id="";
+	private String post_id="";
 	private Drawable d;
 	
 	private Handler handler = new Handler() {
@@ -77,6 +81,9 @@ public class viewComment extends Activity {
          name = extras.getString("name");
          url = extras.getString("url");
          date = extras.getString("date");
+         status = extras.getString("status");
+         comment_id = extras.getString("comment_id");
+         post_id = extras.getString("post_id");
         } 
         
         final Window w = getWindow();
@@ -120,6 +127,94 @@ public class viewComment extends Activity {
 		TextView tvDate = (TextView) findViewById(R.id.date);
 		
 		tvDate.setText(date);
+		
+		customImageButton delete = (customImageButton) findViewById(R.id.deleteComment);
+		
+		delete.setOnClickListener(new customImageButton.OnClickListener() {
+            public void onClick(View v) {
+            	 
+            	Bundle bundle = new Bundle();
+				bundle.putString("comment_id", comment_id);
+				bundle.putString("action", "delete");
+		    	Intent i = new Intent();
+		    	i.putExtras(bundle);
+		    	setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+		
+		customButton spam = (customButton) findViewById(R.id.markSpam);
+		
+		spam.setOnClickListener(new customButton.OnClickListener() {
+            public void onClick(View v) {
+            	 
+            	Bundle bundle = new Bundle();
+				bundle.putString("comment_id", comment_id);
+				bundle.putString("action", "spam");
+		    	Intent i = new Intent();
+		    	i.putExtras(bundle);
+		    	setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+		
+		customButton unapprove = (customButton) findViewById(R.id.unapproveComment);
+		
+		unapprove.setOnClickListener(new customButton.OnClickListener() {
+            public void onClick(View v) {
+            	 
+            	Bundle bundle = new Bundle();
+				bundle.putString("comment_id", comment_id);
+				bundle.putString("action", "hold");
+		    	Intent i = new Intent();
+		    	i.putExtras(bundle);
+		    	setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+		
+		customButton approve = (customButton) findViewById(R.id.approveComment);
+		
+		approve.setOnClickListener(new customButton.OnClickListener() {
+            public void onClick(View v) {
+            	 
+            	Bundle bundle = new Bundle();
+				bundle.putString("comment_id", comment_id);
+				bundle.putString("action", "approve");
+		    	Intent i = new Intent();
+		    	i.putExtras(bundle);
+		    	setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+		
+		customButton reply = (customButton) findViewById(R.id.reply);
+		
+		reply.setOnClickListener(new customButton.OnClickListener() {
+            public void onClick(View v) {
+            	 
+            	Bundle bundle = new Bundle();
+				bundle.putString("comment_id", comment_id);
+				bundle.putString("action", "reply");
+				bundle.putString("post_id", post_id);
+		    	Intent i = new Intent();
+		    	i.putExtras(bundle);
+		    	setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+		
+		//hide buttons based on comment status		
+		if (status.equals("hold"))
+		{
+			unapprove.setVisibility(View.GONE);
+		}
+		else if (status.equals("approve")){
+			approve.setVisibility(View.GONE);
+		}
+		else if (status.equals("spam")){
+			spam.setVisibility(View.GONE);
+		}
 
 	}
 	

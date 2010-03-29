@@ -213,12 +213,13 @@ res/drawable/bottom_bar.9.png -text
 res/drawable/comments_tab.png -text
 res/drawable/comments_tab_active.png -text
 res/drawable/ic_menu_add.png -text
+res/drawable/ic_menu_close_clear_cancel.png -text
+res/drawable/ic_menu_delete.png -text
 res/drawable/ic_menu_edit.png -text
 res/drawable/ic_menu_more.png -text
 res/drawable/ic_menu_notifications.png -text
 res/drawable/ic_menu_preferences.png -text
 res/drawable/ic_menu_rotate.png -text
-res/drawable/ic_notification_clear_all.png -text
 res/drawable/ic_popup_sync_1.png -text
 res/drawable/list_bg.xml -text
 res/drawable/list_bg_selector.xml -text

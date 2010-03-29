@@ -723,7 +723,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
     menuItem1.setIcon(R.drawable.ic_menu_preferences);
     menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
     MenuItem menuItem2 = menu.findItem(1);
-    menuItem2.setIcon(R.drawable.ic_notification_clear_all);
+    menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
     
     return true;
 }

@@ -77,6 +77,7 @@ public class moderateCommentsTab extends ListActivity {
 	private HashMap changedComments = new HashMap();
 	public int ID_DIALOG_POSTING = 1;
 	public int ID_DIALOG_REPLYING = 2;
+	public int ID_DIALOG_DELETING = 3;
 	public boolean initializing = true;
 	public int selectedID = 0;
 	public int rowID = 0;
@@ -197,7 +198,10 @@ public class moderateCommentsTab extends ListActivity {
 				                    intent.putExtra("email", model.get((int) arg3).authorEmail);
 				                    intent.putExtra("url", model.get((int) arg3).authorURL);
 				                    intent.putExtra("date", model.get((int) arg3).dateCreatedFormatted);
-				                    startActivity(intent);
+				                    intent.putExtra("status", model.get((int) arg3).status);
+				                    intent.putExtra("comment_id", model.get((int) arg3).commentID);
+				                    intent.putExtra("post_id", model.get((int) arg3).postID);
+				                    startActivityForResult(intent, 1);
 									
 								}
 
@@ -225,6 +229,8 @@ public class moderateCommentsTab extends ListActivity {
 	                 menu.add(0, 1, 0, getResources().getText(R.string.mark_unapproved));
 	                 menu.add(0, 2, 0, getResources().getText(R.string.mark_spam));
 	                 menu.add(0, 3, 0, getResources().getText(R.string.reply));
+	                 menu.add(0, 4, 0, getResources().getText(R.string.delete));
+	                 
 					}
 		          });
 	 	
@@ -623,7 +629,7 @@ public class moderateCommentsTab extends ListActivity {
 	    menuItem1.setIcon(R.drawable.ic_menu_preferences);
 	    menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
 	    MenuItem menuItem2 = menu.findItem(1);
-	    menuItem2.setIcon(R.drawable.ic_notification_clear_all);
+	    menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
 	    
 	    return true;
 	}
@@ -871,6 +877,13 @@ public class moderateCommentsTab extends ListActivity {
 		loadingDialog.setCancelable(false);
 		return loadingDialog;
 	}
+	else if (id == ID_DIALOG_DELETING){
+		ProgressDialog loadingDialog = new ProgressDialog(this);
+		loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));
+		loadingDialog.setIndeterminate(true);
+		loadingDialog.setCancelable(false);
+		return loadingDialog;
+	}
 	
 	return super.onCreateDialog(id);
 	}
@@ -922,6 +935,15 @@ public class moderateCommentsTab extends ListActivity {
 	        	  i.putExtra("postID", selectedPostID);
 	        	  startActivityForResult(i, 0);
 	        	  
+	             return true;
+	          case 4:
+	        	  showDialog(ID_DIALOG_DELETING);
+	        	  new Thread() {
+	                  public void run() { 
+	                	  Looper.prepare();
+	        	  deleteComment(selectedID);
+	                  }
+	              }.start();
 	             return true;
 	        	  
 	     }
@@ -1009,6 +1031,80 @@ public class moderateCommentsTab extends ListActivity {
 		    	}	
 	}
 	
+	private void deleteComment(final int selCommentID) {
+
+		String sSelCommentID = String.valueOf(selCommentID);
+    	Vector settings = new Vector();
+        settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+    	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
+        
+    	String sURL = "";
+    	if (settings.get(0).toString().contains("xmlrpc.php"))
+    	{
+    		sURL = settings.get(0).toString();
+    	}
+    	else
+    	{
+    		sURL = settings.get(0).toString() + "xmlrpc.php";
+    	}
+		String sUsername = settings.get(2).toString();
+		String sPassword = settings.get(3).toString();
+		int sBlogId = Integer.parseInt(settings.get(10).toString());
+    	
+    	client = new XMLRPCClient(sURL);
+	        
+        Object[] params = {
+        		sBlogId,
+        		sUsername,
+        		sPassword,
+        		selCommentID
+        };
+        
+        Object result = null;
+        try {
+    		result = (Object) client.call("wp.deleteComment", params);
+    		dismissDialog(ID_DIALOG_DELETING);
+    		Thread action = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
+			  } 
+			}; 
+			this.runOnUiThread(action);
+			Thread action2 = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+				  refreshComments();				  } 
+			}; 
+			this.runOnUiThread(action2);
+			
+    	} catch (final XMLRPCException e) {
+    		dismissDialog(ID_DIALOG_DELETING);
+    		Thread action3 = new Thread() 
+			{ 
+			  public void run() 
+			  {
+    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+            dialogBuilder.setMessage(e.getMessage());
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int whichButton) {
+                  // Just close the window.
+              	
+              }
+          });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+			  }
+			  }; 
+				this.runOnUiThread(action3);
+    	}	
+}
+	
 	private void replyToComment(final String postID, final int commentID, final String comment) {
 
 		
@@ -1074,8 +1170,12 @@ public class moderateCommentsTab extends ListActivity {
 			}; 
 			this.runOnUiThread(action2);
 			
-    	} catch (XMLRPCException e) {
+    	} catch (final XMLRPCException e) {
     		dismissDialog(ID_DIALOG_REPLYING);
+    		Thread action3 = new Thread() 
+			{ 
+			  public void run() 
+			  {
     		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
             dialogBuilder.setMessage(e.getMessage());
@@ -1088,6 +1188,10 @@ public class moderateCommentsTab extends ListActivity {
           });
             dialogBuilder.setCancelable(true);
            dialogBuilder.create().show();
+			  }
+			  }; 
+				this.runOnUiThread(action3);
+           
     	}
     		
 }
@@ -1120,6 +1224,44 @@ public class moderateCommentsTab extends ListActivity {
 		    }
 		    
 		    
+		    break;
+		case 1:
+		    if (resultCode == RESULT_OK){
+		    
+		    	String comment_id;
+				final String action;
+		    	comment_id = extras.getString("comment_id");
+		    	
+		    	action = extras.getString("action");
+		    	if (action.equals("approve") || action.equals("hold") || action.equals("spam")){
+		    		final int commentID = Integer.parseInt(comment_id);
+		    		showDialog(ID_DIALOG_POSTING);
+		        	  new Thread() {
+		                  public void run() {
+		                	  Looper.prepare();
+		                	  changeCommentStatus(action, commentID);
+		                  }
+		        	  	}.start();
+		    	}
+		    	else if (action.equals("delete")){
+		    		final int commentID_del = Integer.parseInt(comment_id);
+		    		showDialog(ID_DIALOG_DELETING);
+		    		new Thread() {
+		                  public void run() {	    		
+		    		deleteComment(commentID_del);
+		                  }
+		    		}.start();
+		    	}
+		    	else if (action.equals("reply")){
+		    		
+		    		Intent i = new Intent(this, replyToComment.class);
+		        	i.putExtra("commentID", Integer.parseInt(comment_id));
+		        	i.putExtra("accountName", accountName);
+		        	i.putExtra("postID", extras.getString("post_id"));
+		        	startActivityForResult(i, 0);
+		    	}
+	
+		    }
 		    break;
 		}
 		}
