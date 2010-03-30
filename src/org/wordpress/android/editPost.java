@@ -285,7 +285,7 @@ public class editPost extends Activity {
 			            		categories = categories.substring(0, categories.length() - 1);
 			            	}
 			            	if (categories != ""){
-			            	categoriesTV.setText(getResources().getText(R.string.select_categories) + " " + categories);
+			            	categoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + categories);
 			            	}
 				        }
 				        

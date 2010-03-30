@@ -15,7 +15,6 @@
  android:textColor="#444444"
 android:divider="@drawable/list_divider"
 android:dividerHeight="1px"
-android:choiceMode="multipleChoice"
 android:cacheColorHint="#00000000">
 </ListView>
 </RelativeLayout>

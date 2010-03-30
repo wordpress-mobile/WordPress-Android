@@ -48,6 +48,7 @@ public class selectCategories extends ListActivity {
         setContentView(R.layout.select_categories);
         setTitle(getResources().getString(R.string.select_categories));
         final ListView lv = getListView();
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE); 
         lv.setItemsCanFocus(false);
         
         Bundle extras = getIntent().getExtras();
@@ -73,16 +74,15 @@ public class selectCategories extends ListActivity {
         	}
         });
         
-    	customMenuButtonText done = (customMenuButtonText) findViewById(R.id.categories_done);
+    	customMenuButtonText categoriesDone = (customMenuButtonText) findViewById(R.id.categories_done);
     	
-    	done.setOnClickListener(new customMenuButtonText.OnClickListener() {
+    	categoriesDone.setOnClickListener(new customMenuButtonText.OnClickListener() {
             public void onClick(View v) {
+            	
             	String selectedCategories = "";
-            	long checkedItems[] = lv.getCheckItemIds();
             	
             	SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-            	int ctr = 0;
-            	Vector rCheckedItems = new Vector();
+            	Vector<Integer> rCheckedItems = new Vector();
             	
             	for (int i=0; i<selectedItems.size();i++){
             		if (selectedItems.get(selectedItems.keyAt(i)) == true){
@@ -98,7 +98,6 @@ public class selectCategories extends ListActivity {
             	}
             	
             	Bundle bundle = new Bundle();
-                
             	selectedCategories = selectedCategories.trim();
             	if (selectedCategories.endsWith(",")){
             		selectedCategories = selectedCategories.substring(0, selectedCategories.length() - 1);
