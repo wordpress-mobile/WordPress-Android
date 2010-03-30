@@ -102,26 +102,14 @@ public class editPost extends Activity {
          isPage = extras.getBoolean("isPage", false);
         }
         
-        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
-        
-        
-        //remove categories and tags if editing a page
         if (isPage){  
-        	TextView tvTitle = (TextView) findViewById(R.id.l_title);
-        	tvTitle.setText(getResources().getText(R.string.page_title));
-        	TextView tvContent = (TextView) findViewById(R.id.l_content);
-        	tvTitle.setText(getResources().getText(R.string.page_content));
-        	TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-    		EditText tagsET = (EditText) findViewById(R.id.tags);
-    		TextView tvCategoriesLabel = (TextView) findViewById(R.id.l_category);
-    		TextView tvTagsLabel = (TextView) findViewById(R.id.l_tags);
-    		customButton selectCategories = (customButton) findViewById(R.id.selectCategories);
-    		selectCategories.setVisibility(View.GONE);
-    		tvCategories.setVisibility(View.GONE);
-    		tagsET.setVisibility(View.GONE);
-    		tvCategoriesLabel.setVisibility(View.GONE);
-    		tvTagsLabel.setVisibility(View.GONE);
+        	setContentView(R.layout.edit_page);
         }
+        else{
+        	setContentView(R.layout.edit);
+        }
+        
+        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
         
         if (localDraft){
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
@@ -632,8 +620,6 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
         String content = contentET.getText().toString();
-        EditText tagsET = (EditText)findViewById(R.id.tags);
-        String tags = tagsET.getText().toString();
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         Boolean publishThis = false;
         String imageContent = "";
@@ -654,14 +640,9 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         	res = "emptyFields";
         }
         else {
-        String selectedCategory = "";
-
-        // categoryID = getCategoryId(selectedCategory);
-        String[] theCategories = categories.split(",");
-
         settingsDB settingsDB = new settingsDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
-    	
+        
 	    	String sURL = "";
 	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
 	    	{
@@ -705,11 +686,17 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
         contentStruct.put("post_type", "post");
         contentStruct.put("title", escapeUtils.escapeHtml(title));
         contentStruct.put("description", escapeUtils.escapeHtml(content));
+        if (!isPage){
+        	EditText tagsET = (EditText)findViewById(R.id.tags);
+            String tags = tagsET.getText().toString();
+            // categoryID = getCategoryId(selectedCategory);
+            String[] theCategories = categories.split(",");
         if (tags != ""){
         contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
         }
         if (theCategories.length > 0){
         contentStruct.put("categories", theCategories);
+        }
         }
         
 

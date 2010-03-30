@@ -245,12 +245,14 @@ res/layout/add_category.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/edit.xml -text
+res/layout/edit_page.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
 res/layout/link.xml -text
 res/layout/list_selector.xml -text
 res/layout/list_selector_background_transition.xml -text
 res/layout/main.xml -text
+res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/newaccount.xml -text
 res/layout/newpage.xml -text

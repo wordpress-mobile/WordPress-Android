@@ -48,6 +48,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,7 +95,7 @@ public class newPost extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
       
-        setContentView(R.layout.main);	
+        	
         
         
         Bundle extras = getIntent().getExtras();
@@ -105,26 +106,16 @@ public class newPost extends Activity {
          isPage = extras.getBoolean("isPage", false);
         }
         
-        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
-        
-      //remove categories and tags if creating a page
         if (isPage){  
-        	TextView tvTitle = (TextView) findViewById(R.id.l_title);
-        	tvTitle.setText(getResources().getText(R.string.page_title));
-        	TextView tvContent = (TextView) findViewById(R.id.l_content);
-        	tvTitle.setText(getResources().getText(R.string.page_content));
-        	customButton selectCategories = (customButton) findViewById(R.id.selectCategories);
-        	TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-    		EditText tagsET = (EditText) findViewById(R.id.tags);
-    		TextView tvCategoriesLabel = (TextView) findViewById(R.id.l_category);
-    		TextView tvTagsLabel = (TextView) findViewById(R.id.l_tags);
-    		selectCategories.setVisibility(View.GONE);
-    		tvCategories.setVisibility(View.GONE);
-    		tagsET.setVisibility(View.GONE);
-    		tvCategoriesLabel.setVisibility(View.GONE);
-    		tvTagsLabel.setVisibility(View.GONE);
+        	setContentView(R.layout.main_page);
+        }
+        else{
+        	setContentView(R.layout.main);
         }
         
+        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+        
+
       //clear up some variables
         selectedImageIDs.clear();
         selectedImageCtr = 0;
