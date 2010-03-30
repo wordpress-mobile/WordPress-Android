@@ -795,6 +795,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	// TODO Auto-generated method stub
 	super.onActivityResult(requestCode, resultCode, data);
+	if (resultCode == RESULT_OK){
 	Bundle extras = data.getExtras();
 	String returnResult = extras.getString("returnStatus");
 	
@@ -811,6 +812,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			}
 			break;
 		}
+	}
 	}
 
 }

@@ -155,7 +155,7 @@ public class settings extends Activity {
                  bundle.putString("returnStatus", "CANCEL");
                  Intent mIntent = new Intent();
                  mIntent.putExtras(bundle);
-                 setResult(RESULT_OK, mIntent);
+                 setResult(RESULT_CANCELED, mIntent);
                  finish();
             }
         });
