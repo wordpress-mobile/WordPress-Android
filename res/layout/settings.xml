@@ -57,11 +57,9 @@
         android:id="@+id/imagePlacement"
         android:layout_below="@id/l_imagePlacement">
         <RadioButton
-        android:textColor="#444444"
             android:id="@+id/aboveText"
             android:text="@string/above_text"/>
         <RadioButton
-        android:textColor="#444444"
             android:id="@+id/belowText" android:text="@string/below_text"/>
     </RadioGroup>        
     
@@ -75,7 +73,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
-        android:textColor="#444444"
    android:layout_below="@id/l_maxImageWidth"/>
    
         <TextView android:id="@+id/l_centerThumbnail" 
@@ -113,7 +110,6 @@
 <view
 class="org.wordpress.android.customButton"
 			android:id="@+id/save"
-			android:textColor="#444444"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/fullSizeImage"
@@ -122,7 +118,6 @@ class="org.wordpress.android.customButton"
  
 <view
 class="org.wordpress.android.customButton"
-android:textColor="#444444"
 			android:id="@+id/cancel"
      		android:layout_width="wrap_content"  
             android:layout_height="wrap_content"

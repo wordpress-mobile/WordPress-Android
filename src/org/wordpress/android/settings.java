@@ -159,27 +159,8 @@ public class settings extends Activity {
                  finish();
             }
         });
-        
-        
-        
      
 	}
-	
-	@Override public boolean onKeyDown(int i, KeyEvent event) {
-
-		  // only intercept back button press
-		  if (i == KeyEvent.KEYCODE_BACK) {
-         	 Bundle bundle = new Bundle();
-             
-             bundle.putString("returnStatus", "CANCEL");
-             Intent mIntent = new Intent();
-             mIntent.putExtras(bundle);
-             setResult(RESULT_OK, mIntent);
-             finish();
-		  }
-
-		  return false; // propagate this keyevent
-		}
 	
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {

@@ -255,7 +255,6 @@ res/layout/main.xml -text
 res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/newaccount.xml -text
-res/layout/newpage.xml -text
 res/layout/notification_options.xml -text
 res/layout/pages_tab_selector.xml -text
 res/layout/posts_tab_selector.xml -text

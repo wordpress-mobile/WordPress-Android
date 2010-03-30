@@ -135,7 +135,6 @@ public void displayAccounts(){
 	            new String[] { "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes" , "1 Hour", "3 Hours", "6 Hours", "12 Hours", "Daily"});
 	    sIntervalArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    sInterval.setAdapter(sIntervalArrayAdapter);
-	    
 	    String interval = settingsDB.getInterval(this);
 	    
 	    if (interval != ""){
@@ -191,7 +190,6 @@ public void displayAccounts(){
 	    
 	    final customButton save = new customButton(this);
 	    save.setLayoutParams(params2);
-	    save.setTextColor(Color.parseColor("#444444"));
         save.setTextSize(18);
 	    save.setText("Save");
 	    

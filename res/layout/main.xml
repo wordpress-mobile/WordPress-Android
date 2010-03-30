@@ -46,8 +46,7 @@
               
 <view
 class="org.wordpress.android.customButton"  
-			android:id="@+id/bold"  
-			android:textColor="#444444"
+			android:id="@+id/bold"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/content"
@@ -56,8 +55,7 @@ class="org.wordpress.android.customButton"
             android:text="B" />           
 <view
 class="org.wordpress.android.customButton"
-			android:id="@+id/em"  
-			android:textColor="#444444"
+			android:id="@+id/em"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/bold"
@@ -79,8 +77,7 @@ class="org.wordpress.android.customButton"
             
 <view
 class="org.wordpress.android.customButton"
-			android:id="@+id/bquote"  
-			android:textColor="#444444"
+			android:id="@+id/bquote"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
             android:layout_alignTop="@id/link"
@@ -97,8 +94,7 @@ class="org.wordpress.android.customButton"
     
 <view
 class="org.wordpress.android.customButton"
-			android:id="@+id/addPictureButton"  
-			android:textColor="#444444"
+			android:id="@+id/addPictureButton"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/l_pictures" 
@@ -107,8 +103,7 @@ class="org.wordpress.android.customButton"
             
 <view
 class="org.wordpress.android.customButton"
-			android:id="@+id/clearPicture"  
-			android:textColor="#444444"
+			android:id="@+id/clearPicture"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
             android:textSize="20dip"
@@ -149,8 +144,7 @@ class="org.wordpress.android.customButton"
               android:layout_marginTop="10dip"/>
               
   <view
-class="org.wordpress.android.customButton" 
-			android:textColor="#444444"
+class="org.wordpress.android.customButton"
 			android:id="@+id/selectCategories"
      	    android:layout_below="@id/l_category"
             android:layout_width="wrap_content"  
@@ -183,8 +177,7 @@ class="org.wordpress.android.customButton"
     		  
 <view
 class="org.wordpress.android.customButton"
-			android:id="@+id/post" 
-			android:textColor="#444444"
+			android:id="@+id/post"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/publish"
