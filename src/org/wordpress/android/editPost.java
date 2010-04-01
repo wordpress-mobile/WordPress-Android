@@ -97,7 +97,7 @@ public class editPost extends Activity {
         if(extras !=null)
         {
          id = extras.getString("id");
-         accountName = extras.getString("accountName");
+         accountName = escapeUtils.unescapeHtml(extras.getString("accountName"));
          postID = extras.getString("postID");
          localDraft = extras.getBoolean("localDraft", false); 
          isPage = extras.getBoolean("isPage", false);

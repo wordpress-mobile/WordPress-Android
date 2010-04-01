@@ -98,7 +98,7 @@ public class newPost extends Activity {
         if(extras !=null)
         {
          id = extras.getString("id");
-         accountName = extras.getString("accountName");
+         accountName = escapeUtils.unescapeHtml(extras.getString("accountName"));
          isPage = extras.getBoolean("isPage", false);
         }
         
@@ -136,7 +136,6 @@ public class newPost extends Activity {
             	builder.setTitle(getResources().getText(R.string.select_a_blog));
             	builder.setItems(blogNames, new DialogInterface.OnClickListener() {
             	    public void onClick(DialogInterface dialog, int item) {
-
             	        id = accountIDs[item];
             	        accountName = blogNames[item];
             	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post)); 
