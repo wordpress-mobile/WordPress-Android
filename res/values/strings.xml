@@ -230,4 +230,8 @@
   <string name="cat_name_required">The Category Name field is required.</string>
   <string name="cat_adding_category">Adding Category</string>
   <string name="cat_attempt_add_category">Attempting to add category</string>
+  
+  <!--  action from share intents -->
+  <string name="select_a_blog">Select a Blog</string>
+  <string name="no_account">No WordPress account found, please add an account and try again.</string>
 </resources>

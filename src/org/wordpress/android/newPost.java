@@ -129,20 +129,17 @@ public class newPost extends Activity {
                 	accountIDs[i] = curHash.get("id").toString();
                 	
                 } 
-                
-                
+
                 //Don't prompt if they have one blog only
                 if (accounts.size() != 1){
             	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            	builder.setTitle("Select a Blog");
+            	builder.setTitle(getResources().getText(R.string.select_a_blog));
             	builder.setItems(blogNames, new DialogInterface.OnClickListener() {
             	    public void onClick(DialogInterface dialog, int item) {
-            	    	
-            	        Toast.makeText(getApplicationContext(), "You selected position " + item, Toast.LENGTH_LONG).show();
+
             	        id = accountIDs[item];
             	        accountName = blogNames[item];
-            	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
-            	        
+            	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post)); 
             	        setContent();
             	    }
             	});
@@ -162,7 +159,7 @@ public class newPost extends Activity {
         	else{
         		//no account, load main view to load new account view
         		Intent i = new Intent(this, wpAndroid.class);
-        		Toast.makeText(getApplicationContext(), "No WordPress account found, please add an account and try again.", Toast.LENGTH_LONG).show();
+        		Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
             	startActivity(i);
             	finish();
 

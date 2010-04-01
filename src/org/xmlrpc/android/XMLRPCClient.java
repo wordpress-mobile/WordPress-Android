@@ -47,7 +47,7 @@ public class XMLRPCClient {
 		postMethod = new HttpPost(uri);
 		postMethod.addHeader("Content-Type", "text/xml");		
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE!
-		postMethod.addHeader("User-Agent", "wp-android/1.1.1");
+		postMethod.addHeader("User-Agent", "wp-android/1.1.3");
 		
 		// WARNING
 		// I had to disable "Expect: 100-Continue" header since I had 
