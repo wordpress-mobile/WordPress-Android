@@ -107,8 +107,7 @@
             android:layout_marginRight="2dip"
             /> 
   
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/save"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -116,8 +115,7 @@ class="org.wordpress.android.customButton"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dip" android:text="@string/save"/>
  
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/cancel"
      		android:layout_width="wrap_content"  
             android:layout_height="wrap_content"

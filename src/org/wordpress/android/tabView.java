@@ -10,8 +10,9 @@ import android.widget.TabHost;
 public class tabView extends TabActivity {
 	private String id = "";
 	private String accountName = "";
-	private String activateTab = "";
+	private String activateTab = "", action = "";
 	boolean fromNotification = false;
+	int uploadID = 0;
 	
 	     @Override  
      public void onCreate(Bundle savedInstanceState) {  
@@ -24,6 +25,8 @@ public class tabView extends TabActivity {
           accountName = extras.getString("accountName");
           activateTab = extras.getString("activateTab");
           fromNotification = extras.getBoolean("fromNotification", false);   
+          action = extras.getString("action");
+          uploadID = extras.getInt("uploadID");
          }
          
          Intent tab1 = new Intent(this, moderateCommentsTab.class);
@@ -39,6 +42,12 @@ public class tabView extends TabActivity {
  		}
  		
  		tab1.putExtras(bundle);
+ 		
+ 		if (action != null){
+ 			bundle.putString("action", action);
+ 			bundle.putInt("uploadID", uploadID);
+ 		}
+ 		
  		tab2.putExtras(bundle);		
  		bundle.putBoolean("viewPages", true); 		
  		tab3.putExtras(bundle);
@@ -50,12 +59,10 @@ public class tabView extends TabActivity {
          host.addTab(host.newTabSpec("three").setIndicator(getResources().getText(R.string.tab_pages), getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
 
          if (activateTab != null){
-        	 if (activateTab.equals("drafts")){
-        	 host.setCurrentTab(1);
+        	 if(activateTab.equals("posts")){
+        		 host.setCurrentTab(1);
         	 }
          }
-         
-
      }  
 	     
 	     @Override

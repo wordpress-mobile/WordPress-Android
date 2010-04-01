@@ -230,6 +230,7 @@ res/drawable/list_selector_background_longpress.9.png -text
 res/drawable/list_selector_background_pressed.9.png -text
 res/drawable/menu_button.9.png -text
 res/drawable/menu_button_bg.9.png -text
+res/drawable/menu_button_selector.xml -text
 res/drawable/pages_tab.png -text
 res/drawable/pages_tab_active.png -text
 res/drawable/placeholder.png -text
@@ -265,7 +266,6 @@ res/layout/select_categories.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/splashscreen.xml -text
-res/layout/tabview.xml -text
 res/layout/view_comment.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewpost.xml -text
@@ -299,10 +299,6 @@ src/org/wordpress/android/addCategory.java -text
 src/org/wordpress/android/broadcastReceiver.java -text
 src/org/wordpress/android/categoriesDB.java -text
 src/org/wordpress/android/commentService.java -text
-src/org/wordpress/android/customButton.java -text
-src/org/wordpress/android/customImageButton.java -text
-src/org/wordpress/android/customMenuButton.java -text
-src/org/wordpress/android/customMenuButtonText.java -text
 src/org/wordpress/android/editPost.java -text
 src/org/wordpress/android/escapeUtils.java -text
 src/org/wordpress/android/eulaDB.java -text

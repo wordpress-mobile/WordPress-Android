@@ -25,8 +25,7 @@
               android:layout_marginBottom="6dip"
               /> 
               
-<view
-class="org.wordpress.android.customButton" 
+<Button 
 			android:id="@+id/ok" 
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -35,8 +34,7 @@ class="org.wordpress.android.customButton"
             android:layout_marginLeft="10dip"
             android:text="@string/reply_send" />
  
-<view
-class="org.wordpress.android.customButton"
+<Button
 		    android:id="@+id/cancel"
      		android:layout_width="wrap_content"  
             android:layout_height="wrap_content"

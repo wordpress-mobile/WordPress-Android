@@ -244,5 +244,21 @@ public class localDraftsDB {
 		return returnValue;
 	}
 
+	public int getLatestDraftID(Context ctx, String id) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] {"id"}, "blogID=" + id, null, null, null, "id desc", "1");
+		
+		int latestID = -1;
+		int numRows = c.getCount();
+		if (numRows != 0){
+			c.moveToFirst();
+			latestID = c.getInt(0);
+		}
+		c.close();
+		db.close();
+		
+		return latestID;
+	}
+
 }
 

@@ -37,7 +37,7 @@ public class eulaDB {
 		if (numRows == 1){
 			returnValue = (c.getInt(0) != 0);
 		}
-		
+		c.close();
 		db.close();
 			
 		return returnValue;
@@ -77,7 +77,7 @@ public class eulaDB {
 		if (numRows == 1){
 			returnValue = c.getLong(0);
 		}
-		
+		c.close();
 		db.close();
 		return returnValue;
 	}

@@ -43,8 +43,7 @@
               android:capitalize="sentences"
               android:layout_below="@id/l_content"/>
               
-<view
-class="org.wordpress.android.customButton"
+<Button
 			 android:id="@+id/bold"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
@@ -53,8 +52,7 @@ class="org.wordpress.android.customButton"
             android:textSize="22dip"
             android:text="B" /> 
             
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/em" 
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -65,8 +63,7 @@ class="org.wordpress.android.customButton"
             android:paddingRight="2dip"
             android:text="I " />
         
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/link"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -76,8 +73,7 @@ class="org.wordpress.android.customButton"
             android:textColor="#006699"
             android:text="link" />  
             
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/bquote"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -92,16 +88,14 @@ class="org.wordpress.android.customButton"
               android:layout_below="@id/bold"
               android:textColor="#444444" android:text="@string/pictures"/>
     
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/addPictureButton" 
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/l_pictures" 
             android:textSize="20dip" android:text="@string/add"/>
             
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/clearPicture" 
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -133,8 +127,7 @@ class="org.wordpress.android.customButton"
             android:layout_below="@id/l_publish"
             /> 
     		  
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/post"  
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
@@ -143,8 +136,7 @@ class="org.wordpress.android.customButton"
             android:textSize="20dip"
             android:text="@string/save" /> 
             
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/cancel" 
             android:layout_alignTop="@id/post"
             android:layout_toLeftOf="@id/post" 

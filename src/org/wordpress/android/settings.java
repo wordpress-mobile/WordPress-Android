@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -104,10 +105,10 @@ public class settings extends Activity {
 
         
         
-        final customButton cancelButton = (customButton) findViewById(R.id.cancel);
-        final customButton saveButton = (customButton) findViewById(R.id.save);
+        final Button cancelButton = (Button) findViewById(R.id.cancel);
+        final Button saveButton = (Button) findViewById(R.id.save);
         
-        saveButton.setOnClickListener(new customButton.OnClickListener() {
+        saveButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                // SharedPreferences settings = getSharedPreferences("wpAndroidSettings", 0);
                // SharedPreferences.Editor editor = settings.edit();
@@ -147,7 +148,7 @@ public class settings extends Activity {
             }
         });   
         
-        cancelButton.setOnClickListener(new customButton.OnClickListener() {
+        cancelButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
             	 Bundle bundle = new Bundle();

@@ -19,6 +19,8 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -128,9 +130,9 @@ public class viewComment extends Activity {
 		
 		tvDate.setText(date);
 		
-		customImageButton delete = (customImageButton) findViewById(R.id.deleteComment);
+		ImageButton delete = (ImageButton) findViewById(R.id.deleteComment);
 		
-		delete.setOnClickListener(new customImageButton.OnClickListener() {
+		delete.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
             	 
             	Bundle bundle = new Bundle();
@@ -143,9 +145,9 @@ public class viewComment extends Activity {
             }
         });
 		
-		customButton spam = (customButton) findViewById(R.id.markSpam);
+		Button spam = (Button) findViewById(R.id.markSpam);
 		
-		spam.setOnClickListener(new customButton.OnClickListener() {
+		spam.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	 
             	Bundle bundle = new Bundle();
@@ -158,9 +160,9 @@ public class viewComment extends Activity {
             }
         });
 		
-		customButton unapprove = (customButton) findViewById(R.id.unapproveComment);
+		Button unapprove = (Button) findViewById(R.id.unapproveComment);
 		
-		unapprove.setOnClickListener(new customButton.OnClickListener() {
+		unapprove.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	 
             	Bundle bundle = new Bundle();
@@ -173,9 +175,9 @@ public class viewComment extends Activity {
             }
         });
 		
-		customButton approve = (customButton) findViewById(R.id.approveComment);
+		Button approve = (Button) findViewById(R.id.approveComment);
 		
-		approve.setOnClickListener(new customButton.OnClickListener() {
+		approve.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	 
             	Bundle bundle = new Bundle();
@@ -188,9 +190,9 @@ public class viewComment extends Activity {
             }
         });
 		
-		customButton reply = (customButton) findViewById(R.id.reply);
+		Button reply = (Button) findViewById(R.id.reply);
 		
-		reply.setOnClickListener(new customButton.OnClickListener() {
+		reply.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	 
             	Bundle bundle = new Bundle();

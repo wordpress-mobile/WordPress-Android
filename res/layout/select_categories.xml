@@ -24,16 +24,16 @@ android:cacheColorHint="#00000000">
 		android:gravity="bottom"
 		android:padding="4dip"
 		android:background="@drawable/bottom_bar">
-<view
-class="org.wordpress.android.customMenuButton" android:id="@+id/newCategory" 
+<ImageButton android:id="@+id/newCategory" 
+android:background="@drawable/menu_button_selector"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"	
 		android:padding="2dip"
 	android:src="@drawable/add"/>
-<view
-class="org.wordpress.android.customMenuButtonText"
+<Button
  android:id="@+id/categories_done"
 android:layout_width="wrap_content" 
+		android:background="@drawable/menu_button_selector"
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
 		android:text="Done"

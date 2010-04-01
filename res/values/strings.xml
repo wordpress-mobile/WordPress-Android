@@ -22,6 +22,7 @@
   <string name="password">Password:</string>
   <string name="get_free_blog">Get a free blog at WordPress.com</string>
   <string name="blogs">Blogs</string>
+  <string name="upload_now">Upload Now</string>
   
   <!--  general strings -->
   <string name="app_name">WordPress</string>

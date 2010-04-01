@@ -26,6 +26,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,20 +41,17 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 
 public class newPost extends Activity {
@@ -88,14 +86,15 @@ public class newPost extends Activity {
     public int imgLooper;
     public String imageContent = "";
     public String imgHTML = "";
-    public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false;
+    public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false, isAction=false;
     public String SD_CARD_TEMP_DIR = "";
     public long checkedCategories[];
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
+        final Intent intent = getIntent();
         if(extras !=null)
         {
          id = extras.getString("id");
@@ -110,8 +109,74 @@ public class newPost extends Activity {
         	setContentView(R.layout.main);
         }
         
-        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
-        
+        String action = getIntent().getAction();
+        if (Intent.ACTION_SEND.equals(action)){ //this is from a share action!
+        	isAction = true;
+        	settingsDB settingsDB = new settingsDB(this);
+        	Vector accounts = settingsDB.getAccounts(this);
+        	
+        	if (accounts.size() > 0){
+                
+        		final String blogNames[] = new String[accounts.size()];
+        		final String accountIDs[] = new String[accounts.size()];
+        		String accountUsers[] = new String[accounts.size()];
+        		
+                for (int i = 0; i < accounts.size(); i++) {
+                    
+                	HashMap curHash = (HashMap) accounts.get(i);
+                	blogNames[i] = escapeUtils.unescapeHtml(curHash.get("blogName").toString());
+                	accountUsers[i] = curHash.get("username").toString();
+                	accountIDs[i] = curHash.get("id").toString();
+                	
+                } 
+                
+                
+                //Don't prompt if they have one blog only
+                if (accounts.size() != 1){
+            	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            	builder.setTitle("Select a Blog");
+            	builder.setItems(blogNames, new DialogInterface.OnClickListener() {
+            	    public void onClick(DialogInterface dialog, int item) {
+            	    	
+            	        Toast.makeText(getApplicationContext(), "You selected position " + item, Toast.LENGTH_LONG).show();
+            	        id = accountIDs[item];
+            	        accountName = blogNames[item];
+            	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+            	        
+            	        setContent();
+            	    }
+            	});
+            	AlertDialog alert = builder.create();
+            	alert.show();
+                }
+                else{
+                	id = accountIDs[0];
+        	        accountName = blogNames[0];
+        	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+        	        setContent();
+                }
+                
+    	        
+                
+        	}
+        	else{
+        		//no account, load main view to load new account view
+        		Intent i = new Intent(this, wpAndroid.class);
+        		Toast.makeText(getApplicationContext(), "No WordPress account found, please add an account and try again.", Toast.LENGTH_LONG).show();
+            	startActivity(i);
+            	finish();
+
+        	}
+        	
+        	
+        }
+
+        if (accountName != null){
+        	this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+        }
+        else{
+        	this.setTitle(getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+        }
 
       //clear up some variables
         selectedImageIDs.clear();
@@ -121,9 +186,9 @@ public class newPost extends Activity {
         if (!isPage){
 	        //loadCategories();
 	       
-	       final customButton selectCategories = (customButton) findViewById(R.id.selectCategories);   
+	       final Button selectCategories = (Button) findViewById(R.id.selectCategories);   
 	        
-	        selectCategories.setOnClickListener(new customButton.OnClickListener() {
+	        selectCategories.setOnClickListener(new Button.OnClickListener() {
 	            public void onClick(View v) {
 	            	 
 	            	Bundle bundle = new Bundle();
@@ -139,33 +204,86 @@ public class newPost extends Activity {
 	        
     }
         
-        final customButton postButton = (customButton) findViewById(R.id.post);
+        final Button postButton = (Button) findViewById(R.id.post);
         
-        postButton.setOnClickListener(new customButton.OnClickListener() {
+        postButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
             	boolean result = savePost();
             	
             	if (result){
 
-              	  	Toast.makeText(newPost.this, getResources().getText(R.string.saved_to_local_drafts), Toast.LENGTH_SHORT).show();
-              	  Bundle bundle = new Bundle();
-                  
-                  bundle.putString("returnStatus", "OK");
-                  Intent mIntent = new Intent();
-                  mIntent.putExtras(bundle);
-                  setResult(RESULT_OK, mIntent);
-                  finish();
+              	  Toast.makeText(newPost.this, getResources().getText(R.string.saved_to_local_drafts), Toast.LENGTH_SHORT).show();
+              	  if (isAction){
+              		  Bundle bundle = new Bundle();
+	                  Intent mIntent = new Intent(newPost.this, tabView.class);
+	                  bundle.putString("activateTab", "posts");
+	                  bundle.putString("id", id);
+	                  bundle.putString("accountName", accountName);
+	                  bundle.putString("action", "save");
+	                  mIntent.putExtras(bundle);
+	                  startActivity(mIntent);
+	                  finish();
+              	  }
+              	  else{
+	              	  Bundle bundle = new Bundle();
+	                  bundle.putString("returnStatus", "OK");
+	                  Intent mIntent = new Intent();
+	                  mIntent.putExtras(bundle);
+	                  setResult(RESULT_OK, mIntent);
+	                  finish();
+              	  }
             	}
 	
             }
         });
         
-            final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);
+final Button uploadButton = (Button) findViewById(R.id.upload);
+        
+        uploadButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+
+            	boolean result = savePost();
+            	
+            	if (result){
+            		
+            	  localDraftsDB lddb = new localDraftsDB(newPost.this);
+              	  
+              	  int newID = lddb.getLatestDraftID(newPost.this, id);
+              	  Bundle bundle = new Bundle();
+              	  if (newID != -1){
+            	  
+            	  if (isAction){
+            		  Intent mIntent = new Intent(newPost.this, tabView.class);
+	                  bundle.putString("activateTab", "posts");
+	                  bundle.putString("id", id);
+	                  bundle.putInt("uploadID", newID);
+	                  bundle.putString("accountName", accountName);
+	                  bundle.putString("action", "upload");
+	                  mIntent.putExtras(bundle);
+	                  startActivity(mIntent);
+            	  }
+            	  else{
+                      bundle.putString("returnStatus", "OK");
+                      bundle.putBoolean("upload", true);
+                      bundle.putInt("newID", newID);
+                      Intent mIntent = new Intent();
+                      mIntent.putExtras(bundle);
+                      setResult(RESULT_OK, mIntent); 
+            	  }
+
+                  finish();
+            	  }
+            	}
+	
+            }
+        });
+        
+            final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);
             
             registerForContextMenu(addPictureButton);
             
-            addPictureButton.setOnClickListener(new customButton.OnClickListener() {
+            addPictureButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	addPictureButton.performLongClick();
@@ -173,9 +291,9 @@ public class newPost extends Activity {
                 }
         });
             
-final customButton boldButton = (customButton) findViewById(R.id.bold);   
+final Button boldButton = (Button) findViewById(R.id.bold);   
             
-            boldButton.setOnClickListener(new customButton.OnClickListener() {
+            boldButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -219,9 +337,9 @@ final customButton boldButton = (customButton) findViewById(R.id.bold);
                 }
         });
 
-            final customButton linkButton = (customButton) findViewById(R.id.link);   
+            final Button linkButton = (Button) findViewById(R.id.link);   
             
-linkButton.setOnClickListener(new customButton.OnClickListener() {
+linkButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -265,9 +383,9 @@ linkButton.setOnClickListener(new customButton.OnClickListener() {
             });
             
             
-final customButton emButton = (customButton) findViewById(R.id.em);   
+final Button emButton = (Button) findViewById(R.id.em);   
             
-            emButton.setOnClickListener(new customButton.OnClickListener() {
+            emButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -310,9 +428,9 @@ final customButton emButton = (customButton) findViewById(R.id.em);
                 }
         });
             
-final customButton bquoteButton = (customButton) findViewById(R.id.bquote);   
+final Button bquoteButton = (Button) findViewById(R.id.bquote);   
             
-            bquoteButton.setOnClickListener(new customButton.OnClickListener() {
+            bquoteButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -355,9 +473,9 @@ final customButton bquoteButton = (customButton) findViewById(R.id.bquote);
                 }
         });
             
-final customButton clearPictureButton = (customButton) findViewById(R.id.clearPicture);   
+final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
             
-			clearPictureButton.setOnClickListener(new customButton.OnClickListener() {
+			clearPictureButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
 
@@ -370,13 +488,42 @@ final customButton clearPictureButton = (customButton) findViewById(R.id.clearPi
                 	         	
                 }
         });            
-          
-            
             
     }
     
 
     
+	protected void setContent() {
+		Intent intent = getIntent();
+		String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (text != null) {
+        	EditText contentET = (EditText) findViewById(R.id.content);
+        	//It's a youtube video link! need to strip some parameters so the embed will work
+        	if (text.contains("youtube_gdata")){
+        		text = text.replace("&feature=youtube_gdata", "");
+        		text = text.replace("watch?v=", "v/");
+        		text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\"" + text + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"" + text + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
+        	}
+        	
+        	contentET.setText(text);
+        }
+        
+        String type = intent.getType();
+        Uri stream = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (stream != null && type != null) {
+        	String imgPath = stream.getEncodedPath();
+        	selectedImageIDs.add(selectedImageCtr, stream);
+        	imageUrl.add(selectedImageCtr, imgPath);
+	           	selectedImageCtr++;
+	           	GridView gridview = (GridView) findViewById(R.id.gridView);
+		     	  
+	           	gridview.setAdapter(new ImageAdapter(newPost.this));
+        }
+		
+	}
+
+
+
 	public boolean savePost() {
 		
 		

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.wordpress.android" android:versionName="1.1.1" android:versionCode="8">
+	package="org.wordpress.android" android:versionCode="10" android:versionName="1.1.3">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 	<application android:icon="@drawable/app_icon" android:theme="@android:style/Theme.Light"
-		android:label="WordPress" android:debuggable="true" android:name="WordPress">
+		android:label="WordPress" android:name="WordPress" android:debuggable="true">
 		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".settings" android:label="Settings"
 			android:configChanges="orientation|keyboardHidden" />
@@ -11,7 +11,14 @@
 			android:label="Enter a URL" />
 		<activity android:name="viewPosts" android:theme="@style/Theme.TabView"/>
 		<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="newPost" android:configChanges="orientation|keyboardHidden"/>
+		<activity android:name="newPost" android:configChanges="orientation|keyboardHidden">
+			<intent-filter>
+    			<action android:name="android.intent.action.SEND" />
+    				<category android:name="android.intent.category.DEFAULT" />
+    				<data android:mimeType="text/plain" />
+    				<data android:mimeType="image/*" />
+  			</intent-filter> 
+  		</activity>
 		<activity android:name="newAccount" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="viewPost" />

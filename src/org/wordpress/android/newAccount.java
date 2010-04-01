@@ -36,6 +36,7 @@ import android.os.Looper;
 import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -56,10 +57,10 @@ public class newAccount extends Activity {
 		
 		this.setTitle("WordPress - " + getResources().getText(R.string.new_account));
         
-        final customButton cancelButton = (customButton) findViewById(R.id.cancel);
-        final customButton saveButton = (customButton) findViewById(R.id.save);
+        final Button cancelButton = (Button) findViewById(R.id.cancel);
+        final Button saveButton = (Button) findViewById(R.id.save);
         
-        saveButton.setOnClickListener(new customButton.OnClickListener() {
+        saveButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
 
@@ -80,7 +81,7 @@ public class newAccount extends Activity {
             }
         });   
         
-        cancelButton.setOnClickListener(new customButton.OnClickListener() {
+        cancelButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
             	 Bundle bundle = new Bundle();
@@ -93,9 +94,9 @@ public class newAccount extends Activity {
             }
         });
         
-        customButton signUp = (customButton) findViewById(R.id.wordpressdotcom);
+        Button signUp = (Button) findViewById(R.id.wordpressdotcom);
         
-        signUp.setOnClickListener(new customButton.OnClickListener() {
+        signUp.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
             	Intent signupIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/signup/?ref=wp-android")); 

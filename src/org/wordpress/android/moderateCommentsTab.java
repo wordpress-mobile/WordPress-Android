@@ -48,6 +48,7 @@ import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -114,9 +115,9 @@ public class moderateCommentsTab extends ListActivity {
         	refreshComments();
         }
         
-        final customMenuButton refresh = (customMenuButton) findViewById(R.id.refreshComments);   
+       final ImageButton refresh = (ImageButton) findViewById(R.id.refreshComments);   
         
-        refresh.setOnClickListener(new customMenuButton.OnClickListener() {
+        refresh.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
             	refreshComments();
@@ -644,7 +645,7 @@ public class moderateCommentsTab extends ListActivity {
 			bundle.putString("accountName", accountName);
 	    	Intent i = new Intent(this, settings.class);
 	    	i.putExtras(bundle);
-	    	startActivityForResult(i, 1);
+	    	startActivity(i);
 	    	
 	    	return true;
 		case 1:

@@ -23,7 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -62,8 +64,8 @@ public class selectCategories extends ListActivity {
         loadCategories();
         
 //    	Button to add a Category
-        final customMenuButton addCategory = (customMenuButton) findViewById(R.id.newCategory);   
-        addCategory.setOnClickListener(new customButton.OnClickListener() {
+        final ImageButton addCategory = (ImageButton) findViewById(R.id.newCategory);   
+        addCategory.setOnClickListener(new ImageButton.OnClickListener() {
         	public void onClick(View v) {
         		
         		Bundle bundle = new Bundle();
@@ -74,9 +76,9 @@ public class selectCategories extends ListActivity {
         	}
         });
         
-    	customMenuButtonText categoriesDone = (customMenuButtonText) findViewById(R.id.categories_done);
+    	Button categoriesDone = (Button) findViewById(R.id.categories_done);
     	
-    	categoriesDone.setOnClickListener(new customMenuButtonText.OnClickListener() {
+    	categoriesDone.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
             	String selectedCategories = "";

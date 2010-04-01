@@ -58,8 +58,7 @@
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_password"/>     
   
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/save"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -68,8 +67,7 @@ class="org.wordpress.android.customButton"
             android:layout_marginLeft="10dip"
             android:text="@string/save" />
  
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/cancel" 
      		android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -89,7 +87,7 @@ class="org.wordpress.android.customButton"
             android:layout_height="wrap_content" 
             android:text="@string/dont_yet_have_a_blog"
             android:layout_below="@id/cancel"/>
-<view class="org.wordpress.android.customButton"
+<Button
 			android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
 			android:id="@+id/wordpressdotcom"

@@ -60,34 +60,29 @@ android:src="@drawable/placeholder">
 		android:layout_height="wrap_content"
 		android:gravity="bottom"
 		android:paddingTop="4dip">
-<view
-class="org.wordpress.android.customImageButton" android:id="@+id/deleteComment" 
+<ImageButton android:id="@+id/deleteComment" 
 android:layout_width="48dip" 
 		android:layout_height="48dip"
 	android:src="@drawable/ic_menu_delete"
 	android:layout_alignParentLeft="true"/>
 
-<view
-class="org.wordpress.android.customButton" android:id="@+id/approveComment" 
+<Button android:id="@+id/approveComment" 
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 	android:text="@string/approve"
 	android:layout_alignParentRight="true"/>
-<view
-class="org.wordpress.android.customButton" android:id="@+id/unapproveComment" 
+<Button android:id="@+id/unapproveComment" 
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 	android:text="@string/unapprove"
 	android:layout_toLeftOf="@id/approveComment"
 	android:layout_alignParentRight="true"/>
-<view
-class="org.wordpress.android.customButton" android:id="@+id/markSpam" 
+<Button android:id="@+id/markSpam" 
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 	android:text="@string/spam"
 	android:layout_toLeftOf="@id/unapproveComment"/>
-	<view
-class="org.wordpress.android.customButton" android:id="@+id/reply" 
+	<Button android:id="@+id/reply" 
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 	android:text="@string/reply"

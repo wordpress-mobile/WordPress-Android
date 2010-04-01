@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -188,12 +189,12 @@ public void displayAccounts(){
         
         layout.addView(nOptionsLayout);
 	    
-	    final customButton save = new customButton(this);
+	    final Button save = new Button(this);
 	    save.setLayoutParams(params2);
         save.setTextSize(18);
 	    save.setText("Save");
 	    
-	    save.setOnClickListener(new customButton.OnClickListener() {
+	    save.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
             	boolean sound = false, vibrate = false, light = false;

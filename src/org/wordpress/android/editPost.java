@@ -46,6 +46,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -163,9 +164,9 @@ public class editPost extends Activity {
 		    		
 		    	}
 		    	
-		    	customButton selectCategories = (customButton) findViewById(R.id.selectCategories);   
+		    	Button selectCategories = (Button) findViewById(R.id.selectCategories);   
     	        
-    	        selectCategories.setOnClickListener(new customButton.OnClickListener() {
+    	        selectCategories.setOnClickListener(new Button.OnClickListener() {
     	            public void onClick(View v) {
     	            	 
     	            	Bundle bundle = new Bundle();
@@ -277,9 +278,9 @@ public class editPost extends Activity {
 			            	}
 				        }
 				        
-				        customButton selectCategories = (customButton) findViewById(R.id.selectCategories);   
+				        Button selectCategories = (Button) findViewById(R.id.selectCategories);   
 		    	        
-		    	        selectCategories.setOnClickListener(new customButton.OnClickListener() {
+		    	        selectCategories.setOnClickListener(new Button.OnClickListener() {
 		    	            public void onClick(View v) {
 		    	            	 
 		    	            	Bundle bundle = new Bundle();
@@ -320,9 +321,9 @@ public class editPost extends Activity {
         
         
         
-        final customButton postButton = (customButton) findViewById(R.id.post);
+        final Button postButton = (Button) findViewById(R.id.post);
         
-        postButton.setOnClickListener(new customButton.OnClickListener() {
+        postButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             
             if(localDraft){
@@ -361,11 +362,11 @@ public class editPost extends Activity {
             }
         });
         
-            final customButton addPictureButton = (customButton) findViewById(R.id.addPictureButton);   
+            final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);   
             
             registerForContextMenu(addPictureButton);
             
-            addPictureButton.setOnClickListener(new customButton.OnClickListener() {
+            addPictureButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	addPictureButton.performLongClick();
@@ -373,9 +374,9 @@ public class editPost extends Activity {
                 }
         });
             
-final customButton boldButton = (customButton) findViewById(R.id.bold);   
+final Button boldButton = (Button) findViewById(R.id.bold);   
             
-            boldButton.setOnClickListener(new customButton.OnClickListener() {
+            boldButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -419,9 +420,9 @@ final customButton boldButton = (customButton) findViewById(R.id.bold);
                 }
         });
 
-            final customButton linkButton = (customButton) findViewById(R.id.link);   
+            final Button linkButton = (Button) findViewById(R.id.link);   
             
-linkButton.setOnClickListener(new customButton.OnClickListener() {
+linkButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -465,9 +466,9 @@ linkButton.setOnClickListener(new customButton.OnClickListener() {
             });
             
             
-final customButton emButton = (customButton) findViewById(R.id.em);   
+final Button emButton = (Button) findViewById(R.id.em);   
             
-            emButton.setOnClickListener(new customButton.OnClickListener() {
+            emButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -510,9 +511,9 @@ final customButton emButton = (customButton) findViewById(R.id.em);
                 }
         });
             
-final customButton bquoteButton = (customButton) findViewById(R.id.bquote);   
+final Button bquoteButton = (Button) findViewById(R.id.bquote);   
             
-            bquoteButton.setOnClickListener(new customButton.OnClickListener() {
+            bquoteButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -556,9 +557,9 @@ final customButton bquoteButton = (customButton) findViewById(R.id.bquote);
         });
             
             
-final customButton cancelButton = (customButton) findViewById(R.id.cancel);   
+final Button cancelButton = (Button) findViewById(R.id.cancel);   
             
-            cancelButton.setOnClickListener(new customButton.OnClickListener() {
+            cancelButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
@@ -591,9 +592,9 @@ final customButton cancelButton = (customButton) findViewById(R.id.cancel);
                 
         });
             
-final customButton clearPictureButton = (customButton) findViewById(R.id.clearPicture);   
+final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
             
-			clearPictureButton.setOnClickListener(new customButton.OnClickListener() {
+			clearPictureButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
 

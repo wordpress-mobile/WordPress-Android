@@ -9,20 +9,7 @@
 			  android:id="@+id/mainRL" 
 			  android:layout_width="wrap_content" 
               android:layout_height="wrap_content"
-              android:layout_weight="1.0">       
-<!--  <TextView android:id="@+id/longPress"
-android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		  android:padding="4dip"
-		  android:textColor="#444444"
-		  android:background="#b7b7b7"
-		  android:gravity="center"
-		  android:text="Long press on a comment to view actions"
-		  android:shadowColor="#FFFFFF"
-		  android:shadowDx="0"
-		  android:shadowDy=".5"
-		  android:shadowRadius="1">
-</TextView> -->        
+              android:layout_weight="1.0">             
 <ListView android:choiceMode="singleChoice" android:id="@android:id/list"
  android:layout_width="fill_parent" android:layout_height="fill_parent"
  android:textColor="#444444"
@@ -69,14 +56,14 @@ android:cacheColorHint="#00000000">
 		android:background="@drawable/bottom_bar"
 		android:gravity="bottom"
 		android:padding="2dip">
-<view
-class="org.wordpress.android.customMenuButton" android:id="@+id/newPost" 
+<ImageButton android:id="@+id/newPost"
+android:background="@drawable/menu_button_selector" 
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"	
 		android:padding="2dip"
 	android:src="@drawable/add"/>
-<view
-class="org.wordpress.android.customMenuButton"
+<ImageButton
+android:background="@drawable/menu_button_selector" 
  android:id="@+id/refresh"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"

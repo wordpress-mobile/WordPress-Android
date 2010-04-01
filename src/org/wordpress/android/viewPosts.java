@@ -54,6 +54,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -98,18 +99,50 @@ public class viewPosts extends ListActivity {
         setContentView(R.layout.viewposts);
         
         Bundle extras = getIntent().getExtras();
+        String action = null;
         if(extras !=null)
         {
          id = extras.getString("id");
          accountName = extras.getString("accountName");
          isPage = extras.getBoolean("viewPages");
+         action = extras.getString("action");
         }
         
-        //query for posts and refresh view
-        boolean loadedPosts = loadPosts();
-        
-        if (!loadedPosts){
-        	refreshPosts();
+        //user came from action intent
+        if (action != null){
+        	if (action.equals("upload")){
+        		selectedID = extras.getInt("uploadID");
+        		showDialog(ID_DIALOG_POSTING);
+				
+				new Thread() {
+	                public void run() { 
+				
+				try {
+					submitResult = submitPost();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+	                }
+				}.start();
+        	}
+        	else{
+        		boolean loadedPosts = loadPosts();
+        		if (!loadedPosts){
+                	refreshPosts();
+                }
+        	}
+        }
+        else{
+	        
+	        //query for posts and refresh view
+	        boolean loadedPosts = loadPosts();
+	        
+	        if (!loadedPosts){
+	        	refreshPosts();
+	        }
         }
         
         Display display = getWindowManager().getDefaultDisplay();
@@ -120,9 +153,9 @@ public class viewPosts extends ListActivity {
         }
         
 
-            final customMenuButton addNewPost = (customMenuButton) findViewById(R.id.newPost);   
+            final ImageButton addNewPost = (ImageButton) findViewById(R.id.newPost);   
             
-            addNewPost.setOnClickListener(new customMenuButton.OnClickListener() {
+            addNewPost.setOnClickListener(new ImageButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	Intent i = new Intent(viewPosts.this, newPost.class);
@@ -136,9 +169,9 @@ public class viewPosts extends ListActivity {
                 }
         });
             
-final customMenuButton refresh = (customMenuButton) findViewById(R.id.refresh);   
+final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);   
             
-            refresh.setOnClickListener(new customMenuButton.OnClickListener() {
+            refresh.setOnClickListener(new ImageButton.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	refreshPosts();
@@ -803,7 +836,31 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case 0:
 			if (returnResult.equals("OK")){
-				loadPosts();
+				boolean uploadNow = false;
+				uploadNow = extras.getBoolean("upload");
+				if (uploadNow){
+					int uploadID = extras.getInt("newID");
+					selectedID = uploadID;
+					showDialog(ID_DIALOG_POSTING);
+					
+					new Thread() {
+		                public void run() { 
+					
+					try {
+						submitResult = submitPost();
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+		                }
+					}.start();
+
+				}
+				else{
+					loadPosts();
+				}
 			}
 			break;
 		case 1:

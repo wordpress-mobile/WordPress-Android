@@ -44,8 +44,7 @@
               android:capitalize="sentences"
               android:layout_below="@id/l_content"/>
               
-<view
-class="org.wordpress.android.customButton"  
+<Button  
 			android:id="@+id/bold"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -53,8 +52,7 @@ class="org.wordpress.android.customButton"
             android:textStyle="bold"
             android:textSize="22dip"
             android:text="B" />           
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/em"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -64,8 +62,7 @@ class="org.wordpress.android.customButton"
             android:textSize="22dip"
             android:text="I " />
         
-<view
-class="org.wordpress.android.customButton"
+<Button
 			 android:id="@+id/link" 
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -75,8 +72,7 @@ class="org.wordpress.android.customButton"
             android:textColor="#006699"
             android:text="link" />  
             
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/bquote"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
@@ -92,8 +88,7 @@ class="org.wordpress.android.customButton"
               android:text="@string/pictures"
               android:textColor="#444444"/>
     
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/addPictureButton"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -101,8 +96,7 @@ class="org.wordpress.android.customButton"
             android:textSize="20dip"
             android:text="@string/add"/>
             
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/clearPicture"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
@@ -143,8 +137,7 @@ class="org.wordpress.android.customButton"
               android:textColor="#444444"
               android:layout_marginTop="10dip"/>
               
-  <view
-class="org.wordpress.android.customButton"
+  <Button
 			android:id="@+id/selectCategories"
      	    android:layout_below="@id/l_category"
             android:layout_width="wrap_content"  
@@ -175,14 +168,21 @@ class="org.wordpress.android.customButton"
             android:layout_below="@id/l_publish"
             /> 
     		  
-<view
-class="org.wordpress.android.customButton"
+<Button
 			android:id="@+id/post"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/publish"
             android:layout_alignParentRight="true"
             android:textSize="20dip"
-            android:text="@string/save" />           
+            android:text="@string/save" />
+<Button
+			android:id="@+id/upload"
+            android:layout_width="wrap_content"  
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/post"
+            android:layout_toLeftOf="@id/post"
+            android:textSize="20dip"
+            android:text="@string/upload_now" />            
 </RelativeLayout>
 </ScrollView>

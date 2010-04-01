@@ -2,32 +2,33 @@
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
-                android:padding="0px"
-                android:background="#F4F4F4"
+                
                 android:orientation="vertical">    
 <RelativeLayout  
 			  android:id="@+id/mainRL" 
 			  android:layout_width="wrap_content" 
               android:layout_height="wrap_content"
+              android:padding="0px"
+               android:background="#F4F4F4"
               android:layout_weight="1.0">               
 <ListView android:choiceMode="singleChoice" android:id="@android:id/list"
  android:layout_width="fill_parent" android:layout_height="fill_parent"
  android:textColor="#444444"
 android:divider="@drawable/list_divider"
 android:dividerHeight="1px"
-android:cacheColorHint="#00000000">
+android:cacheColorHint="#00000000"
+android:scrollingCache="true">
 </ListView>
 <RelativeLayout android:layout_above="@id/mainRL"
 			  android:id="@+id/loading" 
 			  android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"            
-              
+              android:layout_height="wrap_content"
               android:visibility="invisible">  
               <LinearLayout android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:background="#AA111111"
               android:padding="8dip"
-              android:gravity="center">       
+              android:gravity="center">     
 	<ProgressBar 
 				android:id="@+id/progress"
 				android:layout_width="24dip" 
@@ -53,13 +54,12 @@ android:cacheColorHint="#00000000">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="right"
     android:background="@drawable/bottom_bar"
     android:padding="2dip"
    >
-<view
-class="org.wordpress.android.customMenuButton"
+<ImageButton
 android:id="@+id/refreshComments"
+android:background="@drawable/menu_button_selector"
 android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
