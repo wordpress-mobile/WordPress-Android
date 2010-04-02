@@ -274,6 +274,8 @@ res/values-de/strings.xml -text
 res/values-fi/strings.xml -text
 res/values-fr/strings.xml -text
 res/values-in/strings.xml -text
+res/values-it/strings.xml -text
+res/values-ja/strings.xml -text
 res/values-sk/strings.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text

@@ -7,14 +7,15 @@ import java.util.Vector;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.view.View.OnClickListener;
 
 public class settingsDB {
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
+	private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
+		+ "read integer not null, interval text, statsdate integer);";
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
 	
@@ -36,19 +37,26 @@ public class settingsDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//db.execSQL("DROP TABLE IF EXISTS "+ SETTINGS_TABLE);
 		db.execSQL(CREATE_TABLE_SETTINGS);
-		int test = db.getVersion();
+		//added eula to this class to fix trac #49
+		db.execSQL(CREATE_TABLE_EULA);
+		//int test = db.getVersion();
 		
 		if (db.getVersion() <= 1){ //user is new install or running v1.0.0 or v1.0.1
-			db.execSQL(ADD_BLOGID);
-			db.execSQL(UPDATE_BLOGID);
-			db.execSQL(ADD_SOUND_OPTION);
-			db.execSQL(ADD_VIBRATE_OPTION);
-			db.execSQL(ADD_LIGHT_OPTION);
+				try {
+					db.execSQL(ADD_BLOGID);
+					db.execSQL(UPDATE_BLOGID);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				db.execSQL(ADD_SOUND_OPTION);
+				db.execSQL(ADD_VIBRATE_OPTION);
+				db.execSQL(ADD_LIGHT_OPTION);
 		}
 		else if (db.getVersion()  == 2){
-			db.execSQL(ADD_SOUND_OPTION);
-			db.execSQL(ADD_VIBRATE_OPTION);
-			db.execSQL(ADD_LIGHT_OPTION);
+				db.execSQL(ADD_SOUND_OPTION);
+				db.execSQL(ADD_VIBRATE_OPTION);
+				db.execSQL(ADD_LIGHT_OPTION);
 		}
 
 		db.setVersion(DATABASE_VERSION); //set to latest revision

@@ -1,13 +1,9 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Vector;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.format.DateFormat;
 
 public class eulaDB {
 

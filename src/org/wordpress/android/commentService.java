@@ -93,6 +93,7 @@ public class commentService extends Service {
 		
 		//Log.i(getClass().getSimpleName(), "Timer Cycled!");
 		
+		//need to create eulaDB first in case the user reboots their device before launching the app
 		settingsDB settingsDB = new settingsDB(this);
     	
     	Vector notificationAccounts = settingsDB.getNotificationAccounts(this);
