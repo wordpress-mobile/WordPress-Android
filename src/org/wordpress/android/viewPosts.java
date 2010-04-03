@@ -1168,13 +1168,35 @@ public String submitPost() throws IOException {
     };
     
     Object result = null;
+    boolean success = false;
     try {
 		result = (Object) client.call("metaWeblog.newPost", params);
-	} catch (XMLRPCException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		success = true;
+	} catch (final XMLRPCException e) {
+		//e.printStackTrace();
+		Thread prompt = new Thread() 
+		{ 
+		  public void run() 
+		  {
+			dismissDialog(ID_DIALOG_POSTING);
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+              dialogBuilder.setMessage(e.getMessage());
+              dialogBuilder.setPositiveButton("OK",  new
+            		  DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int whichButton) {
+                  // Just close the window.
+              	
+              	}
+              });
+              dialogBuilder.setCancelable(true);
+             dialogBuilder.create().show();
+		  } 
+		}; 
+		this.runOnUiThread(prompt);
 	}
 
+			if (success){
 			newID = result.toString();
 			res = "OK";
 			dismissDialog(ID_DIALOG_POSTING);
@@ -1232,8 +1254,7 @@ public String submitPost() throws IOException {
 			  } 
 			}; 
 			this.runOnUiThread(action);
-          	  
-            
+			}
 
     }// if/then for valid settings
     

@@ -713,15 +713,41 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         };
         
         Object result = null;
+        boolean success = false;
         try {
 			result = (Object) client.call("metaWeblog.editPost", params);
-		} catch (XMLRPCException e) {
+			success = true;
+		} catch (final XMLRPCException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Thread prompt = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				dismissDialog(ID_DIALOG_POSTING);
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+				  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+	              dialogBuilder.setMessage(e.getMessage());
+	              dialogBuilder.setPositiveButton("OK",  new
+	            		  DialogInterface.OnClickListener() {
+	              public void onClick(DialogInterface dialog, int whichButton) {
+	                  // Just close the window.
+	              	}
+	              });
+	              dialogBuilder.setCancelable(true);
+	             dialogBuilder.create().show();
+			  } 
+			}; 
+			this.runOnUiThread(prompt);
 		}
+		
+		if (success){
 
 				newID = result.toString();
 				res = "OK";
+		}
+		else{
+			res = "FAIL";
+		}
 			
 
         }// if/then for valid settings
@@ -1537,6 +1563,9 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                   });
 	              dialogBuilder.setCancelable(true);
 	             dialogBuilder.create().show();
+			}
+			else if (finalResult.equals("FAIL")){
+				dismissDialog(editPost.this.ID_DIALOG_POSTING);	
 			}
 		}
 	};

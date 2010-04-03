@@ -215,7 +215,7 @@ public class selectCategories extends ListActivity {
 		        loadCategories(); 
 				Toast.makeText(selectCategories.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
 			}
-			else if (finalResult.equals("categoryFault")){
+			else if (finalResult.equals("FAIL")){
 				if (pd.isShowing())
 					{
 					pd.dismiss();
@@ -301,46 +301,48 @@ public class selectCategories extends ListActivity {
         	
             client = new XMLRPCClient(sURL);
             
+            boolean success = false;
+            
             try {
 				result = (Object[]) client.call("wp.getCategories", params);
+				success = true;
 			} catch (XMLRPCException e) {
-				// TODO Auto-generated catch block
-				e.getMessage();
+				//e.getMessage();
 				e.printStackTrace();
 				res = null;
 			}
-								   
-        
-        
-       // HashMap categoryNames = (HashMap) result[0];
         
             //Vector categoryIds = (Vector) result;
-            
-            int size = result.length;
-            
-            //initialize database
-            categoriesDB categoriesDB = new categoriesDB(this);
-            //wipe out the categories table
-            categoriesDB.clearCategories(this, id);
-            
-            for(int i=0; i<size; i++)
-            {
-              HashMap curHash = (HashMap) result[i];
-              
-              String categoryName = curHash.get("categoryName").toString();
-              String categoryID = curHash.get("categoryId").toString();
-              
-              int convertedCategoryID = Integer.parseInt(categoryID);
-              
-              categoriesDB.insertCategory(this, id, convertedCategoryID, categoryName);
-              
-              //populate the spinner with the category names
-              
-              textArray.add(categoryName);
-              
+            if (success){
+	            int size = result.length;
+	            
+	            //initialize database
+	            categoriesDB categoriesDB = new categoriesDB(this);
+	            //wipe out the categories table
+	            categoriesDB.clearCategories(this, id);
+	            
+	            for(int i=0; i<size; i++)
+	            {
+	              HashMap curHash = (HashMap) result[i];
+	              
+	              String categoryName = curHash.get("categoryName").toString();
+	              String categoryID = curHash.get("categoryId").toString();
+	              
+	              int convertedCategoryID = Integer.parseInt(categoryID);
+	              
+	              categoriesDB.insertCategory(this, id, convertedCategoryID, categoryName);
+	              
+	              //populate the spinner with the category names
+	              
+	              textArray.add(categoryName);
+	              
+	            }
+	            
+	            returnMessage = "gotCategories";
             }
-            
-            returnMessage = "gotCategories";
+            else{
+            	returnMessage = "FAIL";
+            }
         
         } //end valid url
         return returnMessage;
