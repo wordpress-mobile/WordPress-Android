@@ -126,6 +126,9 @@ public void displayAccounts(){
     settingsDB settingsDB = new settingsDB(this);
 	accounts = settingsDB.getAccounts(this);
 	
+	//upload stats
+	checkStats(accounts.size());
+	
 	 ListView listView = (ListView) findViewById(android.R.id.list);
 	 
 	/* TextView tv = new TextView(this);
@@ -183,7 +186,6 @@ public void displayAccounts(){
 	
 	
 	if (accounts.size() > 0){
-		checkStats(accounts.size());
 		ScrollView sv = new ScrollView(this);
 		sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));
