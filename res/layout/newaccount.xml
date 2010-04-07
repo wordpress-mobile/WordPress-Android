@@ -4,12 +4,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="none"
-    android:background="#e8e8e8">
+    android:background="#FFF9F9F9">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-				android:background="#e8e8e8">
+				android:background="#FFF9F9F9">
             
     <TextView android:id="@+id/l_url" 
     		  android:textColor="#444444"
@@ -65,7 +65,12 @@
             android:layout_below="@id/password"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dip"
-            android:text="@string/save" />
+            android:text="@string/save"
+            android:shadowColor="#FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:background="@drawable/wp_button_small" />
  
 <Button
 			android:id="@+id/cancel" 
@@ -73,7 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/save"
             android:layout_toLeftOf="@id/save"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:background="@drawable/wp_button_small" />
             
 <TextView android:id="@+id/l_wordpressdotcom"
       		android:textColor="#444444"
@@ -93,6 +99,7 @@
 			android:id="@+id/wordpressdotcom"
      		android:text="@string/get_free_blog"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/l_wordpressdotcom"/>
+            android:layout_below="@id/l_wordpressdotcom"
+            android:background="@drawable/wp_button"/>
 </RelativeLayout>
 </ScrollView>

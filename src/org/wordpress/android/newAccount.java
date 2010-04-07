@@ -199,25 +199,13 @@ public class newAccount extends Activity {
 	                noMatch = settingsDB.checkMatch(newAccount.this, blogName, blogURL, username);
 	                
 	                if (noMatch){
-	                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newAccount.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.account_exists));
-			              dialogBuilder.setMessage(getResources().getText(R.string.account_already_exists));
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                        	  Bundle bundle = new Bundle();
-    	    		                
-    	    		                bundle.putString("returnStatus", "SAVE");
-    	    		                Intent mIntent = new Intent();
-    	    		                mIntent.putExtras(bundle);
-    	    		                setResult(RESULT_OK, mIntent);
-    	    		                finish();
-	                      
-	                          }
-	                      });
-			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
-			             
+	                	Thread prompt = new Thread(){
+	                	public void run() 
+	      			  	{
+	                	 Toast.makeText(newAccount.this, getResources().getText(R.string.account_already_exists), Toast.LENGTH_SHORT).show();
+	      			  	} 
+						}; 
+						runOnUiThread(prompt);
 			             
 	                }
 	                else{

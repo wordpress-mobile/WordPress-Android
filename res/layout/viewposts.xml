@@ -59,7 +59,7 @@ android:cacheColorHint="#00000000">
 <ImageButton android:id="@+id/newPost"
 android:background="@drawable/menu_button_selector" 
 android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"	
+		android:layout_height="wrap_content"
 		android:padding="2dip"
 	android:src="@drawable/add"/>
 <ImageButton

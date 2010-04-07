@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Demonstrates using a relative layout to create a form -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:background="#FFF9F9F9">
     
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
-				android:background="#e8e8e8"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:paddingBottom="10dip"> 
+                android:layout_gravity="center_horizontal"
+                android:padding="10dip"
+                > 
+    <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section1">
+    <TextView android:id="@+id/l_section1" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+    		  android:layout_marginBottom="6dip"
+              android:text="Page Content"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"
+              android:textColor="#FF464646"/>
     <TextView android:id="@+id/l_title" 
+    		  android:layout_below="@id/l_section1"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:textColor="#444444" android:text="@string/post_title"/>
+              android:text="@string/page_title"
+                android:textColor="#444444"/>
               
     <EditText android:id="@+id/title" 
     		  android:minHeight="40dip"
@@ -30,8 +46,9 @@
     <TextView android:id="@+id/l_content" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
+              android:text="@string/page_content"
               android:layout_below="@id/title"
-              android:textColor="#444444" android:text="@string/post_content"/>
+              android:textColor="#444444"/>
               
     <EditText android:id="@+id/content"
     		  android:gravity="top" 
@@ -43,28 +60,29 @@
               android:capitalize="sentences"
               android:layout_below="@id/l_content"/>
               
-<Button
-			 android:id="@+id/bold"
+<Button  
+			android:id="@+id/bold"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
             android:layout_below="@id/content"
             android:textStyle="bold"
             android:textSize="22dip"
-            android:text="B" /> 
-            
+            android:text="B" />           
 <Button
-			android:id="@+id/em" 
+			android:id="@+id/em"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/bold"
             android:layout_toRightOf="@id/bold"
             android:textStyle="italic"
             android:textSize="22dip"
-            android:paddingRight="2dip"
             android:text="I " />
         
 <Button
-			android:id="@+id/link"
+			 android:id="@+id/link" 
+			 android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/em"
@@ -75,33 +93,56 @@
             
 <Button
 			android:id="@+id/bquote"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" 
             android:layout_alignTop="@id/link"
             android:layout_toRightOf="@id/link"
             android:textSize="22dip"
             android:text="b-quote" />          
-              
+              </RelativeLayout>
+<RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section2"
+                android:layout_marginTop="10dip"
+                android:layout_below="@id/section1">             
+    <TextView android:id="@+id/l_media"
+    		  android:layout_marginBottom="6dip"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="Media"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"
+              android:textColor="#FF444444"/>            
     <TextView android:id="@+id/l_pictures" 
-              android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
-              android:layout_below="@id/bold"
-              android:textColor="#444444" android:text="@string/pictures"/>
+    		  android:layout_below="@id/l_media"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/pictures"
+              android:textColor="#444444"/>
     
 <Button
-			android:id="@+id/addPictureButton" 
+			android:id="@+id/addPictureButton"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/l_pictures" 
-            android:textSize="20dip" android:text="@string/add"/>
+            android:textSize="20dip"
+            android:text="@string/add"/>
             
 <Button
-			android:id="@+id/clearPicture" 
+			android:id="@+id/clearPicture"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content" 
+            android:textSize="20dip"
             android:layout_alignBottom="@id/addPictureButton"
             android:layout_toRightOf="@id/addPictureButton"
-            android:textSize="20dip" android:text="@string/clear"/>
+            android:text="@string/clear" />
             
             <GridView   
             		android:id="@+id/gridView"   
@@ -111,27 +152,39 @@
                     android:numColumns="3"
                     android:layout_below="@id/addPictureButton">             
                </GridView>
-               
-  <TextView android:id="@+id/l_publish" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
-              android:text="@string/publish"
-              android:layout_below="@id/gridView"
-              android:textColor="#444444"
-              android:layout_marginTop="10dip"/>           
-                                     
+</RelativeLayout>
+ <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section3"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:layout_below="@id/section2"> 
+                <TextView android:id="@+id/l_status"
+    		  android:layout_marginBottom="6dip"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="Status"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"
+              android:textColor="#FF444444"/>                                       
     <CheckBox android:id="@+id/publish"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:layout_below="@id/l_publish"
+            android:layout_below="@id/l_status"
+            android:text="@string/publish"
             /> 
+ </RelativeLayout>  
     		  
 <Button
 			android:id="@+id/post"  
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
-            android:layout_below="@id/publish"
+            android:layout_below="@id/section3"
+            android:background="@drawable/wp_button"
             android:layout_alignParentRight="true"
             android:textSize="20dip"
             android:text="@string/save" /> 
@@ -140,6 +193,7 @@
 			android:id="@+id/cancel" 
             android:layout_alignTop="@id/post"
             android:layout_toLeftOf="@id/post" 
+            android:background="@drawable/wp_button"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:textSize="20dip"

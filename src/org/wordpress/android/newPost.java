@@ -866,7 +866,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	   
 	        String[] projection = new String[] {
 	      		    Images.Thumbnails._ID,
-	      		    Images.Thumbnails.DATA
+	      		    Images.Thumbnails.DATA,
+	      		  Images.ImageColumns.ORIENTATION
 	      		};
 	     	   
 			Cursor cur = managedQuery(tempURI, projection, null, null, null);
@@ -874,13 +875,18 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	 
 	     	  if (cur.moveToFirst()) {
 	     		  
-	     		int nameColumn, dataColumn, heightColumn, widthColumn;
+	     		int nameColumn, dataColumn, heightColumn, widthColumn, orientation;
+	     		String testOrientation = "";
 	     		
 	     			nameColumn = cur.getColumnIndex(Images.Media._ID);
 	     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+	     	        orientation = cur.getColumnIndex(Images.ImageColumns.ORIENTATION);
 	     		             	            
 	           
 	           thumbData = cur.getString(dataColumn);
+	           testOrientation = cur.getString(orientation);
+	           int blah = 0;
+	           blah++;
 
 	     	  }
 	     	   

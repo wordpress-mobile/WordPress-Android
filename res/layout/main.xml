@@ -3,20 +3,34 @@
 	android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:background="#FFF9F9F9">
     
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
-				android:background="#e8e8e8"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:paddingBottom="10dip"> 
+                android:layout_gravity="center_horizontal"
+                android:padding="10dip"
+                > 
+    <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section1">
+    <TextView android:id="@+id/l_section1" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+    		  android:layout_marginBottom="6dip"
+              android:text="Post Content"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"/>
     <TextView android:id="@+id/l_title" 
+    		  android:layout_below="@id/l_section1"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="@string/post_title"
-                android:textColor="#444444"/>
+              android:text="@string/post_title"/>
               
     <EditText android:id="@+id/title" 
     		  android:minHeight="40dip"
@@ -31,8 +45,7 @@
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="@string/post_content"
-              android:layout_below="@id/title"
-              android:textColor="#444444"/>
+              android:layout_below="@id/title"/>
               
     <EditText android:id="@+id/content"
     		  android:gravity="top" 
@@ -46,6 +59,7 @@
               
 <Button  
 			android:id="@+id/bold"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/content"
@@ -54,6 +68,7 @@
             android:text="B" />           
 <Button
 			android:id="@+id/em"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/bold"
@@ -64,6 +79,7 @@
         
 <Button
 			 android:id="@+id/link" 
+			 android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/em"
@@ -74,22 +90,39 @@
             
 <Button
 			android:id="@+id/bquote"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
             android:layout_alignTop="@id/link"
             android:layout_toRightOf="@id/link"
             android:textSize="22dip"
             android:text="b-quote" />          
-              
-    <TextView android:id="@+id/l_pictures" 
+              </RelativeLayout>
+<RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section2"
+                android:layout_marginTop="10dip"
+                android:layout_below="@id/section1">             
+    <TextView android:id="@+id/l_media"
+    		  android:layout_marginBottom="6dip"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:layout_below="@id/bold"
-              android:text="@string/pictures"
-              android:textColor="#444444"/>
+              android:text="Media"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"/>            
+    <TextView android:id="@+id/l_pictures" 
+    		  android:layout_below="@id/l_media"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/pictures"/>
     
 <Button
 			android:id="@+id/addPictureButton"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_below="@id/l_pictures" 
@@ -98,6 +131,7 @@
             
 <Button
 			android:id="@+id/clearPicture"
+			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
             android:textSize="20dip"
@@ -113,13 +147,29 @@
                     android:numColumns="3"
                     android:layout_below="@id/addPictureButton">             
                </GridView>
-               
+</RelativeLayout>
+<RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section3"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:layout_below="@id/section2"> 
+                <TextView android:id="@+id/l_tags_categories"
+    		  android:layout_marginBottom="6dip"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="Tags &amp; Categories"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"/>              
                    <TextView android:id="@+id/l_tags" 
               android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="@string/tags_separate_with_commas"
-                android:textColor="#444444"
-                android:layout_below="@id/gridView"/>
+              android:layout_height="wrap_content"
+              android:layout_below="@id/l_tags_categories" 
+              android:text="@string/tags_separate_with_commas"/>
               
     <EditText android:id="@+id/tags" 
     		  android:minHeight="40dip"
@@ -134,11 +184,11 @@
               android:layout_height="wrap_content" 
               android:text="@string/categories"
               android:layout_below="@id/tags"
-              android:textColor="#444444"
               android:layout_marginTop="10dip"/>
               
   <Button
 			android:id="@+id/selectCategories"
+			android:background="@drawable/wp_button_small"
      	    android:layout_below="@id/l_category"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
@@ -149,32 +199,41 @@
               android:layout_width="wrap_content" 
               android:layout_height="wrap_content"
               android:text="@string/selected_categories"
-              android:layout_below="@id/selectCategories"
-              android:textColor="#444444"/>       
-     	
-                         
-  <TextView android:id="@+id/l_publish" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
-              android:text="@string/publish"
-              android:layout_below="@id/selectedCategories"
-              android:textColor="#444444"
-              android:layout_marginTop="10dip"/>          
-                                     
+              android:layout_below="@id/selectCategories"/>        
+ </RelativeLayout> 
+ <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section4"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:layout_below="@id/section3"> 
+                <TextView android:id="@+id/l_status"
+    		  android:layout_marginBottom="6dip"
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="Status"
+              android:textStyle="bold"
+              android:shadowColor="#FFFFFFFF"
+              android:shadowDx="0"
+              android:shadowDy="2"
+              android:shadowRadius="1"/>                                       
     <CheckBox android:id="@+id/publish"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:layout_below="@id/l_publish"
+            android:layout_below="@id/l_status"
+            android:text="@string/publish"
+            android:button="@drawable/wp_checkbox"
             /> 
-    		  
+ </RelativeLayout>   		  
 <Button
 			android:id="@+id/post"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
-            android:layout_below="@id/publish"
+            android:layout_below="@id/section4"
             android:layout_alignParentRight="true"
             android:textSize="20dip"
+            android:background="@drawable/wp_button"
             android:text="@string/save" />
 <Button
 			android:id="@+id/upload"
@@ -183,6 +242,7 @@
             android:layout_alignBottom="@id/post"
             android:layout_toLeftOf="@id/post"
             android:textSize="20dip"
+            android:background="@drawable/wp_button"
             android:text="@string/upload_now" />            
 </RelativeLayout>
 </ScrollView>

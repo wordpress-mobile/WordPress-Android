@@ -1354,7 +1354,8 @@ public String uploadImages(){
 
  	  projection = new String[] {
        		    Images.Media._ID,
-       		    Images.Media.DATA
+       		    Images.Media.DATA,
+       		    Images.Media.MIME_TYPE
        		};
  	  
  	   Uri imgPath;
@@ -1362,17 +1363,19 @@ public String uploadImages(){
  	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
 
 	Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
- 	  String thumbData = "";
+ 	  String thumbData = "", mimeType = "";
  	 
  	  if (cur.moveToFirst()) {
  		  
- 		int nameColumn, dataColumn, heightColumn, widthColumn;
+ 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
  			nameColumn = cur.getColumnIndex(Images.Media._ID);
  	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+ 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
 
        String imgPath4 = imgPath.getEncodedPath();              	            
        
        thumbData = cur.getString(dataColumn);
+       mimeType = cur.getString(mimeTypeColumn);
 
  	  }
  	   
@@ -1408,12 +1411,11 @@ public String uploadImages(){
 	   }
  	   	
         //try to upload the image
-        String contentType = "image/jpg";
         Map<String, Object> m = new HashMap<String, Object>();
 
         HashMap hPost = new HashMap();
         m.put("name", imageTitle);
-        m.put("type", contentType);
+        m.put("type", mimeType);
         m.put("bits", finalBytes);
         m.put("overwrite", true);
         

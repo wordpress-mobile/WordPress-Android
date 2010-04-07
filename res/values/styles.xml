@@ -58,12 +58,29 @@
         <item name="android:textStyle">normal</item>
     </style>
     
-    <style name="Theme.WordPress">
-    	<item name="android:windowBackground">@android:drawable/screen_background_light</item>
-        <item name="android:colorBackground">@android:color/background_light</item>
-        <item name="android:textColorPrimary">#464646</item>  
-        <item name="android:textColorSecondary">#464646</item>        
-    </style>
+    <style name="WordPress" parent="@android:style/Theme.Light">
+    	<item name="android:textViewStyle">@style/WordPressTextAppearance</item> 
+    	<item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
+    	<item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
+	</style>	
+    
+    <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
+    	<item name="android:textColor">#FF464646</item>
+  	</style>
+    
+    <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
+    	<item name="android:singleLine">true</item>
+    	<item name="android:shadowColor">#BB000000</item>
+        <item name="android:shadowRadius">2.75</item>
+    	<item name="android:textColor">#FFF6F6F6</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+  	</style>
+  	
+  	<style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
+    	<item name="android:textColor">#FF464646</item>
+  	</style>
+  	
     
     <style name="Theme.TabView">
     <item name="android:windowBackground">@drawable/screen_background_black</item>
