@@ -10,12 +10,21 @@
                 android:layout_height="wrap_content"
                 android:padding="10dip"
 				android:background="#FFF9F9F9">
-            
+    <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section1"> 
+     <TextView android:id="@+id/l_section1" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="Account Details"
+              style="@style/WordPressSectionHeader"/>       
     <TextView android:id="@+id/l_url" 
     		  android:textColor="#444444"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:text="Blog URL:"/>
+              android:text="Blog URL:"
+              android:layout_below="@id/l_section1"/>
               
     <EditText android:id="@+id/url" 
     		  android:inputType="textUri"
@@ -80,7 +89,7 @@
             android:layout_toLeftOf="@id/save"
             android:text="@string/cancel"
             android:background="@drawable/wp_button_small" />
-            
+            </RelativeLayout>
 <TextView android:id="@+id/l_wordpressdotcom"
       		android:textColor="#444444"
       		android:shadowColor="#FFFFFF"
@@ -92,7 +101,7 @@
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:text="@string/dont_yet_have_a_blog"
-            android:layout_below="@id/cancel"/>
+            android:layout_below="@id/section1"/>
 <Button
 			android:layout_width="wrap_content" 
             android:layout_height="wrap_content"

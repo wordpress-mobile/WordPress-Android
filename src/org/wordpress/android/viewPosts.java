@@ -1146,11 +1146,11 @@ public String submitPost() throws IOException {
     }
     
     contentStruct.put("post_type", (isPage) ? "page" : "post");
-    contentStruct.put("title", escapeUtils.escapeHtml(title));
-    contentStruct.put("description", escapeUtils.escapeHtml(content));
+    contentStruct.put("title", title);
+    contentStruct.put("description", content);
     if (!isPage){
 	    if (tags != ""){
-	    contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
+	    contentStruct.put("mt_keywords", tags);
 	    }
 	    if (theCategories.length > 0){
 	    contentStruct.put("categories", theCategories);

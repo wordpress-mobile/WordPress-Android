@@ -240,10 +240,10 @@ public class editPost extends Activity {
 			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
 			        EditText contentET = (EditText)findViewById(R.id.content);
 			        if (contentHash.get("mt_text_more").toString() != ""){
-			        	contentET.setText(escapeUtils.unescapeHtml(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString()));
+			        	contentET.setText(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString());
 			        }
 			        else{
-			        	contentET.setText(escapeUtils.unescapeHtml(contentHash.get("description").toString()));
+			        	contentET.setText(contentHash.get("description").toString());
 			        }
 			      
 			        
@@ -636,7 +636,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         if (!enteredSettings){
         	res = "invalidSettings";
         }
-        else if (title.equals("") || content.equals(""))
+        else if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
         {
         	res = "emptyFields";
         }
@@ -685,15 +685,15 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         }
         
         contentStruct.put("post_type", "post");
-        contentStruct.put("title", escapeUtils.escapeHtml(title));
-        contentStruct.put("description", escapeUtils.escapeHtml(content));
+        contentStruct.put("title", title);
+        contentStruct.put("description", content);
         if (!isPage){
         	EditText tagsET = (EditText)findViewById(R.id.tags);
             String tags = tagsET.getText().toString();
             // categoryID = getCategoryId(selectedCategory);
             String[] theCategories = categories.split(",");
         if (tags != ""){
-        contentStruct.put("mt_keywords", escapeUtils.escapeHtml(tags));
+        contentStruct.put("mt_keywords", tags);
         }
         if (theCategories.length > 0){
         contentStruct.put("categories", theCategories);
@@ -1615,9 +1615,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         if (!enteredSettings){
         	res = "invalidSettings";
         }
-        else if (title.equals("") || content.equals(""))
+        else if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
         {
-        	res = "emptyFields";
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
+          dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
+          dialogBuilder.setPositiveButton("OK",  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //Just close the window
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
         }
         else {
         

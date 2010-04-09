@@ -248,6 +248,7 @@ res/drawable/list_selector_background_pressed.9.png -text
 res/drawable/menu_button.9.png -text
 res/drawable/menu_button_bg.9.png -text
 res/drawable/menu_button_selector.xml -text
+res/drawable/new_account_logo.jpg -text
 res/drawable/pages_tab.png -text
 res/drawable/pages_tab_active.png -text
 res/drawable/placeholder.png -text
@@ -265,6 +266,7 @@ res/drawable/wp_logo_home.png -text
 res/drawable/wp_small.9.png -text
 res/drawable/wp_small_down.9.png -text
 res/drawable/wp_small_over.9.png -text
+res/layout/add_account.xml -text
 res/layout/add_category.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
@@ -278,7 +280,7 @@ res/layout/list_selector_background_transition.xml -text
 res/layout/main.xml -text
 res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text
-res/layout/newaccount.xml -text
+res/layout/new_account.xml -text
 res/layout/notification_options.xml -text
 res/layout/pages_tab_selector.xml -text
 res/layout/posts_tab_selector.xml -text
@@ -296,6 +298,7 @@ res/layout/viewposts.xml -text
 res/values-de/strings.xml -text
 res/values-fi/strings.xml -text
 res/values-fr/strings.xml -text
+res/values-hdpi/styles.xml -text
 res/values-in/strings.xml -text
 res/values-it/strings.xml -text
 res/values-ja/strings.xml -text
@@ -320,6 +323,7 @@ src/org/wordpress/android/StringHelper.java -text
 src/org/wordpress/android/TrustAllManager.java -text
 src/org/wordpress/android/TrustAllSSLSocketFactory.java -text
 src/org/wordpress/android/WordPress.java -text
+src/org/wordpress/android/addAccount.java -text
 src/org/wordpress/android/addCategory.java -text
 src/org/wordpress/android/broadcastReceiver.java -text
 src/org/wordpress/android/categoriesDB.java -text
@@ -339,6 +343,7 @@ src/org/wordpress/android/replyToComment.java -text
 src/org/wordpress/android/selectCategories.java -text
 src/org/wordpress/android/settings.java -text
 src/org/wordpress/android/settingsDB.java -text
+src/org/wordpress/android/signup.java -text
 src/org/wordpress/android/splashScreen.java -text
 src/org/wordpress/android/tabView.java -text
 src/org/wordpress/android/viewComment.java -text

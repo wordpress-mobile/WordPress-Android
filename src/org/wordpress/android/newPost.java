@@ -570,7 +570,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
             dialogBuilder.setCancelable(true);
            dialogBuilder.create().show();
         }
-        else if (title.equals("") || content.equals(""))
+        else if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
         {
         	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
 			  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));

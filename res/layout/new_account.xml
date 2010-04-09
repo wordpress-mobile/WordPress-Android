@@ -1,0 +1,41 @@
+<LinearLayout android:id="@+id/LinearLayout01" 
+android:layout_width="fill_parent" 
+android:layout_height="fill_parent" 
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:background="#FFF9F9F9" 
+android:gravity="center_horizontal"
+android:orientation="vertical">
+<ImageView 
+			android:scaleType="centerInside" 
+			android:layout_width="240dip"
+			android:layout_height="240dip" 
+			android:layout_marginTop="30dip"
+			android:layout_marginBottom="30dip"
+			android:id="@+id/wordpress_logo" 
+			android:src="@drawable/new_account_logo">
+</ImageView>
+<Button
+			android:id="@+id/setupAccount"
+            android:layout_width="260dip"  
+            android:layout_height="wrap_content"
+            android:textSize="14dip"
+            android:shadowColor="#FFFFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:textStyle="bold"
+            android:background="@drawable/wp_button"
+            android:text="@string/i_have_blog" />
+<Button
+			android:id="@+id/createAccount"
+            android:layout_width="260dip"  
+            android:layout_height="wrap_content"
+            android:textSize="14dip"
+            android:shadowColor="#FFFFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:textStyle="bold"
+            android:background="@drawable/wp_button"
+            android:text="@string/new_to_wp" />
+</LinearLayout>

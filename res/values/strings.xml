@@ -21,6 +21,8 @@
   <string name="place_image">Place image:</string>
   <string name="password">Password:</string>
   <string name="get_free_blog">Get a free blog at WordPress.com</string>
+  <string name="i_have_blog">I have a WordPress blog</string>
+  <string name="new_to_wp">I\'m new to WordPress</string>
   <string name="blogs">Blogs</string>
   <string name="upload_now">Upload Now</string>
   
@@ -44,7 +46,7 @@
   <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
-  <string name="account_removed_successfully">Account removed successfully</string>
+  <string name="account_removed_successfully">Blog removed successfully</string>
   <string name="error">Error</string>
   <string name="could_not_remove_account">Could not remove blog.</string>
   <string name="edit_page">Edit Page</string>

@@ -382,7 +382,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
 public boolean onOptionsItemSelected(final MenuItem item){
     switch (item.getItemId()) {
     case 0:
-    	Intent i = new Intent(this, newAccount.class);
+    	Intent i = new Intent(this, addAccount.class);
 
     	startActivityForResult(i, 0);
     	
