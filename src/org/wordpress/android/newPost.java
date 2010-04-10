@@ -1036,7 +1036,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
                         Log.i("camera", "Selected image: " + capturedImage.toString());
 
-                    //f.delete();
+                    f.delete();
                     
                     Bundle bundle = new Bundle();
                     
@@ -1050,13 +1050,32 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
        
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
                 }
 
         }
         else {
-                Log.i("Camera", "Result code was " + resultCode);
-
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+    		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+            dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+          dialogBuilder.setPositiveButton("OK",  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // just close the dialog
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
         }
 
 		     	break;

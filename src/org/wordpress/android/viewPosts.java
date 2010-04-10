@@ -1082,19 +1082,7 @@ public String submitPost() throws IOException {
     //upload the images and return the HTML
     imageContent =  uploadImages();
     
-    Vector<Object> myPostVector = new Vector<Object> ();
     String res = null;
-    //before we do anything, validate that the user has entered settings
-    boolean enteredSettings = checkSettings();
- 
-    if (!enteredSettings){
-    	res = "invalidSettings";
-    }
-    else if (title.equals("") || content.equals(""))
-    {
-    	res = "emptyFields";
-    }
-    else {
     
     // categoryID = getCategoryId(selectedCategory);
     String[] theCategories = new String[selectedCategories.size()];
@@ -1258,8 +1246,6 @@ public String submitPost() throws IOException {
 			}; 
 			this.runOnUiThread(action);
 			}
-
-    }// if/then for valid settings
     
 	return res;
 }

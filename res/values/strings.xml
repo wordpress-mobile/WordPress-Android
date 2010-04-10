@@ -238,4 +238,8 @@
   <!--  action from share intents -->
   <string name="select_a_blog">Select a Blog</string>
   <string name="no_account">No WordPress account found, please add an account and try again.</string>
+  
+  <!--  file errors -->
+  <string name="file_error">File Error</string>
+  <string name="file_error_encountered">An error occurred while setting up the captured image.</string>
 </resources>
