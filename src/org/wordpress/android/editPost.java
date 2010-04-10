@@ -686,6 +686,9 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         
         contentStruct.put("post_type", "post");
         contentStruct.put("title", title);
+        //for trac #53, add <p> and <br /> tags
+        content = content.replace("/\n\n/g", "</p><p>");
+        content = content.replace("/\n/g", "<br />");
         contentStruct.put("description", content);
         if (!isPage){
         	EditText tagsET = (EditText)findViewById(R.id.tags);
@@ -1542,7 +1545,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			{
 				dismissDialog(editPost.this.ID_DIALOG_POSTING);	
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-				  dialogBuilder.setTitle(getResources().getText(R.string.post_edited));
+				  dialogBuilder.setTitle(getResources().getText((isPage) ? R.string.page_edited : R.string.post_edited));
 				  if (xmlrpcError){
 					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_image_error : R.string.post_edited_image_error));  
 				  }

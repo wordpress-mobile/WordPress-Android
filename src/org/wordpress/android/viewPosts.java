@@ -1147,6 +1147,9 @@ public String submitPost() throws IOException {
     
     contentStruct.put("post_type", (isPage) ? "page" : "post");
     contentStruct.put("title", title);
+    //for trac #53, add <p> and <br /> tags
+    content = content.replace("/\n\n/g", "</p><p>");
+    content = content.replace("/\n/g", "<br />");
     contentStruct.put("description", content);
     if (!isPage){
 	    if (tags != ""){

@@ -17,7 +17,7 @@
      <TextView android:id="@+id/l_section1" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:text="Account Details"
+              android:text="@string/account_details"
               style="@style/WordPressSectionHeader"/>       
     <TextView android:id="@+id/l_url" 
     		  android:textColor="#444444"

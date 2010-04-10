@@ -25,6 +25,7 @@
   <string name="new_to_wp">I\'m new to WordPress</string>
   <string name="blogs">Blogs</string>
   <string name="upload_now">Upload Now</string>
+  <string name="account_details">Account Details</string>
   
   <!--  general strings -->
   <string name="app_name">WordPress</string>
@@ -215,6 +216,7 @@
   <string name="select_photo">Select a photo from gallery</string>
   <string name="take_photo">Take a new photo</string>
   <string name="add_media">Add Media</string>
+  <string name="media">Media</string>
   
   <!--  category management -->
   <string name="refresh_categories">Refresh Categories</string>

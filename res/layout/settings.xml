@@ -4,19 +4,28 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="none"
-    android:background="#e8e8e8">
+    android:background="#FFF9F9F9">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-				android:background="#e8e8e8">
-              
+				android:background="#FFF9F9F9">
+        <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section1"> 
+     <TextView android:id="@+id/l_section1" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/account_details"
+              style="@style/WordPressSectionHeader"/>        
       <TextView android:id="@+id/l_username"  
-      android:textColor="#444444"
+      			android:textColor="#444444"
+      			android:layout_below="@id/l_section1"
         	  android:layout_marginTop="10dip"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:layout_below="@id/url" android:text="@string/username"/>
+              android:text="@string/username"/>
               
     <EditText android:id="@+id/username" 
               android:layout_width="fill_parent" 
@@ -41,13 +50,25 @@
               android:password="true"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_password"/>
-
+</RelativeLayout>
+<RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section2"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:layout_below="@id/section1"> 
+     <TextView android:id="@+id/l_section2" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/media"
+              style="@style/WordPressSectionHeader"/>
       <TextView android:id="@+id/l_imagePlacement"
       android:textColor="#444444"
         		android:layout_marginTop="10dip" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
-              android:layout_below="@id/password" android:text="@string/place_image"/>
+              android:layout_below="@id/l_section2" android:text="@string/place_image"/>
               
         <RadioGroup
         android:layout_width="fill_parent"
@@ -106,12 +127,12 @@
             android:layout_toRightOf="@id/l_fullSizeImage"
             android:layout_marginRight="2dip"
             /> 
-  
+  </RelativeLayout>
 <Button
 			android:id="@+id/save"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
-            android:layout_below="@id/fullSizeImage"
+            android:layout_below="@id/section2"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dip" android:text="@string/save"/>
  
