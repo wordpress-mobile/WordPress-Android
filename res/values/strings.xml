@@ -57,7 +57,7 @@
   <string name="getting_post">Getting post</string>
   <string name="please_wait_getting_post">Please wait while attempting to get post (note - pictures will not be loaded)</string>
   <string name="no_text_selected">No text selected</string>
-  <string name="howto_select_text">You can select text by holding the shift key and scrolling.</string>
+  <string name="howto_select_text">You can select text by long pressing in the text area.</string>
   <string name="select_text_to_bold">Please select some text first in order to bold it.</string>
   <string name="select_text_to_link">Please select some text first in order to link it.</string>
   <string name="select_text_to_emphasize">Please select some text in order to emphasize it.</string>
@@ -72,7 +72,7 @@
   <string name="settings_not_found">Settings not found</string>
   <string name="settings_not_found_load_now">Some required settings were not found. Load settings now?</string>
   <string name="empty_fields">Empty fields</string>
-  <string name="title_post_required">Title and Post are required fields. Please enter something to your post before submitting!</string>
+  <string name="title_post_required">A Post Title with Post Content or a Media attachment is required.</string>
   <string name="post_edited">Post edited</string>
   <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading images</string>
   <string name="post_edited_successfully">Post edited successfully</string>
