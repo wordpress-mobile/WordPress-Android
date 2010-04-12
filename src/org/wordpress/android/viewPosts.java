@@ -1335,40 +1335,46 @@ public String uploadImages(){
  		{
  	   
  	   Uri imageUri = Uri.parse(curImagePath);
- 	   
- 	   String imgID = imageUri.getLastPathSegment();
- 	   long imgID2 = Long.parseLong(imgID);
- 	   
- 	  String[] projection; 
-
- 	  projection = new String[] {
-       		    Images.Media._ID,
-       		    Images.Media.DATA,
-       		    Images.Media.MIME_TYPE
-       		};
- 	  
- 	   Uri imgPath;
-
- 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-
-	Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
- 	  String thumbData = "", mimeType = "";
- 	 
- 	  if (cur.moveToFirst()) {
- 		  
- 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
- 			nameColumn = cur.getColumnIndex(Images.Media._ID);
- 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
- 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-
-       String imgPath4 = imgPath.getEncodedPath();              	            
-       
-       thumbData = cur.getString(dataColumn);
-       mimeType = cur.getString(mimeTypeColumn);
-
- 	  }
- 	   
- 	   File jpeg = new File(thumbData);
+ 	   File jpeg = null;
+ 	   String mimeType = "";
+ 	   if (imageUri.toString().contains("content:")){ //file is in media library
+		 	   String imgID = imageUri.getLastPathSegment();
+		 	   
+		 	   long imgID2 = Long.parseLong(imgID);
+		 	   
+		 	  String[] projection; 
+		
+		 	  projection = new String[] {
+		       		    Images.Media._ID,
+		       		    Images.Media.DATA,
+		       		    Images.Media.MIME_TYPE
+		       		};
+		 	  
+		 	   Uri imgPath;
+		
+		 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+		
+			Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+		 	  String thumbData = "";
+		 	 
+		 	  if (cur.moveToFirst()) {
+		 		  
+		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
+		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+		
+		       String imgPath4 = imgPath.getEncodedPath();              	            
+		       
+		       thumbData = cur.getString(dataColumn);
+		       mimeType = cur.getString(mimeTypeColumn);
+		       jpeg = new File(thumbData);
+		 	  
+		 	  }
+ 	   }
+ 	   else{ //file is not in media library
+ 		   jpeg = new File(imageUri.toString().replace("file://", ""));
+ 	   }
  	   
  	   imageTitle = jpeg.getName();
  	  

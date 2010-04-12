@@ -823,38 +823,46 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 		{
 	 	   
 	 	   Uri imageUri = Uri.parse(curImagePath);
-	 	   
-	 	   String imgID = imageUri.getLastPathSegment();
-	 	   long imgID2 = Long.parseLong(imgID);
-	 	   
-	 	  String[] projection; 
-
-	 	  projection = new String[] {
-	       		    Images.Media._ID,
-	       		    Images.Media.DATA
-	       		};
-	 	  
-	 	   Uri imgPath;
-
-	 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-
-		Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
-	 	  String thumbData = "";
-	 	 
-	 	  if (cur.moveToFirst()) {
-	 		  
-	 		int nameColumn, dataColumn, heightColumn, widthColumn;
-	 			nameColumn = cur.getColumnIndex(Images.Media._ID);
-	 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-
-	       String imgPath4 = imgPath.getEncodedPath();              	            
-	       
-	       thumbData = cur.getString(dataColumn);
-
-	 	  }
-	 	   
-	 	   File jpeg = new File(thumbData);
-	 	   
+	 	   File jpeg = null;
+	 	   String mimeType = "";
+	 	   if (imageUri.toString().contains("content:")){ //file is in media library
+		 	   String imgID = imageUri.getLastPathSegment();
+		 	   long imgID2 = Long.parseLong(imgID);
+		 	   
+		 	  String[] projection; 
+	
+		 	  projection = new String[] {
+		       		    Images.Media._ID,
+		       		    Images.Media.DATA,
+		       		    Images.Media.MIME_TYPE
+		       		};
+		 	  
+		 	   Uri imgPath;
+	
+		 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+	
+			Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+		 	  String thumbData = "";
+		 	 
+		 	  if (cur.moveToFirst()) {
+		 		  
+		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
+		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+	
+		       String imgPath4 = imgPath.getEncodedPath();              	            
+		       
+		       thumbData = cur.getString(dataColumn);
+		       mimeType = cur.getString(mimeTypeColumn);
+		       
+		 	  }
+		 	   
+		 	   jpeg = new File(thumbData);
+	 	   }
+	 	   else{ //file is not in media library
+	 		   jpeg = new File(imageUri.toString().replace("file://", ""));
+	 	   }
 	 	   imageTitle = jpeg.getName();
 	 	  
 	 	   byte[] bytes = new byte[(int) jpeg.length()];
@@ -885,12 +893,11 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		   }
 	 	   	
 	        //try to upload the image
-	        String contentType = "image/jpg";
 	        Map<String, Object> m = new HashMap<String, Object>();
 
 	        HashMap hPost = new HashMap();
 	        m.put("name", imageTitle);
-	        m.put("type", contentType);
+	        m.put("type", mimeType);
 	        m.put("bits", finalBytes);
 	        m.put("overwrite", true);
 	        
@@ -1299,6 +1306,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	      		};
 	     	   
 			Cursor cur = managedQuery(tempURI, projection, null, null, null);
+			File jpeg = null;
+			if (cur != null){
 	     	  String thumbData = "";
 	     	 
 	     	  if (cur.moveToFirst()) {
@@ -1310,10 +1319,14 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     		             	            
 	           
 	           thumbData = cur.getString(dataColumn);
-
+	           
 	     	  }
-	     	   
-	     	   File jpeg = new File(thumbData);
+	     	  
+	     	 jpeg = new File(thumbData);
+			}
+			else{
+				jpeg = new File(tempURI.toString().replace("file://", ""));
+			}
 	     	   
 	     	   imageTitle = jpeg.getName();
 	     	  
