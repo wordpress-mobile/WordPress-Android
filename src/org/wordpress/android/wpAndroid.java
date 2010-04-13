@@ -411,6 +411,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	case 0:
 		settingsDB settingsDB = new settingsDB(this);
 		accounts = settingsDB.getAccounts(this);
+		String action = extras.getString("returnStatus");
 		
 		if (accounts.size() == 0){
 			finish();

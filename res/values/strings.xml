@@ -129,12 +129,6 @@
   <string name="reply_required">Required Field</string>
   <string name="reply_please_enter">Please enter something in the reply field.</string>
   
-  <!-- post preview -->
-  <string name="post_preview">Post Preview:</string>
-  <string name="getting_preview">Getting Preview</string>
-  <string name="getting_preview_attempting">Attempting to get preview</string>
-  <string name="preview">Preview</string>
-  
   <!-- view post comments -->
   <string name="view_comments">View Comments</string>
   <string name="no_approved_comments">There are no approved comments for this post</string>
@@ -169,13 +163,12 @@
   
   <!--  page actions -->
   <string name="page_actions">Page Actions</string>
-  <string name="preview_page">Preview Page</string>
+  <string name="preview_page">View Page</string>
   <string name="page_attempt_upload">Attempting to upload page</string>
-  <string name="page_preview">Page Preview:</string>
   
   <!--  post actions -->
   <string name="post_actions">Post Actions</string>
-  <string name="preview_post">Preview Post</string>
+  <string name="preview_post">View Post</string>
   <string name="post_attempt_upload">Attempting to upload post</string>
   
   <!--  comment actions -->

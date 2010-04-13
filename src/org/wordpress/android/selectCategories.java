@@ -486,8 +486,6 @@ public class selectCategories extends ListActivity {
 	    			th.start();
 	    			
 			}
-					
-				
 
 			break;
 		}

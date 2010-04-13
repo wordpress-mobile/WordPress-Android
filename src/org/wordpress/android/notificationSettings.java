@@ -191,6 +191,7 @@ public void displayAccounts(){
 	    
 	    final Button save = new Button(this);
 	    save.setLayoutParams(params2);
+	    save.setBackgroundDrawable(getResources().getDrawable(R.drawable.wp_button_small));
         save.setTextSize(18);
 	    save.setText("Save");
 	    

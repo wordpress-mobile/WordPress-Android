@@ -4,17 +4,7 @@ android:background="#e8e8e8"
 				android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:padding="0px" 
-                android:orientation="vertical">   
-<TextView
-		android:id="@+id/postPreview"
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		android:padding="4dip"
-		  android:textColor="#444444"
-		  android:background="#b7b7b7"
-		  android:gravity="center"
-		android:text="@string/post_preview">
-</TextView>        
+                android:orientation="vertical">          
 <WebView  android:id="@+id/webView"
  android:layout_width="wrap_content" android:layout_height="fill_parent">
 </WebView>        

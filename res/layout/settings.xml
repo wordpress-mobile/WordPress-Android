@@ -134,6 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/section2"
             android:layout_alignParentRight="true"
+            android:background="@drawable/wp_button_small"
             android:layout_marginLeft="10dip" android:text="@string/save"/>
  
 <Button
@@ -141,6 +142,7 @@
      		android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/save"
+            android:background="@drawable/wp_button_small"
             android:layout_toLeftOf="@id/save" android:text="@string/cancel"/>
  
 </RelativeLayout>

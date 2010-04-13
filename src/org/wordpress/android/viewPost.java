@@ -10,9 +10,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 
@@ -30,8 +34,10 @@ public class viewPost extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-       
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.viewpost);
+        setProgressBarIndeterminateVisibility(true);
+        
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
@@ -40,145 +46,51 @@ public class viewPost extends Activity {
          accountName = extras.getString("accountName");
          isPage = extras.getBoolean("isPage");
         }   
-        
-        pd = ProgressDialog.show(viewPost.this,
-        		getResources().getText(R.string.getting_preview), getResources().getText(R.string.getting_preview_attempting), true, false);
+
         if (isPage){
         	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_page));
-        	TextView postPreview = (TextView) findViewById(R.id.postPreview);
-        	postPreview.setText(getResources().getText(R.string.page_preview));
         }
         else{
         	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_post));
         }
         
-        
-        
-        Vector settings = new Vector();
         settingsDB settingsDB = new settingsDB(this);
-    	settings = settingsDB.loadSettings(this, id);
+        Vector account = settingsDB.loadSettings(this, id);
+        String blogURL = account.get(0).toString();
+        blogURL = blogURL.replace("https:", "http:");
+        blogURL = blogURL.replace("xmlrpc.php", "") + "?p=" + postID;
         
-    	
-    	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = settings.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
-    	}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
+        WebView wv = (WebView) findViewById(R.id.webView);
+		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		//pretend we're a desktop browser
+		wv.getSettings().setUserAgentString("Mozilla/5.0 (Linux) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Safari/530.17");
+		wv.getSettings().setBuiltInZoomControls(true);
+		wv.getSettings().setJavaScriptEnabled(true);
+		wv.setWebViewClient(new WordPressWebViewClient());
 
-        	
-        	client = new XMLRPCClient(sURL);
-        	
-        	XMLRPCMethod method = new XMLRPCMethod("metaWeblog.getPost", new XMLRPCMethodCallback() {
-				public void callFinished(Object result) {
-					pd.dismiss();
-					String s = "done";
-					s = result.toString();
-					
-					HashMap resultHash = (HashMap) result;
-					
-					String HTML = resultHash.get("description").toString();
-					
-					WebView wv = (WebView) findViewById(R.id.webView);
-					
-					String mimetype = "text/html";
-					String encoding = "utf-8";
-
-					//wv.loadData(HTML, mimetype, encoding);
-					wv.loadDataWithBaseURL(null, HTML, mimetype, encoding, "about:blank");
-					wv.clearCache(true);
-
-				}
-	        });
-        	
-	        Object[] params = {
-	        		postID,
-	        		sUsername,
-	        		sPassword
-	        };
-	        
-	        
-	        method.call(params);
-        	  
-        
+		wv.loadUrl(blogURL);
         
         
     }
 
-
-interface XMLRPCMethodCallback {
-	void callFinished(Object result);
+private class WordPressWebViewClient extends WebViewClient {
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        view.loadUrl(url);
+        return true;
+    }
+    @Override
+    public void onPageFinished(WebView  view, String  url){
+    	setProgressBarIndeterminateVisibility(false);
+    	view.clearCache(true);
+    }
 }
 
-class XMLRPCMethod extends Thread {
-	private String method;
-	private Object[] params;
-	private Handler handler;
-	private XMLRPCMethodCallback callBack;
-	public XMLRPCMethod(String method, XMLRPCMethodCallback callBack) {
-		this.method = method;
-		this.callBack = callBack;
-		handler = new Handler();
-	}
-	public void call() {
-		call(null);
-	}
-	public void call(Object[] params) {
-		this.params = params;
-		start();
-	}
-	@Override
-	public void run() {
-		try {
-			final long t0 = System.currentTimeMillis();
-			final Object result = (Object) client.call(method, params);
-			final long t1 = System.currentTimeMillis();
-			handler.post(new Runnable() {
-				public void run() {
-
-					callBack.callFinished(result);
-				}
-			});
-		} catch (final XMLRPCFault e) {
-			handler.post(new Runnable() {
-				public void run() {
-					pd.dismiss();
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPost.this);
-					  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-		              dialogBuilder.setMessage(e.getFaultString());
-		              dialogBuilder.setPositiveButton("OK",  new
-		            		  DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                              // Just close the window.
-                      
-                          }
-                      });
-		              dialogBuilder.setCancelable(true);
-		             dialogBuilder.create().show();
-
-				}
-			});
-		} catch (final XMLRPCException e) {
-			handler.post(new Runnable() {
-				public void run() {
-					pd.dismiss();
-					Throwable couse = e.getCause();
-					if (couse instanceof HttpHostConnectException) {
-						//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
-					} else {
-						//status.setText("Error " + e.getMessage());
-					}
-				}
-			});
-		}
-	}
+@Override
+public void onConfigurationChanged(Configuration newConfig) {
+  //ignore orientation change
+  super.onConfigurationChanged(newConfig);
 }
-
 
 }
 

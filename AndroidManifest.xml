@@ -21,7 +21,7 @@
   		</activity>
 		<activity android:configChanges="orientation|keyboardHidden" android:name="addAccount"/>
 		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="viewPost" />
+		<activity android:name="viewPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="notificationSettings" android:label="Notification Settings" />
 		<service android:name="commentService" android:label="Comment Service" />
 		<receiver android:name="broadcastReceiver" />
@@ -44,8 +44,8 @@
 		</receiver>
 <activity android:name="selectCategories" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:theme="@android:style/Theme.Dialog" android:name="addCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="signup"></activity>
-<activity android:name="newAccount"></activity>
+<activity android:name="signup" android:configChanges="orientation|keyboardHidden"></activity>
+<activity android:name="newAccount" android:screenOrientation="portrait"></activity>
 </application>
 
 	<supports-screens android:smallScreens="true"

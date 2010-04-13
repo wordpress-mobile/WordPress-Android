@@ -92,6 +92,7 @@ public class newAccount extends Activity {
 		switch(requestCode) {
 		case 0:
 			String action = extras.getString("returnStatus");
+			if (action.equals("SAVE")){
 			Bundle bundle = new Bundle();
             
             bundle.putString("returnStatus", action);
@@ -99,10 +100,27 @@ public class newAccount extends Activity {
             mIntent.putExtras(bundle);
             setResult(RESULT_OK, mIntent);
             finish();
+			}
 		    break;
 		}
 	}//end null check
 
 	}
+	
+	@Override public boolean onKeyDown(int i, KeyEvent event) {
+
+		  // only intercept back button press
+		  if (i == KeyEvent.KEYCODE_BACK) {
+       	 Bundle bundle = new Bundle();
+           
+           bundle.putString("returnStatus", "CANCEL");
+           Intent mIntent = new Intent();
+           mIntent.putExtras(bundle);
+           setResult(RESULT_OK, mIntent);
+           finish();
+		  }
+
+		  return false; // propagate this keyevent
+		}
 	
 }

@@ -88,9 +88,6 @@ public class viewComment extends Activity {
          post_id = extras.getString("post_id");
         } 
         
-        final Window w = getWindow();
-        w.requestFeature(Window.FEATURE_LEFT_ICON);
-        
         setContentView(R.layout.view_comment);
         
         final String gravatarURL = "http://gravatar.com/avatar/" + getMd5Hash(email.trim()) + "?s=200&d=identicon";
