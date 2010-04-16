@@ -142,6 +142,7 @@ public class editPost extends Activity {
         	        selectedImageCtr++;
         	     	  
         	     	GridView gridview = (GridView) findViewById(R.id.gridView);
+        	     	gridview.setVisibility(View.VISIBLE);
         	     	gridview.setAdapter(new ImageAdapter(this));
         		}
         		
@@ -603,7 +604,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        selectedImageIDs = new Vector();
 			        selectedImageCtr = 0;
 			        GridView gridview = (GridView) findViewById(R.id.gridView);
-			     	 gridview.setAdapter(null);
+			        gridview.setVisibility(View.GONE);
+			     	gridview.setAdapter(null);
                 	         	
                 }
         });            
@@ -1450,13 +1452,13 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		    Uri imageUri = data.getData();
 		    String imgPath = imageUri.getEncodedPath();
    
-           selectedImageIDs.add(selectedImageCtr, imageUri);
-           imageUrl.add(selectedImageCtr, imgPath);
-           selectedImageCtr++;
-
+            selectedImageIDs.add(selectedImageCtr, imageUri);
+            imageUrl.add(selectedImageCtr, imgPath);
+            selectedImageCtr++;
+            gridview.setVisibility(View.VISIBLE);
 	     	  
-	     	 gridview.setAdapter(new ImageAdapter(this));
-	     	 break;
+	     	gridview.setAdapter(new ImageAdapter(this));
+	     	break;
 		case 4:
 			if (resultCode == Activity.RESULT_OK) {
 
@@ -1481,8 +1483,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     selectedImageIDs.add(selectedImageCtr, capturedImage);
                     imageUrl.add(selectedImageCtr, capturedImage.toString());
                     selectedImageCtr++;
-
-         	     	 gridview.setAdapter(new ImageAdapter(this));
+                    gridview.setVisibility(View.VISIBLE);
+         	     	gridview.setAdapter(new ImageAdapter(this));
        
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block

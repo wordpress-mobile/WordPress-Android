@@ -141,6 +141,7 @@
                     android:layout_height="fill_parent"
                     android:gravity="fill_vertical"
                     android:numColumns="3"
+                    android:visibility="gone"
                     android:layout_below="@id/addPictureButton">             
                </GridView>
 </RelativeLayout>

@@ -481,6 +481,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        selectedImageCtr = 0;
 			        GridView gridview = (GridView) findViewById(R.id.gridView);
 			     	 gridview.setAdapter(null);
+			     	 gridview.setVisibility(View.GONE);
                 	         	
                 }
         });            
@@ -512,7 +513,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	imageUrl.add(selectedImageCtr, imgPath);
 	           	selectedImageCtr++;
 	           	GridView gridview = (GridView) findViewById(R.id.gridView);
-		     	  
+		     	  gridview.setVisibility(View.VISIBLE);
 	           	gridview.setAdapter(new ImageAdapter(newPost.this));
         }
 		
@@ -1017,7 +1018,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
            selectedImageIDs.add(selectedImageCtr, imageUri);
            imageUrl.add(selectedImageCtr, imgPath);
            selectedImageCtr++;
-
+           gridview.setVisibility(View.VISIBLE);
 	     	  
 	     	 gridview.setAdapter(new ImageAdapter(this));
 	     	 break;
@@ -1045,7 +1046,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     selectedImageIDs.add(selectedImageCtr, capturedImage);
                     imageUrl.add(selectedImageCtr, capturedImage.toString());
                     selectedImageCtr++;
-
+                    gridview.setVisibility(View.VISIBLE);
          	     	 gridview.setAdapter(new ImageAdapter(this));
        
                 } catch (FileNotFoundException e) {
