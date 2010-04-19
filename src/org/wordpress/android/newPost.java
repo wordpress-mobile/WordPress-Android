@@ -150,10 +150,7 @@ public class newPost extends Activity {
         	        accountName = blogNames[0];
         	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
         	        setContent();
-                }
-                
-    	        
-                
+                } 
         	}
         	else{
         		//no account, load main view to load new account view
@@ -166,6 +163,11 @@ public class newPost extends Activity {
         	
         	
         }
+        else{
+        	//clear up some variables
+            selectedImageIDs.clear();
+            selectedImageCtr = 0;
+        }
 
         if (accountName != null){
         	this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
@@ -173,10 +175,6 @@ public class newPost extends Activity {
         else{
         	this.setTitle(getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
         }
-
-      //clear up some variables
-        selectedImageIDs.clear();
-        selectedImageCtr = 0;
         
         //loads the categories from the db if they exist
         if (!isPage){
