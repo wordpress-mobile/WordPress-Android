@@ -1296,8 +1296,6 @@ public String uploadImages(){
     	{
     		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
     	}
-    	//test
-    	sURL = "http://droundhill.wordpress.com/xmlrpc.php";
 		String sBlogName = categoriesVector.get(1).toString();
 		String sUsername = categoriesVector.get(2).toString();
 		String sPassword = categoriesVector.get(3).toString();
