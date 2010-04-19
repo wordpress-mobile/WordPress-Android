@@ -7,11 +7,11 @@ android:gravity="center_horizontal"
 android:orientation="vertical">
 <ImageView 
 			android:scaleType="centerInside" 
-			android:layout_width="220dip"
-			android:layout_height="220dip" 
-			android:layout_marginTop="20dip"
+			android:layout_width="246dip"
+			android:layout_height="246dip" 
+			android:layout_marginTop="24dip"
 			android:id="@+id/wordpress_logo" 
-			android:src="@drawable/new_account_logo">
+			android:src="@drawable/new_account_logo"> 
 </ImageView>
 <TextView android:id="@+id/welcome"
 		  android:layout_width="wrap_content"
@@ -25,7 +25,7 @@ android:orientation="vertical">
 		  android:layout_marginBottom="20dip"
 		  android:shadowColor="#FFFFFFFF"
             android:shadowDx="0"
-            android:shadowDy="1"
+            android:shadowDy="2"
             android:shadowRadius="1"
             android:textSize="20dip"/>	  
 <Button
@@ -36,7 +36,7 @@ android:orientation="vertical">
             android:shadowColor="#FFFFFFFF"
             android:shadowDx="0"
             android:shadowDy="2"
-            android:layout_marginBottom="6dip"
+            android:layout_marginBottom="8dip"
             android:shadowRadius="1"
             android:textStyle="bold"
             android:background="@drawable/wp_button"

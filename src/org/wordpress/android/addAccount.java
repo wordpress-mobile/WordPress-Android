@@ -29,6 +29,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import android.os.Looper;
 import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,7 +54,6 @@ public class addAccount extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.add_account);	
 		
 		this.setTitle("WordPress - " + getResources().getText(R.string.new_account));

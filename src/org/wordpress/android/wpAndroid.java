@@ -34,6 +34,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,6 +47,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup.LayoutParams;
@@ -76,7 +78,8 @@ public class wpAndroid extends ListActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        
+        getWindow().setFormat(PixelFormat.RGBA_8888);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
         //verify that the user has accepted the EULA
         boolean eula = checkEULA();
         if (eula == false){

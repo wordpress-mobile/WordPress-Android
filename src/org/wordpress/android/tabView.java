@@ -3,8 +3,10 @@ package org.wordpress.android;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TabHost;
 
 public class tabView extends TabActivity {
@@ -18,6 +20,8 @@ public class tabView extends TabActivity {
      public void onCreate(Bundle savedInstanceState) {  
          super.onCreate(savedInstanceState);
          requestWindowFeature(Window.FEATURE_NO_TITLE);
+         getWindow().setFormat(PixelFormat.RGBA_8888);
+         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
          Bundle extras = getIntent().getExtras();
          if(extras !=null)
          {

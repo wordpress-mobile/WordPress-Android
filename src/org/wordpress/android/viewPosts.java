@@ -31,6 +31,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.AlphaAnimation;
@@ -95,7 +97,6 @@ public class viewPosts extends ListActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-      
         setContentView(R.layout.viewposts);
         
         Bundle extras = getIntent().getExtras();
