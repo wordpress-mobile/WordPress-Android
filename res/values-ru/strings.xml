@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="preview_page">Просмотреть страницу</string>
+	<string name="preview_post">Просмотреть запись</string>
+	<string name="title_post_required">Заголовок записи и содержимое (или медиафайл) обязательны.</string>
+	<string name="howto_select_text">Вы можете выбрать текст долгим нажатием в текстовой области.</string>
+	<string name="file_error">Ошибка файла</string>
+	<string name="file_error_encountered">Ошибка во время установки захваченного изображения.</string>
+	<string name="account_details">Настройки аккаунта</string>
+	<string name="media">Медиа</string>
+	<string name="account_removed_successfully">Блог успешно удален</string>
+	<string name="i_have_blog">У меня есть WordPress-блог</string>
+	<string name="new_to_wp">Я новичок в WordPress</string>
 	<string name="no_account">Не найдена учетная запись WordPress, пожалуйста добавьте ее и попробуйте снова.</string>
 	<string name="select_a_blog">Выберите блог</string>
-	<string name="upload_now">Загрузить сейчас</string>
+	<string name="upload_now">Отправить</string>
 	<string name="adding_cat_failed_check">Пожалуйста, проверьте свои настройки и попробуйте снова.</string>
 	<string name="adding_cat_success">Рубрика успешно добавлена.</string>
 	<string name="cat_already_exists">Рубрика с таким именем уже существует.</string>
@@ -50,7 +61,7 @@
 	<string name="above_text">Над текстом</string>
 	<string name="place_image">Разместить изображение:</string>
 	<string name="password">Пароль:</string>
-	<string name="get_free_blog">Получите бесплатный блог на WordPress.com</string>
+	<string name="get_free_blog">Получите бесплатно на WordPress.com</string>
 	<string name="app_name">WordPress</string>
 	<string name="eula">Лицензионное соглашение</string>
 	<string name="username">Имя пользователя:</string>
@@ -60,12 +71,11 @@
 	<string name="clear">Очистить</string>
 	<string name="edit_page">Править страницу</string>
 	<string name="getting_page">Получение страницы</string>
-	<string name="please_wait_getting_page">Подождите пока читается страница (примечание - изображения не будут загружены)</string>
+	<string name="please_wait_getting_page">Подождите пока читается страница (изображения загружены не будут)</string>
 	<string name="edit_post">Править запись</string>
 	<string name="getting_post">Получение записи</string>
-	<string name="please_wait_getting_post">Подождите пока читается запись (примечание - изображения не будут загружены)</string>
+	<string name="please_wait_getting_post">Подождите пока читается запись (изображения загружены не будут)</string>
 	<string name="no_text_selected">Текст не выбран</string>
-	<string name="howto_select_text">Вы можете выбрать текст прижатой клавишей shift и промоткой.</string>
 	<string name="select_text_to_bold">Выберите какой-нибудь текст, чтобы сделать его жирным.</string>
 	<string name="select_text_to_link">Выберите какой-нибудь текст, чтобы сделать его ссылкой.</string>
 	<string name="select_text_to_emphasize">Выберите текст, чтобы выделить его курсивом.</string>
@@ -80,7 +90,6 @@
 	<string name="settings_not_found">Настройки не найдены</string>
 	<string name="settings_not_found_load_now">Некоторые необходимые настройки были не найдены. Загрузить их сейчас?</string>
 	<string name="empty_fields">Пустые поля</string>
-	<string name="title_post_required">Имя и сообщение - обязательные поля. Пожалуйста введите что-либо перед отправкой!</string>
 	<string name="post_edited">Запись отредактирована</string>
 	<string name="post_edited_image_error">Сообщение отредактировано успешно, но произошла ошибка при загрузке изображений</string>
 	<string name="post_edited_successfully">Запись успешно изменена</string>
@@ -117,10 +126,6 @@
 	<string name="reply_to_comment">Ответить на комментарий</string>
 	<string name="reply_required">Требуемое поле</string>
 	<string name="reply_please_enter">Пожалуйста введите что-нибудь в поле ответа.</string>
-	<string name="post_preview">Предварительный просмотр сообщения:</string>
-	<string name="getting_preview">Получаем предварительный вариант</string>
-	<string name="getting_preview_attempting">Пытаемся получить предварительный вариант</string>
-	<string name="preview">Предварительный просмотр</string>
 	<string name="view_comments">Посмотреть комментарии</string>
 	<string name="no_approved_comments">Нет утверждённых комментариев к этому сообщению</string>
 	<string name="loading">Загрузка...</string>
@@ -140,15 +145,12 @@
 	<string name="delete_draft">Удалить черновик</string>
 	<string name="delete_sure">Вы уверены что вы хотите удалить черновик</string>
 	<string name="page_actions">Действия со страницой</string>
-	<string name="preview_page">Предварительный просмотр страницы</string>
 	<string name="page_attempt_upload">Попытка загрузки страницы</string>
-	<string name="page_preview">Предварительный просмотр страницы:</string>
 	<string name="post_actions">Действия над сообщением</string>
-	<string name="preview_post">Предварительный просмотр сообщения</string>
 	<string name="post_attempt_upload">Попытка загрузить сообщение</string>
 	<string name="comment_actions">Действия над комментарием</string>
-	<string name="mark_approved">Пометить утвержденным</string>
-	<string name="mark_unapproved">Пометить как непровереный</string>
+	<string name="mark_approved">Одобрить</string>
+	<string name="mark_unapproved">Отозвать</string>
 	<string name="mark_spam">Пометить как спам</string>
 	<string name="reply">Ответ</string>
 	<string name="publish_yes">Опубликовано: Да</string>
