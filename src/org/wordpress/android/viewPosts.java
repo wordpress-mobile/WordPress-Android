@@ -1105,8 +1105,6 @@ public String submitPost() throws IOException {
     	{
     		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
     	}
-    	//test
-    	sURL = "http://droundhill.wordpress.com/xmlrpc.php";
 		String sUsername = categoriesVector.get(2).toString();
 		String sPassword = categoriesVector.get(3).toString();
 		String sImagePlacement = categoriesVector.get(4).toString();
