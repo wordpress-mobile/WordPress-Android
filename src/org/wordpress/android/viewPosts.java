@@ -110,7 +110,7 @@ public class viewPosts extends ListActivity {
         }
         
         //user came from action intent
-        if (action != null){
+        if (action != null && !isPage){
         	if (action.equals("upload")){
         		selectedID = extras.getInt("uploadID");
         		showDialog(ID_DIALOG_POSTING);
