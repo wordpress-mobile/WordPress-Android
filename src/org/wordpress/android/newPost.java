@@ -242,8 +242,13 @@ final Button uploadButton = (Button) findViewById(R.id.upload);
             	if (result){
             		
             	  localDraftsDB lddb = new localDraftsDB(newPost.this);
-              	  
-              	  int newID = lddb.getLatestDraftID(newPost.this, id);
+              	  int newID = -1;
+              	  if (isPage){
+              		  newID = lddb.getLatestPageDraftID(newPost.this, id);
+              	  }
+              	  else{
+              		  newID = lddb.getLatestDraftID(newPost.this, id);
+              	  }
               	  Bundle bundle = new Bundle();
               	  if (newID != -1){
             	  
