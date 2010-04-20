@@ -443,7 +443,6 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 					   setListAdapter(new PostListAdapter(viewPosts.this));
 
 					   ListView listView = (ListView) findViewById(android.R.id.list);
-					   listView.setSelector(R.layout.list_selector);
 					   
 					   listView.setOnItemClickListener(new OnItemClickListener() {
 						   
@@ -1350,10 +1349,6 @@ public String uploadImages(){
 		       		    Images.Media.DATA,
 		       		    Images.Media.MIME_TYPE
 		       		};
-		 	  
-		 	   /*Uri imgPath;
-		
-		 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);*/
 		
 			Cursor cur = this.managedQuery(imageUri, projection, null, null, null);
 		 	  String thumbData = "";

@@ -250,10 +250,6 @@ res/drawable/list_bg.xml -text
 res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
 res/drawable/list_header_bg.xml -text
-res/drawable/list_selector_background_focus.9.png -text
-res/drawable/list_selector_background_longpress.9.png -text
-res/drawable/list_selector_background_pressed.9.png -text
-res/drawable/menu_button.9.png -text
 res/drawable/menu_button_bg.9.png -text
 res/drawable/menu_button_selector.xml -text
 res/drawable/new_account_logo.png -text
@@ -287,8 +283,6 @@ res/layout/edit_page.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
 res/layout/link.xml -text
-res/layout/list_selector.xml -text
-res/layout/list_selector_background_transition.xml -text
 res/layout/main.xml -text
 res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text

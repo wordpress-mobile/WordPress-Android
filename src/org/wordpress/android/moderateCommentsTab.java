@@ -181,7 +181,6 @@ public class moderateCommentsTab extends ListActivity {
 							   setListAdapter(thumbs);				   
 						
 						   ListView listView = (ListView) findViewById(android.R.id.list);
-						   listView.setSelector(R.layout.list_selector);
 
 						   listView.setOnItemClickListener(new OnItemClickListener() {
 							   
