@@ -4,12 +4,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="none"
-    android:background="#FFF0F0F0">
+    android:background="#FFF5F5F5">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
                 android:padding="10dip"
-				android:background="#FFF0F0F0">
+				android:background="#FFF5F5F5">
     <RelativeLayout android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:background="@drawable/content_bg"

@@ -1351,11 +1351,11 @@ public String uploadImages(){
 		       		    Images.Media.MIME_TYPE
 		       		};
 		 	  
-		 	   Uri imgPath;
+		 	   /*Uri imgPath;
 		
-		 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+		 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);*/
 		
-			Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+			Cursor cur = this.managedQuery(imageUri, projection, null, null, null);
 		 	  String thumbData = "";
 		 	 
 		 	  if (cur.moveToFirst()) {
@@ -1363,9 +1363,7 @@ public String uploadImages(){
 		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
 		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
 		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-		
-		       String imgPath4 = imgPath.getEncodedPath();              	            
+		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);          	            
 		       
 		       thumbData = cur.getString(dataColumn);
 		       mimeType = cur.getString(mimeTypeColumn);

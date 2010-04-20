@@ -819,7 +819,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 	   for (int i = 0; i < 2; i++){
 	 		   
 
-	 		 curImagePath = imageUrl.get(it).toString();
+	 		 curImagePath = selectedImageIDs.get(it).toString();
 	 		   
 	 		if (i == 0 || sFullSizeImage)
 	 		{
