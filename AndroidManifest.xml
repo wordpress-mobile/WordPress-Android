@@ -49,7 +49,7 @@
 </application>
 
 	<supports-screens android:smallScreens="true"
-		android:normalScreens="true" android:largeScreens="true" />
+		android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
 	<uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
 		android:name="android.permission.INTERNET" />
 		<uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
