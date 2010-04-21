@@ -346,8 +346,11 @@ public class XMLRPCClient {
 			
 			//get rid of junk characters before xml response.  60 = '<'
 			int bomCheck = is.read();
-			while (bomCheck != 60){
+			int i = 0;
+			//quit if we get 20 characters in...
+			while (bomCheck != 60 && i <= 20){
 				bomCheck = is.read();
+				i++;
 			}
 			is.unread(bomCheck);
 			
