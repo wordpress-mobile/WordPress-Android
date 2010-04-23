@@ -29,6 +29,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -826,7 +827,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 	   
 	 	   Uri imageUri = Uri.parse(curImagePath);
 	 	   File jpeg = null;
-	 	   String mimeType = "";
+	 	   String mimeType = "", orientation = "";
 	 	   if (imageUri.toString().contains("content:")){ //file is in media library
 		 	   String imgID = imageUri.getLastPathSegment();
 		 	   long imgID2 = Long.parseLong(imgID);
@@ -836,7 +837,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		 	  projection = new String[] {
 		       		    Images.Media._ID,
 		       		    Images.Media.DATA,
-		       		    Images.Media.MIME_TYPE
+		       		    Images.Media.MIME_TYPE,
+		       		    Images.Media.ORIENTATION
 		       		};
 		 	  
 		 	   Uri imgPath;
@@ -848,15 +850,17 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		 	 
 		 	  if (cur.moveToFirst()) {
 		 		  
-		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+		 		int nameColumn, dataColumn, mimeTypeColumn, orientationColumn;;
 		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
 		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
 		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+		 	        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
 	
 		       String imgPath4 = imgPath.getEncodedPath();              	            
 		       
 		       thumbData = cur.getString(dataColumn);
 		       mimeType = cur.getString(mimeTypeColumn);
+		       orientation = cur.getString(orientationColumn);
 		       
 		 	  }
 		 	   
@@ -888,7 +892,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		}
 		
 		if (i == 0){
-			  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
+			  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth, orientation);
 		   }
 		   else{
 			  finalBytes = bytes;
@@ -1304,9 +1308,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	   
 	        String[] projection = new String[] {
 	      		    Images.Thumbnails._ID,
-	      		    Images.Thumbnails.DATA
+	      		    Images.Thumbnails.DATA,
+	      		    Images.Media.ORIENTATION
 	      		};
-	     	   
+	        String orientation = "";
 			Cursor cur = managedQuery(tempURI, projection, null, null, null);
 			File jpeg = null;
 			if (cur != null){
@@ -1314,14 +1319,15 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	 
 	     	  if (cur.moveToFirst()) {
 	     		  
-	     		int nameColumn, dataColumn, heightColumn, widthColumn;
-	     		
+	     		 int nameColumn, dataColumn, orientationColumn;
+		     		
 	     			nameColumn = cur.getColumnIndex(Images.Media._ID);
 	     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+	     	        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
 	     		             	            
 	           
 	           thumbData = cur.getString(dataColumn);
-	           
+	           orientation = cur.getString(orientationColumn);
 	     	  }
 	     	  
 	     	 jpeg = new File(thumbData);
@@ -1390,7 +1396,20 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        
 	        Bitmap resizedBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts); 
 	        
-	        imageView.setImageBitmap(resizedBitmap);
+	        if ((orientation != null) && (orientation.equals("90") || orientation.equals("180") || orientation.equals("270"))){
+	        	Matrix matrix = new Matrix();
+		        // rotate the Bitmap
+		        matrix.postRotate(Integer.valueOf(orientation));
+
+		        // recreate the new Bitmap
+		        Bitmap rotatedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0,
+		        		resizedBitmap.getWidth(), resizedBitmap.getHeight(), matrix, true); 
+		        
+		        imageView.setImageBitmap(rotatedBitmap);
+	        }
+	        else{
+	        	imageView.setImageBitmap(resizedBitmap);
+	        }
 	        
 	        //resizedBitmap.recycle(); //free up memory
 	        
@@ -1465,7 +1484,51 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                 // http://code.google.com/p/android/issues/detail?id=1480
 
                 // on activity return
-                File f = new File(SD_CARD_TEMP_DIR);
+				File f = null;
+                if (data != null){ //HTC Sense Device returns different data for image capture
+                	
+                	try {
+						String[] projection; 
+						Uri imagePath = data.getData();
+						projection = new String[] {
+							    Images.Media._ID,
+							    Images.Media.DATA,
+							    Images.Media.MIME_TYPE,
+							    Images.Media.ORIENTATION
+							};
+						
+						Cursor cur = this.managedQuery(imagePath, projection, null, null, null);
+  		 	  String thumbData = "";
+  		 	 
+  		 	  if (cur.moveToFirst()) {
+						  
+						int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, orientationColumn;
+
+							nameColumn = cur.getColumnIndex(Images.Media._ID);
+						    dataColumn = cur.getColumnIndex(Images.Media.DATA);
+							            
+
+  		       thumbData = cur.getString(dataColumn);
+  		       f = new File(thumbData);
+  		 	  }
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+	            		dialogBuilder.setTitle(getResources().getText(R.string.error));
+	                    dialogBuilder.setMessage(e.getMessage());
+	                  dialogBuilder.setPositiveButton("OK",  new
+	                		  DialogInterface.OnClickListener() {
+	                        public void onClick(DialogInterface dialog, int whichButton) {
+	                            // just close the dialog
+	                        }
+	                    });
+	                  dialogBuilder.setCancelable(true);
+	                 dialogBuilder.create().show();
+					}
+                }
+                else{
+                	f = new File(SD_CARD_TEMP_DIR);
+                }
                 try {
                     Uri capturedImage =
                         Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),

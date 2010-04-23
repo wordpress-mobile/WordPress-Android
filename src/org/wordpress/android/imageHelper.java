@@ -8,7 +8,7 @@ import android.graphics.Matrix;
 
 public class imageHelper {
 
-	public static byte[] createThumbnail(byte[] bytes, String sMaxImageWidth) {
+	public static byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation) {
 		//creates a thumbnail and returns the bytes
 		
 		int finalHeight = 0;
@@ -103,6 +103,9 @@ public class imageHelper {
         	        Matrix matrix = new Matrix(); 
         	        // Resize the bitmap 
         	        matrix.postScale(scaleBy, scaleBy); 
+        	        if ((orientation != null) && (orientation.equals("90") || orientation.equals("180") || orientation.equals("270"))){
+        	        matrix.postRotate(Integer.valueOf(orientation));
+        	        }
 
         	        Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 

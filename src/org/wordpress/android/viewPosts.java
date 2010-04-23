@@ -1336,7 +1336,7 @@ public String uploadImages(){
  	   
  	   Uri imageUri = Uri.parse(curImagePath);
  	   File jpeg = null;
- 	   String mimeType = "";
+ 	  String mimeType = "", orientation = "";
  	   if (imageUri.toString().contains("content:")){ //file is in media library
 		 	   String imgID = imageUri.getLastPathSegment();
 		 	   
@@ -1347,7 +1347,8 @@ public String uploadImages(){
 		 	  projection = new String[] {
 		       		    Images.Media._ID,
 		       		    Images.Media.DATA,
-		       		    Images.Media.MIME_TYPE
+		       		    Images.Media.MIME_TYPE,
+		       		    Images.Media.ORIENTATION
 		       		};
 		
 			Cursor cur = this.managedQuery(imageUri, projection, null, null, null);
@@ -1355,12 +1356,15 @@ public String uploadImages(){
 		 	 
 		 	  if (cur.moveToFirst()) {
 		 		  
-		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+		 		 int nameColumn, dataColumn, mimeTypeColumn, orientationColumn;
+
 		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
 		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);          	            
+		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+		 	       orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);        	            
 		       
 		       thumbData = cur.getString(dataColumn);
+		       orientation = cur.getString(orientationColumn);
 		       mimeType = cur.getString(mimeTypeColumn);
 		       jpeg = new File(thumbData);
 		 	  
@@ -1393,7 +1397,7 @@ public String uploadImages(){
 	}
 	
 	if (i == 0){
-		  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth);
+		  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth, orientation);
 	   }
 	   else{
 		  finalBytes = bytes;
