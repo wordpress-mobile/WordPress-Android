@@ -10,11 +10,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.newPost.ImageAdapter;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -33,7 +34,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -48,20 +56,16 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
 
-public class editPost extends Activity {
+public class editPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
 	public static long globalData = 0;
 	public ProgressDialog pd;
@@ -92,6 +96,11 @@ public class editPost extends Activity {
     public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
     public String SD_CARD_TEMP_DIR = "", categories = "";
     ProgressDialog loadingDialog;
+    LocationManager lm;
+    Criteria criteria;
+    String provider;
+    Location curLocation;
+    public boolean location = false, locationActive = false;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -128,7 +137,7 @@ public class editPost extends Activity {
         		post = lDraftsDB.loadPost(this, postID);
         	}
         	
-        	HashMap postHashMap = (HashMap) post.get(0);
+        	final HashMap postHashMap = (HashMap) post.get(0);
         	
         	EditText titleET = (EditText)findViewById(R.id.title);
         	EditText contentET = (EditText)findViewById(R.id.content);
@@ -172,6 +181,64 @@ public class editPost extends Activity {
 		    		tvCategories.setText("Selected categories: " + categories);
 		    		
 		    	}
+		    	
+		    	settingsDB settingsDB = new settingsDB(this);
+	        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+	        	
+	    		String sLocation = settingsVector.get(11).toString();
+	    		
+	    		boolean location = false;
+	    		if (sLocation.equals("1")){
+	    			location = true;
+	    		}
+	    		
+	    		Double latitude = (Double) postHashMap.get("latitude");
+	    		Double longitude = (Double) postHashMap.get("longitude");
+
+	    		if (latitude != 0.0){
+	    			new getAddressTask().execute(latitude, longitude);
+	    		}
+	    		
+	    		if (sLocation.equals("1")){
+	    			location = true;
+	    		}
+	    		if (location && latitude > 0){
+	    			Button updateLocation = (Button) findViewById(R.id.updateLocation);
+	    			
+	    			updateLocation.setOnClickListener(new Button.OnClickListener() {
+	    	            public void onClick(View v) {
+	    	            	 
+	    	            	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+	    		    		
+	    		    		lm.requestLocationUpdates(
+	    				            LocationManager.GPS_PROVIDER, 
+	    				            20000, 
+	    				            0, 
+	    				            editPost.this
+	    				    );
+	    					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+	    					locationActive = true;
+	    	            }
+	    	        });
+	    			
+		    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+	            	locationSection.setVisibility(View.VISIBLE);
+	    		}
+	    		else if (location){
+	    			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+		    		
+		    		lm.requestLocationUpdates(
+				            LocationManager.GPS_PROVIDER, 
+				            20000, 
+				            0, 
+				            editPost.this
+				    );
+					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+					locationActive = true;
+					
+					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+	            	locationSection.setVisibility(View.VISIBLE);
+	    		}
 		    	
 		    	Button selectCategories = (Button) findViewById(R.id.selectCategories);   
     	        
@@ -2044,13 +2111,42 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		publishThis = true;
         	}
         
+        	//Geotagging
+        	settingsDB settingsDB = new settingsDB(this);
+        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+        	
+    		String sLocation = settingsVector.get(11).toString();
+    		
+    		boolean location = false;
+    		if (sLocation.equals("1")){
+    			location = true;
+    		}
+        	
+    		Double latitude = 0.0;
+        	Double longitude = 0.0;
+            if (location){
+            	         	
+        		//attempt to get the device's location
+        		// set up the LocationManager
+            	
+                try {
+        			Location loc = lm.getLastKnownLocation(provider);
+        			latitude = loc.getLatitude();
+        			longitude = loc.getLongitude();
+        		} catch (Exception e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+
+        	}
+        
         	//new feature, automatically save a post as a draft just in case the posting fails
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
         	if (isPage){
-        		success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
+        		success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
         	}
         	else{
-        		success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis);
+        		success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis, latitude, longitude);
         	}
         
         
@@ -2184,6 +2280,89 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	}
 	  return false;	
 	}
+	
+	/** Register for the updates when Activity is in foreground */
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+	}
+
+	/** Stop the updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (!isPage && location && locationActive){
+			lm.removeUpdates(this);
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onPause();
+		if (!isPage && location && locationActive){
+			lm.removeUpdates(this);
+		}
+	}
+
+	public void onLocationChanged(Location location) {
+		curLocation = location;
+		final TextView map = (TextView) findViewById(R.id.locationText); 
+		Geocoder gcd = new Geocoder(editPost.this, Locale.getDefault());
+		List<Address> addresses;
+		try {
+			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+			if (addresses.size() > 0) {
+			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		lm.removeUpdates(this);
+	}
+
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private class getAddressTask extends AsyncTask<Double, Void, Void> {
+
+	     protected void onProgressUpdate() {
+	     }
+
+	     protected void onPostExecute(Long result) {
+	    	  
+	     }
+	     @Override
+		protected Void doInBackground(Double... args) {
+			Geocoder gcd = new Geocoder(editPost.this, Locale.getDefault());
+	    	TextView map = (TextView) findViewById(R.id.locationText);
+	    			List<Address> addresses;
+	    		try {
+	    			addresses = gcd.getFromLocation(args[0], args[1], 1);
+	    			if (addresses.size() > 0) {
+	    			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+	    			}
+	    		} catch (IOException e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+				return null;
+		}
+
+	 }
     
 }
 

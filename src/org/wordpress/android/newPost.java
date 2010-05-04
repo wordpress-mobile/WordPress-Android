@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,7 +25,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -46,6 +50,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,6 +92,7 @@ public class newPost extends Activity implements LocationListener{
     Criteria criteria;
     String provider;
     Location curLocation;
+    public boolean location = false;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -105,18 +111,27 @@ public class newPost extends Activity implements LocationListener{
         }
         else{
         	setContentView(R.layout.main);
+        	settingsDB settingsDB = new settingsDB(this);
+        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
         	
-        	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-    		criteria = new Criteria();
-    		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-    		criteria.setAltitudeRequired(false);
-    		criteria.setBearingRequired(false);
-    		criteria.setCostAllowed(true);
-    		criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-
-    		provider = lm.getBestProvider(criteria, true);
+    		String sLocation = settingsVector.get(11).toString();
     		
-    		Location curLocation = lm.getLastKnownLocation(provider);
+    		if (sLocation.equals("1")){
+    			location = true;
+    		}
+    		if (location){
+	        	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+	    		criteria = new Criteria();
+	    		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+	    		criteria.setAltitudeRequired(false);
+	    		criteria.setBearingRequired(false);
+	    		criteria.setCostAllowed(true);
+	    		criteria.setPowerRequirement(Criteria.POWER_HIGH);
+	
+	    		provider = lm.getBestProvider(criteria, true);
+	    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+            	locationSection.setVisibility(View.VISIBLE);
+    		}
         }
         
         String action = getIntent().getAction();
@@ -205,6 +220,31 @@ public class newPost extends Activity implements LocationListener{
 			    	startActivityForResult(i, 5);
 	            }
 	        });
+	        
+	        final Button viewMap = (Button) findViewById(R.id.viewMap);   
+	        
+	        viewMap.setOnClickListener(new TextView.OnClickListener() {
+	            public void onClick(View v) {
+	            	 
+	            	Double latitude = 0.0;
+	            	try {
+						latitude = curLocation.getLatitude();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            	if (latitude != 0.0){
+		            	String uri = "geo:"+ latitude + "," + curLocation.getLongitude();  
+		            	startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri))); 
+	            	}
+	            	else {
+	            		Toast.makeText(newPost.this, "Location data not yet available, please wait.", Toast.LENGTH_SHORT).show();
+	            	}
+	            	  
+
+	            }
+	        });
+	        
 	        
     }
         
@@ -636,6 +676,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
     		Double latitude = 0.0;
         	Double longitude = 0.0;
             if (location){
+            	         	
         		//attempt to get the device's location
         		// set up the LocationManager
             	
@@ -1276,31 +1317,48 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//lm.requestLocationUpdates(provider, 20000, 1, this);
-		lm.requestLocationUpdates(
-	            LocationManager.GPS_PROVIDER, 
-	            0, 
-	            0, 
-	            this
-	    );
-
+		if (!isPage && location){
+			lm.requestLocationUpdates(
+		            LocationManager.GPS_PROVIDER, 
+		            20000, 
+		            0, 
+		            this
+		    );
+			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, this);
+		}
 	}
 
 	/** Stop the updates when Activity is paused */
 	@Override
 	protected void onPause() {
 		super.onPause();
-		lm.removeUpdates(this);
+		if (!isPage && location){
+			lm.removeUpdates(this);
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onPause();
-		lm.removeUpdates(this);
+		if (!isPage && location){
+			lm.removeUpdates(this);
+		}
 	}
 
 	public void onLocationChanged(Location location) {
 		curLocation = location;
+		final TextView map = (TextView) findViewById(R.id.locationText); 
+		Geocoder gcd = new Geocoder(newPost.this, Locale.getDefault());
+		List<Address> addresses;
+		try {
+			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+			if (addresses.size() > 0) {
+			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void onProviderDisabled(String provider) {

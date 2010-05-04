@@ -26,6 +26,7 @@
   <string name="blogs">Blogs</string>
   <string name="upload_now">Upload Now</string>
   <string name="account_details">Account Details</string>
+  <string name="status">Status</string>
   
   <!--  general strings -->
   <string name="app_name">WordPress</string>
