@@ -1,7 +1,17 @@
 package org.xmlrpc.android;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PushbackInputStream;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -9,19 +19,28 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.Map;
+import java.util.Random;
+import java.net.Socket;
+import org.apache.http.HttpConnection;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.SocketFactory;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.wordpress.android.ConnectionClient;
+import org.wordpress.android.TrustAllSSLSocketFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
+
+import android.os.Environment;
+import android.util.Log;
 import android.util.Xml;
 
 public class XMLRPCClient {
@@ -45,10 +64,11 @@ public class XMLRPCClient {
 	 */
 	public XMLRPCClient(URI uri) {
 		postMethod = new HttpPost(uri);
-		postMethod.addHeader("Content-Type", "text/xml");	
+		postMethod.addHeader("Content-Type", "text/xml");
+		
 		postMethod.addHeader("charset", "UTF-8");
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE!
-		postMethod.addHeader("User-Agent", "wp-android/1.1.5");
+		postMethod.addHeader("User-Agent", "wp-android/1.2");
 		
 		// WARNING
 		// I had to disable "Expect: 100-Continue" header since I had 
@@ -297,29 +317,72 @@ public class XMLRPCClient {
 	private Object callXMLRPC(String method, Object[] params) throws XMLRPCException {
 		try {
 			// prepare POST body
-			StringWriter bodyWriter = new StringWriter();
-			serializer.setOutput(bodyWriter);
-			serializer.startDocument(null, null);
-			serializer.startTag(null, TAG_METHOD_CALL);
-			// set method name
-			serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
-			if (params != null && params.length != 0) {
-				// set method params
-				serializer.startTag(null, TAG_PARAMS);
-				for (int i=0; i<params.length; i++) {
-					serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-					XMLRPCSerializer.serialize(serializer, params[i]);
-					serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
-				}
-				serializer.endTag(null, TAG_PARAMS);
-			}
-			serializer.endTag(null, TAG_METHOD_CALL);
-			serializer.endDocument();
+			File tempFile = null;
+			if (method.equals("wp.uploadFile")){
+				String tempFilePath = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".xml";
+				
+				File directory = new File(tempFilePath).getParentFile();
+	            if (!directory.exists() && !directory.mkdirs()) {
+	            	throw new XMLRPCException("Path to file could not be created.");
+	            }
 
-			// set POST body
-			HttpEntity entity = new StringEntity(bodyWriter.toString());
-			postMethod.setEntity(entity);
-			
+				tempFile = new File(tempFilePath);
+				FileWriter fileWriter = new FileWriter(tempFile);
+				serializer.setOutput(fileWriter);
+				
+				serializer.startDocument(null, null);
+				serializer.startTag(null, TAG_METHOD_CALL);
+				// set method name
+				serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+				if (params != null && params.length != 0) {
+					// set method params
+					serializer.startTag(null, TAG_PARAMS);
+					for (int i=0; i<params.length; i++) {
+						serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+						XMLRPCSerializer.serialize(serializer, params[i]);
+						serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+					}
+					serializer.endTag(null, TAG_PARAMS);
+				}
+				serializer.endTag(null, TAG_METHOD_CALL);
+				serializer.endDocument();
+				
+				fileWriter.flush();
+				fileWriter.close();
+				FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\""); 
+	            fEntity.setContentType("text/xml");
+	            fEntity.setChunked(false);
+				long fileSize = tempFile.length();
+	            postMethod.setEntity(fEntity);
+	            
+	            
+			}
+			else{
+				StringWriter bodyWriter = new StringWriter();
+				serializer.setOutput(bodyWriter);
+				
+				serializer.startDocument(null, null);
+				serializer.startTag(null, TAG_METHOD_CALL);
+				// set method name
+				serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+				if (params != null && params.length != 0) {
+					// set method params
+					serializer.startTag(null, TAG_PARAMS);
+					for (int i=0; i<params.length; i++) {
+						serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+						XMLRPCSerializer.serialize(serializer, params[i]);
+						serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+					}
+					serializer.endTag(null, TAG_PARAMS);
+				}
+				serializer.endTag(null, TAG_METHOD_CALL);
+				serializer.endDocument();
+				
+				HttpEntity entity = new StringEntity(bodyWriter.toString());
+				Log.i("WordPress", bodyWriter.toString());
+				postMethod.setEntity(entity);
+			}
+
 			//set timeout to 40 seconds, does it need to be set for both client and method?
 			client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
 	        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
@@ -328,9 +391,14 @@ public class XMLRPCClient {
 			
 			// execute HTTP POST request
 			HttpResponse response = client.execute(postMethod);
-
+			
+			Log.i("WordPress", "response = " + response.getStatusLine());
 			// check status code
 			int statusCode = response.getStatusLine().getStatusCode();
+			
+			if ((method.equals("wp.uploadFile"))){ //get rid of the temp file
+				tempFile.delete();
+			}
 			
 			if (statusCode != HttpStatus.SC_OK) {
 				throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
@@ -340,17 +408,14 @@ public class XMLRPCClient {
 			//
 			// setup pull parser
 			XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
-			entity = response.getEntity();
+			HttpEntity entity = response.getEntity();
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
 			
 			//get rid of junk characters before xml response.  60 = '<'
 			int bomCheck = is.read();
-			int i = 0;
-			//quit if we get 20 characters in...
-			while (bomCheck != 60 && i <= 20){
+			while (bomCheck != 60){
 				bomCheck = is.read();
-				i++;
 			}
 			is.unread(bomCheck);
 			

@@ -4,21 +4,17 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
-
-import org.apache.http.conn.HttpHostConnectException;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,12 +22,14 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
@@ -42,20 +40,17 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class newPost extends Activity {
+public class newPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
 	public static long globalData = 0;
 	public ProgressDialog pd, imagePD;
@@ -71,11 +66,9 @@ public class newPost extends Activity {
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
 	public String categoryErrorMsg = "";
-	private XMLRPCClient client;
 	public String id = "";
 	private Vector<Uri> selectedImageIDs = new Vector();
 	private int selectedImageCtr = 0;
-    private String newID = "";
     private String accountName = "";
     public int ID_DIALOG_POSTING = 1;
     public String sMaxImageWidth = "";
@@ -90,6 +83,10 @@ public class newPost extends Activity {
     public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false, isAction=false;
     public String SD_CARD_TEMP_DIR = "";
     public long checkedCategories[];
+    LocationManager lm;
+    Criteria criteria;
+    String provider;
+    Location curLocation;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -108,6 +105,18 @@ public class newPost extends Activity {
         }
         else{
         	setContentView(R.layout.main);
+        	
+        	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+    		criteria = new Criteria();
+    		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+    		criteria.setAltitudeRequired(false);
+    		criteria.setBearingRequired(false);
+    		criteria.setCostAllowed(true);
+    		criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+
+    		provider = lm.getBestProvider(criteria, true);
+    		
+    		Location curLocation = lm.getLastKnownLocation(provider);
         }
         
         String action = getIntent().getAction();
@@ -486,6 +495,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        GridView gridview = (GridView) findViewById(R.id.gridView);
 			     	 gridview.setAdapter(null);
 			     	 gridview.setVisibility(View.GONE);
+			     	 
+			     	 clearPictureButton.setVisibility(View.GONE);
                 	         	
                 }
         });            
@@ -519,6 +530,9 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	           	GridView gridview = (GridView) findViewById(R.id.gridView);
 		     	  gridview.setVisibility(View.VISIBLE);
 	           	gridview.setAdapter(new ImageAdapter(newPost.this));
+
+	           	Button clearMedia = (Button) findViewById(R.id.clearPicture);
+	           	clearMedia.setVisibility(View.VISIBLE);
         }
 		
 	}
@@ -543,7 +557,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         String images = "";
         String categories = "";
         boolean success = false;
-        
 
         Integer blogID = 1;
         
@@ -591,7 +604,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         }
         else {
         
-        	//upload the images and return the HTML
+        	//images
         	for (int it = 0; it < selectedImageCtr; it++){
            
         		images += selectedImageIDs.get(it).toString() + ",";
@@ -607,6 +620,35 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	{
         		publishThis = true;
         	}
+        	
+        	
+        	//Geotagging
+        	settingsDB settingsDB = new settingsDB(this);
+        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+        	
+    		String sLocation = settingsVector.get(11).toString();
+    		
+    		boolean location = false;
+    		if (sLocation.equals("1")){
+    			location = true;
+    		}
+        	
+    		Double latitude = 0.0;
+        	Double longitude = 0.0;
+            if (location){
+        		//attempt to get the device's location
+        		// set up the LocationManager
+            	
+                try {
+        			Location loc = lm.getLastKnownLocation(provider);
+        			latitude = loc.getLatitude();
+        			longitude = loc.getLongitude();
+        		} catch (Exception e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+
+        	}
         
         	//new feature, automatically save a post as a draft just in case the posting fails
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
@@ -614,7 +656,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
         	}
         	else{
-        		success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis);
+        		success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis, latitude, longitude);
         	}
         
         
@@ -674,13 +716,15 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	            imageView = (ImageView) convertView;
 	        }
 	        Uri tempURI = (Uri) selectedImageIDs.get(position);
+	        
+	        if (!tempURI.toString().contains("video")){
 	     	   
 	        String[] projection = new String[] {
 	      		    Images.Thumbnails._ID,
 	      		    Images.Thumbnails.DATA,
 	      		    Images.Media.ORIENTATION
 	      		};
-	        String orientation = "";
+	     	String orientation = "";
 			Cursor cur = managedQuery(tempURI, projection, null, null, null);
 			File jpeg = null;
 			if (cur != null){
@@ -688,22 +732,24 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	 
 	     	  if (cur.moveToFirst()) {
 	     		  
-	     		 int nameColumn, dataColumn, orientationColumn;
-		     		
+	     		int nameColumn, dataColumn, orientationColumn;
+	     		
 	     			nameColumn = cur.getColumnIndex(Images.Media._ID);
 	     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
 	     	        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-	     		             	            
-	           
+
 	           thumbData = cur.getString(dataColumn);
 	           orientation = cur.getString(orientationColumn);
 	     	  }
 	     	  
-	     	 jpeg = new File(thumbData);
+	     	   
+	     	   jpeg = new File(thumbData);
 			}
 			else{
 				jpeg = new File(tempURI.toString().replace("file://", ""));
 			}
+			
+			
 	     	   
 	     	   imageTitle = jpeg.getName();
 	     	  
@@ -780,6 +826,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        	imageView.setImageBitmap(resizedBitmap);
 	        }
 	        
+	        
+	        }
+	        else{
+	        	imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+	        }
+	        
 	        //resizedBitmap.recycle(); //free up memory
 	        
 	        return imageView;
@@ -795,7 +847,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		{
 			Bundle extras;
 			GridView gridview = (GridView) findViewById(R.id.gridView);
-
+			Button clearMedia = (Button) findViewById(R.id.clearPicture);
 		switch(requestCode) {
 		case 0:
 			extras = data.getExtras();
@@ -840,19 +892,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		    Uri imageUri = data.getData();
 		    String imgPath = imageUri.getEncodedPath();
    
-           selectedImageIDs.add(selectedImageCtr, imageUri);
-           imageUrl.add(selectedImageCtr, imgPath);
-           selectedImageCtr++;
-           gridview.setVisibility(View.VISIBLE);
+		    selectedImageIDs.add(selectedImageCtr, imageUri);
+		    imageUrl.add(selectedImageCtr, imgPath);
+		    selectedImageCtr++;
+		    gridview.setVisibility(View.VISIBLE);
 	     	  
-	     	 gridview.setAdapter(new ImageAdapter(this));
-	     	 break;
+	     	gridview.setAdapter(new ImageAdapter(this));
+
+           	clearMedia.setVisibility(View.VISIBLE);
+	     	break;
 		case 4:
 			if (resultCode == Activity.RESULT_OK) {
 
                 // http://code.google.com/p/android/issues/detail?id=1480
-
-                // on activity return
 				File f = null;
                 if (data != null){ //HTC Sense Device returns different data for image capture
                 	
@@ -917,6 +969,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     selectedImageCtr++;
                     gridview.setVisibility(View.VISIBLE);
          	     	 gridview.setAdapter(new ImageAdapter(this));
+         	     	 
+    	           	clearMedia.setVisibility(View.VISIBLE);
        
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
@@ -961,6 +1015,108 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + cats);
 			}
 	     	break;
+		case 6:
+			 
+		    Uri videoUri = data.getData();
+		    String videoPath = videoUri.getEncodedPath();
+   
+           selectedImageIDs.add(selectedImageCtr, videoUri);
+           imageUrl.add(selectedImageCtr, videoPath);
+           selectedImageCtr++;
+
+           gridview.setVisibility(View.VISIBLE);
+	     	 gridview.setAdapter(new ImageAdapter(this));
+	     	 clearMedia.setVisibility(View.VISIBLE);
+	     	 break;
+		case 7:
+			if (resultCode == Activity.RESULT_OK) {
+
+                // http://code.google.com/p/android/issues/detail?id=1480
+
+                // on activity return
+                File f = new File(SD_CARD_TEMP_DIR);
+                try {
+                	// Save the name and description of a video in a ContentValues map.  
+                    ContentValues values = new ContentValues(2);
+                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/3gp");
+                    // values.put(MediaStore.Video.Media.DATA, f.getAbsolutePath()); 
+
+                    // Add a new record (identified by uri) without the video, but with the values just set.
+                    Uri capturedVideo = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+                    // Now get a handle to the file for that record, and save the data into it.
+
+                        InputStream is = new FileInputStream(f);
+                        OutputStream os = getContentResolver().openOutputStream(capturedVideo);
+                        byte[] buffer = new byte[8192]; // tweaking this number may increase performance
+                        int len;
+                        while ((len = is.read(buffer)) != -1){
+                            os.write(buffer, 0, len);
+                        }
+                        os.flush();
+                        is.close();
+                        os.close();
+
+
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, capturedVideo));
+
+                    f.delete();
+                    
+                    Bundle bundle = new Bundle();
+                    
+                    bundle.putString("imageURI", capturedVideo.toString());
+                    
+                    selectedImageIDs.add(selectedImageCtr, capturedVideo);
+                    imageUrl.add(selectedImageCtr, capturedVideo.toString());
+                    selectedImageCtr++;
+                    gridview.setVisibility(View.VISIBLE);
+         	     	 gridview.setAdapter(new ImageAdapter(this));
+         	     	 clearMedia.setVisibility(View.VISIBLE);
+       
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
+                } catch (IOException e) {
+					// TODO Auto-generated catch block
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
+				}
+
+        }
+        else {
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+    		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+            dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+          dialogBuilder.setPositiveButton("OK",  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // just close the dialog
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
+        }
+
+		     	break;
 		}
 		
 		
@@ -1026,11 +1182,13 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	
 	public void onCreateContextMenu(
 			      ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo)
-			   {
-				menu.setHeaderTitle(getResources().getText(R.string.add_media));
-				menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-				menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
-			   }
+			{
+			menu.setHeaderTitle(getResources().getText(R.string.add_media));
+			menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
+			menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+			menu.add(0, 2, 0, getResources().getText(R.string.select_video));
+			menu.add(0, 3, 0, getResources().getText(R.string.take_video));
+			}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item){
@@ -1056,8 +1214,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
         	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
         	Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        	takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
-        	                File(SD_CARD_TEMP_DIR)));
+        	takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(SD_CARD_TEMP_DIR)));
         	
         	// make sure the directory we plan to store the recording in exists
             File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
@@ -1073,8 +1230,92 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	startActivityForResult(takePictureFromCameraIntent, 4); 
 		
 		return true;
+		case 2:
+	    	
+	    	Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
+        	videoPickerIntent.setType("video/*");
+        	
+        	startActivityForResult(videoPickerIntent, 6);
+	    	
+	    	return true;
+		case 3:
+			String vState = android.os.Environment.getExternalStorageState();
+            if(!vState.equals(android.os.Environment.MEDIA_MOUNTED))  {
+                try {
+					throw new IOException("SD Card is not mounted.  It is " + vState + ".");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+
+        	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".3gp";
+        	Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        	takeVideoIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
+        	                File(SD_CARD_TEMP_DIR)));
+        	
+        	// make sure the directory we plan to store the recording in exists
+            File vDirectory = new File(SD_CARD_TEMP_DIR).getParentFile();
+            if (!vDirectory.exists() && !vDirectory.mkdirs()) {
+              try {
+				throw new IOException("Path to file could not be created.");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            }
+
+        	startActivityForResult(takeVideoIntent, 7); 
+		
+		return true;
 	}
 	  return false;	
+	}
+	
+	/** Register for the updates when Activity is in foreground */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//lm.requestLocationUpdates(provider, 20000, 1, this);
+		lm.requestLocationUpdates(
+	            LocationManager.GPS_PROVIDER, 
+	            0, 
+	            0, 
+	            this
+	    );
+
+	}
+
+	/** Stop the updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		lm.removeUpdates(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onPause();
+		lm.removeUpdates(this);
+	}
+
+	public void onLocationChanged(Location location) {
+		curLocation = location;
+	}
+
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

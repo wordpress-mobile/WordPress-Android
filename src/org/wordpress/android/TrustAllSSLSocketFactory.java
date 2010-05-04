@@ -23,7 +23,7 @@ public class TrustAllSSLSocketFactory extends SSLSocketFactory {
             try { 
                 SSLContext sslcontext = SSLContext.getInstance("TLS"); 
                 sslcontext.init(null, new TrustManager[] { new TrustAllManager() }, null);
-                factory = sslcontext.getSocketFactory(); 
+                factory = sslcontext.getSocketFactory();
                 setHostnameVerifier(new AllowAllHostnameVerifier());             
             } catch(Exception ex) { } 
     } 

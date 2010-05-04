@@ -12,15 +12,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
+
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -31,11 +31,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
@@ -44,7 +48,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.AlphaAnimation;
@@ -52,21 +55,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 
-public class viewPosts extends ListActivity {
+public class viewPosts extends ListActivity{
     /** Called when the activity is first created. */
 	private XMLRPCClient client;
 	private String[] postIDs, titles, dateCreated, dateCreatedFormatted, draftIDs, draftTitles, publish;
@@ -90,6 +89,7 @@ public class viewPosts extends ListActivity {
     public String imageTitle = null;
     public boolean thumbnailOnly, secondPass, xmlrpcError = false;
     public String submitResult = "";
+    ProgressDialog loadingDialog;
     public int totalDrafts = 0;
     public boolean isPage = false;
     public Vector thumbnailUrl = new Vector();
@@ -957,7 +957,6 @@ public boolean onContextItemSelected(MenuItem item) {
         case 1:
       	  showDialog(ID_DIALOG_POSTING);
       	  
-      	  
       	  new Thread() {
                 public void run() { 	  
       	  
@@ -1010,9 +1009,9 @@ public boolean onContextItemSelected(MenuItem item) {
 @Override
 protected Dialog onCreateDialog(int id) {
 if (id == ID_DIALOG_POSTING){
-	ProgressDialog loadingDialog = new ProgressDialog(this);
+	loadingDialog = new ProgressDialog(this);
+	loadingDialog.setTitle(getResources().getText(R.string.uploading_content));
 	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
-	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
 	return loadingDialog;
 	}
@@ -1069,6 +1068,7 @@ public String submitPost() throws IOException {
 		}
 		
 		tags = postHashMap.get("tags").toString();
+		
 	}
 	int publish = Integer.valueOf(postHashMap.get("publish").toString());
 	
@@ -1079,10 +1079,30 @@ public String submitPost() throws IOException {
     	publishThis = true;
     }
     String imageContent = "";
-    //upload the images and return the HTML
-    imageContent =  uploadImages();
+    boolean mediaError = false;
+    if (selectedImageCtr > 0){  //did user add media to post?
+    	//upload the images and return the HTML
+    	String state = android.os.Environment.getExternalStorageState();
+    	if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
+            //we need an SD card to submit media, stop this train!
+    		mediaError = true;
+        }
+    	else{
+    		imageContent =  uploadImages();
+    	}
+
+    }
+    String res = "";
+    if (!mediaError){
     
-    String res = null;
+    Thread updateDialog = new Thread() 
+ 	{ 
+ 	  public void run() 
+ 	  {
+ 		 loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
+ 	  } 
+ 	}; 
+ 	this.runOnUiThread(updateDialog);
     
     // categoryID = getCategoryId(selectedCategory);
     String[] theCategories = new String[selectedCategories.size()];
@@ -1094,22 +1114,23 @@ public String submitPost() throws IOException {
     
   //
     settingsDB settingsDB = new settingsDB(this);
-	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
+	Vector settingsVector = settingsDB.loadSettings(this, id);   	
 	
     	String sURL = "";
-    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
+    	if (settingsVector.get(0).toString().contains("xmlrpc.php"))
     	{
-    		sURL = categoriesVector.get(0).toString();
+    		sURL = settingsVector.get(0).toString();
     	}
     	else
     	{
-    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
+    		sURL = settingsVector.get(0).toString() + "xmlrpc.php";
     	}
-		String sUsername = categoriesVector.get(2).toString();
-		String sPassword = categoriesVector.get(3).toString();
-		String sImagePlacement = categoriesVector.get(4).toString();
-		String sCenterThumbnailString = categoriesVector.get(5).toString();
-		String sFullSizeImageString = categoriesVector.get(6).toString();
+		String sUsername = settingsVector.get(2).toString();
+		String sPassword = settingsVector.get(3).toString();
+		String sImagePlacement = settingsVector.get(4).toString();
+		String sCenterThumbnailString = settingsVector.get(5).toString();
+		String sFullSizeImageString = settingsVector.get(6).toString();
+		String sLocation = settingsVector.get(11).toString();
 		boolean sFullSizeImage  = false;
 		if (sFullSizeImageString.equals("1")){
 			sFullSizeImage = true;
@@ -1120,7 +1141,12 @@ public String submitPost() throws IOException {
 			centerThumbnail = true;
 		}
 		
-		int sBlogId = Integer.parseInt(categoriesVector.get(10).toString());
+		boolean location = false;
+		if (sLocation.equals("1")){
+			location = true;
+		}
+		
+		int sBlogId = Integer.parseInt(settingsVector.get(10).toString());
     
     Map<String, Object> contentStruct = new HashMap<String, Object>();
   
@@ -1147,6 +1173,35 @@ public String submitPost() throws IOException {
 	    contentStruct.put("categories", theCategories);
 	    }
     }
+    Double latitude = 0.0;
+    Double longitude = 0.0;
+    if (!isPage){
+    	latitude = (Double) postHashMap.get("latitude");
+		longitude = (Double) postHashMap.get("longitude");
+		
+		if (latitude > 0){
+		HashMap hLatitude = new HashMap();
+		hLatitude.put("key", "geo_latitude");
+		hLatitude.put("value", latitude);
+
+		HashMap hLongitude = new HashMap();
+		hLongitude.put("key", "geo_longitude");
+		hLongitude.put("value", longitude);
+		
+		HashMap hPublic = new HashMap();
+		hPublic.put("key", "geo_public");
+		hPublic.put("value", 1);
+		
+		Object[] geo = {
+				hLatitude,
+				hLongitude,
+				hPublic	
+		};
+		
+		contentStruct.put("custom_fields", geo);
+		}
+    }
+    
     
     client = new XMLRPCClient(sURL);
     
@@ -1176,7 +1231,7 @@ public String submitPost() throws IOException {
               dialogBuilder.setPositiveButton("OK",  new
             		  DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int whichButton) {
-                  // Just close the window.
+                  clearCounters();
               	
               	}
               });
@@ -1221,19 +1276,14 @@ public String submitPost() throws IOException {
 	                	  if (isInteger)
 	                	  {
 	                		
-	                		//reset variables
-	                		selectedImageIDs.clear();
-	              	        imageUrl.clear();
-	              	        selectedImageCtr = 0;
-	              	        selectedCategories.clear();
-	              	        xmlrpcError = false;
+	                		clearCounters();
 	                		  //post made it, so let's delete the draft
-	              	      if (isPage){
-	              	    	  lDraftsDB.deletePageDraft(viewPosts.this, String.valueOf(selectedID));
-	              	      }
-	              	      else {
-	              	    	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
-	              	      }
+		              	      if (isPage){
+		              	    	  lDraftsDB.deletePageDraft(viewPosts.this, String.valueOf(selectedID));
+		              	      }
+		              	      else {
+		              	    	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+		              	      }
 	                	  refreshPosts();
 	                	  }
 	              
@@ -1246,8 +1296,41 @@ public String submitPost() throws IOException {
 			}; 
 			this.runOnUiThread(action);
 			}
-    
+    }
+    else {
+    	Thread prompt = new Thread() 
+		{ 
+		  public void run() 
+		  {
+			dismissDialog(ID_DIALOG_POSTING);
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
+              dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
+              dialogBuilder.setPositiveButton("OK",  new
+            		  DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int whichButton) {
+            	  //start over
+            	    clearCounters();
+              	}
+
+              });
+              dialogBuilder.setCancelable(true);
+             dialogBuilder.create().show();
+		  } 
+		}; 
+		this.runOnUiThread(prompt);
+    }
 	return res;
+}
+
+private void clearCounters() {
+	//resets counter variables
+	selectedImageIDs.clear();
+    imageUrl.clear();
+    selectedImageCtr = 0;
+    selectedCategories.clear();
+    xmlrpcError = false;
+	
 }
 
 public boolean checkSettings(){
@@ -1317,7 +1400,15 @@ public String uploadImages(){
     //new loop for multiple images
     
     for (int it = 0; it < selectedImageCtr; it++){
-
+    	final int printCtr = it;
+    	Thread prompt = new Thread() 
+     	{ 
+     	  public void run() 
+     	  {
+     		  loadingDialog.setMessage("Uploading Media File #" + String.valueOf(printCtr + 1));
+     	  } 
+     	}; 
+     	this.runOnUiThread(prompt);
     //check for image, and upload it
     if (imageUrl.get(it) != null)
     {
@@ -1326,9 +1417,111 @@ public String uploadImages(){
  	   String sXmlRpcMethod = "wp.uploadFile";
  	   String curImagePath = "";
  	   
- 	   for (int i = 0; i < 2; i++){
- 		   
+ 	  curImagePath = imageUrl.get(it).toString();
+ 	 boolean video = false;
+ 	  if (curImagePath.contains("video")){
+ 		  video = true;
+ 	  }
+ 	   
+ 	  if (video){ //upload the video
+  	   
+  	   Uri videoUri = Uri.parse(curImagePath);
+  	   File fVideo = null;
+  	   String mimeType = "";
+  	   MediaFile mf = null;
+  	  
+  	   if (videoUri.toString().contains("content:")){ //file is in media library
+ 		 	   String imgID = videoUri.getLastPathSegment();
+ 		 	   
+ 		 	   long imgID2 = Long.parseLong(imgID);
+ 		 	   
+ 		 	  String[] projection; 
+ 		 	 Uri imgPath;
+ 		 	 
 
+ 		 	  	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+
+ 			 	  projection = new String[] {
+ 			       		    Video.Media._ID,
+ 			       		    Video.Media.DATA,
+ 			       		    Video.Media.MIME_TYPE
+ 			       		};
+ 			 	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+ 		 	  
+
+ 		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+ 		 	  String thumbData = "";
+ 		 	 
+ 		 	  if (cur.moveToFirst()) {
+ 		 		  
+ 		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+
+	 			nameColumn = cur.getColumnIndex(Video.Media._ID);
+	 	        dataColumn = cur.getColumnIndex(Video.Media.DATA);
+	 	        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+
+ 		       String imgPath4 = imgPath.getEncodedPath();              	            
+ 		       mf = new MediaFile();
+ 		       
+ 		       thumbData = cur.getString(dataColumn);
+ 		       mimeType = cur.getString(mimeTypeColumn);
+ 		       fVideo = new File(thumbData);
+ 				mf.setFilePath(fVideo.getPath());
+
+ 		 	  }
+  	   }
+  	   else{ //file is not in media library
+  		   fVideo = new File(videoUri.toString().replace("file://", ""));
+  	   }
+  	   
+  	   imageTitle = fVideo.getName();
+
+         //try to upload the video
+         Map<String, Object> m = new HashMap<String, Object>();
+         
+         HashMap hPost = new HashMap();
+         m.put("name", imageTitle);
+         m.put("type", mimeType);
+         m.put("bits", mf);
+         m.put("overwrite", true);
+         
+         Object[] params = {
+         		1,
+         		sUsername,
+         		sPassword,
+         		m
+         };
+         
+         Object result = null;
+         
+         try {
+ 			result = (Object) client.call("wp.uploadFile", params);
+ 		} catch (XMLRPCException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 			e.getMessage();
+ 			xmlrpcError = true;
+ 			break;
+ 		}
+ 				
+ 				HashMap contentHash = new HashMap();
+ 				    
+ 				contentHash = (HashMap) result;
+
+ 				String resultURL = contentHash.get("url").toString();
+ 				if (contentHash.containsKey("videopress_shortcode")){
+ 					resultURL = contentHash.get("videopress_shortcode").toString() + "<br />";
+ 				}
+ 				else{
+ 					resultURL = "<a type=\"" + mimeType + "\" href=\"" + resultURL + "\">View Video</a><br />";
+ 				}
+ 				
+ 				content = content + resultURL;
+
+ 	  } //end video
+ 	  else{
+ 	   for (int i = 0; i < 2; i++){
+ 
  		 curImagePath = imageUrl.get(it).toString();
  		   
  		if (i == 0 || sFullSizeImage)
@@ -1336,38 +1529,45 @@ public String uploadImages(){
  	   
  	   Uri imageUri = Uri.parse(curImagePath);
  	   File jpeg = null;
- 	  String mimeType = "", orientation = "";
+ 	   String mimeType = "", orientation = "";
+ 	   MediaFile mf = null;
+ 	 
  	   if (imageUri.toString().contains("content:")){ //file is in media library
 		 	   String imgID = imageUri.getLastPathSegment();
 		 	   
 		 	   long imgID2 = Long.parseLong(imgID);
 		 	   
 		 	  String[] projection; 
-		
-		 	  projection = new String[] {
-		       		    Images.Media._ID,
-		       		    Images.Media.DATA,
-		       		    Images.Media.MIME_TYPE,
-		       		    Images.Media.ORIENTATION
-		       		};
-		
-			Cursor cur = this.managedQuery(imageUri, projection, null, null, null);
+		 	 Uri imgPath;
+
+			 	  projection = new String[] {
+			       		    Images.Media._ID,
+			       		    Images.Media.DATA,
+			       		    Images.Media.MIME_TYPE,
+			       		    Images.Media.ORIENTATION
+			       		};
+			 	  imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+		 	  
+
+		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
 		 	  String thumbData = "";
 		 	 
 		 	  if (cur.moveToFirst()) {
 		 		  
-		 		 int nameColumn, dataColumn, mimeTypeColumn, orientationColumn;
+		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, orientationColumn;
 
 		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
 		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
 		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-		 	       orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);        	            
-		       
-		       thumbData = cur.getString(dataColumn);
+		 	       orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+              	            
+		       mf = new MediaFile();
 		       orientation = cur.getString(orientationColumn);
+		       thumbData = cur.getString(dataColumn);
 		       mimeType = cur.getString(mimeTypeColumn);
 		       jpeg = new File(thumbData);
-		 	  
+				mf.setFilePath(jpeg.getPath());
+
 		 	  }
  	   }
  	   else{ //file is not in media library
@@ -1375,9 +1575,10 @@ public String uploadImages(){
  	   }
  	   
  	   imageTitle = jpeg.getName();
+ 	   
+ 	   byte[] finalBytes = null;
  	  
  	   byte[] bytes = new byte[(int) jpeg.length()];
- 	   byte[] finalBytes;
  	   
  	   DataInputStream in = null;
 	try {
@@ -1403,9 +1604,10 @@ public String uploadImages(){
 		  finalBytes = bytes;
 	   }
  	   	
+
         //try to upload the image
         Map<String, Object> m = new HashMap<String, Object>();
-
+        
         HashMap hPost = new HashMap();
         m.put("name", imageTitle);
         m.put("type", mimeType);
@@ -1479,14 +1681,13 @@ public String uploadImages(){
 		        	   centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
 		           }
 		           
-		     	   
+
 		           if (i != 0 && sFullSizeImage)
 		           {
 			           if (resultURL != null)
 			           {
 
 			   	        	if (sImagePlacement.equals("Above Text")){
-			   	        		
 			   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a><br /><br />";
 			   	        	}
 			   	        	else{
@@ -1517,6 +1718,8 @@ public String uploadImages(){
        
        
  	  }//end image check
+ 	   
+ 	  }
  	   
     }//end image stuff
     }//end new for loop

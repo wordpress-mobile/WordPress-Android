@@ -10,7 +10,6 @@
   <string name="categories">Categories:</string>
   <string name="select_categories">Select Categories</string>
   <string name="tags_separate_with_commas">Tags (separate tags with commas):</string>
-  <string name="pictures">Pictures:</string>
   <string name="post_content">Post Content:</string>
   <string name="post_title">Post Title:</string>
   <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
@@ -83,6 +82,7 @@
   <string name="saved_to_local_drafts">Saved to local drafts</string>
   <string name="new_account">New Account</string>
   <string name="upload_full_size_image">Upload and link to full image:</string>
+  <string name="uploading_content">Uploading Content</string>
   
   <!--  tab titles -->
   <string name="tab_comments">Comments</string>
@@ -209,6 +209,8 @@
   <!--  media selection -->
   <string name="select_photo">Select a photo from gallery</string>
   <string name="take_photo">Take a new photo</string>
+  <string name="select_video">Select a video from gallery</string>
+  <string name="take_video">Take a new video</string>
   <string name="add_media">Add Media</string>
   <string name="media">Media</string>
   
@@ -236,4 +238,12 @@
   <!--  file errors -->
   <string name="file_error">File Error</string>
   <string name="file_error_encountered">An error occurred while setting up the captured image.</string>
+  
+  <!--  SD Card errors --> 
+  <string name="sdcard_title">SD Card Required</string>
+  <string name="sdcard_message">A mounted SD card is required to upload media.</string>
+  
+  <!--  location -->
+  <string name="location">Location</string>
+  <string name="geotag">Geotag Posts:</string>
 </resources>

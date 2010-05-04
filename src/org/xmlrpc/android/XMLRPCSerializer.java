@@ -1,7 +1,12 @@
 package org.xmlrpc.android;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,9 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.wordpress.android.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
+
+import android.util.Log;
 
 class XMLRPCSerializer {
 	static final String TAG_NAME = "name";
@@ -64,7 +72,29 @@ class XMLRPCSerializer {
 			String value = new String(Base64Coder.encode((byte[])object));
 			//String value = "/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAACgAA/+4ADkFkb2JlAGTAAAAAAf/bAIQAFBAQGRIZJxcXJzImHyYyLiYmJiYuPjU1NTU1PkRBQUFBQUFERERERERERERERERERERERERERERERERERERERAEVGRkgHCAmGBgmNiYgJjZENisrNkREREI1QkRERERERERERERERERERERERERERERERERERERERERERERERERE/8AAEQgAAgACAwEiAAIRAQMRAf/EAEsAAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAEEAEAAAAAAAAAAAAAAAAAAAAAEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCAADP/2Q==";
 			serializer.startTag(null, TYPE_BASE64).text(value).endTag(null, TYPE_BASE64);
-		} else
+		} 
+		else if( object instanceof MediaFile ) {
+			//convert media file binary to base64
+			serializer.startTag( null, "base64" );
+			MediaFile videoFile = (MediaFile) object;
+			InputStream inStream = new DataInputStream(new FileInputStream(videoFile.getFilePath()));
+			byte[] buffer = new byte[3600];//you must use a 24bit multiple
+			int length = -1;
+			long start1 = System.currentTimeMillis();
+			String chunk = null;
+			//int ctr = 0;
+			Log.i("WordPress", "converting media file to base64");
+			while ((length = inStream.read(buffer)) > 0) {
+				chunk = Base64.encodeBytes(buffer, 0, length);
+				serializer.text(chunk);
+				//ctr+=3600;
+				//Log.i("WordPress", "chunk " + ctr);
+			}
+			Log.i("WordPress", "conversion done!");
+			long end1 = System.currentTimeMillis();
+			inStream.close();
+			serializer.endTag(null, "base64");
+		}else
 		if (object instanceof List) {
 			serializer.startTag(null, TYPE_ARRAY).startTag(null, TAG_DATA);
 			List<Object> list = (List<Object>) object;

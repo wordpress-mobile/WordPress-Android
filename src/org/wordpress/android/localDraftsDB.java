@@ -16,6 +16,9 @@ public class localDraftsDB {
 	private static final String LOCALDRAFTS_TABLE = "localdrafts";
 	private static final String LOCALPAGEDRAFTS_TABLE = "localpagedrafts";
 	private static final String DATABASE_NAME = "wordpress";
+	
+	private static final String ADD_LATITUDE = "alter table localdrafts add latitude real";
+	private static final String ADD_LONGITUDE = "alter table localdrafts add longitude real";
 
 	private SQLiteDatabase db;
 
@@ -23,10 +26,17 @@ public class localDraftsDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		db.execSQL(CREATE_TABLE_LOCALDRAFTS);
 		db.execSQL(CREATE_TABLE_LOCALPAGEDRAFTS);
+		
+		if (db.getVersion() == 4){
+			db.execSQL(ADD_LATITUDE);
+			db.execSQL(ADD_LONGITUDE);
+			db.setVersion(5);
+		}
+		
 		db.close();
 	}
 
-	public boolean saveLocalDraft(Context ctx, String blogID, String title, String content, String picturePaths, String tags, String categories, boolean publish) {
+	public boolean saveLocalDraft(Context ctx, String blogID, String title, String content, String picturePaths, String tags, String categories, boolean publish, Double latitude, Double longitude) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -38,6 +48,8 @@ public class localDraftsDB {
 			values.put("tags", tags);
 			values.put("categories", categories);
 			values.put("publish", publish);
+			values.put("latitude", latitude);
+			values.put("longitude", longitude);
 			returnValue = db.insert(LOCALDRAFTS_TABLE, null, values) > 0;
 
 		db.close();
@@ -93,7 +105,7 @@ public class localDraftsDB {
 	public Vector loadPost(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector returnVector = new Vector();
-		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "publish"}, "id=" + postID, null, null, null, null);
+		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "publish", "latitude", "longitude"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -107,6 +119,8 @@ public class localDraftsDB {
 		returnHash.put("tags", c.getString(3));
 		returnHash.put("categories", c.getString(4));
 		returnHash.put("publish", c.getInt(5));
+		returnHash.put("latitude", c.getDouble(6));
+		returnHash.put("longitude", c.getDouble(7));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();

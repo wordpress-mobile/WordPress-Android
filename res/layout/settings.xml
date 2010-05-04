@@ -128,11 +128,38 @@
             android:layout_marginRight="2dip"
             /> 
   </RelativeLayout>
+  <RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:id="@+id/section3"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:layout_below="@id/section2"> 
+     <TextView android:id="@+id/l_section3" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/location"
+              style="@style/WordPressSectionHeader"/>
+     <TextView android:id="@+id/l_location" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_alignParentLeft="true"
+            android:paddingTop="13px"
+              android:text="@string/geotag"
+              android:layout_below="@id/l_section3"/> 
+	<CheckBox android:id="@+id/location"
+     		android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/l_location"
+            android:layout_toRightOf="@id/l_location"
+            android:layout_marginRight="2dip"
+            /> 
+</RelativeLayout>
 <Button
 			android:id="@+id/save"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
-            android:layout_below="@id/section2"
+            android:layout_below="@id/section3"
             android:layout_alignParentRight="true"
             android:background="@drawable/wp_button_small"
             android:layout_marginLeft="10dip" android:text="@string/save"/>

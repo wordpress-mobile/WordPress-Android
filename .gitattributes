@@ -261,6 +261,7 @@ res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
 res/drawable/spinner_white_48.png -text
 res/drawable/title_bg.xml -text
+res/drawable/video.png -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_button.xml -text
 res/drawable/wp_button_small.xml -text
@@ -327,10 +328,12 @@ src/org/wordpress/android/DrawableManager.java -text
 src/org/wordpress/android/Entities.java -text
 src/org/wordpress/android/ImageAdapter.java -text
 src/org/wordpress/android/IntHashMap.java -text
+src/org/wordpress/android/MediaFile.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
 src/org/wordpress/android/StringHelper.java -text
 src/org/wordpress/android/TrustAllManager.java -text
 src/org/wordpress/android/TrustAllSSLSocketFactory.java -text
+src/org/wordpress/android/UploadDialog.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/addAccount.java -text
 src/org/wordpress/android/addCategory.java -text
@@ -360,6 +363,7 @@ src/org/wordpress/android/viewComments.java -text
 src/org/wordpress/android/viewPost.java -text
 src/org/wordpress/android/viewPosts.java -text
 src/org/wordpress/android/wpAndroid.java -text
+src/org/xmlrpc/android/Base64.java -text
 src/org/xmlrpc/android/Base64Coder.java -text
 src/org/xmlrpc/android/XMLRPCClient.java -text
 src/org/xmlrpc/android/XMLRPCException.java -text

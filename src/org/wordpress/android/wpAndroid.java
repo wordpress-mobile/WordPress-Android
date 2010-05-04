@@ -192,7 +192,6 @@ public void displayAccounts(){
 		ScrollView sv = new ScrollView(this);
 		sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));
-		sv.setBackgroundColor(Color.parseColor("#e8e8e8"));
 		LinearLayout layout = new LinearLayout(this);
 		layout.setPadding(10, 10, 10, 0);
 		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,

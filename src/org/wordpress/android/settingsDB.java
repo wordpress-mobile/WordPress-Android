@@ -19,7 +19,8 @@ public class settingsDB {
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
 	
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
+	//db version is now 5, see postStoreDB.java
 	
 	//for capturing blogID, trac ticket #
 	private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
@@ -29,6 +30,9 @@ public class settingsDB {
 	private static final String ADD_SOUND_OPTION = "alter table eula add sound boolean default false;";
 	private static final String ADD_VIBRATE_OPTION = "alter table eula add vibrate boolean default false;";
 	private static final String ADD_LIGHT_OPTION = "alter table eula add light boolean default false;";
+	
+	//for capturing blogID, trac ticket #
+	private static final String ADD_LOCATION_FLAG = "alter table accounts add location boolean default false;";
 	
 	
 	private SQLiteDatabase db;
@@ -52,14 +56,20 @@ public class settingsDB {
 				db.execSQL(ADD_SOUND_OPTION);
 				db.execSQL(ADD_VIBRATE_OPTION);
 				db.execSQL(ADD_LIGHT_OPTION);
+				db.execSQL(ADD_LOCATION_FLAG);
+				db.setVersion(DATABASE_VERSION); //set to latest revision
 		}
 		else if (db.getVersion()  == 2){
 				db.execSQL(ADD_SOUND_OPTION);
 				db.execSQL(ADD_VIBRATE_OPTION);
 				db.execSQL(ADD_LIGHT_OPTION);
+				db.execSQL(ADD_LOCATION_FLAG);
+				db.setVersion(DATABASE_VERSION); //set to latest revision
 		}
-
-		db.setVersion(DATABASE_VERSION); //set to latest revision
+		else if (db.getVersion() == 3){
+				db.execSQL(ADD_LOCATION_FLAG);
+				db.setVersion(DATABASE_VERSION); //set to latest revision
+		}
 
 		db.close();
 		
@@ -160,7 +170,7 @@ public class settingsDB {
         return sb.toString();
     }
 
-	public boolean saveSettings(Context ctx, String id, String url, String username, String password, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId) {
+	public boolean saveSettings(Context ctx, String id, String url, String username, String password, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean location) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -171,6 +181,7 @@ public class settingsDB {
 		values.put("fullSizeImage", fullSizeImage);
 		values.put("maxImageWidth", maxImageWidth);
 		values.put("maxImageWidthId", maxImageWidthId);
+		values.put("location", location);
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
 		db.close();
 		return (returnValue);
@@ -191,7 +202,7 @@ public class settingsDB {
 	public Vector loadSettings(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId"}, "id=" + id, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location"}, "id=" + id, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -209,6 +220,7 @@ public class settingsDB {
 		returnVector.add(c.getInt(8));
 		returnVector.add(c.getInt(9));
 		returnVector.add(c.getInt(10));
+		returnVector.add(c.getInt(11));
 		}
 		else
 		{

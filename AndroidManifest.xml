@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.wordpress.android" android:versionName="1.1.5" android:versionCode="12">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:versionName="1.2 Beta" android:versionCode="13">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:debuggable="false">
@@ -59,4 +58,9 @@
 	<uses-permission xmlns:android="http://schemas.android.com/apk/res/android" 
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+	<uses-feature android:name="android.hardware.camera" />
+
+
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
 </manifest> 

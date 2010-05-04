@@ -53,6 +53,7 @@ public class settings extends Activity {
     		String imagePlacement = categoriesVector.get(4).toString();
     		String sCenterThumbnailString = categoriesVector.get(5).toString();
     		String sFullSizeImageString = categoriesVector.get(6).toString();
+    		String location = categoriesVector.get(11).toString();
     			
     		boolean sFullSizeImage  = false;
     		if (sFullSizeImageString.equals("1")){
@@ -62,6 +63,11 @@ public class settings extends Activity {
     		boolean sCenterThumbnail = false;
     		if (sCenterThumbnailString.equals("1")){
     			sCenterThumbnail = true;
+    		}
+    		
+    		boolean sLocation  = false;
+    		if (location.equals("1")){
+    			sLocation = true;
     		}
     		
     		String maxImageWidth = categoriesVector.get(7).toString();
@@ -79,12 +85,17 @@ public class settings extends Activity {
 
             RadioButton aboveTextRB = (RadioButton)findViewById(R.id.aboveText);
             RadioButton belowTextRB = (RadioButton)findViewById(R.id.belowText);
+            aboveTextRB.setTag(0);
+            belowTextRB.setTag(1);
             
             CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
             centerThumbnail.setChecked(sCenterThumbnail);
             
             CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
             fullSize.setChecked(sFullSizeImage);
+            
+            CheckBox locationCB = (CheckBox)findViewById(R.id.location);
+            locationCB.setChecked(sLocation);
             
       
             spinner.setSelection(maxImageWidthIdInt);
@@ -121,8 +132,16 @@ public class settings extends Activity {
                 
                 
                 RadioGroup imageRG = (RadioGroup)findViewById(R.id.imagePlacement);
-                RadioButton checkedRB = (RadioButton)findViewById(imageRG.getCheckedRadioButtonId());
-                String buttonValue = checkedRB.getText().toString();
+                // trac #55
+                String buttonValue = ""; 
+                RadioButton aboveTextRB = (RadioButton)findViewById(R.id.aboveText);
+                if (aboveTextRB.isChecked()){
+                	buttonValue = "Above Text"; 
+                }
+                else{
+                	buttonValue = "Below Text";
+                }
+                
                 CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
                 boolean fullSizeImageValue = fullSize.isChecked();
                 
@@ -132,9 +151,12 @@ public class settings extends Activity {
                 int maxImageWidthIdInt = (int) maxImageWidthId;
                 CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
                 boolean centerThumbnailValue = centerThumbnail.isChecked();
+                
+                CheckBox locationCB = (CheckBox)findViewById(R.id.location);
+                boolean locationValue = locationCB.isChecked();
 
                 settingsDB settingsDB = new settingsDB(settings.this);
-                settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt);
+                settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, locationValue);
                 
         		//exit settings screen
                 Bundle bundle = new Bundle();

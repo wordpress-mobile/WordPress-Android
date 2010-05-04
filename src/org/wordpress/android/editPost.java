@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +39,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
 import android.text.Editable;
 import android.text.Selection;
 import android.util.Log;
@@ -87,6 +91,7 @@ public class editPost extends Activity {
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
     public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
     public String SD_CARD_TEMP_DIR = "", categories = "";
+    ProgressDialog loadingDialog;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -145,6 +150,8 @@ public class editPost extends Activity {
         	     	GridView gridview = (GridView) findViewById(R.id.gridView);
         	     	gridview.setVisibility(View.VISIBLE);
         	     	gridview.setAdapter(new ImageAdapter(this));
+        	     	Button clearMedia = (Button) findViewById(R.id.clearPicture);
+        	     	clearMedia.setVisibility(View.VISIBLE);
         		}
         		
         	}
@@ -607,6 +614,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        GridView gridview = (GridView) findViewById(R.id.gridView);
 			        gridview.setVisibility(View.GONE);
 			     	gridview.setAdapter(null);
+			     	clearPictureButton.setVisibility(View.GONE);
                 	         	
                 }
         });            
@@ -627,10 +635,34 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         Boolean publishThis = false;
         String imageContent = "";
-        //upload the images and return the HTML
-        imageContent =  uploadImages();
+        boolean mediaError = false;
+        if (selectedImageCtr > 0){  //did user add media to post?
+        	//upload the images and return the HTML
+        	String state = android.os.Environment.getExternalStorageState();
+        	if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
+                //we need an SD card to submit media, stop this train!
+        		mediaError = true;
+            }
+        	else{
+        		imageContent =  uploadImages();
+        	}
 
-        String res = null;
+        }
+        
+        
+
+        String res = "";
+        if (!mediaError){
+        	
+    	Thread updateDialog = new Thread() 
+     	{ 
+     	  public void run() 
+     	  {
+     		 loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
+     	  } 
+     	}; 
+     	this.runOnUiThread(updateDialog);
+     	
         //before we do anything, validate that the user has entered settings
         boolean enteredSettings = checkSettings();
         
@@ -758,7 +790,32 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
         }// if/then for valid settings
         
-		return res;
+		
+        }
+        else {
+        	Thread prompt = new Thread() 
+    		{ 
+    		  public void run() 
+    		  {
+    			dismissDialog(ID_DIALOG_POSTING);
+    			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+    			  dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
+                  dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                	  //just close the dialog
+                  	}
+
+                  });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
+    		  } 
+    		}; 
+    		this.runOnUiThread(prompt);
+    		res = "mediaError";
+        }
+        return res;
 	}
 
 	public String uploadImages(){
@@ -808,7 +865,16 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	    //new loop for multiple images
 	    
 	    for (int it = 0; it < selectedImageCtr; it++){
-
+	    	final int printCtr = it;
+	    	Thread prompt = new Thread() 
+	     	{ 
+	     	  public void run() 
+	     	  {
+	     		  loadingDialog.setMessage("Uploading Media File #" + String.valueOf(printCtr + 1));
+	     		  loadingDialog.setProgress(loadingDialog.getProgress() + (100 / (selectedImageCtr + 1)));
+	     	  } 
+	     	}; 
+	     	this.runOnUiThread(prompt);
 	    //check for image, and upload it
 	    if (imageUrl.get(it) != null)
 	    {
@@ -817,10 +883,112 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 	   String sXmlRpcMethod = "wp.uploadFile";
 	 	   String curImagePath = "";
 	 	   
-	 	   for (int i = 0; i < 2; i++){
-	 		   
+	 	  curImagePath = imageUrl.get(it).toString();
+	 	 boolean video = false;
+	 	  if (curImagePath.contains("video")){
+	 		  video = true;
+	 	  }
+	 	   
+	 	  if (video){ //upload the video
+	  	   
+	  	   Uri videoUri = Uri.parse(curImagePath);
+	  	   File fVideo = null;
+	  	   String mimeType = "";
+	  	   MediaFile mf = null;
+	  	  
+	  	   if (videoUri.toString().contains("content:")){ //file is in media library
+	 		 	   String imgID = videoUri.getLastPathSegment();
+	 		 	   
+	 		 	   long imgID2 = Long.parseLong(imgID);
+	 		 	   
+	 		 	  String[] projection; 
+	 		 	 Uri imgPath;
+	 		 	 
 
-	 		 curImagePath = selectedImageIDs.get(it).toString();
+	 		 	  	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+
+	 			 	  projection = new String[] {
+	 			       		    Video.Media._ID,
+	 			       		    Video.Media.DATA,
+	 			       		    Video.Media.MIME_TYPE
+	 			       		};
+	 			 	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+	 		 	  
+
+	 		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+	 		 	  String thumbData = "";
+	 		 	 
+	 		 	  if (cur.moveToFirst()) {
+	 		 		  
+	 		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+
+		 			nameColumn = cur.getColumnIndex(Video.Media._ID);
+		 	        dataColumn = cur.getColumnIndex(Video.Media.DATA);
+		 	        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+
+	 		       String imgPath4 = imgPath.getEncodedPath();              	            
+	 		       mf = new MediaFile();
+	 		       
+	 		       thumbData = cur.getString(dataColumn);
+	 		       mimeType = cur.getString(mimeTypeColumn);
+	 		       fVideo = new File(thumbData);
+	 				mf.setFilePath(fVideo.getPath());
+
+	 		 	  }
+	  	   }
+	  	   else{ //file is not in media library
+	  		   fVideo = new File(videoUri.toString().replace("file://", ""));
+	  	   }
+	  	   
+	  	   imageTitle = fVideo.getName();
+
+	         //try to upload the video
+	         Map<String, Object> m = new HashMap<String, Object>();
+	         
+	         HashMap hPost = new HashMap();
+	         m.put("name", imageTitle);
+	         m.put("type", mimeType);
+	         m.put("bits", mf);
+	         m.put("overwrite", true);
+	         
+	         Object[] params = {
+	         		1,
+	         		sUsername,
+	         		sPassword,
+	         		m
+	         };
+	         
+	         Object result = null;
+	         
+	         try {
+	 			result = (Object) client.call("wp.uploadFile", params);
+	 		} catch (XMLRPCException e) {
+	 			// TODO Auto-generated catch block
+	 			e.printStackTrace();
+	 			e.getMessage();
+	 			xmlrpcError = true;
+	 			break;
+	 		}
+	 				
+	 				HashMap contentHash = new HashMap();
+	 				    
+	 				contentHash = (HashMap) result;
+
+	 				String resultURL = contentHash.get("url").toString();
+	 				if (contentHash.containsKey("videopress_shortcode")){
+	 					resultURL = contentHash.get("videopress_shortcode").toString() + "<br />";
+	 				}
+	 				else{
+	 					resultURL = "<a type=\"" + mimeType + "\" href=\"" + resultURL + "\">View Video</a><br />";
+	 				}
+	 				
+	 				content = content + resultURL;
+
+	 	  } //end video
+	 	  else{
+	 	   for (int i = 0; i < 2; i++){
+	 
+	 		 curImagePath = imageUrl.get(it).toString();
 	 		   
 	 		if (i == 0 || sFullSizeImage)
 	 		{
@@ -828,51 +996,55 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 	   Uri imageUri = Uri.parse(curImagePath);
 	 	   File jpeg = null;
 	 	   String mimeType = "", orientation = "";
+	 	   MediaFile mf = null;
+	 	 
 	 	   if (imageUri.toString().contains("content:")){ //file is in media library
-		 	   String imgID = imageUri.getLastPathSegment();
-		 	   long imgID2 = Long.parseLong(imgID);
-		 	   
-		 	  String[] projection; 
-	
-		 	  projection = new String[] {
-		       		    Images.Media._ID,
-		       		    Images.Media.DATA,
-		       		    Images.Media.MIME_TYPE,
-		       		    Images.Media.ORIENTATION
-		       		};
-		 	  
-		 	   Uri imgPath;
-	
-		 	   imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-	
-			Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
-		 	  String thumbData = "";
-		 	 
-		 	  if (cur.moveToFirst()) {
-		 		  
-		 		int nameColumn, dataColumn, mimeTypeColumn, orientationColumn;;
-		 			nameColumn = cur.getColumnIndex(Images.Media._ID);
-		 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-		 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-		 	        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-	
-		       String imgPath4 = imgPath.getEncodedPath();              	            
-		       
-		       thumbData = cur.getString(dataColumn);
-		       mimeType = cur.getString(mimeTypeColumn);
-		       orientation = cur.getString(orientationColumn);
-		       
-		 	  }
-		 	   
-		 	   jpeg = new File(thumbData);
+			 	   String imgID = imageUri.getLastPathSegment();
+			 	   
+			 	   long imgID2 = Long.parseLong(imgID);
+			 	   
+			 	  String[] projection; 
+			 	 Uri imgPath;
+
+				 	  projection = new String[] {
+				       		    Images.Media._ID,
+				       		    Images.Media.DATA,
+				       		    Images.Media.MIME_TYPE,
+				       		    Images.Media.ORIENTATION
+				       		};
+				 	  imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+			 	  
+
+			 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
+			 	  String thumbData = "";
+			 	 
+			 	  if (cur.moveToFirst()) {
+			 		  
+			 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, orientationColumn;
+
+			 			nameColumn = cur.getColumnIndex(Images.Media._ID);
+			 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
+			 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+			 	       orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+	              	            
+			       mf = new MediaFile();
+			       orientation = cur.getString(orientationColumn);
+			       thumbData = cur.getString(dataColumn);
+			       mimeType = cur.getString(mimeTypeColumn);
+			       jpeg = new File(thumbData);
+					mf.setFilePath(jpeg.getPath());
+
+			 	  }
 	 	   }
 	 	   else{ //file is not in media library
 	 		   jpeg = new File(imageUri.toString().replace("file://", ""));
 	 	   }
+	 	   
 	 	   imageTitle = jpeg.getName();
+	 	   
+	 	   byte[] finalBytes = null;
 	 	  
 	 	   byte[] bytes = new byte[(int) jpeg.length()];
-	 	   byte[] finalBytes;
 	 	   
 	 	   DataInputStream in = null;
 		try {
@@ -898,9 +1070,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			  finalBytes = bytes;
 		   }
 	 	   	
+
 	        //try to upload the image
 	        Map<String, Object> m = new HashMap<String, Object>();
-
+	        
 	        HashMap hPost = new HashMap();
 	        m.put("name", imageTitle);
 	        m.put("type", mimeType);
@@ -974,14 +1147,13 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        	   centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
 			           }
 			           
-			     	   
+
 			           if (i != 0 && sFullSizeImage)
 			           {
 				           if (resultURL != null)
 				           {
 
 				   	        	if (sImagePlacement.equals("Above Text")){
-				   	        		
 				   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a><br /><br />";
 				   	        	}
 				   	        	else{
@@ -1012,6 +1184,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	       
 	       
 	 	  }//end image check
+	 	   
+	 	  }
 	 	   
 	    }//end image stuff
 	    }//end new for loop
@@ -1293,7 +1467,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        return 0;
 	    }
 
-	    // create a new ImageView for each item referenced by the Adapter
+	 // create a new ImageView for each item referenced by the Adapter
 	    public View getView(int position, View convertView, ViewGroup parent) {
 	        ImageView imageView;
 	        if (convertView == null) {  // if it's not recycled, initialize some attributes
@@ -1305,13 +1479,15 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	            imageView = (ImageView) convertView;
 	        }
 	        Uri tempURI = (Uri) selectedImageIDs.get(position);
+	        
+	        if (!tempURI.toString().contains("video")){
 	     	   
 	        String[] projection = new String[] {
 	      		    Images.Thumbnails._ID,
 	      		    Images.Thumbnails.DATA,
 	      		    Images.Media.ORIENTATION
 	      		};
-	        String orientation = "";
+	     	String orientation = "";
 			Cursor cur = managedQuery(tempURI, projection, null, null, null);
 			File jpeg = null;
 			if (cur != null){
@@ -1319,22 +1495,24 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	 
 	     	  if (cur.moveToFirst()) {
 	     		  
-	     		 int nameColumn, dataColumn, orientationColumn;
-		     		
+	     		int nameColumn, dataColumn, orientationColumn;
+	     		
 	     			nameColumn = cur.getColumnIndex(Images.Media._ID);
 	     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
 	     	        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-	     		             	            
-	           
+
 	           thumbData = cur.getString(dataColumn);
 	           orientation = cur.getString(orientationColumn);
 	     	  }
 	     	  
-	     	 jpeg = new File(thumbData);
+	     	   
+	     	   jpeg = new File(thumbData);
 			}
 			else{
 				jpeg = new File(tempURI.toString().replace("file://", ""));
 			}
+			
+			
 	     	   
 	     	   imageTitle = jpeg.getName();
 	     	  
@@ -1411,6 +1589,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        	imageView.setImageBitmap(resizedBitmap);
 	        }
 	        
+	        
+	        }
+	        else{
+	        	imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+	        }
+	        
 	        //resizedBitmap.recycle(); //free up memory
 	        
 	        return imageView;
@@ -1426,7 +1610,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		{
 			Bundle extras;
 			GridView gridview = (GridView) findViewById(R.id.gridView);
-
+			Button clearMedia = (Button) findViewById(R.id.clearPicture);
 		switch(requestCode) {
 		case 0:
 			extras = data.getExtras();
@@ -1471,19 +1655,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		    Uri imageUri = data.getData();
 		    String imgPath = imageUri.getEncodedPath();
    
-            selectedImageIDs.add(selectedImageCtr, imageUri);
-            imageUrl.add(selectedImageCtr, imgPath);
-            selectedImageCtr++;
-            gridview.setVisibility(View.VISIBLE);
+		    selectedImageIDs.add(selectedImageCtr, imageUri);
+		    imageUrl.add(selectedImageCtr, imageUri.toString());
+		    selectedImageCtr++;
+		    gridview.setVisibility(View.VISIBLE);
 	     	  
 	     	gridview.setAdapter(new ImageAdapter(this));
+
+           	clearMedia.setVisibility(View.VISIBLE);
 	     	break;
 		case 4:
 			if (resultCode == Activity.RESULT_OK) {
 
                 // http://code.google.com/p/android/issues/detail?id=1480
-
-                // on activity return
 				File f = null;
                 if (data != null){ //HTC Sense Device returns different data for image capture
                 	
@@ -1537,7 +1721,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
                         Log.i("camera", "Selected image: " + capturedImage.toString());
 
-                    //f.delete();
+                    f.delete();
                     
                     Bundle bundle = new Bundle();
                     
@@ -1547,30 +1731,150 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     imageUrl.add(selectedImageCtr, capturedImage.toString());
                     selectedImageCtr++;
                     gridview.setVisibility(View.VISIBLE);
-         	     	gridview.setAdapter(new ImageAdapter(this));
+         	     	 gridview.setAdapter(new ImageAdapter(this));
+         	     	 
+    	           	clearMedia.setVisibility(View.VISIBLE);
        
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
                 }
 
         }
         else {
-                Log.i("Camera", "Result code was " + resultCode);
-
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+    		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+            dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+          dialogBuilder.setPositiveButton("OK",  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // just close the dialog
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
         }
 
 		     	break;
+		     	
 		case 5:
-			 
-			extras = data.getExtras();
-			String cats = extras.getString("selectedCategories");
-			categories = cats;
-			TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + cats);
-           
+			// deprecated
 	     	break;
+		case 6:
+			 
+		    Uri videoUri = data.getData();
+		    String videoPath = videoUri.getEncodedPath();
+   
+           selectedImageIDs.add(selectedImageCtr, videoUri);
+           imageUrl.add(selectedImageCtr, videoUri);
+           selectedImageCtr++;
+
+           gridview.setVisibility(View.VISIBLE);
+	     	 gridview.setAdapter(new ImageAdapter(this));
+	     	 clearMedia.setVisibility(View.VISIBLE);
+	     	 break;
+		case 7:
+			if (resultCode == Activity.RESULT_OK) {
+
+                // http://code.google.com/p/android/issues/detail?id=1480
+
+                // on activity return
+                File f = new File(SD_CARD_TEMP_DIR);
+                try {
+                	// Save the name and description of a video in a ContentValues map.  
+                    ContentValues values = new ContentValues(2);
+                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/3gp");
+                    // values.put(MediaStore.Video.Media.DATA, f.getAbsolutePath()); 
+
+                    // Add a new record (identified by uri) without the video, but with the values just set.
+                    Uri capturedVideo = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+                    // Now get a handle to the file for that record, and save the data into it.
+
+                        InputStream is = new FileInputStream(f);
+                        OutputStream os = getContentResolver().openOutputStream(capturedVideo);
+                        byte[] buffer = new byte[8192]; // tweaking this number may increase performance
+                        int len;
+                        while ((len = is.read(buffer)) != -1){
+                            os.write(buffer, 0, len);
+                        }
+                        os.flush();
+                        is.close();
+                        os.close();
+
+
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, capturedVideo));
+
+                    f.delete();
+                    
+                    Bundle bundle = new Bundle();
+                    
+                    bundle.putString("imageURI", capturedVideo.toString());
+                    
+                    selectedImageIDs.add(selectedImageCtr, capturedVideo);
+                    imageUrl.add(selectedImageCtr, capturedVideo.toString());
+                    selectedImageCtr++;
+                    gridview.setVisibility(View.VISIBLE);
+         	     	 gridview.setAdapter(new ImageAdapter(this));
+         	     	 clearMedia.setVisibility(View.VISIBLE);
+       
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
+                } catch (IOException e) {
+					// TODO Auto-generated catch block
+                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+                  dialogBuilder.setPositiveButton("OK",  new
+                		  DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+                  dialogBuilder.setCancelable(true);
+                 dialogBuilder.create().show();
+				}
+
+        }
+        else {
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+    		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
+            dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
+          dialogBuilder.setPositiveButton("OK",  new
+        		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // just close the dialog
+                }
+            });
+          dialogBuilder.setCancelable(true);
+         dialogBuilder.create().show();
+        }
+
+		     	break;
 		}
+		
+		
 		
 	}//end null check
 	}
@@ -1654,7 +1958,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	@Override
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
-	ProgressDialog loadingDialog = new ProgressDialog(this);
+	loadingDialog = new ProgressDialog(this);
+	loadingDialog.setTitle(getResources().getText(R.string.uploading_content));
 	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.attempting_edit_page : R.string.attempting_edit_post));
 	loadingDialog.setIndeterminate(true);
 	loadingDialog.setCancelable(true);
@@ -1792,9 +2097,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	public void onCreateContextMenu(
 		      ContextMenu menu, View v,ContextMenu.ContextMenuInfo menuInfo)
 		   {
-			menu.setHeaderTitle(getResources().getText(R.string.add_media));
-			menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-			menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+				menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
+				menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+				menu.add(0, 2, 0, getResources().getText(R.string.select_video));
+				menu.add(0, 3, 0, getResources().getText(R.string.take_video));
 		   }
 	
 	@Override
@@ -1821,8 +2127,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
         	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
         	Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        	takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
-        	                File(SD_CARD_TEMP_DIR)));
+        	takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(SD_CARD_TEMP_DIR)));
         	
         	// make sure the directory we plan to store the recording in exists
             File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
@@ -1836,6 +2141,44 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
             }
 
         	startActivityForResult(takePictureFromCameraIntent, 4); 
+		
+		return true;
+		case 2:
+	    	
+	    	Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
+        	videoPickerIntent.setType("video/*");
+        	
+        	startActivityForResult(videoPickerIntent, 6);
+	    	
+	    	return true;
+		case 3:
+			String vState = android.os.Environment.getExternalStorageState();
+            if(!vState.equals(android.os.Environment.MEDIA_MOUNTED))  {
+                try {
+					throw new IOException("SD Card is not mounted.  It is " + vState + ".");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+
+        	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".3gp";
+        	Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        	takeVideoIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
+        	                File(SD_CARD_TEMP_DIR)));
+        	
+        	// make sure the directory we plan to store the recording in exists
+            File vDirectory = new File(SD_CARD_TEMP_DIR).getParentFile();
+            if (!vDirectory.exists() && !vDirectory.mkdirs()) {
+              try {
+				throw new IOException("Path to file could not be created.");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            }
+
+        	startActivityForResult(takeVideoIntent, 7); 
 		
 		return true;
 	}

@@ -105,19 +105,14 @@
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
               android:text="Media"
-              style="@style/WordPressSectionHeader"/>            
-    <TextView android:id="@+id/l_pictures" 
-    		  android:layout_below="@id/l_media"
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:text="@string/pictures"/>
-    
+              style="@style/WordPressSectionHeader"/>               
 <Button
 			android:id="@+id/addPictureButton"
+			android:layout_marginTop="4dip"
 			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
-            android:layout_below="@id/l_pictures" 
+            android:layout_below="@id/l_media" 
             android:textSize="20dip"
             android:text="@string/add"/>
             
@@ -126,6 +121,7 @@
 			android:background="@drawable/wp_button_small"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content" 
+            android:visibility="gone"
             android:textSize="20dip"
             android:layout_alignBottom="@id/addPictureButton"
             android:layout_toRightOf="@id/addPictureButton"
