@@ -238,7 +238,7 @@ public class newPost extends Activity implements LocationListener{
 		            	startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri))); 
 	            	}
 	            	else {
-	            		Toast.makeText(newPost.this, "Location data not yet available, please wait.", Toast.LENGTH_SHORT).show();
+	            		Toast.makeText(newPost.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
 	            	}
 	            	  
 

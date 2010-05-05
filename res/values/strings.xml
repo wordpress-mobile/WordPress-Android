@@ -75,7 +75,7 @@
   <string name="empty_fields">Empty fields</string>
   <string name="title_post_required">A Post Title with Post Content or a Media attachment is required.</string>
   <string name="post_edited">Post edited</string>
-  <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading images</string>
+  <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading media.</string>
   <string name="post_edited_successfully">Post edited successfully</string>
   <string name="attempting_edit_post">Attempting to edit Post</string>
   <string name="cancel_edit">Cancel Edit</string>
@@ -98,7 +98,7 @@
   <string name="page_title">Page Title:</string>
   <string name="page_content">Page Content:</string>
   <string name="page_edited">Page Edited</string>
-  <string name="page_edited_image_error">Page edited successfully, but an error was encountered when uploading images.</string>
+  <string name="page_edited_image_error">Page edited successfully, but an error was encountered when uploading media.</string>
   <string name="page_edited_successfully">Page edited successfully</string>
   <string name="attempting_edit_page">Attempting to edit Page</string>
   <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
@@ -247,4 +247,5 @@
   <!--  location -->
   <string name="location">Location</string>
   <string name="geotag">Geotag Posts:</string>
+  <string name="location_toast">Location data not yet available, please wait.</string>
 </resources>

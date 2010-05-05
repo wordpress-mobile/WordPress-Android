@@ -64,6 +64,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class editPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
@@ -187,9 +188,35 @@ public class editPost extends Activity implements LocationListener{
 	        	
 	    		String sLocation = settingsVector.get(11).toString();
 	    		
-	    		boolean location = false;
+	    		location = false;
 	    		if (sLocation.equals("1")){
 	    			location = true;
+	    		}
+	    		
+	    		if (location){
+	    			final Button viewMap = (Button) findViewById(R.id.viewMap);   
+	    	        
+	    	        viewMap.setOnClickListener(new TextView.OnClickListener() {
+	    	            public void onClick(View v) {
+	    	            	 
+	    	            	Double latitude = 0.0;
+	    	            	try {
+	    						latitude = curLocation.getLatitude();
+	    					} catch (Exception e) {
+	    						// TODO Auto-generated catch block
+	    						e.printStackTrace();
+	    					}
+	    	            	if (latitude != 0.0){
+	    		            	String uri = "geo:"+ latitude + "," + curLocation.getLongitude();  
+	    		            	startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri))); 
+	    	            	}
+	    	            	else {
+	    	            		Toast.makeText(editPost.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+	    	            	}
+	    	            	  
+
+	    	            }
+	    	        });
 	    		}
 	    		
 	    		Double latitude = (Double) postHashMap.get("latitude");
@@ -199,9 +226,6 @@ public class editPost extends Activity implements LocationListener{
 	    			new getAddressTask().execute(latitude, longitude);
 	    		}
 	    		
-	    		if (sLocation.equals("1")){
-	    			location = true;
-	    		}
 	    		if (location && latitude > 0){
 	    			Button updateLocation = (Button) findViewById(R.id.updateLocation);
 	    			
