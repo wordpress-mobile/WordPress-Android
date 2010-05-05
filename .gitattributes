@@ -312,6 +312,7 @@ res/values-ja/strings.xml -text
 res/values-nb/strings.xml -text
 res/values-ru/strings.xml -text
 res/values-sk/strings.xml -text
+res/values-ta/strings.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
 src/com/commonsware/cwac/cache/AsyncCache.java -text
