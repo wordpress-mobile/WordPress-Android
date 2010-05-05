@@ -111,27 +111,6 @@ public class newPost extends Activity implements LocationListener{
         }
         else{
         	setContentView(R.layout.main);
-        	settingsDB settingsDB = new settingsDB(this);
-        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
-        	
-    		String sLocation = settingsVector.get(11).toString();
-    		
-    		if (sLocation.equals("1")){
-    			location = true;
-    		}
-    		if (location){
-	        	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-	    		criteria = new Criteria();
-	    		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-	    		criteria.setAltitudeRequired(false);
-	    		criteria.setBearingRequired(false);
-	    		criteria.setCostAllowed(true);
-	    		criteria.setPowerRequirement(Criteria.POWER_HIGH);
-	
-	    		provider = lm.getBestProvider(criteria, true);
-	    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-            	locationSection.setVisibility(View.VISIBLE);
-    		}
         }
         
         String action = getIntent().getAction();
@@ -150,7 +129,6 @@ public class newPost extends Activity implements LocationListener{
                     
                 	HashMap curHash = (HashMap) accounts.get(i);
                 	blogNames[i] = escapeUtils.unescapeHtml(curHash.get("blogName").toString());
-                	accountUsers[i] = curHash.get("username").toString();
                 	accountIDs[i] = curHash.get("id").toString();
                 	
                 } 
@@ -165,6 +143,8 @@ public class newPost extends Activity implements LocationListener{
             	        accountName = blogNames[item];
             	        setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post)); 
             	        setContent();
+            	        lbsCheck();
+            	        
             	    }
             	});
             	AlertDialog alert = builder.create();
@@ -183,15 +163,16 @@ public class newPost extends Activity implements LocationListener{
         		Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
             	startActivity(i);
             	finish();
-
         	}
-        	
-        	
+
         }
         else{
         	//clear up some variables
             selectedImageIDs.clear();
             selectedImageCtr = 0;
+            
+            lbsCheck();
+            
         }
 
         if (accountName != null){
@@ -230,7 +211,6 @@ public class newPost extends Activity implements LocationListener{
 	            	try {
 						latitude = curLocation.getLatitude();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 	            	if (latitude != 0.0){
@@ -424,10 +404,6 @@ linkButton.setOnClickListener(new Button.OnClickListener() {
 
                     	startActivityForResult(i, 2);
                 	}    	
-            
-        	
-        	
-        	
                }
             });
             
@@ -457,8 +433,6 @@ final Button emButton = (Button) findViewById(R.id.em);
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // just close the dialog
-                            	
-                        
                             }
                         });
                       dialogBuilder.setCancelable(true);
@@ -502,8 +476,6 @@ final Button bquoteButton = (Button) findViewById(R.id.bquote);
                     		  DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // just close the dialog
-                            	
-                        
                             }
                         });
                       dialogBuilder.setCancelable(true);
@@ -533,18 +505,41 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        selectedImageIDs.clear();
 			        selectedImageCtr = 0;
 			        GridView gridview = (GridView) findViewById(R.id.gridView);
-			     	 gridview.setAdapter(null);
-			     	 gridview.setVisibility(View.GONE);
+			     	gridview.setAdapter(null);
+			     	gridview.setVisibility(View.GONE);
 			     	 
-			     	 clearPictureButton.setVisibility(View.GONE);
+			     	clearPictureButton.setVisibility(View.GONE);
                 	         	
                 }
         });            
             
     }
     
+	protected void lbsCheck() {
+		settingsDB settingsDB = new settingsDB(newPost.this);
+    	Vector settingsVector = settingsDB.loadSettings(newPost.this, id);   	
+    	
+		String sLocation = settingsVector.get(11).toString();
+		
+		if (sLocation.equals("1")){
+			location = true;
+		}
+		if (location){
+        	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+    		criteria = new Criteria();
+    		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+    		criteria.setAltitudeRequired(false);
+    		criteria.setBearingRequired(false);
+    		criteria.setCostAllowed(true);
+    		criteria.setPowerRequirement(Criteria.POWER_HIGH);
 
-    
+    		provider = lm.getBestProvider(criteria, true);
+    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+        	locationSection.setVisibility(View.VISIBLE);
+		}
+		
+	}
+
 	protected void setContent() {
 		Intent intent = getIntent();
 		String text = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -597,11 +592,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         String images = "";
         String categories = "";
         boolean success = false;
-
-        Integer blogID = 1;
         
-        Vector<Object> myPostVector = new Vector<Object> ();
-        String res = null;
         //before we do anything, validate that the user has entered settings
         boolean enteredSettings = checkSettings();
         
@@ -660,7 +651,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	{
         		publishThis = true;
         	}
-        	
         	
         	//Geotagging
         	settingsDB settingsDB = new settingsDB(this);
@@ -1072,31 +1062,23 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		case 7:
 			if (resultCode == Activity.RESULT_OK) {
 
-                // http://code.google.com/p/android/issues/detail?id=1480
-
-                // on activity return
                 File f = new File(SD_CARD_TEMP_DIR);
-                try {
-                	// Save the name and description of a video in a ContentValues map.  
+                try { 
                     ContentValues values = new ContentValues(2);
                     values.put(MediaStore.Video.Media.MIME_TYPE, "video/3gp");
-                    // values.put(MediaStore.Video.Media.DATA, f.getAbsolutePath()); 
 
-                    // Add a new record (identified by uri) without the video, but with the values just set.
                     Uri capturedVideo = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
-                    // Now get a handle to the file for that record, and save the data into it.
-
-                        InputStream is = new FileInputStream(f);
-                        OutputStream os = getContentResolver().openOutputStream(capturedVideo);
-                        byte[] buffer = new byte[8192]; // tweaking this number may increase performance
-                        int len;
-                        while ((len = is.read(buffer)) != -1){
-                            os.write(buffer, 0, len);
-                        }
-                        os.flush();
-                        is.close();
-                        os.close();
+                    InputStream is = new FileInputStream(f);
+                    OutputStream os = getContentResolver().openOutputStream(capturedVideo);
+                    byte[] buffer = new byte[8192]; // tweaking this number may increase performance
+                    int len;
+                    while ((len = is.read(buffer)) != -1){
+                        os.write(buffer, 0, len);
+                    }
+                    os.flush();
+                    is.close();
+                    os.close();
 
 
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, capturedVideo));
@@ -1111,8 +1093,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     imageUrl.add(selectedImageCtr, capturedVideo.toString());
                     selectedImageCtr++;
                     gridview.setVisibility(View.VISIBLE);
-         	     	 gridview.setAdapter(new ImageAdapter(this));
-         	     	 clearMedia.setVisibility(View.VISIBLE);
+         	     	gridview.setAdapter(new ImageAdapter(this));
+         	     	clearMedia.setVisibility(View.VISIBLE);
        
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block

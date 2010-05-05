@@ -158,7 +158,7 @@ public void displayAccounts(){
 	    soundCB.setTag("soundCB");
 	    soundCB.setTextColor(Color.parseColor("#444444"));
 	    soundCB.setTextSize(18);
-	    soundCB.setText(escapeUtils.unescapeHtml("Play notification sound"));
+	    soundCB.setText(getResources().getText(R.string.notification_sound));
         params.setMargins(0, 0, 0, 6);
         soundCB.setLayoutParams(params);
         soundCB.setChecked(sound);
@@ -169,7 +169,7 @@ public void displayAccounts(){
         vibrateCB.setTag("vibrateCB");
         vibrateCB.setTextColor(Color.parseColor("#444444"));
         vibrateCB.setTextSize(18);
-        vibrateCB.setText(escapeUtils.unescapeHtml("Vibrate"));
+        vibrateCB.setText(getResources().getText(R.string.notification_vibrate));
         params.setMargins(0, 0, 0, 6);
         vibrateCB.setLayoutParams(params);
         vibrateCB.setChecked(vibrate);
@@ -180,7 +180,7 @@ public void displayAccounts(){
         lightCB.setTag("lightCB");
         lightCB.setTextColor(Color.parseColor("#444444"));
         lightCB.setTextSize(18);
-        lightCB.setText(escapeUtils.unescapeHtml("Blink notification light"));
+        lightCB.setText(getResources().getText(R.string.notification_blink));
         params.setMargins(0, 0, 0, 6);
         lightCB.setLayoutParams(params);
         lightCB.setChecked(light);

@@ -67,18 +67,16 @@ public class XMLRPCClient {
 		postMethod.addHeader("Content-Type", "text/xml");
 		
 		postMethod.addHeader("charset", "UTF-8");
-		//UPDATE THE VERSION NUMBER BEFORE RELEASE!
+		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
 		postMethod.addHeader("User-Agent", "wp-android/1.2");
 		
-		// WARNING
-		// I had to disable "Expect: 100-Continue" header since I had 
-		// two second delay between sending http POST request and POST body 
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
 		
 		//username & password not needed
 		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("", "");
 		
+		//this gets connections working over https
 		if (uri.getScheme() != null){
 			if(uri.getScheme().equals("https")) { 
 				if(uri.getPort() == -1)
@@ -404,8 +402,6 @@ public class XMLRPCClient {
 				throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
 			}
 
-			// parse response stuff
-			//
 			// setup pull parser
 			XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 			HttpEntity entity = response.getEntity();

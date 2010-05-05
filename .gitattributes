@@ -288,7 +288,6 @@ res/layout/main.xml -text
 res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/new_account.xml -text
-res/layout/notification_options.xml -text
 res/layout/pages_tab_selector.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/reply.xml -text
@@ -326,7 +325,6 @@ src/com/commonsware/cwac/thumbnail/ThumbnailMessage.java -text
 src/org/wordpress/android/ConnectionClient.java -text
 src/org/wordpress/android/DrawableManager.java -text
 src/org/wordpress/android/Entities.java -text
-src/org/wordpress/android/ImageAdapter.java -text
 src/org/wordpress/android/IntHashMap.java -text
 src/org/wordpress/android/MediaFile.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text

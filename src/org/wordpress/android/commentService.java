@@ -21,22 +21,12 @@ import android.util.Log;
 
 public class commentService extends Service {
 
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	// constants
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	public static final String response = "true";
 	public static ServiceUpdateUIListener UI_UPDATE_LISTENER;
 	public String accountID = "", accountName = "", updateInterval = "";
 	private XMLRPCClient client;
 	private Timer timer = new Timer();
 	private static long UPDATE_INTERVAL = 360000;  //default to hourly
-
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	// hooks into other activities
-	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-	/*public static void setMainActivity(MainActivity activity) {
-	  MAIN_ACTIVITY = activity;
-	}*/
 
 	public static void setUpdateListener(ServiceUpdateUIListener l) {
 		  UI_UPDATE_LISTENER = l;
@@ -53,16 +43,12 @@ public class commentService extends Service {
 	  super.onCreate();
 	  // init the service here
 	  _startService();
-	  
-	  
-	  // if (MAIN_ACTIVITY != null) AppUtils.showToastShort(MAIN_ACTIVITY, "MyService started");
+
 	}
 	
     @Override
     public void onStart(Intent intent, int startId) {
-        //Log.i("ServiceStartArguments","Starting #" + startId + ": " + intent.getExtras());
        
-
     }
 
 
@@ -90,8 +76,6 @@ public class commentService extends Service {
 
 	/** dont forget to fire update to the ui listener */
 	private void _getUpdatedComments() {
-		
-		//Log.i(getClass().getSimpleName(), "Timer Cycled!");
 		
 		//need to create eulaDB first in case the user reboots their device before launching the app
 		settingsDB settingsDB = new settingsDB(this);
@@ -146,7 +130,6 @@ public class commentService extends Service {
         XMLRPCMethodCallback callBack = new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
 				String s = "done";
-				//Log.i(getClass().getSimpleName(), "made it to callback");
 				settingsDB settingsDB = new settingsDB(commentService.this);
 				HashMap notificationOptions = settingsDB.getNotificationOptions(commentService.this);
 				boolean sound = false, vibrate = false, light = false;
@@ -187,7 +170,6 @@ public class commentService extends Service {
 					Log.i("WordPressCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){
-					//UI_UPDATE_LISTENER.updateUI(accountID, accountName); //new comment!
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					Intent notificationIntent = new Intent(commentService.this, tabView.class);
     		  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+accountID)));
@@ -233,7 +215,7 @@ public class commentService extends Service {
 			e.printStackTrace();
 		}
         
-    		} //end for loop
+    		} 
     		}
     	}  // end if
 
@@ -241,7 +223,6 @@ public class commentService extends Service {
 
 	private void _shutdownService() {
 	  if (timer != null) timer.cancel();
-	  //Log.i(getClass().getSimpleName(), "Timer stopped!!!");
 	}
 	
 	interface XMLRPCMethodCallback {
@@ -260,7 +241,6 @@ public class commentService extends Service {
 			try {
 				handler = new Handler();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

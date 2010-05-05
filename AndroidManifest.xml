@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:versionName="1.2 Beta" android:versionCode="13">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
-		android:label="WordPress" android:name="WordPress" android:debuggable="true">
+		android:label="WordPress" android:name="WordPress" android:debuggable="false">
 		<uses-library android:name="com.google.android.maps" />
 		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".settings" android:label="Settings"
@@ -17,6 +17,7 @@
     				<category android:name="android.intent.category.DEFAULT" />
     				<data android:mimeType="text/plain" />
     				<data android:mimeType="image/*" />
+    				<data android:mimeType="video/*" />
   			</intent-filter> 
   		</activity>
 		<activity android:configChanges="orientation|keyboardHidden" android:name="addAccount"/>

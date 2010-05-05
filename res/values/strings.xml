@@ -45,6 +45,9 @@
   <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or to configure comment notifications.</string>
   <string name="add_account">Add Account</string>
   <string name="notification_settings">Notification settings</string>
+  <string name="notification_sound">Play notification sound</string>
+  <string name="notification_vibrate">Vibrate</string>
+  <string name="notification_blink">Blink notification light</string>
   <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
