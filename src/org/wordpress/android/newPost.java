@@ -171,7 +171,9 @@ public class newPost extends Activity implements LocationListener{
             selectedImageIDs.clear();
             selectedImageCtr = 0;
             
-            lbsCheck();
+            if (!isPage){
+            	lbsCheck();
+            }
             
         }
 
@@ -643,7 +645,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	}
         	if (!isPage){
 
-        	categories = selectedCategories;
+        		categories = selectedCategories;
 
         	}
         

@@ -88,7 +88,7 @@ public class viewPosts extends ListActivity{
     public Vector imageUrl = new Vector();
     public String imageTitle = null;
     public boolean thumbnailOnly, secondPass, xmlrpcError = false;
-    public String submitResult = "";
+    public String submitResult = "", mediaErrorMsg = "";
     ProgressDialog loadingDialog;
     public int totalDrafts = 0;
     public boolean isPage = false;
@@ -1254,7 +1254,7 @@ public String submitPost() throws IOException {
 				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 	  			  dialogBuilder.setTitle(getResources().getText(R.string.success));
 	  			if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error));  
+					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error) + ": " + mediaErrorMsg);  
 				  }
 				  else{
 	              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully));
@@ -1499,7 +1499,7 @@ public String uploadImages(){
  		} catch (XMLRPCException e) {
  			// TODO Auto-generated catch block
  			e.printStackTrace();
- 			e.getMessage();
+ 			mediaErrorMsg = e.getMessage();
  			xmlrpcError = true;
  			break;
  		}

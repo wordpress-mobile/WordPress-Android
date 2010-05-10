@@ -95,7 +95,7 @@ public class editPost extends Activity implements LocationListener{
     private int ID_DIALOG_POSTING = 1;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
     public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
-    public String SD_CARD_TEMP_DIR = "", categories = "";
+    public String SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
     ProgressDialog loadingDialog;
     LocationManager lm;
     Criteria criteria;
@@ -374,7 +374,7 @@ public class editPost extends Activity implements LocationListener{
 			            		categories = categories.substring(0, categories.length() - 1);
 			            	}
 			            	if (categories != ""){
-			            	categoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + categories);
+			            		categoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + categories);
 			            	}
 				        }
 				        
@@ -1056,7 +1056,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 		} catch (XMLRPCException e) {
 	 			// TODO Auto-generated catch block
 	 			e.printStackTrace();
-	 			e.getMessage();
+	 			mediaErrorMsg = e.getMessage();
 	 			xmlrpcError = true;
 	 			break;
 	 		}
@@ -1859,7 +1859,11 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		     	break;
 		     	
 		case 5:
-			// deprecated
+			extras = data.getExtras();
+			String cats = extras.getString("selectedCategories");
+			categories = cats;
+			TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
+			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + cats);
 	     	break;
 		case 6:
 			 
@@ -2020,7 +2024,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 				  dialogBuilder.setTitle(getResources().getText((isPage) ? R.string.page_edited : R.string.post_edited));
 				  if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_image_error : R.string.post_edited_image_error));  
+					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_image_error : R.string.post_edited_image_error) + ": " + mediaErrorMsg);  
 				  }
 				  else{
 	              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_successfully : R.string.post_edited_successfully));
@@ -2114,21 +2118,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		images += selectedImageIDs.get(it).toString() + ",";
 
         	}
-        	if (!isPage){
-	        	/*String selectedCategory = "";
 
-	        	// categoryID = getCategoryId(selectedCategory);
-	        	String[] theCategories = new String[selectedCategories.size()];
-	        
-	        	int catSize = selectedCategories.size();
-	        
-	        	for(int i=0; i < selectedCategories.size(); i++)
-	        	{
-	        		categories += selectedCategories.get(i).toString() + ",";
-	        		//theCategories[i] = selectedCategories.get(i).toString();
-	        	}*/
-	        	
-        	}
         
         	if (publishCB.isChecked())
         	{
@@ -2167,10 +2157,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	//new feature, automatically save a post as a draft just in case the posting fails
         	localDraftsDB lDraftsDB = new localDraftsDB(this);
         	if (isPage){
-        		success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
+        		success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
         	}
         	else{
-        		success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis, latitude, longitude);
+        		success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis, latitude, longitude);
         	}
         
         

@@ -349,7 +349,7 @@ public class XMLRPCClient {
 				fileWriter.close();
 				FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\""); 
 	            fEntity.setContentType("text/xml");
-	            fEntity.setChunked(false);
+	            //fEntity.setChunked(true);
 				long fileSize = tempFile.length();
 	            postMethod.setEntity(fEntity);
 	            
@@ -377,7 +377,7 @@ public class XMLRPCClient {
 				serializer.endDocument();
 				
 				HttpEntity entity = new StringEntity(bodyWriter.toString());
-				Log.i("WordPress", bodyWriter.toString());
+				//Log.i("WordPress", bodyWriter.toString());
 				postMethod.setEntity(entity);
 			}
 

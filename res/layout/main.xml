@@ -186,6 +186,11 @@
               android:text="@string/selected_categories"
               android:layout_below="@id/selectCategories"/>        
  </RelativeLayout> 
+  <RelativeLayout android:id="@+id/location_wrapper"
+ 			   android:layout_width="wrap_content"
+ 			   android:layout_height="fill_parent"
+                android:layout_below="@id/section3"
+                android:layout_marginTop="-10dip">
   <RelativeLayout android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:background="@drawable/content_bg"
@@ -213,15 +218,16 @@
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:textSize="18dip"
-            android:text="View Map" />                                     
+            android:text="View Map" />                                 
  </RelativeLayout> 
+ </RelativeLayout>  
  <RelativeLayout android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:background="@drawable/content_bg"
                 android:id="@+id/section5"
                 android:layout_marginTop="10dip"
                 android:layout_marginBottom="10dip"
-                android:layout_below="@id/section4"> 
+                android:layout_below="@id/location_wrapper"> 
                 <TextView android:id="@+id/l_status"
     		  android:layout_marginBottom="6dip"
               android:layout_width="fill_parent" 

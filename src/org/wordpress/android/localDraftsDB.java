@@ -56,7 +56,7 @@ public class localDraftsDB {
 		return (returnValue);
 	}
 	
-	public boolean updateLocalDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String tags, String categories, boolean publish) {
+	public boolean updateLocalDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String tags, String categories, boolean publish, Double latitude, Double longitude) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -68,6 +68,8 @@ public class localDraftsDB {
 			values.put("tags", tags);
 			values.put("categories", categories);
 			values.put("publish", publish);
+			values.put("latitude", latitude);
+			values.put("longitude", longitude);
 			returnValue = db.update(LOCALDRAFTS_TABLE, values, "id=" + postID, null) > 0;
 
 		db.close();
