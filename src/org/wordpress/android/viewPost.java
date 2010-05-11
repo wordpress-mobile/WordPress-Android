@@ -57,6 +57,7 @@ public class viewPost extends Activity {
         settingsDB settingsDB = new settingsDB(this);
         Vector account = settingsDB.loadSettings(this, id);
         String blogURL = account.get(0).toString();
+        blogURL = blogURL.replace("https:", "http:");
         blogURL = blogURL.replace("xmlrpc.php", "") + "?p=" + postID;
         
         WebView wv = (WebView) findViewById(R.id.webView);
