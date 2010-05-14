@@ -76,6 +76,7 @@ public class viewPosts extends ListActivity{
 	Vector postNames = new Vector();
 	int selectedID = 0;
 	int rowID = 0;
+	private int ID_DIALOG_DELETING = 1;
 	private int ID_DIALOG_POSTING = 2;
 	Vector selectedCategories = new Vector();
 	private boolean inDrafts = false;
@@ -486,12 +487,14 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 				                	   menu.add(2, 0, 0, getResources().getText(R.string.preview_page));
 				                	   menu.add(2, 1, 0, getResources().getText(R.string.view_comments));
 				                	   menu.add(2, 2, 0, getResources().getText(R.string.edit_page));
+				                	   menu.add(2, 3, 0, getResources().getText(R.string.delete_page));
 			                	   }
 			                	   else{
 			                		   menu.setHeaderTitle(getResources().getText(R.string.post_actions));
 			                		   menu.add(0, 0, 0, getResources().getText(R.string.preview_post));
 			                		   menu.add(0, 1, 0, getResources().getText(R.string.view_comments));
 				                	   menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
+				                	   menu.add(0, 3, 0, getResources().getText(R.string.delete_post));
 			                	   }
 			                	   
 			                	   
@@ -906,6 +909,33 @@ public boolean onContextItemSelected(MenuItem item) {
               i2.putExtra("accountName", accountName);
               startActivityForResult(i2,1);
         	  return true;
+          case 3:
+        	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.delete_post));
+            dialogBuilder.setMessage(getResources().getText(R.string.delete_sure_post) + " '" + titles[rowID] + "'?");
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                	showDialog(ID_DIALOG_DELETING);
+    	    		new Thread() {
+    	                  public void run() {	    		
+    	                	  deletePost();
+    	                  }
+    	    		}.start();
+            
+                }
+            });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Just close the window.
+            
+                }
+            });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+        	  
+        	  return true;
      }
      
 	}
@@ -936,6 +966,31 @@ public boolean onContextItemSelected(MenuItem item) {
 	              i2.putExtra("accountName", accountName);
 	              i2.putExtra("isPage", true);
 	              startActivityForResult(i2,1);
+	        	  return true;
+	          case 3:
+	        	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+				  dialogBuilder.setTitle(getResources().getText(R.string.delete_page));
+	            dialogBuilder.setMessage(getResources().getText(R.string.delete_sure_page) + " '" + titles[rowID] + "'?");
+	            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+	          		  DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	        	  showDialog(ID_DIALOG_DELETING);
+		    		new Thread() {
+		                  public void run() {	    		
+		                	  deletePost();
+		                  }
+		    		}.start();
+	                }
+	            });
+	            dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
+	          		  DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                    // Just close the window.
+	            
+	                }
+	            });
+	            dialogBuilder.setCancelable(true);
+	           dialogBuilder.create().show();
 	        	  return true;
 	     }
 	     
@@ -1006,12 +1061,100 @@ public boolean onContextItemSelected(MenuItem item) {
 	return false;
 }
 
+private void deletePost() {
+
+		
+    	Vector settings = new Vector();
+        settingsDB settingsDB = new settingsDB(viewPosts.this);
+    	settings = settingsDB.loadSettings(viewPosts.this, id);
+        
+    	String sURL = "";
+    	if (settings.get(0).toString().contains("xmlrpc.php"))
+    	{
+    		sURL = settings.get(0).toString();
+    	}
+    	else
+    	{
+    		sURL = settings.get(0).toString() + "xmlrpc.php";
+    	}
+		String sUsername = settings.get(2).toString();
+		String sPassword = settings.get(3).toString();
+		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String selPostID = String.valueOf(selectedID);
+    	client = new XMLRPCClient(sURL);
+	    
+
+    	Object[] postParams = {
+        		"",
+        		selPostID,
+        		sUsername,
+        		sPassword
+        };
+    	Object[] pageParams = {
+	    		sBlogId,
+	    		sUsername,
+	    		sPassword,
+	    		selPostID
+    	};
+    	
+        Object result = null;
+        try {
+    		result = (Object) client.call((isPage) ? "wp.deletePage" : "blogger.deletePost", (isPage) ? pageParams: postParams);
+    		dismissDialog(ID_DIALOG_DELETING);
+    		Thread action = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  Toast.makeText(viewPosts.this, getResources().getText((isPage) ? R.string.page_deleted : R.string.post_deleted), Toast.LENGTH_SHORT).show();
+			  } 
+			}; 
+			this.runOnUiThread(action);
+			Thread action2 = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  refreshPosts();				  } 
+			}; 
+			this.runOnUiThread(action2);
+			
+    	} catch (final XMLRPCException e) {
+    		dismissDialog(ID_DIALOG_DELETING);
+    		Thread action3 = new Thread() 
+			{ 
+			  public void run() 
+			  {
+    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+            dialogBuilder.setMessage(e.getMessage());
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int whichButton) {
+                  // Just close the window.
+              	
+              }
+          });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+			  }
+			  }; 
+				this.runOnUiThread(action3);
+    	}	
+	
+}
+
 @Override
 protected Dialog onCreateDialog(int id) {
 if (id == ID_DIALOG_POSTING){
 	loadingDialog = new ProgressDialog(this);
 	loadingDialog.setTitle(getResources().getText(R.string.uploading_content));
 	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
+	loadingDialog.setCancelable(true);
+	return loadingDialog;
+	}
+else if (id == ID_DIALOG_DELETING){
+	loadingDialog = new ProgressDialog(this);
+	loadingDialog.setTitle(getResources().getText((isPage) ? R.string.delete_page : R.string.delete_post));
+	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.attempt_delete_page : R.string.attempt_delete_post));
 	loadingDialog.setCancelable(true);
 	return loadingDialog;
 	}

@@ -208,6 +208,7 @@ bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
 /default.properties -text
 res/drawable-hdpi-v4/add.png -text
+res/drawable-hdpi-v4/app_icon.png -text
 res/drawable-hdpi-v4/btn_check_off_pressed.png -text
 res/drawable-hdpi-v4/btn_check_off_selected.png -text
 res/drawable-hdpi-v4/btn_check_on_pressed.png -text

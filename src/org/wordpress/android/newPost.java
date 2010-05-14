@@ -98,7 +98,6 @@ public class newPost extends Activity implements LocationListener{
         super.onCreate(icicle);
 
         final Bundle extras = getIntent().getExtras();
-        final Intent intent = getIntent();
         if(extras !=null)
         {
          id = extras.getString("id");
@@ -123,7 +122,6 @@ public class newPost extends Activity implements LocationListener{
                 
         		final String blogNames[] = new String[accounts.size()];
         		final String accountIDs[] = new String[accounts.size()];
-        		String accountUsers[] = new String[accounts.size()];
         		
                 for (int i = 0; i < accounts.size(); i++) {
                     

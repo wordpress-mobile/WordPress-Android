@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:versionCode="14" android:versionName="1.2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:versionName="1.2.1" android:versionCode="15">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
-		android:label="WordPress" android:name="WordPress" android:debuggable="false">
+		android:label="WordPress" android:name="WordPress" android:debuggable="true">
 		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".settings" android:label="Settings"
 			android:configChanges="orientation|keyboardHidden" />
@@ -46,7 +46,6 @@
 <activity android:theme="@android:style/Theme.Dialog" android:name="addCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="signup" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="newAccount" android:screenOrientation="portrait"></activity>
-
 </application>
 
 	<supports-screens android:smallScreens="true"

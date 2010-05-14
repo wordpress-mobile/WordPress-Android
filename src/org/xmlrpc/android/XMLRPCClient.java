@@ -408,10 +408,12 @@ public class XMLRPCClient {
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
 			
-			//get rid of junk characters before xml response.  60 = '<'
+			//get rid of junk characters before xml response.  60 = '<'.  Added stopper to prevent infinite loop
 			int bomCheck = is.read();
-			while (bomCheck != 60){
+			int stopper = 0;
+			while (bomCheck != 60 && stopper < 20){
 				bomCheck = is.read();
+				stopper++;
 			}
 			is.unread(bomCheck);
 			

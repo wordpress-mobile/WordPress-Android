@@ -1,4 +1,3 @@
-//copyright Dan Roundhill, 11/10/2008
 package org.wordpress.android;
 
 import android.app.Activity;

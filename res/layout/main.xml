@@ -6,9 +6,8 @@
     android:scrollbars="none"
     android:background="#FFF5F5F5">
     
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
+<RelativeLayout android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:padding="10dip"
                 > 
@@ -48,7 +47,7 @@
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
               android:minLines="5"
-              android:maxLines="20"
+              android:maxLines="5"
               android:autoText="true"
               android:capitalize="sentences"
               android:layout_below="@id/l_content"/>
@@ -95,7 +94,7 @@
             android:text="b-quote" />          
               </RelativeLayout>
 <RelativeLayout android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/content_bg"
                 android:id="@+id/section2"
                 android:layout_marginTop="10dip"
@@ -138,7 +137,7 @@
                </GridView>
 </RelativeLayout>
 <RelativeLayout android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/content_bg"
                 android:id="@+id/section3"
                 android:layout_marginTop="10dip"
@@ -187,12 +186,12 @@
               android:layout_below="@id/selectCategories"/>        
  </RelativeLayout> 
   <RelativeLayout android:id="@+id/location_wrapper"
- 			   android:layout_width="wrap_content"
- 			   android:layout_height="fill_parent"
+ 			   android:layout_width="fill_parent"
+ 			   android:layout_height="wrap_content"
                 android:layout_below="@id/section3"
                 android:layout_marginTop="-10dip">
   <RelativeLayout android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/content_bg"
                 android:id="@+id/section4"
                 android:layout_marginTop="10dip"
@@ -222,7 +221,7 @@
  </RelativeLayout> 
  </RelativeLayout>  
  <RelativeLayout android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/content_bg"
                 android:id="@+id/section5"
                 android:layout_marginTop="10dip"
