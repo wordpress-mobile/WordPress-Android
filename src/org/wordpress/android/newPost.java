@@ -54,6 +54,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class newPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
@@ -550,9 +552,27 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		text = text.replace("&feature=youtube_gdata", "");
         		text = text.replace("watch?v=", "v/");
         		text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\"" + text + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"" + text + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
+        		contentET.setText(text);
+        	}
+        	else{   	
+	        	//add link tag around URLs, trac #64
+	            String [] parts = text.split("\\s");
+	            String finalText = "";
+	
+	            // Attempt to convert each item into an URL.   
+	            for( String item : parts ) try {
+	                URL url = new URL(item);
+	                // If possible then replace with anchor...
+	                finalText+="<a href=\"" + url + "\">"+ url + "</a> ";    
+	            } catch (MalformedURLException e) {
+	                // If there was an URL that was not it!...
+	                finalText+= item + " ";
+	            }
+	            
+	            contentET.setText(finalText);
         	}
         	
-        	contentET.setText(text);
+        	
         }
         
         String type = intent.getType();
@@ -1227,12 +1247,20 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		case 1:
 			String state = android.os.Environment.getExternalStorageState();
             if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
-                try {
-					throw new IOException("SD Card is not mounted.  It is " + state + ".");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+	    		dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
+	            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
+	            dialogBuilder.setPositiveButton("OK",  new
+	        		  DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                    // just close the dialog
+
+	                }
+	            });
+	            dialogBuilder.setCancelable(true);
+	            dialogBuilder.create().show();
+	            break;		
             }
 
         	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
@@ -1264,12 +1292,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		case 3:
 			String vState = android.os.Environment.getExternalStorageState();
             if(!vState.equals(android.os.Environment.MEDIA_MOUNTED))  {
-                try {
-					throw new IOException("SD Card is not mounted.  It is " + vState + ".");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
+	    		dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
+	            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
+	            dialogBuilder.setPositiveButton("OK",  new
+	        		  DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                    // just close the dialog
+
+	                }
+	            });
+	            dialogBuilder.setCancelable(true);
+	            dialogBuilder.create().show();
+	            break;
             }
 
         	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".3gp";

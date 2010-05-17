@@ -1570,7 +1570,7 @@ public String uploadImages(){
   	   
   	   Uri videoUri = Uri.parse(curImagePath);
   	   File fVideo = null;
-  	   String mimeType = "";
+  	   String mimeType = "", xRes = "", yRes = "";
   	   MediaFile mf = null;
   	  
   	   if (videoUri.toString().contains("content:")){ //file is in media library
@@ -1581,35 +1581,49 @@ public String uploadImages(){
  		 	  String[] projection; 
  		 	 Uri imgPath;
  		 	 
-
- 		 	  	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+ 		 	 	
+ 		 	  	  //imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
 
  			 	  projection = new String[] {
  			       		    Video.Media._ID,
  			       		    Video.Media.DATA,
- 			       		    Video.Media.MIME_TYPE
+ 			       		    Video.Media.MIME_TYPE,
+ 			       		    Video.Media.RESOLUTION
  			       		};
- 			 	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
- 		 	  
+ 			 	  //imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+ 			 	imgPath = videoUri;
 
  		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
  		 	  String thumbData = "";
  		 	 
  		 	  if (cur.moveToFirst()) {
  		 		  
- 		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+ 		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, resolutionColumn;
 
 	 			nameColumn = cur.getColumnIndex(Video.Media._ID);
 	 	        dataColumn = cur.getColumnIndex(Video.Media.DATA);
 	 	        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+	 	        resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
 
- 		       String imgPath4 = imgPath.getEncodedPath();              	            
+ 		       String imgPath4 = imgPath.getEncodedPath(); 
  		       mf = new MediaFile();
  		       
  		       thumbData = cur.getString(dataColumn);
  		       mimeType = cur.getString(mimeTypeColumn);
  		       fVideo = new File(thumbData);
- 				mf.setFilePath(fVideo.getPath());
+ 			   mf.setFilePath(fVideo.getPath());
+ 			   String resolution = cur.getString(resolutionColumn);
+ 			   if (resolution != null){
+	 			   String[] resx = resolution.split("x");
+	 			   xRes = resx[0];
+	 			   yRes = resx[1];
+ 			   }
+ 			   else{
+ 				   // set to droid/nexus one video resolution by default
+ 				   xRes = "720";
+ 				   yRes = "480";
+ 			   }
+ 				
 
  		 	  }
   	   }
@@ -1653,10 +1667,10 @@ public String uploadImages(){
 
  				String resultURL = contentHash.get("url").toString();
  				if (contentHash.containsKey("videopress_shortcode")){
- 					resultURL = contentHash.get("videopress_shortcode").toString() + "<br />";
+ 					resultURL = contentHash.get("videopress_shortcode").toString() + "\n";
  				}
  				else{
- 					resultURL = "<a type=\"" + mimeType + "\" href=\"" + resultURL + "\">View Video</a><br />";
+ 					resultURL = "<object classid=\"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B\" width=\"" + xRes + "\" height=\"" + (Integer.valueOf(yRes) + 16) + "\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab\"><param name=\"src\" value=\"" + resultURL + "\" /><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /><object type=\"video/quicktime\" data=\"" + resultURL + "\" width=\"" + xRes + "\" height=\"" + (Integer.valueOf(yRes) + 16) + "\"><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /></object></object>\n";
  				}
  				
  				content = content + resultURL;
@@ -1689,8 +1703,8 @@ public String uploadImages(){
 			       		    Images.Media.MIME_TYPE,
 			       		    Images.Media.ORIENTATION
 			       		};
-			 	  imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-		 	  
+			 	  //imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+		 	  imgPath = imageUri;
 
 		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
 		 	  String thumbData = "";
