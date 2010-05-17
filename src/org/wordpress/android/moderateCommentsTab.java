@@ -130,13 +130,6 @@ public class moderateCommentsTab extends ListActivity {
 
 	}
 	
-	@Override
-	public void onStart() {
-		super.onStart();
-		
-		loadComments();																			
-	}
-	
 	private boolean loadComments() {
 		postStoreDB postStoreDB = new postStoreDB(this);
 	    Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
@@ -177,11 +170,15 @@ public class moderateCommentsTab extends ListActivity {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-				        
-							   setListAdapter(thumbs);				   
-						
-						   ListView listView = (ListView) findViewById(android.R.id.list);
-
+							
+							ListView listView = (ListView) findViewById(android.R.id.list);
+							TextView tv = new TextView(this);
+							   tv.setText("Load more comments");
+							   
+							   listView.addFooterView(tv);
+							
+							   setListAdapter(thumbs);	
+							   
 						   listView.setOnItemClickListener(new OnItemClickListener() {
 							   
 								public void onNothingSelected(AdapterView<?> arg0) {

@@ -996,15 +996,15 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 		 	 Uri imgPath;
 	 		 	 
 
-	 		 	  	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+	 		 	  	  //imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
 
 	 			 	  projection = new String[] {
 	 			       		    Video.Media._ID,
 	 			       		    Video.Media.DATA,
 	 			       		    Video.Media.MIME_TYPE
 	 			       		};
-	 			 	  imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
-	 		 	  
+	 			 	  //imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
+	 			 	  imgPath = videoUri;
 
 	 		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
 	 		 	  String thumbData = "";
@@ -1103,8 +1103,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 				       		    Images.Media.MIME_TYPE,
 				       		    Images.Media.ORIENTATION
 				       		};
-				 	  imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-			 	  
+				 	  //imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
+				 	  imgPath = imageUri;
 
 			 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
 			 	  String thumbData = "";
@@ -2227,12 +2227,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		case 1:
 			String state = android.os.Environment.getExternalStorageState();
             if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
-                try {
-					throw new IOException("SD Card is not mounted.  It is " + state + ".");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+	    		dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
+	            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
+	            dialogBuilder.setPositiveButton("OK",  new
+	        		  DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                    // just close the dialog
+
+	                }
+	            });
+	            dialogBuilder.setCancelable(true);
+	            dialogBuilder.create().show();
+	            break;
             }
 
         	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
@@ -2264,12 +2271,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		case 3:
 			String vState = android.os.Environment.getExternalStorageState();
             if(!vState.equals(android.os.Environment.MEDIA_MOUNTED))  {
-                try {
-					throw new IOException("SD Card is not mounted.  It is " + vState + ".");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+	    		dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
+	            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
+	            dialogBuilder.setPositiveButton("OK",  new
+	        		  DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                    // just close the dialog
+
+	                }
+	            });
+	            dialogBuilder.setCancelable(true);
+	            dialogBuilder.create().show();
+	            break;
             }
 
         	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".3gp";
