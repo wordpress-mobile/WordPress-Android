@@ -42,7 +42,7 @@ public class settings extends Activity {
 	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    spinner.setAdapter(spinnerArrayAdapter);
 		
-    	settingsDB settingsDB = new settingsDB(this);
+    	WordPressDB settingsDB = new WordPressDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);
     	if (categoriesVector != null)
     	{
@@ -155,7 +155,7 @@ public class settings extends Activity {
                 CheckBox locationCB = (CheckBox)findViewById(R.id.location);
                 boolean locationValue = locationCB.isChecked();
 
-                settingsDB settingsDB = new settingsDB(settings.this);
+                WordPressDB settingsDB = new WordPressDB(settings.this);
                 settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, locationValue);
                 
         		//exit settings screen

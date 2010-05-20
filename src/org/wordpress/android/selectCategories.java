@@ -121,7 +121,7 @@ public class selectCategories extends ListActivity {
     
     private void loadCategories() {
         loadTextArray.clear();
-        categoriesDB categoriesDB = new categoriesDB(this);
+        WordPressDB categoriesDB = new WordPressDB(this);
     	Vector categoriesVector = categoriesDB.loadCategories(this, id);
     	if (categoriesVector.size() > 0)
     	{
@@ -273,7 +273,7 @@ public class selectCategories extends ListActivity {
            dialogBuilder.create().show();
         }
         else{
-        	settingsDB settingsDB = new settingsDB(this);
+        	WordPressDB settingsDB = new WordPressDB(this);
         	Vector categoriesVector = settingsDB.loadSettings(this, id);
         	
         	
@@ -317,7 +317,7 @@ public class selectCategories extends ListActivity {
 	            int size = result.length;
 	            
 	            //initialize database
-	            categoriesDB categoriesDB = new categoriesDB(this);
+	            WordPressDB categoriesDB = new WordPressDB(this);
 	            //wipe out the categories table
 	            categoriesDB.clearCategories(this, id);
 	            
@@ -351,7 +351,7 @@ public class selectCategories extends ListActivity {
     
     public boolean checkSettings(){
 		//see if the user has any saved preferences
-		 settingsDB settingsDB = new settingsDB(this);
+		 WordPressDB settingsDB = new WordPressDB(this);
 	    	Vector categoriesVector = settingsDB.loadSettings(this, id);
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
@@ -380,7 +380,7 @@ public class selectCategories extends ListActivity {
     	String returnString = "";
     	
     	//	Load settings
-    	settingsDB settingsDB = new settingsDB(this);
+    	WordPressDB settingsDB = new WordPressDB(this);
     	Vector settingsVector = settingsDB.loadSettings(this, id);   	
     	
     	//	Check if Blog-URL contains the "xmlrpc.php"
@@ -425,7 +425,7 @@ public class selectCategories extends ListActivity {
 		}
 		else {	//	Category successfully created. "result" is the ID of the new category.
 			//	Initialize the category database
-            categoriesDB categoriesDB = new categoriesDB(this);
+			WordPressDB categoriesDB = new WordPressDB(this);
             //	Convert "result" (= category_id) from type Object to int
             int category_id = Integer.parseInt(result.toString());
             //	Insert the new category into database

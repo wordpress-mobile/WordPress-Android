@@ -54,7 +54,7 @@ public class viewPost extends Activity {
         	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_post));
         }
         
-        settingsDB settingsDB = new settingsDB(this);
+        WordPressDB settingsDB = new WordPressDB(this);
         Vector account = settingsDB.loadSettings(this, id);
         String blogURL = account.get(0).toString();
         blogURL = blogURL.replace("https:", "http:");

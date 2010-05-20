@@ -8,21 +8,24 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 
-public class notificationSettings extends Activity {
+public class Preferences extends Activity {
     /** Called when the activity is first created. */
 	public Vector accounts;
 	public Vector accountNames = new Vector();
@@ -40,10 +43,11 @@ public class notificationSettings extends Activity {
     
 public void displayAccounts(){
 	//settings time!
-    final settingsDB settingsDB = new settingsDB(this);
+    final WordPressDB settingsDB = new WordPressDB(this);
 	accounts = settingsDB.getAccounts(this);
 	HashMap notificationOptions = settingsDB.getNotificationOptions(this);
-	boolean sound = false, vibrate = false, light = false;
+	boolean sound = false, vibrate = false, light = false, taglineValue = false;
+	String tagline = "";
 	
 	if (notificationOptions != null){
 		if (notificationOptions.get("sound").toString().equals("1")){
@@ -55,16 +59,20 @@ public void displayAccounts(){
 		if (notificationOptions.get("light").toString().equals("1")){
 			light = true;
 		}
+		if (notificationOptions.get("tagline_flag").toString().equals("1")){
+			taglineValue = true;
+		}
+		tagline = notificationOptions.get("tagline").toString();
 	}
 	
 	if (accounts.size() > 0){
 		ScrollView sv = new ScrollView(this);
 		sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));
-		sv.setBackgroundColor(Color.parseColor("#e8e8e8"));
+		sv.setBackgroundColor(Color.parseColor("#FFF5F5F5"));
 		LinearLayout layout = new LinearLayout(this);
 		
-		layout.setPadding(10, 10, 10, 0);
+		layout.setPadding(14, 14, 14, 14);
 		layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));
 
@@ -73,22 +81,33 @@ public void displayAccounts(){
 		
 		final LinearLayout cbLayout = new LinearLayout(this);
 		
-		cbLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+		cbLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT));
 
 		cbLayout.setOrientation(LinearLayout.VERTICAL);
 		
-        TextView textView = new TextView(this);
-        textView.setTextColor(Color.parseColor("#444444"));
-        textView.setTextSize(12);
-        textView.setPadding(0, 20, 0, 0);
-        textView.setGravity(Gravity.CENTER_HORIZONTAL);
-        textView.setText(getResources().getText(R.string.notifications_select));
-
-        layout.addView(textView);
-        
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams 
+		LinearLayout.LayoutParams section1Params = new LinearLayout.LayoutParams 
         (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		
+		section1Params.setMargins(0, 0, 0, 20);
+		
+		LinearLayout section1 = new LinearLayout(this);
+		section1.setBackgroundDrawable(getResources().getDrawable(R.drawable.content_bg));
+		section1.setLayoutParams(section1Params);
+		section1.setOrientation(LinearLayout.VERTICAL);
+		
+        TextView textView = new TextView(this);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        textView.setPadding(0, -2, 0, 0);
+        textView.setTypeface(Typeface.DEFAULT_BOLD);
+        textView.setShadowLayer(1, 0, 2, Color.parseColor("#FFFFFFFF"));
+        textView.setText("Comment Notifications");
+
+        section1.addView(textView);
+        
+        LinearLayout.LayoutParams cbParams = new LinearLayout.LayoutParams 
+        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        cbParams.setMargins(0, 0, 0, 6);
         
         for (int i = 0; i < accounts.size(); i++) {
             
@@ -98,15 +117,13 @@ public void displayAccounts(){
         	String accountID = curHash.get("id").toString();
         	int runService = Integer.valueOf(curHash.get("runService").toString());
         	accountNames.add(i, curBlogName);
-        	cbLayout.setBackgroundColor(Color.parseColor("#e8e8e8"));
             
             final CheckBox checkBox = new CheckBox(this);
             checkBox.setTextColor(Color.parseColor("#444444"));
-            checkBox.setTextSize(18);
+            checkBox.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
             checkBox.setText(escapeUtils.unescapeHtml(curBlogName));
-            checkBox.setId(Integer.valueOf(accountID));
-            params.setMargins(0, 0, 0, 6);
-            checkBox.setLayoutParams(params);
+            checkBox.setId(Integer.valueOf(accountID));  
+            checkBox.setLayoutParams(cbParams);
             
             if (runService == 1){
             	checkBox.setChecked(true);
@@ -116,21 +133,20 @@ public void displayAccounts(){
         } 
         
         if (cbLayout.getChildCount() > 0){
-        	layout.addView(cbLayout);
+        	section1.addView(cbLayout);
         }
         
         //add spinner and buttons
         TextView textView2 = new TextView(this);
         textView2.setTextColor(Color.parseColor("#444444"));
-        textView2.setTextSize(12);
-        textView2.setPadding(0, 20, 0, 0);
-        textView2.setGravity(Gravity.CENTER_HORIZONTAL);
+        textView2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         textView2.setText(getResources().getText(R.string.notifications_interval));
 
-        layout.addView(textView2);
+        section1.addView(textView2);
         
         final Spinner sInterval = new Spinner(this);
-        sInterval.setLayoutParams(params);
+        sInterval.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT));
 	    ArrayAdapter<Object> sIntervalArrayAdapter = new ArrayAdapter<Object>(this,
 	    		R.layout.spinner_textview,
 	            new String[] { "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes" , "1 Hour", "3 Hours", "6 Hours", "12 Hours", "Daily"});
@@ -142,10 +158,7 @@ public void displayAccounts(){
             sInterval.setSelection(sIntervalArrayAdapter.getPosition(interval));
 	    }
 	    
-	    layout.addView(sInterval);
-	    
-	    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams 
-        (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
+	    section1.addView(sInterval);
 	    
 	    final LinearLayout nOptionsLayout = new LinearLayout(this);
 		
@@ -157,10 +170,9 @@ public void displayAccounts(){
 	    CheckBox soundCB = new CheckBox(this);
 	    soundCB.setTag("soundCB");
 	    soundCB.setTextColor(Color.parseColor("#444444"));
-	    soundCB.setTextSize(18);
+	    soundCB.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 	    soundCB.setText(getResources().getText(R.string.notification_sound));
-        params.setMargins(0, 0, 0, 6);
-        soundCB.setLayoutParams(params);
+        soundCB.setLayoutParams(cbParams);
         soundCB.setChecked(sound);
         
         nOptionsLayout.addView(soundCB);
@@ -168,10 +180,9 @@ public void displayAccounts(){
         CheckBox vibrateCB = new CheckBox(this);
         vibrateCB.setTag("vibrateCB");
         vibrateCB.setTextColor(Color.parseColor("#444444"));
-        vibrateCB.setTextSize(18);
+        vibrateCB.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         vibrateCB.setText(getResources().getText(R.string.notification_vibrate));
-        params.setMargins(0, 0, 0, 6);
-        vibrateCB.setLayoutParams(params);
+        vibrateCB.setLayoutParams(cbParams);
         vibrateCB.setChecked(vibrate);
         
         nOptionsLayout.addView(vibrateCB);
@@ -179,26 +190,71 @@ public void displayAccounts(){
         CheckBox lightCB = new CheckBox(this);
         lightCB.setTag("lightCB");
         lightCB.setTextColor(Color.parseColor("#444444"));
-        lightCB.setTextSize(18);
+        lightCB.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         lightCB.setText(getResources().getText(R.string.notification_blink));
-        params.setMargins(0, 0, 0, 6);
-        lightCB.setLayoutParams(params);
+        lightCB.setLayoutParams(cbParams);
         lightCB.setChecked(light);
         
         nOptionsLayout.addView(lightCB);
         
-        layout.addView(nOptionsLayout);
+        section1.addView(nOptionsLayout);
+        
+        layout.addView(section1);
+        
+        final LinearLayout section2 = new LinearLayout(this);
+		section2.setBackgroundDrawable(getResources().getDrawable(R.drawable.content_bg));
+		section2.setOrientation(LinearLayout.VERTICAL);
+		LinearLayout.LayoutParams section2Params = new LinearLayout.LayoutParams 
+        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        section2Params.setMargins(0, 0, 0, 20);
+		section2.setLayoutParams(section2Params);
+		
+		TextView section2lbl = new TextView(this);
+		section2lbl.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+		section2lbl.setPadding(0, -2, 0, 0);
+		section2lbl.setTypeface(Typeface.DEFAULT_BOLD);
+		section2lbl.setShadowLayer(1, 0, 2, Color.parseColor("#FFFFFFFF"));
+		section2lbl.setText("Post Signature");
+		
+		section2.addView(section2lbl);
+        
+        CheckBox taglineCB = new CheckBox(this);
+        taglineCB.setTag("taglineCB");
+        taglineCB.setTextColor(Color.parseColor("#444444"));
+        taglineCB.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        taglineCB.setText("Add a tag line to new posts:");
+        taglineCB.setLayoutParams(cbParams);
+        taglineCB.setChecked(taglineValue);
+        
+        section2.addView(taglineCB);
+        
+        EditText taglineET = new EditText(this);
+        if (tagline != null){
+        	if (tagline.equals("")){
+            	taglineET.setText("Posted from WordPress for Android");
+            }
+        	else{
+        		taglineET.setText(tagline);
+        	}
+        } 
+        taglineET.setMinLines(2);
+        
+        section2.addView(taglineET);
+        
+        layout.addView(section2);
 	    
 	    final Button save = new Button(this);
-	    save.setLayoutParams(params2);
-	    save.setBackgroundDrawable(getResources().getDrawable(R.drawable.wp_button_small));
-        save.setTextSize(18);
+
+	    save.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.FILL_PARENT));
+	    save.setBackgroundDrawable(getResources().getDrawable(R.drawable.wp_button));
+        save.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
 	    save.setText("Save");
 	    
 	    save.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
-            	boolean sound = false, vibrate = false, light = false;
+            	boolean sound = false, vibrate = false, light = false, tagValue = false;
             	checkCtr = 0;
             	
             	int listItemCount = cbLayout.getChildCount();
@@ -207,11 +263,11 @@ public void displayAccounts(){
             	    	int id = cbox.getId();
                 	    if( cbox.isChecked() ) {   
                 	    	checkCtr++;
-                	        settingsDB.updateNotificationFlag(notificationSettings.this, id, true);
+                	        settingsDB.updateNotificationFlag(Preferences.this, id, true);
                 	        Log.i("CommentService", "Service enabled for " + cbox.getText());
                 	    }
                 	    else{
-                	        settingsDB.updateNotificationFlag(notificationSettings.this, id, false);
+                	        settingsDB.updateNotificationFlag(Preferences.this, id, false);
                 	    }
             	}
             	
@@ -228,8 +284,14 @@ public void displayAccounts(){
 		    			light = cbox.isChecked();
 		    		}
             	}
+            	
+            	CheckBox tagFlag = (CheckBox) ((View)section2.getChildAt(1));
+            	tagValue = tagFlag.isChecked();
+            	
+            	EditText taglineET = (EditText) ((View)section2.getChildAt(2));
+            	String taglineText = taglineET.getText().toString();
 
-            	settingsDB.updateNotificationSettings(notificationSettings.this, sInterval.getSelectedItem().toString(), sound, vibrate, light);
+            	settingsDB.updateNotificationSettings(Preferences.this, sInterval.getSelectedItem().toString(), sound, vibrate, light, tagValue, taglineText);
             	
             	if (checkCtr > 0){
 
@@ -265,8 +327,8 @@ public void displayAccounts(){
         	        	 UPDATE_INTERVAL = 86400000;
         	         }
         	        
-        	        Intent intent = new Intent(notificationSettings.this, broadcastReceiver.class);
-                	PendingIntent pIntent = PendingIntent.getBroadcast(notificationSettings.this, 0, intent, 0);
+        	        Intent intent = new Intent(Preferences.this, broadcastReceiver.class);
+                	PendingIntent pIntent = PendingIntent.getBroadcast(Preferences.this, 0, intent, 0);
                 	
                 	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 	
@@ -275,12 +337,12 @@ public void displayAccounts(){
         		}
         		else{
 
-        						Intent stopIntent = new Intent(notificationSettings.this, broadcastReceiver.class);
-                            	PendingIntent stopPIntent = PendingIntent.getBroadcast(notificationSettings.this, 0, stopIntent, 0);
+        						Intent stopIntent = new Intent(Preferences.this, broadcastReceiver.class);
+                            	PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
                             	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                             	alarmManager.cancel(stopPIntent); 
                             	
-                            	Intent service = new Intent(notificationSettings.this, commentService.class);
+                            	Intent service = new Intent(Preferences.this, commentService.class);
                             	stopService(service);
 
             	}

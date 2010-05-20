@@ -22,7 +22,7 @@
 		<activity android:configChanges="orientation|keyboardHidden" android:name="addAccount"/>
 		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="viewPost" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="notificationSettings" android:label="Notification Settings" />
+		<activity android:label="WordPress - Preferences" android:name="Preferences"/>
 		<service android:name="commentService" android:label="Comment Service" />
 		<receiver android:name="broadcastReceiver" />
 		<activity android:name="tabView" android:theme="@style/Theme.TabView" android:configChanges="orientation|keyboardHidden" />

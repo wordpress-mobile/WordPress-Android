@@ -52,7 +52,7 @@ public class addCategory extends Activity {
             	String parent_category = sCategories.getSelectedItem().toString();
             	int parent_id = 0;
             	if (sCategories.getSelectedItemPosition() != 0){
-            		categoriesDB categoriesDB = new categoriesDB(addCategory.this);
+            		WordPressDB categoriesDB = new WordPressDB(addCategory.this);
                 	parent_id = categoriesDB.getCategoryId(addCategory.this, id, parent_category);
             	}
             	
@@ -107,7 +107,7 @@ public class addCategory extends Activity {
 	private void loadCategories() {
 		ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
         loadTextArray.clear();
-        categoriesDB categoriesDB = new categoriesDB(this);
+        WordPressDB categoriesDB = new WordPressDB(this);
     	Vector categoriesVector = categoriesDB.loadCategories(this, id);
     	if (categoriesVector.size() > 0)
     	{

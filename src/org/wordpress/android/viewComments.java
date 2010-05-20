@@ -49,7 +49,7 @@ public class viewComments extends ListActivity {
         
         this.setTitle(accountName + " - " + getResources().getText(R.string.view_comments));
         Vector settings = new Vector();
-        settingsDB settingsDB = new settingsDB(this);
+        WordPressDB settingsDB = new WordPressDB(this);
     	settings = settingsDB.loadSettings(this, id);
         
     	String sURL = "";

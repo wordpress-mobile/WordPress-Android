@@ -194,7 +194,7 @@ public class addAccount extends Activity {
 				    
 				    ctr++;
 				    
-	                settingsDB settingsDB = new settingsDB(addAccount.this);
+	                WordPressDB settingsDB = new WordPressDB(addAccount.this);
 	                
 	                //check if this blog is already set up
 	                boolean noMatch = false;

@@ -189,7 +189,7 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
     	showProgressBar();
 
     	Vector settings = new Vector();
-        settingsDB settingsDB = new settingsDB(this);
+        WordPressDB settingsDB = new WordPressDB(this);
     	settings = settingsDB.loadSettings(this, id);
         
     	
@@ -239,7 +239,7 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 					String rDateCreatedFormatted[] = new String[result.length];
 					String rParentID[] = new String[result.length];
 					Vector dbVector = new Vector();
-					postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
+					WordPressDB postStoreDB = new WordPressDB(viewPosts.this);
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 					Calendar cal = Calendar.getInstance();
@@ -348,13 +348,13 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
     
     private boolean loadPosts(){ //loads posts from the db
    	
-    	postStoreDB postStoreDB = new postStoreDB(this);
+    	WordPressDB postStoreDB = new WordPressDB(this);
     	Vector loadedPosts;
     	if (isPage){
     		loadedPosts = postStoreDB.loadPages(viewPosts.this, id);	
     	}
     	else{
-    		loadedPosts = postStoreDB.loadPosts(viewPosts.this, id);
+    		loadedPosts = postStoreDB.loadSavedPosts(viewPosts.this, id);
     	}
    	
     	if (loadedPosts != null){
@@ -536,7 +536,7 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
     
     private boolean loadDrafts(){ //loads drafts from the db
        	
-        localDraftsDB lDraftsDB = new localDraftsDB(this);
+    	WordPressDB lDraftsDB = new WordPressDB(this);
         Vector loadedPosts;
         if (isPage){
         	loadedPosts = lDraftsDB.loadPageDrafts(viewPosts.this, id);
@@ -723,7 +723,7 @@ class XMLRPCMethod extends Thread {
 		             dialogBuilder.create().show();
 					}
 					else{
-						postStoreDB postStoreDB = new postStoreDB(viewPosts.this);
+						WordPressDB postStoreDB = new WordPressDB(viewPosts.this);
 						postStoreDB.clearPosts(viewPosts.this, id);
 						loadPosts();
 					}
@@ -756,7 +756,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
     menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
     MenuItem menuItem1 = menu.findItem(0);
-    menuItem1.setIcon(R.drawable.ic_menu_preferences);
+    menuItem1.setIcon(R.drawable.ic_menu_prefs);
     menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
     MenuItem menuItem2 = menu.findItem(1);
     menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
@@ -785,7 +785,7 @@ public boolean onOptionsItemSelected(final MenuItem item){
     		  DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // User clicked Accept so set that they've agreed to the eula.
-            	settingsDB settingsDB = new settingsDB(viewPosts.this);
+            	WordPressDB settingsDB = new WordPressDB(viewPosts.this);
               boolean deleteSuccess = settingsDB.deleteAccount(viewPosts.this, id);
               if (deleteSuccess)
               {
@@ -1033,7 +1033,7 @@ public boolean onContextItemSelected(MenuItem item) {
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
           		  DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-              	  localDraftsDB lDraftsDB = new localDraftsDB(viewPosts.this);
+                  WordPressDB lDraftsDB = new WordPressDB(viewPosts.this);
               	  if (isPage){
               		  lDraftsDB.deletePageDraft(viewPosts.this, String.valueOf(selectedID)); 
               	  }
@@ -1065,7 +1065,7 @@ private void deletePost() {
 
 		
     	Vector settings = new Vector();
-        settingsDB settingsDB = new settingsDB(viewPosts.this);
+        WordPressDB settingsDB = new WordPressDB(viewPosts.this);
     	settings = settingsDB.loadSettings(viewPosts.this, id);
         
     	String sURL = "";
@@ -1167,7 +1167,7 @@ public String submitPost() throws IOException {
 	
 	
 	//grab the form data
-	final localDraftsDB lDraftsDB = new localDraftsDB(this);
+	final WordPressDB lDraftsDB = new WordPressDB(this);
 	Vector post;
 	if (isPage){
 		post = lDraftsDB.loadPageDraft(this, String.valueOf(selectedID));
@@ -1256,7 +1256,7 @@ public String submitPost() throws IOException {
     }
     
   //
-    settingsDB settingsDB = new settingsDB(this);
+    WordPressDB settingsDB = new WordPressDB(this);
 	Vector settingsVector = settingsDB.loadSettings(this, id);   	
 	
     	String sURL = "";
@@ -1302,6 +1302,26 @@ public String submitPost() throws IOException {
     	}
     }
     
+    if (!isPage){
+	    //add the tagline
+		HashMap globalSettings = settingsDB.getNotificationOptions(this);
+		boolean taglineValue = false;
+		String tagline = "";
+		
+		if (globalSettings != null){
+			if (globalSettings.get("tagline_flag").toString().equals("1")){
+				taglineValue = true;
+			}
+			
+			if (taglineValue){
+				tagline = globalSettings.get("tagline").toString();
+				if (!tagline.equals("")){
+					content += "\n\n<span style=\"font-size: 85%;\">" + tagline + "</span>\n\n";
+				}
+			}
+		}
+    }
+	
     contentStruct.put("post_type", (isPage) ? "page" : "post");
     contentStruct.put("title", title);
     //for trac #53, add <p> and <br /> tags
@@ -1478,7 +1498,7 @@ private void clearCounters() {
 
 public boolean checkSettings(){
 	//see if the user has any saved preferences
-	 settingsDB settingsDB = new settingsDB(this);
+	 WordPressDB settingsDB = new WordPressDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);
     	String sURL = null, sUsername = null, sPassword = null;
     	if (categoriesVector != null){
@@ -1510,7 +1530,7 @@ public String uploadImages(){
     String uploadImagePath = "";
     
     //get the settings
-    settingsDB settingsDB = new settingsDB(this);
+    WordPressDB settingsDB = new WordPressDB(this);
 	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
 	
     	String sURL = "";

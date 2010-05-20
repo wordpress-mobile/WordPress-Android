@@ -81,7 +81,7 @@ public class wpAndroid extends ListActivity {
 								int whichButton) {
 							// User clicked Accept so set that they've agreed to
 							// the eula.
-							eulaDB eulaDB = new eulaDB(wpAndroid.this);
+							WordPressDB eulaDB = new WordPressDB(wpAndroid.this);
 							eulaDB.setEULA(wpAndroid.this);
 							displayAccounts();
 
@@ -102,7 +102,7 @@ public class wpAndroid extends ListActivity {
 	}
 
 	public boolean checkEULA() {
-		eulaDB eulaDB = new eulaDB(this);
+		WordPressDB eulaDB = new WordPressDB(this);
 		boolean sEULA = eulaDB.checkEULA(this);
 
 		return sEULA;
@@ -116,7 +116,7 @@ public class wpAndroid extends ListActivity {
 				+ getResources().getText(R.string.blogs));
 
 		// settings time!
-		settingsDB settingsDB = new settingsDB(this);
+		WordPressDB settingsDB = new WordPressDB(this);
 		accounts = settingsDB.getAccounts(this);
 
 		// upload stats
@@ -220,7 +220,7 @@ public class wpAndroid extends ListActivity {
 
 	private void checkStats(final int numBlogs) {
 
-		eulaDB eulaDB = new eulaDB(this);
+		WordPressDB eulaDB = new WordPressDB(this);
 		long lastStatsDate = eulaDB.getStatsDate(this);
 		long now = System.currentTimeMillis();
 
@@ -360,9 +360,9 @@ public class wpAndroid extends ListActivity {
 		menuItem1.setIcon(R.drawable.ic_menu_add);
 
 		menu.add(0, 1, 0, getResources()
-				.getText(R.string.notification_settings));
+				.getText(R.string.preferences));
 		MenuItem menuItem2 = menu.findItem(1);
-		menuItem2.setIcon(R.drawable.ic_menu_notifications);
+		menuItem2.setIcon(R.drawable.ic_menu_prefs);
 
 		return true;
 	}
@@ -378,7 +378,7 @@ public class wpAndroid extends ListActivity {
 
 			return true;
 		case 1:
-			Intent i2 = new Intent(this, notificationSettings.class);
+			Intent i2 = new Intent(this, Preferences.class);
 
 			startActivity(i2);
 
@@ -398,7 +398,7 @@ public class wpAndroid extends ListActivity {
 
 			switch (requestCode) {
 			case 0:
-				settingsDB settingsDB = new settingsDB(this);
+				WordPressDB settingsDB = new WordPressDB(this);
 				accounts = settingsDB.getAccounts(this);
 				String action = extras.getString("returnStatus");
 
@@ -435,7 +435,7 @@ public class wpAndroid extends ListActivity {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
 							// remove the account
-							settingsDB settingsDB = new settingsDB(
+							WordPressDB settingsDB = new WordPressDB(
 									wpAndroid.this);
 							boolean deleteSuccess = settingsDB.deleteAccount(
 									wpAndroid.this, selectedID);

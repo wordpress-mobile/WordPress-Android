@@ -44,7 +44,7 @@
   <string name="decline">Decline</string>
   <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or to configure comment notifications.</string>
   <string name="add_account">Add Account</string>
-  <string name="notification_settings">Notification settings</string>
+  <string name="notification_settings">Settings</string>
   <string name="notification_sound">Play notification sound</string>
   <string name="notification_vibrate">Vibrate</string>
   <string name="notification_blink">Blink notification light</string>
@@ -259,4 +259,7 @@
   <string name="location">Location</string>
   <string name="geotag">Geotag Posts:</string>
   <string name="location_toast">Location data not yet available, please wait.</string>
+  
+  <!--  preferences -->
+  <string name="preferences">Preferences</string>
 </resources>

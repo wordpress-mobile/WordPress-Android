@@ -78,7 +78,7 @@ public class commentService extends Service {
 	private void _getUpdatedComments() {
 		
 		//need to create eulaDB first in case the user reboots their device before launching the app
-		settingsDB settingsDB = new settingsDB(this);
+		WordPressDB settingsDB = new WordPressDB(this);
     	
     	Vector notificationAccounts = settingsDB.getNotificationAccounts(this);
     	
@@ -130,7 +130,7 @@ public class commentService extends Service {
         XMLRPCMethodCallback callBack = new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
 				String s = "done";
-				settingsDB settingsDB = new settingsDB(commentService.this);
+				WordPressDB settingsDB = new WordPressDB(commentService.this);
 				HashMap notificationOptions = settingsDB.getNotificationOptions(commentService.this);
 				boolean sound = false, vibrate = false, light = false;
 				

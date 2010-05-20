@@ -44,7 +44,7 @@ public class splashScreen extends Activity {
                  splashScreen.this.startActivity(mainIntent); 
                  splashScreen.this.finish(); 
             } 
-       }, 3250); //3250 for release
+       }, 0); //3250 for release
         
 }
 }

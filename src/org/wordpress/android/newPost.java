@@ -94,6 +94,7 @@ public class newPost extends Activity implements LocationListener{
     Criteria criteria;
     String provider;
     Location curLocation;
+    boolean gotLocation = false;
     public boolean location = false;
     @Override
     public void onCreate(Bundle icicle) {
@@ -117,7 +118,7 @@ public class newPost extends Activity implements LocationListener{
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action)){ //this is from a share action!
         	isAction = true;
-        	settingsDB settingsDB = new settingsDB(this);
+        	WordPressDB settingsDB = new WordPressDB(this);
         	Vector accounts = settingsDB.getAccounts(this);
         	
         	if (accounts.size() > 0){
@@ -273,7 +274,7 @@ final Button uploadButton = (Button) findViewById(R.id.upload);
             	
             	if (result){
             		
-            	  localDraftsDB lddb = new localDraftsDB(newPost.this);
+            	  WordPressDB lddb = new WordPressDB(newPost.this);
               	  int newID = -1;
               	  if (isPage){
               		  newID = lddb.getLatestPageDraftID(newPost.this, id);
@@ -518,7 +519,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
     }
     
 	protected void lbsCheck() {
-		settingsDB settingsDB = new settingsDB(newPost.this);
+		WordPressDB settingsDB = new WordPressDB(newPost.this);
     	Vector settingsVector = settingsDB.loadSettings(newPost.this, id);   	
     	
 		String sLocation = settingsVector.get(11).toString();
@@ -673,7 +674,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	}
         	
         	//Geotagging
-        	settingsDB settingsDB = new settingsDB(this);
+        	WordPressDB settingsDB = new WordPressDB(this);
         	Vector settingsVector = settingsDB.loadSettings(this, id);   	
         	
     		String sLocation = settingsVector.get(11).toString();
@@ -702,7 +703,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	}
         
         	//new feature, automatically save a post as a draft just in case the posting fails
-        	localDraftsDB lDraftsDB = new localDraftsDB(this);
+            WordPressDB lDraftsDB = new WordPressDB(this);
         	if (isPage){
         		success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
         	}
@@ -718,7 +719,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	
 	public boolean checkSettings(){
 		//see if the user has any saved preferences
-		 settingsDB settingsDB = new settingsDB(this);
+		 WordPressDB settingsDB = new WordPressDB(this);
 	    	Vector categoriesVector = settingsDB.loadSettings(this, id);
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
@@ -1337,11 +1338,11 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		if (!isPage && location){
 			lm.requestLocationUpdates(
 		            LocationManager.GPS_PROVIDER, 
-		            20000, 
+		            60000, 
 		            0, 
 		            this
 		    );
-			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, this);
+			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 0, this);
 		}
 	}
 
@@ -1364,6 +1365,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 	public void onLocationChanged(Location location) {
 		curLocation = location;
+		if (!gotLocation){
+		//get the location in text if first tag
 		final TextView map = (TextView) findViewById(R.id.locationText); 
 		Geocoder gcd = new Geocoder(newPost.this, Locale.getDefault());
 		List<Address> addresses;
@@ -1375,6 +1378,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		gotLocation = true;
 		}
 	}
 

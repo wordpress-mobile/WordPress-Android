@@ -131,7 +131,7 @@ public class moderateCommentsTab extends ListActivity {
 	}
 	
 	private boolean loadComments() {
-		postStoreDB postStoreDB = new postStoreDB(this);
+		WordPressDB postStoreDB = new WordPressDB(this);
 	    Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
 	 	if (loadedPosts != null){
 	 	String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
@@ -172,10 +172,10 @@ public class moderateCommentsTab extends ListActivity {
 							}
 							
 							ListView listView = (ListView) findViewById(android.R.id.list);
-							TextView tv = new TextView(this);
+							/*TextView tv = new TextView(this);
 							   tv.setText("Load more comments");
 							   
-							   listView.addFooterView(tv);
+							   listView.addFooterView(tv);*/
 							
 							   setListAdapter(thumbs);	
 							   
@@ -247,7 +247,7 @@ public class moderateCommentsTab extends ListActivity {
         
         
 		Vector settings = new Vector();
-	    settingsDB settingsDB = new settingsDB(this);
+	    WordPressDB settingsDB = new WordPressDB(this);
 		settings = settingsDB.loadSettings(this, id); 
 	   
 		String sURL = "";
@@ -343,7 +343,7 @@ public class moderateCommentsTab extends ListActivity {
 						        
 						    }
 						    
-						    postStoreDB postStoreDB = new postStoreDB(moderateCommentsTab.this);
+						    WordPressDB postStoreDB = new WordPressDB(moderateCommentsTab.this);
 						    postStoreDB.saveComments(moderateCommentsTab.this, dbVector);
 
 						   loadComments();
@@ -625,7 +625,7 @@ public class moderateCommentsTab extends ListActivity {
 	    super.onCreateOptionsMenu(menu);
 	    menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
 	    MenuItem menuItem1 = menu.findItem(0);
-	    menuItem1.setIcon(R.drawable.ic_menu_preferences);
+	    menuItem1.setIcon(R.drawable.ic_menu_prefs);
 	    menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
 	    MenuItem menuItem2 = menu.findItem(1);
 	    menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
@@ -654,7 +654,7 @@ public class moderateCommentsTab extends ListActivity {
 	    		  DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int whichButton) {
 	                // User clicked Accept so set that they've agreed to the eula.
-	            	settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+	            	WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 	              boolean deleteSuccess = settingsDB.deleteAccount(moderateCommentsTab.this, id);
 	              if (deleteSuccess)
 	              {
@@ -953,7 +953,7 @@ public class moderateCommentsTab extends ListActivity {
 
 	    		String sSelCommentID = String.valueOf(selCommentID);
 	        	Vector settings = new Vector();
-	            settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+	            WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 	        	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 	            
 	        	String sURL = "";
@@ -1034,7 +1034,7 @@ public class moderateCommentsTab extends ListActivity {
 
 		String sSelCommentID = String.valueOf(selCommentID);
     	Vector settings = new Vector();
-        settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+        WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
     	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
         
     	String sURL = "";
@@ -1108,7 +1108,7 @@ public class moderateCommentsTab extends ListActivity {
 
 		
     	Vector settings = new Vector();
-        settingsDB settingsDB = new settingsDB(moderateCommentsTab.this);
+        WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
     	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
     
     	String sURL = "";

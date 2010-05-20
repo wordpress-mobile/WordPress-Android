@@ -101,6 +101,7 @@ public class editPost extends Activity implements LocationListener{
     Criteria criteria;
     String provider;
     Location curLocation;
+    boolean gotLocation = false;
     public boolean location = false, locationActive = false;
     @Override
     public void onCreate(Bundle icicle) {
@@ -129,7 +130,7 @@ public class editPost extends Activity implements LocationListener{
         this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
         
         if (localDraft){
-        	localDraftsDB lDraftsDB = new localDraftsDB(this);
+        	WordPressDB lDraftsDB = new WordPressDB(this);
         	Vector post;
         	if (isPage){
         		post = lDraftsDB.loadPageDraft(this, postID);
@@ -183,7 +184,7 @@ public class editPost extends Activity implements LocationListener{
 		    		
 		    	}
 		    	
-		    	settingsDB settingsDB = new settingsDB(this);
+		    	WordPressDB settingsDB = new WordPressDB(this);
 	        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
 	        	
 	    		String sLocation = settingsVector.get(11).toString();
@@ -299,7 +300,7 @@ public class editPost extends Activity implements LocationListener{
         }
         else{
 
-        settingsDB settingsDB = new settingsDB(this);
+        WordPressDB settingsDB = new WordPressDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);
     	String sURL = "";
     	
@@ -767,7 +768,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	res = "emptyFields";
         }
         else {
-        settingsDB settingsDB = new settingsDB(this);
+        WordPressDB settingsDB = new WordPressDB(this);
     	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
         
 	    	String sURL = "";
@@ -923,7 +924,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	    String uploadImagePath = "";
 	    
 	    //get the settings
-	    settingsDB settingsDB = new settingsDB(this);
+	    WordPressDB settingsDB = new WordPressDB(this);
 		Vector categoriesVector = settingsDB.loadSettings(this, id);   	
 		
 	    	String sURL = "";
@@ -1287,7 +1288,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	
 	public boolean checkSettings(){
 		//see if the user has any saved preferences
-		 settingsDB settingsDB = new settingsDB(this);
+		 WordPressDB settingsDB = new WordPressDB(this);
 	    	Vector categoriesVector = settingsDB.loadSettings(this, id);
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
@@ -2126,7 +2127,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	}
         
         	//Geotagging
-        	settingsDB settingsDB = new settingsDB(this);
+        	WordPressDB settingsDB = new WordPressDB(this);
         	Vector settingsVector = settingsDB.loadSettings(this, id);   	
         	
     		String sLocation = settingsVector.get(11).toString();
@@ -2155,7 +2156,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	}
         
         	//new feature, automatically save a post as a draft just in case the posting fails
-        	localDraftsDB lDraftsDB = new localDraftsDB(this);
+            WordPressDB lDraftsDB = new WordPressDB(this);
         	if (isPage){
         		success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
         	}
@@ -2335,17 +2336,20 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 	public void onLocationChanged(Location location) {
 		curLocation = location;
-		final TextView map = (TextView) findViewById(R.id.locationText); 
-		Geocoder gcd = new Geocoder(editPost.this, Locale.getDefault());
-		List<Address> addresses;
-		try {
-			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-			if (addresses.size() > 0) {
-			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+		if (!gotLocation){
+			final TextView map = (TextView) findViewById(R.id.locationText); 
+			Geocoder gcd = new Geocoder(editPost.this, Locale.getDefault());
+			List<Address> addresses;
+			try {
+				addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+				if (addresses.size() > 0) {
+				    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		gotLocation = true;
 		}
 		lm.removeUpdates(this);
 	}
