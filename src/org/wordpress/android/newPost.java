@@ -32,6 +32,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -94,7 +95,6 @@ public class newPost extends Activity implements LocationListener{
     Criteria criteria;
     String provider;
     Location curLocation;
-    boolean gotLocation = false;
     public boolean location = false;
     @Override
     public void onCreate(Bundle icicle) {
@@ -958,10 +958,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
                 // http://code.google.com/p/android/issues/detail?id=1480
 				File f = null;
-                if (data != null){ //HTC Sense Device returns different data for image capture
+                if (data != null && (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.DONUT)){ //Older HTC Sense Devices return different data for image capture
                 	
                 	try {
-						String[] projection; 
+                		String[] projection; 
 						Uri imagePath = data.getData();
 						projection = new String[] {
 							    Images.Media._ID,
@@ -1082,33 +1082,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	 break;
 		case 7:
 			if (resultCode == Activity.RESULT_OK) {
-
-                File f = new File(SD_CARD_TEMP_DIR);
-                try { 
-                    ContentValues values = new ContentValues(2);
-                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/3gp");
-
-                    Uri capturedVideo = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-
-                    InputStream is = new FileInputStream(f);
-                    OutputStream os = getContentResolver().openOutputStream(capturedVideo);
-                    byte[] buffer = new byte[8192]; // tweaking this number may increase performance
-                    int len;
-                    while ((len = is.read(buffer)) != -1){
-                        os.write(buffer, 0, len);
-                    }
-                    os.flush();
-                    is.close();
-                    os.close();
-
-
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, capturedVideo));
-
-                    f.delete();
-                    
-                    Bundle bundle = new Bundle();
-                    
-                    bundle.putString("imageURI", capturedVideo.toString());
+                    Uri capturedVideo = data.getData();
                     
                     selectedImageIDs.add(selectedImageCtr, capturedVideo);
                     imageUrl.add(selectedImageCtr, capturedVideo.toString());
@@ -1116,35 +1090,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     gridview.setVisibility(View.VISIBLE);
          	     	gridview.setAdapter(new ImageAdapter(this));
          	     	clearMedia.setVisibility(View.VISIBLE);
-       
-                } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
-                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
-                  dialogBuilder.setPositiveButton("OK",  new
-                		  DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // just close the dialog
-                        }
-                    });
-                  dialogBuilder.setCancelable(true);
-                 dialogBuilder.create().show();
-                } catch (IOException e) {
-					// TODO Auto-generated catch block
-                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-            		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
-                    dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
-                  dialogBuilder.setPositiveButton("OK",  new
-                		  DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // just close the dialog
-                        }
-                    });
-                  dialogBuilder.setCancelable(true);
-                 dialogBuilder.create().show();
-				}
-
         }
         else {
         	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
@@ -1162,8 +1107,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 		     	break;
 		}
-		
-		
 		
 	}//end null check
 	}
@@ -1291,38 +1234,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	    	
 	    	return true;
 		case 3:
-			String vState = android.os.Environment.getExternalStorageState();
-            if(!vState.equals(android.os.Environment.MEDIA_MOUNTED))  {
-            	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-	    		dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
-	            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
-	            dialogBuilder.setPositiveButton("OK",  new
-	        		  DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int whichButton) {
-	                    // just close the dialog
 
-	                }
-	            });
-	            dialogBuilder.setCancelable(true);
-	            dialogBuilder.create().show();
-	            break;
-            }
-
-        	SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".3gp";
         	Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        	takeVideoIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new
-        	                File(SD_CARD_TEMP_DIR)));
-        	
-        	// make sure the directory we plan to store the recording in exists
-            File vDirectory = new File(SD_CARD_TEMP_DIR).getParentFile();
-            if (!vDirectory.exists() && !vDirectory.mkdirs()) {
-              try {
-				throw new IOException("Path to file could not be created.");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            }
 
         	startActivityForResult(takeVideoIntent, 7); 
 		
@@ -1365,22 +1278,9 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 	public void onLocationChanged(Location location) {
 		curLocation = location;
-		if (!gotLocation){
-		//get the location in text if first tag
-		final TextView map = (TextView) findViewById(R.id.locationText); 
-		Geocoder gcd = new Geocoder(newPost.this, Locale.getDefault());
-		List<Address> addresses;
-		try {
-			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-			if (addresses.size() > 0) {
-			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		gotLocation = true;
-		}
+		new getAddressTask().execute(location.getLatitude(), location.getLongitude());
+		lm.removeUpdates(this);
+
 	}
 
 	public void onProviderDisabled(String provider) {
@@ -1397,5 +1297,32 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private class getAddressTask extends AsyncTask<Double, Void, Void> {
+
+	     protected void onProgressUpdate() {
+	     }
+
+	     protected void onPostExecute(Long result) {
+	    	  
+	     }
+	     @Override
+		protected Void doInBackground(Double... args) {
+			Geocoder gcd = new Geocoder(newPost.this, Locale.getDefault());
+	    	TextView map = (TextView) findViewById(R.id.locationText);
+	    			List<Address> addresses;
+	    		try {
+	    			addresses = gcd.getFromLocation(args[0], args[1], 1);
+	    			if (addresses.size() > 0) {
+	    			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+	    			}
+	    		} catch (IOException e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+				return null;
+		}
+
+	 }
 	
 }
