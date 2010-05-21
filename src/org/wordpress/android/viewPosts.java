@@ -1865,10 +1865,10 @@ public String uploadImages(){
 			           {
 
 			   	        	if (sImagePlacement.equals("Above Text")){
-			   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a><br /><br />";
+			   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>\n\n";
 			   	        	}
 			   	        	else{
-			   	        		content = content + "<br /><a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
+			   	        		content = content + "\n<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
 			   	        	}        		
 			           	
 			           		
@@ -1880,10 +1880,10 @@ public String uploadImages(){
 
 			   	        	if (sImagePlacement.equals("Above Text")){
 			   	        		
-			   	        		content = content + "<img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /><br /><br />";
+			   	        		content = content + "<img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" />\n\n";
 			   	        	}
 			   	        	else{
-			   	        		content = content + "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" />";
+			   	        		content = content + "\n<img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" />";
 			   	        	}        		
 			           	
 			           		

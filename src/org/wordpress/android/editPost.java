@@ -2262,29 +2262,29 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		
 	}
 	
-	private class getAddressTask extends AsyncTask<Double, Void, Void> {
+	private class getAddressTask extends AsyncTask<Double, Void, String> {
 
 	     protected void onProgressUpdate() {
 	     }
 
-	     protected void onPostExecute(Long result) {
-	    	  
+	     protected void onPostExecute(String result) {
+	    	 TextView map = (TextView) findViewById(R.id.locationText); 
+	    	 map.setText(result);
 	     }
 	     @Override
-		protected Void doInBackground(Double... args) {
+		protected String doInBackground(Double... args) {
 			Geocoder gcd = new Geocoder(editPost.this, Locale.getDefault());
-	    	TextView map = (TextView) findViewById(R.id.locationText);
+	    	String finalText = "";
 	    			List<Address> addresses;
 	    		try {
 	    			addresses = gcd.getFromLocation(args[0], args[1], 1);
 	    			if (addresses.size() > 0) {
-	    			    map.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+	    			    finalText = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea();
 	    			}
 	    		} catch (IOException e) {
-	    			// TODO Auto-generated catch block
 	    			e.printStackTrace();
 	    		}
-				return null;
+				return finalText;
 		}
 
 	 }
