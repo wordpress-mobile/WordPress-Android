@@ -958,7 +958,13 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
                 // http://code.google.com/p/android/issues/detail?id=1480
 				File f = null;
-                if (data != null && (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.DONUT)){ //Older HTC Sense Devices return different data for image capture
+				int sdk_int = 0;
+				try {
+					sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
+				} catch (Exception e1) {
+					sdk_int = 3; //assume they are on cupcake
+				}
+                if (data != null && (sdk_int <= 4)){ //Older HTC Sense Devices return different data for image capture
                 	
                 	try {
                 		String[] projection; 
