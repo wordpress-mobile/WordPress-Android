@@ -117,8 +117,12 @@ public class WordPressDB {
 				db.execSQL(ADD_TAGLINE_FLAG);
 				db.setVersion(DATABASE_VERSION); 
 		}
-		if (db.getVersion() == 4){
-			db.execSQL(ADD_LOCATION_FLAG);
+		else if (db.getVersion() == 4){
+			try {
+				db.execSQL(ADD_LOCATION_FLAG);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			db.execSQL(ADD_LATITUDE);
 			db.execSQL(ADD_LONGITUDE);
 			db.execSQL(ADD_TAGLINE);
