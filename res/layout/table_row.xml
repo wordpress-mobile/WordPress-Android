@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+          <TextView android:id="@+id/col1"
+          android:maxWidth="200dip"
+          android:layout_marginRight="2dip"
+          android:textColorLink="#FF21759b"
+          android:text="Column 1"
+          android:padding="4dip"
+          android:textColor="#FF464646"/>
+          <TextView android:id="@+id/col2" android:text="Column 2"
+          android:textColor="#FF464646"
+          android:padding="4dip"/>
+</TableRow> 

@@ -1,0 +1,18 @@
+<resources>
+
+<string-array name="reportTypes">
+	<item>@string/report_views</item>
+	<item>@string/report_postviews</item>
+	<item>@string/report_referrers</item>
+	<item>@string/report_searchterms</item>
+</string-array>
+
+<string-array name="reportIntervals">
+	<item>@string/seven_days</item>
+	<item>@string/thirty_days</item>
+	<item>@string/quarter</item>
+	<item>@string/year</item>
+	<item>@string/all</item>
+</string-array>
+
+</resources>

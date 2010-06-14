@@ -87,11 +87,13 @@
   <string name="new_account">New Account</string>
   <string name="upload_full_size_image">Upload and link to full image:</string>
   <string name="uploading_content">Uploading Content</string>
+  <string name="load_more">Load More</string>
   
   <!--  tab titles -->
   <string name="tab_comments">Comments</string>
   <string name="tab_posts">Posts</string>
   <string name="tab_pages">Pages</string>
+  <string name="tab_stats">Stats</string>
   
   
   <!--  link view -->
@@ -148,9 +150,12 @@
   <string name="spam">Spam</string>
   <string name="moderate_comments">Moderate Comments</string>
   <string name="moderating_comment">Moderating comment</string>
+  <string name="moderating_comments">Moderating comments</string>
   <string name="replying_comment">Replying to comment</string>
   <string name="deleting_comment">Deleting comment</string>
+  <string name="deleting_comments">Deleting comments</string>
   <string name="comment_moderated">Comment Moderated Successfully</string>
+  <string name="comments_moderated">Comments Moderated Successfully</string>
   <string name="reply_added">Reply Added Successfully</string>
   <string name="view_comment_from">View Comment from</string>
   
@@ -262,4 +267,16 @@
   
   <!--  preferences -->
   <string name="preferences">Preferences</string>
+  
+  <!--  stats -->
+  <string name="report_views">Views</string>
+  <string name="report_postviews">Post Views</string>
+  <string name="report_referrers">Referrers</string>
+  <string name="report_searchterms">Search Terms</string>
+  <string name="report_videoplays">Video Plays</string>
+  <string name="seven_days">7 Days</string>
+  <string name="thirty_days">30 Days</string>
+  <string name="quarter">Quarter</string>
+  <string name="year">Year</string>
+  <string name="all">All Time</string>
 </resources>

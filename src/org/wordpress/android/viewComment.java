@@ -34,9 +34,10 @@ public class viewComment extends Activity {
 	private String url = "";
 	private String date = "";
 	private String status = "";
-	private String comment_id="";
-	private String post_id="";
+	private String comment_id = "";
+	private String post_id = "";
 	private Drawable d;
+	private int position = 0;
 	
 	private Handler handler = new Handler() {
 
@@ -86,6 +87,7 @@ public class viewComment extends Activity {
          status = extras.getString("status");
          comment_id = extras.getString("comment_id");
          post_id = extras.getString("post_id");
+         position = extras.getInt("position");
         } 
         
         setContentView(R.layout.view_comment);
@@ -135,6 +137,7 @@ public class viewComment extends Activity {
             	Bundle bundle = new Bundle();
 				bundle.putString("comment_id", comment_id);
 				bundle.putString("action", "delete");
+				bundle.putInt("position", position);
 		    	Intent i = new Intent();
 		    	i.putExtras(bundle);
 		    	setResult(RESULT_OK, i);
@@ -150,6 +153,7 @@ public class viewComment extends Activity {
             	Bundle bundle = new Bundle();
 				bundle.putString("comment_id", comment_id);
 				bundle.putString("action", "spam");
+				bundle.putInt("position", position);
 		    	Intent i = new Intent();
 		    	i.putExtras(bundle);
 		    	setResult(RESULT_OK, i);
@@ -165,6 +169,7 @@ public class viewComment extends Activity {
             	Bundle bundle = new Bundle();
 				bundle.putString("comment_id", comment_id);
 				bundle.putString("action", "hold");
+				bundle.putInt("position", position);
 		    	Intent i = new Intent();
 		    	i.putExtras(bundle);
 		    	setResult(RESULT_OK, i);
@@ -180,6 +185,7 @@ public class viewComment extends Activity {
             	Bundle bundle = new Bundle();
 				bundle.putString("comment_id", comment_id);
 				bundle.putString("action", "approve");
+				bundle.putInt("position", position);
 		    	Intent i = new Intent();
 		    	i.putExtras(bundle);
 		    	setResult(RESULT_OK, i);
@@ -196,6 +202,7 @@ public class viewComment extends Activity {
 				bundle.putString("comment_id", comment_id);
 				bundle.putString("action", "reply");
 				bundle.putString("post_id", post_id);
+				bundle.putInt("position", position);
 		    	Intent i = new Intent();
 		    	i.putExtras(bundle);
 		    	setResult(RESULT_OK, i);

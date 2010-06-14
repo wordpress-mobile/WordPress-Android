@@ -213,6 +213,9 @@ res/drawable-hdpi-v4/btn_check_off_pressed.png -text
 res/drawable-hdpi-v4/btn_check_off_selected.png -text
 res/drawable-hdpi-v4/btn_check_on_pressed.png -text
 res/drawable-hdpi-v4/btn_check_on_selected.png -text
+res/drawable-hdpi-v4/check.png -text
+res/drawable-hdpi-v4/comments_tab.png -text
+res/drawable-hdpi-v4/comments_tab_active.png -text
 res/drawable-hdpi-v4/content_bg.9.png -text
 res/drawable-hdpi-v4/grey_wp_button.9.png -text
 res/drawable-hdpi-v4/grey_wp_button_active.9.png -text
@@ -220,6 +223,10 @@ res/drawable-hdpi-v4/grey_wp_button_down.9.png -text
 res/drawable-hdpi-v4/ic_menu_add.png -text
 res/drawable-hdpi-v4/ic_menu_close_clear_cancel.png -text
 res/drawable-hdpi-v4/ic_menu_prefs.png -text
+res/drawable-hdpi-v4/pages_tab.png -text
+res/drawable-hdpi-v4/pages_tab_active.png -text
+res/drawable-hdpi-v4/posts_tab.png -text
+res/drawable-hdpi-v4/posts_tab_active.png -text
 res/drawable-hdpi-v4/refresh.png -text
 res/drawable-hdpi-v4/wp_check_off.png -text
 res/drawable-hdpi-v4/wp_check_on.png -text
@@ -290,6 +297,8 @@ res/layout/global_settings.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
 res/layout/link.xml -text
+res/layout/list_footer_btn.xml -text
+res/layout/list_footer_progress.xml -text
 res/layout/main.xml -text
 res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text
@@ -303,7 +312,10 @@ res/layout/select_categories.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/splashscreen.xml -text
+res/layout/table_row.xml -text
+res/layout/table_row_header.xml -text
 res/layout/view_comment.xml -text
+res/layout/view_stats.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
@@ -319,6 +331,7 @@ res/values-nb/strings.xml -text
 res/values-ru/strings.xml -text
 res/values-sk/strings.xml -text
 res/values-ta/strings.xml -text
+res/values/arrays.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
 src/com/commonsware/cwac/cache/AsyncCache.java -text
@@ -363,6 +376,7 @@ src/org/wordpress/android/viewComment.java -text
 src/org/wordpress/android/viewComments.java -text
 src/org/wordpress/android/viewPost.java -text
 src/org/wordpress/android/viewPosts.java -text
+src/org/wordpress/android/viewStats.java -text
 src/org/wordpress/android/wpAndroid.java -text
 src/org/xmlrpc/android/Base64.java -text
 src/org/xmlrpc/android/Base64Coder.java -text

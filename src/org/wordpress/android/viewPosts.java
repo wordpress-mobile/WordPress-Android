@@ -57,11 +57,13 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 import android.widget.AdapterView.OnItemClickListener;
 
 
@@ -95,6 +97,9 @@ public class viewPosts extends ListActivity{
     public boolean isPage = false;
     public Vector thumbnailUrl = new Vector();
     boolean largeScreen = false;
+    int numRecords = 30;
+    private ViewSwitcher switcher;
+    private PostListAdapter pla;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -131,19 +136,35 @@ public class viewPosts extends ListActivity{
 				}.start();
         	}
         	else{
-        		boolean loadedPosts = loadPosts();
+        		boolean loadedPosts = loadPosts(false);
         		if (!loadedPosts){
-                	refreshPosts();
+                	refreshPosts(false);
                 }
         	}
         }
         else{
+        	
+        	//add footer view
+    	    if (!isPage){
+    	    	//create the ViewSwitcher in the current context
+    	        switcher = new ViewSwitcher(this);
+    			  //footer Button: see XML1
+    			  Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
+    			  footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_posts));
+    			  
+    			  //progress View: see XML2
+    			  View progress = View.inflate(this, R.layout.list_footer_progress, null);
+    			  
+    			  //add the views (first added will show first)
+    			  switcher.addView(footer);
+    			  switcher.addView(progress);  
+    	    }
 	        
 	        //query for posts and refresh view
-	        boolean loadedPosts = loadPosts();
+	        boolean loadedPosts = loadPosts(false);
 	        
 	        if (!loadedPosts){
-	        	refreshPosts();
+	        	refreshPosts(false);
 	        }
         }
         
@@ -176,17 +197,26 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
             refresh.setOnClickListener(new ImageButton.OnClickListener() {
                 public void onClick(View v) {
                 	
-                	refreshPosts();
+                	refreshPosts(false);
                 	 
                 }
         });
         
-        
     }
     
-    private void refreshPosts(){
+   public void onClick(View arg0) {
+		//first view is showing, show the second progress view
+		switcher.showNext();
+		//get 30 more posts
+		numRecords += 30;
+		refreshPosts(true);
+	}
+    
+    private void refreshPosts(final boolean loadMore){
 
-    	showProgressBar();
+    	if (!loadMore){
+    		showProgressBar();
+    	}
 
     	Vector settings = new Vector();
         WordPressDB settingsDB = new WordPressDB(this);
@@ -215,7 +245,12 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 					s = result.toString();
 					
 					if (result.length == 0){
-						closeProgressBar();
+						if (!loadMore){
+							closeProgressBar();
+						}
+						else{
+				    		switcher.showPrevious();
+				    	}
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 						  dialogBuilder.setTitle(getResources().getText((isPage) ? R.string.pages_not_found: R.string.posts_not_found));
 			              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.pages_no_pages: R.string.posts_no_posts));
@@ -308,8 +343,13 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 					    }
 					    
 
-					   loadPosts();
-					   closeProgressBar();
+					   loadPosts(loadMore);
+					   if (!loadMore){
+							closeProgressBar();
+						}
+						else{
+				    		switcher.showPrevious();
+				    	}
 					}
 			        
 				}
@@ -328,7 +368,7 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
         				sBlogId,
         				sUsername,
         				sPassword,
-        				30
+        				numRecords
         		};
         		method.call(params);
         	}
@@ -346,7 +386,7 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
         return item;  
     } 
     
-    private boolean loadPosts(){ //loads posts from the db
+    private boolean loadPosts(boolean loadMore){ //loads posts from the db
    	
     	WordPressDB postStoreDB = new WordPressDB(this);
     	Vector loadedPosts;
@@ -441,69 +481,79 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 					    
 					    if (loadedPosts != null || drafts == true )
 					    {
-					   setListAdapter(new PostListAdapter(viewPosts.this));
+					    ListView listView = (ListView) findViewById(android.R.id.list);
 
-					   ListView listView = (ListView) findViewById(android.R.id.list);
-					   
-					   listView.setOnItemClickListener(new OnItemClickListener() {
+					    if (!isPage){
+					    	listView.removeFooterView(switcher);
+					    	listView.addFooterView(switcher);
+					    }				    
+					    
+					   if (loadMore){
+						   pla.notifyDataSetChanged();
+					   }
+					   else{
+						   pla = new PostListAdapter(viewPosts.this);
+						   setListAdapter(pla);
 						   
+						   listView.setOnItemClickListener(new OnItemClickListener() {
+							   
 
-							public void onItemClick(AdapterView<?> arg0, View arg1,
-									int arg2, long arg3) {
-								arg1.performLongClick();
-								
+								public void onItemClick(AdapterView<?> arg0, View arg1,
+										int arg2, long arg3) {
+									arg1.performLongClick();
+									
+								}
+
+				            });
+						   
+						   listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+				               public void onCreateContextMenu(ContextMenu menu, View v,
+									ContextMenuInfo menuInfo) {
+								// TODO Auto-generated method stub
+				            	   AdapterView.AdapterContextMenuInfo info;
+				                   try {
+				                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+				                   } catch (ClassCastException e) {
+				                       //Log.e(TAG, "bad menuInfo", e);
+				                       return;
+				                   }
+				                   
+				                   selectedID = info.targetView.getId();
+				                   rowID = info.position;
+				                   
+				                   if (totalDrafts > 0 && rowID <= totalDrafts && rowID != 0){
+				                	   menu.clear();
+				                	   menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
+				                	   menu.add(1, 0, 0, getResources().getText(R.string.edit_draft));
+				                	   menu.add(1, 1, 0, getResources().getText(R.string.upload));
+				                	   menu.add(1, 2, 0, getResources().getText(R.string.delete_draft));            	             
+				                   }
+				                   else if(rowID == 1 || ((rowID != (totalDrafts + 1)) && rowID != 0)){
+				                	   menu.clear();
+				                	   
+				                	   if (isPage){
+				                		   menu.setHeaderTitle(getResources().getText(R.string.page_actions));
+					                	   menu.add(2, 0, 0, getResources().getText(R.string.preview_page));
+					                	   menu.add(2, 1, 0, getResources().getText(R.string.view_comments));
+					                	   menu.add(2, 2, 0, getResources().getText(R.string.edit_page));
+					                	   menu.add(2, 3, 0, getResources().getText(R.string.delete_page));
+				                	   }
+				                	   else{
+				                		   menu.setHeaderTitle(getResources().getText(R.string.post_actions));
+				                		   menu.add(0, 0, 0, getResources().getText(R.string.preview_post));
+				                		   menu.add(0, 1, 0, getResources().getText(R.string.view_comments));
+					                	   menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
+					                	   menu.add(0, 3, 0, getResources().getText(R.string.delete_post));
+				                	   }
+				                	   
+				                	   
+				                   }
+
+				                   
 							}
-
-			            });
-					   
-					   listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-			               public void onCreateContextMenu(ContextMenu menu, View v,
-								ContextMenuInfo menuInfo) {
-							// TODO Auto-generated method stub
-			            	   AdapterView.AdapterContextMenuInfo info;
-			                   try {
-			                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			                   } catch (ClassCastException e) {
-			                       //Log.e(TAG, "bad menuInfo", e);
-			                       return;
-			                   }
-			                   
-			                   selectedID = info.targetView.getId();
-			                   rowID = info.position;
-			                   
-			                   if (totalDrafts > 0 && rowID <= totalDrafts && rowID != 0){
-			                	   menu.clear();
-			                	   menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
-			                	   menu.add(1, 0, 0, getResources().getText(R.string.edit_draft));
-			                	   menu.add(1, 1, 0, getResources().getText(R.string.upload));
-			                	   menu.add(1, 2, 0, getResources().getText(R.string.delete_draft));            	             
-			                   }
-			                   else if(rowID == 1 || ((rowID != (totalDrafts + 1)) && rowID != 0)){
-			                	   menu.clear();
-			                	   
-			                	   if (isPage){
-			                		   menu.setHeaderTitle(getResources().getText(R.string.page_actions));
-				                	   menu.add(2, 0, 0, getResources().getText(R.string.preview_page));
-				                	   menu.add(2, 1, 0, getResources().getText(R.string.view_comments));
-				                	   menu.add(2, 2, 0, getResources().getText(R.string.edit_page));
-				                	   menu.add(2, 3, 0, getResources().getText(R.string.delete_page));
-			                	   }
-			                	   else{
-			                		   menu.setHeaderTitle(getResources().getText(R.string.post_actions));
-			                		   menu.add(0, 0, 0, getResources().getText(R.string.preview_post));
-			                		   menu.add(0, 1, 0, getResources().getText(R.string.view_comments));
-				                	   menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
-				                	   menu.add(0, 3, 0, getResources().getText(R.string.delete_post));
-			                	   }
-			                	   
-			                	   
-			                   }
-
-			                   
-						}
-			          });
-   
+				          });
+					   }
 		        return true;
 		    }
 			else{
@@ -725,7 +775,7 @@ class XMLRPCMethod extends Thread {
 					else{
 						WordPressDB postStoreDB = new WordPressDB(viewPosts.this);
 						postStoreDB.clearPosts(viewPosts.this, id);
-						loadPosts();
+						loadPosts(false);
 					}
 				}
 			});
@@ -862,13 +912,13 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 				}
 				else{
-					loadPosts();
+					loadPosts(false);
 				}
 			}
 			break;
 		case 1:
 			if (returnResult.equals("OK")){
-				refreshPosts();
+				refreshPosts(false);
 			}
 			break;
 		}
@@ -1040,7 +1090,7 @@ public boolean onContextItemSelected(MenuItem item) {
               	  else{
               		  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
               	  }
-              	  loadPosts();
+              	  loadPosts(false);
             
                 }
             });
@@ -1113,7 +1163,7 @@ private void deletePost() {
 			{ 
 			  public void run() 
 			  {
-				  refreshPosts();				  } 
+				  refreshPosts(false);				  } 
 			}; 
 			this.runOnUiThread(action2);
 			
@@ -1447,7 +1497,7 @@ public String submitPost() throws IOException {
 		              	      else {
 		              	    	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
 		              	      }
-	                	  refreshPosts();
+	                	  refreshPosts(false);
 	                	  }
 	              
 	                  }
@@ -1639,9 +1689,16 @@ public String uploadImages(){
 	 			   yRes = resx[1];
  			   }
  			   else{
- 				   // set to droid/nexus one video resolution by default
- 				   xRes = "720";
- 				   yRes = "480";
+ 				   // set the width of the video to the thumbnail width, else 640x480
+ 				   if (!sMaxImageWidth.equals("Original Size")){
+ 					  xRes = sMaxImageWidth;
+ 					  yRes = String.valueOf(Math.round(Integer.valueOf(sMaxImageWidth) * 0.75));
+ 				   }
+ 				   else{
+ 					   xRes = "640";
+ 					   yRes = "480";
+ 				   }
+ 				   
  			   }
  				
 
@@ -1690,7 +1747,7 @@ public String uploadImages(){
  					resultURL = contentHash.get("videopress_shortcode").toString() + "\n";
  				}
  				else{
- 					resultURL = "<object classid=\"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B\" width=\"" + xRes + "\" height=\"" + (Integer.valueOf(yRes) + 16) + "\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab\"><param name=\"src\" value=\"" + resultURL + "\" /><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /><object type=\"video/quicktime\" data=\"" + resultURL + "\" width=\"" + xRes + "\" height=\"" + (Integer.valueOf(yRes) + 16) + "\"><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /></object></object>\n";
+ 					resultURL = "<object classid=\"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B\" width=\"" + xRes + "\" height=\"" + (Integer.valueOf(yRes) + 16) + "\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab\"><param name=\"scale\" value=\"aspect\"><param name=\"src\" value=\"" + resultURL + "\" /><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /><object type=\"video/quicktime\" data=\"" + resultURL + "\" width=\"" + xRes + "\" height=\"" + (Integer.valueOf(yRes) + 16) + "\"><param name=\"scale\" value=\"aspect\"><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /></object></object>\n";
  				}
  				
  				content = content + resultURL;
@@ -1949,7 +2006,6 @@ class XMLRPCMethodImages extends Thread {
 				}
 			});
 		} catch (final XMLRPCFault e) {
-					//pd.dismiss();
 					e.printStackTrace();
 		             
 				

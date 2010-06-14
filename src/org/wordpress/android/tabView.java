@@ -36,6 +36,7 @@ public class tabView extends TabActivity {
          Intent tab1 = new Intent(this, moderateCommentsTab.class);
          Intent tab2 = new Intent(this, viewPosts.class);
          Intent tab3 = new Intent(this, viewPosts.class);
+         Intent tab4 = new Intent(this, viewStats.class);
          
         Bundle bundle = new Bundle();
  		bundle.putString("accountName", accountName);
@@ -46,6 +47,7 @@ public class tabView extends TabActivity {
  		}
  		
  		tab1.putExtras(bundle);
+ 		tab4.putExtras(bundle);
  		
  		if (action != null){
  			bundle.putString("action", action);
@@ -57,11 +59,10 @@ public class tabView extends TabActivity {
  		tab3.putExtras(bundle);
          
          TabHost host = getTabHost();  
-         
          host.addTab(host.newTabSpec("one").setIndicator(getResources().getText(R.string.tab_comments), getResources().getDrawable(R.layout.comment_tab_selector)).setContent(tab1));  
          host.addTab(host.newTabSpec("two").setIndicator(getResources().getText(R.string.tab_posts), getResources().getDrawable(R.layout.posts_tab_selector)).setContent(tab2));
          host.addTab(host.newTabSpec("three").setIndicator(getResources().getText(R.string.tab_pages), getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
-
+         host.addTab(host.newTabSpec("four").setIndicator(getResources().getText(R.string.tab_stats), null).setContent(tab4));
          if (activateTab != null){
         	 if(activateTab.equals("posts")){
         		 host.setCurrentTab(1);

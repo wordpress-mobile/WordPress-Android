@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -34,7 +34,7 @@ public class WordPressDB {
 	//postStore
 	private static final String CREATE_TABLE_POSTSTORE = "create table if not exists poststore (blogID text, postID text, title text, postDate text, postDateFormatted text);";
 	private static final String CREATE_TABLE_PAGES = "create table if not exists pages (blogID text, pageID text, parentID text, title text, pageDate text, pageDateFormatted text);";
-	private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, postID text, commentID text, author text, comment text, commentDate text, commentDateFormatted text, status text, url text, email text, postTitle text);";
+	private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, postID text, iCommentID integer, author text, comment text, commentDate text, commentDateFormatted text, status text, url text, email text, postTitle text);";
 	private static final String POSTSTORE_TABLE = "poststore";
 	private static final String PAGES_TABLE = "pages";
 	private static final String COMMENTS_TABLE = "comments";
@@ -60,6 +60,16 @@ public class WordPressDB {
 	
 	//for capturing blogID, trac ticket #
 	private static final String ADD_LOCATION_FLAG = "alter table accounts add location boolean default false;";
+	
+	//fix commentID data type
+	private static final String ADD_NEW_COMMENT_ID = "ALTER TABLE comments ADD iCommentID INTEGER;";
+	private static final String COPY_COMMENT_IDS = "UPDATE comments SET iCommentID = commentID;";
+	
+	//add wordpress.com stats login info
+	private static final String ADD_DOTCOM_USERNAME = "alter table accounts add dotcom_username text;";
+	private static final String ADD_DOTCOM_PASSWORD = "alter table accounts add dotcom_password text;";
+	private static final String ADD_API_KEY = "alter table accounts add api_key text;";
+	private static final String ADD_API_BLOGID = "alter table accounts add api_blogid text;";
 	
 	private SQLiteDatabase db;
 
@@ -96,6 +106,10 @@ public class WordPressDB {
 				db.execSQL(ADD_LONGITUDE);
 				db.execSQL(ADD_TAGLINE);
 				db.execSQL(ADD_TAGLINE_FLAG);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 		}
 		else if (db.getVersion()  == 2){
@@ -107,6 +121,12 @@ public class WordPressDB {
 				db.execSQL(ADD_LONGITUDE);
 				db.execSQL(ADD_TAGLINE);
 				db.execSQL(ADD_TAGLINE_FLAG);
+				db.execSQL(ADD_NEW_COMMENT_ID);
+				db.execSQL(COPY_COMMENT_IDS);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
 				db.setVersion(DATABASE_VERSION); 
 		}
 		else if (db.getVersion() == 3){
@@ -115,6 +135,12 @@ public class WordPressDB {
 				db.execSQL(ADD_LONGITUDE);
 				db.execSQL(ADD_TAGLINE);
 				db.execSQL(ADD_TAGLINE_FLAG);
+				db.execSQL(ADD_NEW_COMMENT_ID);
+				db.execSQL(COPY_COMMENT_IDS);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
 				db.setVersion(DATABASE_VERSION); 
 		}
 		else if (db.getVersion() == 4){
@@ -127,12 +153,33 @@ public class WordPressDB {
 			db.execSQL(ADD_LONGITUDE);
 			db.execSQL(ADD_TAGLINE);
 			db.execSQL(ADD_TAGLINE_FLAG);
+			db.execSQL(ADD_NEW_COMMENT_ID);
+			db.execSQL(COPY_COMMENT_IDS);
+			db.execSQL(ADD_DOTCOM_USERNAME);
+			db.execSQL(ADD_DOTCOM_PASSWORD);
+			db.execSQL(ADD_API_KEY);
+			db.execSQL(ADD_API_BLOGID);
 			db.setVersion(DATABASE_VERSION);
 		}
 		else if (db.getVersion() == 5){
-				db.execSQL(ADD_TAGLINE);
-				db.execSQL(ADD_TAGLINE_FLAG);
-				db.setVersion(DATABASE_VERSION);
+			db.execSQL(ADD_TAGLINE);
+			db.execSQL(ADD_TAGLINE_FLAG);
+			db.execSQL(ADD_NEW_COMMENT_ID);
+			db.execSQL(COPY_COMMENT_IDS);
+			db.execSQL(ADD_DOTCOM_USERNAME);
+			db.execSQL(ADD_DOTCOM_PASSWORD);
+			db.execSQL(ADD_API_KEY);
+			db.execSQL(ADD_API_BLOGID);
+			db.setVersion(DATABASE_VERSION);
+		}
+		else if (db.getVersion() == 6){
+			db.execSQL(ADD_NEW_COMMENT_ID);
+			db.execSQL(COPY_COMMENT_IDS);
+			db.execSQL(ADD_DOTCOM_USERNAME);
+			db.execSQL(ADD_DOTCOM_PASSWORD);
+			db.execSQL(ADD_API_KEY);
+			db.execSQL(ADD_API_BLOGID);
+			db.setVersion(DATABASE_VERSION);
 		}
 
 		db.close();
@@ -296,6 +343,75 @@ public class WordPressDB {
 		return returnVector;
 	}
 
+	public Vector loadStatsLogin(Context ctx, String id) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username", "dotcom_password"}, "id=" + id, null, null, null, null);
+		
+		int numRows = c.getCount();
+		c.moveToFirst();
+
+		Vector returnVector = new Vector();
+		if (c.getString(0) != null){
+		returnVector.add(c.getString(0));
+		returnVector.add(c.getString(1));
+		}
+		else
+		{
+			returnVector = null;
+		}
+		c.close();
+		db.close();
+		
+		return returnVector;
+	}
+	
+	public boolean saveStatsLogin(Context ctx, String id, String statsUsername, String statsPassword) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		ContentValues values = new ContentValues();
+		values.put("dotcom_username", statsUsername);
+		values.put("dotcom_password", statsPassword);
+		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
+		db.close();
+		
+		return (returnValue);
+		
+	}
+	
+	public Vector loadAPIData(Context ctx, String id) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "api_key", "api_blogid"}, "id=" + id, null, null, null, null);
+		
+		int numRows = c.getCount();
+		c.moveToFirst();
+
+		Vector returnVector = new Vector();
+		if (c.getString(0) != null){
+		returnVector.add(c.getString(0));
+		returnVector.add(c.getString(1));
+		}
+		else
+		{
+			returnVector = null;
+		}
+		c.close();
+		db.close();
+		
+		return returnVector;
+	}
+	
+	public boolean saveAPIData(Context ctx, String id, String apiKey, String apiBlogID) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		ContentValues values = new ContentValues();
+		values.put("api_key", apiKey);
+		values.put("api_blogid", apiBlogID);
+		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
+		db.close();
+		
+		return (returnValue);
+		
+	}
 
 	public int getLatestCommentID(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
@@ -743,15 +859,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
-		/*Vector returnVector = new Vector();
-		for (int i = 0; i < numRows; ++i) {
-			String category_name = c.getString(2);
-			if (category_name != null)
-			{	
-			returnVector.add(category_name);
-			}
-			c.moveToNext();
-		}*/
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
@@ -834,17 +941,65 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector loadComments(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector returnVector = new Vector();
-		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "commentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
+		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "iCommentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
-		for (int i = 0; i < numRows; ++i) {
+		HashMap numRecords = new HashMap();
+		//add the number of stored records so the offset can be computed
+		if (numRows > 0){
+			numRecords.put("numRecords", numRows);
+			returnVector.add(0, numRecords);
+		}
+		
+		for (int i = 1; i < (numRows + 1); ++i) {
 		if (c.getString(0) != null){
 		HashMap returnHash = new HashMap();
 		returnHash.put("blogID", c.getString(0));
 		returnHash.put("postID", c.getInt(1));
-		returnHash.put("commentID", c.getString(2));
+		returnHash.put("commentID", c.getInt(2));
+		returnHash.put("author", c.getString(3));
+		returnHash.put("comment", c.getString(4));
+		returnHash.put("commentDate", c.getString(5));
+		returnHash.put("commentDateFormatted", c.getString(6));
+		returnHash.put("status", c.getString(7));
+		returnHash.put("url", c.getString(8));
+		returnHash.put("email", c.getString(9));
+		returnHash.put("postTitle", c.getString(10));
+		returnVector.add(i, returnHash);
+		}
+		c.moveToNext();
+		}
+		c.close();
+		db.close();
+		
+		if (numRows == 0){
+			returnVector = null;
+		}
+		
+		return returnVector;
+	}
+	
+	public Vector loadMoreComments(Context ctx, String blogID, int limit) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		Vector returnVector = new Vector();
+		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "iCommentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, "iCommentID ASC", String.valueOf(limit));
+		int numRows = c.getCount();
+		c.moveToFirst();
+		
+		//HashMap numRecords = new HashMap();
+		//add the number of stored records so the offset can be computed
+		/*if (numRows > 0){
+			numRecords.put("numRecords", numRows);
+			returnVector.add(0, numRecords);
+		}*/
+		for (int i = 0; i < numRows; i++) {
+		if (c.getString(0) != null){
+		HashMap returnHash = new HashMap();
+		returnHash.put("blogID", c.getString(0));
+		returnHash.put("postID", c.getInt(1));
+		returnHash.put("commentID", c.getInt(2));
 		returnHash.put("author", c.getString(3));
 		returnHash.put("comment", c.getString(4));
 		returnHash.put("commentDate", c.getString(5));
@@ -867,20 +1022,22 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 
-	public boolean saveComments(Context ctx, Vector pageValues) {
+	public boolean saveComments(Context ctx, Vector commentValues, boolean loadMore) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		HashMap firstHash = (HashMap) pageValues.get(0);
+		HashMap firstHash = (HashMap) commentValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
-		//delete existing values
-		db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
+		//delete existing values, if user hit refresh button
+		if (!loadMore){
+			db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
+		}
 
-		for (int i = 0; i < pageValues.size(); i++){
+		for (int i = 0; i < commentValues.size(); i++){
 			ContentValues values = new ContentValues();
-			HashMap thisHash = (HashMap) pageValues.get(i);
+			HashMap thisHash = (HashMap) commentValues.get(i);
 			values.put("blogID", thisHash.get("blogID").toString());
 			values.put("postID", thisHash.get("postID").toString());
-			values.put("commentID", thisHash.get("commentID").toString());
+			values.put("iCommentID", thisHash.get("commentID").toString());
 			values.put("author", thisHash.get("author").toString());
 			values.put("comment", thisHash.get("comment").toString());
 			values.put("commentDate", thisHash.get("commentDate").toString());
@@ -895,6 +1052,17 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		db.close();
 		return (returnValue);
+		
+	}
+	
+	public void updateCommentStatus(Context ctx, String blogID, String id, String newStatus) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
+		ContentValues values = new ContentValues();
+		values.put("status", newStatus);
+		boolean returnValue = db.update(COMMENTS_TABLE, values, "blogID=" + blogID + " AND iCommentID=" + id, null) > 0;
+
+	db.close();
 		
 	}
 
