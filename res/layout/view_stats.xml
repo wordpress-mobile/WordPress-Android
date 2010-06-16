@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFFFF">
+    android:background="#FFFFFFFF"
+    android:fillViewport="true">
 <RelativeLayout 
 	android:id="@+id/mainRL"
     android:layout_width="fill_parent"
@@ -82,7 +83,7 @@ android:layout_width="fill_parent"
 <ImageView android:id="@+id/chart"
 	android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:scaleType="fitXY"
+    android:scaleType="centerInside"
     android:layout_below="@id/chartTitle"
     android:paddingLeft="6dip"
     android:paddingRight="6dip"
@@ -98,12 +99,10 @@ android:layout_width="fill_parent"
     android:padding="6dip">  
  </TableLayout>
     <RelativeLayout android:id="@+id/dotcomLogin"
-    android:layout_alignParentBottom="true"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#AA111111"
-    android:layout_gravity="bottom"
-    android:gravity="bottom"
+    android:layout_alignParentBottom="true"
 	android:padding="4dip"
     android:visibility="invisible"> 
 	<TextView android:id="@+id/dotcom"
@@ -115,6 +114,7 @@ android:layout_width="fill_parent"
 	android:shadowDx="0"
 	android:shadowDy=".5"
 	android:shadowRadius="1"
+	android:paddingLeft="4dip"
 	android:text="Please enter your WordPress.com login:"/>
 	<EditText android:id="@+id/dotcomUsername"
 	android:layout_below="@id/dotcom"
@@ -125,6 +125,7 @@ android:layout_width="fill_parent"
 	android:layout_below="@id/dotcomUsername"
 	android:layout_width="fill_parent" 
     android:layout_height="wrap_content"
+    android:inputType="textPassword"
 	/>
 	<Button android:id="@+id/saveDotcom"
 	android:layout_below="@id/dotcomPassword"
@@ -134,7 +135,8 @@ android:layout_width="fill_parent"
     android:text="@string/save"
 	/>
 	<TextView 
-	android:layout_toLeftOf="@id/saveDotcom"
+	android:layout_gravity="left"
+	android:layout_marginBottom="16dip"
 	android:layout_alignBottom="@id/saveDotcom"
 	android:layout_width="wrap_content" 
     android:layout_height="wrap_content"
@@ -142,7 +144,8 @@ android:layout_width="fill_parent"
 	android:shadowDx="0"
 	android:shadowDy=".5"
 	android:shadowRadius="1"
-	android:text="Help with WordPress.com stats"/>
+	android:paddingLeft="4dip"
+	android:text="Get help with WordPress.com stats"/>
 	</RelativeLayout>
 </RelativeLayout>
 </ScrollView>

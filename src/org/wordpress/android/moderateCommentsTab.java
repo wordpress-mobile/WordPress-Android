@@ -71,9 +71,7 @@ public class moderateCommentsTab extends ListActivity {
 	private ThumbnailAdapter thumbs=null;
 	private ArrayList<CommentEntry> model=null;
 	private XMLRPCClient client;
-	private String id = "";
-	private String accountName = "";
-	private String postTitle = "", sUsername = "", sPassword = "";
+	private String id = "", accountName = "", postTitle = "", sUsername = "", sPassword = "", moderateErrorMsg = "", selectedPostID = "";
 	int sBlogId;
 	public Object[] origComments;
 	public int[] changedStatuses;
@@ -85,7 +83,6 @@ public class moderateCommentsTab extends ListActivity {
 	public boolean initializing = true;
 	public int selectedID = 0;
 	public int rowID = 0;
-	private String selectedPostID = "";
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
 	private int numRecords = 0;
@@ -95,144 +92,129 @@ public class moderateCommentsTab extends ListActivity {
 	private Vector checkedComments;
 	private int checkedCommentTotal = 0; 
 	private boolean inModeration = false;
-	private String moderateErrorMsg = "";
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.moderatecomments);
-        boolean fromNotification = false;
-        Bundle extras = getIntent().getExtras();
-        if(extras !=null)
-        {
-         id = extras.getString("id");
-         accountName = extras.getString("accountName");
-         pd = new ProgressDialog(this);
-         fromNotification = extras.getBoolean("fromNotification", false);       		
-        }      
+		boolean fromNotification = false;
+		Bundle extras = getIntent().getExtras();
+		if(extras !=null)
+		{
+			id = extras.getString("id");
+			accountName = extras.getString("accountName");
+			pd = new ProgressDialog(this);
+			fromNotification = extras.getBoolean("fromNotification", false);       		
+		}      
 
 		//create the ViewSwitcher in the current context
-        switcher = new ViewSwitcher(this);
-		  Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
-		  footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_comments));
+		switcher = new ViewSwitcher(this);
+		Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
+		footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_comments));
 
-		  View progress = View.inflate(this, R.layout.list_footer_progress, null);
-		  
-		  switcher.addView(footer);
-		  switcher.addView(progress);
-        
-        if (fromNotification) //dismiss the notification 
-        {
-        	NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        	nm.cancel(22 + Integer.valueOf(id));
-        	refreshComments(false, false, false);
-        }
-        
-        this.setTitle(accountName + " - Moderate Comments");
-        
-        boolean loadedComments = loadComments(false, false);
-        
-        if (!loadedComments){
-        	        	
-        	refreshComments(false, false, false);
-        }
-        
-       final ImageButton refresh = (ImageButton) findViewById(R.id.refreshComments);   
-        
-        refresh.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
+		View progress = View.inflate(this, R.layout.list_footer_progress, null);
 
-            	refreshComments(false, true, false);
-            	 
-            }
-    });
-        Button bulkEdit = (Button) findViewById(R.id.bulkEdit);   
-        
+		switcher.addView(footer);
+		switcher.addView(progress);
+
+		if (fromNotification) //dismiss the notification 
+		{
+			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			nm.cancel(22 + Integer.valueOf(id));
+			refreshComments(false, false, false);
+		}
+
+		this.setTitle(accountName + " - Moderate Comments");
+
+		boolean loadedComments = loadComments(false, false);
+
+		if (!loadedComments){
+
+			refreshComments(false, false, false);
+		}
+
+		final ImageButton refresh = (ImageButton) findViewById(R.id.refreshComments);   
+
+		refresh.setOnClickListener(new ImageButton.OnClickListener() {
+			public void onClick(View v) {
+
+				refreshComments(false, true, false);
+
+			}
+		});
+		Button bulkEdit = (Button) findViewById(R.id.bulkEdit);   
+
 		bulkEdit.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	inModeration = !inModeration;
-            	
-            	showOrHideBulkCheckBoxes();
-            	 
-            }
-    }); 
-		
+			public void onClick(View v) {
+				inModeration = !inModeration;
+				showOrHideBulkCheckBoxes();
+			}
+		}); 
+
 		ImageButton deleteComments = (ImageButton) findViewById(R.id.deleteComment);   
-        
-        deleteComments.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-            	showDialog(ID_DIALOG_DELETING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-            	deleteComments();
-	                  }
-	        	  }.start();
-            	 
-            }
-    });
-        
-        Button approveComments = (Button) findViewById(R.id.approveComment);   
-        
-        approveComments.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	showDialog(ID_DIALOG_MODERATING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-	                	  moderateComments("approve");
-	                  }
 
-					
-	        	  }.start();
-            	 
-            }
-    });
-        
-        Button unapproveComments = (Button) findViewById(R.id.unapproveComment);   
-        
-        unapproveComments.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	showDialog(ID_DIALOG_MODERATING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-	                	  moderateComments("hold");
-	                  }
+		deleteComments.setOnClickListener(new ImageButton.OnClickListener() {
+			public void onClick(View v) {
+				showDialog(ID_DIALOG_DELETING);
+				new Thread() {
+					public void run() { 
+						Looper.prepare();
+						deleteComments();
+					}
+				}.start();
 
-					
-	        	  }.start();
-            	 
-            }
-    });
-        
-        Button spamComments = (Button) findViewById(R.id.markSpam);   
-        
-        spamComments.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	showDialog(ID_DIALOG_MODERATING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-	                	  moderateComments("spam");
-	                  }
+			}
+		});
 
-					
-	        	  }.start();
-            	 
-            }
-    });
-        
+		Button approveComments = (Button) findViewById(R.id.approveComment);   
+
+		approveComments.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				showDialog(ID_DIALOG_MODERATING);
+				new Thread() {
+					public void run() { 
+						Looper.prepare();
+						moderateComments("approve");
+					}
+				}.start();
+			}
+		});
+
+		Button unapproveComments = (Button) findViewById(R.id.unapproveComment);   
+
+		unapproveComments.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				showDialog(ID_DIALOG_MODERATING);
+				new Thread() {
+					public void run() { 
+						Looper.prepare();
+						moderateComments("hold");
+					}
+				}.start();
+			}
+		});
+
+		Button spamComments = (Button) findViewById(R.id.markSpam);   
+
+		spamComments.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				showDialog(ID_DIALOG_MODERATING);
+				new Thread() {
+					public void run() { 
+						Looper.prepare();
+						moderateComments("spam");
+					}
+				}.start();
+			}
+		});
+
 	}
-	
+
 	protected void showOrHideBulkCheckBoxes() {
 		ListView listView = getListView();
 		int loopMax = 0;
 		if (listView.getFooterViewsCount() >= 1){
 			//we don't want a checkmark on the footer view 
-			int test = thumbs.getCount();
-			int test2 = listView.getLastVisiblePosition();
 			if (listView.getLastVisiblePosition() == thumbs.getCount()){
-				
 				loopMax = listView.getChildCount() - 1;
 			}
 			else{
@@ -242,114 +224,110 @@ public class moderateCommentsTab extends ListActivity {
 		else{
 			loopMax = listView.getChildCount();
 		}
-    	for (int i=0; i < loopMax;i++){
-    		RelativeLayout rl = (RelativeLayout) (View)listView.getChildAt(i).findViewById(R.id.bulkEditGroup);
-    		if (inModeration){
-    			
-    			showBulkCheckBoxes(rl);
-    			
-    		}
-    		else{
-    			
-    			hideBulkCheckBoxes(rl);
+		for (int i=0; i < loopMax;i++){
+			RelativeLayout rl = (RelativeLayout) (View)listView.getChildAt(i).findViewById(R.id.bulkEditGroup);
+			if (inModeration){
+				showBulkCheckBoxes(rl);
+			}
+			else{
+				hideBulkCheckBoxes(rl);
+			}
+		}
 
-    		}
-    	}
-		
 	}
 
 	protected void moderateComments(String newStatus) {
+		//handles bulk moderation
 		Vector settings = new Vector();
-        WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-    	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-    	
-    	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = settings.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
-    	}
+		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
+		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
+
+		String sURL = "";
+		if (settings.get(0).toString().contains("xmlrpc.php"))
+		{
+			sURL = settings.get(0).toString();
+		}
+		else
+		{
+			sURL = settings.get(0).toString() + "xmlrpc.php";
+		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
 		int sBlogId = Integer.parseInt(settings.get(10).toString());
-		
+
 		for (int i=0;i < checkedComments.size(); i++)
 		{
-		if (checkedComments.get(i).toString().equals("true")){
+			if (checkedComments.get(i).toString().equals("true")){
 
-			client = new XMLRPCClient(sURL);
-			
-			CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
-	    	String curCommentID = listRow.commentID;
-			 
-    		HashMap contentHash, postHash = new HashMap();
-    		contentHash = (HashMap) allComments.get(curCommentID);
-	        postHash.put("status", newStatus);
-	        Date d = new Date();
-	        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
-	        String cDate = contentHash.get("commentDate").toString().replace("America/Los_Angeles", "PST");
-	        try{  
-	        	d = sdf.parse(cDate);
-	        } catch (ParseException pe){  
-	            pe.printStackTrace();  
-	        }  
-	        postHash.put("date_created_gmt", d);
-	        postHash.put("content", contentHash.get("comment"));
-	        postHash.put("author", contentHash.get("author"));
-	        postHash.put("author_url", contentHash.get("url"));
-	        postHash.put("author_email", contentHash.get("email"));
+				client = new XMLRPCClient(sURL);
 
-	        
-        Object[] params = {
-        		sBlogId,
-        		sUsername,
-        		sPassword,
-        		curCommentID,
-        		postHash
-        };
-        
-        Object result = null;
-        try {
-    		result = (Object) client.call("wp.editComment", params);
-    		boolean bResult = Boolean.parseBoolean(result.toString());
-    		if (bResult){
-    			checkedComments.set(i, "false");
-    			listRow.status = newStatus;
-    			model.set(i, listRow);
-    			settingsDB.updateCommentStatus(moderateCommentsTab.this, id, listRow.commentID, newStatus);
-    		}
-    	} catch (XMLRPCException e) {
-    		moderateErrorMsg = e.getMessage();
-    	}	
-		}
+				CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
+				String curCommentID = listRow.commentID;
+
+				HashMap contentHash, postHash = new HashMap();
+				contentHash = (HashMap) allComments.get(curCommentID);
+				postHash.put("status", newStatus);
+				Date d = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
+				String cDate = contentHash.get("commentDate").toString();
+				try{  
+					d = sdf.parse(cDate);
+				} catch (ParseException pe){  
+					pe.printStackTrace();  
+				}  
+				postHash.put("date_created_gmt", d);
+				postHash.put("content", contentHash.get("comment"));
+				postHash.put("author", contentHash.get("author"));
+				postHash.put("author_url", contentHash.get("url"));
+				postHash.put("author_email", contentHash.get("email"));
+
+				Object[] params = {
+						sBlogId,
+						sUsername,
+						sPassword,
+						curCommentID,
+						postHash
+				};
+
+				Object result = null;
+				try {
+					result = (Object) client.call("wp.editComment", params);
+					boolean bResult = Boolean.parseBoolean(result.toString());
+					if (bResult){
+						checkedComments.set(i, "false");
+						listRow.status = newStatus;
+						model.set(i, listRow);
+						settingsDB.updateCommentStatus(moderateCommentsTab.this, id, listRow.commentID, newStatus);
+					}
+				} catch (XMLRPCException e) {
+					moderateErrorMsg = e.getMessage();
+				}	
+			}
 		}
 		dismissDialog(ID_DIALOG_MODERATING);
 		Thread action = new Thread() 
 		{ 
-		  public void run() 
-		  {
-			  if (moderateErrorMsg == ""){
-				  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comments_moderated), Toast.LENGTH_SHORT).show();
-			  }
-			  else{
-				  //there was an xmlrpc error
-				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-				  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-	            dialogBuilder.setMessage(moderateErrorMsg);
-	            dialogBuilder.setPositiveButton("OK",  new
-	          		  DialogInterface.OnClickListener() {
-	              public void onClick(DialogInterface dialog, int whichButton) {
-	                  // Just close the window.
-	              	
-	              }
-	          });
-	            dialogBuilder.setCancelable(true);
-	           dialogBuilder.create().show();
-			  }
-		  } 
+			public void run() 
+			{
+				if (moderateErrorMsg == ""){
+					Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comments_moderated), Toast.LENGTH_SHORT).show();
+				}
+				else{
+					//there was an xmlrpc error
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+					dialogBuilder.setMessage(moderateErrorMsg);
+					dialogBuilder.setPositiveButton("OK",  new
+							DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							// Just close the window.
+
+						}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			} 
 		}; 
 		this.runOnUiThread(action);
 		if (moderateErrorMsg == ""){
@@ -358,326 +336,309 @@ public class moderateCommentsTab extends ListActivity {
 			inModeration = false;
 			Thread action2 = new Thread() 
 			{ 
-			  public void run() 
-			  {
-				  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
-				  showOrHideBulkCheckBoxes();
-				  hideModerationBar();
-				  thumbs.notifyDataSetChanged();
-			  } 
+				public void run() 
+				{
+					pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+					showOrHideBulkCheckBoxes();
+					hideModerationBar();
+					thumbs.notifyDataSetChanged();
+				} 
 			}; 
 			this.runOnUiThread(action2);
 		}
 	}
-	
+
 	protected void hideBulkCheckBoxes(RelativeLayout rl) {
 		AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(1.0f, 0.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 1.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f
-        );
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        rl.startAnimation(set);
+		Animation animation = new AlphaAnimation(1.0f, 0.0f);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 1.0f,
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f
+		);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		rl.startAnimation(set);
 		rl.setVisibility(View.GONE);
 		if (checkedCommentTotal > 0){
 			hideModerationBar();
 		}
-		
 	}
 
 	protected void showBulkCheckBoxes(RelativeLayout rl) {
 		AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 1.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f
-        );
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
+		Animation animation = new AlphaAnimation(0.0f, 1.0f);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_SELF, 1.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f
+		);
+		animation.setDuration(500);
+		set.addAnimation(animation);
 		rl.setVisibility(View.VISIBLE);
 		rl.startAnimation(set);
 		if (checkedCommentTotal > 0){
 			showModerationBar();
 		}
-		
 	}
 
 	protected void deleteComments() {
-		
+		//bulk detete comments
 		Vector settings = new Vector();
-        WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-    	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-    	
-    	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = settings.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
-    	}
+		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
+		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
+		String sURL = "";
+		if (settings.get(0).toString().contains("xmlrpc.php"))
+		{
+			sURL = settings.get(0).toString();
+		}
+		else
+		{
+			sURL = settings.get(0).toString() + "xmlrpc.php";
+		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
 		int sBlogId = Integer.parseInt(settings.get(10).toString());
 		
 		for (int i=0;i < checkedComments.size(); i++)
 		{
-		if (checkedComments.get(i).toString().equals("true")){
+			if (checkedComments.get(i).toString().equals("true")){
 
-    	client = new XMLRPCClient(sURL);
-    	
-    	CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
-    	String curCommentID = listRow.commentID;
-	        
-        Object[] params = {
-        		sBlogId,
-        		sUsername,
-        		sPassword,
-        		curCommentID
-        };
-        
-        Object result = null;
-        try {
-    		result = (Object) client.call("wp.deleteComment", params);
-    	} catch (final XMLRPCException e) {
-    		/*dismissDialog(ID_DIALOG_DELETING);
-    		Thread action3 = new Thread() 
-			{ 
-			  public void run() 
-			  {
-    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-            dialogBuilder.setMessage(e.getMessage());
-            dialogBuilder.setPositiveButton("OK",  new
-          		  DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int whichButton) {
-                  // Just close the window.
-              	
-              }
-          });
-            dialogBuilder.setCancelable(true);
-           dialogBuilder.create().show();
-			  }
-			  }; 
-				this.runOnUiThread(action3);*/
-    	}
-		}
+				client = new XMLRPCClient(sURL);
+
+				CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
+				String curCommentID = listRow.commentID;
+
+				Object[] params = {
+						sBlogId,
+						sUsername,
+						sPassword,
+						curCommentID
+				};
+
+				Object result = null;
+				try {
+					result = (Object) client.call("wp.deleteComment", params);
+				} catch (final XMLRPCException e) {
+					moderateErrorMsg = e.getMessage();
+				}
+			}
 		}
 		dismissDialog(ID_DIALOG_DELETING);
 		Thread action = new Thread() 
 		{ 
-		  public void run() 
-		  {
-			  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
-		  } 
+			public void run() 
+			{
+				if (moderateErrorMsg == ""){
+					Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
+				}
+				else{
+					//error occured during delete request
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+					dialogBuilder.setMessage(moderateErrorMsg);
+					dialogBuilder.setPositiveButton("OK",  new
+							DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							// Just close the window.
+
+						}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			} 
 		}; 
 		this.runOnUiThread(action);
 		Thread action2 = new Thread() 
 		{ 
-		  public void run() 
-		  {
-			  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
-			  refreshComments(false, true, true);
-			  } 
+			public void run() 
+			{
+				if (moderateErrorMsg == ""){
+				pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+				refreshComments(false, true, true);
+				}
+			} 
 		}; 
 		this.runOnUiThread(action2);
 		checkedCommentTotal = 0;
 		inModeration = false;
-		
+
 	}
 
 	private boolean loadComments(boolean addMore, boolean refreshOnly) {
 		WordPressDB postStoreDB = new WordPressDB(this);
 		String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore){
-	    Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
-	 	if (loadedPosts != null){
-	 	HashMap countHash = new HashMap();
-	 	countHash = (HashMap) loadedPosts.get(0);
-	 	numRecords = Integer.parseInt(countHash.get("numRecords").toString());
-	 	if (refreshOnly){
-	 		model.clear();
-	 	}
-	 	else{
-	 		model=new ArrayList<CommentEntry>();
-	 	}
-	 	checkedComments = new Vector();
-	    for (int i=1; i < loadedPosts.size(); i++){
-	    	checkedComments.add(i-1, "false");
-	        HashMap contentHash = (HashMap) loadedPosts.get(i);
-	        allComments.put(contentHash.get("commentID").toString(), contentHash);
-	        author = escapeUtils.unescapeHtml(contentHash.get("author").toString());
-	        commentID = contentHash.get("commentID").toString();
-	        postID = contentHash.get("postID").toString();
-	        comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
-	        dateCreated = contentHash.get("commentDate").toString();
-	        dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
-	        status = contentHash.get("status").toString();
-	        authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
-	        authorURL = escapeUtils.unescapeHtml(contentHash.get("url").toString());
-	        postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
-	        
-	        //add to model
-	        model.add(new CommentEntry(postID,
-	        		commentID, 
-	        		author,
-	        		dateCreatedFormatted,
-	        		comment,
-	        		status,
-	        		postTitle,
-	        		authorURL,
-	        		authorEmail,
-	        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
-	    }
-		
-	    if (!refreshOnly){
-	    try {
-	    	ThumbnailBus bus = new ThumbnailBus();
-			thumbs=new ThumbnailAdapter(this, new CommentAdapter(),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
+			if (loadedPosts != null){
+				HashMap countHash = new HashMap();
+				countHash = (HashMap) loadedPosts.get(0);
+				numRecords = Integer.parseInt(countHash.get("numRecords").toString());
+				if (refreshOnly){
+					model.clear();
+				}
+				else{
+					model=new ArrayList<CommentEntry>();
+				}
+				checkedComments = new Vector();
+				for (int i=1; i < loadedPosts.size(); i++){
+					checkedComments.add(i-1, "false");
+					HashMap contentHash = (HashMap) loadedPosts.get(i);
+					allComments.put(contentHash.get("commentID").toString(), contentHash);
+					author = escapeUtils.unescapeHtml(contentHash.get("author").toString());
+					commentID = contentHash.get("commentID").toString();
+					postID = contentHash.get("postID").toString();
+					comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
+					dateCreated = contentHash.get("commentDate").toString();
+					dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
+					status = contentHash.get("status").toString();
+					authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
+					authorURL = escapeUtils.unescapeHtml(contentHash.get("url").toString());
+					postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
+
+					//add to model
+					model.add(new CommentEntry(postID,
+							commentID, 
+							author,
+							dateCreatedFormatted,
+							comment,
+							status,
+							postTitle,
+							authorURL,
+							authorEmail,
+							URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
+				}
+
+				if (!refreshOnly){
+					try {
+						ThumbnailBus bus = new ThumbnailBus();
+						thumbs=new ThumbnailAdapter(this, new CommentAdapter(),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					ListView listView = (ListView) findViewById(android.R.id.list);
+					listView.removeFooterView(switcher);
+					listView.addFooterView(switcher);
+					setListAdapter(thumbs);
+					
+					listView.setOnItemClickListener(new OnItemClickListener() {
+
+						public void onNothingSelected(AdapterView<?> arg0) {
+						}
+
+						public void onItemClick(AdapterView<?> arg0, View arg1,
+								int position, long arg3) {
+							Intent intent = new Intent(moderateCommentsTab.this, viewComment.class);
+							//intent.putExtra("pageID", pageIDs[(int) arg3]);
+							//intent.putExtra("postTitle", titles[(int) arg3]);
+							intent.putExtra("id", id);
+							intent.putExtra("accountName", accountName);
+							intent.putExtra("comment", model.get((int) arg3).comment);
+							intent.putExtra("name", model.get((int) arg3).name);
+							intent.putExtra("email", model.get((int) arg3).authorEmail);
+							intent.putExtra("url", model.get((int) arg3).authorURL);
+							intent.putExtra("date", model.get((int) arg3).dateCreatedFormatted);
+							intent.putExtra("status", model.get((int) arg3).status);
+							intent.putExtra("comment_id", model.get((int) arg3).commentID);
+							intent.putExtra("post_id", model.get((int) arg3).postID);
+							intent.putExtra("position", position);
+							startActivityForResult(intent, 1);
+						}
+					});
+
+					listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+						public void onCreateContextMenu(ContextMenu menu, View v,
+								ContextMenuInfo menuInfo) {
+							// TODO Auto-generated method stub
+							AdapterView.AdapterContextMenuInfo info;
+							try {
+								info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+							} catch (ClassCastException e) {
+								//Log.e(TAG, "bad menuInfo", e);
+								return;
+							}
+
+							selectedID = info.targetView.getId();
+							rowID = info.position;
+							selectedPostID = model.get(info.position).postID;
+
+							menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
+							menu.add(0, 0, 0, getResources().getText(R.string.mark_approved));
+							menu.add(0, 1, 0, getResources().getText(R.string.mark_unapproved));
+							menu.add(0, 2, 0, getResources().getText(R.string.mark_spam));
+							menu.add(0, 3, 0, getResources().getText(R.string.reply));
+							menu.add(0, 4, 0, getResources().getText(R.string.delete));
+						}
+					});
+				}
+				else{
+					thumbs.notifyDataSetChanged();
+				}
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
-		
+		else{
+			Vector latestComments = postStoreDB.loadMoreComments(moderateCommentsTab.this, id, commentsToLoad);
+			if (latestComments != null){
+				numRecords += latestComments.size();
+				Toast.makeText(this, "numRecords is now " + numRecords, Toast.LENGTH_LONG).show();
+				for (int i=latestComments.size(); i > 0; i--){
+					HashMap contentHash = (HashMap) latestComments.get(i-1);
+					allComments.put(contentHash.get("commentID").toString(), contentHash);
+					author = escapeUtils.unescapeHtml(contentHash.get("author").toString());
+					commentID = contentHash.get("commentID").toString();
+					postID = contentHash.get("postID").toString();
+					comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
+					dateCreated = contentHash.get("commentDate").toString();
+					dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
+					status = contentHash.get("status").toString();
+					authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
+					authorURL = escapeUtils.unescapeHtml(contentHash.get("url").toString());
+					postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
 
-	   ListView listView = (ListView) findViewById(android.R.id.list);
-		  
-	   listView.removeFooterView(switcher);
-
-	   listView.addFooterView(switcher);
-
-	   setListAdapter(thumbs);
-		   
-	   listView.setOnItemClickListener(new OnItemClickListener() {
-		   
-			public void onNothingSelected(AdapterView<?> arg0) {
-				
+					//add to model
+					model.add(new CommentEntry(postID,
+							commentID, 
+							author,
+							dateCreatedFormatted,
+							comment,
+							status,
+							postTitle,
+							authorURL,
+							authorEmail,
+							URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
+				}
+				thumbs.notifyDataSetChanged();
 			}
-
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				Intent intent = new Intent(moderateCommentsTab.this, viewComment.class);
-                //intent.putExtra("pageID", pageIDs[(int) arg3]);
-                //intent.putExtra("postTitle", titles[(int) arg3]);
-                intent.putExtra("id", id);
-                intent.putExtra("accountName", accountName);
-                intent.putExtra("comment", model.get((int) arg3).comment);
-                intent.putExtra("name", model.get((int) arg3).name);
-                intent.putExtra("email", model.get((int) arg3).authorEmail);
-                intent.putExtra("url", model.get((int) arg3).authorURL);
-                intent.putExtra("date", model.get((int) arg3).dateCreatedFormatted);
-                intent.putExtra("status", model.get((int) arg3).status);
-                intent.putExtra("comment_id", model.get((int) arg3).commentID);
-                intent.putExtra("post_id", model.get((int) arg3).postID);
-                intent.putExtra("position", position);
-                startActivityForResult(intent, 1);
-				
-			}
-
-        });
-				   
-        listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-        	
-               public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo) {
-				// TODO Auto-generated method stub
-            	   AdapterView.AdapterContextMenuInfo info;
-                   try {
-                        info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                   } catch (ClassCastException e) {
-                       //Log.e(TAG, "bad menuInfo", e);
-                       return;
-                   }
-                   
-                   selectedID = info.targetView.getId();
-                   rowID = info.position;
-                   selectedPostID = model.get(info.position).postID;
-                   
-			 menu.setHeaderTitle(getResources().getText(R.string.comment_actions));
-             menu.add(0, 0, 0, getResources().getText(R.string.mark_approved));
-             menu.add(0, 1, 0, getResources().getText(R.string.mark_unapproved));
-             menu.add(0, 2, 0, getResources().getText(R.string.mark_spam));
-             menu.add(0, 3, 0, getResources().getText(R.string.reply));
-             menu.add(0, 4, 0, getResources().getText(R.string.delete));
-             
-			}
-          });
+			return true;
 		}
-	   else{
-		   thumbs.notifyDataSetChanged();
-	   }
-	   return true;
 	}
- 	else{
- 		return false;
- 	}
-}
-else{
-	Vector latestComments = postStoreDB.loadMoreComments(moderateCommentsTab.this, id, commentsToLoad);
-	if (latestComments != null){
-		numRecords += latestComments.size();
-		Toast.makeText(this, "numRecords is now " + numRecords, Toast.LENGTH_LONG).show();
-		for (int i=latestComments.size(); i > 0; i--){
-	        HashMap contentHash = (HashMap) latestComments.get(i-1);
-	        allComments.put(contentHash.get("commentID").toString(), contentHash);
-	        author = escapeUtils.unescapeHtml(contentHash.get("author").toString());
-	        commentID = contentHash.get("commentID").toString();
-	        postID = contentHash.get("postID").toString();
-	        comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
-	        dateCreated = contentHash.get("commentDate").toString();
-	        dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
-	        status = contentHash.get("status").toString();
-	        authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
-	        authorURL = escapeUtils.unescapeHtml(contentHash.get("url").toString());
-	        postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
-	        
-	        //add to model
-	        model.add(new CommentEntry(postID,
-	        		commentID, 
-	        		author,
-	        		dateCreatedFormatted,
-	        		comment,
-	        		status,
-	        		postTitle,
-	        		authorURL,
-	        		authorEmail,
-	        		URI.create("http://gravatar.com/avatar/" + getMd5Hash(authorEmail.trim()) + "?s=60&d=identicon")));
-	    }
-		thumbs.notifyDataSetChanged();
-	}
-	return true;
-}
-}
 
-	   public void onClick(View arg0) {
-			//first view is showing, show the second progress view
-			switcher.showNext();
-			refreshComments(true, false, false);
-		}
+	public void onClick(View arg0) {
+		//first view is showing, show the second progress view
+		switcher.showNext();
+		refreshComments(true, false, false);
+	}
 
 	private void refreshComments(final boolean loadMore, final boolean refreshOnly, final boolean doInBackground) {
 
 		if (!loadMore && !doInBackground){
 			showProgressBar();
 		}
-        
+
 		Vector settings = new Vector();
-	    WordPressDB settingsDB = new WordPressDB(this);
+		WordPressDB settingsDB = new WordPressDB(this);
 		settings = settingsDB.loadSettings(this, id); 
-	   
+
 		String sURL = "";
 		if (settings.get(0).toString().contains("xmlrpc.php"))
 		{
@@ -693,46 +654,46 @@ else{
 
 		client = new XMLRPCClient(sURL);
 
-	        HashMap hPost = new HashMap();
-	        hPost.put("status", "");
-	        hPost.put("post_id", "");
-	        if (loadMore){
-	        	hPost.put("offset", numRecords);
-	        }
-	        if (totalComments != 0 && ((totalComments - numRecords) < 30)){
-	        	commentsToLoad = totalComments - numRecords;
-	        	hPost.put("number", commentsToLoad);
-	        }
-	        else{
-	        	hPost.put("number", 30);
-	        }
+		HashMap hPost = new HashMap();
+		hPost.put("status", "");
+		hPost.put("post_id", "");
+		if (loadMore){
+			hPost.put("offset", numRecords);
+		}
+		if (totalComments != 0 && ((totalComments - numRecords) < 30)){
+			commentsToLoad = totalComments - numRecords;
+			hPost.put("number", commentsToLoad);
+		}
+		else{
+			hPost.put("number", 30);
+		}
 
-	    	List<Object> list = new ArrayList<Object>();
-	    	
-	    	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
-				public void callFinished(Object[] result) {
-					String s = "done";
-					if (!loadMore && !doInBackground){
-						closeProgressBar();
-					}
-					else if (loadMore){
-						switcher.showPrevious();
-					}
-					if (result.length == 0){
-						// no comments found
-						if (pd.isShowing())
-						{
+		List<Object> list = new ArrayList<Object>();
+
+		XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
+			public void callFinished(Object[] result) {
+				String s = "done";
+				if (!loadMore && !doInBackground){
+					closeProgressBar();
+				}
+				else if (loadMore){
+					switcher.showPrevious();
+				}
+				if (result.length == 0){
+					// no comments found
+					if (pd.isShowing())
+					{
 						pd.dismiss();
-						}
 					}
-					else{
+				}
+				else{
 					s = result.toString();
 					origComments = result;
 					String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
-					
+
 					HashMap contentHash = new HashMap();
 					Vector dbVector = new Vector();
-					
+
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 					Calendar cal = Calendar.getInstance();
@@ -743,146 +704,136 @@ else{
 						//end of list reached
 						getListView().removeFooterView(switcher);
 					}
-						//loop this!
-						    for (int ctr = 0; ctr < result.length; ctr++){
-						    	if (loadMore){
-						    		checkedComments.add("false"); 
-						    	}
-						    	HashMap<String, String> dbValues = new HashMap();
-						        contentHash = (HashMap) result[ctr];
-						        allComments.put(contentHash.get("comment_id").toString(), contentHash);
-						        comment = contentHash.get("content").toString();
-						        author = contentHash.get("author").toString();
-						        status = contentHash.get("status").toString();
-						        postID = contentHash.get("post_id").toString();
-						        commentID = contentHash.get("comment_id").toString();
-						        dateCreated = contentHash.get("date_created_gmt").toString();
-						        authorURL = contentHash.get("author_url").toString();
-						        authorEmail = contentHash.get("author_email").toString();
-						        postTitle = contentHash.get("post_title").toString();
-						        
-						        //make the date pretty
-						        String cDate = dateCreated.replace(tz.getID(), shortDisplayName);
-						        try{  
-						        	d = sdf.parse(cDate);
-						        	SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 
-						        	dateCreatedFormatted = sdfOut.format(d);
-						        } catch (ParseException pe){  
-						            pe.printStackTrace();
-						            dateCreatedFormatted = dateCreated;  //just make it the ugly date if it doesn't work
-						        } 
-						        
-						        dbValues.put("blogID", id);
-						        dbValues.put("postID", postID);
-						        dbValues.put("commentID", commentID);
-						        dbValues.put("author", author);
-						        dbValues.put("comment", comment);
-						        dbValues.put("commentDate", dateCreated);
-						        dbValues.put("commentDateFormatted", dateCreatedFormatted);
-						        dbValues.put("status", status);
-						        dbValues.put("url", authorURL);
-						        dbValues.put("email", authorEmail);
-						        dbValues.put("postTitle", postTitle);
-						        dbVector.add(ctr, dbValues);
-						        
-						        
-						    }
-						    
-						    WordPressDB postStoreDB = new WordPressDB(moderateCommentsTab.this);
-						    postStoreDB.saveComments(moderateCommentsTab.this, dbVector, loadMore);
-						   
-						    if (!doInBackground){
-						    	loadComments(loadMore, refreshOnly);
-						    }
-						   
-						   if (pd.isShowing())
-							{
-							pd.dismiss();
-							}
-					    
-					}  
+					//loop this!
+					for (int ctr = 0; ctr < result.length; ctr++){
+						if (loadMore){
+							checkedComments.add("false"); 
+						}
+						HashMap<String, String> dbValues = new HashMap();
+						contentHash = (HashMap) result[ctr];
+						allComments.put(contentHash.get("comment_id").toString(), contentHash);
+						comment = contentHash.get("content").toString();
+						author = contentHash.get("author").toString();
+						status = contentHash.get("status").toString();
+						postID = contentHash.get("post_id").toString();
+						commentID = contentHash.get("comment_id").toString();
+						dateCreated = contentHash.get("date_created_gmt").toString();
+						authorURL = contentHash.get("author_url").toString();
+						authorEmail = contentHash.get("author_email").toString();
+						postTitle = contentHash.get("post_title").toString();
 
-				}
-	        });
-	        Object[] params = {
-	        		sBlogId,
-	        		sUsername,
-	        		sPassword,
-	        		hPost
-	        };
+						//make the date pretty
+						String cDate = dateCreated.replace(tz.getID(), shortDisplayName);
+						try{  
+							d = sdf.parse(cDate);
+							SimpleDateFormat sdfOut = new SimpleDateFormat("MMMM dd, yyyy hh:mm a"); 
+							dateCreatedFormatted = sdfOut.format(d);
+						} catch (ParseException pe){  
+							pe.printStackTrace();
+							dateCreatedFormatted = dateCreated;  //just make it the ugly date if it doesn't work
+						} 
 
-	        method.call(params);
-			
-		}
-	
+						dbValues.put("blogID", id);
+						dbValues.put("postID", postID);
+						dbValues.put("commentID", commentID);
+						dbValues.put("author", author);
+						dbValues.put("comment", comment);
+						dbValues.put("commentDate", dateCreated);
+						dbValues.put("commentDateFormatted", dateCreatedFormatted);
+						dbValues.put("status", status);
+						dbValues.put("url", authorURL);
+						dbValues.put("email", authorEmail);
+						dbValues.put("postTitle", postTitle);
+						dbVector.add(ctr, dbValues);
+					}
+
+					WordPressDB postStoreDB = new WordPressDB(moderateCommentsTab.this);
+					postStoreDB.saveComments(moderateCommentsTab.this, dbVector, loadMore);
+
+					if (!doInBackground){
+						loadComments(loadMore, refreshOnly);
+					}
+
+					if (pd.isShowing())
+					{
+						pd.dismiss();
+					}
+
+				}  
+
+			}
+		});
+		Object[] params = {
+				sBlogId,
+				sUsername,
+				sPassword,
+				hPost
+		};
+
+		method.call(params);
+
+	}
+
 	public void showProgressBar() {
 		AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
-        );
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        LayoutAnimationController controller =
-                new LayoutAnimationController(set, 0.5f);
-        RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
-        loading.setVisibility(View.VISIBLE);
-        loading.setLayoutAnimation(controller);
+		Animation animation = new AlphaAnimation(0.0f, 1.0f);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+				Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
+		);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		LayoutAnimationController controller =
+			new LayoutAnimationController(set, 0.5f);
+		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
+		loading.setVisibility(View.VISIBLE);
+		loading.setLayoutAnimation(controller);
 	}
 
 	public void closeProgressBar() {
 
-        AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(1.0f, 0.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, -1.0f
-        );
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        LayoutAnimationController controller =
-                new LayoutAnimationController(set, 0.5f);
-        RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
-        
-        loading.startAnimation(set);
-        loading.setVisibility(View.INVISIBLE);
+		AnimationSet set = new AnimationSet(true);
+		Animation animation = new AlphaAnimation(1.0f, 0.0f);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, -1.0f
+		);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		LayoutAnimationController controller =
+			new LayoutAnimationController(set, 0.5f);
+		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
+		loading.startAnimation(set);
+		loading.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		
-		//thumbs.close();
+
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		return(model);
 	}
-	
+
 	private void goBlooey(Throwable t) {
 		Log.e("WordPress", "Exception!", t);
-		
+
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
-		
+
 		builder
-			.setTitle("UHOH")
-			.setMessage(t.toString())
-			.setPositiveButton("OK", null)
-			.show();
+		.setTitle("Error")
+		.setMessage(t.toString())
+		.setPositiveButton("OK", null)
+		.show();
 	}
-	
+
 	class CommentEntry {
 		String postID="";
 		String commentID="";
@@ -895,9 +846,9 @@ else{
 		String authorEmail="";
 		String dateCreatedFormatted="";
 		URI profileImageUrl=null;
-		
+
 		CommentEntry(String postID, String commentID, String name, String dateCreatedFormatted,
-									String comment, String status, String postTitle, String authorURL, String authorEmail, URI profileImageUrl) {
+				String comment, String status, String postTitle, String authorURL, String authorEmail, URI profileImageUrl) {
 			this.postID=postID;
 			this.commentID=commentID;
 			this.name=name;
@@ -911,20 +862,20 @@ else{
 			this.dateCreatedFormatted=dateCreatedFormatted;
 		}
 	}
-	
+
 	class CommentAdapter extends ArrayAdapter<CommentEntry> {
-		 CommentAdapter() {
+		CommentAdapter() {
 			super(moderateCommentsTab.this, R.layout.row, model);
 		}
-		
+
 		public View getView(int position, View convertView,
-												ViewGroup parent) {
+				ViewGroup parent) {
 			View row=convertView;
 			CommentEntryWrapper wrapper=null;
-			
+
 			if (row==null) {													
 				LayoutInflater inflater=getLayoutInflater();
-				
+
 				row=inflater.inflate(R.layout.row, null);
 				wrapper=new CommentEntryWrapper(row);
 				row.setTag(wrapper);
@@ -934,11 +885,11 @@ else{
 			}
 			row.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
 			wrapper.populateFrom(getItem(position), position);
-			
+
 			return(row);
 		}
 	}
-	
+
 	class CommentEntryWrapper {
 		private TextView name=null;
 		private TextView emailURL=null;
@@ -949,29 +900,29 @@ else{
 		private View row=null;
 		private CheckBox bulkCheck=null;
 		private RelativeLayout bulkEditGroup=null;
-		
+
 		CommentEntryWrapper(View row) {
 			this.row=row;
-			
+
 		}
-		
+
 		void populateFrom(CommentEntry s, final int position) {
 			getName().setText(s.name);
-		
+
 			String fEmailURL = s.authorURL;
 			// use the required email address if the commenter didn't leave a url
 			if (fEmailURL == ""){
 				fEmailURL = s.emailURL;
 			}
-			
+
 			getEmailURL().setText(fEmailURL);
 			getComment().setText(s.comment);
 			getPostTitle().setText(getResources().getText(R.string.on) + " " + s.postTitle);
-			
+
 			row.setId(Integer.valueOf(s.commentID));
-			
+
 			String prettyComment,textColor = "";
-			
+
 			if (s.status.equals("spam")){
 				prettyComment = getResources().getText(R.string.spam).toString();
 				textColor = "#FF0000";
@@ -984,28 +935,27 @@ else{
 				prettyComment = getResources().getText(R.string.approved).toString();
 				textColor = "#006505";
 			}
-			
+
 			if (inModeration){
 				getBulkEditGroup().setVisibility(View.VISIBLE);
 			}
 			else{
 				getBulkEditGroup().setVisibility(View.GONE);
 			}
-			
+
 			getStatus().setText(prettyComment);
 			getStatus().setTextColor(Color.parseColor(textColor));
-			
+
 			getBulkCheck().setChecked(Boolean.parseBoolean(checkedComments.get(position).toString()));
 			getBulkCheck().setTag(position);
 			getBulkCheck().setOnClickListener(new OnClickListener() { 
 
-					public void onClick(View arg0) {
-                    //Toast.makeText(moderateCommentsTab.this, "CLICK: " + getBulkCheck().getTag(), Toast.LENGTH_SHORT).show(); 
+				public void onClick(View arg0) { 
 					checkedComments.set(position, String.valueOf(getBulkCheck().isChecked()));
 					showOrHideModerateButtons();
-					} 
+				} 
 			}); 
-			
+
 			if (s.profileImageUrl!=null) {
 				try {
 					getAvatar().setImageResource(R.drawable.placeholder);
@@ -1021,68 +971,68 @@ else{
 			if (name==null) {
 				name=(TextView)row.findViewById(R.id.name);
 			}
-			
+
 			return(name);
 		}
-		
+
 		TextView getEmailURL() {
 			if (emailURL==null) {
 				emailURL=(TextView)row.findViewById(R.id.email_url);
 			}
-			
+
 			return(emailURL);
 		}
-		
+
 		TextView getComment() {
 			if (comment==null) {
 				comment=(TextView)row.findViewById(R.id.comment);
 			}
-			
+
 			return(comment);
 		}
-		
+
 		TextView getStatus() {
 			if (status==null) {
 				status=(TextView)row.findViewById(R.id.status);
 			}
-			
+
 			status.setTextSize(10);
-			
+
 			return(status);
 		}
-		
+
 		TextView getPostTitle() {
 			if (postTitle==null) {
 				postTitle=(TextView)row.findViewById(R.id.postTitle);
 			}
-			
+
 			return(postTitle);
 		}
-		
+
 		ImageView getAvatar() {
 			if (avatar==null) {
 				avatar=(ImageView)row.findViewById(R.id.avatar);
 			}
-			
+
 			return(avatar);
 		}
-		
+
 		CheckBox getBulkCheck() {
 			if (bulkCheck==null) {
 				bulkCheck=(CheckBox)row.findViewById(R.id.bulkCheck);
 			}
-			
+
 			return(bulkCheck);
 		}
-		
+
 		RelativeLayout getBulkEditGroup() {
 			if (bulkEditGroup==null) {
 				bulkEditGroup=(RelativeLayout)row.findViewById(R.id.bulkEditGroup);
 			}
-			
+
 			return(bulkEditGroup);
 		}
-		
+
 		protected void showOrHideModerateButtons() {
 			int previousTotal = checkedCommentTotal;
 			checkedCommentTotal = 0;
@@ -1095,148 +1045,140 @@ else{
 				showModerationBar();
 			}
 			if (checkedCommentTotal == 0 && previousTotal > 0){
-				
+
 				hideModerationBar();
-				
+
 			}
-			
+
 		}
 	}
-	
+
 	public static String getMd5Hash(String input) {
-	    try     {
-	            MessageDigest md = MessageDigest.getInstance("MD5");
-	            byte[] messageDigest = md.digest(input.getBytes());
-	            BigInteger number = new BigInteger(1,messageDigest);
-	            String md5 = number.toString(16);
-	       
-	            while (md5.length() < 32)
-	                    md5 = "0" + md5;
-	       
-	            return md5;
-	    } catch(NoSuchAlgorithmException e) {
-	            Log.e("MD5", e.getMessage());
-	            return null;
-	    }
+		try     {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] messageDigest = md.digest(input.getBytes());
+			BigInteger number = new BigInteger(1,messageDigest);
+			String md5 = number.toString(16);
+
+			while (md5.length() < 32)
+				md5 = "0" + md5;
+
+			return md5;
+		} catch(NoSuchAlgorithmException e) {
+			Log.e("MD5", e.getMessage());
+			return null;
+		}
 	}
-	
+
 	public void hideModerationBar() {
 		AnimationSet set = new AnimationSet(true);
+		Animation animation = new AlphaAnimation(1.0f, 0.0f);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 1.0f
+		);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.moderationBar);       
+		moderationBar.clearAnimation();
+		moderationBar.startAnimation(set);
+		moderationBar.setVisibility(View.INVISIBLE);
 
-        Animation animation = new AlphaAnimation(1.0f, 0.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 1.0f
-        );
-        animation.setDuration(500);
-        set.addAnimation(animation);
-;
-        RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.moderationBar);       
-        moderationBar.clearAnimation();
-        moderationBar.startAnimation(set);
-        moderationBar.setVisibility(View.INVISIBLE);
-		
 	}
-	
+
 	public void showModerationBar(){
 		AnimationSet set = new AnimationSet(true);
 
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 1.0f,Animation.RELATIVE_TO_SELF, 0.0f
-        );
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.moderationBar);       
-        moderationBar.setVisibility(View.VISIBLE);
-        moderationBar.startAnimation(set);
+		Animation animation = new AlphaAnimation(0.0f, 1.0f);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+				Animation.RELATIVE_TO_SELF, 1.0f,Animation.RELATIVE_TO_SELF, 0.0f
+		);
+		animation.setDuration(500);
+		set.addAnimation(animation);
+		RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.moderationBar);       
+		moderationBar.setVisibility(View.VISIBLE);
+		moderationBar.startAnimation(set);
 	}
 
 	//Add settings to menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    super.onCreateOptionsMenu(menu);
-	    menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
-	    MenuItem menuItem1 = menu.findItem(0);
-	    menuItem1.setIcon(R.drawable.ic_menu_prefs);
-	    menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
-	    MenuItem menuItem2 = menu.findItem(1);
-	    menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
-	    
-	    return true;
+		super.onCreateOptionsMenu(menu);
+		menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
+		MenuItem menuItem1 = menu.findItem(0);
+		menuItem1.setIcon(R.drawable.ic_menu_prefs);
+		menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
+		MenuItem menuItem2 = menu.findItem(1);
+		menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
+		return true;
 	}
+	
 	//Menu actions
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item){
-	    switch (item.getItemId()) {
-	    case 0:
-	    	
-	    	Bundle bundle = new Bundle();
+		switch (item.getItemId()) {
+		case 0:
+
+			Bundle bundle = new Bundle();
 			bundle.putString("id", id);
 			bundle.putString("accountName", accountName);
-	    	Intent i = new Intent(this, settings.class);
-	    	i.putExtras(bundle);
-	    	startActivity(i);
-	    	
-	    	return true;
+			Intent i = new Intent(this, settings.class);
+			i.putExtras(bundle);
+			startActivity(i);
+			return true;
 		case 1:
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-			  dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
-	      dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
-	      dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
-	    		  DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int whichButton) {
-	                // User clicked Accept so set that they've agreed to the eula.
-	            	WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-	              boolean deleteSuccess = settingsDB.deleteAccount(moderateCommentsTab.this, id);
-	              if (deleteSuccess)
-	              {
-	            	  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.blog_removed_successfully),
-	                          Toast.LENGTH_SHORT).show();
-	            	  finish();
-	              }
-	              else
-	              {
-	            	  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-	      			  dialogBuilder.setTitle(getResources().getText(R.string.error));
-	                  dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
-	                  dialogBuilder.setPositiveButton("OK",  new
-	                		  DialogInterface.OnClickListener() {
-	                        public void onClick(DialogInterface dialog, int whichButton) {
-	                            // just close the dialog
-	                        	
-	                    
-	                        }
-	                    });
-	                  dialogBuilder.setCancelable(true);
-	                 dialogBuilder.create().show();
-	              }
-	        
-	            }
-	        });
-	      dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
-	    		  DialogInterface.OnClickListener() {
-	            public void onClick(DialogInterface dialog, int whichButton) {
-	            	//just close the window
-	            }
-	        });
-	      dialogBuilder.setCancelable(false);
-	     dialogBuilder.create().show();
-		
-		
-		return true;
+			dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+			dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+			dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+					DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// User clicked Accept so set that they've agreed to the eula.
+					WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
+					boolean deleteSuccess = settingsDB.deleteAccount(moderateCommentsTab.this, id);
+					if (deleteSuccess)
+					{
+						Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.blog_removed_successfully),
+								Toast.LENGTH_SHORT).show();
+						finish();
+					}
+					else
+					{
+						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+						dialogBuilder.setTitle(getResources().getText(R.string.error));
+						dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
+						dialogBuilder.setPositiveButton("OK",  new
+								DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// just close the dialog
+
+
+							}
+						});
+						dialogBuilder.setCancelable(true);
+						dialogBuilder.create().show();
+					}
+
+				}
+			});
+			dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
+					DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					//just close the window
+				}
+			});
+			dialogBuilder.setCancelable(false);
+			dialogBuilder.create().show();
+			return true;
+		}
+		return false;	
 	}
-	  return false;	
-	}
-	
+
 	interface XMLRPCMethodCallback {
 		void callFinished(Object[] result);
 	}
@@ -1249,7 +1191,6 @@ else{
 		public XMLRPCMethod(String method, XMLRPCMethodCallback callBack) {
 			this.method = method;
 			this.callBack = callBack;
-			
 			handler = new Handler();
 		}
 		public void call() {
@@ -1265,11 +1206,11 @@ else{
 				//get the total comments
 				HashMap countResult = new HashMap();
 				Object[] countParams = {
-		        		sBlogId,
-		        		sUsername,
-		        		sPassword,
-		        		0
-		        };
+						sBlogId,
+						sUsername,
+						sPassword,
+						0
+				};
 				try {
 					countResult = (HashMap) client.call("wp.getCommentCount", countParams);
 					totalComments = Integer.valueOf(countResult.get("awaiting_moderation").toString()) + Integer.valueOf(countResult.get("approved").toString());
@@ -1289,22 +1230,21 @@ else{
 					public void run() {
 						if (pd.isShowing())
 						{
-						pd.dismiss();
+							pd.dismiss();
 						}
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                              // Just close the window.
-	                      
-	                          }
-	                      });
-			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
+						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+						dialogBuilder.setMessage(e.getFaultString());
+						dialogBuilder.setPositiveButton("OK",  new
+								DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// Just close the window.
 
+							}
+						});
+						dialogBuilder.setCancelable(true);
+						dialogBuilder.create().show();
 					}
 				});
 			} catch (final XMLRPCException e) {
@@ -1312,28 +1252,28 @@ else{
 					public void run() {
 						if (pd.isShowing())
 						{
-						pd.dismiss();
+							pd.dismiss();
 						}
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-			              dialogBuilder.setMessage(e.getMessage());
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                        public void onClick(DialogInterface dialog, int whichButton) {
-	                            // Just close the window.
-	                    
-	                        }
-	                    });
-			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
-						
+						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+						dialogBuilder.setMessage(e.getMessage());
+						dialogBuilder.setPositiveButton("OK",  new
+								DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// Just close the window.
+
+							}
+						});
+						dialogBuilder.setCancelable(true);
+						dialogBuilder.create().show();
+
 					}
 				});
 			}
 		}
 	}
-	
+
 	interface XMLRPCMethodCallbackEditComment {
 		void callFinished(Object result);
 	}
@@ -1347,16 +1287,13 @@ else{
 			this.method = method;
 			this.callBack = callBack;
 			handler = new Handler();
-			
 		}
 		public void call() {
 			call(null);
 		}
 		public void call(Object[] params) {
 			this.params = params;
-			
 			start();
-			
 		}
 		@Override
 		public void run() {
@@ -1364,9 +1301,7 @@ else{
 				final Object result = (Object) client.call(method, params);
 				handler.post(new Runnable() {
 					public void run() {
-						
 						callBack.callFinished(result);
-						
 					}
 				});
 			} catch (final XMLRPCFault e) {
@@ -1374,84 +1309,81 @@ else{
 					public void run() {
 						dismissDialog(ID_DIALOG_MODERATING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                              // Just close the window.
-	                      
-	                          }
-	                      });
-			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
+						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+						dialogBuilder.setMessage(e.getFaultString());
+						dialogBuilder.setPositiveButton("OK",  new
+								DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// Just close the window.
 
+							}
+						});
+						dialogBuilder.setCancelable(true);
+						dialogBuilder.create().show();
 					}
 				});
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
-
 						Throwable couse = e.getCause();
 						dismissDialog(ID_DIALOG_MODERATING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-			              dialogBuilder.setMessage(e.getMessage());
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                        public void onClick(DialogInterface dialog, int whichButton) {
-	                            // Just close the window.
-	                    
-	                        }
-	                    });
-			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
+						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+						dialogBuilder.setMessage(e.getMessage());
+						dialogBuilder.setPositiveButton("OK",  new
+								DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// Just close the window.
+							}
+						});
+						dialogBuilder.setCancelable(true);
+						dialogBuilder.create().show();
 					}
 				});
 			}
 		}
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
-	if(id == ID_DIALOG_MODERATING){
-	ProgressDialog loadingDialog = new ProgressDialog(this);
-	if (checkedCommentTotal <= 1){
-		loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
-	}
-	else{
-		loadingDialog.setMessage(getResources().getText(R.string.moderating_comments));
-	}
-	loadingDialog.setIndeterminate(true);
-	loadingDialog.setCancelable(false);
-	return loadingDialog;
-	}
-	else if (id == ID_DIALOG_REPLYING){
-		ProgressDialog loadingDialog = new ProgressDialog(this);
-		loadingDialog.setMessage(getResources().getText(R.string.replying_comment));
-		loadingDialog.setIndeterminate(true);
-		loadingDialog.setCancelable(false);
-		return loadingDialog;
-	}
-	else if (id == ID_DIALOG_DELETING){
-		ProgressDialog loadingDialog = new ProgressDialog(this);
-		if (checkedCommentTotal <= 1){
-			loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));
+		if(id == ID_DIALOG_MODERATING){
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			if (checkedCommentTotal <= 1){
+				loadingDialog.setMessage(getResources().getText(R.string.moderating_comment));
+			}
+			else{
+				loadingDialog.setMessage(getResources().getText(R.string.moderating_comments));
+			}
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(false);
+			return loadingDialog;
 		}
-		else{
-			loadingDialog.setMessage(getResources().getText(R.string.deleting_comments));
+		else if (id == ID_DIALOG_REPLYING){
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			loadingDialog.setMessage(getResources().getText(R.string.replying_comment));
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(false);
+			return loadingDialog;
 		}
-		loadingDialog.setIndeterminate(true);
-		loadingDialog.setCancelable(false);
-		return loadingDialog;
-	}
-	
-	return super.onCreateDialog(id);
+		else if (id == ID_DIALOG_DELETING){
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			if (checkedCommentTotal <= 1){
+				loadingDialog.setMessage(getResources().getText(R.string.deleting_comment));
+			}
+			else{
+				loadingDialog.setMessage(getResources().getText(R.string.deleting_comments));
+			}
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(false);
+			return loadingDialog;
+		}
+
+		return super.onCreateDialog(id);
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		
+
 		super.onConfigurationChanged(newConfig); 
 	}
 
@@ -1459,323 +1391,320 @@ else{
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-	     /* Switch on the ID of the item, to get what the user selected. */
-	     switch (item.getItemId()) {
-	          case 0:
-	        	showDialog(ID_DIALOG_MODERATING);
-	        	  new Thread() {
-	                  public void run() {
-	                	  Looper.prepare();
-				changeCommentStatus("approve", selectedID, rowID);
-	                  }
-	              }.start();
-	        	  return true;
-	          case 1:
-	        	  showDialog(ID_DIALOG_MODERATING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-	        	  changeCommentStatus("hold", selectedID, rowID);
-	                  }
-	              }.start();
-	              
-	        	  return true;
-	          case 2:
-	        	  showDialog(ID_DIALOG_MODERATING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-	        	  changeCommentStatus("spam", selectedID, rowID);
-	                  }
-	              }.start();
-	             return true;
-	          case 3:
-	        	  Intent i = new Intent(this, replyToComment.class);
-	        	  i.putExtra("commentID", selectedID);
-	        	  i.putExtra("accountName", accountName);
-	        	  i.putExtra("postID", selectedPostID);
-	        	  startActivityForResult(i, 0);
-	        	  
-	             return true;
-	          case 4:
-	        	  showDialog(ID_DIALOG_DELETING);
-	        	  new Thread() {
-	                  public void run() { 
-	                	  Looper.prepare();
-	        	  deleteComment(selectedID);
-	                  }
-	              }.start();
-	             return true;
-	        	  
-	     }
-	     return false;
+		/* Switch on the ID of the item, to get what the user selected. */
+		switch (item.getItemId()) {
+		case 0:
+			showDialog(ID_DIALOG_MODERATING);
+			new Thread() {
+				public void run() {
+					Looper.prepare();
+					changeCommentStatus("approve", selectedID, rowID);
+				}
+			}.start();
+			return true;
+		case 1:
+			showDialog(ID_DIALOG_MODERATING);
+			new Thread() {
+				public void run() { 
+					Looper.prepare();
+					changeCommentStatus("hold", selectedID, rowID);
+				}
+			}.start();
+
+			return true;
+		case 2:
+			showDialog(ID_DIALOG_MODERATING);
+			new Thread() {
+				public void run() { 
+					Looper.prepare();
+					changeCommentStatus("spam", selectedID, rowID);
+				}
+			}.start();
+			return true;
+		case 3:
+			Intent i = new Intent(this, replyToComment.class);
+			i.putExtra("commentID", selectedID);
+			i.putExtra("accountName", accountName);
+			i.putExtra("postID", selectedPostID);
+			startActivityForResult(i, 0);
+
+			return true;
+		case 4:
+			showDialog(ID_DIALOG_DELETING);
+			new Thread() {
+				public void run() { 
+					Looper.prepare();
+					deleteComment(selectedID);
+				}
+			}.start();
+			return true;
+
+		}
+		return false;
 	}
 
 	private void changeCommentStatus(final String newStatus, final int selCommentID, int position) {
-
-	    		String sSelCommentID = String.valueOf(selCommentID);
-	    		ListView lv = getListView();
-	    		CommentEntry ce = (CommentEntry)lv.getItemAtPosition(position);
-	        	Vector settings = new Vector();
-	            WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-	        	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-	        	String sURL = "";
-	        	if (settings.get(0).toString().contains("xmlrpc.php"))
-	        	{
-	        		sURL = settings.get(0).toString();
-	        	}
-	        	else
-	        	{
-	        		sURL = settings.get(0).toString() + "xmlrpc.php";
-	        	}
-	    		String sUsername = settings.get(2).toString();
-	    		String sPassword = settings.get(3).toString();
-	    		int sBlogId = Integer.parseInt(settings.get(10).toString());
-	        	
-	        	client = new XMLRPCClient(sURL);
- 
-	        		HashMap contentHash, postHash = new HashMap();
-	        		contentHash = (HashMap) allComments.get(sSelCommentID);
-			        postHash.put("status", newStatus);
-			        Date d = new Date();
-			        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
-			        String cDate = contentHash.get("commentDate").toString().replace("America/Los_Angeles", "PST");
-			        try{  
-			        	d = sdf.parse(cDate);
-			        } catch (ParseException pe){  
-			            pe.printStackTrace();  
-			        }  
-			        postHash.put("date_created_gmt", d);
-			        postHash.put("content", contentHash.get("comment"));
-			        postHash.put("author", contentHash.get("author"));
-			        postHash.put("author_url", contentHash.get("url"));
-			        postHash.put("author_email", contentHash.get("email"));
-
-			        
-		        Object[] params = {
-		        		sBlogId,
-		        		sUsername,
-		        		sPassword,
-		        		sSelCommentID,
-		        		postHash
-		        };
-		        
-		        Object result = null;
-		        try {
-		    		result = (Object) client.call("wp.editComment", params);
-		    		boolean bResult = Boolean.parseBoolean(result.toString());
-		    		if (bResult){
-		    			ce.status = newStatus;
-		    			model.set(position, ce);
-		    			settingsDB.updateCommentStatus(moderateCommentsTab.this, id, ce.commentID, newStatus);
-		    		}
-		    		dismissDialog(ID_DIALOG_MODERATING);
-		    		Thread action = new Thread() 
-					{ 
-					  public void run() 
-					  {
-						  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
-					  } 
-					}; 
-					this.runOnUiThread(action);
-					Thread action2 = new Thread() 
-					{ 
-					  public void run() 
-					  {
-						  thumbs.notifyDataSetChanged();				  
-					  } 
-					}; 
-					this.runOnUiThread(action2);
-					
-		    	} catch (final XMLRPCException e) {
-		    		dismissDialog(ID_DIALOG_MODERATING);
-		    		Thread action3 = new Thread() 
-					{ 
-					  public void run() 
-					  {
-						  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-						  dialogBuilder.setMessage(e.getMessage());
-						  dialogBuilder.setPositiveButton("OK",  new
-		          		  DialogInterface.OnClickListener() {
-							  public void onClick(DialogInterface dialog, int whichButton) {
-		                  // Just close the window.
-		              	
-							  }
-						  });
-						  dialogBuilder.setCancelable(true);
-						  dialogBuilder.create().show();
-					  	}
-					  }; 
-					  this.runOnUiThread(action3);
-		    	}	
-	}
-	
-	private void deleteComment(final int selCommentID) {
-
+		//for individual comment moderation
 		String sSelCommentID = String.valueOf(selCommentID);
-    	Vector settings = new Vector();
-        WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-    	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-        
-    	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = settings.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
-    	}
+		ListView lv = getListView();
+		CommentEntry ce = (CommentEntry)lv.getItemAtPosition(position);
+		Vector settings = new Vector();
+		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
+		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
+		String sURL = "";
+		if (settings.get(0).toString().contains("xmlrpc.php"))
+		{
+			sURL = settings.get(0).toString();
+		}
+		else
+		{
+			sURL = settings.get(0).toString() + "xmlrpc.php";
+		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
 		int sBlogId = Integer.parseInt(settings.get(10).toString());
-    	
-    	client = new XMLRPCClient(sURL);
-	        
-        Object[] params = {
-        		sBlogId,
-        		sUsername,
-        		sPassword,
-        		selCommentID
-        };
-        
-        Object result = null;
-        try {
-    		result = (Object) client.call("wp.deleteComment", params);
-    		dismissDialog(ID_DIALOG_DELETING);
-    		Thread action = new Thread() 
+
+		client = new XMLRPCClient(sURL);
+
+		HashMap contentHash, postHash = new HashMap();
+		contentHash = (HashMap) allComments.get(sSelCommentID);
+		postHash.put("status", newStatus);
+		Date d = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
+		String cDate = contentHash.get("commentDate").toString();
+		try{  
+			d = sdf.parse(cDate);
+		} catch (ParseException pe){  
+			pe.printStackTrace();  
+		}  
+		postHash.put("date_created_gmt", d);
+		postHash.put("content", contentHash.get("comment"));
+		postHash.put("author", contentHash.get("author"));
+		postHash.put("author_url", contentHash.get("url"));
+		postHash.put("author_email", contentHash.get("email"));
+
+
+		Object[] params = {
+				sBlogId,
+				sUsername,
+				sPassword,
+				sSelCommentID,
+				postHash
+		};
+
+		Object result = null;
+		try {
+			result = (Object) client.call("wp.editComment", params);
+			boolean bResult = Boolean.parseBoolean(result.toString());
+			if (bResult){
+				ce.status = newStatus;
+				model.set(position, ce);
+				settingsDB.updateCommentStatus(moderateCommentsTab.this, id, ce.commentID, newStatus);
+			}
+			dismissDialog(ID_DIALOG_MODERATING);
+			Thread action = new Thread() 
 			{ 
-			  public void run() 
-			  {
-				  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
-			  } 
+				public void run() 
+				{
+					Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
+				} 
 			}; 
 			this.runOnUiThread(action);
 			Thread action2 = new Thread() 
 			{ 
-			  public void run() 
-			  {
-				  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
-				  refreshComments(false, true, false);				  } 
+				public void run() 
+				{
+					thumbs.notifyDataSetChanged();				  
+				} 
 			}; 
 			this.runOnUiThread(action2);
-			
-    	} catch (final XMLRPCException e) {
-    		dismissDialog(ID_DIALOG_DELETING);
-    		Thread action3 = new Thread() 
+
+		} catch (final XMLRPCException e) {
+			dismissDialog(ID_DIALOG_MODERATING);
+			Thread action3 = new Thread() 
 			{ 
-			  public void run() 
-			  {
-    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-            dialogBuilder.setMessage(e.getMessage());
-            dialogBuilder.setPositiveButton("OK",  new
-          		  DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int whichButton) {
-                  // Just close the window.
-              	
-              }
-          });
-            dialogBuilder.setCancelable(true);
-           dialogBuilder.create().show();
-			  }
-			  }; 
-				this.runOnUiThread(action3);
-    	}	
-}
-	
+				public void run() 
+				{
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+					dialogBuilder.setMessage(e.getMessage());
+					dialogBuilder.setPositiveButton("OK",  new
+							DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							// Just close the window.
+
+						}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			}; 
+			this.runOnUiThread(action3);
+		}	
+	}
+
+	private void deleteComment(final int selCommentID) {
+		//delete individual comment
+		String sSelCommentID = String.valueOf(selCommentID);
+		Vector settings = new Vector();
+		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
+		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
+
+		String sURL = "";
+		if (settings.get(0).toString().contains("xmlrpc.php"))
+		{
+			sURL = settings.get(0).toString();
+		}
+		else
+		{
+			sURL = settings.get(0).toString() + "xmlrpc.php";
+		}
+		String sUsername = settings.get(2).toString();
+		String sPassword = settings.get(3).toString();
+		int sBlogId = Integer.parseInt(settings.get(10).toString());
+
+		client = new XMLRPCClient(sURL);
+
+		Object[] params = {
+				sBlogId,
+				sUsername,
+				sPassword,
+				selCommentID
+		};
+
+		Object result = null;
+		try {
+			result = (Object) client.call("wp.deleteComment", params);
+			dismissDialog(ID_DIALOG_DELETING);
+			Thread action = new Thread() 
+			{ 
+				public void run() 
+				{
+					Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.comment_moderated), Toast.LENGTH_SHORT).show();
+				} 
+			}; 
+			this.runOnUiThread(action);
+			Thread action2 = new Thread() 
+			{ 
+				public void run() 
+				{
+					pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+					refreshComments(false, true, false);				  } 
+			}; 
+			this.runOnUiThread(action2);
+
+		} catch (final XMLRPCException e) {
+			dismissDialog(ID_DIALOG_DELETING);
+			Thread action3 = new Thread() 
+			{ 
+				public void run() 
+				{
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+					dialogBuilder.setMessage(e.getMessage());
+					dialogBuilder.setPositiveButton("OK",  new
+							DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							// Just close the window.
+
+						}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			}; 
+			this.runOnUiThread(action3);
+		}	
+	}
+
 	private void replyToComment(final String postID, final int commentID, final String comment) {
+		//reply to individual comment
+		Vector settings = new Vector();
+		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
+		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 
-		
-    	Vector settings = new Vector();
-        WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-    	settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-    
-    	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = settings.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
-    	}
+		String sURL = "";
+		if (settings.get(0).toString().contains("xmlrpc.php"))
+		{
+			sURL = settings.get(0).toString();
+		}
+		else
+		{
+			sURL = settings.get(0).toString() + "xmlrpc.php";
+		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
 		int sBlogId = Integer.parseInt(settings.get(10).toString());
-    	
-    	client = new XMLRPCClient(sURL);
-    	
-    	ListView lv = getListView(); 
-    	
-    	Object curListItem;
-    	ListAdapter la = lv.getAdapter();
-    	
-        
-    		HashMap replyHash = new HashMap();
-	        replyHash.put("comment_parent", commentID);
-	        replyHash.put("content", comment);
-	        replyHash.put("author", "");
-	        replyHash.put("author_url", "");
-	        replyHash.put("author_email", "");
 
-	        
-        Object[] params = {
-        		sBlogId,
-        		sUsername,
-        		sPassword,
-        		Integer.valueOf(postID),
-        		replyHash
-        };
-        
-        Object result = null;
-        try {
-    		result = (Object) client.call("wp.newComment", params);
-    		dismissDialog(ID_DIALOG_REPLYING);
-    		Thread action = new Thread() 
+		client = new XMLRPCClient(sURL);
+
+		ListView lv = getListView(); 
+
+		Object curListItem;
+		ListAdapter la = lv.getAdapter();
+
+		HashMap replyHash = new HashMap();
+		replyHash.put("comment_parent", commentID);
+		replyHash.put("content", comment);
+		replyHash.put("author", "");
+		replyHash.put("author_url", "");
+		replyHash.put("author_email", "");
+
+		Object[] params = {
+				sBlogId,
+				sUsername,
+				sPassword,
+				Integer.valueOf(postID),
+				replyHash
+		};
+
+		Object result = null;
+		try {
+			result = (Object) client.call("wp.newComment", params);
+			dismissDialog(ID_DIALOG_REPLYING);
+			Thread action = new Thread() 
 			{ 
-			  public void run() 
-			  {
-				  Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.reply_added), Toast.LENGTH_SHORT).show();
-			  } 
+				public void run() 
+				{
+					Toast.makeText(moderateCommentsTab.this, getResources().getText(R.string.reply_added), Toast.LENGTH_SHORT).show();
+				} 
 			}; 
 			this.runOnUiThread(action);
 			Thread action2 = new Thread() 
 			{ 
-			  public void run() 
-			  {
-				  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
-				  refreshComments(false, true, false);				  } 
+				public void run() 
+				{
+					pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+					refreshComments(false, true, false);				  } 
 			}; 
 			this.runOnUiThread(action2);
-			
-    	} catch (final XMLRPCException e) {
-    		dismissDialog(ID_DIALOG_REPLYING);
-    		Thread action3 = new Thread() 
+
+		} catch (final XMLRPCException e) {
+			dismissDialog(ID_DIALOG_REPLYING);
+			Thread action3 = new Thread() 
 			{ 
-			  public void run() 
-			  {
-    		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
-			  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-            dialogBuilder.setMessage(e.getMessage());
-            dialogBuilder.setPositiveButton("OK",  new
-          		  DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int whichButton) {
-                  // Just close the window.
-              	
-              }
-          });
-            dialogBuilder.setCancelable(true);
-           dialogBuilder.create().show();
-			  }
-			  }; 
-				this.runOnUiThread(action3);
-           
-    	}
-    		
-}
-	
+				public void run() 
+				{
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
+					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+					dialogBuilder.setMessage(e.getMessage());
+					dialogBuilder.setPositiveButton("OK",  new
+							DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							// Just close the window.
+
+						}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			}; 
+			this.runOnUiThread(action3);
+
+		}
+
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -1783,68 +1712,68 @@ else{
 		if (data != null)
 		{
 
-		Bundle extras = data.getExtras();
+			Bundle extras = data.getExtras();
 
-		switch(requestCode) {
-		case 0:
-		    final String returnText = extras.getString("replyText");
-		    
-		    if (!returnText.equals("CANCEL")){
-		    	final String postID = extras.getString("postID");
-		    	final int commentID = extras.getInt("commentID");
-		    	showDialog(ID_DIALOG_REPLYING);
-					  				  
-					  new Thread(new Runnable(){
-						  public void run(){
-							  Looper.prepare();
-							  pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
-							  replyToComment(postID, commentID, returnText);
-						  }
-						  }).start();
-		    }
-		    
-		    
-		    break;
-		case 1:
-		    if (resultCode == RESULT_OK){
-		    
-		    	String comment_id;
-				final String action;
-		    	comment_id = extras.getString("comment_id");
-		    	final int position = extras.getInt("position");
-		    	
-		    	action = extras.getString("action");
-		    	if (action.equals("approve") || action.equals("hold") || action.equals("spam")){
-		    		final int commentID = Integer.parseInt(comment_id);
-		    		showDialog(ID_DIALOG_MODERATING);
-		        	  new Thread() {
-		                  public void run() {
-		                	  Looper.prepare();
-		                	  changeCommentStatus(action, commentID, position);
-		                  }
-		        	  	}.start();
-		    	}
-		    	else if (action.equals("delete")){
-		    		final int commentID_del = Integer.parseInt(comment_id);
-		    		showDialog(ID_DIALOG_DELETING);
-		    		new Thread() {
-		                  public void run() {	    		
-		    		deleteComment(commentID_del);
-		                  }
-		    		}.start();
-		    	}
-		    	else if (action.equals("reply")){
-		    		
-		    		Intent i = new Intent(this, replyToComment.class);
-		        	i.putExtra("commentID", Integer.parseInt(comment_id));
-		        	i.putExtra("accountName", accountName);
-		        	i.putExtra("postID", extras.getString("post_id"));
-		        	startActivityForResult(i, 0);
-		    	}
-	
-		    }
-		    break;
-		}
+			switch(requestCode) {
+			case 0:
+				final String returnText = extras.getString("replyText");
+
+				if (!returnText.equals("CANCEL")){
+					final String postID = extras.getString("postID");
+					final int commentID = extras.getInt("commentID");
+					showDialog(ID_DIALOG_REPLYING);
+
+					new Thread(new Runnable(){
+						public void run(){
+							Looper.prepare();
+							pd = new ProgressDialog(moderateCommentsTab.this);  // to avoid crash
+							replyToComment(postID, commentID, returnText);
+						}
+					}).start();
+				}
+
+
+				break;
+			case 1:
+				if (resultCode == RESULT_OK){
+
+					String comment_id;
+					final String action;
+					comment_id = extras.getString("comment_id");
+					final int position = extras.getInt("position");
+
+					action = extras.getString("action");
+					if (action.equals("approve") || action.equals("hold") || action.equals("spam")){
+						final int commentID = Integer.parseInt(comment_id);
+						showDialog(ID_DIALOG_MODERATING);
+						new Thread() {
+							public void run() {
+								Looper.prepare();
+								changeCommentStatus(action, commentID, position);
+							}
+						}.start();
+					}
+					else if (action.equals("delete")){
+						final int commentID_del = Integer.parseInt(comment_id);
+						showDialog(ID_DIALOG_DELETING);
+						new Thread() {
+							public void run() {	    		
+								deleteComment(commentID_del);
+							}
+						}.start();
+					}
+					else if (action.equals("reply")){
+
+						Intent i = new Intent(this, replyToComment.class);
+						i.putExtra("commentID", Integer.parseInt(comment_id));
+						i.putExtra("accountName", accountName);
+						i.putExtra("postID", extras.getString("post_id"));
+						startActivityForResult(i, 0);
+					}
+
+				}
+				break;
+			}
 		}
 	}
 }

@@ -228,6 +228,8 @@ res/drawable-hdpi-v4/pages_tab_active.png -text
 res/drawable-hdpi-v4/posts_tab.png -text
 res/drawable-hdpi-v4/posts_tab_active.png -text
 res/drawable-hdpi-v4/refresh.png -text
+res/drawable-hdpi-v4/stats_tab.png -text
+res/drawable-hdpi-v4/stats_tab_active.png -text
 res/drawable-hdpi-v4/wp_check_off.png -text
 res/drawable-hdpi-v4/wp_check_on.png -text
 res/drawable-hdpi-v4/wp_logo.png -text
@@ -272,6 +274,11 @@ res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/refresh.png -text
 res/drawable/spinner_white_48.png -text
+res/drawable/stats_tab.png -text
+res/drawable/stats_tab_active.png -text
+res/drawable/tab_bg_selector.xml -text
+res/drawable/tab_color_selector.xml -text
+res/drawable/tab_unselected.xml -text
 res/drawable/title_bg.xml -text
 res/drawable/video.png -text
 res/drawable/wordpress_home.png -text
@@ -312,6 +319,7 @@ res/layout/select_categories.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/splashscreen.xml -text
+res/layout/stats_tab_selector.xml -text
 res/layout/table_row.xml -text
 res/layout/table_row_header.xml -text
 res/layout/view_comment.xml -text

@@ -1,17 +1,9 @@
 package org.xmlrpc.android;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.PushbackInputStream;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -19,22 +11,18 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.Map;
-import java.util.Random;
-import java.net.Socket;
-import org.apache.http.HttpConnection;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.wordpress.android.ConnectionClient;
-import org.wordpress.android.TrustAllSSLSocketFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
@@ -68,7 +56,7 @@ public class XMLRPCClient {
 		
 		postMethod.addHeader("charset", "UTF-8");
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/1.2");
+		postMethod.addHeader("User-Agent", "wp-android/1.3");
 		
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);

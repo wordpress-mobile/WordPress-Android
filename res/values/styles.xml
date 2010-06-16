@@ -100,6 +100,18 @@
         <item name="android:progressBarStyleInverse">@android:style/Widget.ProgressBar.Inverse</item>
 		<item name="android:progressBarStyleSmallInverse">@android:style/Widget.ProgressBar.Small.Inverse</item>
 	    <item name="android:progressBarStyleLargeInverse">@android:style/Widget.ProgressBar.Large.Inverse</item> 
+	    <item name="android:tabWidgetStyle">@style/WordPress.TabWidget</item> 
     </style>
+    
+    <style name="WordPress.TabWidget">
+        <item name="android:textAppearance">@style/WordPress.TabWidgetText</item>
+	</style>  
+
+
+	<style name="WordPress.TabWidgetText">
+	    <item name="android:textSize">12sp</item>
+	    <item name="android:textStyle">normal</item>
+	    <item name="android:textColor">@android:color/tab_indicator_text</item>
+	</style> 
 
 </resources>
