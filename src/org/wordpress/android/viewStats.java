@@ -62,16 +62,20 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
@@ -87,6 +91,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 public class viewStats extends Activity {
@@ -95,7 +100,7 @@ public class viewStats extends Activity {
 	private ConnectionClient client;
 	private HttpPost postMethod;
 	private HttpParams httpParams;
-	String id = "";
+	String id = "", accountName = "";
 	boolean loginShowing = false;
 	ProgressDialog loadingDialog;
 	private int ID_DIALOG_GET_STATS = 0;
@@ -110,7 +115,8 @@ public class viewStats extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null)
 		{
-			id = extras.getString("id");    		
+			id = extras.getString("id");    
+			accountName = extras.getString("accountName");
 		}  
 
 		//get the ball rolling...
@@ -129,8 +135,8 @@ public class viewStats extends Activity {
 
 				if (dcUsername.equals("") || dcPassword.equals("")){
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewStats.this);
-					dialogBuilder.setTitle(getResources().getText(R.string.error));
-					dialogBuilder.setMessage("Username and Password are required fields.");
+					dialogBuilder.setTitle(getResources().getText(R.string.required_fields));
+					dialogBuilder.setMessage(getResources().getText(R.string.username_password_required));
 					dialogBuilder.setPositiveButton("OK",  new
 							DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
@@ -180,6 +186,20 @@ public class viewStats extends Activity {
 
 			}
 		});
+		
+		TextView wpcomHelp = (TextView) findViewById(R.id.wpcomHelp);
+		wpcomHelp.setOnClickListener(new TextView.OnClickListener() {
+			public void onClick(View v) {
+
+				Intent intent1 = new Intent(Intent.ACTION_VIEW);  
+				intent1.setData(Uri.parse("http://en.support.wordpress.com/stats/"));  
+				startActivity(intent1); 
+
+
+			}
+		});
+		
+		
 
 	}
 
@@ -406,6 +426,7 @@ public class viewStats extends Activity {
 						TextView reportTitle = (TextView) findViewById(R.id.chartTitle);
 						reportTitle.setVisibility(View.VISIBLE);
 						ImageView iv = (ImageView) findViewById(R.id.chart);
+						
 						if (reportType.equals("views")){
 							iv.setVisibility(View.VISIBLE);
 							reportTitle.setText(getResources().getText(R.string.report_views));
@@ -422,13 +443,12 @@ public class viewStats extends Activity {
 							LayoutInflater inflater = getLayoutInflater();
 							TableRow table_row = (TableRow) inflater.inflate(R.layout.table_row_header, tl, false);
 
-							//Create a Button to be the row-content. 
 							TextView col_1 = (TextView)table_row.findViewById(R.id.col1);
-							col_1.setText("Date");
+							col_1.setText(getResources().getText(R.string.date));
 							col_1.setTypeface(Typeface.DEFAULT_BOLD);
 
 							TextView col_2 = (TextView)table_row.findViewById(R.id.col2);
-							col_2.setText("Views");
+							col_2.setText(getResources().getText(R.string.report_views));
 							col_2.setTypeface(Typeface.DEFAULT_BOLD);
 							//Add row to TableLayout.
 							tl.addView(table_row);
@@ -446,7 +466,7 @@ public class viewStats extends Activity {
 								// Create a new row to be added.
 								TableRow tr = (TableRow) inflater.inflate(R.layout.table_row, tl, false);
 
-								//Create a Button to be the row-content. 
+								//Create a view to be the row-content. 
 								TextView col1 = (TextView)tr.findViewById(R.id.col1);
 								col1.setText(date);
 
@@ -455,8 +475,9 @@ public class viewStats extends Activity {
 
 								if (i % 2 == 0){
 									//different background color for alternating rows
-									col1.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
-									col2.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									tr.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									//col1.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									//col2.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
 								}
 								//Add row to TableLayout.
 								tl.addView(tr);
@@ -549,16 +570,17 @@ public class viewStats extends Activity {
 
 							//add header row
 							LayoutInflater inflater = getLayoutInflater();
-							TableRow table_row = (TableRow) inflater.inflate(R.layout.table_row, tl, false);
+							TableRow table_row = (TableRow) inflater.inflate(R.layout.table_row_header, tl, false);
 
 							//Create a Button to be the row-content. 
 							TextView col_1 = (TextView)table_row.findViewById(R.id.col1);
-							col_1.setText("Post Title");
+							col_1.setText(getResources().getText(R.string.report_post_title));
 							col_1.setTypeface(Typeface.DEFAULT_BOLD);
 
 							TextView col_2 = (TextView)table_row.findViewById(R.id.col2);
-							col_2.setText("Views");
+							col_2.setText(getResources().getText(R.string.report_views));
 							col_2.setTypeface(Typeface.DEFAULT_BOLD);
+							
 							//Add row to TableLayout.
 							tl.addView(table_row);
 
@@ -567,11 +589,12 @@ public class viewStats extends Activity {
 								row = (HashMap) dataSet.get(i);
 								String date = row.get("title").toString();
 								String value = numDataSet.get(i).toString();
-
+								
 								//table display work
 
 								// Create a new row to be added.
 								TableRow tr = (TableRow) inflater.inflate(R.layout.table_row, tl, false);
+								
 
 								//Create a Button to be the row-content. 
 								TextView col1 = (TextView)tr.findViewById(R.id.col1);
@@ -582,8 +605,9 @@ public class viewStats extends Activity {
 
 								if (i % 2 == 0){
 									//different background color for alternating rows
-									col1.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
-									col2.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									tr.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									//col1.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									//col2.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
 								}
 								//Add row to TableLayout.
 								tl.addView(tr);
@@ -603,17 +627,17 @@ public class viewStats extends Activity {
 
 							//add header row
 							LayoutInflater inflater = getLayoutInflater();
-							TableRow table_row = (TableRow) inflater.inflate(R.layout.table_row, tl, false);
+							TableRow table_row = (TableRow) inflater.inflate(R.layout.table_row_header, tl, false);
 
 							//Create a Button to be the row-content. 
 							TextView col_1 = (TextView)table_row.findViewById(R.id.col1);
 							if (reportType.equals("referrers")){
-								col_1.setText("Referrer");
+								col_1.setText(getResources().getText(R.string.report_referrers));
 								reportTitle.setText(getResources().getText(R.string.report_referrers));
 							}
 							else{
 								reportTitle.setText(getResources().getText(R.string.report_searchterms));
-								col_1.setText("Views");
+								col_1.setText(getResources().getText(R.string.report_searchterms));
 							}
 							col_1.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -644,8 +668,9 @@ public class viewStats extends Activity {
 
 								if (i % 2 == 0){
 									//different background color for alternating rows
-									col1.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
-									col2.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									tr.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									//col1.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
+									//col2.setBackgroundColor(Color.parseColor("#FFE6F0FF"));
 								}
 								//Add row to TableLayout.
 								tl.addView(tr);
@@ -994,8 +1019,8 @@ public class viewStats extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		if (id == ID_DIALOG_GET_STATS){
 			loadingDialog = new ProgressDialog(this);
-			loadingDialog.setTitle("Retrieving Stats");
-			loadingDialog.setMessage("Attempting to retrieve stats");
+			loadingDialog.setTitle(getResources().getText(R.string.retrieving_stats));
+			loadingDialog.setMessage(getResources().getText(R.string.attempt_retrieve));
 			loadingDialog.setCancelable(true);
 			loadingDialog.setIndeterminate(true);
 			return loadingDialog;

@@ -1,15 +1,20 @@
 package org.wordpress.android;
 
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.Toast;
 
 public class tabView extends TabActivity {
 	private String id = "";
@@ -85,4 +90,78 @@ public class tabView extends TabActivity {
 	       //ignore orientation change
 	       super.onConfigurationChanged(newConfig);
 	     } 
+	     
+	 	//Add settings to menu
+	 	@Override
+	 	public boolean onCreateOptionsMenu(Menu menu) {
+	 		super.onCreateOptionsMenu(menu);
+	 		menu.add(0, 0, 0, getResources().getText(R.string.blog_settings));
+	 		MenuItem menuItem1 = menu.findItem(0);
+	 		menuItem1.setIcon(R.drawable.ic_menu_prefs);
+	 		menu.add(0, 1, 0, getResources().getText(R.string.remove_account));
+	 		MenuItem menuItem2 = menu.findItem(1);
+	 		menuItem2.setIcon(R.drawable.ic_menu_close_clear_cancel);
+	 		return true;
+	 	}
+	 	
+	 	//Menu actions
+	 	@Override
+	 	public boolean onOptionsItemSelected(final MenuItem item){
+	 		switch (item.getItemId()) {
+	 		case 0:
+
+	 			Bundle bundle = new Bundle();
+	 			bundle.putString("id", id);
+	 			bundle.putString("accountName", accountName);
+	 			Intent i = new Intent(this, settings.class);
+	 			i.putExtras(bundle);
+	 			startActivity(i);
+	 			return true;
+	 		case 1:
+	 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(tabView.this);
+	 			dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+	 			dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+	 			dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+	 					DialogInterface.OnClickListener() {
+	 				public void onClick(DialogInterface dialog, int whichButton) {
+	 					// User clicked Accept so set that they've agreed to the eula.
+	 					WordPressDB settingsDB = new WordPressDB(tabView.this);
+	 					boolean deleteSuccess = settingsDB.deleteAccount(tabView.this, id);
+	 					if (deleteSuccess)
+	 					{
+	 						Toast.makeText(tabView.this, getResources().getText(R.string.blog_removed_successfully),
+	 								Toast.LENGTH_SHORT).show();
+	 						finish();
+	 					}
+	 					else
+	 					{
+	 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(tabView.this);
+	 						dialogBuilder.setTitle(getResources().getText(R.string.error));
+	 						dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
+	 						dialogBuilder.setPositiveButton("OK",  new
+	 								DialogInterface.OnClickListener() {
+	 							public void onClick(DialogInterface dialog, int whichButton) {
+	 								// just close the dialog
+
+
+	 							}
+	 						});
+	 						dialogBuilder.setCancelable(true);
+	 						dialogBuilder.create().show();
+	 					}
+
+	 				}
+	 			});
+	 			dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
+	 					DialogInterface.OnClickListener() {
+	 				public void onClick(DialogInterface dialog, int whichButton) {
+	 					//just close the window
+	 				}
+	 			});
+	 			dialogBuilder.setCancelable(false);
+	 			dialogBuilder.create().show();
+	 			return true;
+	 		}
+	 		return false;	
+	 	}
  }
