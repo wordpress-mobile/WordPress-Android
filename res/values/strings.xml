@@ -273,6 +273,7 @@
   <string name="report_postviews">Post Views</string>
   <string name="report_referrers">Referrers</string>
   <string name="report_searchterms">Search Terms</string>
+  <string name="report_clicks">Clicks</string>
   <string name="report_videoplays">Video Plays</string>
   <string name="seven_days">7 Days</string>
   <string name="thirty_days">30 Days</string>
@@ -288,4 +289,5 @@
   <string name="retrieving_stats">Retrieving Stats</string>
   <string name="attempt_retrieve">Attempting to retrieve stats</string>
   <string name="stats_login">Stats Login</string>
+  <string name="no_data_found">No stats data found. Please try again.</string>
 </resources>

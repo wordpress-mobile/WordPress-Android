@@ -169,10 +169,8 @@ public class addAccount extends Activity {
     	
     	XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
-				String s = "done";
-				s = result.toString();
 				
-				pd.dismiss();
+				
 				String[] blogNames = new String[result.length];
 				String[] urls = new String[result.length];
 				int[]blogIds = new int[result.length];
@@ -216,12 +214,48 @@ public class addAccount extends Activity {
 	                if (blogName == ""){
 	                	blogName = "(No Blog Title)";
 	                }
-	                success = settingsDB.addAccount(addAccount.this, blogURL, blogName, username, password, "Above Text", true, false, "500", 5, false, blogId);
+	                
+	                boolean wpcomFlag = false;
+	                //check for wordpress.com
+	                if (blogURL.toLowerCase().contains("wordpress.com")){
+	                	wpcomFlag = true;
+	                }
+	                
+	                //attempt to get the software version
+	                HashMap hPost = new HashMap();
+	                hPost.put("software_version", "software_version");
+	                Object[] vParams = {
+	                		1,
+	                		username,
+	                		password,
+	                		hPost
+	                };
+	                Object versionResult = new Object();
+	                try {
+						versionResult = (Object) client.call("wp.getOptions", vParams);
+					} catch (XMLRPCException e) {
+						// TODO Auto-generated catch block
+						//e.printStackTrace();
+					}
+					
+					String wpVersion = "";
+					if (versionResult != null){
+						try {
+							contentHash = (HashMap) versionResult;
+							HashMap sv = (HashMap) contentHash.get("software_version");
+							wpVersion = sv.get("value").toString();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							//e.printStackTrace();
+						}
+					}
+	                
+	                success = settingsDB.addAccount(addAccount.this, blogURL, blogName, username, password, "Above Text", true, false, "500", 5, false, blogId, wpcomFlag, wpVersion);
 	                
 	                }
 	                
 			} //end loop
-				    
+				    pd.dismiss();   
 				    if (result.length == 0){
 				    	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(addAccount.this);
 						  dialogBuilder.setTitle("No Blogs Found");

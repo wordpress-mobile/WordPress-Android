@@ -18,8 +18,9 @@ import android.widget.Spinner;
 
 public class settings extends Activity {
 	protected static Intent svc = null;
-	private String id = "", accountName = "";
+	private String id = "", accountName = "", originalUsername;
 	private String xmlrpcPath;
+	boolean isWPCom = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -49,11 +50,18 @@ public class settings extends Activity {
     		xmlrpcPath = categoriesVector.get(0).toString();
     		//String savedBlogName = categoriesVector.get(1).toString();
     		String savedUsername = categoriesVector.get(2).toString();
+    		originalUsername = savedUsername;
     		String savedPassword = categoriesVector.get(3).toString();
     		String imagePlacement = categoriesVector.get(4).toString();
     		String sCenterThumbnailString = categoriesVector.get(5).toString();
     		String sFullSizeImageString = categoriesVector.get(6).toString();
     		String location = categoriesVector.get(11).toString();
+    		
+    		String sWPCom = categoriesVector.get(12).toString();
+    		if (sWPCom.equals("1")){
+    			isWPCom = true;
+    		}
+    		
     			
     		boolean sFullSizeImage  = false;
     		if (sFullSizeImageString.equals("1")){
@@ -121,8 +129,6 @@ public class settings extends Activity {
         
         saveButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-               // SharedPreferences settings = getSharedPreferences("wpAndroidSettings", 0);
-               // SharedPreferences.Editor editor = settings.edit();
                 
                 //capture the entered fields *needs validation*
                 EditText usernameET = (EditText)findViewById(R.id.username);
@@ -156,8 +162,9 @@ public class settings extends Activity {
                 boolean locationValue = locationCB.isChecked();
 
                 WordPressDB settingsDB = new WordPressDB(settings.this);
-                settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, locationValue);
-                
+
+                settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, locationValue, isWPCom, originalUsername);
+
         		//exit settings screen
                 Bundle bundle = new Bundle();
                 

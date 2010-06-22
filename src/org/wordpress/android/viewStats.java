@@ -55,7 +55,6 @@ import org.apache.http.params.HttpProtocolParams;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,7 +62,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -74,10 +72,7 @@ import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -92,7 +87,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 public class viewStats extends Activity {
 	public boolean success = false;
@@ -614,7 +608,7 @@ public class viewStats extends Activity {
 							}			  
 
 						}
-						else if (reportType.equals("referrers") || reportType.equals("searchterms")){
+						else if (reportType.equals("referrers") || reportType.equals("searchterms") || reportType.equals("clicks")){
 							iv.setVisibility(View.GONE);
 
 							Object[] key = numDataSet.toArray();
@@ -635,9 +629,13 @@ public class viewStats extends Activity {
 								col_1.setText(getResources().getText(R.string.report_referrers));
 								reportTitle.setText(getResources().getText(R.string.report_referrers));
 							}
-							else{
+							else if (reportType.equals("searchterms")){
 								reportTitle.setText(getResources().getText(R.string.report_searchterms));
 								col_1.setText(getResources().getText(R.string.report_searchterms));
+							}
+							else {
+								reportTitle.setText(getResources().getText(R.string.report_clicks));
+								col_1.setText(getResources().getText(R.string.report_clicks));
 							}
 							col_1.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -692,18 +690,7 @@ public class viewStats extends Activity {
 						dismissDialog(ID_DIALOG_GET_STATS); 
 						RelativeLayout filters = (RelativeLayout) findViewById(R.id.filters);
 						filters.setVisibility(View.VISIBLE);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewStats.this);
-						dialogBuilder.setTitle(getResources().getText(R.string.error));
-						dialogBuilder.setMessage("No data was found, please try again.");
-						dialogBuilder.setPositiveButton("OK",  new
-								DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								// just close the dialog
-
-							}
-						});
-						dialogBuilder.setCancelable(true);
-						dialogBuilder.create().show();
+						Toast.makeText(viewStats.this, getResources().getText(R.string.no_data_found), Toast.LENGTH_SHORT).show();
 					}
 				}; 
 				this.runOnUiThread(alertDialog);

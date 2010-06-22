@@ -5,6 +5,7 @@
 	<item>@string/report_postviews</item>
 	<item>@string/report_referrers</item>
 	<item>@string/report_searchterms</item>
+	<item>@string/report_clicks</item>
 </string-array>
 
 <string-array name="reportIntervals">
