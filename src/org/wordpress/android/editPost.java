@@ -50,6 +50,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Selection;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -145,7 +146,7 @@ public class editPost extends Activity implements LocationListener{
         	EditText contentET = (EditText)findViewById(R.id.content);
         	
         	titleET.setText(postHashMap.get("title").toString());
-        	contentET.setText(postHashMap.get("content").toString());
+        	contentET.setText(Html.fromHtml(postHashMap.get("content").toString()));
         	
         	String picturePaths = postHashMap.get("picturePaths").toString();
         	if (!picturePaths.equals("")){
@@ -341,10 +342,10 @@ public class editPost extends Activity implements LocationListener{
 			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
 			        EditText contentET = (EditText)findViewById(R.id.content);
 			        if (contentHash.get("mt_text_more").toString() != ""){
-			        	contentET.setText(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString());
+			        	contentET.setText(Html.fromHtml(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString()));
 			        }
 			        else{
-			        	contentET.setText(contentHash.get("description").toString());
+			        	contentET.setText(Html.fromHtml(contentHash.get("description").toString()));
 			        }
 			      
 			        

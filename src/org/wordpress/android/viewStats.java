@@ -94,7 +94,7 @@ public class viewStats extends Activity {
 	private ConnectionClient client;
 	private HttpPost postMethod;
 	private HttpParams httpParams;
-	String id = "", accountName = "";
+	String id = "", accountName = "", errorMsg = "";
 	boolean loginShowing = false;
 	ProgressDialog loadingDialog;
 	private int ID_DIALOG_GET_STATS = 0;
@@ -333,7 +333,6 @@ public class viewStats extends Activity {
 		try {
 			HttpResponse response;
 			response = client.execute(postMethod);
-			Log.i("WordPress", "response = " + response.getStatusLine());
 
 			// setup pull parser
 
@@ -342,7 +341,6 @@ public class viewStats extends Activity {
 			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
 
 			PushbackInputStream is = new PushbackInputStream(entity.getContent());
-
 
 			//get rid of junk characters before xml response.  60 = '<'.  Added stopper to prevent infinite loop
 			int bomCheck = is.read();
@@ -683,7 +681,7 @@ public class viewStats extends Activity {
 
 			}
 			else{
-				Thread alertDialog = new Thread() 
+				Thread alert = new Thread() 
 				{ 
 					public void run() 
 					{
@@ -693,19 +691,44 @@ public class viewStats extends Activity {
 						Toast.makeText(viewStats.this, getResources().getText(R.string.no_data_found), Toast.LENGTH_SHORT).show();
 					}
 				}; 
-				this.runOnUiThread(alertDialog);
+				this.runOnUiThread(alert);
 			}
 
 		} catch (ClientProtocolException e) {
 			dismissDialog(ID_DIALOG_GET_STATS);
+			errorMsg = e.getMessage();
 		} catch (IllegalStateException e) {
 			dismissDialog(ID_DIALOG_GET_STATS);
+			errorMsg = e.getMessage();
 		} catch (IOException e) {
 			dismissDialog(ID_DIALOG_GET_STATS);
+			errorMsg = e.getMessage();
 		} catch (XmlPullParserException e) {
 			dismissDialog(ID_DIALOG_GET_STATS);
+			errorMsg = e.getMessage();
 		}
-
+		
+		if (errorMsg != ""){
+			Thread error = new Thread() 
+			{ 
+			  public void run() 
+			  {
+				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewStats.this);
+				  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+				  dialogBuilder.setMessage(errorMsg);
+				  dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+					  public void onClick(DialogInterface dialog, int whichButton) {
+                  // Just close the window.
+              	
+					  }		
+				  });
+				  dialogBuilder.setCancelable(true);
+				  dialogBuilder.create().show();
+			  }
+			}; 
+			this.runOnUiThread(error);
+		}
 
 	}
 

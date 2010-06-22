@@ -38,7 +38,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextWatcher;
+import android.text.style.ClickableSpan;
+import android.text.style.QuoteSpan;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -54,6 +63,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -96,6 +106,7 @@ public class newPost extends Activity implements LocationListener{
     String provider;
     Location curLocation;
     public boolean location = false;
+    int styleStart = -1;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -323,14 +334,94 @@ final Button uploadButton = (Button) findViewById(R.id.upload);
                 }
         });
             
-final Button boldButton = (Button) findViewById(R.id.bold);   
+            final EditText contentEdit = (EditText) findViewById(R.id.content);
+            contentEdit.addTextChangedListener(new TextWatcher() { 
+                public void afterTextChanged(Editable s) { 
+                	//add style as the user types if a toggle button is enabled
+                	ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+                	ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+                	ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+                	ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+                	ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+                	int position = Selection.getSelectionStart(contentEdit.getText());
+            		if (position < 0){
+            			position = 0;
+            		}
+                	
+            		if (position > 0){
+            			
+            			if (styleStart > position){
+            				//user changed cursor point
+            				styleStart = position - 1;
+            			}
+            			
+	                	if (boldButton.isChecked()){  
+	                		StyleSpan[] ss = s.getSpans(styleStart, position, StyleSpan.class);
+
+	                		for (int i = 0; i < ss.length; i++) {
+	                			if (ss[i].getStyle() == android.graphics.Typeface.BOLD){
+	                				s.removeSpan(ss[i]);
+	                			}
+	                        }
+	                		s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	                	}
+	                	if (emButton.isChecked()){
+	                		StyleSpan[] ss = s.getSpans(styleStart, position, StyleSpan.class);
+	                		
+	                		boolean exists = false;
+	                		for (int i = 0; i < ss.length; i++) {
+	                			if (ss[i].getStyle() == android.graphics.Typeface.ITALIC){
+	                				s.removeSpan(ss[i]);
+	                			}
+	                        }
+	                		s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	                	}
+	                	if (bquoteButton.isChecked()){
+	                		
+	                		QuoteSpan[] ss = s.getSpans(styleStart, position, QuoteSpan.class);
+
+	                		for (int i = 0; i < ss.length; i++) {
+	                				s.removeSpan(ss[i]);
+	                        }
+	                		s.setSpan(new QuoteSpan(), styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	                	}
+	                	if (underlineButton.isChecked()){
+	                		UnderlineSpan[] ss = s.getSpans(styleStart, position, UnderlineSpan.class);
+
+	                		for (int i = 0; i < ss.length; i++) {
+	                				s.removeSpan(ss[i]);
+	                        }
+	                		s.setSpan(new UnderlineSpan(), styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	                	}
+	                	if (strikeButton.isChecked()){
+	                		StrikethroughSpan[] ss = s.getSpans(styleStart, position, StrikethroughSpan.class);
+
+	                		for (int i = 0; i < ss.length; i++) {
+	                				s.removeSpan(ss[i]);
+	                        }
+	                		s.setSpan(new StrikethroughSpan(), styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	                	}
+            		}
+                } 
+                public void beforeTextChanged(CharSequence s, int start, int count, 
+int after) { 
+                        //XXX do something 
+                } 
+                public void onTextChanged(CharSequence s, int start, int before, int count) { 
+                        //XXX do something 
+                } 
+});
+            
+final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);   
             
             boldButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
-                	TextView contentText = (TextView) findViewById(R.id.content);
-
+                	EditText contentText = (EditText) findViewById(R.id.content);
+                	
                 	int selectionStart = contentText.getSelectionStart();
+                	
+                	styleStart = selectionStart;
                 	
                 	int selectionEnd = contentText.getSelectionEnd();
                 	
@@ -340,31 +431,25 @@ final Button boldButton = (Button) findViewById(R.id.bold);
                 		selectionStart = temp;
                 	}
                 	
-                	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
-                		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
-                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_bold) + " " + getResources().getText(R.string.howto_select_text));
-                      dialogBuilder.setPositiveButton("OK",  new
-                    		  DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // just close the dialog
-                            	
-                        
-                            }
-                        });
-                      dialogBuilder.setCancelable(true);
-                     dialogBuilder.create().show();
-                	}
-                	else
+                	
+                	if (selectionEnd > selectionStart)
                 	{
-                		String textToBold = contentText.getText().toString().substring(selectionStart, selectionEnd); 
-                		textToBold = "<strong>" + textToBold + "</strong>";
-                		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
-                		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
-                		contentText.setText(firstHalf + textToBold + lastHalf);
-                		Editable etext = (Editable) contentText.getText();
-                		Selection.setSelection(etext, selectionStart + textToBold.length());
+                		Spannable str = contentText.getText();
+                		StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
                 		
+                		boolean exists = false;
+                		for (int i = 0; i < ss.length; i++) {
+                			if (ss[i].getStyle() == android.graphics.Typeface.BOLD){
+                				str.removeSpan(ss[i]);
+                				exists = true;
+                			}
+                        }
+                		
+                		if (!exists){
+                			str.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                		}
+                		
+                		boldButton.setChecked(false);
                 	}
                 }
         });
@@ -377,6 +462,8 @@ linkButton.setOnClickListener(new Button.OnClickListener() {
                 	TextView contentText = (TextView) findViewById(R.id.content);
 
                 	int selectionStart = contentText.getSelectionStart();
+                	
+                	styleStart = selectionStart;
                 	
                 	int selectionEnd = contentText.getSelectionEnd();
                 	
@@ -411,14 +498,16 @@ linkButton.setOnClickListener(new Button.OnClickListener() {
             });
             
             
-final Button emButton = (Button) findViewById(R.id.em);   
+final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);   
             
             emButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
-                	TextView contentText = (TextView) findViewById(R.id.content);
+                	EditText contentText = (EditText) findViewById(R.id.content);
 
                 	int selectionStart = contentText.getSelectionStart();
+                	
+                	styleStart = selectionStart;
                 	
                 	int selectionEnd = contentText.getSelectionEnd();
                 	
@@ -428,40 +517,38 @@ final Button emButton = (Button) findViewById(R.id.em);
                 		selectionStart = temp;
                 	}
                 	
-                	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
-                		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
-                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_emphasize) + " " + getResources().getText(R.string.howto_select_text));
-                      dialogBuilder.setPositiveButton("OK",  new
-                    		  DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // just close the dialog
-                            }
-                        });
-                      dialogBuilder.setCancelable(true);
-                     dialogBuilder.create().show();
-                	}
-                	else
+                	if (selectionEnd > selectionStart)
                 	{
-                		String textToBold = contentText.getText().toString().substring(selectionStart, selectionEnd); 
-                		textToBold = "<em>" + textToBold + "</em>";
-                		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
-                		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
-                		contentText.setText(firstHalf + textToBold + lastHalf);
-                		Editable etext = (Editable) contentText.getText();
-                		Selection.setSelection(etext, selectionStart + textToBold.length());
+                		Spannable str = contentText.getText();
+                		StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
+                		
+                		boolean exists = false;
+                		for (int i = 0; i < ss.length; i++) {
+                			if (ss[i].getStyle() == android.graphics.Typeface.ITALIC){
+                				str.removeSpan(ss[i]);
+                				exists = true;
+                			}
+                        }
+                		
+                		if (!exists){
+                			str.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                		}
+                		
+                		emButton.setChecked(false);
                 	}
                 }
         });
             
-final Button bquoteButton = (Button) findViewById(R.id.bquote);   
+final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);   
             
-            bquoteButton.setOnClickListener(new Button.OnClickListener() {
+            underlineButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	 
-                	TextView contentText = (TextView) findViewById(R.id.content);
+                	EditText contentText = (EditText) findViewById(R.id.content);
 
                 	int selectionStart = contentText.getSelectionStart();
+                	
+                	styleStart = selectionStart;
                 	
                 	int selectionEnd = contentText.getSelectionEnd();
                 	
@@ -471,28 +558,100 @@ final Button bquoteButton = (Button) findViewById(R.id.bquote);
                 		selectionStart = temp;
                 	}
                 	
-                	if (selectionStart == -1 || selectionStart == contentText.getText().toString().length() || (selectionStart == selectionEnd)){
-                		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-                		dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
-                        dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_blockquote) + " " + getResources().getText(R.string.howto_select_text));
-                      dialogBuilder.setPositiveButton("OK",  new
-                    		  DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // just close the dialog
-                            }
-                        });
-                      dialogBuilder.setCancelable(true);
-                     dialogBuilder.create().show();
-                	}
-                	else
+                	if (selectionEnd > selectionStart)
                 	{
-                		String textToBold = contentText.getText().toString().substring(selectionStart, selectionEnd); 
-                		textToBold = "<blockquote>" + textToBold + "</blockquote>";
-                		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
-                		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
-                		contentText.setText(firstHalf + textToBold + lastHalf);
-                		Editable etext = (Editable) contentText.getText();
-                		Selection.setSelection(etext, selectionStart + textToBold.length());
+                		Spannable str = contentText.getText();
+                		UnderlineSpan[] ss = str.getSpans(selectionStart, selectionEnd, UnderlineSpan.class);
+                		
+                		boolean exists = false;
+                		for (int i = 0; i < ss.length; i++) {
+                				str.removeSpan(ss[i]);
+                				exists = true;
+                        }
+                		
+                		if (!exists){
+                			str.setSpan(new UnderlineSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                		}
+                		
+                		underlineButton.setChecked(false);
+                	}
+                }
+        });
+            
+final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);   
+            
+            strikeButton.setOnClickListener(new Button.OnClickListener() {
+                public void onClick(View v) {
+                	 
+                	EditText contentText = (EditText) findViewById(R.id.content);
+
+                	int selectionStart = contentText.getSelectionStart();
+                	
+                	styleStart = selectionStart;
+                	
+                	int selectionEnd = contentText.getSelectionEnd();
+                	
+                	if (selectionStart > selectionEnd){
+                		int temp = selectionEnd;
+                		selectionEnd = selectionStart;
+                		selectionStart = temp;
+                	}
+                	
+                	if (selectionEnd > selectionStart)
+                	{
+                		Spannable str = contentText.getText();
+                		StrikethroughSpan[] ss = str.getSpans(selectionStart, selectionEnd, StrikethroughSpan.class);
+                		
+                		boolean exists = false;
+                		for (int i = 0; i < ss.length; i++) {
+                				str.removeSpan(ss[i]);
+                				exists = true;
+                        }
+                		
+                		if (!exists){
+                			str.setSpan(new StrikethroughSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                		}
+                		
+                		strikeButton.setChecked(false);
+                	}
+                }
+        });
+            
+final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);   
+            
+            bquoteButton.setOnClickListener(new Button.OnClickListener() {
+                public void onClick(View v) {
+                	 
+                	EditText contentText = (EditText) findViewById(R.id.content);
+
+                	int selectionStart = contentText.getSelectionStart();
+                	
+                	styleStart = selectionStart;
+                	
+                	int selectionEnd = contentText.getSelectionEnd();
+                	
+                	if (selectionStart > selectionEnd){
+                		int temp = selectionEnd;
+                		selectionEnd = selectionStart;
+                		selectionStart = temp;
+                	}
+                	
+                	if (selectionEnd > selectionStart)
+                	{
+                		Spannable str = contentText.getText();
+                		QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd, QuoteSpan.class);
+                		
+                		boolean exists = false;
+                		for (int i = 0; i < ss.length; i++) {
+                				str.removeSpan(ss[i]);
+                				exists = true;
+                        }
+                		
+                		if (!exists){
+                			str.setSpan(new QuoteSpan(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                		}
+                		
+                		strikeButton.setChecked(false);
                 	}
                 }
         });
@@ -602,7 +761,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         EditText titleET = (EditText)findViewById(R.id.title);
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
-        String content = contentET.getText().toString();
+        String content = Html.toHtml(contentET.getText());
         String tags = "";
         if (!isPage){
         EditText tagsET = (EditText)findViewById(R.id.tags);
@@ -917,7 +1076,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			
 			if (linkText.equals("CANCEL") != true){
 
-			TextView contentText = (TextView) findViewById(R.id.content);
+			EditText contentText = (EditText) findViewById(R.id.content);
 
         	int selectionStart = contentText.getSelectionStart();
         	
@@ -929,13 +1088,15 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		selectionStart = temp;
         	}
         	
-			String textToLink = contentText.getText().toString().substring(selectionStart, selectionEnd); 
+			/*String textToLink = contentText.getText().toString().substring(selectionStart, selectionEnd); 
     		textToLink = "<a href=\"" + linkText + "\">"+ textToLink + "</a>";
     		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
     		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
     		contentText.setText(firstHalf + textToLink + lastHalf);
     		Editable etext = (Editable) contentText.getText(); 
-    		Selection.setSelection(etext, selectionStart + textToLink.length());
+    		Selection.setSelection(etext, selectionStart + textToLink.length());*/
+        	Spannable str = contentText.getText();
+    		str.setSpan(new URLSpan(linkText),  selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 			}
 			break;			

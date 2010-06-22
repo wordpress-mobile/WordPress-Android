@@ -7,11 +7,11 @@
   <string name="url_username_password_required">Blog URL, Username and Password are all required fields.</string>
 
   <!--  form labels -->
-  <string name="categories">Categories:</string>
+  <string name="categories">Categories</string>
   <string name="select_categories">Select Categories</string>
-  <string name="tags_separate_with_commas">Tags (separate tags with commas):</string>
-  <string name="post_content">Post Content:</string>
-  <string name="post_title">Post Title:</string>
+  <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
+  <string name="post_content">Post Content</string>
+  <string name="post_title">Post Title</string>
   <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
   <string name="align_thumb_to_center">Align thumbnail to center: </string>
   <string name="max_thumbnail_px_width">Maximum thumbnail pixel width:</string>
@@ -100,8 +100,9 @@
   <string name="link_enter_url">Enter a URL:</string>
   
   <!--  page view -->
-  <string name="page_title">Page Title:</string>
-  <string name="page_content">Page Content:</string>
+  <string name="page_content">Page Content</string>
+  <string name="title">Title</string>
+  <string name="content">Content</string>
   <string name="page_edited">Page Edited</string>
   <string name="page_edited_image_error">Page edited successfully, but an error was encountered when uploading media</string>
   <string name="page_edited_successfully">Page edited successfully</string>
@@ -290,4 +291,9 @@
   <string name="attempt_retrieve">Attempting to retrieve stats</string>
   <string name="stats_login">Stats Login</string>
   <string name="no_data_found">No stats data found. Please try again.</string>
+  
+  <!-- editor button -->
+  <string name="strike"><strike>ABC</strike></string>
+  <string name="link"><u>link</u></string>
+  <string name="underline"><u>U</u></string>
 </resources>

@@ -236,6 +236,7 @@ res/drawable-hdpi-v4/wp_logo.png -text
 res/drawable-hdpi-v4/wp_small.9.png -text
 res/drawable-hdpi-v4/wp_small_down.9.png -text
 res/drawable-hdpi-v4/wp_small_over.9.png -text
+res/drawable-hdpi-v4/wp_small_toggle.9.png -text
 res/drawable/add.png -text
 res/drawable/app_icon.png -text
 res/drawable/bottom_bar.9.png -text
@@ -284,6 +285,7 @@ res/drawable/video.png -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_button.xml -text
 res/drawable/wp_button_small.xml -text
+res/drawable/wp_button_toggle.xml -text
 res/drawable/wp_check_off.png -text
 res/drawable/wp_check_on.png -text
 res/drawable/wp_checkbox.xml -text
@@ -292,6 +294,7 @@ res/drawable/wp_logo_home.png -text
 res/drawable/wp_small.9.png -text
 res/drawable/wp_small_down.9.png -text
 res/drawable/wp_small_over.9.png -text
+res/drawable/wp_small_toggle.9.png -text
 res/layout-hdpi-v4/new_account.xml -text
 res/layout-small-v4/new_account.xml -text
 res/layout/add_account.xml -text
