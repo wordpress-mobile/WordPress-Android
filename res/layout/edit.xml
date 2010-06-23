@@ -163,33 +163,20 @@
               android:layout_height="wrap_content"
               android:text="Tags &amp; Categories"
               style="@style/WordPressSectionHeader"/>              
-                   <TextView android:id="@+id/l_tags" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:layout_below="@id/l_tags_categories" 
-              android:text="@string/tags_separate_with_commas"
-                android:textColor="#444444"/>
-              
     <EditText android:id="@+id/tags" 
     		  android:minHeight="40dip"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
               android:autoText="true"
-              android:layout_below="@id/l_tags"/>
-              
-    <TextView android:id="@+id/l_category" 
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:text="@string/categories"
-              android:layout_below="@id/tags"
-              android:textColor="#444444"
-              android:layout_marginTop="10dip"/>
+              android:hint="@string/tags_separate_with_commas"
+              android:layout_below="@id/l_tags_categories"
+              android:layout_marginBottom="10dip"/>
               
   <Button
 			android:id="@+id/selectCategories"
 			android:background="@drawable/wp_button_small"
-     	    android:layout_below="@id/l_category"
+     	    android:layout_below="@id/tags"
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:textSize="20dip"
@@ -198,6 +185,7 @@
      <TextView android:id="@+id/selectedCategories" 
               android:layout_width="wrap_content" 
               android:layout_height="wrap_content"
+              android:layout_marginLeft="4dip"
               android:text="@string/selected_categories"
               android:layout_below="@id/selectCategories"
               android:textColor="#444444"/>        

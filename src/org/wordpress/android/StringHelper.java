@@ -25,4 +25,31 @@ public class StringHelper {
 		return ((String[]) result.toArray(new String[result.size()]));  
 		}
 	
+	public static String convertHTMLTagsForUpload(String source){
+		
+		//bold
+		source = source.replace("<b>", "<strong>");
+		source = source.replace("</b>", "</strong>");
+		
+		//italics
+		source = source.replace("<i>", "<em>");
+		source = source.replace("</i>", "</em>");
+		
+		return source;
+		
+	}
+	
+	public static String convertHTMLTagsForDisplay(String source){
+		
+		//bold
+		source = source.replace("<strong>", "<b>");
+		source = source.replace("</strong>", "</b>");
+		
+		//italics
+		source = source.replace("<em>", "<i>");
+		source = source.replace("</em>", "</i>");
+		
+		return source;
+		
+	}
 }

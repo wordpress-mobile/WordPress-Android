@@ -1153,7 +1153,7 @@ public String submitPost() throws IOException {
 	HashMap postHashMap = (HashMap) post.get(0);
 	
 	String title = postHashMap.get("title").toString();
-	String content = postHashMap.get("content").toString();
+	String content = StringHelper.convertHTMLTagsForUpload(postHashMap.get("content").toString());
 	
 	String picturePaths = postHashMap.get("picturePaths").toString();
 	
