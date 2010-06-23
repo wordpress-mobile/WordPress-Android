@@ -106,7 +106,7 @@ public class newPost extends Activity implements LocationListener{
     String provider;
     Location curLocation;
     public boolean location = false;
-    int styleStart = -1;
+    int styleStart = -1, cursorLoc = 0;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -350,10 +350,12 @@ final Button uploadButton = (Button) findViewById(R.id.upload);
                 	
             		if (position > 0){
             			
-            			if (styleStart > position){
-            				//user changed cursor point
+            			if (styleStart > position || position > (cursorLoc + 1)){
+            				//user changed cursor location, reset
             				styleStart = position - 1;
             			}
+            			
+            			cursorLoc = position;
             			
 	                	if (boldButton.isChecked()){  
 	                		StyleSpan[] ss = s.getSpans(styleStart, position, StyleSpan.class);
@@ -403,12 +405,11 @@ final Button uploadButton = (Button) findViewById(R.id.upload);
 	                	}
             		}
                 } 
-                public void beforeTextChanged(CharSequence s, int start, int count, 
-int after) { 
-                        //XXX do something 
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { 
+                        //unused
                 } 
                 public void onTextChanged(CharSequence s, int start, int before, int count) { 
-                        //XXX do something 
+                        //unused
                 } 
 });
             
