@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="report_videoplays">Reproduções de vídeo</string>
+	<string name="seven_days">7 dias</string>
+	<string name="thirty_days">30 dias</string>
+	<string name="quarter">15 dias</string>
+	<string name="year">Ano</string>
+	<string name="all">Sempre</string>
+	<string name="report_searchterms">Termos de pesquisa</string>
+	<string name="report_postviews">Leitura de posts</string>
+	<string name="moderating_comments">Opções de moderação</string>
+	<string name="load_more">Carregar mais</string>
+	<string name="tab_stats">Estatísticas</string>
+	<string name="deleting_comments">A eliminar comentários</string>
+	<string name="comments_moderated">Comentários moderados com sucesso</string>
+	<string name="preferences">Preferências</string>
+	<string name="notification_settings">Definições</string>
+	<string name="post_deleted">Post eliminado com sucesso</string>
+	<string name="attempt_delete_post">A tentar eliminar post</string>
+	<string name="delete_sure_post">Tem a certeza de que pretende eliminar o post</string>
+	<string name="delete_post">Eliminar Post</string>
+	<string name="page_deleted">Página eliminada com sucesso</string>
+	<string name="delete_sure_page">Tem a certeza de que pretende eliminar esta página</string>
+	<string name="attempt_delete_page">A tentar eliminar página</string>
+	<string name="delete_page">Eliminar página</string>
+	<string name="added_successfully_image_error">adicionado com sucesso, mas ocorreu um erro ao fazer upload do conteúdo multimédia</string>
+	<string name="no_account">Nenhuma conta WordPress encontrada, adicione uma conta e tente novamente.</string>
+	<string name="required_fields">Campos Obrigatórios</string>
+	<string name="select_categories">Seleccionar Categorias</string>
+	<string name="blog_removed_successfully">Blog Removido com Sucesso</string>
+	<string name="remove_account">Remover Blog</string>
+	<string name="view_comment_from">Ver formulário de Comentário</string>
+	<string name="sure_to_remove_account">Tem a certeza que quer remover este blog?</string>
+	<string name="blogs">Blogs</string>
+	<string name="could_not_remove_account">Impossível remover blog.</string>
+</resources>

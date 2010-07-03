@@ -71,6 +71,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -365,9 +366,9 @@ public class viewStats extends Activity {
 			//most replies follow the same xml structure, so the data is stored in a vector for display after parsing
 			while (eventType != XmlPullParser.END_DOCUMENT) {
 				if(eventType == XmlPullParser.START_DOCUMENT) {
-					System.out.println("Start document");
+					//System.out.println("Start document");
 				} else if(eventType == XmlPullParser.END_DOCUMENT) {
-					System.out.println("End document");
+					//System.out.println("End document");
 				} else if(eventType == XmlPullParser.START_TAG) {
 					String name = pullParser.getName();
 					if (name.equals("views") || name.equals("postviews") || name.equals("referrers") || name.equals("clicks") 
@@ -391,7 +392,7 @@ public class viewStats extends Activity {
 					}
 
 				} else if(eventType == XmlPullParser.END_TAG) {
-					System.out.println("End tag "+pullParser.getName());
+					//System.out.println("End tag "+pullParser.getName());
 				} else if(eventType == XmlPullParser.TEXT) {
 					if (foundDataItem){
 						String temp = pullParser.getText();
@@ -520,12 +521,20 @@ public class viewStats extends Activity {
 							long numRows = (maxBuffer - minBuffer) / yInterval;
 							float yGrid = 100.00f / numRows;
 
+							//scale to screen size
+							Display display = getWindowManager().getDefaultDisplay();
+					        int width = display.getWidth();
+					        int height = display.getHeight();
+					        String screenSize = "320x240";
+					        if (width > 480 || height > 480){
+					        	screenSize = "480x360";
+					        }
+							
 							//build the google chart api url
-							final String chartViewURL = "http://chart.apis.google.com/chart?chts=464646,20&cht=lc&chd=t:"+ dataValues + "&chs=480x360&chl=" + dateArray[0].toString() + "|" + dateArray[dateArray.length - 1].toString() + "&chxt=y" + 
+							final String chartViewURL = "http://chart.apis.google.com/chart?chts=464646,20&cht=lc&chd=t:"+ dataValues + "&chs=" + screenSize + 
+							"&chl=" + dateArray[0].toString() + "|" + dateArray[dateArray.length - 1].toString() + "&chxt=y" + 
 							"&chds=" + minBuffer + "," + maxBuffer + "&chxr=0," + minBuffer + "," + maxBuffer + "," + yInterval + 
 							"&chf=c,lg,90,E2E2E2,0,FEFEFE,0.5&chm=o,14568A,0,-1,10.0&chco=14568A&chls=4&chg=" + xGrid + "," + yGrid;
-
-							Log.i("WordPress", chartViewURL);
 
 
 							try {
@@ -743,7 +752,6 @@ public class viewStats extends Activity {
 		HttpResponse response;
 		try {
 			response = client.execute(postMethod);
-			Log.i("WordPress", "response = " + response.getStatusLine());
 			/*ByteArrayOutputStream outstream = new ByteArrayOutputStream();
 			response.getEntity().writeTo(outstream);
 			String text = outstream.toString();
@@ -783,11 +791,10 @@ public class viewStats extends Activity {
 				String curBlogURL = "";
 				while (eventType != XmlPullParser.END_DOCUMENT) {
 					if(eventType == XmlPullParser.START_DOCUMENT) {
-						System.out.println("Start document");
+						//System.out.println("Start document");
 					} else if(eventType == XmlPullParser.END_DOCUMENT) {
-						System.out.println("End document");
+						//System.out.println("End document");
 					} else if(eventType == XmlPullParser.START_TAG) {
-						String test = pullParser.getName();
 						if (pullParser.getName().equals("apikey")){
 							foundKey = true;
 						}
@@ -798,9 +805,9 @@ public class viewStats extends Activity {
 							foundURL = true;
 						}
 					} else if(eventType == XmlPullParser.END_TAG) {
-						System.out.println("End tag "+pullParser.getName());
+						//System.out.println("End tag "+pullParser.getName());
 					} else if(eventType == XmlPullParser.TEXT) {
-						System.out.println("Text "+pullParser.getText().toString());
+						//System.out.println("Text "+pullParser.getText().toString());
 						if (foundKey){
 							apiKey = pullParser.getText();
 							foundKey = false;

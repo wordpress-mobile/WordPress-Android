@@ -1290,7 +1290,7 @@ public String submitPost() throws IOException {
 			if (taglineValue){
 				tagline = globalSettings.get("tagline").toString();
 				if (!tagline.equals("")){
-					content += "\n\n<span id=\"post_sig\">" + tagline + "</span>\n\n";
+					content += "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
 				}
 			}
 		}

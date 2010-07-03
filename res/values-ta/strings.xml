@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_deleted">பதிவு வெற்றிகரமாக நீக்கப்பட்டது</string>
+	<string name="attempt_delete_post">பதிவை நீக்க முயற்சிநடைபெறுகிறது</string>
+	<string name="delete_sure_post">இந்த பதிவை நீக்குவதில் நிச்சயமாக உள்ளீரா</string>
+	<string name="delete_post">பதிவை நீக்கு</string>
+	<string name="page_deleted">பக்கம் நீக்கப்பட்டது</string>
+	<string name="delete_sure_page">இந்த பக்கத்தை நீக்கவேண்டும் என்பதில் உறுதியாக உள்ளீரா?</string>
+	<string name="attempt_delete_page">பக்கத்தை அழிக்க முயற்சி நடைபெறுகின்றது</string>
+	<string name="delete_page">பக்கத்தை நீக்கு</string>
+	<string name="added_successfully_image_error">வெற்றிகமாக சேர்க்கப்பட்டது, ஆனால் ஒரு பிழை ஏற்பட்டது ஊடகத்தை ஏற்றும் போது</string>
+	<string name="file_error_encountered">பிடித்த படிமத்தை அமைக்கும் போது பிழை ஏற்பட்டது.</string>
+	<string name="post_edited_image_error">பதிவு வெற்றிகரமாக தொகுக்கப்பட்டது, ஆனால் ஊடகத்தை ஏற்றும் போது ஒரு பிழை நேர்ந்துள்ளது</string>
+	<string name="page_edited_image_error">பக்கம் வெற்றிகரமாக தொகுகப்பட்டது ஆனால் ஊடகத்தை ஏற்றும போது ஒரு பிழை ஏற்பட்டுள்ளது.</string>
+	<string name="notification_blink">அறிவிக்க விட்டு விட்டு எரியும் வெளிச்சம்</string>
+	<string name="notification_sound">அறிவித்தல் ஒலி</string>
+	<string name="notification_vibrate">அதிர்வு</string>
+	<string name="location_toast">இடத்தின் தரவு இதுவரை இல்லை, சிறிது பொறுக்கவும்</string>
+	<string name="status">நிலை</string>
+	<string name="sdcard_message">ஊடகத்தை ஏற்ற சொருகப்பட்ட ஒரு SD அட்டை அவசியம்.</string>
+	<string name="location">இடம்</string>
+	<string name="take_video">புதிய வீடியோவை எடு</string>
+	<string name="sdcard_title">SD அட்டை தேவை</string>
+	<string name="select_video">காட்சிகூடத்தில் இருந்து ஒரு காணொளியை தெரிவுசெய்</string>
+	<string name="uploading_content">உள்ளடக்கம் ஏற்றப்படுகின்றது</string>
+	<string name="geotag">ஜியோடக் பதிவுகள்:</string>
 	<string name="tagline">செக்கன்களில் உங்கள் செல்பேசியில் வலைப்பதிவை ஆரம்பி</string>
 	<string name="preview_page">பக்கம் பார்</string>
 	<string name="preview_post">பதிவைப் பார்</string>
 	<string name="title_post_required">ஒரு பதிவு தலைப்பு உள்ளடக்கத்துடனோ அல்லது பல்லூடக இணைப்போ அவசியம்</string>
 	<string name="howto_select_text">நீங்கள் எழுத்துக்களை தொடர்ந்து அமுக்குவதன் மூலம் தெரிவு செய்யலாம்</string>
 	<string name="file_error">கோப்பு பிழை</string>
-	<string name="file_error_encountered">பிடிக்கப்பட்ட படிமத்தை அமைக்கின்றபோது பிழை ஏற்பட்டுள்ளது.</string>
 	<string name="account_details">கணக்கு விபரங்கள்</string>
 	<string name="media">பல்லூடகம்</string>
 	<string name="account_removed_successfully">வலைப்பதிவு வெற்றிகரமாக நீக்கப்பட்டது</string>
@@ -117,7 +140,6 @@
 	<string name="post_added">பதிவு சேர்க்கப்பட்டது</string>
 	<string name="post_id">பதிவு இல#</string>
 	<string name="added_successfully">வெற்றிகரமாகச் சேர்க்கப்பட்டது</string>
-	<string name="added_successfully_image_error">வெற்றிகரமாகச் சேர்க்கப்பட்டது, ஆனால் படிமங்களை ஏற்றும் போது பிழை ஏற்பட்டுள்ளது</string>
 	<string name="page_id">பக்க இல#</string>
 	<string name="reply_enter">பதில் போடு:</string>
 	<string name="reply_send">பதில் அனுப்பு</string>
@@ -173,7 +195,6 @@
 	<string name="decline">நிராகரி</string>
 	<string name="hint_menu_to_add_acc">\'பட்டியல்\' என்பதை தெரிவு செய்து புதிய கணக்கை சேர்க்கலாம் அல்லது மறுமுழி அறிவித்தலை அமைக்கலாம்.</string>
 	<string name="add_account">கணக்கு சேர்</string>
-	<string name="notification_settings">அறிவித்தல் அமைப்புகள்</string>
 	<string name="yes">ஆம்</string>
 	<string name="no">இல்லை</string>
 </resources>
