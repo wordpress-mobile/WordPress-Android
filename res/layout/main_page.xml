@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/content"
             android:textStyle="bold"
-            android:textSize="18dip"
+            android:textSize="17dip"
             android:textOn="B"
             android:textOff="B" />           
 	<ToggleButton
@@ -60,7 +60,7 @@
             android:layout_alignTop="@id/bold"
             android:layout_toRightOf="@id/bold"
             android:textStyle="italic"
-            android:textSize="18dip"
+            android:textSize="17dip"
             android:textOn="I "
             android:textOff="I " />
 	<ToggleButton
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/em"
             android:layout_toRightOf="@id/em"
-            android:textSize="18dip"
+            android:textSize="17dip"
             android:textOn="@string/underline"
             android:textOff="@string/underline" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/underline"
             android:layout_toRightOf="@id/underline"
-            android:textSize="18dip"
+            android:textSize="17dip"
             android:textOn="@string/strike"
             android:textOff="@string/strike" />
      
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/strike"
             android:layout_toRightOf="@id/strike"
-            android:textSize="18dip"
+            android:textSize="17dip"
             android:textColor="#21759b"
             android:text="@string/link" />  
             
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content" 
             android:layout_alignTop="@id/link"
             android:layout_toRightOf="@id/link"
-            android:textSize="18dip"
+            android:textSize="17dip"
             android:textOn="b-quote"
 			android:textOff="b-quote" />     
               </RelativeLayout>
