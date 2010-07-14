@@ -115,6 +115,8 @@ public class viewPosts extends ListActivity{
          action = extras.getString("action");
         }
         
+        createSwitcher();
+        
         //user came from action intent
         if (action != null && !isPage){
         	if (action.equals("upload")){
@@ -136,6 +138,7 @@ public class viewPosts extends ListActivity{
 				}.start();
         	}
         	else{
+
         		boolean loadedPosts = loadPosts(false);
         		if (!loadedPosts){
                 	refreshPosts(false);
@@ -144,22 +147,6 @@ public class viewPosts extends ListActivity{
         }
         else{
         	
-        	//add footer view
-    	    if (!isPage){
-    	    	//create the ViewSwitcher in the current context
-    	        switcher = new ViewSwitcher(this);
-    			  //footer Button: see XML1
-    			  Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
-    			  footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_posts));
-    			  
-    			  //progress View: see XML2
-    			  View progress = View.inflate(this, R.layout.list_footer_progress, null);
-    			  
-    			  //add the views (first added will show first)
-    			  switcher.addView(footer);
-    			  switcher.addView(progress);  
-    	    }
-	        
 	        //query for posts and refresh view
 	        boolean loadedPosts = loadPosts(false);
 	        
@@ -204,7 +191,26 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
         
     }
     
-   public void onClick(View arg0) {
+   private void createSwitcher() {
+	 //add footer view
+	    if (!isPage){
+	    	//create the ViewSwitcher in the current context
+	        switcher = new ViewSwitcher(this);
+			  //footer Button: see XML1
+			  Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
+			  footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_posts));
+			  
+			  //progress View: see XML2
+			  View progress = View.inflate(this, R.layout.list_footer_progress, null);
+			  
+			  //add the views (first added will show first)
+			  switcher.addView(footer);
+			  switcher.addView(progress);  
+	    }
+		
+	}
+
+public void onClick(View arg0) {
 		//first view is showing, show the second progress view
 		switcher.showNext();
 		//get 30 more posts
@@ -494,6 +500,7 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 					   else{
 						   pla = new PostListAdapter(viewPosts.this);
 						   setListAdapter(pla);
+	
 						   
 						   listView.setOnItemClickListener(new OnItemClickListener() {
 							   

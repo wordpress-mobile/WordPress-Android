@@ -70,18 +70,12 @@ public class tabView extends TabActivity {
          host.addTab(host.newTabSpec("two").setIndicator(getResources().getText(R.string.tab_posts), getResources().getDrawable(R.layout.posts_tab_selector)).setContent(tab2));
          host.addTab(host.newTabSpec("three").setIndicator(getResources().getText(R.string.tab_pages), getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
          host.addTab(host.newTabSpec("four").setIndicator(getResources().getText(R.string.tab_stats), getResources().getDrawable(R.layout.stats_tab_selector)).setContent(tab4));
+
          if (activateTab != null){
         	 if(activateTab.equals("posts")){
         		 host.setCurrentTab(1);
         	 }
          }
-         
-         /*TabWidget tw = getTabWidget();
-         tw.setStripEnabled(false);
-         for (int i = 0; i < tw.getChildCount(); i++) { 
-                     View v = tw.getChildAt(i); 
-                     v.setBackgroundDrawable(getResources().getDrawable(R.drawable.tab_bg_selector)); 
-                   } */
          
      }  
 	     

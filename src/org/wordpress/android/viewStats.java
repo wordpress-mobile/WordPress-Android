@@ -819,6 +819,9 @@ public class viewStats extends Activity {
 						else if (foundURL){
 							curBlogURL = pullParser.getText();
 							foundURL = false;
+							if (url.endsWith("/")){
+								url = url.substring(0, url.length() - 1);
+							}
 							if (curBlogURL.equals(url) || storedBlogID.equals(curBlogID)){
 								//yay, found a match
 								blogID = curBlogID;
@@ -854,7 +857,7 @@ public class viewStats extends Activity {
 
 		postMethod.addHeader("charset", "UTF-8");
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/1.3");
+		postMethod.addHeader("User-Agent", "wp-android/1.3.1");
 
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);

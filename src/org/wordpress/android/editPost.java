@@ -345,10 +345,11 @@ public class editPost extends Activity implements LocationListener{
 			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
 			        EditText contentET = (EditText)findViewById(R.id.content);
 			        if (contentHash.get("mt_text_more").toString() != ""){
-			        	contentET.setText(Html.fromHtml(StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString())));
+			        	//removed toHtml function for trac ticket #68
+			        	contentET.setText(StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString()));
 			        }
 			        else{
-			        	contentET.setText(Html.fromHtml(StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString())));
+			        	contentET.setText(StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString()));
 			        }
 			      
 			        
@@ -358,7 +359,6 @@ public class editPost extends Activity implements LocationListener{
 				        EditText tagsET = (EditText)findViewById(R.id.tags);
 				        tagsET.setText(escapeUtils.unescapeHtml(contentHash.get("mt_keywords").toString()));
 				        TextView categoriesTV = (TextView)findViewById(R.id.selectedCategories);
-			        
 			        
 				        Object categoriesArray[] = (Object[]) contentHash.get("categories");
 				        
@@ -874,7 +874,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         EditText titleET = (EditText)findViewById(R.id.title);
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
-        String content = Html.toHtml(contentET.getText());
+        String content = escapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
         content = StringHelper.convertHTMLTagsForUpload(content);
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         Boolean publishThis = false;
@@ -2172,7 +2172,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         EditText titleET = (EditText)findViewById(R.id.title);
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
-        String content = Html.toHtml(contentET.getText());
+        String content = escapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
         String tags = "";
         if (!isPage){
         EditText tagsET = (EditText)findViewById(R.id.tags);

@@ -98,7 +98,7 @@ public class newPost extends Activity implements LocationListener{
 	public int imgLooper;
 	public String imageContent = "";
 	public String imgHTML = "";
-	public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false, isAction=false;
+	public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false, isAction=false, isUrl=false;
 	public String SD_CARD_TEMP_DIR = "";
 	public long checkedCategories[];
 	LocationManager lm;
@@ -719,6 +719,7 @@ public class newPost extends Activity implements LocationListener{
 				text = text.replace("&feature=youtube_gdata", "");
 				text = text.replace("watch?v=", "v/");
 				text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\"" + text + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"" + text + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
+				text = escapeUtils.escapeHtml(text);
 				contentET.setText(text);
 			}
 			else{   	
@@ -729,17 +730,14 @@ public class newPost extends Activity implements LocationListener{
 				// Attempt to convert each item into an URL.   
 				for( String item : parts ) try {
 					URL url = new URL(item);
-					// If possible then replace with anchor...
-					finalText+="<a href=\"" + url + "\">"+ url + "</a> ";    
+					finalText+="<a href=\"" + url + "\">"+ url + "</a> ";  
+					contentET.setText(Html.fromHtml(finalText));
+					isUrl = true;
 				} catch (MalformedURLException e) {
-					// If there was an URL that was not it!...
 					finalText+= item + " ";
+					contentET.setText(finalText);
 				}
-
-				contentET.setText(finalText);
 			}
-
-
 		}
 
 		String type = intent.getType();
@@ -768,7 +766,12 @@ public class newPost extends Activity implements LocationListener{
 		EditText titleET = (EditText)findViewById(R.id.title);
 		String title = titleET.getText().toString();
 		EditText contentET = (EditText)findViewById(R.id.content);
-		String content = Html.toHtml(contentET.getText());
+		String content = "";
+		if (isAction){
+			content = Html.toHtml(contentET.getText());
+		}else{
+			content = escapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
+		}
 		String tags = "";
 		if (!isPage){
 			EditText tagsET = (EditText)findViewById(R.id.tags);
