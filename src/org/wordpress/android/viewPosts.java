@@ -200,6 +200,16 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 			  Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
 			  footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_posts));
 			  
+			  footer.setOnClickListener(new Button.OnClickListener() {
+					public void onClick(View v) {
+						//first view is showing, show the second progress view
+						switcher.showNext();
+						//get 30 more posts
+						numRecords += 30;
+						refreshPosts(true);
+					}
+				});
+			  
 			  //progress View: see XML2
 			  View progress = View.inflate(this, R.layout.list_footer_progress, null);
 			  
@@ -208,14 +218,6 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 			  switcher.addView(progress);  
 	    }
 		
-	}
-
-public void onClick(View arg0) {
-		//first view is showing, show the second progress view
-		switcher.showNext();
-		//get 30 more posts
-		numRecords += 30;
-		refreshPosts(true);
 	}
     
     private void refreshPosts(final boolean loadMore){
@@ -491,7 +493,9 @@ public void onClick(View arg0) {
 
 					    if (!isPage){
 					    	listView.removeFooterView(switcher);
-					    	listView.addFooterView(switcher);
+					    	if (loadedPosts.size() >= 30){
+								listView.addFooterView(switcher);
+							}
 					    }				    
 					    
 					   if (loadMore){

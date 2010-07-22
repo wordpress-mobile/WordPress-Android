@@ -61,7 +61,8 @@
     <style name="WordPress" parent="@android:style/Theme.Light">
     	<item name="android:textViewStyle">@style/WordPressTextAppearance</item> 
     	<item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
-    	<item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
+    	<item name="android:buttonStyle">@style/WordPressButtonAppearance</item> 
+	    <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
 	</style>	
     
     <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
@@ -100,11 +101,15 @@
         <item name="android:progressBarStyleInverse">@android:style/Widget.ProgressBar.Inverse</item>
 		<item name="android:progressBarStyleSmallInverse">@android:style/Widget.ProgressBar.Small.Inverse</item>
 	    <item name="android:progressBarStyleLargeInverse">@android:style/Widget.ProgressBar.Large.Inverse</item> 
-	    <item name="android:tabWidgetStyle">@style/WordPress.TabWidget</item> 
+	    <item name="android:tabWidgetStyle">@style/WordPress.TabWidget</item>
+	    <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
     </style>
     
     <style name="WordPress.TabWidget">
         <item name="android:textAppearance">@style/WordPress.TabWidgetText</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">2</item>
+        <item name="android:singleLine">true</item>
 	</style>  
 
 
@@ -113,5 +118,10 @@
 	    <item name="android:textStyle">normal</item>
 	    <item name="android:textColor">@android:color/tab_indicator_text</item>
 	</style> 
+    
+   <style name="WindowTitleBackground">     
+        <item name="android:background">@drawable/title_bar_gradient</item>  
+        <item name="android:paddingLeft">4dip</item>                 
+    </style>
 
 </resources>

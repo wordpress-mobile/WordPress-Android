@@ -140,7 +140,7 @@ public class wpAndroid extends ListActivity {
 			public void onItemClick(AdapterView<?> arg0, View row,
 					int position, long id) {
 				Bundle bundle = new Bundle();
-				bundle.putString("accountName", blogNames[position]);
+				bundle.putString("accountName", escapeUtils.unescapeHtml(blogNames[position]));
 				bundle.putString("id", String.valueOf(row.getId()));
 				Intent viewPostsIntent = new Intent(wpAndroid.this,
 						tabView.class);

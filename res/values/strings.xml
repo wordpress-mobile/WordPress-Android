@@ -158,7 +158,7 @@
   <string name="comment_moderated">Comment Moderated Successfully</string>
   <string name="comments_moderated">Comments Moderated Successfully</string>
   <string name="reply_added">Reply Added Successfully</string>
-  <string name="view_comment_from">View Comment from</string>
+  <string name="view_comment_from">Comment from</string>
   
   <!--  context menu -->
   <string name="blog_settings">Blog Settings</string>

@@ -965,9 +965,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         
         contentStruct.put("post_type", "post");
         contentStruct.put("title", title);
-        //for trac #53, add <p> and <br /> tags
-        content = content.replace("/\n\n/g", "</p><p>");
-        content = content.replace("/\n/g", "<br />");
         contentStruct.put("description", content);
         if (!isPage){
         	EditText tagsET = (EditText)findViewById(R.id.tags);

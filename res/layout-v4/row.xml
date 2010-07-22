@@ -6,7 +6,7 @@
 <RelativeLayout
 		android:id="@+id/bulkEditGroup"
 		android:layout_width="wrap_content"
-		android:layout_height="238dip"
+		android:layout_height="119dip"
 		android:layout_alignParentRight="true"
 		android:gravity="right|center"
 		android:padding="4dip"
@@ -16,7 +16,6 @@
 			<CheckBox android:id="@+id/bulkCheck"
 					android:layout_width="wrap_content"
 					android:layout_height="fill_parent"
-					android:layout_marginTop="119dip"
 					android:focusable="false"
 					android:button="@drawable/wp_checkbox"/>	
 		</RelativeLayout>

@@ -111,6 +111,13 @@ public class moderateCommentsTab extends ListActivity {
 		Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
 		footer.setText(getResources().getText(R.string.load_more) + " " + getResources().getText(R.string.tab_comments));
 
+		footer.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				switcher.showNext();
+				refreshComments(true, false, false);
+			}
+		});
+		
 		View progress = View.inflate(this, R.layout.list_footer_progress, null);
 
 		switcher.addView(footer);
@@ -483,6 +490,15 @@ public class moderateCommentsTab extends ListActivity {
 				else{
 					model=new ArrayList<CommentEntry>();
 				}
+				
+				//fixes trac #72 (1.5 bug)
+				int sdk_int = 0;
+				try {
+					sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
+				} catch (Exception e1) {
+					sdk_int = 3; //assume they are on cupcake
+				}
+				
 				checkedComments = new Vector();
 				for (int i=1; i < loadedPosts.size(); i++){
 					checkedComments.add(i-1, "false");
@@ -498,6 +514,18 @@ public class moderateCommentsTab extends ListActivity {
 					authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
 					authorURL = escapeUtils.unescapeHtml(contentHash.get("url").toString());
 					postTitle = escapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
+					
+					//more 1.5 htc sense fix
+					if (sdk_int == 3){
+						postTitle = postTitle.replace("Ô", "'");
+						postTitle = postTitle.replace("Õ", "'");
+						postTitle = postTitle.replace('Ó', '"');
+						postTitle = postTitle.replace('Ò', '"');
+						postTitle = postTitle.replace('Ð', '-');
+						postTitle = postTitle.replaceAll("[^a-zA-Z0-9\'\"-]", " ");
+						author = author.replaceAll("[^a-zA-Z0-9\'\"-]", " ");
+						authorURL = authorURL.replaceAll("[^a-zA-Z0-9:'/'/.-]", " ");
+					}
 
 					//add to model
 					model.add(new CommentEntry(postID,
@@ -523,7 +551,9 @@ public class moderateCommentsTab extends ListActivity {
 
 					ListView listView = (ListView) findViewById(android.R.id.list);
 					listView.removeFooterView(switcher);
-					listView.addFooterView(switcher);
+					if (loadedPosts.size() >= 30){
+						listView.addFooterView(switcher);
+					}
 					setListAdapter(thumbs);
 					
 					listView.setOnItemClickListener(new OnItemClickListener() {
@@ -590,7 +620,6 @@ public class moderateCommentsTab extends ListActivity {
 			Vector latestComments = postStoreDB.loadMoreComments(moderateCommentsTab.this, id, commentsToLoad);
 			if (latestComments != null){
 				numRecords += latestComments.size();
-				Toast.makeText(this, "numRecords is now " + numRecords, Toast.LENGTH_LONG).show();
 				for (int i=latestComments.size(); i > 0; i--){
 					HashMap contentHash = (HashMap) latestComments.get(i-1);
 					allComments.put(contentHash.get("commentID").toString(), contentHash);
@@ -621,12 +650,6 @@ public class moderateCommentsTab extends ListActivity {
 			}
 			return true;
 		}
-	}
-
-	public void onClick(View arg0) {
-		//first view is showing, show the second progress view
-		switcher.showNext();
-		refreshComments(true, false, false);
 	}
 
 	private void refreshComments(final boolean loadMore, final boolean refreshOnly, final boolean doInBackground) {

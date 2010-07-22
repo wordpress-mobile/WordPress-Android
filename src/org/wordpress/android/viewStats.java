@@ -744,6 +744,10 @@ public class viewStats extends Activity {
 	private Vector getAPIInfo(String username, String password, String url, String storedBlogID) {
 
 		Vector apiInfo = null;
+		
+		URI blogHost = URI.create(url);
+		String blogDomain = blogHost.getHost();
+		
 		URI uri = URI.create("https://public-api.wordpress.com/getuserblogs.php");
 
 		configureClient(uri, username, password);
@@ -818,11 +822,13 @@ public class viewStats extends Activity {
 						}
 						else if (foundURL){
 							curBlogURL = pullParser.getText();
+							URI curBlogHost = URI.create(curBlogURL);
+							String curBlogDomain = curBlogHost.getHost();
 							foundURL = false;
-							if (url.endsWith("/")){
+							/*if (url.endsWith("/")){
 								url = url.substring(0, url.length() - 1);
-							}
-							if (curBlogURL.equals(url) || storedBlogID.equals(curBlogID)){
+							}*/
+							if (curBlogDomain.equals(blogDomain) || storedBlogID.equals(curBlogID)){
 								//yay, found a match
 								blogID = curBlogID;
 								apiInfo = new Vector();
@@ -857,7 +863,7 @@ public class viewStats extends Activity {
 
 		postMethod.addHeader("charset", "UTF-8");
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/1.3.1");
+		postMethod.addHeader("User-Agent", "wp-android/1.3.2");
 
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);

@@ -280,6 +280,7 @@ res/drawable/stats_tab_active.png -text
 res/drawable/tab_bg_selector.xml -text
 res/drawable/tab_color_selector.xml -text
 res/drawable/tab_unselected.xml -text
+res/drawable/title_bar_gradient.xml -text
 res/drawable/title_bg.xml -text
 res/drawable/video.png -text
 res/drawable/wordpress_home.png -text
@@ -297,6 +298,7 @@ res/drawable/wp_small_over.9.png -text
 res/drawable/wp_small_toggle.9.png -text
 res/layout-hdpi-v4/new_account.xml -text
 res/layout-small-v4/new_account.xml -text
+res/layout-v4/row.xml -text
 res/layout/add_account.xml -text
 res/layout/add_category.xml -text
 res/layout/categories_row.xml -text

@@ -25,7 +25,7 @@ public class imageHelper {
         byte[] finalBytes;
         
         if (sMaxImageWidth.equals("Original Size")){
-        	if (bytes.length > 1000000) //it's a biggie! don't want out of memory crash
+        	if (bytes.length > 2000000) //it's a biggie! don't want out of memory crash
         	{
         		float finWidth = 1000;
         		int sample = 0;

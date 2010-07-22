@@ -26,7 +26,7 @@ public class tabView extends TabActivity {
 	     @Override  
      public void onCreate(Bundle savedInstanceState) {  
          super.onCreate(savedInstanceState);
-         requestWindowFeature(Window.FEATURE_NO_TITLE);
+         //requestWindowFeature(Window.FEATURE_NO_TITLE);
          getWindow().setFormat(PixelFormat.RGBA_8888);
          getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
          Bundle extras = getIntent().getExtras();
@@ -40,6 +40,19 @@ public class tabView extends TabActivity {
           uploadID = extras.getInt("uploadID");
          }
          
+         int sdk_int = 0;
+			try {
+				sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
+			} catch (Exception e1) {
+				sdk_int = 3; //assume they are on cupcake
+			}
+			if (sdk_int == 3){
+				requestWindowFeature(Window.FEATURE_NO_TITLE);
+			}
+			else {
+				setTitle(accountName);
+			}
+
          Intent tab1 = new Intent(this, moderateCommentsTab.class);
          Intent tab2 = new Intent(this, viewPosts.class);
          Intent tab3 = new Intent(this, viewPosts.class);
