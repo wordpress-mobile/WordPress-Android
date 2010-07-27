@@ -4,7 +4,7 @@
   <!--  account setup -->
   <string name="required_fields">Required Fields</string>
   <string name="required_field">Required Field</string>
-  <string name="url_username_password_required">Blog URL, Username and Password are all required fields.</string>
+  <string name="url_username_password_required">Please fill in all of the fields before submitting.</string>
 
   <!--  form labels -->
   <string name="categories">Categories</string>
@@ -293,6 +293,7 @@
   <string name="stats_login">Stats Login</string>
   <string name="no_data_found">No stats data found. Please try again.</string>
   <string name="invalid_login">Incorrect Login</string>
+  <string name="site_not_found">or site not found.</string>
   
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>

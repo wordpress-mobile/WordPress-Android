@@ -943,7 +943,7 @@ public class viewStats extends Activity {
 			else{
 				//prompt for the username and password
 				if (firstRun > 0){
-					Toast.makeText(viewStats.this, getResources().getText(R.string.invalid_login), Toast.LENGTH_SHORT).show();
+					Toast.makeText(viewStats.this, getResources().getText(R.string.invalid_login) + " " + getResources().getText(R.string.site_not_found), Toast.LENGTH_SHORT).show();
 				}
 				firstRun++;
 				showOrHideLoginForm(); 
