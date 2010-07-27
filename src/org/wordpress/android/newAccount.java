@@ -1,49 +1,16 @@
 package org.wordpress.android;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.http.conn.HttpHostConnectException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-
+import android.widget.TextView;
 
 public class newAccount extends Activity {
 	private XMLRPCClient client;
@@ -54,29 +21,41 @@ public class newAccount extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		getWindow().setFormat(PixelFormat.RGBA_8888);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
+		//getWindow().setFormat(PixelFormat.RGBA_8888);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.new_account);	
 		
-		this.setTitle("WordPress");
+		TextView tv = (TextView) findViewById(R.id.welcome);
+		
+		//this.setTitle("WordPress");
+
+        Button createAccountButton = (Button) findViewById(R.id.createWPAccount);
+        Button dotComButton = (Button) findViewById(R.id.dotcomExisting);
+        Button dotOrgButton = (Button) findViewById(R.id.dotorgExisting);
         
-        final Button setupAccountButton = (Button) findViewById(R.id.setupAccount);
-        final Button createAccountButton = (Button) findViewById(R.id.createAccount);
+        createAccountButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+            	Intent signupIntent = new Intent(newAccount.this, signup.class);
+            	startActivity(signupIntent);
+            }
+        });
         
-        setupAccountButton.setOnClickListener(new Button.OnClickListener() {
+        dotComButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+            	
+            	Intent i = new Intent(newAccount.this, addAccount.class); 
+            	i.putExtra("wpcom", true);
+            	startActivityForResult(i, 0);
+ 
+            }
+        });
+        
+        dotOrgButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
             	Intent i = new Intent(newAccount.this, addAccount.class);
             	startActivityForResult(i, 0);
  
-            }
-        });   
-        
-        createAccountButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            	
-            	Intent signupIntent = new Intent(newAccount.this, signup.class); 
-            	startActivity(signupIntent);
             }
         });
         

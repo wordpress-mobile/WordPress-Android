@@ -99,6 +99,7 @@ public class viewStats extends Activity {
 	boolean loginShowing = false;
 	ProgressDialog loadingDialog;
 	private int ID_DIALOG_GET_STATS = 0;
+	private int firstRun = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -941,6 +942,10 @@ public class viewStats extends Activity {
 			}
 			else{
 				//prompt for the username and password
+				if (firstRun > 0){
+					Toast.makeText(viewStats.this, getResources().getText(R.string.invalid_login), Toast.LENGTH_SHORT).show();
+				}
+				firstRun++;
 				showOrHideLoginForm(); 
 			}
 		}

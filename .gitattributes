@@ -207,6 +207,8 @@ bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
 /default.properties -text
+res/anim/cycle_5.xml -text
+res/anim/shake.xml -text
 res/drawable-hdpi-v4/add.png -text
 res/drawable-hdpi-v4/app_icon.png -text
 res/drawable-hdpi-v4/btn_check_off_pressed.png -text
@@ -296,11 +298,14 @@ res/drawable/wp_small.9.png -text
 res/drawable/wp_small_down.9.png -text
 res/drawable/wp_small_over.9.png -text
 res/drawable/wp_small_toggle.9.png -text
+res/drawable/wpcom.png -text
+res/drawable/wplogo.png -text
 res/layout-hdpi-v4/new_account.xml -text
 res/layout-small-v4/new_account.xml -text
 res/layout-v4/row.xml -text
 res/layout/add_account.xml -text
 res/layout/add_category.xml -text
+res/layout/blogs_row.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/edit.xml -text
@@ -320,6 +325,7 @@ res/layout/posts_tab_selector.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/row_post_page.xml -text
+res/layout/select_blogs_list.xml -text
 res/layout/select_categories.xml -text
 res/layout/settings.xml -text
 res/layout/spinner_textview.xml -text

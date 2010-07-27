@@ -9,7 +9,7 @@ android:orientation="vertical">
 			android:scaleType="centerInside" 
 			android:layout_width="246dip"
 			android:layout_height="246dip" 
-			android:layout_marginTop="24dip"
+			android:layout_marginTop="12dip"
 			android:id="@+id/wordpress_logo" 
 			android:src="@drawable/new_account_logo"> 
 </ImageView>
@@ -29,8 +29,32 @@ android:orientation="vertical">
             android:shadowRadius="1"
             android:textSize="20dip"/>	  
 <Button
-			android:id="@+id/setupAccount"
-            android:layout_width="260dip"  
+			android:id="@+id/createWPAccount"
+            android:layout_width="280dip"  
+            android:layout_height="wrap_content"
+            android:textSize="14dip"
+            android:shadowColor="#FFFFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:textStyle="bold"
+            android:background="@drawable/wp_button"
+            android:text="@string/new_to_wp" />  
+<Button
+			android:id="@+id/dotcomExisting"
+            android:layout_width="280dip"  
+            android:layout_height="wrap_content"
+            android:textSize="14dip"
+            android:shadowColor="#FFFFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:textStyle="bold"
+            android:background="@drawable/wp_button"
+            android:text="@string/i_have_wp_blog" />
+<Button
+			android:id="@+id/dotorgExisting"
+            android:layout_width="280dip"  
             android:layout_height="wrap_content"
             android:textSize="14dip"
             android:shadowColor="#FFFFFFFF"
@@ -41,16 +65,4 @@ android:orientation="vertical">
             android:textStyle="bold"
             android:background="@drawable/wp_button"
             android:text="@string/i_have_blog" />
-<Button
-			android:id="@+id/createAccount"
-            android:layout_width="260dip"  
-            android:layout_height="wrap_content"
-            android:textSize="14dip"
-            android:shadowColor="#FFFFFFFF"
-            android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="1"
-            android:textStyle="bold"
-            android:background="@drawable/wp_button"
-            android:text="@string/new_to_wp" />
 </LinearLayout>

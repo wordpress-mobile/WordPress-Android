@@ -8,9 +8,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content"
-                android:padding="10dip"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingBottom="10dip"
 				android:background="#FFF5F5F5">
+	 <ImageView android:id="@+id/wpcomLogo"
+     android:layout_width="fill_parent" 
+     android:layout_height="wrap_content"
+     android:gravity="left"
+     android:paddingLeft="20dip"
+     android:paddingRight="20dip"
+     android:src="@drawable/wpcom"
+     android:scaleType="centerInside">
+     </ImageView>
     <RelativeLayout android:layout_width="fill_parent" 
+    			android:layout_below="@id/wpcomLogo"
                 android:layout_height="fill_parent"
                 android:background="@drawable/content_bg"
                 android:id="@+id/section1"> 
@@ -18,13 +30,17 @@
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
               android:text="@string/account_details"
-              style="@style/WordPressSectionHeader"/>       
+              style="@style/WordPressSectionHeader"/>  
+              <RelativeLayout android:layout_width="wrap_content" 
+    			android:layout_below="@id/l_section1"
+                android:layout_height="wrap_content"
+                android:id="@+id/urlWrapper">      
     <TextView android:id="@+id/l_url" 
     		  android:textColor="#444444"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="Blog URL:"
-              android:layout_below="@id/l_section1"/>
+              android:layout_below="@id/urlWrapper"/>
               
     <EditText android:id="@+id/url" 
     		  android:inputType="textUri"
@@ -33,14 +49,14 @@
               android:minHeight="40dip"
               android:background="@android:drawable/editbox_background"
               android:layout_below="@id/l_url"/>
-              
+              </RelativeLayout>
       <TextView android:id="@+id/l_username" 
       		  android:textColor="#444444" 
         	  android:layout_marginTop="10dip"	
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:text="@string/username"
-              android:layout_below="@id/url"/>
+              android:layout_below="@id/urlWrapper"/>
               
     <EditText android:id="@+id/username" 
               android:layout_width="fill_parent" 
@@ -98,7 +114,7 @@
       		android:shadowDy="1"
       		android:shadowRadius="1" 
       		android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dip" 
+            android:layout_marginTop="24dip" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content" 
             android:text="@string/dont_yet_have_a_blog"

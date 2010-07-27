@@ -29,7 +29,6 @@ public class link extends Activity {
             	EditText linkTextET = (EditText)findViewById(R.id.linkText);
             	String linkText = linkTextET.getText().toString();
             	
-            	
                 Bundle bundle = new Bundle();
                 
                 bundle.putString("linkText", linkText);

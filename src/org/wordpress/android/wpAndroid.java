@@ -112,8 +112,7 @@ public class wpAndroid extends ListActivity {
 	public void displayAccounts() {
 
 		setContentView(R.layout.home);
-		setTitle(getResources().getText(R.string.app_name) + " - "
-				+ getResources().getText(R.string.blogs));
+		setTitle(getResources().getText(R.string.app_name));
 
 		// settings time!
 		WordPressDB settingsDB = new WordPressDB(this);
@@ -129,7 +128,7 @@ public class wpAndroid extends ListActivity {
 				R.drawable.list_divider));
 		listView.addFooterView(iv);
 		listView.setVerticalFadingEdgeEnabled(false);
-		listView.setVerticalScrollBarEnabled(false);
+		listView.setVerticalScrollBarEnabled(true);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -169,6 +168,8 @@ public class wpAndroid extends ListActivity {
 				});
 
 		if (accounts.size() > 0) {
+			setTitle(getResources().getText(R.string.app_name) + " - "
+					+ getResources().getText(R.string.blogs));
 			ScrollView sv = new ScrollView(this);
 			sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 					LayoutParams.WRAP_CONTENT));
@@ -372,7 +373,7 @@ public class wpAndroid extends ListActivity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case 0:
-			Intent i = new Intent(this, addAccount.class);
+			Intent i = new Intent(this, newAccount.class);
 
 			startActivityForResult(i, 0);
 

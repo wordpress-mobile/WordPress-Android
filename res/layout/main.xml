@@ -147,8 +147,7 @@
             <GridView   
             		android:id="@+id/gridView"   
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:gravity="fill_vertical"
+                    android:layout_height="wrap_content"
                     android:numColumns="3"
                     android:visibility="gone"
                     android:layout_below="@id/addPictureButton">             

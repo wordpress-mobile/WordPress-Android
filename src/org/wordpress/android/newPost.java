@@ -5,18 +5,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,7 +42,6 @@ import android.text.Html;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextWatcher;
-import android.text.style.ClickableSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -64,9 +63,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class newPost extends Activity implements LocationListener{
 	/** Called when the activity is first created. */
@@ -330,6 +326,8 @@ public class newPost extends Activity implements LocationListener{
 			public void onClick(View v) {
 
 				addPictureButton.performLongClick();
+				//Intent i = new Intent(newPost.this, addMedia.class);
+				//startActivityForResult(i, 8);
 
 			}
 		});
@@ -930,7 +928,7 @@ public class newPost extends Activity implements LocationListener{
 			ImageView imageView;
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
 				imageView = new ImageView(mContext);
-				imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+				imageView.setLayoutParams(new GridView.LayoutParams(130, 130));
 				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 				imageView.setPadding(8, 8, 8, 8);
 			} else {
@@ -1118,8 +1116,8 @@ public class newPost extends Activity implements LocationListener{
 				selectedImageIDs.add(selectedImageCtr, imageUri);
 				imageUrl.add(selectedImageCtr, imgPath);
 				selectedImageCtr++;
+				
 				gridview.setVisibility(View.VISIBLE);
-
 				gridview.setAdapter(new ImageAdapter(this));
 
 				clearMedia.setVisibility(View.VISIBLE);

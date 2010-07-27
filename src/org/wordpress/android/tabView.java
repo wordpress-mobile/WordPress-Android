@@ -1,5 +1,7 @@
 package org.wordpress.android;
 
+import java.lang.reflect.Field;
+
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
@@ -15,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.Toast;
+import android.widget.TabHost.OnTabChangeListener;
 
 public class tabView extends TabActivity {
 	private String id = "";
@@ -78,7 +81,7 @@ public class tabView extends TabActivity {
  		bundle.putBoolean("viewPages", true); 		
  		tab3.putExtras(bundle);
          
-         TabHost host = getTabHost();  
+         final TabHost host = getTabHost();  
          host.addTab(host.newTabSpec("one").setIndicator(getResources().getText(R.string.tab_comments), getResources().getDrawable(R.layout.comment_tab_selector)).setContent(tab1));  
          host.addTab(host.newTabSpec("two").setIndicator(getResources().getText(R.string.tab_posts), getResources().getDrawable(R.layout.posts_tab_selector)).setContent(tab2));
          host.addTab(host.newTabSpec("three").setIndicator(getResources().getText(R.string.tab_pages), getResources().getDrawable(R.layout.pages_tab_selector)).setContent(tab3));
@@ -89,6 +92,7 @@ public class tabView extends TabActivity {
         		 host.setCurrentTab(1);
         	 }
          }
+
          
      }  
 	     
@@ -170,5 +174,8 @@ public class tabView extends TabActivity {
 	 			return true;
 	 		}
 	 		return false;	
+
 	 	}
+	 	
+	 	
  }
