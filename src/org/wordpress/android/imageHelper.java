@@ -1,14 +1,17 @@
 package org.wordpress.android;
 
 import java.io.ByteArrayOutputStream;
-
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
 public class imageHelper {
 
-	public static byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation) {
+	public static byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny) {
 		//creates a thumbnail and returns the bytes
 		
 		int finalHeight = 0;
@@ -21,6 +24,10 @@ public class imageHelper {
         
         int finalWidth = 500;  //default to this if there's a problem
         //Change dimensions of thumbnail
+        
+        if (tiny){
+        	finalWidth = 150;
+        }
         
         byte[] finalBytes;
         
@@ -51,7 +58,7 @@ public class imageHelper {
                 
                 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-                bm.compress(Bitmap.CompressFormat.JPEG, 85, baos);
+                bm.compress(Bitmap.CompressFormat.JPEG, 90, baos);
                 
                 bm.recycle(); //free up memory
                 
@@ -123,5 +130,72 @@ public class imageHelper {
         return finalBytes;
 
 }
+
+	public static String getExifOrientation(String path, String orientation) {
+		//get image EXIF orientation if Android 2.0 or higher, using reflection
+		//http://developer.android.com/resources/articles/backward-compatibility.html
+		Method exif_getAttribute;
+		Constructor exif_construct;
+		String exifOrientation = "";
+		
+		int sdk_int = 0;
+		try {
+			sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
+		} catch (Exception e1) {
+			sdk_int = 3; //assume they are on cupcake
+		}
+		if (sdk_int >= 5){
+			try {
+		           exif_construct = android.media.ExifInterface.class.getConstructor(new Class[] { String.class } );
+		           Object exif = exif_construct.newInstance(path);
+		           exif_getAttribute = android.media.ExifInterface.class.getMethod("getAttribute", new Class[] { String.class } );
+		           try {
+		        	   exifOrientation = (String) exif_getAttribute.invoke(exif, android.media.ExifInterface.TAG_ORIENTATION);
+		        	   if (exifOrientation.equals("1")){
+							orientation = "0";
+						}
+						else if (exifOrientation.equals("3")){
+							orientation = "180";
+						}
+						else if (exifOrientation.equals("6")){
+							orientation = "90";
+						}
+						else if (exifOrientation.equals("8")){
+							orientation = "270";
+						}
+		           } catch (InvocationTargetException ite) {
+		               /* unpack original exception when possible */
+		               Throwable cause = ite.getCause();
+		               if (cause instanceof IOException) {
+		                   try {
+							throw (IOException) cause;
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		               } else if (cause instanceof RuntimeException) {
+		                   throw (RuntimeException) cause;
+		               } else if (cause instanceof Error) {
+		                   throw (Error) cause;
+		               } else {
+		                   /* unexpected checked exception; wrap and re-throw */
+		                   throw new RuntimeException(ite);
+		               }
+		           } catch (IllegalAccessException ie) {
+		               System.err.println("unexpected " + ie);
+		           }
+		           /* success, this is a newer device */
+		       } catch (NoSuchMethodException nsme) {
+		           /* failure, must be older device */
+		       } catch (IllegalArgumentException e) {
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			} catch (InvocationTargetException e) {
+			}
+
+
+		}
+		return orientation;
+	}
 	
 }

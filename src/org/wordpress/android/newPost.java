@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,7 +27,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -47,9 +49,9 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -927,131 +929,86 @@ public class newPost extends Activity implements LocationListener{
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView imageView;
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
-				imageView = new ImageView(mContext);
-				imageView.setLayoutParams(new GridView.LayoutParams(130, 130));
-				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setPadding(8, 8, 8, 8);
+				LayoutInflater inflater = (LayoutInflater) newPost.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    		imageView = (ImageView) inflater.inflate(R.layout.image_view, null);
+				
+				Uri tempURI = (Uri) selectedImageIDs.get(position);
+
+				if (!tempURI.toString().contains("video")){
+
+					String[] projection = new String[] {
+							Images.Thumbnails._ID,
+							Images.Thumbnails.DATA,
+							Images.Media.ORIENTATION
+					};
+					String orientation = "", path = "";
+					Cursor cur = managedQuery(tempURI, projection, null, null, null);
+					File jpeg = null;
+					if (cur != null){
+						String thumbData = "";
+
+						if (cur.moveToFirst()) {
+
+							int nameColumn, dataColumn, orientationColumn;
+
+							nameColumn = cur.getColumnIndex(Images.Media._ID);
+							dataColumn = cur.getColumnIndex(Images.Media.DATA);
+							orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+
+							thumbData = cur.getString(dataColumn);
+							orientation = cur.getString(orientationColumn);
+						}
+
+
+						jpeg = new File(thumbData);
+						path = thumbData;
+					}
+					else{
+						path = tempURI.toString().replace("file://", "");
+						jpeg = new File(tempURI.toString().replace("file://", ""));
+						
+					}
+					
+					imageTitle = jpeg.getName();
+				 	   
+				 	   byte[] finalBytes = null;
+				 	  
+				 	   byte[] bytes = new byte[(int) jpeg.length()];
+				 	   
+				 	   DataInputStream in = null;
+					try {
+						in = new DataInputStream(new FileInputStream(jpeg));
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				 	   try {
+						in.readFully(bytes);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				 	   try {
+						in.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					orientation = imageHelper.getExifOrientation(path, orientation);
+
+					imageTitle = jpeg.getName();
+					
+					finalBytes = imageHelper.createThumbnail(bytes, "150", orientation, true);
+
+					Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
+
+					imageView.setImageBitmap(resizedBitmap);
+				}
+				else{
+					imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+				}
+				
 			} else {
 				imageView = (ImageView) convertView;
 			}
-			Uri tempURI = (Uri) selectedImageIDs.get(position);
-
-			if (!tempURI.toString().contains("video")){
-
-				String[] projection = new String[] {
-						Images.Thumbnails._ID,
-						Images.Thumbnails.DATA,
-						Images.Media.ORIENTATION
-				};
-				String orientation = "";
-				Cursor cur = managedQuery(tempURI, projection, null, null, null);
-				File jpeg = null;
-				if (cur != null){
-					String thumbData = "";
-
-					if (cur.moveToFirst()) {
-
-						int nameColumn, dataColumn, orientationColumn;
-
-						nameColumn = cur.getColumnIndex(Images.Media._ID);
-						dataColumn = cur.getColumnIndex(Images.Media.DATA);
-						orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-
-						thumbData = cur.getString(dataColumn);
-						orientation = cur.getString(orientationColumn);
-					}
-
-
-					jpeg = new File(thumbData);
-				}
-				else{
-					jpeg = new File(tempURI.toString().replace("file://", ""));
-				}
-
-
-
-				imageTitle = jpeg.getName();
-
-				byte[] bytes = new byte[(int) jpeg.length()];
-
-				DataInputStream in = null;
-				try {
-					in = new DataInputStream(new FileInputStream(jpeg));
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					in.readFully(bytes);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				try {
-					in.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				//create the thumbnail
-
-				BitmapFactory.Options opts = new BitmapFactory.Options();
-				opts.inJustDecodeBounds = true;
-				Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-				int width = opts.outHeight;
-				int height = opts.outWidth;
-
-				float percentage = (float) 100 / width;
-				float proportionateHeight = height * percentage;
-				int finalHeight = (int) Math.rint(proportionateHeight);
-
-
-				// calculate the scale - in this case = 0.4f
-				float scaleWidth = ((float) 100) / width;
-				float scaleHeight = ((float) finalHeight) / height;
-
-				float finWidth = 200;
-				int sample = 0;
-
-				float fWidth = width;
-				sample= new Double(Math.ceil(fWidth / finWidth)).intValue();
-
-				if(sample == 3){
-					sample = 4;
-				}
-				else if(sample > 4 && sample < 8 ){
-					sample = 8;
-				}
-
-				opts.inSampleSize = sample;
-				opts.inJustDecodeBounds = false;
-
-				Bitmap resizedBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts); 
-
-				if ((orientation != null) && (orientation.equals("90") || orientation.equals("180") || orientation.equals("270"))){
-					Matrix matrix = new Matrix();
-					// rotate the Bitmap
-					matrix.postRotate(Integer.valueOf(orientation));
-
-					// recreate the new Bitmap
-					Bitmap rotatedBitmap = Bitmap.createBitmap(resizedBitmap, 0, 0,
-							resizedBitmap.getWidth(), resizedBitmap.getHeight(), matrix, true); 
-
-					imageView.setImageBitmap(rotatedBitmap);
-				}
-				else{
-					imageView.setImageBitmap(resizedBitmap);
-				}
-
-
-			}
-			else{
-				imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
-			}
-
-			//resizedBitmap.recycle(); //free up memory
 
 			return imageView;
 		}
@@ -1096,13 +1053,6 @@ public class newPost extends Activity implements LocationListener{
 							selectionStart = temp;
 						}
 
-						/*String textToLink = contentText.getText().toString().substring(selectionStart, selectionEnd); 
-    		textToLink = "<a href=\"" + linkText + "\">"+ textToLink + "</a>";
-    		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
-    		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
-    		contentText.setText(firstHalf + textToLink + lastHalf);
-    		Editable etext = (Editable) contentText.getText(); 
-    		Selection.setSelection(etext, selectionStart + textToLink.length());*/
 						Spannable str = contentText.getText();
 						str.setSpan(new URLSpan(linkText),  selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 					}
@@ -1126,6 +1076,7 @@ public class newPost extends Activity implements LocationListener{
 				if (resultCode == Activity.RESULT_OK) {
 
 					// http://code.google.com/p/android/issues/detail?id=1480
+					String path= "";
 					File f = null;
 					int sdk_int = 0;
 					try {
@@ -1175,17 +1126,20 @@ public class newPost extends Activity implements LocationListener{
 						}
 					}
 					else{
+						path = SD_CARD_TEMP_DIR;
 						f = new File(SD_CARD_TEMP_DIR);
 					}
-					try {
-						Uri capturedImage =
-							Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),
-									f.getAbsolutePath(), null, null));
+					
+					
+					//try {
+						//Uri capturedImage =
+						//	Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),
+						//			f.getAbsolutePath(), null, null));
 
 
-						Log.i("camera", "Selected image: " + capturedImage.toString());
-
-						f.delete();
+						//Log.i("camera", "Selected image: " + capturedImage.toString());
+					
+						Uri capturedImage = Uri.parse(f.getAbsolutePath());
 
 						Bundle bundle = new Bundle();
 
@@ -1199,7 +1153,7 @@ public class newPost extends Activity implements LocationListener{
 
 						clearMedia.setVisibility(View.VISIBLE);
 
-					} catch (FileNotFoundException e) {
+					/*} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.file_error));
@@ -1212,7 +1166,7 @@ public class newPost extends Activity implements LocationListener{
 						});
 						dialogBuilder.setCancelable(true);
 						dialogBuilder.create().show();
-					}
+					}*/
 
 				}
 				else {

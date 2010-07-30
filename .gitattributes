@@ -313,6 +313,7 @@ res/layout/edit_page.xml -text
 res/layout/global_settings.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
+res/layout/image_view.xml -text
 res/layout/link.xml -text
 res/layout/list_footer_btn.xml -text
 res/layout/list_footer_progress.xml -text

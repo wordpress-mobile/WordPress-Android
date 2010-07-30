@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ import java.util.Vector;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -35,6 +35,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +49,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.AlphaAnimation;
@@ -493,9 +495,11 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 
 					    if (!isPage){
 					    	listView.removeFooterView(switcher);
-					    	if (loadedPosts.size() >= 30){
-								listView.addFooterView(switcher);
-							}
+					    	if (loadedPosts != null){
+					    		if (loadedPosts.size() >= 30){
+					    			listView.addFooterView(switcher);
+								}
+					    	}
 					    }				    
 					    
 					   if (loadMore){
@@ -1698,7 +1702,7 @@ public String uploadImages(){
  	   
  	   Uri imageUri = Uri.parse(curImagePath);
  	   File jpeg = null;
- 	   String mimeType = "", orientation = "";
+ 	   String mimeType = "", orientation = "", path = "";
  	   MediaFile mf = null;
  	 
  	   if (imageUri.toString().contains("content:")){ //file is in media library
@@ -1735,14 +1739,18 @@ public String uploadImages(){
 		       thumbData = cur.getString(dataColumn);
 		       mimeType = cur.getString(mimeTypeColumn);
 		       jpeg = new File(thumbData);
+		       path = thumbData;
 				mf.setFilePath(jpeg.getPath());
 
 		 	  }
  	   }
  	   else{ //file is not in media library
- 		   jpeg = new File(imageUri.toString().replace("file://", ""));
+ 		   path = imageUri.toString().replace("file://", "");
+ 		   jpeg = new File(path);
  	   }
  	   
+ 	   orientation = imageHelper.getExifOrientation(path, orientation);
+ 	   	
  	   imageTitle = jpeg.getName();
  	   
  	   byte[] finalBytes = null;
@@ -1767,7 +1775,7 @@ public String uploadImages(){
 	}
 	
 	if (i == 0){
-		  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth, orientation);
+		  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth, orientation, false);
 	   }
 	   else{
 		  finalBytes = bytes;
