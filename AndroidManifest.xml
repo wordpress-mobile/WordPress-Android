@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="1.3.3" android:versionCode="22">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
-		android:label="WordPress" android:name="WordPress" android:debuggable="true">
+		android:label="WordPress" android:name="WordPress" android:debuggable="false">
 		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".settings" android:label="Settings"
 			android:configChanges="orientation|keyboardHidden" />
