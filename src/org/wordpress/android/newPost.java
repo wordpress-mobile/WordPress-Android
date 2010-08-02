@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,9 +46,9 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +101,7 @@ public class newPost extends Activity implements LocationListener{
 	String provider;
 	Location curLocation;
 	public boolean location = false;
-	int styleStart = -1, cursorLoc = 0;
+	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -116,6 +113,10 @@ public class newPost extends Activity implements LocationListener{
 			accountName = escapeUtils.unescapeHtml(extras.getString("accountName"));
 			isPage = extras.getBoolean("isPage", false);
 		}
+		
+		DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        screenDensity = dm.densityDpi;
 
 		if (isPage){  
 			setContentView(R.layout.main_page);
@@ -929,9 +930,21 @@ public class newPost extends Activity implements LocationListener{
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView imageView;
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
-				LayoutInflater inflater = (LayoutInflater) newPost.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    		imageView = (ImageView) inflater.inflate(R.layout.image_view, null);
+				imageView = new ImageView(mContext);
 				
+				float pixels;
+				if (screenDensity > 0){
+					pixels =  95 * ((float) screenDensity / (float) 160);
+				}
+				else{
+					pixels = 85;
+				}
+				
+				int picSize = (int) pixels;
+				
+	            imageView.setLayoutParams(new GridView.LayoutParams(picSize, picSize));
+	            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+	    		
 				Uri tempURI = (Uri) selectedImageIDs.get(position);
 
 				if (!tempURI.toString().contains("video")){

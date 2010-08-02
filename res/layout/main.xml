@@ -148,8 +148,8 @@
             		android:id="@+id/gridView"   
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:horizontalSpacing="4dip"
-                    android:verticalSpacing="4dip"
+                    android:horizontalSpacing="6dip"
+                    android:verticalSpacing="6dip"
                     android:numColumns="3"
                     android:visibility="gone"
                     android:layout_below="@id/addPictureButton">             

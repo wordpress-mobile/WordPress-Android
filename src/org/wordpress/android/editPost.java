@@ -55,6 +55,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -108,7 +109,7 @@ public class editPost extends Activity implements LocationListener{
     String provider;
     Location curLocation;
     public boolean location = false, locationActive = false;
-    int styleStart = -1, cursorLoc = 0;
+    int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -125,6 +126,10 @@ public class editPost extends Activity implements LocationListener{
          localDraft = extras.getBoolean("localDraft", false); 
          isPage = extras.getBoolean("isPage", false);
         }
+        
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        screenDensity = dm.densityDpi;
         
         if (isPage){  
         	setContentView(R.layout.edit_page);
@@ -1714,10 +1719,20 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	    public View getView(int position, View convertView, ViewGroup parent) {
 	        ImageView imageView;
 	        if (convertView == null) {  // if it's not recycled, initialize some attributes
-	            imageView = new ImageView(mContext);
-	            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-	            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-	            imageView.setPadding(8, 8, 8, 8);
+	        	imageView = new ImageView(mContext);
+	        	
+	        	float pixels;
+				if (screenDensity > 0){
+					pixels =  95 * ((float) screenDensity / (float) 160);
+				}
+				else{
+					pixels = 85;
+				}
+				
+				int picSize = (int) pixels;
+				
+	            imageView.setLayoutParams(new GridView.LayoutParams(picSize, picSize));
+	            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 	            
 	            Uri tempURI = (Uri) selectedImageIDs.get(position);
 		        
