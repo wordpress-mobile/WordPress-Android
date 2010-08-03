@@ -48,10 +48,12 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -100,8 +102,8 @@ public class newPost extends Activity implements LocationListener{
 	Criteria criteria;
 	String provider;
 	Location curLocation;
-	public boolean location = false;
-	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
+	public boolean location = false, isLargeScreen = false;
+	int styleStart = -1, cursorLoc = 0;
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -114,9 +116,15 @@ public class newPost extends Activity implements LocationListener{
 			isPage = extras.getBoolean("isPage", false);
 		}
 		
-		DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenDensity = dm.densityDpi;
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
+		int width = display.getWidth();
+		int height = display.getHeight();
+		if (height > width){
+			width = height;
+		}	
+		if (width > 480){
+			isLargeScreen = true;
+		}
 
 		if (isPage){  
 			setContentView(R.layout.main_page);
@@ -933,8 +941,8 @@ public class newPost extends Activity implements LocationListener{
 				imageView = new ImageView(mContext);
 				
 				float pixels;
-				if (screenDensity > 0){
-					pixels =  95 * ((float) screenDensity / (float) 160);
+				if (isLargeScreen){
+					pixels =  95 * ((float) 240 / (float) 160);
 				}
 				else{
 					pixels = 85;
@@ -1005,11 +1013,13 @@ public class newPost extends Activity implements LocationListener{
 						e.printStackTrace();
 					}
 					
-					orientation = imageHelper.getExifOrientation(path, orientation);
+					imageHelper ih = imageHelper.getInstance();
+					
+					orientation = ih.getExifOrientation(path, orientation);
 
 					imageTitle = jpeg.getName();
 					
-					finalBytes = imageHelper.createThumbnail(bytes, "150", orientation, true);
+					finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
 
 					Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
 

@@ -1749,7 +1749,8 @@ public String uploadImages(){
  		   jpeg = new File(path);
  	   }
  	   
- 	   orientation = imageHelper.getExifOrientation(path, orientation);
+ 	   imageHelper ih = imageHelper.getInstance();
+ 	   orientation = ih.getExifOrientation(path, orientation);
  	   	
  	   imageTitle = jpeg.getName();
  	   
@@ -1775,7 +1776,8 @@ public String uploadImages(){
 	}
 	
 	if (i == 0){
-		  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth, orientation, false);
+		  imageHelper ih2 = imageHelper.getInstance();
+		  finalBytes = ih2.createThumbnail(bytes, sMaxImageWidth, orientation, false);
 	   }
 	   else{
 		  finalBytes = bytes;

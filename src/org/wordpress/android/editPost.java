@@ -58,10 +58,12 @@ import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -108,7 +110,7 @@ public class editPost extends Activity implements LocationListener{
     Criteria criteria;
     String provider;
     Location curLocation;
-    public boolean location = false, locationActive = false;
+    public boolean location = false, locationActive = false, isLargeScreen = false;
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     @Override
     public void onCreate(Bundle icicle) {
@@ -127,9 +129,15 @@ public class editPost extends Activity implements LocationListener{
          isPage = extras.getBoolean("isPage", false);
         }
         
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenDensity = dm.densityDpi;
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
+		int width = display.getWidth();
+		int height = display.getHeight();
+		if (height > width){
+			width = height;
+		}	
+		if (width > 480){
+			isLargeScreen = true;
+		}
         
         if (isPage){  
         	setContentView(R.layout.edit_page);
@@ -1312,7 +1320,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		}
 		
 		if (i == 0){
-			  finalBytes = imageHelper.createThumbnail(bytes, sMaxImageWidth, orientation, false);
+				imageHelper ih = imageHelper.getInstance();
+			  finalBytes = ih.createThumbnail(bytes, sMaxImageWidth, orientation, false);
 		   }
 		   else{
 			  finalBytes = bytes;
@@ -1722,8 +1731,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        	imageView = new ImageView(mContext);
 	        	
 	        	float pixels;
-				if (screenDensity > 0){
-					pixels =  95 * ((float) screenDensity / (float) 160);
+				if (isLargeScreen){
+					pixels =  95 * ((float) 240 / (float) 160);
 				}
 				else{
 					pixels = 85;
@@ -1787,11 +1796,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 					e.printStackTrace();
 				}
 				
-				orientation = imageHelper.getExifOrientation(path, orientation);
+				imageHelper ih = imageHelper.getInstance();
+				orientation = ih.getExifOrientation(path, orientation);
 				
 				imageTitle = jpeg.getName();
 				
-				byte[] finalBytes = imageHelper.createThumbnail(bytes, "150", orientation, true);
+				byte[] finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
 
 				Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
 
