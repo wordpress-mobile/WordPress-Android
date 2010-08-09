@@ -776,14 +776,38 @@ class XMLRPCMethod extends Thread {
 					if (e.getFaultCode() != 500){
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 					  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-		              dialogBuilder.setMessage(e.getMessage());
-		              dialogBuilder.setPositiveButton("OK",  new
-		            		  DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                              // Just close the window.
-                      
-                          }
-                      });
+		              String msg = e.getMessage();
+					  dialogBuilder.setMessage(e.getFaultString());
+						if (msg.contains("403")){
+							dialogBuilder.setMessage(e.getFaultString() + " " + getResources().getString(R.string.load_settings));
+							dialogBuilder.setPositiveButton(getResources().getString(R.string.yes),  new
+									DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									Intent i = new Intent(viewPosts.this, settings.class);
+									i.putExtra("id", id);
+									i.putExtra("accountName", accountName);
+									startActivity(i);
+
+								}
+							});
+							
+							dialogBuilder.setNegativeButton(getResources().getString(R.string.no),  new
+									DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									// Just close the window.
+
+								}
+							});
+						}
+						else{
+						dialogBuilder.setPositiveButton("OK",  new
+								DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// Just close the window.
+
+							}
+						});
+						}
 		              dialogBuilder.setCancelable(true);
 		             dialogBuilder.create().show();
 					}

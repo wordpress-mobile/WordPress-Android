@@ -89,6 +89,7 @@
   <string name="upload_full_size_image">Upload and link to full image:</string>
   <string name="uploading_content">Uploading Content</string>
   <string name="load_more">Load More</string>
+  <string name="load_settings">Load settings now?</string>
   
   <!--  tab titles -->
   <string name="tab_comments">Comments</string>
