@@ -95,36 +95,21 @@
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
    android:layout_below="@id/l_maxImageWidth"/>
-   
-        <TextView android:id="@+id/l_centerThumbnail" 
-        android:textColor="#444444"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
-            android:paddingTop="13dip"
-              android:layout_below="@id/maxImageWidth" android:text="@string/align_thumb_to_center"/>
               
 <CheckBox android:id="@+id/centerThumbnail"
+			android:text="@string/align_thumb_to_center"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/l_centerThumbnail"
-            android:layout_toRightOf="@id/l_centerThumbnail"
+            android:layout_below="@id/maxImageWidth"
             android:layout_marginRight="2dip"
             />
-            
-            <TextView android:id="@+id/l_fullSizeImage" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
-            android:paddingTop="13px"
-              android:text="@string/upload_full_size_image"
-              android:layout_below="@id/centerThumbnail"/>
               
 <CheckBox android:id="@+id/fullSizeImage"
+			android:textColor="#444444"
+			android:text="@string/upload_full_size_image"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/l_fullSizeImage"
-            android:layout_toRightOf="@id/l_fullSizeImage"
+            android:layout_below="@id/centerThumbnail"
             android:layout_marginRight="2dip"
             /> 
   </RelativeLayout>
@@ -140,18 +125,12 @@
               android:layout_height="wrap_content"
               android:text="@string/location"
               style="@style/WordPressSectionHeader"/>
-     <TextView android:id="@+id/l_location" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"
-            android:paddingTop="13px"
-              android:text="@string/geotag"
-              android:layout_below="@id/l_section3"/> 
 	<CheckBox android:id="@+id/location"
+			android:text="@string/geotag"
+			android:textColor="#444444"
      		android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/l_location"
-            android:layout_toRightOf="@id/l_location"
+            android:layout_below="@id/l_section3"
             android:layout_marginRight="2dip"
             /> 
 </RelativeLayout>

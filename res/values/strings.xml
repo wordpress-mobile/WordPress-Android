@@ -13,8 +13,8 @@
   <string name="post_content">Post Content</string>
   <string name="post_title">Post Title</string>
   <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
-  <string name="align_thumb_to_center">Align thumbnail to center: </string>
-  <string name="max_thumbnail_px_width">Maximum thumbnail pixel width:</string>
+  <string name="align_thumb_to_center">Align thumbnail to center</string>
+  <string name="max_thumbnail_px_width">Maximum thumbnail pixel width</string>
   <string name="below_text">Below Text</string>
   <string name="above_text">Above Text</string>
   <string name="place_image">Place image:</string>
@@ -128,6 +128,8 @@
   <string name="post_id">Post ID #</string>
   <string name="added_successfully">added successfully</string>
   <string name="added_successfully_image_error">added successfully, but an error was encountered when uploading media</string>
+  <string name="permalink_not_found">The permalink was not found.</string>
+  <string name="basic_html">Showing basic HTML preview until post status is set to published.</string>
   
   <!--  page view -->
   <string name="page_id">Page ID #</string>
@@ -265,7 +267,7 @@
   
   <!--  location -->
   <string name="location">Location</string>
-  <string name="geotag">Geotag Posts:</string>
+  <string name="geotag">Geotag Posts</string>
   <string name="location_toast">Location data not yet available, please wait.</string>
   
   <!--  preferences -->
