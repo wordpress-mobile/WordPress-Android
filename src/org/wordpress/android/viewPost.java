@@ -128,7 +128,7 @@ private void displayResults(final String permaLink, final String html, final Str
 		}
 		else{
 			wv.loadData(html, "text/html", "utf-8");
-			Toast.makeText(viewPost.this, "Showing basic HTML preview until post is published.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(viewPost.this, getResources().getText(R.string.basic_html), Toast.LENGTH_SHORT).show();
 		}
 	}
 	else{
