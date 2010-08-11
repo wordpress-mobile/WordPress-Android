@@ -485,8 +485,10 @@ public class moderateCommentsTab extends ListActivity {
 				countHash = (HashMap) loadedPosts.get(0);
 				numRecords = Integer.parseInt(countHash.get("numRecords").toString());
 				if (refreshOnly){
-					model.clear();
-				}
+					if (model != null){
+						model.clear();
+					}
+				}	
 				else{
 					model=new ArrayList<CommentEntry>();
 				}
