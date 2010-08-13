@@ -96,7 +96,7 @@ public class viewPosts extends ListActivity{
     public String submitResult = "", mediaErrorMsg = "";
     ProgressDialog loadingDialog;
     public int totalDrafts = 0;
-    public boolean isPage = false;
+    public boolean isPage = false, vpUpgrade = false;
     public Vector thumbnailUrl = new Vector();
     boolean largeScreen = false;
     int numRecords = 30;
@@ -515,7 +515,9 @@ final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
 
 								public void onItemClick(AdapterView<?> arg0, View arg1,
 										int arg2, long arg3) {
-									arg1.performLongClick();
+									if (arg1 != null){
+										arg1.performLongClick();
+									}
 									
 								}
 
@@ -1430,15 +1432,45 @@ public String submitPost() throws IOException {
 				  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
 	  			  dialogBuilder.setTitle(getResources().getText(R.string.success));
 	  			if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error) + ": " + mediaErrorMsg);  
+	  				  if (vpUpgrade){
+						  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error) + ": " + mediaErrorMsg);
+						  dialogBuilder.setNegativeButton(getResources().getString(R.string.no),  new
+			            		  DialogInterface.OnClickListener() {
+			                  public void onClick(DialogInterface dialog, int whichButton) {
+			                	  boolean isInteger = false;
+			                	  
+			                	  try {
+									int i = Integer.parseInt(newID);
+									isInteger = true;
+								} catch (NumberFormatException e) {
+									
+								}
+			                	  
+			                	  if (isInteger)
+			                	  {
+			                		
+			                		clearCounters();
+			                		  //post made it, so let's delete the draft
+				              	      if (isPage){
+				              	    	  lDraftsDB.deletePageDraft(viewPosts.this, String.valueOf(selectedID));
+				              	      }
+				              	      else {
+				              	    	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
+				              	      }
+			                	  refreshPosts(false);
+			                	  }
+			              
+			                  }
+			              });
+	  				  }
+					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully_image_error) + ": " + mediaErrorMsg);
 				  }
 				  else{
 	              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_id : R.string.post_id) + " " + newID + " " + getResources().getText(R.string.added_successfully));
 				  }
-	              dialogBuilder.setPositiveButton("OK",  new
+	              dialogBuilder.setPositiveButton((vpUpgrade) ? getResources().getString(R.string.yes) : "OK",  new
 	            		  DialogInterface.OnClickListener() {
 	                  public void onClick(DialogInterface dialog, int whichButton) {
-	                      // Just close the window.
 	                	  
 	                	  boolean isInteger = false;
 	                	  
@@ -1461,6 +1493,13 @@ public String submitPost() throws IOException {
 		              	    	  lDraftsDB.deletePost(viewPosts.this, String.valueOf(selectedID));
 		              	      }
 	                	  refreshPosts(false);
+	                	  }
+	                	  
+	                	  if(vpUpgrade){
+	                		  String url = "http://videopress.com";
+	                		  Intent i = new Intent(Intent.ACTION_VIEW);
+	                		  i.setData(Uri.parse(url));
+	                		  startActivity(i);
 	                	  }
 	              
 	                  }
@@ -1694,9 +1733,13 @@ public String uploadImages(){
          try {
  			result = (Object) client.call("wp.uploadFile", params);
  		} catch (XMLRPCException e) {
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
  			mediaErrorMsg = e.getMessage();
+ 			if (video){
+ 				if (mediaErrorMsg.contains("Invalid file type")){
+ 					mediaErrorMsg = getResources().getString(R.string.vp_upgrade);
+ 					vpUpgrade = true;
+ 				}
+ 			}
  			xmlrpcError = true;
  			break;
  		}
@@ -1764,13 +1807,15 @@ public String uploadImages(){
 		       mimeType = cur.getString(mimeTypeColumn);
 		       jpeg = new File(thumbData);
 		       path = thumbData;
-				mf.setFilePath(jpeg.getPath());
+			   mf.setFilePath(jpeg.getPath());
 
 		 	  }
  	   }
  	   else{ //file is not in media library
+ 		   mf = new MediaFile();
  		   path = imageUri.toString().replace("file://", "");
  		   jpeg = new File(path);
+ 		   mf.setFilePath(path);
  	   }
  	   
  	   imageHelper ih = imageHelper.getInstance();
@@ -1780,33 +1825,29 @@ public String uploadImages(){
  	   
  	   byte[] finalBytes = null;
  	  
- 	   byte[] bytes = new byte[(int) jpeg.length()];
- 	   
- 	   DataInputStream in = null;
-	try {
-		in = new DataInputStream(new FileInputStream(jpeg));
-	} catch (FileNotFoundException e) {
-		e.printStackTrace();
-	}
- 	   try {
-		in.readFully(bytes);
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
- 	   try {
-		in.close();
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
-	
-	if (i == 0){
+ 	   if (i == 0){
+		  byte[] bytes = new byte[(int) jpeg.length()];
+		  
+		  DataInputStream in = null;
+		  try {
+				in = new DataInputStream(new FileInputStream(jpeg));
+		  } catch (FileNotFoundException e) {
+				e.printStackTrace();
+		  }
+		  try {
+				in.readFully(bytes);
+		  } catch (IOException e) {
+				e.printStackTrace();
+		  }
+		  try {
+		  in.close();
+		  } catch (IOException e) {
+		  e.printStackTrace();
+		  }
+		
 		  imageHelper ih2 = imageHelper.getInstance();
 		  finalBytes = ih2.createThumbnail(bytes, sMaxImageWidth, orientation, false);
-	   }
-	   else{
-		  finalBytes = bytes;
-	   }
- 	   	
+	  }
 
         //try to upload the image
         Map<String, Object> m = new HashMap<String, Object>();
@@ -1814,7 +1855,12 @@ public String uploadImages(){
         HashMap hPost = new HashMap();
         m.put("name", imageTitle);
         m.put("type", mimeType);
-        m.put("bits", finalBytes);
+        if (i == 0){
+        	m.put("bits", finalBytes);
+        }
+        else {
+        	m.put("bits", mf);
+        }
         m.put("overwrite", true);
         
         Object[] params = {

@@ -1159,16 +1159,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 		 	   
 	 		 	  String[] projection; 
 	 		 	 Uri imgPath;
-	 		 	 
-
-	 		 	  	  //imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
 
 	 			 	  projection = new String[] {
 	 			       		    Video.Media._ID,
 	 			       		    Video.Media.DATA,
 	 			       		    Video.Media.MIME_TYPE
 	 			       		};
-	 			 	  //imgPath = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, imgID2);
 	 			 	  imgPath = videoUri;
 
 	 		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
@@ -1288,45 +1284,44 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			       thumbData = cur.getString(dataColumn);
 			       mimeType = cur.getString(mimeTypeColumn);
 			       jpeg = new File(thumbData);
-					mf.setFilePath(jpeg.getPath());
+				   mf.setFilePath(jpeg.getPath());
 
 			 	  }
 	 	   }
 	 	   else{ //file is not in media library
-	 		   jpeg = new File(imageUri.toString().replace("file://", ""));
+	 		   String path = imageUri.toString().replace("file://", "");
+	 		   jpeg = new File(path);
+	 		   mf = new MediaFile();
+	 		   mf.setFilePath(path);
 	 	   }
 	 	   
 	 	   imageTitle = jpeg.getName();
 	 	   
 	 	   byte[] finalBytes = null;
-	 	  
-	 	   byte[] bytes = new byte[(int) jpeg.length()];
 	 	   
-	 	   DataInputStream in = null;
-		try {
-			in = new DataInputStream(new FileInputStream(jpeg));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	 	   try {
-			in.readFully(bytes);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	 	   try {
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (i == 0){
+	 	   if (i == 0){
+			 	byte[] bytes = new byte[(int) jpeg.length()];
+			 	   
+			 	DataInputStream in = null;
+				try {
+					in = new DataInputStream(new FileInputStream(jpeg));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			 	   try {
+					in.readFully(bytes);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			 	   try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 				imageHelper ih = imageHelper.getInstance();
-			  finalBytes = ih.createThumbnail(bytes, sMaxImageWidth, orientation, false);
-		   }
-		   else{
-			  finalBytes = bytes;
-		   }
-	 	   	
+				finalBytes = ih.createThumbnail(bytes, sMaxImageWidth, orientation, false);
+	 	   }
 
 	        //try to upload the image
 	        Map<String, Object> m = new HashMap<String, Object>();
@@ -1334,7 +1329,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        HashMap hPost = new HashMap();
 	        m.put("name", imageTitle);
 	        m.put("type", mimeType);
-	        m.put("bits", finalBytes);
+	        if (i == 0){
+	        	m.put("bits", finalBytes);
+	        }
+	        else {
+	        	m.put("bits", mf);
+	        }
 	        m.put("overwrite", true);
 	        
 	        Object[] params = {
