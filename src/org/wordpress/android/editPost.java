@@ -359,14 +359,21 @@ public class editPost extends Activity implements LocationListener{
 					EditText titleET = (EditText)findViewById(R.id.title);
 			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
 			        EditText contentET = (EditText)findViewById(R.id.content);
+			        String content = "";
 			        if (contentHash.get("mt_text_more").toString() != ""){
 			        	//removed toHtml function for trac ticket #68
-			        	contentET.setText(StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString()));
+			        	content = StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString());
 			        }
 			        else{
-			        	contentET.setText(StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString()));
+			        	content = StringHelper.convertHTMLTagsForDisplay(contentHash.get("description").toString());
 			        }
 			      
+			        //replace duplicate <p> tags so there's not duplicates, trac #86
+			        content = content.replace("<p><p>", "<p>");
+			        content = content.replace("</p></p>", "</p>");
+			        content = content.replace("<br><br>", "<br>");
+			        
+			        contentET.setText(content);
 			        
 			        String status = contentHash.get("post_status").toString();
 			        
@@ -1679,7 +1686,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 						if (couse instanceof HttpHostConnectException) {
 							//pd.dismiss();
 							dismissDialog(editPost.this.ID_DIALOG_POSTING);
-							//status.setText("Cannot connect to " + uri.getHost() + "\nMake sure server.py on your development host is running !!!");
 						} else {
 							//pd.dismiss();
 							dismissDialog(editPost.this.ID_DIALOG_POSTING);
@@ -2142,6 +2148,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
         String content = escapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
+        //replace duplicate <p> tags so there's not duplicates, trac #86
+        content = content.replace("<p><p>", "<p>");
+        content = content.replace("</p></p>", "</p>");
+        content = content.replace("<br><br>", "<br>");
         String tags = "";
         if (!isPage){
         EditText tagsET = (EditText)findViewById(R.id.tags);
