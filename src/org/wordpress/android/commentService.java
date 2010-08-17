@@ -77,7 +77,6 @@ public class commentService extends Service {
 	/** dont forget to fire update to the ui listener */
 	private void _getUpdatedComments() {
 		
-		//need to create eulaDB first in case the user reboots their device before launching the app
 		WordPressDB settingsDB = new WordPressDB(this);
     	
     	Vector notificationAccounts = settingsDB.getNotificationAccounts(this);
@@ -170,6 +169,10 @@ public class commentService extends Service {
 					Log.i("WordPressCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){
+					
+					//update the comments
+					ApiHelper.refreshComments(accountID, commentService.this);
+					
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					Intent notificationIntent = new Intent(commentService.this, tabView.class);
     		  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+accountID)));
@@ -177,8 +180,11 @@ public class commentService extends Service {
     		  		notificationIntent.putExtra("accountName", accountName);
     		  		notificationIntent.putExtra("fromNotification", true);
     		  		PendingIntent pendingIntent = PendingIntent.getActivity(commentService.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
- 			  			  		
-    		  		Notification n = new Notification(R.drawable.wp_logo, getResources().getText(R.string.new_comment), System.currentTimeMillis());
+ 			  		
+    		  		String comment = contentHash.get("content").toString();
+    		  		String author = contentHash.get("author").toString();
+    		  		
+    		  		Notification n = new Notification(R.drawable.wp_logo, author + ": " + comment, System.currentTimeMillis());
     		  		if (sound){
     		  		n.defaults |= Notification.DEFAULT_SOUND;
     		  		}
@@ -191,7 +197,8 @@ public class commentService extends Service {
     		  		n.ledOffMS = 5000;
     		  		n.flags |= Notification.FLAG_SHOW_LIGHTS;
     		  		}
- 			  		n.setLatestEventInfo(commentService.this, accountName, getResources().getText(R.string.new_comment), pendingIntent);
+    		  		n.flags |= Notification.FLAG_AUTO_CANCEL;
+ 			  		n.setLatestEventInfo(commentService.this, accountName, author + ": " + comment, pendingIntent);
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));
@@ -217,7 +224,7 @@ public class commentService extends Service {
         
     		} 
     		}
-    	}  // end if
+    	}
 
 	}
 

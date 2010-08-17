@@ -125,9 +125,9 @@ public class moderateCommentsTab extends ListActivity {
 
 		if (fromNotification) //dismiss the notification 
 		{
-			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			nm.cancel(22 + Integer.valueOf(id));
-			refreshComments(false, false, false);
+			//NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			//nm.cancel(22 + Integer.valueOf(id));
+			//loadComments(false, false);
 		}
 
 		this.setTitle(accountName + " - Moderate Comments");
@@ -527,6 +527,10 @@ public class moderateCommentsTab extends ListActivity {
 						postTitle = postTitle.replaceAll("[^a-zA-Z0-9\'\"-]", " ");
 						author = author.replaceAll("[^a-zA-Z0-9\'\"-]", " ");
 						authorURL = authorURL.replaceAll("[^a-zA-Z0-9:'/'/.-]", " ");
+					}
+					
+					if (model == null){
+						model=new ArrayList<CommentEntry>();
 					}
 
 					//add to model
