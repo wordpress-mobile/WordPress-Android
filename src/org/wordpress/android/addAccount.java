@@ -233,7 +233,7 @@ public class addAccount extends Activity {
 		                boolean success = false;
 		                
 		                if (blogName == ""){
-		                	blogName = "(No Blog Title)";
+		                	blogNames[blogCtr] = "(No Blog Title)";
 		                }
 		                
 		                boolean wpcomFlag = false;
