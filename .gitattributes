@@ -339,14 +339,15 @@ res/layout/view_stats.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
-res/values-br/strings.xml -text
 res/values-ca/strings.xml -text
 res/values-cs/strings.xml -text
 res/values-da/strings.xml -text
 res/values-de/strings.xml -text
+res/values-es/strings.xml -text
 res/values-fi/strings.xml -text
 res/values-fr/strings.xml -text
 res/values-hdpi-v4/styles.xml -text
+res/values-id/strings.xml -text
 res/values-in/strings.xml -text
 res/values-it/strings.xml -text
 res/values-ja/strings.xml -text

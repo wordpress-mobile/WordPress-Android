@@ -370,24 +370,26 @@ public class WordPressDB {
 		c.moveToFirst();
 
 		Vector returnVector = new Vector();
-		if (c.getString(0) != null){
-		returnVector.add(c.getString(0));
-		returnVector.add(c.getString(1));
-		returnVector.add(c.getString(2));
-		returnVector.add(c.getString(3));
-		returnVector.add(c.getString(4));
-		returnVector.add(c.getInt(5));
-		returnVector.add(c.getString(6));
-		returnVector.add(c.getString(7));
-		returnVector.add(c.getInt(8));
-		returnVector.add(c.getInt(9));
-		returnVector.add(c.getInt(10));
-		returnVector.add(c.getInt(11));
-		returnVector.add(c.getInt(12));
-		}
-		else
-		{
-			returnVector = null;
+		if (numRows > 0){
+			if (c.getString(0) != null){
+			returnVector.add(c.getString(0));
+			returnVector.add(c.getString(1));
+			returnVector.add(c.getString(2));
+			returnVector.add(c.getString(3));
+			returnVector.add(c.getString(4));
+			returnVector.add(c.getInt(5));
+			returnVector.add(c.getString(6));
+			returnVector.add(c.getString(7));
+			returnVector.add(c.getInt(8));
+			returnVector.add(c.getInt(9));
+			returnVector.add(c.getInt(10));
+			returnVector.add(c.getInt(11));
+			returnVector.add(c.getInt(12));
+			}
+			else
+			{
+				returnVector = null;
+			}
 		}
 		c.close();
 		db.close();

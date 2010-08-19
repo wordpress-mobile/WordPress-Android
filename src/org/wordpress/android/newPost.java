@@ -147,7 +147,11 @@ public class newPost extends Activity implements LocationListener{
 				for (int i = 0; i < accounts.size(); i++) {
 
 					HashMap curHash = (HashMap) accounts.get(i);
-					blogNames[i] = escapeUtils.unescapeHtml(curHash.get("blogName").toString());
+					try {
+						blogNames[i] = escapeUtils.unescapeHtml(curHash.get("blogName").toString());
+					} catch (Exception e) {
+						blogNames[i] = "(No Blog Title)";
+					}
 					accountIDs[i] = curHash.get("id").toString();
 
 				} 
