@@ -194,6 +194,7 @@
   <string name="post_deleted">Post Deleted Successfully</string>
   <string name="delete_sure_post">Are you sure you want to delete the post</string>
   <string name="attempt_delete_post">Attempting to delete post</string>
+  <string name="html">HTML Editor Activated</string>
   
   <!--  comment actions -->
   <string name="comment_actions">Comment Actions</string>
