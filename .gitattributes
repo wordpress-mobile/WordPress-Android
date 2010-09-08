@@ -219,6 +219,7 @@ res/drawable-hdpi-v4/check.png -text
 res/drawable-hdpi-v4/comments_tab.png -text
 res/drawable-hdpi-v4/comments_tab_active.png -text
 res/drawable-hdpi-v4/content_bg.9.png -text
+res/drawable-hdpi-v4/gallery_selected_default.9.png -text
 res/drawable-hdpi-v4/grey_wp_button.9.png -text
 res/drawable-hdpi-v4/grey_wp_button_active.9.png -text
 res/drawable-hdpi-v4/grey_wp_button_down.9.png -text
@@ -249,6 +250,7 @@ res/drawable/btn_check_on_selected.png -text
 res/drawable/comments_tab.png -text
 res/drawable/comments_tab_active.png -text
 res/drawable/content_bg.9.png -text
+res/drawable/gallery_selected_default.9.png -text
 res/drawable/grey_wp_button.9.png -text
 res/drawable/grey_wp_button_active.9.png -text
 res/drawable/grey_wp_button_down.9.png -text
@@ -285,6 +287,7 @@ res/drawable/tab_unselected.xml -text
 res/drawable/title_bar_gradient.xml -text
 res/drawable/title_bg.xml -text
 res/drawable/video.png -text
+res/drawable/wordpress_gallery_background.xml -text
 res/drawable/wordpress_home.png -text
 res/drawable/wp_button.xml -text
 res/drawable/wp_button_small.xml -text

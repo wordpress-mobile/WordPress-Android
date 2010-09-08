@@ -144,17 +144,14 @@
             android:layout_alignBottom="@id/addPictureButton"
             android:layout_toRightOf="@id/addPictureButton"
             android:text="@string/clear" />
-            
-            <GridView   
-            		android:id="@+id/gridView"   
-                    android:layout_width="wrap_content"
+            <Gallery  
+            		android:id="@+id/gallery"   
+            		android:spacing="5dip"
+            		android:visibility="gone"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:horizontalSpacing="6dip"
-                    android:verticalSpacing="6dip"
-                    android:numColumns="3"
-                    android:visibility="gone"
                     android:layout_below="@id/addPictureButton">             
-               </GridView>
+               </Gallery>
 </RelativeLayout>
  <RelativeLayout android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"

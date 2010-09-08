@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
+import org.wordpress.android.newPost.ImageAdapter;
+import org.wordpress.android.newPost.ImageAdapter.ViewHolder;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -65,6 +67,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -102,6 +105,7 @@ public class editPost extends Activity implements LocationListener{
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
     public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
     public String SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
+    public Vector imgThumbs = new Vector();
     ProgressDialog loadingDialog;
     LocationManager lm;
     Criteria criteria;
@@ -170,15 +174,7 @@ public class editPost extends Activity implements LocationListener{
         		for (int i = 0; i < pPaths.length; i++)
         		{
         			Uri imagePath = Uri.parse(pPaths[i]); 
-        			selectedImageIDs.add(selectedImageCtr, imagePath);
-        	        imageUrl.add(selectedImageCtr, pPaths[i]);
-        	        selectedImageCtr++;
-        	     	  
-        	     	GridView gridview = (GridView) findViewById(R.id.gridView);
-        	     	gridview.setVisibility(View.VISIBLE);
-        	     	gridview.setAdapter(new ImageAdapter(this));
-        	     	Button clearMedia = (Button) findViewById(R.id.clearPicture);
-        	     	clearMedia.setVisibility(View.VISIBLE);
+        			addMedia(imagePath.getEncodedPath(), imagePath);
         		}
         		
         	}
@@ -719,9 +715,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			        thumbnailUrl.clear();
 			        selectedImageIDs = new Vector();
 			        selectedImageCtr = 0;
-			        GridView gridview = (GridView) findViewById(R.id.gridView);
-			        gridview.setVisibility(View.GONE);
-			     	gridview.setAdapter(null);
+			        imgThumbs.clear();
+			        Gallery gallery = (Gallery) findViewById(R.id.gallery);
+			        gallery.setVisibility(View.GONE);
+			     	gallery.setAdapter(null);
 			     	clearPictureButton.setVisibility(View.GONE);
                 	         	
                 }
@@ -787,6 +784,93 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         		contentText.setSelection(selectionEnd + endTag.length());
         	}
     	}
+		
+	}
+	
+	private void addMedia(String imgPath, Uri curStream) {
+		selectedImageIDs.add(selectedImageCtr, curStream);
+		imageUrl.add(selectedImageCtr, imgPath);
+		selectedImageCtr++;
+		
+		if (!imgPath.contains("video")){
+		
+		String[] projection = new String[] {
+				Images.Thumbnails._ID,
+				Images.Thumbnails.DATA,
+				Images.Media.ORIENTATION
+		};
+		String orientation = "", path = "";
+		Cursor cur = managedQuery(curStream, projection, null, null, null);
+		File jpeg = null;
+		if (cur != null){
+			String thumbData = "";
+
+			if (cur.moveToFirst()) {
+
+				int nameColumn, dataColumn, orientationColumn;
+
+				nameColumn = cur.getColumnIndex(Images.Media._ID);
+				dataColumn = cur.getColumnIndex(Images.Media.DATA);
+				orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+
+				thumbData = cur.getString(dataColumn);
+				orientation = cur.getString(orientationColumn);
+			}
+
+
+			jpeg = new File(thumbData);
+			path = thumbData;
+		}
+		else{
+			path = curStream.toString().replace("file://", "");
+			jpeg = new File(curStream.toString().replace("file://", ""));
+			
+		}
+		
+		imageTitle = jpeg.getName();
+	 	   
+	 	   byte[] finalBytes = null;
+	 	  
+	 	   byte[] bytes = new byte[(int) jpeg.length()];
+	 	   
+	 	   DataInputStream in = null;
+		try {
+			in = new DataInputStream(new FileInputStream(jpeg));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	 	   try {
+			in.readFully(bytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	 	   try {
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		imageHelper ih = imageHelper.getInstance();
+		
+		orientation = ih.getExifOrientation(path, orientation);
+
+		imageTitle = jpeg.getName();
+		
+		finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
+
+		Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
+		imgThumbs.add(resizedBitmap);
+		
+		}
+		else {
+			imgThumbs.add("video");
+		}
+
+		Gallery gallery = (Gallery) findViewById(R.id.gallery);
+		gallery.setVisibility(View.VISIBLE);
+		gallery.setAdapter(new ImageAdapter(editPost.this));
+		Button clearMedia = (Button) findViewById(R.id.clearPicture);
+		clearMedia.setVisibility(View.VISIBLE);
 		
 	}
 
@@ -1621,31 +1705,36 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	}
 	
 	public class ImageAdapter extends BaseAdapter {
-	    private Context mContext;
+		private Context mContext;
 
-	    public ImageAdapter(Context c) {
-	        mContext = c;
-	    }
+		public ImageAdapter(Context c) {
+			mContext = c;
+		}
 
-	    public int getCount() {
-	        return selectedImageIDs.size();
-	    }
+		public int getCount() {
+			return selectedImageIDs.size();
+		}
 
-	    public Object getItem(int position) {
-	        return null;
-	    }
+		public Object getItem(int position) {
+			return null;
+		}
 
-	    public long getItemId(int position) {
-	        return 0;
-	    }
+		public long getItemId(int position) {
+			return 0;
+		}
 
-	 // create a new ImageView for each item referenced by the Adapter
-	    public View getView(int position, View convertView, ViewGroup parent) {
-	        ImageView imageView;
-	        if (convertView == null) {  // if it's not recycled, initialize some attributes
-	        	imageView = new ImageView(mContext);
-	        	
-	        	float pixels;
+		// create a new ImageView for each item referenced by the Adapter
+		public View getView(int position, View convertView, ViewGroup parent) {
+			boolean isVideo = false;
+			ViewHolder holder;
+			ImageView imageView;
+			if (convertView == null) {  // if it's not recycled, initialize some attributes
+				convertView = new ImageView(mContext);
+				holder = new ViewHolder();
+				
+				holder.imageView = (ImageView) convertView;
+				
+				float pixels;
 				if (isLargeScreen){
 					pixels =  95 * ((float) 240 / (float) 160);
 				}
@@ -1654,85 +1743,39 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 				}
 				
 				int picSize = (int) pixels;
-				
-	            imageView.setLayoutParams(new GridView.LayoutParams(picSize, picSize));
-	            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-	            
-	            Uri tempURI = (Uri) selectedImageIDs.get(position);
-		        
-		        if (!tempURI.toString().contains("video")){
-		     	   
-		        String[] projection = new String[] {
-		      		    Images.Thumbnails._ID,
-		      		    Images.Thumbnails.DATA,
-		      		    Images.Media.ORIENTATION
-		      		};
-		     	String orientation = "", path = "";
-				Cursor cur = managedQuery(tempURI, projection, null, null, null);
-				File jpeg = null;
-				if (cur != null){
-		     	  String thumbData = "";
-		     	 
-		     	  if (cur.moveToFirst()) {
-		     		  
-		     		int nameColumn, dataColumn, orientationColumn;
-		     		
-		     			nameColumn = cur.getColumnIndex(Images.Media._ID);
-		     	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-		     	        orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+				holder.imageView.setLayoutParams(new Gallery.LayoutParams(200,150));
+				holder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				holder.imageView.setBackgroundResource(R.drawable.wordpress_gallery_background);
+	    		
+				Uri tempURI = (Uri) selectedImageIDs.get(position);
 
-		           thumbData = cur.getString(dataColumn);
-		           orientation = cur.getString(orientationColumn);
-		     	  }
-		     	   jpeg = new File(thumbData);
-		     	   path = thumbData;
+				if (!tempURI.toString().contains("video")){
+
+					
 				}
 				else{
-					path = tempURI.toString().replace("file://", "");
-					jpeg = new File(path);
+					holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+					isVideo = true;
 				}
-		     	  
-		     	byte[] bytes = new byte[(int) jpeg.length()];
-		     	   
-		     	DataInputStream in = null;
-				try {
-					in = new DataInputStream(new FileInputStream(jpeg));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-		     	   try {
-					in.readFully(bytes);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		     	   try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				imageHelper ih = imageHelper.getInstance();
-				orientation = ih.getExifOrientation(path, orientation);
-				
-				imageTitle = jpeg.getName();
-				
-				byte[] finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			if (!isVideo){
+				holder.imageView.setImageBitmap((Bitmap) imgThumbs.get(position));
+			}
+			
+			//holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+			
+			return convertView;
+			
+		}
+		
+		class ViewHolder {
+            ImageView imageView;
+        }
 
-				Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
-
-				imageView.setImageBitmap(resizedBitmap);
-
-		        }
-		        else{
-		        	imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
-		        }
-	        } else {
-	            imageView = (ImageView) convertView;
-	        }
-	        
-	        return imageView;
-	    }
-	    
 	}
 
 	@Override
@@ -1742,8 +1785,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		if (data != null || requestCode == 4)
 		{
 			Bundle extras;
-			GridView gridview = (GridView) findViewById(R.id.gridView);
-			Button clearMedia = (Button) findViewById(R.id.clearPicture);
 		switch(requestCode) {
 		case 0:
 			extras = data.getExtras();
@@ -1783,14 +1824,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		    Uri imageUri = data.getData();
 		    String imgPath = imageUri.getEncodedPath();
    
-		    selectedImageIDs.add(selectedImageCtr, imageUri);
-		    imageUrl.add(selectedImageCtr, imageUri.toString());
-		    selectedImageCtr++;
-		    gridview.setVisibility(View.VISIBLE);
-	     	  
-	     	gridview.setAdapter(new ImageAdapter(this));
-
-           	clearMedia.setVisibility(View.VISIBLE);
+		    addMedia(imgPath, imageUri);
 	     	break;
 		case 4:
 			if (resultCode == Activity.RESULT_OK) {
@@ -1856,17 +1890,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
                     f.delete();
                     
-                    Bundle bundle = new Bundle();
-                    
-                    bundle.putString("imageURI", capturedImage.toString());
-                    
-                    selectedImageIDs.add(selectedImageCtr, capturedImage);
-                    imageUrl.add(selectedImageCtr, capturedImage.toString());
-                    selectedImageCtr++;
-                    gridview.setVisibility(View.VISIBLE);
-         	     	 gridview.setAdapter(new ImageAdapter(this));
-         	     	 
-    	           	clearMedia.setVisibility(View.VISIBLE);
+                    addMedia(capturedImage.getEncodedPath(), capturedImage);
        
                 } catch (FileNotFoundException e) {
                     // TODO Auto-generated catch block
@@ -1912,24 +1936,14 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		    Uri videoUri = data.getData();
 		    String videoPath = videoUri.getEncodedPath();
    
-           selectedImageIDs.add(selectedImageCtr, videoUri);
-           imageUrl.add(selectedImageCtr, videoUri);
-           selectedImageCtr++;
-
-           gridview.setVisibility(View.VISIBLE);
-	     	 gridview.setAdapter(new ImageAdapter(this));
-	     	 clearMedia.setVisibility(View.VISIBLE);
+		    addMedia(videoPath, videoUri);
+		    
 	     	 break;
 		case 7:
 			if (resultCode == Activity.RESULT_OK) {
                 Uri capturedVideo = data.getData();
                 
-                selectedImageIDs.add(selectedImageCtr, capturedVideo);
-                imageUrl.add(selectedImageCtr, capturedVideo.toString());
-                selectedImageCtr++;
-                gridview.setVisibility(View.VISIBLE);
-     	     	gridview.setAdapter(new ImageAdapter(this));
-     	     	clearMedia.setVisibility(View.VISIBLE);
+                addMedia(capturedVideo.getEncodedPath(), capturedVideo);
     }
     else {
     	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);

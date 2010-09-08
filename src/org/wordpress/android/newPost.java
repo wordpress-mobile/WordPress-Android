@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,7 +47,6 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -58,6 +58,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -98,6 +99,7 @@ public class newPost extends Activity implements LocationListener{
 	public boolean thumbnailOnly, secondPass, xmlrpcError = false, isPage = false, isAction=false, isUrl=false;
 	public String SD_CARD_TEMP_DIR = "";
 	public long checkedCategories[];
+	Vector imgThumbs = new Vector();
 	LocationManager lm;
 	Criteria criteria;
 	String provider;
@@ -134,7 +136,7 @@ public class newPost extends Activity implements LocationListener{
 		}
 
 		String action = getIntent().getAction();
-		if (Intent.ACTION_SEND.equals(action)){ //this is from a share action!
+		if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)){ //this is from a share action!
 			isAction = true;
 			WordPressDB settingsDB = new WordPressDB(this);
 			Vector accounts = settingsDB.getAccounts(this);
@@ -528,12 +530,13 @@ public class newPost extends Activity implements LocationListener{
 
 
 				imageUrl.clear();
+				imgThumbs.clear();
 				thumbnailUrl.clear();
 				selectedImageIDs.clear();
 				selectedImageCtr = 0;
-				GridView gridview = (GridView) findViewById(R.id.gridView);
-				gridview.setAdapter(null);
-				gridview.setVisibility(View.GONE);
+				Gallery gallery = (Gallery) findViewById(R.id.gallery);
+				gallery.setAdapter(null);
+				gallery.setVisibility(View.GONE);
 
 				clearPictureButton.setVisibility(View.GONE);
 
@@ -632,28 +635,120 @@ public class newPost extends Activity implements LocationListener{
 				}
 			}
 		}
-
+		
+		String action = intent.getAction();
 		String type = intent.getType();
-		Uri stream = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-		if (stream != null && type != null) {
-			String imgPath = stream.getEncodedPath();
-			selectedImageIDs.add(selectedImageCtr, stream);
-			imageUrl.add(selectedImageCtr, imgPath);
-			selectedImageCtr++;
-			GridView gridview = (GridView) findViewById(R.id.gridView);
-			gridview.setVisibility(View.VISIBLE);
-			gridview.setAdapter(new ImageAdapter(newPost.this));
-
-			Button clearMedia = (Button) findViewById(R.id.clearPicture);
-			clearMedia.setVisibility(View.VISIBLE);
+		ArrayList multi_stream;
+		if (Intent.ACTION_SEND_MULTIPLE.equals(action)){
+			multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
 		}
+		else{
+			multi_stream = new ArrayList();
+			multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+		}
+		for (int i=0; i < multi_stream.size(); i++) {
+		    Uri curStream = (Uri) multi_stream.get(i);
+		    if (curStream != null && type != null) {
+				String imgPath = curStream.getEncodedPath();
+				
+				addMedia(imgPath, curStream);
+				
+			}
+		}
+		
 
 	}
 
 
 
-	public boolean savePost() {
+	private void addMedia(String imgPath, Uri curStream) {
+		selectedImageIDs.add(selectedImageCtr, curStream);
+		imageUrl.add(selectedImageCtr, imgPath);
+		selectedImageCtr++;
+		
+		if (!imgPath.contains("video")){
+		
+		String[] projection = new String[] {
+				Images.Thumbnails._ID,
+				Images.Thumbnails.DATA,
+				Images.Media.ORIENTATION
+		};
+		String orientation = "", path = "";
+		Cursor cur = managedQuery(curStream, projection, null, null, null);
+		File jpeg = null;
+		if (cur != null){
+			String thumbData = "";
 
+			if (cur.moveToFirst()) {
+
+				int nameColumn, dataColumn, orientationColumn;
+
+				nameColumn = cur.getColumnIndex(Images.Media._ID);
+				dataColumn = cur.getColumnIndex(Images.Media.DATA);
+				orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+
+				thumbData = cur.getString(dataColumn);
+				orientation = cur.getString(orientationColumn);
+			}
+
+
+			jpeg = new File(thumbData);
+			path = thumbData;
+		}
+		else{
+			path = curStream.toString().replace("file://", "");
+			jpeg = new File(curStream.toString().replace("file://", ""));
+			
+		}
+		
+		imageTitle = jpeg.getName();
+	 	   
+	 	   byte[] finalBytes = null;
+	 	  
+	 	   byte[] bytes = new byte[(int) jpeg.length()];
+	 	   
+	 	   DataInputStream in = null;
+		try {
+			in = new DataInputStream(new FileInputStream(jpeg));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	 	   try {
+			in.readFully(bytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	 	   try {
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		imageHelper ih = imageHelper.getInstance();
+		
+		orientation = ih.getExifOrientation(path, orientation);
+
+		imageTitle = jpeg.getName();
+		
+		finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
+
+		Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
+		imgThumbs.add(resizedBitmap);
+		
+		}
+		else {
+			imgThumbs.add("video");
+		}
+
+		Gallery gallery = (Gallery) findViewById(R.id.gallery);
+		gallery.setVisibility(View.VISIBLE);
+		gallery.setAdapter(new ImageAdapter(newPost.this));
+		Button clearMedia = (Button) findViewById(R.id.clearPicture);
+		clearMedia.setVisibility(View.VISIBLE);
+		
+	}
+
+	public boolean savePost() {
 
 		//grab the form data
 		EditText titleET = (EditText)findViewById(R.id.title);
@@ -801,7 +896,7 @@ public class newPost extends Activity implements LocationListener{
 
 	public class ImageAdapter extends BaseAdapter {
 		private Context mContext;
-
+		int GalItemBg;
 		public ImageAdapter(Context c) {
 			mContext = c;
 		}
@@ -820,9 +915,14 @@ public class newPost extends Activity implements LocationListener{
 
 		// create a new ImageView for each item referenced by the Adapter
 		public View getView(int position, View convertView, ViewGroup parent) {
+			boolean isVideo = false;
+			ViewHolder holder;
 			ImageView imageView;
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
-				imageView = new ImageView(mContext);
+				convertView = new ImageView(mContext);
+				holder = new ViewHolder();
+				
+				holder.imageView = (ImageView) convertView;
 				
 				float pixels;
 				if (isLargeScreen){
@@ -833,92 +933,38 @@ public class newPost extends Activity implements LocationListener{
 				}
 				
 				int picSize = (int) pixels;
-				
-	            imageView.setLayoutParams(new GridView.LayoutParams(picSize, picSize));
-	            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				holder.imageView.setLayoutParams(new Gallery.LayoutParams(200,150));
+				holder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				holder.imageView.setBackgroundResource(R.drawable.wordpress_gallery_background);
 	    		
 				Uri tempURI = (Uri) selectedImageIDs.get(position);
 
 				if (!tempURI.toString().contains("video")){
 
-					String[] projection = new String[] {
-							Images.Thumbnails._ID,
-							Images.Thumbnails.DATA,
-							Images.Media.ORIENTATION
-					};
-					String orientation = "", path = "";
-					Cursor cur = managedQuery(tempURI, projection, null, null, null);
-					File jpeg = null;
-					if (cur != null){
-						String thumbData = "";
-
-						if (cur.moveToFirst()) {
-
-							int nameColumn, dataColumn, orientationColumn;
-
-							nameColumn = cur.getColumnIndex(Images.Media._ID);
-							dataColumn = cur.getColumnIndex(Images.Media.DATA);
-							orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-
-							thumbData = cur.getString(dataColumn);
-							orientation = cur.getString(orientationColumn);
-						}
-
-
-						jpeg = new File(thumbData);
-						path = thumbData;
-					}
-					else{
-						path = tempURI.toString().replace("file://", "");
-						jpeg = new File(tempURI.toString().replace("file://", ""));
-						
-					}
 					
-					imageTitle = jpeg.getName();
-				 	   
-				 	   byte[] finalBytes = null;
-				 	  
-				 	   byte[] bytes = new byte[(int) jpeg.length()];
-				 	   
-				 	   DataInputStream in = null;
-					try {
-						in = new DataInputStream(new FileInputStream(jpeg));
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				 	   try {
-						in.readFully(bytes);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				 	   try {
-						in.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					imageHelper ih = imageHelper.getInstance();
-					
-					orientation = ih.getExifOrientation(path, orientation);
-
-					imageTitle = jpeg.getName();
-					
-					finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
-
-					Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
-
-					imageView.setImageBitmap(resizedBitmap);
 				}
 				else{
-					imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+					holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+					isVideo = true;
 				}
-				
+				convertView.setTag(holder);
 			} else {
-				imageView = (ImageView) convertView;
+				holder = (ViewHolder) convertView.getTag();
 			}
-
-			return imageView;
+			
+			if (!isVideo){
+				holder.imageView.setImageBitmap((Bitmap) imgThumbs.get(position));
+			}
+			
+			//holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+			
+			return convertView;
+			
 		}
+		
+		class ViewHolder {
+            ImageView imageView;
+        }
 
 	}
 
@@ -929,8 +975,6 @@ public class newPost extends Activity implements LocationListener{
 		if (data != null || requestCode == 4)
 		{
 			Bundle extras;
-			GridView gridview = (GridView) findViewById(R.id.gridView);
-			Button clearMedia = (Button) findViewById(R.id.clearPicture);
 			switch(requestCode) {
 			case 0:
 				extras = data.getExtras();
@@ -969,15 +1013,9 @@ public class newPost extends Activity implements LocationListener{
 
 				Uri imageUri = data.getData();
 				String imgPath = imageUri.getEncodedPath();
-
-				selectedImageIDs.add(selectedImageCtr, imageUri);
-				imageUrl.add(selectedImageCtr, imgPath);
-				selectedImageCtr++;
 				
-				gridview.setVisibility(View.VISIBLE);
-				gridview.setAdapter(new ImageAdapter(this));
+				addMedia(imgPath, imageUri);
 
-				clearMedia.setVisibility(View.VISIBLE);
 				break;
 			case 4:
 				if (resultCode == Activity.RESULT_OK) {
@@ -1037,44 +1075,9 @@ public class newPost extends Activity implements LocationListener{
 						f = new File(SD_CARD_TEMP_DIR);
 					}
 					
-					
-					//try {
-						//Uri capturedImage =
-						//	Uri.parse(android.provider.MediaStore.Images.Media.insertImage(getContentResolver(),
-						//			f.getAbsolutePath(), null, null));
-
-
-						//Log.i("camera", "Selected image: " + capturedImage.toString());
-					
 						Uri capturedImage = Uri.parse(f.getAbsolutePath());
 
-						Bundle bundle = new Bundle();
-
-						bundle.putString("imageURI", capturedImage.toString());
-
-						selectedImageIDs.add(selectedImageCtr, capturedImage);
-						imageUrl.add(selectedImageCtr, capturedImage.toString());
-						selectedImageCtr++;
-						gridview.setVisibility(View.VISIBLE);
-						gridview.setAdapter(new ImageAdapter(this));
-
-						clearMedia.setVisibility(View.VISIBLE);
-
-					/*} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
-						dialogBuilder.setTitle(getResources().getText(R.string.file_error));
-						dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
-						dialogBuilder.setPositiveButton("OK",  new
-								DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								// just close the dialog
-							}
-						});
-						dialogBuilder.setCancelable(true);
-						dialogBuilder.create().show();
-					}*/
-
+						addMedia(capturedImage.getEncodedPath(), capturedImage);
 				}
 				else {
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
@@ -1108,24 +1111,13 @@ public class newPost extends Activity implements LocationListener{
 				Uri videoUri = data.getData();
 				String videoPath = videoUri.getEncodedPath();
 
-				selectedImageIDs.add(selectedImageCtr, videoUri);
-				imageUrl.add(selectedImageCtr, videoPath);
-				selectedImageCtr++;
-
-				gridview.setVisibility(View.VISIBLE);
-				gridview.setAdapter(new ImageAdapter(this));
-				clearMedia.setVisibility(View.VISIBLE);
+				addMedia(videoPath, videoUri);
 				break;
 			case 7:
 				if (resultCode == Activity.RESULT_OK) {
 					Uri capturedVideo = data.getData();
 
-					selectedImageIDs.add(selectedImageCtr, capturedVideo);
-					imageUrl.add(selectedImageCtr, capturedVideo.toString());
-					selectedImageCtr++;
-					gridview.setVisibility(View.VISIBLE);
-					gridview.setAdapter(new ImageAdapter(this));
-					clearMedia.setVisibility(View.VISIBLE);
+					addMedia(capturedVideo.getEncodedPath(), capturedVideo);
 				}
 				else {
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
