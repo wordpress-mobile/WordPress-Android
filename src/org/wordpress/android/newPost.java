@@ -917,23 +917,26 @@ public class newPost extends Activity implements LocationListener{
 		public View getView(int position, View convertView, ViewGroup parent) {
 			boolean isVideo = false;
 			ViewHolder holder;
-			ImageView imageView;
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
 				convertView = new ImageView(mContext);
 				holder = new ViewHolder();
 				
 				holder.imageView = (ImageView) convertView;
 				
-				float pixels;
+				int width, height;
 				if (isLargeScreen){
-					pixels =  95 * ((float) 240 / (float) 160);
+					width =  240;
+					height = 160;
 				}
 				else{
-					pixels = 85;
+					width = 125;
+					height = 100;
 				}
 				
-				int picSize = (int) pixels;
-				holder.imageView.setLayoutParams(new Gallery.LayoutParams(200,150));
+				//int picWidth = (int) width;
+				//int picHeight = (int) height;
+				
+				holder.imageView.setLayoutParams(new Gallery.LayoutParams(width, height));
 				holder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 				holder.imageView.setBackgroundResource(R.drawable.wordpress_gallery_background);
 	    		

@@ -26,7 +26,7 @@ public class signup extends Activity {
 		 // if there is an error loading this page (see below).
 		 webview.setWebViewClient(new WordPressWebViewClient());
 
-		 webview.loadUrl("http://en.wordpress.com/signup/?ref=wp-android");
+		 webview.loadUrl("https://en.wordpress.com/signup/?ref=wp-android");
 		 
 		 
 		
