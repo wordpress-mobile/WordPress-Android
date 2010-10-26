@@ -86,7 +86,7 @@ public class newPost extends Activity implements LocationListener{
 	private Vector<Uri> selectedImageIDs = new Vector();
 	private int selectedImageCtr = 0;
 	private String accountName = "";
-	public int ID_DIALOG_POSTING = 1;
+	public int ID_DIALOG_LOADING = 1;
 	public String sMaxImageWidth = "";
 	public boolean centerThumbnail = false;
 	public String sImagePlacement = "";
@@ -612,10 +612,11 @@ public class newPost extends Activity implements LocationListener{
 			EditText contentET = (EditText) findViewById(R.id.content);
 			//It's a youtube video link! need to strip some parameters so the embed will work
 			if (text.contains("youtube_gdata")){
-				text = text.replace("&feature=youtube_gdata", "");
+				text = text.replace("feature=youtube_gdata", "");
+				text = text.replace("&", "");
+				text = text.replace("_player", "");
 				text = text.replace("watch?v=", "v/");
 				text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\"" + text + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"" + text + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
-				text = escapeUtils.escapeHtml(text);
 				contentET.setText(text);
 			}
 			else{   	
@@ -635,25 +636,22 @@ public class newPost extends Activity implements LocationListener{
 				}
 			}
 		}
-		
-		String action = intent.getAction();
-		String type = intent.getType();
-		ArrayList multi_stream;
-		if (Intent.ACTION_SEND_MULTIPLE.equals(action)){
-			multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-		}
-		else{
-			multi_stream = new ArrayList();
-			multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
-		}
-		for (int i=0; i < multi_stream.size(); i++) {
-		    Uri curStream = (Uri) multi_stream.get(i);
-		    if (curStream != null && type != null) {
-				String imgPath = curStream.getEncodedPath();
-				
-				addMedia(imgPath, curStream);
-				
+		else {
+			String action = intent.getAction();
+			final String type = intent.getType();
+			final ArrayList multi_stream;
+			if (Intent.ACTION_SEND_MULTIPLE.equals(action)){
+				multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
 			}
+			else{
+				multi_stream = new ArrayList();
+				multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+			}
+	
+			Vector params = new Vector();
+			params.add(multi_stream);
+			params.add(type);
+			new processAttachmentsTask().execute(params);
 		}
 		
 
@@ -661,7 +659,7 @@ public class newPost extends Activity implements LocationListener{
 
 
 
-	private void addMedia(String imgPath, Uri curStream) {
+	private void addMedia(String imgPath, Uri curStream, boolean noUI) {
 		selectedImageIDs.add(selectedImageCtr, curStream);
 		imageUrl.add(selectedImageCtr, imgPath);
 		selectedImageCtr++;
@@ -739,12 +737,13 @@ public class newPost extends Activity implements LocationListener{
 		else {
 			imgThumbs.add("video");
 		}
-
+		if (!noUI){
 		Gallery gallery = (Gallery) findViewById(R.id.gallery);
 		gallery.setVisibility(View.VISIBLE);
 		gallery.setAdapter(new ImageAdapter(newPost.this));
 		Button clearMedia = (Button) findViewById(R.id.clearPicture);
 		clearMedia.setVisibility(View.VISIBLE);
+		}
 		
 	}
 
@@ -925,7 +924,7 @@ public class newPost extends Activity implements LocationListener{
 				
 				int width, height;
 				if (isLargeScreen){
-					width =  240;
+					width =  200;
 					height = 160;
 				}
 				else{
@@ -1017,7 +1016,7 @@ public class newPost extends Activity implements LocationListener{
 				Uri imageUri = data.getData();
 				String imgPath = imageUri.getEncodedPath();
 				
-				addMedia(imgPath, imageUri);
+				addMedia(imgPath, imageUri, false);
 
 				break;
 			case 4:
@@ -1080,7 +1079,7 @@ public class newPost extends Activity implements LocationListener{
 					
 						Uri capturedImage = Uri.parse(f.getAbsolutePath());
 
-						addMedia(capturedImage.getEncodedPath(), capturedImage);
+						addMedia(capturedImage.getEncodedPath(), capturedImage, false);
 				}
 				else {
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
@@ -1114,13 +1113,13 @@ public class newPost extends Activity implements LocationListener{
 				Uri videoUri = data.getData();
 				String videoPath = videoUri.getEncodedPath();
 
-				addMedia(videoPath, videoUri);
+				addMedia(videoPath, videoUri, false);
 				break;
 			case 7:
 				if (resultCode == Activity.RESULT_OK) {
 					Uri capturedVideo = data.getData();
 
-					addMedia(capturedVideo.getEncodedPath(), capturedVideo);
+					addMedia(capturedVideo.getEncodedPath(), capturedVideo, false);
 				}
 				else {
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(newPost.this);
@@ -1144,9 +1143,9 @@ public class newPost extends Activity implements LocationListener{
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		if(id == ID_DIALOG_POSTING){
+		if(id == ID_DIALOG_LOADING){
 			ProgressDialog loadingDialog = new ProgressDialog(this);
-			loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
+			loadingDialog.setMessage(getResources().getText(R.string.loading));
 			loadingDialog.setIndeterminate(true);
 			loadingDialog.setCancelable(true);
 			return loadingDialog;
@@ -1352,6 +1351,43 @@ public class newPost extends Activity implements LocationListener{
 				e.printStackTrace();
 			}
 			return finalText;
+		}
+
+	}
+	
+	private class processAttachmentsTask extends AsyncTask<Vector, Void, Boolean> {
+
+		protected void onProgressUpdate() {
+		}
+		
+		protected void onPreExecute(){
+
+			showDialog(ID_DIALOG_LOADING);
+		}
+
+		protected void onPostExecute(Boolean result) {
+			dismissDialog(ID_DIALOG_LOADING);
+			Gallery gallery = (Gallery) findViewById(R.id.gallery);
+			gallery.setVisibility(View.VISIBLE);
+			gallery.setAdapter(new ImageAdapter(newPost.this));
+			Button clearMedia = (Button) findViewById(R.id.clearPicture);
+			clearMedia.setVisibility(View.VISIBLE);
+		}
+		@Override
+		protected Boolean doInBackground(Vector... args) {
+			ArrayList multi_stream = (ArrayList) args[0].get(0);
+			String type = (String) args[0].get(1);
+			for (int i=0; i < multi_stream.size(); i++) {
+			    Uri curStream = (Uri) multi_stream.get(i);
+			    if (curStream != null && type != null) {
+					String imgPath = curStream.getEncodedPath();
+					
+					addMedia(imgPath, curStream, true);
+					
+				}
+			}
+			return true;
+			
 		}
 
 	}

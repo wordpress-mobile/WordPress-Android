@@ -6,7 +6,6 @@
 /CWAC-AdapterWrapper.jar -text
 /CWAC-Bus.jar -text
 /CWAC-Task.jar -text
-bin/WordPress.apk -text
 bin/classes.dex -text
 bin/com/roundhill/androidWP/R$attr.class -text
 bin/com/roundhill/androidWP/R$drawable.class -text
@@ -206,6 +205,7 @@ bin/org/xmlrpc/android/XMLRPCException.class -text
 bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
+bin/wp-android.apk -text
 /default.properties -text
 res/anim/cycle_5.xml -text
 res/anim/shake.xml -text

@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 8;
 	
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -75,6 +75,9 @@ public class WordPressDB {
 	private static final String ADD_DOTCOM_FLAG = "alter table accounts add dotcomFlag boolean default false;";
 	private static final String ADD_WP_VERSION = "alter table accounts add wpVersion text;";
 	
+	//add new unique identifier to no longer use device imei
+	private static final String ADD_UNIQUE_ID = "alter table eula add uuid text;";
+	
 	private SQLiteDatabase db;
 
 	public WordPressDB(Context ctx) {
@@ -116,6 +119,7 @@ public class WordPressDB {
 				db.execSQL(ADD_API_BLOGID);
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 		}
 		else if (db.getVersion() == 1){ //v1.0 or v1.0.1
@@ -142,6 +146,7 @@ public class WordPressDB {
 			db.execSQL(ADD_API_BLOGID);
 			db.execSQL(ADD_DOTCOM_FLAG);
 			db.execSQL(ADD_WP_VERSION);
+			db.execSQL(ADD_UNIQUE_ID);
 			db.setVersion(DATABASE_VERSION); //set to latest revision
 		}
 		else if (db.getVersion()  == 2){
@@ -161,6 +166,7 @@ public class WordPressDB {
 				db.execSQL(ADD_API_BLOGID);
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
 				db.setVersion(DATABASE_VERSION); 
 		}
 		else if (db.getVersion() == 3){
@@ -177,6 +183,7 @@ public class WordPressDB {
 				db.execSQL(ADD_API_BLOGID);
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
 				db.setVersion(DATABASE_VERSION); 
 		}
 		else if (db.getVersion() == 4){
@@ -197,6 +204,7 @@ public class WordPressDB {
 			db.execSQL(ADD_API_BLOGID);
 			db.execSQL(ADD_DOTCOM_FLAG);
 			db.execSQL(ADD_WP_VERSION);
+			db.execSQL(ADD_UNIQUE_ID);
 			db.setVersion(DATABASE_VERSION);
 		}
 		else if (db.getVersion() == 5){
@@ -210,6 +218,7 @@ public class WordPressDB {
 			db.execSQL(ADD_API_BLOGID);
 			db.execSQL(ADD_DOTCOM_FLAG);
 			db.execSQL(ADD_WP_VERSION);
+			db.execSQL(ADD_UNIQUE_ID);
 			db.setVersion(DATABASE_VERSION);
 		}
 		else if (db.getVersion() == 6){
@@ -221,9 +230,13 @@ public class WordPressDB {
 			db.execSQL(ADD_API_BLOGID);
 			db.execSQL(ADD_DOTCOM_FLAG);
 			db.execSQL(ADD_WP_VERSION);
+			db.execSQL(ADD_UNIQUE_ID);
 			db.setVersion(DATABASE_VERSION);
 		}
-
+		else if (db.getVersion() == 7){
+			db.execSQL(ADD_UNIQUE_ID);
+			db.setVersion(DATABASE_VERSION);
+		}
 		db.close();
 		
 	}
@@ -1240,6 +1253,33 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//clear out the table since we are refreshing the whole enchilada
 		db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
 		db.close();
+	}
+	
+	//unique identifier queries
+	public void updateUUID(Context ctx, String uuid) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		ContentValues values = new ContentValues();
+		values.put("uuid", uuid);
+		boolean returnValue = db.update("eula", values, null, null) > 0;	
+		db.close();
+	}
+	
+	public String getUUID(Context ctx) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);		
+		Cursor c = db.query("eula", new String[] { "uuid" }, "id=0", null, null, null, null);
+		int numRows = c.getCount();
+		c.moveToFirst();
+		String returnValue = "";
+		if (numRows == 1){
+			if (c.getString(0) != null){
+			returnValue = c.getString(0);
+			}
+		}
+		c.close();
+		db.close();
+
+		return returnValue;
+		
 	}
 
 }

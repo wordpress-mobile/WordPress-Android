@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import org.apache.http.HttpResponse;
@@ -240,7 +241,12 @@ public class wpAndroid extends ListActivity {
 	private void uploadStats(int numBlogs) {
 
 		// gather all of the device info
-
+		WordPressDB eulaDB = new WordPressDB(this);
+		String uuid = eulaDB.getUUID(this);
+		if (uuid == ""){
+			uuid = UUID.randomUUID().toString();
+			eulaDB.updateUUID(this, uuid);
+		}
 		PackageManager pm = getPackageManager();
 		String app_version = "";
 		try {
@@ -254,10 +260,6 @@ public class wpAndroid extends ListActivity {
 			}
 
 			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			String device_uuid = tm.getDeviceId();
-			if (device_uuid == null) {
-				device_uuid = "N/A";
-			}
 			String device_language = getResources().getConfiguration().locale
 					.getLanguage();
 			String mobile_country_code = tm.getNetworkCountryIso();
@@ -311,25 +313,18 @@ public class wpAndroid extends ListActivity {
 
 			// post the data
 			HttpClient client = new DefaultHttpClient();
-			HttpPost post = new HttpPost(
-					"http://api.wordpress.org/androidapp/update-check/1.0/");
+			HttpPost post = new HttpPost("http://api.wordpress.org/androidapp/update-check/1.0/");
 			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("device_uuid", device_uuid));
+			pairs.add(new BasicNameValuePair("device_uuid", uuid));
 			pairs.add(new BasicNameValuePair("app_version", app_version));
-			pairs
-					.add(new BasicNameValuePair("device_language",
-							device_language));
-			pairs.add(new BasicNameValuePair("mobile_country_code",
-					mobile_country_code));
-			pairs.add(new BasicNameValuePair("mobile_network_number",
-					mobile_network_number));
-			pairs.add(new BasicNameValuePair("mobile_network_type",
-					mobile_network_type));
+			pairs.add(new BasicNameValuePair("device_language", device_language));
+			pairs.add(new BasicNameValuePair("mobile_country_code", mobile_country_code));
+			pairs.add(new BasicNameValuePair("mobile_network_number", mobile_network_number));
+			pairs.add(new BasicNameValuePair("mobile_network_type", mobile_network_type));
 			pairs.add(new BasicNameValuePair("device_version", device_version));
-			pairs.add(new BasicNameValuePair("num_blogs", String
-					.valueOf(num_blogs)));
+			pairs.add(new BasicNameValuePair("num_blogs", String.valueOf(num_blogs)));
 			try {
 				post.setEntity(new UrlEncodedFormEntity(pairs));
 			} catch (UnsupportedEncodingException e) {
