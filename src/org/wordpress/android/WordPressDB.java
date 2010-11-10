@@ -97,14 +97,10 @@ public class WordPressDB {
 		
 		db.execSQL(CREATE_TABLE_CATEGORIES);
 		
-		if (db.getVersion() < 1){ //user is new install
-				try {
-					db.execSQL(ADD_BLOGID);
-					db.execSQL(UPDATE_BLOGID);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		try {
+			if (db.getVersion() < 1){ //user is new install
+				db.execSQL(ADD_BLOGID);
+				db.execSQL(UPDATE_BLOGID);
 				db.execSQL(ADD_SOUND_OPTION);
 				db.execSQL(ADD_VIBRATE_OPTION);
 				db.execSQL(ADD_LIGHT_OPTION);
@@ -121,35 +117,30 @@ public class WordPressDB {
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
-		}
-		else if (db.getVersion() == 1){ //v1.0 or v1.0.1
-			try {
+			}
+			else if (db.getVersion() == 1){ //v1.0 or v1.0.1
 				db.execSQL(ADD_BLOGID);
 				db.execSQL(UPDATE_BLOGID);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				db.execSQL(ADD_SOUND_OPTION);
+				db.execSQL(ADD_VIBRATE_OPTION);
+				db.execSQL(ADD_LIGHT_OPTION);
+				db.execSQL(ADD_LOCATION_FLAG);
+				db.execSQL(ADD_LATITUDE);
+				db.execSQL(ADD_LONGITUDE);
+				db.execSQL(ADD_TAGLINE);
+				db.execSQL(ADD_TAGLINE_FLAG);
+				db.execSQL(ADD_NEW_COMMENT_ID);
+				db.execSQL(COPY_COMMENT_IDS);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
+				db.execSQL(ADD_DOTCOM_FLAG);
+				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
+				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
-			db.execSQL(ADD_SOUND_OPTION);
-			db.execSQL(ADD_VIBRATE_OPTION);
-			db.execSQL(ADD_LIGHT_OPTION);
-			db.execSQL(ADD_LOCATION_FLAG);
-			db.execSQL(ADD_LATITUDE);
-			db.execSQL(ADD_LONGITUDE);
-			db.execSQL(ADD_TAGLINE);
-			db.execSQL(ADD_TAGLINE_FLAG);
-			db.execSQL(ADD_NEW_COMMENT_ID);
-			db.execSQL(COPY_COMMENT_IDS);
-			db.execSQL(ADD_DOTCOM_USERNAME);
-			db.execSQL(ADD_DOTCOM_PASSWORD);
-			db.execSQL(ADD_API_KEY);
-			db.execSQL(ADD_API_BLOGID);
-			db.execSQL(ADD_DOTCOM_FLAG);
-			db.execSQL(ADD_WP_VERSION);
-			db.execSQL(ADD_UNIQUE_ID);
-			db.setVersion(DATABASE_VERSION); //set to latest revision
-		}
-		else if (db.getVersion()  == 2){
+			else if (db.getVersion()  == 2){
 				db.execSQL(ADD_SOUND_OPTION);
 				db.execSQL(ADD_VIBRATE_OPTION);
 				db.execSQL(ADD_LIGHT_OPTION);
@@ -168,8 +159,8 @@ public class WordPressDB {
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
 				db.setVersion(DATABASE_VERSION); 
-		}
-		else if (db.getVersion() == 3){
+			}
+			else if (db.getVersion() == 3){
 				db.execSQL(ADD_LOCATION_FLAG);
 				db.execSQL(ADD_LATITUDE);
 				db.execSQL(ADD_LONGITUDE);
@@ -185,57 +176,56 @@ public class WordPressDB {
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
 				db.setVersion(DATABASE_VERSION); 
-		}
-		else if (db.getVersion() == 4){
-			try {
-				db.execSQL(ADD_LOCATION_FLAG);
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-			db.execSQL(ADD_LATITUDE);
-			db.execSQL(ADD_LONGITUDE);
-			db.execSQL(ADD_TAGLINE);
-			db.execSQL(ADD_TAGLINE_FLAG);
-			db.execSQL(ADD_NEW_COMMENT_ID);
-			db.execSQL(COPY_COMMENT_IDS);
-			db.execSQL(ADD_DOTCOM_USERNAME);
-			db.execSQL(ADD_DOTCOM_PASSWORD);
-			db.execSQL(ADD_API_KEY);
-			db.execSQL(ADD_API_BLOGID);
-			db.execSQL(ADD_DOTCOM_FLAG);
-			db.execSQL(ADD_WP_VERSION);
-			db.execSQL(ADD_UNIQUE_ID);
-			db.setVersion(DATABASE_VERSION);
-		}
-		else if (db.getVersion() == 5){
-			db.execSQL(ADD_TAGLINE);
-			db.execSQL(ADD_TAGLINE_FLAG);
-			db.execSQL(ADD_NEW_COMMENT_ID);
-			db.execSQL(COPY_COMMENT_IDS);
-			db.execSQL(ADD_DOTCOM_USERNAME);
-			db.execSQL(ADD_DOTCOM_PASSWORD);
-			db.execSQL(ADD_API_KEY);
-			db.execSQL(ADD_API_BLOGID);
-			db.execSQL(ADD_DOTCOM_FLAG);
-			db.execSQL(ADD_WP_VERSION);
-			db.execSQL(ADD_UNIQUE_ID);
-			db.setVersion(DATABASE_VERSION);
-		}
-		else if (db.getVersion() == 6){
-			db.execSQL(ADD_NEW_COMMENT_ID);
-			db.execSQL(COPY_COMMENT_IDS);
-			db.execSQL(ADD_DOTCOM_USERNAME);
-			db.execSQL(ADD_DOTCOM_PASSWORD);
-			db.execSQL(ADD_API_KEY);
-			db.execSQL(ADD_API_BLOGID);
-			db.execSQL(ADD_DOTCOM_FLAG);
-			db.execSQL(ADD_WP_VERSION);
-			db.execSQL(ADD_UNIQUE_ID);
-			db.setVersion(DATABASE_VERSION);
-		}
-		else if (db.getVersion() == 7){
-			db.execSQL(ADD_UNIQUE_ID);
-			db.setVersion(DATABASE_VERSION);
+			else if (db.getVersion() == 4){
+				db.execSQL(ADD_LOCATION_FLAG);
+				db.execSQL(ADD_LATITUDE);
+				db.execSQL(ADD_LONGITUDE);
+				db.execSQL(ADD_TAGLINE);
+				db.execSQL(ADD_TAGLINE_FLAG);
+				db.execSQL(ADD_NEW_COMMENT_ID);
+				db.execSQL(COPY_COMMENT_IDS);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
+				db.execSQL(ADD_DOTCOM_FLAG);
+				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
+				db.setVersion(DATABASE_VERSION);
+			}
+			else if (db.getVersion() == 5){
+				db.execSQL(ADD_TAGLINE);
+				db.execSQL(ADD_TAGLINE_FLAG);
+				db.execSQL(ADD_NEW_COMMENT_ID);
+				db.execSQL(COPY_COMMENT_IDS);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
+				db.execSQL(ADD_DOTCOM_FLAG);
+				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
+				db.setVersion(DATABASE_VERSION);
+			}
+			else if (db.getVersion() == 6){
+				db.execSQL(ADD_NEW_COMMENT_ID);
+				db.execSQL(COPY_COMMENT_IDS);
+				db.execSQL(ADD_DOTCOM_USERNAME);
+				db.execSQL(ADD_DOTCOM_PASSWORD);
+				db.execSQL(ADD_API_KEY);
+				db.execSQL(ADD_API_BLOGID);
+				db.execSQL(ADD_DOTCOM_FLAG);
+				db.execSQL(ADD_WP_VERSION);
+				db.execSQL(ADD_UNIQUE_ID);
+				db.setVersion(DATABASE_VERSION);
+			}
+			else if (db.getVersion() == 7){
+				db.execSQL(ADD_UNIQUE_ID);
+				db.setVersion(DATABASE_VERSION);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		db.close();
 		

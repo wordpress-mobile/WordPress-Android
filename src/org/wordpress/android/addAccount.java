@@ -61,6 +61,7 @@ public class addAccount extends Activity {
 	public String blogURL, xmlrpcURL;
 	public ProgressDialog pd;
 	private boolean wpcom = false;
+	private int blogCtr = 0;
 	public ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -213,28 +214,29 @@ public class addAccount extends Activity {
 				final String[] wpVersions = new String[result.length];
 				HashMap contentHash = new HashMap();
 				    
-				int ctr = 0, blogCtr = 0;
+				int ctr = 0;
+				
 				 WordPressDB settingsDB = new WordPressDB(addAccount.this);
 				//loop this!
 				    for (Object item : result){
 				        contentHash = (HashMap) result[ctr];			        
 				        //check if this blog is already set up
 		                boolean match = false;
-		                match = settingsDB.checkMatch(addAccount.this, contentHash.get("blogName").toString(), contentHash.get("xmlrpc").toString(), username);
+		                String matchBlogName = contentHash.get("blogName").toString();
+		                if (matchBlogName.length() == 0){
+		                	matchBlogName = "(No Blog Title)";
+		                } 
+		                match = settingsDB.checkMatch(addAccount.this, matchBlogName, contentHash.get("xmlrpc").toString(), username);
 		            if (!match){
-	                	blogNames[blogCtr] = contentHash.get("blogName").toString();
-				        aBlogNames.add(escapeUtils.unescapeHtml(blogNames[blogCtr]));
+	                	blogNames[blogCtr] = matchBlogName;			        
 				        urls[blogCtr] = contentHash.get("xmlrpc").toString(); 					        
 				        blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
-
 					    String blogName = blogNames[blogCtr];
 					    String blogURL = urls[blogCtr];
 					    int blogId = blogIds[blogCtr];
 		                boolean success = false;
 		                
-		                if (blogName == ""){
-		                	blogNames[blogCtr] = "(No Blog Title)";
-		                }
+		                aBlogNames.add(escapeUtils.unescapeHtml(blogNames[blogCtr]));
 		                
 		                boolean wpcomFlag = false;
 		                //check for wordpress.com
@@ -287,10 +289,14 @@ public class addAccount extends Activity {
 	        ctr++;
 			} //end loop
 				    pd.dismiss();   
-				    if (result.length == 0){
+				    if (blogCtr == 0){
 				    	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(addAccount.this);
 						  dialogBuilder.setTitle("No Blogs Found");
-			              dialogBuilder.setMessage("No blogs were found for that account.");
+						  String additionalText = "";
+						  if (result.length > 0){
+							  additionalText = " additional ";
+						  }
+			              dialogBuilder.setMessage("No " + additionalText + "blogs were found for that account.");
 			              dialogBuilder.setPositiveButton("OK",  new
 			            		  DialogInterface.OnClickListener() {
 	                          public void onClick(DialogInterface dialog, int whichButton) {
@@ -303,7 +309,7 @@ public class addAccount extends Activity {
 				    }
 				    else{
 				    	//take them to the blog selection screen if there's more than one blog
-				    	if (result.length > 1){
+				    	if (blogCtr > 1){
 				    		
 				    		LayoutInflater inflater = (LayoutInflater)addAccount.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				    		final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
@@ -342,7 +348,7 @@ public class addAccount extends Activity {
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                        	  WordPressDB settingsDB = new WordPressDB(addAccount.this);
-		                        	  for (int i=0;i<blogNames.length;i++){
+		                        	  for (int i=0;i<blogCtr;i++){
 		                        		  success = settingsDB.addAccount(addAccount.this, urls[i], blogNames[i], username, password, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 		                        	  }
 		                        	  Bundle bundle = new Bundle();

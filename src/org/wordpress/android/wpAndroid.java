@@ -15,8 +15,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +53,7 @@ import com.commonsware.cwac.cache.SimpleWebImageCache;
 import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
+import org.wordpress.android.Preferences;
 
 public class wpAndroid extends ListActivity {
 	/** Called when the activity is first created. */
@@ -185,24 +188,38 @@ public class wpAndroid extends ListActivity {
 			accountIDs = new String[accounts.size()];
 			accountUsers = new String[accounts.size()];
 			blavatars = new String[accounts.size()];
-
+			int validBlogCtr = 0;
 			for (int i = 0; i < accounts.size(); i++) {
 
 				HashMap curHash = (HashMap) accounts.get(i);
-				blogNames[i] = curHash.get("blogName").toString();
-				accountUsers[i] = curHash.get("username").toString();
-				accountIDs[i] = curHash.get("id").toString();
-				String url = curHash.get("url").toString();
-				url = url.replace("http://", "");
-				url = url.replace("https://", "");
-				String[] urlSplit = url.split("/");
-				url = urlSplit[0];
-				url = "http://gravatar.com/blavatar/"
-						+ moderateCommentsTab.getMd5Hash(url.trim())
-						+ "?s=60&d=404";
-				blavatars[i] = url;
-				accountNames.add(i, blogNames[i]);
-
+				if (curHash.get("blogName") == null){
+					//cleaning up accounts added before v1.3.8
+					String deleteID = curHash.get("id").toString();
+					settingsDB.deleteAccount(this, deleteID);
+					if (validBlogCtr > 0){
+						validBlogCtr--;
+					}
+				}
+				else {					
+					blogNames[validBlogCtr] = curHash.get("blogName").toString();
+					accountUsers[validBlogCtr] = curHash.get("username").toString();
+					accountIDs[validBlogCtr] = curHash.get("id").toString();
+					String url = curHash.get("url").toString();
+					url = url.replace("http://", "");
+					url = url.replace("https://", "");
+					String[] urlSplit = url.split("/");
+					url = urlSplit[0];
+					url = "http://gravatar.com/blavatar/"
+							+ moderateCommentsTab.getMd5Hash(url.trim())
+							+ "?s=60&d=404";
+					blavatars[validBlogCtr] = url;
+					accountNames.add(validBlogCtr, blogNames[i]);
+					validBlogCtr++;
+				}
+			}
+			
+			if (validBlogCtr < accounts.size()){
+				accounts = settingsDB.getAccounts(this);
 			}
 
 			ThumbnailBus bus = new ThumbnailBus();
@@ -211,6 +228,46 @@ public class wpAndroid extends ListActivity {
 							null, null, 101, bus), IMAGE_IDS);
 
 			setListAdapter(thumbs);
+			
+			//start the comment service (it will kill itself if no blogs want notifications)
+			Intent intent = new Intent(wpAndroid.this, broadcastReceiver.class);
+        	PendingIntent pIntent = PendingIntent.getBroadcast(wpAndroid.this, 0, intent, 0);
+        	
+        	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        	String updateInterval = settingsDB.getInterval(wpAndroid.this);
+        	if (updateInterval == ""){
+        		updateInterval = "1 Hour";
+        	}
+        	int UPDATE_INTERVAL = 3600000;
+        	if (updateInterval.equals("5 Minutes")){
+	        	 UPDATE_INTERVAL = 300000;
+	        }
+	        else if (updateInterval.equals("10 Minutes")){
+	        	UPDATE_INTERVAL = 600000;
+	        }
+	        else if (updateInterval.equals("15 Minutes")){
+	        	UPDATE_INTERVAL = 900000;
+	        }
+	        else if (updateInterval.equals("30 Minutes")){
+	        	UPDATE_INTERVAL = 1800000;
+	        }
+	        else if (updateInterval.equals("1 Hour")){
+	        	UPDATE_INTERVAL = 3600000;
+	        }
+	        else if (updateInterval.equals("3 Hours")){
+	        	UPDATE_INTERVAL = 10800000;
+	        }
+	        else if (updateInterval.equals("6 Hours")){
+	        	UPDATE_INTERVAL = 21600000;
+	        }
+	        else if (updateInterval.equals("12 Hours")){
+	        	UPDATE_INTERVAL = 43200000;
+	        }
+	        else if (updateInterval.equals("Daily")){
+	        	UPDATE_INTERVAL = 86400000;
+	        }
+        	alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (5 * 1000), UPDATE_INTERVAL, pIntent);
+			
 		} else {
 			// no account, load new account view
 			Intent i = new Intent(wpAndroid.this, newAccount.class);
