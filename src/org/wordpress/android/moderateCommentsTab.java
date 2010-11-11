@@ -307,7 +307,7 @@ public class moderateCommentsTab extends ListActivity {
 						settingsDB.updateCommentStatus(moderateCommentsTab.this, id, listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
-					moderateErrorMsg = e.getMessage();
+					moderateErrorMsg = e.getLocalizedMessage();
 				}	
 			}
 		}
@@ -332,7 +332,9 @@ public class moderateCommentsTab extends ListActivity {
 						}
 					});
 					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
+					if (!isFinishing()){
+						dialogBuilder.create().show();
+					}
 				}
 			} 
 		}; 
@@ -429,7 +431,7 @@ public class moderateCommentsTab extends ListActivity {
 				try {
 					result = (Object) client.call("wp.deleteComment", params);
 				} catch (final XMLRPCException e) {
-					moderateErrorMsg = e.getMessage();
+					moderateErrorMsg = e.getLocalizedMessage();
 				}
 			}
 		}
@@ -454,7 +456,9 @@ public class moderateCommentsTab extends ListActivity {
 						}
 					});
 					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
+					if (!isFinishing()){
+						dialogBuilder.create().show();
+					}
 				}
 			} 
 		}; 
@@ -1094,7 +1098,7 @@ public class moderateCommentsTab extends ListActivity {
 
 			return md5;
 		} catch(NoSuchAlgorithmException e) {
-			Log.e("MD5", e.getMessage());
+			Log.e("MD5", e.getLocalizedMessage());
 			return null;
 		}
 	}
@@ -1190,7 +1194,7 @@ public class moderateCommentsTab extends ListActivity {
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-						String msg = e.getMessage();
+						String msg = e.getLocalizedMessage();
 						dialogBuilder.setMessage(e.getFaultString());
 						if (msg.contains("403")){
 							dialogBuilder.setMessage(e.getFaultString() + " " + getResources().getString(R.string.load_settings));
@@ -1223,7 +1227,9 @@ public class moderateCommentsTab extends ListActivity {
 						});
 						}
 						dialogBuilder.setCancelable(true);
-						dialogBuilder.create().show();
+						if (!isFinishing()){
+							dialogBuilder.create().show();
+						}
 					}
 				});
 			} catch (final XMLRPCException e) {
@@ -1236,7 +1242,7 @@ public class moderateCommentsTab extends ListActivity {
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-						dialogBuilder.setMessage(e.getMessage());
+						dialogBuilder.setMessage(e.getLocalizedMessage());
 						dialogBuilder.setPositiveButton("OK",  new
 								DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
@@ -1245,8 +1251,9 @@ public class moderateCommentsTab extends ListActivity {
 							}
 						});
 						dialogBuilder.setCancelable(true);
-						dialogBuilder.create().show();
-
+						if (!isFinishing()){
+							dialogBuilder.create().show();
+						}
 					}
 				});
 			}
@@ -1298,7 +1305,9 @@ public class moderateCommentsTab extends ListActivity {
 							}
 						});
 						dialogBuilder.setCancelable(true);
-						dialogBuilder.create().show();
+						if (!isFinishing()){
+							dialogBuilder.create().show();
+						}
 					}
 				});
 			} catch (final XMLRPCException e) {
@@ -1308,7 +1317,7 @@ public class moderateCommentsTab extends ListActivity {
 						dismissDialog(ID_DIALOG_MODERATING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-						dialogBuilder.setMessage(e.getMessage());
+						dialogBuilder.setMessage(e.getLocalizedMessage());
 						dialogBuilder.setPositiveButton("OK",  new
 								DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
@@ -1316,7 +1325,9 @@ public class moderateCommentsTab extends ListActivity {
 							}
 						});
 						dialogBuilder.setCancelable(true);
-						dialogBuilder.create().show();
+						if (!isFinishing()){
+							dialogBuilder.create().show();
+						}
 					}
 				});
 			}
@@ -1506,7 +1517,7 @@ public class moderateCommentsTab extends ListActivity {
 				{
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-					dialogBuilder.setMessage(e.getMessage());
+					dialogBuilder.setMessage(e.getLocalizedMessage());
 					dialogBuilder.setPositiveButton("OK",  new
 							DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
@@ -1515,7 +1526,9 @@ public class moderateCommentsTab extends ListActivity {
 						}
 					});
 					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
+					if (!isFinishing()){
+						dialogBuilder.create().show();
+					}
 				}
 			}; 
 			this.runOnUiThread(action3);
@@ -1580,7 +1593,7 @@ public class moderateCommentsTab extends ListActivity {
 				{
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-					dialogBuilder.setMessage(e.getMessage());
+					dialogBuilder.setMessage(e.getLocalizedMessage());
 					dialogBuilder.setPositiveButton("OK",  new
 							DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
@@ -1589,7 +1602,9 @@ public class moderateCommentsTab extends ListActivity {
 						}
 					});
 					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
+					if (!isFinishing()){
+						dialogBuilder.create().show();
+					}
 				}
 			}; 
 			this.runOnUiThread(action3);
@@ -1666,7 +1681,7 @@ public class moderateCommentsTab extends ListActivity {
 				{
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-					dialogBuilder.setMessage(e.getMessage());
+					dialogBuilder.setMessage(e.getLocalizedMessage());
 					dialogBuilder.setPositiveButton("OK",  new
 							DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
@@ -1675,7 +1690,9 @@ public class moderateCommentsTab extends ListActivity {
 						}
 					});
 					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
+					if (!isFinishing()){
+						dialogBuilder.create().show();
+					}
 				}
 			}; 
 			this.runOnUiThread(action3);

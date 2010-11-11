@@ -2,29 +2,20 @@ package org.wordpress.android;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.conn.HttpHostConnectException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -32,8 +23,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,7 +31,6 @@ import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -147,18 +135,38 @@ public class addAccount extends Activity {
         	blogURL = "http://wordpress.com";
         }
         else {
-        	blogURL = urlET.getText().toString();
+        	blogURL = urlET.getText().toString().trim();
         }
         EditText usernameET = (EditText)findViewById(R.id.username);
-        final String username = usernameET.getText().toString();
+        final String username = usernameET.getText().toString().trim();
         EditText passwordET = (EditText)findViewById(R.id.password);
-        final String password = passwordET.getText().toString();
+        final String password = passwordET.getText().toString().trim();
+        boolean invalidURL = false;
+        try {
+			URI.create(blogURL);
+		} catch (Exception e1) {
+			invalidURL = true;
+		}
         
         if (blogURL.equals("") || username.equals("") || password.equals("")){
         	pd.dismiss();
         	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(addAccount.this);
 			  dialogBuilder.setTitle(getResources().getText(R.string.required_fields));
             dialogBuilder.setMessage(getResources().getText(R.string.url_username_password_required));
+            dialogBuilder.setPositiveButton("OK",  new
+          		  DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                	
+                }
+            });
+            dialogBuilder.setCancelable(true);
+           dialogBuilder.create().show();
+        }
+        else if (invalidURL){
+        	pd.dismiss();
+        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(addAccount.this);
+			  dialogBuilder.setTitle(getResources().getText(R.string.invalid_url));
+            dialogBuilder.setMessage(getResources().getText(R.string.invalid_url_message));
             dialogBuilder.setPositiveButton("OK",  new
           		  DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
