@@ -14,8 +14,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseBooleanArray;
@@ -24,10 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -84,7 +80,7 @@ public class selectCategories extends ListActivity {
             	String selectedCategories = "";
             	
             	SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-            	Vector<Integer> rCheckedItems = new Vector();
+            	Vector<Integer> rCheckedItems = new Vector<Integer>();
             	
             	for (int i=0; i<selectedItems.size();i++){
             		if (selectedItems.get(selectedItems.keyAt(i)) == true){
@@ -122,7 +118,7 @@ public class selectCategories extends ListActivity {
     private void loadCategories() {
         loadTextArray.clear();
         WordPressDB categoriesDB = new WordPressDB(this);
-    	Vector categoriesVector = categoriesDB.loadCategories(this, id);
+    	Vector<?> categoriesVector = categoriesDB.loadCategories(this, id);
     	if (categoriesVector.size() > 0)
     	{
 
@@ -243,7 +239,6 @@ public class selectCategories extends ListActivity {
     public String getCategories(){
     	
     	//gets the categories via xmlrpc call to wp blog
-    	Vector res;
         String returnMessage = "";
 
         //check for the settings
@@ -274,7 +269,7 @@ public class selectCategories extends ListActivity {
         }
         else{
         	WordPressDB settingsDB = new WordPressDB(this);
-        	Vector categoriesVector = settingsDB.loadSettings(this, id);
+        	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
         	
         	
 	        	String sURL = "";
@@ -309,7 +304,6 @@ public class selectCategories extends ListActivity {
 			} catch (XMLRPCException e) {
 				//e.getMessage();
 				e.printStackTrace();
-				res = null;
 			}
         
             //Vector categoryIds = (Vector) result;
@@ -323,7 +317,7 @@ public class selectCategories extends ListActivity {
 	            
 	            for(int i=0; i<size; i++)
 	            {
-	              HashMap curHash = (HashMap) result[i];
+	              HashMap<?, ?> curHash = (HashMap<?, ?>) result[i];
 	              
 	              String categoryName = curHash.get("categoryName").toString();
 	              String categoryID = curHash.get("categoryId").toString();
@@ -352,7 +346,7 @@ public class selectCategories extends ListActivity {
     public boolean checkSettings(){
 		//see if the user has any saved preferences
 		 WordPressDB settingsDB = new WordPressDB(this);
-	    	Vector categoriesVector = settingsDB.loadSettings(this, id);
+	    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
 	    		sURL = categoriesVector.get(0).toString();
@@ -381,7 +375,7 @@ public class selectCategories extends ListActivity {
     	
     	//	Load settings
     	WordPressDB settingsDB = new WordPressDB(this);
-    	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+    	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
     	
     	//	Check if Blog-URL contains the "xmlrpc.php"
     	String sURL = "";
@@ -416,7 +410,6 @@ public class selectCategories extends ListActivity {
 	    try {
 			result = client.call("wp.newCategory", params);
 		} catch (XMLRPCException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
@@ -439,7 +432,6 @@ public class selectCategories extends ListActivity {
     
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null)
 		{
@@ -450,7 +442,6 @@ public class selectCategories extends ListActivity {
 		case 0:
 
 			//	Add category
-			String resultTitle,resultMessage = "";
 			
 			//	Does the user want to continue, or did he press "dismiss"?
 			if (extras.getString("continue").equals("TRUE")) {
@@ -462,8 +453,6 @@ public class selectCategories extends ListActivity {
 				
 				if (loadTextArray.contains(category_name)) {
 					//	A category with the specified name does already exist.
-					resultTitle = getResources().getText(R.string.duplicated_cat).toString();
-					resultMessage = getResources().getText(R.string.cat_already_exists).toString();
 				}
 				else {
 					//	Add the category

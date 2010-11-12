@@ -103,7 +103,6 @@ public class viewStats extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.view_stats);
@@ -172,7 +171,7 @@ public class viewStats extends Activity {
 						.getSelectedItemPosition());
 
 				WordPressDB settingsDB = new WordPressDB(viewStats.this);
-				Vector apiData = settingsDB.loadAPIData(viewStats.this, id);
+				Vector<?> apiData = settingsDB.loadAPIData(viewStats.this, id);
 
 				final String apiKey = apiData.get(0).toString();
 				final String apiBlogID = apiData.get(1).toString();
@@ -202,7 +201,6 @@ public class viewStats extends Activity {
 	}
 
 	protected int parseInterval(int position) {
-		// TODO Auto-generated method stub
 		int interval = 0;
 		switch (position) {
 
@@ -228,7 +226,6 @@ public class viewStats extends Activity {
 	}
 
 	protected String parseType(int position) {
-		// TODO Auto-generated method stub
 		String type = "";
 		switch (position) {
 
@@ -259,13 +256,13 @@ public class viewStats extends Activity {
 	private void initStats() {
 
 		WordPressDB settingsDB = new WordPressDB(this);
-		Vector settings = settingsDB.loadSettings(this, id);
-		final Vector statsData = settingsDB.loadAPIData(this, id);
+		Vector<?> settings = settingsDB.loadSettings(this, id);
+		final Vector<?> statsData = settingsDB.loadAPIData(this, id);
 
 		if (statsData == null) {
 			String sUsername = "";
 			String sPassword = "";
-			Vector apiLogin = settingsDB.loadStatsLogin(this, id);
+			Vector<?> apiLogin = settingsDB.loadStatsLogin(this, id);
 			if (apiLogin != null) {
 				// we have an alternate login, use that instead
 				sUsername = apiLogin.get(0).toString();
@@ -305,12 +302,12 @@ public class viewStats extends Activity {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getStatsData(String apiKey, String blogID,
 			final String reportType, int interval) {
 		if (isFinishing()) {
 			finish();
 		}
-		Vector apiInfo = null;
 		String DATE_FORMAT = "yyyy-MM-dd";
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar c1 = Calendar.getInstance(); // today
@@ -364,12 +361,9 @@ public class viewStats extends Activity {
 			pullParser.setInput(is, "UTF-8");
 
 			int eventType = pullParser.getEventType();
-			HashMap<Object, Object> statsData = new HashMap<Object, Object>();
-			boolean foundRoot = false;
 			boolean foundDataItem = false;
 			final Vector<HashMap<String, String>> dataSet = new Vector<HashMap<String, String>>();
 			final Vector numDataSet = new Vector();
-			String curCol1 = "";
 			int rowCount = 0;
 			// parse the xml response
 			// most replies follow the same xml structure, so the data is stored
@@ -386,7 +380,6 @@ public class viewStats extends Activity {
 							|| name.equals("clicks")
 							|| name.equals("searchterms")
 							|| name.equals("videoplays")) {
-						foundRoot = true;
 					} else if (pullParser.getName().equals("total")) {
 						// that'll do, pig. that'll do.
 						break;
@@ -408,7 +401,6 @@ public class viewStats extends Activity {
 					// System.out.println("End tag "+pullParser.getName());
 				} else if (eventType == XmlPullParser.TEXT) {
 					if (foundDataItem) {
-						String temp = pullParser.getText();
 						if (pullParser.getText().toString() == "") {
 							numDataSet.add(rowCount, 0);
 						} else {
@@ -603,10 +595,8 @@ public class viewStats extends Activity {
 								is.close();
 								iv.setImageBitmap(bm);
 							} catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
@@ -818,10 +808,10 @@ public class viewStats extends Activity {
 
 	}
 
-	private Vector getAPIInfo(String username, String password, String url,
+	private Vector<String> getAPIInfo(String username, String password, String url,
 			String storedBlogID) {
 
-		Vector apiInfo = null;
+		Vector<String> apiInfo = null;
 
 		URI blogHost = URI.create(url);
 		String blogDomain = blogHost.getHost();
@@ -915,7 +905,7 @@ public class viewStats extends Activity {
 									|| storedBlogID.equals(curBlogID)) {
 								// yay, found a match
 								blogID = curBlogID;
-								apiInfo = new Vector();
+								apiInfo = new Vector<String>();
 								apiInfo.add(apiKey);
 								apiInfo.add(blogID);
 								return apiInfo;
@@ -927,15 +917,12 @@ public class viewStats extends Activity {
 				}
 
 			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -995,12 +982,9 @@ public class viewStats extends Activity {
 
 	}
 
-	private class statsUserDataTask extends AsyncTask<String, Void, Vector> {
+	private class statsUserDataTask extends AsyncTask<String, Void, Vector<?>> {
 
-		protected void onProgressUpdate() {
-		}
-
-		protected void onPostExecute(Vector result) {
+		protected void onPostExecute(Vector<?> result) {
 			closeProgressBar();
 			WordPressDB settingsDB = new WordPressDB(viewStats.this);
 			if (result != null) {
@@ -1034,9 +1018,9 @@ public class viewStats extends Activity {
 		}
 
 		@Override
-		protected Vector doInBackground(String... args) {
+		protected Vector<?> doInBackground(String... args) {
 
-			Vector apiInfo = getAPIInfo(args[0], args[1], args[2], args[3]);
+			Vector<?> apiInfo = getAPIInfo(args[0], args[1], args[2], args[3]);
 
 			return apiInfo;
 
@@ -1119,8 +1103,6 @@ public class viewStats extends Activity {
 		animation.setDuration(500);
 		set.addAnimation(animation);
 
-		LayoutAnimationController controller = new LayoutAnimationController(
-				set, 0.5f);
 		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);
 
 		loading.startAnimation(set);

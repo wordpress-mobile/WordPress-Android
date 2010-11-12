@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -53,12 +52,11 @@ import com.commonsware.cwac.cache.SimpleWebImageCache;
 import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
-import org.wordpress.android.Preferences;
 
 public class wpAndroid extends ListActivity {
 	/** Called when the activity is first created. */
-	public Vector accounts;
-	public Vector accountNames = new Vector();
+	public Vector<?> accounts;
+	public Vector<String> accountNames = new Vector<String>();
 	public String[] accountIDs;
 	public String[] blogNames;
 	public String[] accountUsers;
@@ -136,10 +134,6 @@ public class wpAndroid extends ListActivity {
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
-			public void onNothingSelected(AdapterView<?> arg0) {
-
-			}
-
 			public void onItemClick(AdapterView<?> arg0, View row,
 					int position, long id) {
 				Bundle bundle = new Bundle();
@@ -191,7 +185,7 @@ public class wpAndroid extends ListActivity {
 			int validBlogCtr = 0;
 			for (int i = 0; i < accounts.size(); i++) {
 
-				HashMap curHash = (HashMap) accounts.get(i);
+				HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
 				if (curHash.get("blogName") == null){
 					//cleaning up accounts added before v1.3.8
 					String deleteID = curHash.get("id").toString();
@@ -311,7 +305,6 @@ public class wpAndroid extends ListActivity {
 				PackageInfo pi = pm.getPackageInfo("org.wordpress.android", 0);
 				app_version = pi.versionName;
 			} catch (NameNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				app_version = "N/A";
 			}
@@ -385,20 +378,16 @@ public class wpAndroid extends ListActivity {
 			try {
 				post.setEntity(new UrlEncodedFormEntity(pairs));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			try {
-				HttpResponse response = client.execute(post);
-				int responseCode = response.getStatusLine().getStatusCode();
+				client.execute(post);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -443,25 +432,18 @@ public class wpAndroid extends ListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null) {
-
-			Bundle extras = data.getExtras();
-
 			switch (requestCode) {
 			case 0:
 				WordPressDB settingsDB = new WordPressDB(this);
 				accounts = settingsDB.getAccounts(this);
-				String action = extras.getString("returnStatus");
 
 				if (accounts.size() == 0) {
 					finish();
 				} else {
 					displayAccounts();
 				}
-				// Toast.makeText(wpAndroid.this, title,
-				// Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}// end null check
@@ -542,10 +524,8 @@ public class wpAndroid extends ListActivity {
 	}
 
 	private class HomeListAdapter extends BaseAdapter {
-		private int usenameHeight;
 
 		public HomeListAdapter(Context context) {
-			mContext = context;
 		}
 
 		public int getCount() {
@@ -567,9 +547,9 @@ public class wpAndroid extends ListActivity {
 				LayoutInflater inflater = getLayoutInflater();
 				pv = inflater.inflate(R.layout.home_row, parent, false);
 				wrapper = new ViewWrapper(pv);
-				if (position == 0) {
+				/*if (position == 0) {
 					usenameHeight = wrapper.getBlogUsername().getHeight();
-				}
+				}*/
 				pv.setTag(wrapper);
 				wrapper = new ViewWrapper(pv);
 				pv.setTag(wrapper);
@@ -603,8 +583,6 @@ public class wpAndroid extends ListActivity {
 			return pv;
 
 		}
-
-		private Context mContext;
 
 	}
 

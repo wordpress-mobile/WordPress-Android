@@ -25,7 +25,6 @@ public abstract class imageHelper {
 	             * resolve references to all other classes it uses. Since the pre-Eclair
 	             * does not have those classes, the loading of ContactAccessorSdk5 would fail.
 	             */
-	            @SuppressWarnings("deprecation")
 	            int sdkVersion = Integer.parseInt(Build.VERSION.SDK);       // Cupcake style
 	            if (sdkVersion < Build.VERSION_CODES.DONUT) {
 	                className = "org.wordpress.android.imageHelper_v3";

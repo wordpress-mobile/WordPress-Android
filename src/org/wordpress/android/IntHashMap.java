@@ -47,7 +47,8 @@ class IntHashMap {
      */
     private static class Entry {
         int hash;
-        int key;
+        @SuppressWarnings("unused")
+		int key;
         Object value;
         Entry next;
 

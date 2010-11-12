@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 
 public class imageHelper_v4 extends imageHelper{
 
@@ -134,7 +135,7 @@ public class imageHelper_v4 extends imageHelper{
 		//get image EXIF orientation if Android 2.0 or higher, using reflection
 		//http://developer.android.com/resources/articles/backward-compatibility.html
 		Method exif_getAttribute;
-		Constructor exif_construct;
+		Constructor<ExifInterface> exif_construct;
 		String exifOrientation = "";
 		
 		int sdk_int = 0;

@@ -2,11 +2,9 @@ package org.wordpress.android;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -26,9 +24,10 @@ public class ApiHelper extends Activity {
         super.onCreate(icicle);
     }
     
-    static void refreshComments(final String id, final Context ctx) {
+    @SuppressWarnings("unchecked")
+	static void refreshComments(final String id, final Context ctx) {
 
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		final WordPressDB settingsDB = new WordPressDB(ctx);
 		settings = settingsDB.loadSettings(ctx, id); 
 
@@ -47,7 +46,7 @@ public class ApiHelper extends Activity {
 
 		client = new XMLRPCClient(sURL);
 
-		HashMap hPost = new HashMap();
+		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		hPost.put("status", "");
 		hPost.put("post_id", "");
 		hPost.put("number", 30);  
@@ -64,19 +63,13 @@ public class ApiHelper extends Activity {
 			result = (Object[]) client.call("wp.getComments", params);
 		} catch (XMLRPCException e) {
 		}
-		
-		List<Object> list = new ArrayList<Object>();
 
-		
-		String s = "done";
 		if (result != null){
 			if (result.length > 0){
-				s = result.toString();
-				Object origComments = result;
 				String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 	
-				HashMap contentHash = new HashMap();
-				Vector dbVector = new Vector();
+				HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
+				Vector<HashMap<String, String>> dbVector = new Vector<HashMap<String, String>>();
 	
 				Date d = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
@@ -86,7 +79,7 @@ public class ApiHelper extends Activity {
 				shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
 				//loop this!
 				for (int ctr = 0; ctr < result.length; ctr++){
-					HashMap<String, String> dbValues = new HashMap();
+					HashMap<String, String> dbValues = new HashMap<String, String>();
 					contentHash = (HashMap) result[ctr];
 					comment = contentHash.get("content").toString();
 					author = contentHash.get("author").toString();

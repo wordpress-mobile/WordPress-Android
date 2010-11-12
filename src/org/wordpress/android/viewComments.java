@@ -1,8 +1,6 @@
 package org.wordpress.android;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
@@ -33,7 +31,6 @@ public class viewComments extends ListActivity {
 	private String id = "";
 	private String postID = "";
 	private String accountName = "";
-	private String postTitle = "";
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -48,9 +45,8 @@ public class viewComments extends ListActivity {
         }      
         
         this.setTitle(accountName + " - " + getResources().getText(R.string.view_comments));
-        Vector settings = new Vector();
         WordPressDB settingsDB = new WordPressDB(this);
-    	settings = settingsDB.loadSettings(this, id);
+        Vector<?> settings = settingsDB.loadSettings(this, id);
         
     	String sURL = "";
     	if (settings.get(0).toString().contains("xmlrpc.php"))
@@ -64,28 +60,15 @@ public class viewComments extends ListActivity {
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
             
-            HashMap hPost = new HashMap();
+            HashMap<String, Object> hPost = new HashMap<String, Object>();
             hPost.put("status", "approve");
             hPost.put("post_id", postID);
             hPost.put("number", 10);
-            
-            Object[] commentStruct = {
-	        		postID,
-	        		"",
-	        		"",
-	        		""
-	        };
-        	
-        	List<Object> list = new ArrayList<Object>();
-        	
-        	//haxor
-        	
+
         	client = new XMLRPCClient(sURL);
         	
         	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {
-					String s = "done";
-					s = result.toString();
 					
 					if (result.length == 0){
 						comments = new String[1];
@@ -94,19 +77,13 @@ public class viewComments extends ListActivity {
 						authors[0] = "";
 					}
 					else{
-					comments = new String[result.length];
-					authors = new String[result.length];
-					
-					HashMap contentHash = new HashMap();
-					    
-					int ctr = 0;
-					
-					//loop this!
-					    for (Object item : result){
-					        contentHash = (HashMap) result[ctr];
+						comments = new String[result.length];
+						authors = new String[result.length];
+						
+					    for (int ctr = 0; ctr < result.length; ctr++) {
+					    	HashMap<?, ?> contentHash = (HashMap<?, ?>) result[ctr];
 					        comments[ctr] = contentHash.get("content").toString();
 					        authors[ctr] = contentHash.get("author").toString();
-					        ctr++;
 					    }
 					}  
 		        
@@ -123,10 +100,6 @@ public class viewComments extends ListActivity {
 	        
 	        
 	        method.call(params);
-        	  
-        
-        
-        
     }
 
 
@@ -154,9 +127,7 @@ class XMLRPCMethod extends Thread {
 	@Override
 	public void run() {
 		try {
-			final long t0 = System.currentTimeMillis();
 			final Object[] result = (Object[]) client.call(method, params);
-			final long t1 = System.currentTimeMillis();
 			handler.post(new Runnable() {
 				public void run() {
 

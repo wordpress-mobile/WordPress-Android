@@ -429,7 +429,7 @@ class Entities {
     }
 
     static class PrimitiveEntityMap implements EntityMap {
-        private Map mapNameToValue = new HashMap();
+        private Map<String, Integer> mapNameToValue = new HashMap<String, Integer>();
 
         private IntHashMap mapValueToName = new IntHashMap();
 
@@ -461,9 +461,9 @@ class Entities {
     }
 
     static abstract class MapIntMap implements Entities.EntityMap {
-        protected Map mapNameToValue;
+        protected Map<String, Integer> mapNameToValue;
 
-        protected Map mapValueToName;
+        protected Map<Integer, String> mapValueToName;
 
         /**
          * {@inheritDoc}
@@ -497,8 +497,8 @@ class Entities {
          * Constructs a new instance of <code>HashEntityMap</code>.
          */
         public HashEntityMap() {
-            mapNameToValue = new HashMap();
-            mapValueToName = new HashMap();
+            mapNameToValue = new HashMap<String, Integer>();
+            mapValueToName = new HashMap<Integer, String>();
         }
     }
 
@@ -507,8 +507,8 @@ class Entities {
          * Constructs a new instance of <code>TreeEntityMap</code>.
          */
         public TreeEntityMap() {
-            mapNameToValue = new TreeMap();
-            mapValueToName = new TreeMap();
+            mapNameToValue = new TreeMap<String, Integer>();
+            mapValueToName = new TreeMap<Integer, String>();
         }
     }
 

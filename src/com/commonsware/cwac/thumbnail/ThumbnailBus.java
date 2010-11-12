@@ -14,14 +14,10 @@
 
 package com.commonsware.cwac.thumbnail;
 
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.widget.ImageView;
 import com.commonsware.cwac.bus.AbstractBus;
 
 public class ThumbnailBus
 	extends AbstractBus<ThumbnailMessage, String, ThumbnailBus.MatchStrategy> {
-	private static final String TAG="ThumbnailBus";
 	
 	public ThumbnailBus() {
 		super();

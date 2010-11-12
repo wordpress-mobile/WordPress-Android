@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -18,17 +17,14 @@ import android.os.Message;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class viewComment extends Activity {
-	
-	private String id = "";
+
 	private String comment= "";
-	private String accountName = "";
 	private String email = "";
 	private String name = "";
 	private String url = "";
@@ -76,9 +72,7 @@ public class viewComment extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
         if(extras !=null)
-        {
-         id = extras.getString("id");
-         accountName = extras.getString("accountName");   
+        {  
          comment = extras.getString("comment");
          email = extras.getString("email");
          name = extras.getString("name");
@@ -231,7 +225,6 @@ public class viewComment extends Activity {
 				try {
 					is = (InputStream) url.getContent();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 				if (is != null){
@@ -243,9 +236,6 @@ public class viewComment extends Activity {
 				}
                  
          } catch (MalformedURLException e) { 
-                 e.printStackTrace(); 
-                 return null; 
-         } catch (IOException e) { 
                  e.printStackTrace(); 
                  return null; 
          } 

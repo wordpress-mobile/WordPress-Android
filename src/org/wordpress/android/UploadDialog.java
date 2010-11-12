@@ -1,11 +1,8 @@
 package org.wordpress.android;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.widget.TextView;
 
 public class UploadDialog implements Runnable {

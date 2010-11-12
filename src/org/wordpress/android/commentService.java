@@ -26,7 +26,6 @@ public class commentService extends Service {
 	public String accountID = "", accountName = "", updateInterval = "";
 	private XMLRPCClient client;
 	private Timer timer = new Timer();
-	private static long UPDATE_INTERVAL = 360000;  //default to hourly
 
 	public static void setUpdateListener(ServiceUpdateUIListener l) {
 		  UI_UPDATE_LISTENER = l;
@@ -79,7 +78,7 @@ public class commentService extends Service {
 		
 		WordPressDB settingsDB = new WordPressDB(this);
     	
-    	Vector notificationAccounts = settingsDB.getNotificationAccounts(this);
+    	Vector<?> notificationAccounts = settingsDB.getNotificationAccounts(this);
     	
     	
     	if (notificationAccounts != null){
@@ -97,7 +96,7 @@ public class commentService extends Service {
     			accountName = settingsDB.getAccountName(this, accountID);
     			Log.i("WordPressCommentService", "Checking Comments for " + accountName);
 
-    	Vector settings = settingsDB.loadSettings(this, accountID);
+    	Vector<?> settings = settingsDB.loadSettings(this, accountID);
     	final int latestCommentID = settingsDB.getLatestCommentID(this, accountID);
     	
     	String sURL = "";
@@ -114,7 +113,7 @@ public class commentService extends Service {
 		
 		client = new XMLRPCClient(sURL);
     	
-        HashMap hPost = new HashMap();
+        HashMap<String, Object> hPost = new HashMap<String, Object>();
         hPost.put("status", "");
         hPost.put("post_id", "");
         hPost.put("number", 1);
@@ -127,10 +126,10 @@ public class commentService extends Service {
         };
 		    
         XMLRPCMethodCallback callBack = new XMLRPCMethodCallback() {
+			@SuppressWarnings("unchecked")
 			public void callFinished(Object[] result) {
-				String s = "done";
 				WordPressDB settingsDB = new WordPressDB(commentService.this);
-				HashMap notificationOptions = settingsDB.getNotificationOptions(commentService.this);
+				HashMap<?, ?> notificationOptions = settingsDB.getNotificationOptions(commentService.this);
 				boolean sound = false, vibrate = false, light = false;
 				
 				//there must be a less dorky way of pulling a boolean value from a db?
@@ -149,19 +148,16 @@ public class commentService extends Service {
 
 				}
 				else{
-				s = result.toString();
 				
-				HashMap contentHash = new HashMap();
+				HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
 			    
-				int ctr = 0;
+				;
 				
 				//loop this!
-				    for (Object item : result){
+				    for (int ctr = 0; ctr < result.length; ctr++){
 				        contentHash = (HashMap) result[ctr];
-
 				        ctr++;
 				    }
-				
 
 				String commentID = contentHash.get("comment_id").toString();
 				if (latestCommentID == 0){
@@ -263,10 +259,8 @@ public class commentService extends Service {
 		public void run() {
 			
 			try {
-				final long t0 = System.currentTimeMillis();
 				final Object[] result;
 				result = (Object[]) client.call(method, params);
-				final long t1 = System.currentTimeMillis();
 				handler.post(new Runnable() {
 					public void run() {
 
@@ -283,7 +277,6 @@ public class commentService extends Service {
 				handler.post(new Runnable() {
 					public void run() {
 						
-						Throwable couse = e.getCause();
 						e.printStackTrace();
 						
 					}

@@ -320,8 +320,6 @@ res/layout/image_view.xml -text
 res/layout/link.xml -text
 res/layout/list_footer_btn.xml -text
 res/layout/list_footer_progress.xml -text
-res/layout/main.xml -text
-res/layout/main_page.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/new_account.xml -text
 res/layout/pages_tab_selector.xml -text
@@ -398,7 +396,6 @@ src/org/wordpress/android/imageHelper_v4.java -text
 src/org/wordpress/android/link.java -text
 src/org/wordpress/android/moderateCommentsTab.java -text
 src/org/wordpress/android/newAccount.java -text
-src/org/wordpress/android/newPost.java -text
 src/org/wordpress/android/replyToComment.java -text
 src/org/wordpress/android/selectCategories.java -text
 src/org/wordpress/android/settings.java -text

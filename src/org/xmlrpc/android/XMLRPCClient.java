@@ -300,6 +300,7 @@ public class XMLRPCClient {
 	 * @return deserialized method return value
 	 * @throws XMLRPCException
 	 */
+	@SuppressWarnings("unchecked")
 	private Object callXMLRPC(String method, Object[] params) throws XMLRPCException {
 		try {
 			// prepare POST body
@@ -338,7 +339,6 @@ public class XMLRPCClient {
 				FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\""); 
 	            fEntity.setContentType("text/xml");
 	            //fEntity.setChunked(true);
-				long fileSize = tempFile.length();
 	            postMethod.setEntity(fEntity);
 	            
 	            

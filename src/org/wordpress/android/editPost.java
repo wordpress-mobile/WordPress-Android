@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +17,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.newPost.ImageAdapter;
-import org.wordpress.android.newPost.ImageAdapter.ViewHolder;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -68,7 +69,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Gallery;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -84,33 +84,33 @@ public class editPost extends Activity implements LocationListener{
 	public String thumbnailPath = null;
 	public String imagePath = null;
 	public String imageTitle = null;
-	public Vector imageUrl = new Vector();
-	public Vector thumbnailUrl = new Vector();
+	public Vector<String> imageUrl = new Vector<String>();
+	public Vector<Object> thumbnailUrl = new Vector<Object>();
 	private final Handler mHandler = new Handler();
 	public String finalResult = null;
-	Vector<String> selectedCategories = new Vector();
+	Vector<String> selectedCategories = new Vector<String>();
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
 	public String categoryErrorMsg = "";
 	private XMLRPCClient client;
 	public String id = "";
-	private Vector<Uri> selectedImageIDs = new Vector();
+	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
-	private Vector imageURLs = new Vector();
     private String accountName = "";
     private String postID = "";
     private boolean localDraft = false;
     private int ID_DIALOG_POSTING = 1;
+    public int ID_DIALOG_LOADING = 2;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
-    public Boolean centerThumbnail, xmlrpcError = false, isPage = false;
+    public Boolean centerThumbnail, xmlrpcError = false, isPage = false, isNew = false, isAction = false, isUrl = false;
     public String SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
-    public Vector imgThumbs = new Vector();
-    ProgressDialog loadingDialog;
+    public Vector<Object> imgThumbs = new Vector<Object>();
     LocationManager lm;
     Criteria criteria;
     String provider;
     Location curLocation;
+    ProgressDialog postingDialog;
     public boolean location = false, locationActive = false, isLargeScreen = false;
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     @Override
@@ -128,6 +128,7 @@ public class editPost extends Activity implements LocationListener{
          postID = extras.getString("postID");
          localDraft = extras.getBoolean("localDraft", false); 
          isPage = extras.getBoolean("isPage", false);
+         isNew = extras.getBoolean("isNew", false);
         }
         
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
@@ -147,11 +148,84 @@ public class editPost extends Activity implements LocationListener{
         	setContentView(R.layout.edit);
         }
         
-        this.setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
+        String action = getIntent().getAction();
+		if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)){ //this is from a share action!
+			isAction = true;
+			isNew = true;
+			WordPressDB settingsDB = new WordPressDB(this);
+			Vector<?> accounts = settingsDB.getAccounts(this);
+
+			if (accounts.size() > 0){
+
+				final String blogNames[] = new String[accounts.size()];
+				final String accountIDs[] = new String[accounts.size()];
+
+				for (int i = 0; i < accounts.size(); i++) {
+
+					HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
+					try {
+						blogNames[i] = escapeUtils.unescapeHtml(curHash.get("blogName").toString());
+					} catch (Exception e) {
+						blogNames[i] = "(No Blog Title)";
+					}
+					accountIDs[i] = curHash.get("id").toString();
+
+				} 
+
+				//Don't prompt if they have one blog only
+				if (accounts.size() != 1){
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle(getResources().getText(R.string.select_a_blog));
+					builder.setItems(blogNames, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
+							id = accountIDs[item];
+							accountName = blogNames[item];
+							setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post)); 
+							setContent();
+							lbsCheck();
+
+						}
+					});
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
+				else{
+					id = accountIDs[0];
+					accountName = blogNames[0];
+					setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+					setContent();
+				} 
+			}
+			else{
+				//no account, load main view to load new account view
+				Intent i = new Intent(this, wpAndroid.class);
+				Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
+				startActivity(i);
+				finish();
+			}
+
+		}
+		else{
+			//clear up some variables
+			selectedImageIDs.clear();
+			selectedImageCtr = 0;
+
+			if (!isPage){
+				lbsCheck();
+			}
+
+		}
+        
+		if (isNew){
+			setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
+		}
+		else {
+        	setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
+		}
         
         if (localDraft){
         	WordPressDB lDraftsDB = new WordPressDB(this);
-        	Vector post;
+        	Vector<?> post;
         	if (isPage){
         		post = lDraftsDB.loadPageDraft(this, postID);
         	}
@@ -159,7 +233,7 @@ public class editPost extends Activity implements LocationListener{
         		post = lDraftsDB.loadPost(this, postID);
         	}
         	
-        	final HashMap postHashMap = (HashMap) post.get(0);
+        	final HashMap<?, ?> postHashMap = (HashMap<?, ?>) post.get(0);
         	
         	EditText titleET = (EditText)findViewById(R.id.title);
         	EditText contentET = (EditText)findViewById(R.id.content);
@@ -197,7 +271,7 @@ public class editPost extends Activity implements LocationListener{
 		    	}
 		    	
 		    	WordPressDB settingsDB = new WordPressDB(this);
-	        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+	        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
 	        	
 	    		String sLocation = settingsVector.get(11).toString();
 	    		
@@ -207,29 +281,7 @@ public class editPost extends Activity implements LocationListener{
 	    		}
 	    		
 	    		if (location){
-	    			final Button viewMap = (Button) findViewById(R.id.viewMap);   
-	    	        
-	    	        viewMap.setOnClickListener(new TextView.OnClickListener() {
-	    	            public void onClick(View v) {
-	    	            	 
-	    	            	Double latitude = 0.0;
-	    	            	try {
-	    						latitude = curLocation.getLatitude();
-	    					} catch (Exception e) {
-	    						// TODO Auto-generated catch block
-	    						e.printStackTrace();
-	    					}
-	    	            	if (latitude != 0.0){
-	    		            	String uri = "geo:"+ latitude + "," + curLocation.getLongitude();  
-	    		            	startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri))); 
-	    	            	}
-	    	            	else {
-	    	            		Toast.makeText(editPost.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
-	    	            	}
-	    	            	  
-
-	    	            }
-	    	        });
+	    			enableLBSButtons();
 	    		}
 	    		
 	    		Double latitude = (Double) postHashMap.get("latitude");
@@ -305,15 +357,32 @@ public class editPost extends Activity implements LocationListener{
         	CheckBox publishCB = (CheckBox) findViewById(R.id.publish);
         	if (publish == 1){
         		publishCB.setChecked(true);
+        	}	
+        }
+        else if (isNew){
+        	Button cancelBtn = (Button) findViewById(R.id.cancel);
+        	cancelBtn.setText("Upload Now");
+        	
+        	if (!isAction){
+	        	WordPressDB settingsDB = new WordPressDB(this);
+	        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
+	        	
+	    		String sLocation = settingsVector.get(11).toString();
+	    		if (!isPage){
+		    		location = false;
+		    		if (sLocation.equals("1")){
+		    			location = true;
+		    		}
+		    		
+		    		enableLBSButtons();
+	    		}
         	}
-        	
-        	
         	
         }
         else{
 
         WordPressDB settingsDB = new WordPressDB(this);
-    	Vector categoriesVector = settingsDB.loadSettings(this, id);
+    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
     	String sURL = "";
     	
     	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
@@ -339,15 +408,13 @@ public class editPost extends Activity implements LocationListener{
     	
     	XMLRPCMethod method = new XMLRPCMethod("metaWeblog.getPost", new XMLRPCMethodCallback() {
 			public void callFinished(Object result) {
-				String s = "done";
-				s = result.toString();
 				pd.dismiss();
 				
 				if (result == null){
 					//prompt that something went wrong?
 				}
 				else{
-					HashMap contentHash = (HashMap) result;
+					HashMap<?, ?> contentHash = (HashMap<?, ?>) result;
 					
 					EditText titleET = (EditText)findViewById(R.id.title);
 			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
@@ -375,16 +442,15 @@ public class editPost extends Activity implements LocationListener{
 				        Object categoriesArray[] = (Object[]) contentHash.get("categories");
 				        
 				        if (categoriesArray != null){
-				        	int ctr = 0;
+				        	
 				        	categories = "";
-						    for (Object item : categoriesArray){
+						    for (int ctr = 0; ctr < categoriesArray.length; ctr++){
 						        String category = categoriesArray[ctr].toString();
 						        if (!selectedCategories.contains(category))
 			                	{
 						        categories += category + ",";
 			                	selectedCategories.add(category);
-			                	}
-						        ctr++;					    
+			                	}					    
 				        }	
 						    categories = categories.trim();
 			            	if (categories.endsWith(",")){
@@ -443,7 +509,7 @@ public class editPost extends Activity implements LocationListener{
         postButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             
-            if(localDraft){
+            if(localDraft || isNew){
             	boolean result = savePost();
             	
             	if (result){
@@ -459,7 +525,6 @@ public class editPost extends Activity implements LocationListener{
             	
             	showDialog(ID_DIALOG_POSTING);
             		Thread t = new Thread() {
-            			String resultCode = "";
         				public void run() {
 							try {
 								finalResult = submitPost();
@@ -467,7 +532,6 @@ public class editPost extends Activity implements LocationListener{
 								mHandler.post(mUpdateResults);
 								
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
@@ -494,7 +558,7 @@ public class editPost extends Activity implements LocationListener{
             final EditText contentEdit = (EditText) findViewById(R.id.content);
             contentEdit.addTextChangedListener(new TextWatcher() { 
                 public void afterTextChanged(Editable s) { 
-                	if (localDraft){
+                	if (localDraft || isNew){
 	                	//add style as the user types if a toggle button is enabled
 	                	ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
 	                	ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
@@ -532,7 +596,6 @@ public class editPost extends Activity implements LocationListener{
 		                	if (emButton.isChecked()){
 		                		StyleSpan[] ss = s.getSpans(styleStart, position, StyleSpan.class);
 		                		
-		                		boolean exists = false;
 		                		for (int i = 0; i < ss.length; i++) {
 		                			if (ss[i].getStyle() == android.graphics.Typeface.ITALIC){
 		                				s.removeSpan(ss[i]);
@@ -579,7 +642,7 @@ public class editPost extends Activity implements LocationListener{
                 
 });
             
-final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);   
+            final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);   
             
             boldButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -590,7 +653,7 @@ final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
 
             final Button linkButton = (Button) findViewById(R.id.link);   
             
-linkButton.setOnClickListener(new Button.OnClickListener() {
+            linkButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                 	
                 	TextView contentText = (TextView) findViewById(R.id.content);
@@ -632,7 +695,7 @@ linkButton.setOnClickListener(new Button.OnClickListener() {
             });
             
             
-final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);   
+            final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);   
             
             emButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -641,7 +704,7 @@ final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
                 }
         });
             
-final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);   
+            final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);   
             
             underlineButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -650,7 +713,7 @@ final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline)
                 }
         });
             
-final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);   
+            final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);   
             
             strikeButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -659,7 +722,7 @@ final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
                 }
         });
             
-final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);   
+            final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);   
             
             bquoteButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -670,42 +733,79 @@ final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
         });
             
             
-final Button cancelButton = (Button) findViewById(R.id.cancel);   
+            final Button cancelButton = (Button) findViewById(R.id.cancel);   
             
             cancelButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
-                	
-                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-      			  dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-                    dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
-                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
-                  		  DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                          	Bundle bundle = new Bundle();
-                              
-                              bundle.putString("returnStatus", "CANCEL");
-                              Intent mIntent = new Intent();
-                              mIntent.putExtras(bundle);
-                              setResult(RESULT_OK, mIntent);
-                              finish();
+                	if (isNew){
+                		boolean result = savePost();
 
-                      
-                          }
-                      });
-                    dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
-                  		  DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                          	//just close the dialog window
+        				if (result){
 
-                          }
-                      });
-                    dialogBuilder.setCancelable(true);
-                   dialogBuilder.create().show();            	
-                	}          	
+        					WordPressDB lddb = new WordPressDB(editPost.this);
+        					int newID = -1;
+        					if (isPage){
+        						newID = lddb.getLatestPageDraftID(editPost.this, id);
+        					}
+        					else{
+        						newID = lddb.getLatestDraftID(editPost.this, id);
+        					}
+        					Bundle bundle = new Bundle();
+        					if (newID != -1){
+
+        						if (isAction){
+        							Intent mIntent = new Intent(editPost.this, tabView.class);
+        							bundle.putString("activateTab", "posts");
+        							bundle.putString("id", id);
+        							bundle.putInt("uploadID", newID);
+        							bundle.putString("accountName", accountName);
+        							bundle.putString("action", "upload");
+        							mIntent.putExtras(bundle);
+        							startActivity(mIntent);
+        						}
+        						else{
+        							bundle.putString("returnStatus", "OK");
+        							bundle.putBoolean("upload", true);
+        							bundle.putInt("newID", newID);
+        							Intent mIntent = new Intent();
+        							mIntent.putExtras(bundle);
+        							setResult(RESULT_OK, mIntent); 
+        						}
+
+        						finish();
+        					}
+        				}
+                	}
+                	else {
+	                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
+	                	dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
+	                	dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
+	                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
+	                  	DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int whichButton) {
+	                    	Bundle bundle = new Bundle();
+	                        bundle.putString("returnStatus", "CANCEL");
+		                    Intent mIntent = new Intent();
+		                    mIntent.putExtras(bundle);
+		                    setResult(RESULT_OK, mIntent);
+		                    finish();
+	                    }
+	                    });
+	                    dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
+	                  		  DialogInterface.OnClickListener() {
+	                          public void onClick(DialogInterface dialog, int whichButton) {
+	                          	//just close the dialog window
+	
+	                          }
+	                      });
+	                   dialogBuilder.setCancelable(true);
+	                   dialogBuilder.create().show();            	
+	                }  
+                }
                 
         });
             
-final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
+            final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
             
 			clearPictureButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -713,7 +813,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 			        imageUrl.clear();
 			        thumbnailUrl.clear();
-			        selectedImageIDs = new Vector();
+			        selectedImageIDs = new Vector<Uri>();
 			        selectedImageCtr = 0;
 			        imgThumbs.clear();
 			        Gallery gallery = (Gallery) findViewById(R.id.gallery);
@@ -726,9 +826,56 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
           
             
             
-    }
+}
     
     
+	private void enableLBSButtons() {
+
+			final Button viewMap = (Button) findViewById(R.id.viewMap);   
+	        
+	        viewMap.setOnClickListener(new TextView.OnClickListener() {
+	            public void onClick(View v) {
+	            	 
+	            	Double latitude = 0.0;
+	            	try {
+						latitude = curLocation.getLatitude();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+	            	if (latitude != 0.0){
+		            	String uri = "geo:"+ latitude + "," + curLocation.getLongitude();  
+		            	startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri))); 
+	            	}
+	            	else {
+	            		Toast.makeText(editPost.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+	            	}
+	            	  
+
+	            }
+	        });
+		
+	        if (isNew){
+	        	
+	        	Button updateLocation = (Button) findViewById(R.id.updateLocation);
+	        	updateLocation.setVisibility(View.GONE);
+	        	
+				lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+	    		
+	    		lm.requestLocationUpdates(
+			            LocationManager.GPS_PROVIDER, 
+			            20000, 
+			            0, 
+			            editPost.this
+			    );
+				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+				locationActive = true;
+				
+				RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+	        	locationSection.setVisibility(View.VISIBLE);
+	        }
+	}
+
+
 	protected void formatBtnClick(ToggleButton toggleButton, String tag) {
 		EditText contentText = (EditText) findViewById(R.id.content);
 
@@ -747,7 +894,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
     		selectionStart = temp;
     	}
     	
-    	if (localDraft){             	
+    	if (localDraft || isNew){             	
         	if (selectionEnd > selectionStart)
         	{
         		Spannable str = contentText.getText();
@@ -881,9 +1028,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 			if (cur.moveToFirst()) {
 
-				int nameColumn, dataColumn, orientationColumn;
+				int dataColumn, orientationColumn;
 
-				nameColumn = cur.getColumnIndex(Images.Media._ID);
 				dataColumn = cur.getColumnIndex(Images.Media.DATA);
 				orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
 
@@ -991,7 +1137,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
      	{ 
      	  public void run() 
      	  {
-     		 loadingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
+     		 postingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
      	  } 
      	}; 
      	this.runOnUiThread(updateDialog);
@@ -1010,7 +1156,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         }
         else {
         WordPressDB settingsDB = new WordPressDB(this);
-    	Vector categoriesVector = settingsDB.loadSettings(this, id);   	
+    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);   	
         
 	    	String sURL = "";
 	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
@@ -1025,13 +1171,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
     		String sPassword = categoriesVector.get(3).toString();
     		String sImagePlacement = categoriesVector.get(4).toString();
     		String sCenterThumbnailString = categoriesVector.get(5).toString();
-    		String sFullSizeImageString = categoriesVector.get(6).toString();
-    		boolean sFullSizeImage  = false;
-    		if (sFullSizeImageString.equals("1")){
-    			sFullSizeImage = true;
-    		}
 
-    		boolean centerThumbnail = false;
     		if (sCenterThumbnailString.equals("1")){
     			centerThumbnail = true;
     		}
@@ -1086,7 +1226,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			result = (Object) client.call("metaWeblog.editPost", params);
 			success = true;
 		} catch (final XMLRPCException e) {
-			// TODO Auto-generated catch block
 			Thread prompt = new Thread() 
 			{ 
 			  public void run() 
@@ -1148,22 +1287,18 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         return res;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String uploadImages(){
 		
-	    Vector<Object> myPictureVector = new Vector<Object> ();
-	    String returnedImageURL = null;
-	    String imageRes = null;
 	    String content = "";
-	    int thumbWidth = 0, thumbHeight = 0, finalHeight = 0;
 	    
 	    //images variables
 	    String finalThumbnailUrl = null;
 	    String finalImageUrl = null;
-	    String uploadImagePath = "";
 	    
 	    //get the settings
 	    WordPressDB settingsDB = new WordPressDB(this);
-		Vector categoriesVector = settingsDB.loadSettings(this, id);   	
+		Vector<?> categoriesVector = settingsDB.loadSettings(this, id);   	
 		
 	    	String sURL = "";
 	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
@@ -1174,7 +1309,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	    	{
 	    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
 	    	}
-			String sBlogName = categoriesVector.get(1).toString();
 			String sUsername = categoriesVector.get(2).toString();
 			String sPassword = categoriesVector.get(3).toString();
 			String sImagePlacement = categoriesVector.get(4).toString();
@@ -1191,7 +1325,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			}
 			String sMaxImageWidth = categoriesVector.get(7).toString();
 			
-			String thumbnailURL = "";
 	    //new loop for multiple images
 	    
 	    for (int it = 0; it < selectedImageCtr; it++){
@@ -1200,8 +1333,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	     	{ 
 	     	  public void run() 
 	     	  {
-	     		  loadingDialog.setMessage("Uploading Media File #" + String.valueOf(printCtr + 1));
-	     		  loadingDialog.setProgress(loadingDialog.getProgress() + (100 / (selectedImageCtr + 1)));
+	     		  postingDialog.setMessage("Uploading Media File #" + String.valueOf(printCtr + 1));
+	     		  postingDialog.setProgress(postingDialog.getProgress() + (100 / (selectedImageCtr + 1)));
 	     	  } 
 	     	}; 
 	     	this.runOnUiThread(prompt);
@@ -1210,7 +1343,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	    {
 	       client = new XMLRPCClient(sURL);
 	 	   
-	 	   String sXmlRpcMethod = "wp.uploadFile";
 	 	   String curImagePath = "";
 	 	   
 	 	  curImagePath = imageUrl.get(it).toString();
@@ -1227,9 +1359,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	  	   MediaFile mf = null;
 	  	  
 	  	   if (videoUri.toString().contains("content:")){ //file is in media library
-	 		 	   String imgID = videoUri.getLastPathSegment();
-	 		 	   
-	 		 	   long imgID2 = Long.parseLong(imgID);
 	 		 	   
 	 		 	  String[] projection; 
 	 		 	 Uri imgPath;
@@ -1246,13 +1375,11 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 		 	 
 	 		 	  if (cur.moveToFirst()) {
 	 		 		  
-	 		 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn;
+	 		 		int dataColumn, mimeTypeColumn;
 
-		 			nameColumn = cur.getColumnIndex(Video.Media._ID);
 		 	        dataColumn = cur.getColumnIndex(Video.Media.DATA);
 		 	        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
-
-	 		       String imgPath4 = imgPath.getEncodedPath();              	            
+          	            
 	 		       mf = new MediaFile();
 	 		       
 	 		       thumbData = cur.getString(dataColumn);
@@ -1271,7 +1398,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	         //try to upload the video
 	         Map<String, Object> m = new HashMap<String, Object>();
 	         
-	         HashMap hPost = new HashMap();
 	         m.put("name", imageTitle);
 	         m.put("type", mimeType);
 	         m.put("bits", mf);
@@ -1289,16 +1415,12 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	         try {
 	 			result = (Object) client.call("wp.uploadFile", params);
 	 		} catch (XMLRPCException e) {
-	 			// TODO Auto-generated catch block
-	 			e.printStackTrace();
 	 			mediaErrorMsg = e.getMessage();
 	 			xmlrpcError = true;
 	 			break;
 	 		}
 	 				
-	 				HashMap contentHash = new HashMap();
-	 				    
-	 				contentHash = (HashMap) result;
+	 				HashMap<Object, Object> contentHash = (HashMap<Object, Object>) result;
 
 	 				String resultURL = contentHash.get("url").toString();
 	 				if (contentHash.containsKey("videopress_shortcode")){
@@ -1325,11 +1447,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	 	   MediaFile mf = null;
 	 	 
 	 	   if (imageUri.toString().contains("content:")){ //file is in media library
-			 	   String imgID = imageUri.getLastPathSegment();
 			 	   
-			 	   long imgID2 = Long.parseLong(imgID);
-			 	   
-			 	  String[] projection; 
+			 	 String[] projection; 
 			 	 Uri imgPath;
 
 				 	  projection = new String[] {
@@ -1346,9 +1465,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 			 	 
 			 	  if (cur.moveToFirst()) {
 			 		  
-			 		int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, orientationColumn;
+			 		int dataColumn, mimeTypeColumn, orientationColumn;
 
-			 			nameColumn = cur.getColumnIndex(Images.Media._ID);
 			 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
 			 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
 			 	       orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
@@ -1399,8 +1517,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 	        //try to upload the image
 	        Map<String, Object> m = new HashMap<String, Object>();
-	        
-	        HashMap hPost = new HashMap();
+	
 	        m.put("name", imageTitle);
 	        m.put("type", mimeType);
 	        if (i == 0){
@@ -1423,7 +1540,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	        try {
 				result = (Object) client.call("wp.uploadFile", params);
 			} catch (XMLRPCException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				e.getMessage();
 				xmlrpcError = true;
@@ -1449,29 +1565,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		            	}
 		            }
 
-		           int finalWidth = 500;  //default to this if there's a problem
-		           //Change dimensions of thumbnail
-		           if (sMaxImageWidth.equals("Original Size")){
-		           	finalWidth = thumbWidth;
-		           	finalHeight = thumbHeight;
-		           }
-		           else
-		           {
-		              	finalWidth = Integer.parseInt(sMaxImageWidth);
-		           	if (finalWidth > thumbWidth){
-		           		//don't resize
-		           		finalWidth = thumbWidth;
-		           		finalHeight = thumbHeight;
-		           	}
-		           	else
-		           	{
-		           		float percentage = (float) finalWidth / thumbWidth;
-		           		float proportionateHeight = thumbHeight * percentage;
-		           		finalHeight = (int) Math.rint(proportionateHeight);
-		           	}
-		           }
-					
-					
 					//prepare the centering css if desired from user
 			           String centerCSS = " ";
 			           if (centerThumbnail){
@@ -1528,7 +1621,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	public boolean checkSettings(){
 		//see if the user has any saved preferences
 		 WordPressDB settingsDB = new WordPressDB(this);
-	    	Vector categoriesVector = settingsDB.loadSettings(this, id);
+	    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
 	    		sURL = categoriesVector.get(0).toString();
@@ -1584,13 +1677,10 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		public void run() {
 			
 			try {
-				final long t0 = System.currentTimeMillis();
 				final Object result;
 				result = (Object) client.call(method, params);
-				final long t1 = System.currentTimeMillis();
 				handler.post(new Runnable() {
 					public void run() {
-
 						callBack.callFinished(result);
 					}
 				});
@@ -1701,7 +1791,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		}
 		public void call(Object[] params) throws InterruptedException {		
 			this.params = params;
-			this.method = method;
 			final Object result;
 			try {
 				result = (Object) client.call(method, params);
@@ -1715,10 +1804,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		public void run() {
 			
 			try {
-				final long t0 = System.currentTimeMillis();
 				final Object result;
 				result = (Object) client.call(method, params);
-				final long t1 = System.currentTimeMillis();
 				handler.post(new Runnable() {
 					public void run() {
 
@@ -1801,7 +1888,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		public View getView(int position, View convertView, ViewGroup parent) {
 			boolean isVideo = false;
 			ViewHolder holder;
-			ImageView imageView;
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
 				convertView = new ImageView(mContext);
 				holder = new ViewHolder();
@@ -1854,7 +1940,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null || requestCode == 4)
 		{
@@ -1862,11 +1947,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		switch(requestCode) {
 		case 0:
 			extras = data.getExtras();
-		    String title = extras.getString("returnStatus");
-		    //Toast.makeText(wpAndroid.this, title, Toast.LENGTH_SHORT).show();
 		    break;
 		case 1:
-		    
 		    break;
 		case 2:
 			extras = data.getExtras();
@@ -1927,9 +2009,8 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
   		 	 
   		 	  if (cur.moveToFirst()) {
 						  
-						int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, orientationColumn;
+						int dataColumn;
 
-							nameColumn = cur.getColumnIndex(Images.Media._ID);
 						    dataColumn = cur.getColumnIndex(Images.Media.DATA);
 							            
 
@@ -1937,7 +2018,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
   		       f = new File(thumbData);
   		 	  }
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 	            		dialogBuilder.setTitle(getResources().getText(R.string.error));
 	                    dialogBuilder.setMessage(e.getMessage());
@@ -1967,7 +2047,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
                     addMedia(capturedImage.toString(), capturedImage);
        
                 } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
                 	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
             		dialogBuilder.setTitle(getResources().getText(R.string.file_error));
                     dialogBuilder.setMessage(getResources().getText(R.string.file_error_encountered));
@@ -2120,12 +2199,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	@Override
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
-	loadingDialog = new ProgressDialog(this);
-	loadingDialog.setTitle(getResources().getText(R.string.uploading_content));
-	loadingDialog.setMessage(getResources().getText((isPage) ? R.string.attempting_edit_page : R.string.attempting_edit_post));
-	loadingDialog.setIndeterminate(true);
-	loadingDialog.setCancelable(true);
-	return loadingDialog;
+		postingDialog = new ProgressDialog(this);
+		postingDialog.setTitle(getResources().getText(R.string.uploading_content));
+		postingDialog.setMessage(getResources().getText((isPage) ? R.string.attempting_edit_page : R.string.attempting_edit_post));
+		postingDialog.setIndeterminate(true);
+		postingDialog.setCancelable(true);
+		return postingDialog;
+	}
+	else if(id == ID_DIALOG_LOADING){
+		ProgressDialog loadingDialog = new ProgressDialog(this);
+		loadingDialog.setMessage(getResources().getText(R.string.loading));
+		loadingDialog.setIndeterminate(true);
+		loadingDialog.setCancelable(true);
+		return loadingDialog;
 	}
 
 	return super.onCreateDialog(id);
@@ -2151,21 +2237,19 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         content = content.replace("<br><br>", "<br>");
         String tags = "";
         if (!isPage){
-        EditText tagsET = (EditText)findViewById(R.id.tags);
-        tags = tagsET.getText().toString();
+        	EditText tagsET = (EditText)findViewById(R.id.tags);
+        	tags = tagsET.getText().toString();
         }
         CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         boolean publishThis = false;
         String images = "";
         boolean success = false;
         
-        Vector<Object> myPostVector = new Vector<Object> ();
-        String res = null;
         //before we do anything, validate that the user has entered settings
         boolean enteredSettings = checkSettings();
         
         if (!enteredSettings){
-        	res = "invalidSettings";
+        	finalResult = "invalidSettings";
         }
         else if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
         {
@@ -2198,7 +2282,7 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         
         	//Geotagging
         	WordPressDB settingsDB = new WordPressDB(this);
-        	Vector settingsVector = settingsDB.loadSettings(this, id);   	
+        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
         	
     		String sLocation = settingsVector.get(11).toString();
     		
@@ -2219,7 +2303,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         			latitude = loc.getLatitude();
         			longitude = loc.getLongitude();
         		} catch (Exception e) {
-        			// TODO Auto-generated catch block
         			e.printStackTrace();
         		}
 
@@ -2228,10 +2311,20 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
         	//new feature, automatically save a post as a draft just in case the posting fails
             WordPressDB lDraftsDB = new WordPressDB(this);
         	if (isPage){
-        		success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
+        		if (isNew){
+        			success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
+        		}
+        		else {
+        			success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
+        		}
         	}
-        	else{
-        		success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis, latitude, longitude);
+        	else {
+        		if (isNew){
+        			success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis, latitude, longitude);
+        		}
+        		else {
+        			success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis, latitude, longitude);
+        		}
         	}
         
         
@@ -2323,7 +2416,6 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
               try {
 				throw new IOException("Path to file could not be created.");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             }
@@ -2381,24 +2473,18 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 	}
 
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	private class getAddressTask extends AsyncTask<Double, Void, String> {
-
-	     protected void onProgressUpdate() {
-	     }
 
 	     protected void onPostExecute(String result) {
 	    	 TextView map = (TextView) findViewById(R.id.locationText); 
@@ -2421,6 +2507,206 @@ final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
 		}
 
 	 }
+	
+	protected void setContent() {
+		Intent intent = getIntent();
+		String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+		if (text != null) {
+			EditText contentET = (EditText) findViewById(R.id.content);
+			//It's a youtube video link! need to strip some parameters so the embed will work
+			if (text.contains("youtube_gdata")){
+				text = text.replace("feature=youtube_gdata", "");
+				text = text.replace("&", "");
+				text = text.replace("_player", "");
+				text = text.replace("watch?v=", "v/");
+				text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\"" + text + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"" + text + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
+				contentET.setText(text);
+			}
+			else{   	
+				//add link tag around URLs, trac #64
+				String [] parts = text.split("\\s");
+				String finalText = "";
+
+				// Attempt to convert each item into an URL.   
+				for( String item : parts ) try {
+					URL url = new URL(item);
+					finalText+="<a href=\"" + url + "\">"+ url + "</a> ";  
+					contentET.setText(Html.fromHtml(finalText));
+					isUrl = true;
+				} catch (MalformedURLException e) {
+					finalText+= item + " ";
+					contentET.setText(finalText);
+				}
+			}
+		}
+		else {
+			String action = intent.getAction();
+			final String type = intent.getType();
+			final ArrayList<Uri> multi_stream;
+			if (Intent.ACTION_SEND_MULTIPLE.equals(action)){
+				multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+			}
+			else{
+				multi_stream = new ArrayList<Uri>();
+				multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+			}
+	
+			Vector<Serializable> params = new Vector<Serializable>();
+			params.add(multi_stream);
+			params.add(type);
+			new processAttachmentsTask().execute(params);
+		}
+		
+
+	}
+	
+private class processAttachmentsTask extends AsyncTask<Vector<?>, Void, Boolean> {
+		
+		protected void onPreExecute(){
+
+			showDialog(ID_DIALOG_LOADING);
+		}
+
+		protected void onPostExecute(Boolean result) {
+			dismissDialog(ID_DIALOG_LOADING);
+			Gallery gallery = (Gallery) findViewById(R.id.gallery);
+			gallery.setVisibility(View.VISIBLE);
+			gallery.setAdapter(new ImageAdapter(editPost.this));
+			Button clearMedia = (Button) findViewById(R.id.clearPicture);
+			clearMedia.setVisibility(View.VISIBLE);
+		}
+		@Override
+		protected Boolean doInBackground(Vector<?>... args) {
+			ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
+			String type = (String) args[0].get(1);
+			for (int i=0; i < multi_stream.size(); i++) {
+			    Uri curStream = (Uri) multi_stream.get(i);
+			    if (curStream != null && type != null) {
+					String imgPath = curStream.getEncodedPath();
+					
+					addMedia(imgPath, curStream, true);
+					
+				}
+			}
+			return true;
+		}
+	}
+
+private void addMedia(String imgPath, Uri curStream, boolean noUI) {
+	selectedImageIDs.add(selectedImageCtr, curStream);
+	imageUrl.add(selectedImageCtr, imgPath);
+	selectedImageCtr++;
+	
+	if (!imgPath.contains("video")){
+	
+	String[] projection = new String[] {
+			Images.Thumbnails._ID,
+			Images.Thumbnails.DATA,
+			Images.Media.ORIENTATION
+	};
+	String orientation = "", path = "";
+	Cursor cur = managedQuery(curStream, projection, null, null, null);
+	File jpeg = null;
+	if (cur != null){
+		String thumbData = "";
+
+		if (cur.moveToFirst()) {
+
+			int dataColumn, orientationColumn;
+
+			dataColumn = cur.getColumnIndex(Images.Media.DATA);
+			orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
+
+			thumbData = cur.getString(dataColumn);
+			orientation = cur.getString(orientationColumn);
+		}
+
+
+		jpeg = new File(thumbData);
+		path = thumbData;
+	}
+	else{
+		path = curStream.toString().replace("file://", "");
+		jpeg = new File(curStream.toString().replace("file://", ""));
+		
+	}
+	
+	imageTitle = jpeg.getName();
+ 	   
+ 	   byte[] finalBytes = null;
+ 	  
+ 	   byte[] bytes = new byte[(int) jpeg.length()];
+ 	   
+ 	   DataInputStream in = null;
+	try {
+		in = new DataInputStream(new FileInputStream(jpeg));
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	}
+ 	   try {
+		in.readFully(bytes);
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+ 	   try {
+		in.close();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	
+	imageHelper ih = imageHelper.getInstance();
+	
+	orientation = ih.getExifOrientation(path, orientation);
+
+	imageTitle = jpeg.getName();
+	
+	finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
+
+	Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length); 
+	imgThumbs.add(resizedBitmap);
+	
+	}
+	else {
+		imgThumbs.add("video");
+	}
+	if (!noUI){
+	Gallery gallery = (Gallery) findViewById(R.id.gallery);
+	gallery.setVisibility(View.VISIBLE);
+	gallery.setAdapter(new ImageAdapter(editPost.this));
+	Button clearMedia = (Button) findViewById(R.id.clearPicture);
+	clearMedia.setVisibility(View.VISIBLE);
+	}
+	
+}
+
+protected void lbsCheck() {
+	WordPressDB settingsDB = new WordPressDB(editPost.this);
+	Vector<?> settingsVector = settingsDB.loadSettings(editPost.this, id);   	
+
+	String sLocation = settingsVector.get(11).toString();
+
+	if (sLocation.equals("1")){
+		location = true;
+	}
+	if (location){
+		lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+		criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		criteria.setAltitudeRequired(false);
+		criteria.setBearingRequired(false);
+		criteria.setCostAllowed(true);
+		criteria.setPowerRequirement(Criteria.POWER_HIGH);
+
+		provider = lm.getBestProvider(criteria, true);
+		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+		locationSection.setVisibility(View.VISIBLE);
+		
+		if (isAction){
+			enableLBSButtons();
+		}
+	}
+
+}
     
 }
 

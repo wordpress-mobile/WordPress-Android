@@ -2,22 +2,17 @@ package org.wordpress.android;
 
 import java.util.ArrayList;
 import java.util.Vector;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class addCategory extends Activity {
 	String id = "";
@@ -108,7 +103,7 @@ public class addCategory extends Activity {
 		ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
         loadTextArray.clear();
         WordPressDB categoriesDB = new WordPressDB(this);
-    	Vector categoriesVector = categoriesDB.loadCategories(this, id);
+    	Vector<?> categoriesVector = categoriesDB.loadCategories(this, id);
     	if (categoriesVector.size() > 0)
     	{
     		

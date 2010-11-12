@@ -5,25 +5,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 
 public class settings extends Activity {
 	protected static Intent svc = null;
-	private String id = "", accountName = "", originalUsername;
+	private String id = "", originalUsername;
 	private String xmlrpcPath;
 	boolean isWPCom = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.settings);
@@ -33,18 +30,17 @@ public class settings extends Activity {
         if(extras !=null)
         {
          id = extras.getString("id");
-         accountName = extras.getString("accountName");
         }
 		
 		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
-	    ArrayAdapter spinnerArrayAdapter = new ArrayAdapter<Object>(this,
+	    ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,
 	    		R.layout.spinner_textview,
 	            new String[] { "Original Size", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"});
 	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    spinner.setAdapter(spinnerArrayAdapter);
 		
     	WordPressDB settingsDB = new WordPressDB(this);
-    	Vector categoriesVector = settingsDB.loadSettings(this, id);
+    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
     	if (categoriesVector != null)
     	{
     		xmlrpcPath = categoriesVector.get(0).toString();
@@ -77,8 +73,6 @@ public class settings extends Activity {
     		if (location.equals("1")){
     			sLocation = true;
     		}
-    		
-    		String maxImageWidth = categoriesVector.get(7).toString();
     		
     		String maxImageWidthId = categoriesVector.get(8).toString();
     		int maxImageWidthIdInt = Integer.parseInt(maxImageWidthId);
@@ -136,8 +130,6 @@ public class settings extends Activity {
                 EditText passwordET = (EditText)findViewById(R.id.password);
                 String password = passwordET.getText().toString();
                 
-                
-                RadioGroup imageRG = (RadioGroup)findViewById(R.id.imagePlacement);
                 // trac #55
                 String buttonValue = ""; 
                 RadioButton aboveTextRB = (RadioButton)findViewById(R.id.aboveText);

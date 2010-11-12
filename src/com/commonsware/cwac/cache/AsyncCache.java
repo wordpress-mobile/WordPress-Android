@@ -14,19 +14,14 @@
 
 package com.commonsware.cwac.cache;
 
-import android.content.Intent;
-import android.util.Log;
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+
 import com.commonsware.cwac.bus.AbstractBus;
 
-abstract public class AsyncCache<K, V, B extends AbstractBus, M>
+abstract public class AsyncCache<K, V, B extends AbstractBus<?, ?, ?>, M>
 	extends CacheBase<K,V> {
 	protected abstract V create(K key, M message, int forceStyle);
 	
-	private static String TAG="AsyncCache";
 	private B bus=null;
 	
 	public AsyncCache(File cacheRoot, B bus, DiskCachePolicy policy,

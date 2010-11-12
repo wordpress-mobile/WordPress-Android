@@ -10,7 +10,8 @@
 			android:label="Enter a URL" />
 		<activity android:name="viewPosts" android:theme="@style/Theme.TabView"/>
 		<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden" />
-		<activity android:name="newPost" android:configChanges="orientation|keyboardHidden">
+		<activity android:configChanges="orientation|keyboardHidden" android:name="addAccount"/>
+		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -18,10 +19,8 @@
     				<data android:mimeType="text/plain" />
     				<data android:mimeType="image/*" />
     				<data android:mimeType="video/*" />
-  			</intent-filter> 
-  		</activity>
-		<activity android:configChanges="orientation|keyboardHidden" android:name="addAccount"/>
-		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden" />
+  			</intent-filter>
+		</activity>
 		<activity android:name="viewPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:label="WordPress - Preferences" android:name="Preferences"/>
 		<service android:name="commentService" android:label="Comment Service" />
@@ -55,6 +54,7 @@
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 	<uses-feature android:name="android.hardware.camera" />
+	<uses-feature android:name="android.hardware.location" android:required="false" />
 
 
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>

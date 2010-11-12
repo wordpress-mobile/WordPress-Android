@@ -252,7 +252,7 @@ public class WordPressDB {
 		db.close();
 		return (returnValue);
 	}	
-	public Vector getAccounts(Context ctx) {
+	public Vector<HashMap<String, Object>> getAccounts(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "username", "runService", "blogId", "url"}, null, null, null, null, null);
 		String id;
@@ -261,7 +261,7 @@ public class WordPressDB {
 		int runService;
 		int numRows = c.getCount();
 		c.moveToFirst();
-		Vector accounts = new Vector();
+		Vector<HashMap<String, Object>> accounts = new Vector<HashMap<String, Object>>();
 		for (int i = 0; i < numRows; i++) {
 			
 			id = c.getString(0);
@@ -272,7 +272,7 @@ public class WordPressDB {
 			url = c.getString(5);
 			if (id != null)
 			{	
-				HashMap thisHash = new HashMap();
+				HashMap<String, Object> thisHash = new HashMap<String, Object>();
 				
 				thisHash.put("id", id);
 				thisHash.put("blogName", blogName);
@@ -346,7 +346,7 @@ public class WordPressDB {
 			ContentValues userPass = new ContentValues();
 			userPass.put("username", username);
 			userPass.put("password", password);
-			boolean userPassUpdate = db.update(SETTINGS_TABLE, userPass, "username=\"" + originalUsername + "\" AND dotcomFlag=1" , null) > 0;
+			returnValue = db.update(SETTINGS_TABLE, userPass, "username=\"" + originalUsername + "\" AND dotcomFlag=1" , null) > 0;
 		}
 		db.close();
 		return (returnValue);
@@ -364,7 +364,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public Vector loadSettings(Context ctx, String id) {
+	public Vector<Object> loadSettings(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag"}, "id=" + id, null, null, null, null);
@@ -372,7 +372,7 @@ public class WordPressDB {
 		int numRows = c.getCount();
 		c.moveToFirst();
 
-		Vector returnVector = new Vector();
+		Vector<Object> returnVector = new Vector<Object>();
 		if (numRows > 0){
 			if (c.getString(0) != null){
 			returnVector.add(c.getString(0));
@@ -400,15 +400,14 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public Vector loadStatsLogin(Context ctx, String id) {
+	public Vector<String> loadStatsLogin(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username", "dotcom_password"}, "id=" + id, null, null, null, null);
 		
-		int numRows = c.getCount();
 		c.moveToFirst();
 
-		Vector returnVector = new Vector();
+		Vector<String> returnVector = new Vector<String>();
 		if (c.getString(0) != null){
 		returnVector.add(c.getString(0));
 		returnVector.add(c.getString(1));
@@ -435,15 +434,14 @@ public class WordPressDB {
 		
 	}
 	
-	public Vector loadAPIData(Context ctx, String id) {
+	public Vector<String> loadAPIData(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "api_key", "api_blogid"}, "id=" + id, null, null, null, null);
-		
-		int numRows = c.getCount();
+
 		c.moveToFirst();
 
-		Vector returnVector = new Vector();
+		Vector<String> returnVector = new Vector<String>();
 		if (c.getString(0) != null){
 		returnVector.add(c.getString(0));
 		returnVector.add(c.getString(1));
@@ -474,7 +472,6 @@ public class WordPressDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		int returnInt = 0;
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "lastCommentId"  }, "id=" + id, null, null, null, null);
-		int blah = c.getCount();
 		c.moveToFirst();
 		if (c.getString(0) != null){
 			returnInt = Integer.valueOf(c.getString(0));
@@ -497,21 +494,20 @@ public class WordPressDB {
 	}
 
 
-	public Vector getNotificationAccounts(Context ctx) {
+	public Vector<Integer> getNotificationAccounts(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = null;
 		try {
 			c = db.query(SETTINGS_TABLE, new String[] { "id" }, "runService=1", null, null, null, null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
-		Vector returnVector = new Vector();
+		Vector<Integer> returnVector = new Vector<Integer>();
 		for (int i = 0; i < numRows; ++i) {
 			int tempID = c.getInt(0);	
 			returnVector.add(tempID);
@@ -526,10 +522,8 @@ public class WordPressDB {
 
 	public String getAccountName(Context ctx, String accountID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		int returnInt = 0;
 		String accountName = "";
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName"  }, "id=" + accountID, null, null, null, null);
-		int blah = c.getCount();
 		c.moveToFirst();
 		if (c.getString(0) != null){
 			accountName = c.getString(0);
@@ -550,7 +544,8 @@ public class WordPressDB {
 		values.put("runService", iFlag);
 
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + String.valueOf(id), null) > 0;
-		
+		if(returnValue){
+		}
 		db.close();
 		
 	}
@@ -566,7 +561,7 @@ public class WordPressDB {
 		values.put("tagline", tagline);
 
 		boolean returnValue = db.update("eula", values, null, null) > 0;
-		
+		if (returnValue){};
 		db.close();
 		
 	}
@@ -590,12 +585,12 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 	}
 	
-	public HashMap getNotificationOptions(Context ctx) {
+	public HashMap<String, Object> getNotificationOptions(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Cursor c = db.query("eula", new String[] { "id", "sound", "vibrate", "light", "tagline_flag", "tagline"}, "id=0", null, null, null, null);
 		int sound, vibrate, light;
 		String tagline;
-		HashMap thisHash = new HashMap();
+		HashMap<String, Object> thisHash = new HashMap<String, Object>();
 		int numRows = c.getCount();
 		if (numRows >= 1){
 		c.moveToFirst();
@@ -665,16 +660,16 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return (returnValue);
 	}
 
-	public Vector loadPosts(Context ctx, String blogID) {
+	public Vector<HashMap<String, Object>> loadPosts(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "id", "title", "publish", "uploaded"}, "blogID=" + blogID, null, null, null, "id desc");
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("id", c.getInt(0));
 		returnHash.put("title", c.getString(1));
 		returnHash.put("publish", c.getInt(2));
@@ -693,9 +688,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 	
-	public Vector loadPost(Context ctx, String postID) {
+	public Vector<HashMap<String, Object>> loadPost(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "publish", "latitude", "longitude"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
@@ -703,7 +698,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("title", c.getString(0));
 		returnHash.put("content", c.getString(1));
 		returnHash.put("picturePaths", c.getString(2));
@@ -728,7 +723,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
 	public boolean deletePost(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
 		
 		boolean returnValue = false;
 
@@ -775,16 +769,16 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return (returnValue);
 	}
 	
-	public Vector loadPageDrafts(Context ctx, String blogID) {
+	public Vector<HashMap<String, Object>> loadPageDrafts(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "id", "title", "publish", "uploaded"}, "blogID=" + blogID, null, null, null, "id desc");
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("id", c.getInt(0));
 		returnHash.put("title", c.getString(1));
 		returnHash.put("publish", c.getInt(2));
@@ -803,9 +797,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 	
-	public Vector loadPageDraft(Context ctx, String postID) {
+	public Vector<HashMap<String, Object>> loadPageDraft(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "publish"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
@@ -813,7 +807,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("title", c.getString(0));
 		returnHash.put("content", c.getString(1));
 		returnHash.put("picturePaths", c.getString(2));
@@ -834,7 +828,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
 	public boolean deletePageDraft(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
 		
 		boolean returnValue = false;
 
@@ -882,19 +875,19 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	}
 	
 	//postStore
-	public boolean savePosts(Context ctx, Vector postValues) {
+	public boolean savePosts(Context ctx, Vector<?> postValues) {
 		boolean returnValue = false;
 		if (postValues.size() != 0)
 		{
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		HashMap firstHash = (HashMap) postValues.get(0);
+		HashMap<?, ?> firstHash = (HashMap<?, ?>) postValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
 		//delete existing values
 		db.delete(POSTSTORE_TABLE, "blogID=" + blogID, null);
 
 		for (int i = 0; i < postValues.size(); i++){
 			ContentValues values = new ContentValues();
-			HashMap thisHash = (HashMap) postValues.get(i);
+			HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
 			values.put("blogID", thisHash.get("blogID").toString());
 			values.put("postID", thisHash.get("postID").toString());
 			values.put("title", thisHash.get("title").toString());
@@ -909,9 +902,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return (returnValue);
 	}
 
-	public Vector loadSavedPosts(Context ctx, String blogID) {
+	public Vector<HashMap<String, String>> loadSavedPosts(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, String>> returnVector = new Vector<HashMap<String, String>>();
 		Cursor c = db.query(POSTSTORE_TABLE, new String[] { "blogID", "postID", "title", "postDate", "postDateFormatted"}, "blogID=" + blogID, null, null, null, null);
 		
 		int numRows = c.getCount();
@@ -919,7 +912,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, String> returnHash = new HashMap<String, String>();
 		returnHash.put("blogID", c.getString(0));
 		returnHash.put("postID", c.getString(1));
 		returnHash.put("title", c.getString(2));
@@ -939,9 +932,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 
-	public Vector loadPages(Context ctx, String blogID) {
+	public Vector<HashMap<String, String>> loadPages(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, String>> returnVector = new Vector<HashMap<String, String>>();
 		Cursor c = db.query(PAGES_TABLE, new String[] { "blogID", "pageID", "title", "pageDate", "pageDateFormatted"}, "blogID=" + blogID, null, null, null, null);
 		
 		int numRows = c.getCount();
@@ -949,7 +942,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		for (int i = 0; i < numRows; ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, String> returnHash = new HashMap<String, String>();
 		returnHash.put("blogID", c.getString(0));
 		returnHash.put("pageID", c.getString(1));
 		returnHash.put("title", c.getString(2));
@@ -969,17 +962,17 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 
-	public boolean savePages(Context ctx, Vector pageValues) {
+	public boolean savePages(Context ctx, Vector<?> pageValues) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		HashMap firstHash = (HashMap) pageValues.get(0);
+		HashMap<?, ?> firstHash = (HashMap<?, ?>) pageValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
 		//delete existing values
 		db.delete(PAGES_TABLE, "blogID=" + blogID, null);
 
 		for (int i = 0; i < pageValues.size(); i++){
 			ContentValues values = new ContentValues();
-			HashMap thisHash = (HashMap) pageValues.get(i);
+			HashMap<?, ?> thisHash = (HashMap<?, ?>) pageValues.get(i);
 			values.put("blogID", thisHash.get("blogID").toString());
 			values.put("pageID", thisHash.get("pageID").toString());
 			values.put("parentID", thisHash.get("parentID").toString());
@@ -995,15 +988,15 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 	}
 	
-	public Vector loadComments(Context ctx, String blogID) {
+	public Vector<HashMap<String, Object>> loadComments(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "iCommentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
-		HashMap numRecords = new HashMap();
+		HashMap<String, Object> numRecords = new HashMap<String, Object>();
 		//add the number of stored records so the offset can be computed
 		if (numRows > 0){
 			numRecords.put("numRecords", numRows);
@@ -1012,7 +1005,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		for (int i = 1; i < (numRows + 1); ++i) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("blogID", c.getString(0));
 		returnHash.put("postID", c.getInt(1));
 		returnHash.put("commentID", c.getInt(2));
@@ -1038,9 +1031,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 	
-	public Vector loadMoreComments(Context ctx, String blogID, int limit) {
+	public Vector<HashMap<String, Object>> loadMoreComments(Context ctx, String blogID, int limit) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		Vector returnVector = new Vector();
+		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "iCommentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, "iCommentID ASC", String.valueOf(limit));
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -1053,7 +1046,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		}*/
 		for (int i = 0; i < numRows; i++) {
 		if (c.getString(0) != null){
-		HashMap returnHash = new HashMap();
+		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("blogID", c.getString(0));
 		returnHash.put("postID", c.getInt(1));
 		returnHash.put("commentID", c.getInt(2));
@@ -1079,10 +1072,10 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnVector;
 	}
 
-	public boolean saveComments(Context ctx, Vector commentValues, boolean loadMore) {
+	public boolean saveComments(Context ctx, Vector<?> commentValues, boolean loadMore) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		HashMap firstHash = (HashMap) commentValues.get(0);
+		HashMap<?, ?> firstHash = (HashMap<?, ?>) commentValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
 		//delete existing values, if user hit refresh button
 		if (!loadMore){
@@ -1091,7 +1084,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
 		for (int i = 0; i < commentValues.size(); i++){
 			ContentValues values = new ContentValues();
-			HashMap thisHash = (HashMap) commentValues.get(i);
+			HashMap<?, ?> thisHash = (HashMap<?, ?>) commentValues.get(i);
 			values.put("blogID", thisHash.get("blogID").toString());
 			values.put("postID", thisHash.get("postID").toString());
 			values.put("iCommentID", thisHash.get("commentID").toString());
@@ -1118,6 +1111,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("status", newStatus);
 		boolean returnValue = db.update(COMMENTS_TABLE, values, "blogID=" + blogID + " AND iCommentID=" + id, null) > 0;
+		if (returnValue){};
 
 	db.close();
 		
@@ -1161,6 +1155,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		values.put("id", 0);
 		values.put("read", 1); //set that they've read the EULA
 		boolean returnValue = db.insert(EULA_TABLE, null, values) > 0;
+		if (returnValue){};
 		db.close();
 
 	}
@@ -1170,11 +1165,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("statsdate", System.currentTimeMillis()); //set to current time
 
-		 boolean returnValue = db.update(EULA_TABLE, values, "id=0", null) > 0;
-		
-		
-		String test = "blah";
-		test = "yay";
+		boolean returnValue = db.update(EULA_TABLE, values, "id=0", null) > 0;
+		if (returnValue){};
 		
 		db.close();
 	}
@@ -1250,7 +1242,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("uuid", uuid);
-		boolean returnValue = db.update("eula", values, null, null) > 0;	
+		boolean returnValue = db.update("eula", values, null, null) > 0;
+		if (returnValue){};
 		db.close();
 	}
 	

@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import java.io.InputStream;
-
 public class MediaFile {
 	protected String filePath = null; //path of the file into disk
 	protected String fileName = null; //name of the file into the server

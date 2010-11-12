@@ -2,10 +2,10 @@ package org.wordpress.android;
 
 import java.util.HashMap;
 import java.util.Vector;
-import org.apache.http.conn.HttpHostConnectException;
+
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,14 +13,12 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Window;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -32,7 +30,6 @@ public class viewPost extends Activity {
 	private String id = "";
 	private String postID = "";
 	private String accountName = "";
-	private String postTitle = "";
 	private boolean isPage = false;
 	public ProgressDialog pd;
     @Override
@@ -70,9 +67,8 @@ public class viewPost extends Activity {
     }
 
 protected void loadPostFromPermalink() {
-	Vector settings = new Vector();
     WordPressDB settingsDB = new WordPressDB(this);
-	settings = settingsDB.loadSettings(this, id);
+    Vector<?> settings = settingsDB.loadSettings(this, id);
     
 	String username = settings.get(2).toString();
 	String password = settings.get(3).toString();
@@ -81,7 +77,6 @@ protected void loadPostFromPermalink() {
 	
 	client = new XMLRPCClient(url);
     
-    HashMap hPost = new HashMap();
     Object[] vParams = {
     		postID,
     		username,
@@ -92,7 +87,6 @@ protected void loadPostFromPermalink() {
     try {
 		versionResult = (Object) client.call("metaWeblog.getPost", vParams);
 	} catch (XMLRPCException e) {
-		// TODO Auto-generated catch block
 		//e.printStackTrace();
 	}
 	
@@ -100,7 +94,7 @@ protected void loadPostFromPermalink() {
 	
 	if (versionResult != null){
 		try {
-			HashMap contentHash = (HashMap) versionResult;
+			HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
 			permaLink = contentHash.get("permaLink").toString();
 			status = contentHash.get("post_status").toString();
 			html = contentHash.get("description").toString();

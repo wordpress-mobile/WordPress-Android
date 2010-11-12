@@ -14,7 +14,6 @@
 
 package com.commonsware.cwac.cache;
 
-import android.content.Intent;
 import android.util.Log;
 import java.io.File;
 import java.util.Collections;
@@ -33,6 +32,12 @@ abstract public class CacheBase<K, V> {
 	private File cacheRoot=null;
 	private int maxSize=0;
 	private Map<K, V> cache=Collections.synchronizedMap(new LinkedHashMap<K, V>(101, .75F, true) {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@SuppressWarnings("unchecked")
 		protected boolean removeEldestEntry(Map.Entry eldest) {  
 			return(size()>maxSize);  
 		}  

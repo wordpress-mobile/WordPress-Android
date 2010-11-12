@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import java.lang.reflect.Field;
-
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
@@ -11,13 +9,10 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.Toast;
-import android.widget.TabHost.OnTabChangeListener;
 
 public class tabView extends TabActivity {
 	private String id = "";

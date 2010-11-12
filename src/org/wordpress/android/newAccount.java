@@ -1,19 +1,14 @@
 package org.wordpress.android;
 
-import org.xmlrpc.android.XMLRPCClient;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class newAccount extends Activity {
-	private XMLRPCClient client;
 	public boolean success = false;
 	public String blogURL, xmlrpcURL;
 	public ProgressDialog pd;
@@ -21,13 +16,7 @@ public class newAccount extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		//getWindow().setFormat(PixelFormat.RGBA_8888);
-        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		setContentView(R.layout.new_account);	
-		
-		TextView tv = (TextView) findViewById(R.id.welcome);
-		
-		//this.setTitle("WordPress");
 
         Button createAccountButton = (Button) findViewById(R.id.createWPAccount);
         Button dotComButton = (Button) findViewById(R.id.dotcomExisting);

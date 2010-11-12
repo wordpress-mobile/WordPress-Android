@@ -3,10 +3,8 @@ package org.xmlrpc.android;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +43,7 @@ class XMLRPCSerializer {
 	
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
 
+	@SuppressWarnings("unchecked")
 	static void serialize(XmlSerializer serializer, Object object ) throws IOException {
 		// check for scalar types:
 		if (object instanceof Integer || object instanceof Short || object instanceof Byte) {
@@ -80,7 +79,6 @@ class XMLRPCSerializer {
 			InputStream inStream = new DataInputStream(new FileInputStream(videoFile.getFilePath()));
 			byte[] buffer = new byte[3600];//you must use a 24bit multiple
 			int length = -1;
-			long start1 = System.currentTimeMillis();
 			String chunk = null;
 			//int ctr = 0;
 			Log.i("WordPress", "converting media file to base64");
@@ -91,11 +89,10 @@ class XMLRPCSerializer {
 				//Log.i("WordPress", "chunk " + ctr);
 			}
 			Log.i("WordPress", "conversion done!");
-			long end1 = System.currentTimeMillis();
 			inStream.close();
 			serializer.endTag(null, "base64");
 		}else
-		if (object instanceof List) {
+		if (object instanceof List<?>) {
 			serializer.startTag(null, TYPE_ARRAY).startTag(null, TAG_DATA);
 			List<Object> list = (List<Object>) object;
 			Iterator<Object> iter = list.iterator();

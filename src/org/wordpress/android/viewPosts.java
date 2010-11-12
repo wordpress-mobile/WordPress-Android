@@ -153,9 +153,10 @@ public class viewPosts extends ListActivity {
 		addNewPost.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 
-				Intent i = new Intent(viewPosts.this, newPost.class);
+				Intent i = new Intent(viewPosts.this, editPost.class);
 				i.putExtra("accountName", accountName);
 				i.putExtra("id", id);
+				i.putExtra("isNew", true);
 				if (isPage) {
 					i.putExtra("isPage", true);
 				}

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -21,11 +20,9 @@ import org.xmlrpc.android.XMLRPCFault;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -34,7 +31,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +48,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,16 +62,14 @@ import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 public class moderateCommentsTab extends ListActivity {
 	private static final int[] IMAGE_IDS={R.id.avatar};
-	private SharedPreferences prefs=null;
 	private ThumbnailAdapter thumbs=null;
 	private ArrayList<CommentEntry> model=null;
 	private XMLRPCClient client;
-	private String id = "", accountName = "", postTitle = "", sUsername = "", sPassword = "", moderateErrorMsg = "", selectedPostID = "";
+	private String id = "", accountName = "", sUsername = "", sPassword = "", moderateErrorMsg = "", selectedPostID = "";
 	int sBlogId;
 	public Object[] origComments;
 	public int[] changedStatuses;
-	public HashMap allComments = new HashMap();
-	private HashMap changedComments = new HashMap();
+	public HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
 	public int ID_DIALOG_MODERATING = 1;
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
@@ -89,7 +82,7 @@ public class moderateCommentsTab extends ListActivity {
 	boolean loadMore = false;
 	int totalComments = 0;
 	int commentsToLoad = 30;
-	private Vector checkedComments;
+	private Vector<String> checkedComments;
 	private int checkedCommentTotal = 0; 
 	private boolean inModeration = false;
 	@Override
@@ -243,9 +236,10 @@ public class moderateCommentsTab extends ListActivity {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void moderateComments(String newStatus) {
 		//handles bulk moderation
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 
@@ -395,7 +389,7 @@ public class moderateCommentsTab extends ListActivity {
 
 	protected void deleteComments() {
 		//bulk detete comments
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 		String sURL = "";
@@ -427,9 +421,8 @@ public class moderateCommentsTab extends ListActivity {
 						curCommentID
 				};
 
-				Object result = null;
 				try {
-					result = (Object) client.call("wp.deleteComment", params);
+					client.call("wp.deleteComment", params);
 				} catch (final XMLRPCException e) {
 					moderateErrorMsg = e.getLocalizedMessage();
 				}
@@ -479,13 +472,14 @@ public class moderateCommentsTab extends ListActivity {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private boolean loadComments(boolean addMore, boolean refreshOnly) {
 		WordPressDB postStoreDB = new WordPressDB(this);
-		String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore){
-			Vector loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
+			Vector<?> loadedPosts = postStoreDB.loadComments(moderateCommentsTab.this, id);
 			if (loadedPosts != null){
-				HashMap countHash = new HashMap();
+				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
 				countHash = (HashMap) loadedPosts.get(0);
 				numRecords = Integer.parseInt(countHash.get("numRecords").toString());
 				if (refreshOnly){
@@ -514,7 +508,6 @@ public class moderateCommentsTab extends ListActivity {
 					commentID = contentHash.get("commentID").toString();
 					postID = contentHash.get("postID").toString();
 					comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
-					dateCreated = contentHash.get("commentDate").toString();
 					dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
 					status = contentHash.get("status").toString();
 					authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
@@ -555,7 +548,6 @@ public class moderateCommentsTab extends ListActivity {
 						ThumbnailBus bus = new ThumbnailBus();
 						thumbs=new ThumbnailAdapter(this, new CommentAdapter(),new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus),IMAGE_IDS);
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 
@@ -567,9 +559,6 @@ public class moderateCommentsTab extends ListActivity {
 					setListAdapter(thumbs);
 					
 					listView.setOnItemClickListener(new OnItemClickListener() {
-
-						public void onNothingSelected(AdapterView<?> arg0) {
-						}
 
 						public void onItemClick(AdapterView<?> arg0, View arg1,
 								int position, long arg3) {
@@ -595,7 +584,6 @@ public class moderateCommentsTab extends ListActivity {
 
 						public void onCreateContextMenu(ContextMenu menu, View v,
 								ContextMenuInfo menuInfo) {
-							// TODO Auto-generated method stub
 							AdapterView.AdapterContextMenuInfo info;
 							try {
 								info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -637,7 +625,6 @@ public class moderateCommentsTab extends ListActivity {
 					commentID = contentHash.get("commentID").toString();
 					postID = contentHash.get("postID").toString();
 					comment = escapeUtils.unescapeHtml(contentHash.get("comment").toString());
-					dateCreated = contentHash.get("commentDate").toString();
 					dateCreatedFormatted = contentHash.get("commentDateFormatted").toString();
 					status = contentHash.get("status").toString();
 					authorEmail = escapeUtils.unescapeHtml(contentHash.get("email").toString());
@@ -662,13 +649,14 @@ public class moderateCommentsTab extends ListActivity {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void refreshComments(final boolean loadMore, final boolean refreshOnly, final boolean doInBackground) {
 
 		if (!loadMore && !doInBackground){
 			showProgressBar();
 		}
 
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(this);
 		settings = settingsDB.loadSettings(this, id); 
 
@@ -701,11 +689,8 @@ public class moderateCommentsTab extends ListActivity {
 			hPost.put("number", 30);
 		}
 
-		List<Object> list = new ArrayList<Object>();
-
 		XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
-				String s = "done";
 				if (!loadMore && !doInBackground){
 					closeProgressBar();
 				}
@@ -720,7 +705,6 @@ public class moderateCommentsTab extends ListActivity {
 					}
 				}
 				else{
-					s = result.toString();
 					origComments = result;
 					String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 
@@ -837,8 +821,6 @@ public class moderateCommentsTab extends ListActivity {
 		);
 		animation.setDuration(500);
 		set.addAnimation(animation);
-		LayoutAnimationController controller =
-			new LayoutAnimationController(set, 0.5f);
 		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
 		loading.startAnimation(set);
 		loading.setVisibility(View.INVISIBLE);
@@ -1159,11 +1141,12 @@ public class moderateCommentsTab extends ListActivity {
 			this.params = params;
 			start();
 		}
+		@SuppressWarnings("unchecked")
 		@Override
 		public void run() {
 			try {
 				//get the total comments
-				HashMap countResult = new HashMap();
+				HashMap<Object, Object> countResult = new HashMap<Object, Object>();
 				Object[] countParams = {
 						sBlogId,
 						sUsername,
@@ -1174,7 +1157,6 @@ public class moderateCommentsTab extends ListActivity {
 					countResult = (HashMap) client.call("wp.getCommentCount", countParams);
 					totalComments = Integer.valueOf(countResult.get("awaiting_moderation").toString()) + Integer.valueOf(countResult.get("approved").toString());
 				} catch (XMLRPCException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				final Object[] result = (Object[]) client.call(method, params);
@@ -1313,7 +1295,6 @@ public class moderateCommentsTab extends ListActivity {
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
-						Throwable couse = e.getCause();
 						dismissDialog(ID_DIALOG_MODERATING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(moderateCommentsTab.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
@@ -1433,12 +1414,13 @@ public class moderateCommentsTab extends ListActivity {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void changeCommentStatus(final String newStatus, final int selCommentID, int position) {
 		//for individual comment moderation
 		String sSelCommentID = String.valueOf(selCommentID);
 		ListView lv = getListView();
 		CommentEntry ce = (CommentEntry)lv.getItemAtPosition(position);
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 		String sURL = "";
@@ -1537,8 +1519,7 @@ public class moderateCommentsTab extends ListActivity {
 
 	private void deleteComment(final int selCommentID) {
 		//delete individual comment
-		String sSelCommentID = String.valueOf(selCommentID);
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 
@@ -1564,9 +1545,8 @@ public class moderateCommentsTab extends ListActivity {
 				selCommentID
 		};
 
-		Object result = null;
 		try {
-			result = (Object) client.call("wp.deleteComment", params);
+			client.call("wp.deleteComment", params);
 			dismissDialog(ID_DIALOG_DELETING);
 			Thread action = new Thread() 
 			{ 
@@ -1613,7 +1593,7 @@ public class moderateCommentsTab extends ListActivity {
 
 	private void replyToComment(final String postID, final int commentID, final String comment) {
 		//reply to individual comment
-		Vector settings = new Vector();
+		Vector<Object> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
 		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 
@@ -1632,12 +1612,7 @@ public class moderateCommentsTab extends ListActivity {
 
 		client = new XMLRPCClient(sURL);
 
-		ListView lv = getListView(); 
-
-		Object curListItem;
-		ListAdapter la = lv.getAdapter();
-
-		HashMap replyHash = new HashMap();
+		HashMap<String, Object> replyHash = new HashMap<String, Object>();
 		replyHash.put("comment_parent", commentID);
 		replyHash.put("content", comment);
 		replyHash.put("author", "");
@@ -1652,9 +1627,8 @@ public class moderateCommentsTab extends ListActivity {
 				replyHash
 		};
 
-		Object result = null;
 		try {
-			result = (Object) client.call("wp.newComment", params);
+			client.call("wp.newComment", params);
 			dismissDialog(ID_DIALOG_REPLYING);
 			Thread action = new Thread() 
 			{ 
@@ -1703,7 +1677,6 @@ public class moderateCommentsTab extends ListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null)
 		{

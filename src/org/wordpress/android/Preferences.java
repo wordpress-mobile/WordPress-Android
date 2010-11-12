@@ -27,9 +27,8 @@ import android.widget.TextView;
 
 public class Preferences extends Activity {
     /** Called when the activity is first created. */
-	public Vector accounts;
-	public Vector accountNames = new Vector();
-	private String selectedID = "";
+	public Vector<?> accounts;
+	public Vector<String> accountNames = new Vector<String>();
 	public int checkCtr = 0;
 	protected static Intent svc = null;
 	
@@ -45,7 +44,7 @@ public void displayAccounts(){
 	//settings time!
     final WordPressDB settingsDB = new WordPressDB(this);
 	accounts = settingsDB.getAccounts(this);
-	HashMap notificationOptions = settingsDB.getNotificationOptions(this);
+	HashMap<?, ?> notificationOptions = settingsDB.getNotificationOptions(this);
 	boolean sound = false, vibrate = false, light = false, taglineValue = false;
 	String tagline = "";
 	
@@ -111,9 +110,8 @@ public void displayAccounts(){
         
         for (int i = 0; i < accounts.size(); i++) {
             
-        	HashMap curHash = (HashMap) accounts.get(i);
+        	HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
         	String curBlogName = curHash.get("blogName").toString();
-        	String curUsername = curHash.get("username").toString();
         	String accountID = curHash.get("id").toString();
         	int runService = Integer.valueOf(curHash.get("runService").toString());
         	accountNames.add(i, curBlogName);
@@ -336,15 +334,13 @@ public void displayAccounts(){
         			  
         		}
         		else{
-
-        						Intent stopIntent = new Intent(Preferences.this, broadcastReceiver.class);
-                            	PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
-                            	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                            	alarmManager.cancel(stopPIntent); 
-                            	
-                            	Intent service = new Intent(Preferences.this, commentService.class);
-                            	stopService(service);
-
+					Intent stopIntent = new Intent(Preferences.this, broadcastReceiver.class);
+                	PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
+                	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                	alarmManager.cancel(stopPIntent); 
+                	
+                	Intent service = new Intent(Preferences.this, commentService.class);
+                	stopService(service);
             	}
             	
             	finish();
