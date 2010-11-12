@@ -70,22 +70,21 @@ public class viewPosts extends ListActivity {
 	int rowID = 0;
 	private int ID_DIALOG_DELETING = 1;
 	private int ID_DIALOG_POSTING = 2;
-	Vector selectedCategories = new Vector();
-	private boolean inDrafts = false;
-	private Vector<Uri> selectedImageIDs = new Vector();
+	Vector<String> selectedCategories = new Vector<String>();
+	public boolean inDrafts = false;
+	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
 	public String imgHTML = "";
 	public String sImagePlacement = "";
 	public String sMaxImageWidth = "";
 	public boolean centerThumbnail = false;
-	public Vector imageUrl = new Vector();
+	public Vector<String> imageUrl = new Vector<String>();
 	public String imageTitle = null;
 	public boolean thumbnailOnly, secondPass, xmlrpcError = false;
 	public String submitResult = "", mediaErrorMsg = "";
 	ProgressDialog loadingDialog;
 	public int totalDrafts = 0;
 	public boolean isPage = false, vpUpgrade = false;
-	public Vector thumbnailUrl = new Vector();
 	boolean largeScreen = false;
 	int numRecords = 30;
 	private ViewSwitcher switcher;
@@ -120,7 +119,6 @@ public class viewPosts extends ListActivity {
 							submitResult = submitPost();
 
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
@@ -216,7 +214,7 @@ public class viewPosts extends ListActivity {
 			showProgressBar();
 		}
 
-		Vector settings = new Vector();
+		Vector<?> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(this);
 		settings = settingsDB.loadSettings(this, id);
 
@@ -235,8 +233,6 @@ public class viewPosts extends ListActivity {
 		XMLRPCMethod method = new XMLRPCMethod((isPage) ? "wp.getPageList"
 				: "blogger.getRecentPosts", new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
-				String s = "done";
-				s = result.toString();
 
 				if (result.length == 0) {
 					if (!loadMore) {
@@ -266,14 +262,14 @@ public class viewPosts extends ListActivity {
 					}
 				} else {
 
-					HashMap contentHash = new HashMap();
+					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 
 					String rTitles[] = new String[result.length];
 					String rPostIDs[] = new String[result.length];
 					String rDateCreated[] = new String[result.length];
 					String rDateCreatedFormatted[] = new String[result.length];
 					String rParentID[] = new String[result.length];
-					Vector dbVector = new Vector();
+					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 					WordPressDB postStoreDB = new WordPressDB(viewPosts.this);
 					Date d = new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat(
@@ -285,8 +281,8 @@ public class viewPosts extends ListActivity {
 
 					// loop this!
 					for (int ctr = 0; ctr < result.length; ctr++) {
-						HashMap<String, String> dbValues = new HashMap();
-						contentHash = (HashMap) result[ctr];
+						HashMap<String, String> dbValues = new HashMap<String, String>();
+						contentHash = (HashMap<?, ?>) result[ctr];
 						if (isPage) {
 							rTitles[ctr] = escapeUtils.unescapeHtml(contentHash
 									.get("page_title").toString());
@@ -383,7 +379,7 @@ public class viewPosts extends ListActivity {
 	private boolean loadPosts(boolean loadMore) { // loads posts from the db
 
 		WordPressDB postStoreDB = new WordPressDB(this);
-		Vector loadedPosts;
+		Vector<?> loadedPosts;
 		if (isPage) {
 			loadedPosts = postStoreDB.loadPages(viewPosts.this, id);
 		} else {
@@ -406,7 +402,7 @@ public class viewPosts extends ListActivity {
 		}
 		if (loadedPosts != null) {
 			for (int i = 0; i < loadedPosts.size(); i++) {
-				HashMap contentHash = (HashMap) loadedPosts.get(i);
+				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
 				titles[i] = escapeUtils.unescapeHtml(contentHash.get("title")
 						.toString());
 				if (isPage) {
@@ -424,29 +420,29 @@ public class viewPosts extends ListActivity {
 
 			// add the header
 			List<String> postIDList = Arrays.asList(postIDs);
-			List newPostIDList = new ArrayList<Object>();
+			List<String> newPostIDList = new ArrayList<String>();
 			newPostIDList.add("postsHeader");
 			newPostIDList.addAll(postIDList);
 			postIDs = (String[]) newPostIDList.toArray(new String[newPostIDList
 					.size()]);
 
-			List postTitleList = Arrays.asList(titles);
-			List newPostTitleList = new ArrayList();
+			List<String> postTitleList = Arrays.asList(titles);
+			List<CharSequence> newPostTitleList = new ArrayList<CharSequence>();
 			newPostTitleList.add(getResources().getText(
 					(isPage) ? R.string.tab_pages : R.string.tab_posts));
 			newPostTitleList.addAll(postTitleList);
 			titles = (String[]) newPostTitleList
 					.toArray(new String[newPostTitleList.size()]);
 
-			List dateList = Arrays.asList(dateCreated);
-			List newDateList = new ArrayList();
+			List<String> dateList = Arrays.asList(dateCreated);
+			List<String> newDateList = new ArrayList<String>();
 			newDateList.add("postsHeader");
 			newDateList.addAll(dateList);
 			dateCreated = (String[]) newDateList.toArray(new String[newDateList
 					.size()]);
 
-			List dateFormattedList = Arrays.asList(dateCreatedFormatted);
-			List newDateFormattedList = new ArrayList();
+			List<String> dateFormattedList = Arrays.asList(dateCreatedFormatted);
+			List<String> newDateFormattedList = new ArrayList<String>();
 			newDateFormattedList.add("postsHeader");
 			newDateFormattedList.addAll(dateFormattedList);
 			dateCreatedFormatted = (String[]) newDateFormattedList
@@ -457,22 +453,22 @@ public class viewPosts extends ListActivity {
 
 		if (drafts) {
 
-			List draftIDList = Arrays.asList(draftIDs);
-			List newDraftIDList = new ArrayList();
+			List<String> draftIDList = Arrays.asList(draftIDs);
+			List<String> newDraftIDList = new ArrayList<String>();
 			newDraftIDList.add("draftsHeader");
 			newDraftIDList.addAll(draftIDList);
 			draftIDs = (String[]) newDraftIDList
 					.toArray(new String[newDraftIDList.size()]);
 
-			List titleList = Arrays.asList(draftTitles);
-			List newTitleList = new ArrayList();
+			List<String> titleList = Arrays.asList(draftTitles);
+			List<CharSequence> newTitleList = new ArrayList<CharSequence>();
 			newTitleList.add(getResources().getText(R.string.local_drafts));
 			newTitleList.addAll(titleList);
 			draftTitles = (String[]) newTitleList
 					.toArray(new String[newTitleList.size()]);
 
-			List publishList = Arrays.asList(publish);
-			List newPublishList = new ArrayList();
+			List<String> publishList = Arrays.asList(publish);
+			List<String> newPublishList = new ArrayList<String>();
 			newPublishList.add("draftsHeader");
 			newPublishList.addAll(publishList);
 			publish = (String[]) newPublishList
@@ -523,7 +519,6 @@ public class viewPosts extends ListActivity {
 
 							public void onCreateContextMenu(ContextMenu menu,
 									View v, ContextMenuInfo menuInfo) {
-								// TODO Auto-generated method stub
 								AdapterView.AdapterContextMenuInfo info;
 								try {
 									info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -601,7 +596,7 @@ public class viewPosts extends ListActivity {
 	private boolean loadDrafts() { // loads drafts from the db
 
 		WordPressDB lDraftsDB = new WordPressDB(this);
-		Vector loadedPosts;
+		Vector<?> loadedPosts;
 		if (isPage) {
 			loadedPosts = lDraftsDB.loadPageDrafts(viewPosts.this, id);
 		} else {
@@ -615,7 +610,7 @@ public class viewPosts extends ListActivity {
 			totalDrafts = loadedPosts.size();
 
 			for (int i = 0; i < loadedPosts.size(); i++) {
-				HashMap contentHash = (HashMap) loadedPosts.get(i);
+				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
 				draftIDs[i] = contentHash.get("id").toString();
 				draftTitles[i] = escapeUtils.unescapeHtml(contentHash.get(
 						"title").toString());
@@ -631,10 +626,11 @@ public class viewPosts extends ListActivity {
 	}
 
 	private class PostListAdapter extends BaseAdapter {
-		private int dateHeight;
-
+		
+		//private Context mContext;
+		//private int dateHeight;
 		public PostListAdapter(Context context) {
-			mContext = context;
+			//mContext = context;
 		}
 
 		public int getCount() {
@@ -657,7 +653,7 @@ public class viewPosts extends ListActivity {
 				pv = inflater.inflate(R.layout.row_post_page, parent, false);
 				wrapper = new ViewWrapper(pv);
 				if (position == 0) {
-					dateHeight = wrapper.getDate().getHeight();
+					//dateHeight = wrapper.getDate().getHeight();
 				}
 				pv.setTag(wrapper);
 				wrapper = new ViewWrapper(pv);
@@ -731,8 +727,6 @@ public class viewPosts extends ListActivity {
 
 		}
 
-		private Context mContext;
-
 	}
 
 	interface XMLRPCMethodCallback {
@@ -763,9 +757,7 @@ public class viewPosts extends ListActivity {
 		@Override
 		public void run() {
 			try {
-				final long t0 = System.currentTimeMillis();
 				final Object[] result = (Object[]) client.call(method, params);
-				final long t1 = System.currentTimeMillis();
 				handler.post(new Runnable() {
 					public void run() {
 
@@ -890,7 +882,6 @@ public class viewPosts extends ListActivity {
 										submitResult = submitPost();
 
 									} catch (IOException e) {
-										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
 
@@ -1111,7 +1102,7 @@ public class viewPosts extends ListActivity {
 
 	private void deletePost() {
 
-		Vector settings = new Vector();
+		Vector<?> settings = new Vector<Object>();
 		WordPressDB settingsDB = new WordPressDB(viewPosts.this);
 		settings = settingsDB.loadSettings(viewPosts.this, id);
 
@@ -1130,9 +1121,9 @@ public class viewPosts extends ListActivity {
 		Object[] postParams = { "", selPostID, sUsername, sPassword };
 		Object[] pageParams = { sBlogId, sUsername, sPassword, selPostID };
 
-		Object result = null;
+		
 		try {
-			result = (Object) client.call((isPage) ? "wp.deletePage"
+			client.call((isPage) ? "wp.deletePage"
 					: "blogger.deletePost", (isPage) ? pageParams : postParams);
 			dismissDialog(ID_DIALOG_DELETING);
 			Thread action = new Thread() {
@@ -1210,14 +1201,14 @@ public class viewPosts extends ListActivity {
 
 		// grab the form data
 		final WordPressDB lDraftsDB = new WordPressDB(this);
-		Vector post;
+		Vector<?> post;
 		if (isPage) {
 			post = lDraftsDB.loadPageDraft(this, String.valueOf(selectedID));
 		} else {
 			post = lDraftsDB.loadPost(this, String.valueOf(selectedID));
 		}
 
-		HashMap postHashMap = (HashMap) post.get(0);
+		HashMap<?, ?> postHashMap = (HashMap<?, ?>) post.get(0);
 
 		String title = postHashMap.get("title").toString();
 		String content = StringHelper.convertHTMLTagsForUpload(postHashMap.get(
@@ -1294,7 +1285,7 @@ public class viewPosts extends ListActivity {
 
 			//
 			WordPressDB settingsDB = new WordPressDB(this);
-			Vector settingsVector = settingsDB.loadSettings(this, id);
+			Vector<?> settingsVector = settingsDB.loadSettings(this, id);
 
 			String sURL = "";
 			if (settingsVector.get(0).toString().contains("xmlrpc.php")) {
@@ -1305,23 +1296,6 @@ public class viewPosts extends ListActivity {
 			String sUsername = settingsVector.get(2).toString();
 			String sPassword = settingsVector.get(3).toString();
 			String sImagePlacement = settingsVector.get(4).toString();
-			String sCenterThumbnailString = settingsVector.get(5).toString();
-			String sFullSizeImageString = settingsVector.get(6).toString();
-			String sLocation = settingsVector.get(11).toString();
-			boolean sFullSizeImage = false;
-			if (sFullSizeImageString.equals("1")) {
-				sFullSizeImage = true;
-			}
-
-			boolean centerThumbnail = false;
-			if (sCenterThumbnailString.equals("1")) {
-				centerThumbnail = true;
-			}
-
-			boolean location = false;
-			if (sLocation.equals("1")) {
-				location = true;
-			}
 
 			int sBlogId = Integer.parseInt(settingsVector.get(10).toString());
 
@@ -1337,8 +1311,7 @@ public class viewPosts extends ListActivity {
 
 			if (!isPage) {
 				// add the tagline
-				HashMap globalSettings = settingsDB
-						.getNotificationOptions(this);
+				HashMap<?, ?> globalSettings = settingsDB.getNotificationOptions(this);
 				boolean taglineValue = false;
 				String tagline = "";
 
@@ -1379,15 +1352,15 @@ public class viewPosts extends ListActivity {
 				longitude = (Double) postHashMap.get("longitude");
 
 				if (latitude > 0) {
-					HashMap hLatitude = new HashMap();
+					HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
 					hLatitude.put("key", "geo_latitude");
 					hLatitude.put("value", latitude);
 
-					HashMap hLongitude = new HashMap();
+					HashMap<Object, Object> hLongitude = new HashMap<Object, Object>();
 					hLongitude.put("key", "geo_longitude");
 					hLongitude.put("value", longitude);
 
-					HashMap hPublic = new HashMap();
+					HashMap<Object, Object> hPublic = new HashMap<Object, Object>();
 					hPublic.put("key", "geo_public");
 					hPublic.put("value", 1);
 
@@ -1467,8 +1440,7 @@ public class viewPosts extends ListActivity {
 												boolean isInteger = false;
 
 												try {
-													int i = Integer
-															.parseInt(newID);
+													Integer.parseInt(newID);
 													isInteger = true;
 												} catch (NumberFormatException e) {
 
@@ -1521,7 +1493,7 @@ public class viewPosts extends ListActivity {
 										boolean isInteger = false;
 
 										try {
-											int i = Integer.parseInt(newID);
+											Integer.parseInt(newID);
 											isInteger = true;
 										} catch (NumberFormatException e) {
 
@@ -1610,7 +1582,7 @@ public class viewPosts extends ListActivity {
 	public boolean checkSettings() {
 		// see if the user has any saved preferences
 		WordPressDB settingsDB = new WordPressDB(this);
-		Vector categoriesVector = settingsDB.loadSettings(this, id);
+		Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
 		String sURL = null, sUsername = null, sPassword = null;
 		if (categoriesVector != null) {
 			sURL = categoriesVector.get(0).toString();
@@ -1630,20 +1602,16 @@ public class viewPosts extends ListActivity {
 
 	public String uploadImages() {
 
-		Vector<Object> myPictureVector = new Vector<Object>();
-		String returnedImageURL = null;
-		String imageRes = null;
 		String content = "";
-		int thumbWidth = 0, thumbHeight = 0, finalHeight = 0;
+		//int thumbWidth = 0, thumbHeight = 0;
 
 		// images variables
 		String finalThumbnailUrl = null;
 		String finalImageUrl = null;
-		String uploadImagePath = "";
 
 		// get the settings
 		WordPressDB settingsDB = new WordPressDB(this);
-		Vector categoriesVector = settingsDB.loadSettings(this, id);
+		Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
 
 		String sURL = "";
 		if (categoriesVector.get(0).toString().contains("xmlrpc.php")) {
@@ -1651,7 +1619,6 @@ public class viewPosts extends ListActivity {
 		} else {
 			sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
 		}
-		String sBlogName = categoriesVector.get(1).toString();
 		String sUsername = categoriesVector.get(2).toString();
 		String sPassword = categoriesVector.get(3).toString();
 		String sImagePlacement = categoriesVector.get(4).toString();
@@ -1668,7 +1635,6 @@ public class viewPosts extends ListActivity {
 		}
 		String sMaxImageWidth = categoriesVector.get(7).toString();
 
-		String thumbnailURL = "";
 		// new loop for multiple images
 
 		for (int it = 0; it < selectedImageCtr; it++) {
@@ -1684,7 +1650,6 @@ public class viewPosts extends ListActivity {
 			if (imageUrl.get(it) != null) {
 				client = new XMLRPCClient(sURL);
 
-				String sXmlRpcMethod = "wp.uploadFile";
 				String curImagePath = "";
 
 				curImagePath = imageUrl.get(it).toString();
@@ -1703,10 +1668,6 @@ public class viewPosts extends ListActivity {
 					if (videoUri.toString().contains("content:")) { // file is
 																	// in media
 																	// library
-						String imgID = videoUri.getLastPathSegment();
-
-						long imgID2 = Long.parseLong(imgID);
-
 						String[] projection;
 						Uri imgPath;
 
@@ -1728,16 +1689,14 @@ public class viewPosts extends ListActivity {
 
 						if (cur.moveToFirst()) {
 
-							int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, resolutionColumn;
+							int mimeTypeColumn, resolutionColumn, dataColumn;
 
-							nameColumn = cur.getColumnIndex(Video.Media._ID);
 							dataColumn = cur.getColumnIndex(Video.Media.DATA);
 							mimeTypeColumn = cur
 									.getColumnIndex(Video.Media.MIME_TYPE);
 							resolutionColumn = cur
 									.getColumnIndex(Video.Media.RESOLUTION);
-
-							String imgPath4 = imgPath.getEncodedPath();
+							
 							mf = new MediaFile();
 
 							thumbData = cur.getString(dataColumn);
@@ -1772,9 +1731,8 @@ public class viewPosts extends ListActivity {
 					imageTitle = fVideo.getName();
 
 					// try to upload the video
-					Map<String, Object> m = new HashMap<String, Object>();
+					HashMap<String, Object> m = new HashMap<String, Object>();
 
-					HashMap hPost = new HashMap();
 					m.put("name", imageTitle);
 					m.put("type", mimeType);
 					m.put("bits", mf);
@@ -1799,9 +1757,9 @@ public class viewPosts extends ListActivity {
 						break;
 					}
 
-					HashMap contentHash = new HashMap();
+					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 
-					contentHash = (HashMap) result;
+					contentHash = (HashMap<?, ?>) result;
 
 					String resultURL = contentHash.get("url").toString();
 					if (contentHash.containsKey("videopress_shortcode")) {
@@ -1840,10 +1798,6 @@ public class viewPosts extends ListActivity {
 							MediaFile mf = null;
 
 							if (imageUri.toString().contains("content:")) { //file is in media library
-								String imgID = imageUri.getLastPathSegment();
-
-								long imgID2 = Long.parseLong(imgID);
-
 								String[] projection;
 								Uri imgPath;
 
@@ -1862,10 +1816,8 @@ public class viewPosts extends ListActivity {
 
 								if (cur.moveToFirst()) {
 
-									int nameColumn, dataColumn, heightColumn, widthColumn, mimeTypeColumn, orientationColumn;
+									int dataColumn, mimeTypeColumn, orientationColumn;
 
-									nameColumn = cur
-											.getColumnIndex(Images.Media._ID);
 									dataColumn = cur
 											.getColumnIndex(Images.Media.DATA);
 									mimeTypeColumn = cur
@@ -1928,7 +1880,6 @@ public class viewPosts extends ListActivity {
 							// try to upload the image
 							Map<String, Object> m = new HashMap<String, Object>();
 
-							HashMap hPost = new HashMap();
 							m.put("name", imageTitle);
 							m.put("type", mimeType);
 							if (i == 0) {
@@ -1946,16 +1897,15 @@ public class viewPosts extends ListActivity {
 								result = (Object) client.call("wp.uploadFile",
 										params);
 							} catch (XMLRPCException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 								e.getLocalizedMessage();
 								xmlrpcError = true;
 								break;
 							}
 
-							HashMap contentHash = new HashMap();
+							HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 
-							contentHash = (HashMap) result;
+							contentHash = (HashMap<?, ?>) result;
 
 							String resultURL = contentHash.get("url")
 									.toString();
@@ -1970,8 +1920,7 @@ public class viewPosts extends ListActivity {
 								}
 							}
 
-							int finalWidth = 500; // default to this if there's
-													// a problem
+							/*int finalWidth = 500; // default to this if there's a problem
 							// Change dimensions of thumbnail
 							if (sMaxImageWidth.equals("Original Size")) {
 								finalWidth = thumbWidth;
@@ -1990,7 +1939,7 @@ public class viewPosts extends ListActivity {
 									finalHeight = (int) Math
 											.rint(proportionateHeight);
 								}
-							}
+							}*/
 
 							// prepare the centering css if desired from user
 							String centerCSS = " ";
@@ -2074,7 +2023,6 @@ public class viewPosts extends ListActivity {
 
 		public void call(Object[] params) throws InterruptedException {
 			this.params = params;
-			this.method = method;
 			final Object result;
 			try {
 				result = (Object) client.call(method, params);
@@ -2089,10 +2037,8 @@ public class viewPosts extends ListActivity {
 		public void run() {
 
 			try {
-				final long t0 = System.currentTimeMillis();
 				final Object result;
 				result = (Object) client.call(method, params);
-				final long t1 = System.currentTimeMillis();
 				handler.post(new Runnable() {
 					public void run() {
 

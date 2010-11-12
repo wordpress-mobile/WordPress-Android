@@ -304,4 +304,8 @@
   <string name="strike"><strike>ABC</strike></string>
   <string name="link"><u>link</u></string>
   <string name="underline"><u>U</u></string>
+  
+  <!-- invalid_url -->
+  <string name="invalid_url">Invalid blog URL</string>
+  <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>
 </resources>

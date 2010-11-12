@@ -212,6 +212,7 @@ public class addAccount extends Activity {
         client = new XMLRPCClient(fBlogURL);
     	
     	XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
+			@SuppressWarnings("unchecked")
 			public void callFinished(Object[] result) {
 				
 				
@@ -220,14 +221,12 @@ public class addAccount extends Activity {
 				final int[] blogIds = new int[result.length];
 				final boolean[] wpcoms = new boolean[result.length];
 				final String[] wpVersions = new String[result.length];
-				HashMap contentHash = new HashMap();
-				    
-				int ctr = 0;
+				HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
 				
 				 WordPressDB settingsDB = new WordPressDB(addAccount.this);
 				//loop this!
-				    for (Object item : result){
-				        contentHash = (HashMap) result[ctr];			        
+				    for (int ctr = 0; ctr< result.length; ctr++){
+				        contentHash = (HashMap<Object, Object>) result[ctr];			        
 				        //check if this blog is already set up
 		                boolean match = false;
 		                String matchBlogName = contentHash.get("blogName").toString();
@@ -239,10 +238,7 @@ public class addAccount extends Activity {
 	                	blogNames[blogCtr] = matchBlogName;			        
 				        urls[blogCtr] = contentHash.get("xmlrpc").toString(); 					        
 				        blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
-					    String blogName = blogNames[blogCtr];
 					    String blogURL = urls[blogCtr];
-					    int blogId = blogIds[blogCtr];
-		                boolean success = false;
 		                
 		                aBlogNames.add(escapeUtils.unescapeHtml(blogNames[blogCtr]));
 		                
@@ -294,7 +290,6 @@ public class addAccount extends Activity {
 		                //success = settingsDB.addAccount(addAccount.this, blogURL, blogName, username, password, "Above Text", true, false, "500", 5, false, blogId, wpcomFlag, wpVersion);
 		                
 	                }
-	        ctr++;
 			} //end loop
 				    pd.dismiss();   
 				    if (blogCtr == 0){
@@ -460,10 +455,8 @@ public class addAccount extends Activity {
 		@Override
 		public void run() {
 			try {
-				final long t0 = System.currentTimeMillis();
 				final Object[] result;
 				result = (Object[]) client.call(method, params);
-				final long t1 = System.currentTimeMillis();
 				handler.post(new Runnable() {
 					public void run() {
 						callBack.callFinished(result);
@@ -561,7 +554,6 @@ public class addAccount extends Activity {
 	            // auto-detect the encoding from the stream
 	            parser.setInput(in, null);
 	            int eventType = parser.getEventType();
-	            boolean done = false;
 	            while (eventType != XmlPullParser.END_DOCUMENT){
 	                String name = null;
 	                String rel="";
@@ -618,7 +610,6 @@ public class addAccount extends Activity {
 	            // auto-detect the encoding from the stream
 	            parser.setInput(in, null);
 	            int eventType = parser.getEventType();
-	            boolean done = false;
 	            while (eventType != XmlPullParser.END_DOCUMENT){
 	            	String name="";
 					String apiLink="";
