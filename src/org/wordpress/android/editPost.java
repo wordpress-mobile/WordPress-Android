@@ -329,22 +329,6 @@ public class editPost extends Activity implements LocationListener{
 	            	locationSection.setVisibility(View.VISIBLE);
 	    		}
 		    	
-		    	Button selectCategories = (Button) findViewById(R.id.selectCategories);   
-    	        
-    	        selectCategories.setOnClickListener(new Button.OnClickListener() {
-    	            public void onClick(View v) {
-    	            	 
-    	            	Bundle bundle = new Bundle();
-    					bundle.putString("id", id);
-    					if (categories != ""){
-    					bundle.putString("categoriesCSV", categories);
-    					}
-    			    	Intent i = new Intent(editPost.this, selectCategories.class);
-    			    	i.putExtras(bundle);
-    			    	startActivityForResult(i, 5);
-    	            }
-    	        });
-		    	
 		    	String tags = postHashMap.get("tags").toString();
 		    	if (!tags.equals("")){
 		    		EditText tagsET = (EditText) findViewById(R.id.tags);
@@ -502,7 +486,23 @@ public class editPost extends Activity implements LocationListener{
     	
         } 
         
-        
+        if ((localDraft || isNew) && !isPage){
+        	Button selectCategories = (Button) findViewById(R.id.selectCategories);   
+	        
+	        selectCategories.setOnClickListener(new Button.OnClickListener() {
+	            public void onClick(View v) {
+	            	 
+	            	Bundle bundle = new Bundle();
+					bundle.putString("id", id);
+					if (categories != ""){
+					bundle.putString("categoriesCSV", categories);
+					}
+			    	Intent i = new Intent(editPost.this, selectCategories.class);
+			    	i.putExtras(bundle);
+			    	startActivityForResult(i, 5);
+	            }
+	        });
+        }
         
         final Button postButton = (Button) findViewById(R.id.post);
         
