@@ -691,12 +691,6 @@ public class moderateCommentsTab extends ListActivity {
 
 		XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 			public void callFinished(Object[] result) {
-				if (!loadMore && !doInBackground){
-					closeProgressBar();
-				}
-				else if (loadMore){
-					switcher.showPrevious();
-				}
 				if (result.length == 0){
 					// no comments found
 					if (pd.isShowing())
@@ -777,6 +771,13 @@ public class moderateCommentsTab extends ListActivity {
 					}
 
 				}  
+				
+				if (!loadMore && !doInBackground){
+					closeProgressBar();
+				}
+				else if (loadMore){
+					switcher.showPrevious();
+				}
 
 			}
 		});
