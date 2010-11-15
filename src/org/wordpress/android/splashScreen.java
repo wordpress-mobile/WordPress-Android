@@ -33,10 +33,7 @@ public class splashScreen extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        
-        
-        
+
         new Handler().postDelayed(new Runnable(){ 
             public void run() { 
                  /* Create an Intent that will start the Main WordPress Activity. */ 

@@ -60,23 +60,16 @@ import android.widget.AdapterView.OnItemClickListener;
 public class viewPosts extends ListActivity {
 	/** Called when the activity is first created. */
 	private XMLRPCClient client;
-	private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
-			draftIDs, draftTitles, publish;
+	private String[] postIDs, titles, dateCreated, dateCreatedFormatted, draftIDs, draftTitles, publish;
 	private Integer[] uploaded;
-	private String id = "";
-	private String accountName = "";
-	private String newID = "";
-	int selectedID = 0;
-	int rowID = 0;
-	private int ID_DIALOG_DELETING = 1;
-	private int ID_DIALOG_POSTING = 2;
+	private String id = "",accountName = "", newID = "";
+	int selectedID = 0, rowID = 0;
+	private int ID_DIALOG_DELETING = 1, ID_DIALOG_POSTING = 2;
 	Vector<String> selectedCategories = new Vector<String>();
 	public boolean inDrafts = false;
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
-	public String imgHTML = "";
-	public String sImagePlacement = "";
-	public String sMaxImageWidth = "";
+	public String imgHTML, sImagePlacement = "", sMaxImageWidth = "";
 	public boolean centerThumbnail = false;
 	public Vector<String> imageUrl = new Vector<String>();
 	public String imageTitle = null;
@@ -182,7 +175,6 @@ public class viewPosts extends ListActivity {
 		if (!isPage) {
 			// create the ViewSwitcher in the current context
 			switcher = new ViewSwitcher(this);
-			// footer Button: see XML1
 			Button footer = (Button) View.inflate(this,
 					R.layout.list_footer_btn, null);
 			footer.setText(getResources().getText(R.string.load_more) + " "
@@ -198,11 +190,9 @@ public class viewPosts extends ListActivity {
 				}
 			});
 
-			// progress View: see XML2
 			View progress = View.inflate(this, R.layout.list_footer_progress,
 					null);
 
-			// add the views (first added will show first)
 			switcher.addView(footer);
 			switcher.addView(progress);
 		}
@@ -534,14 +524,10 @@ public class viewPosts extends ListActivity {
 								if (totalDrafts > 0 && rowID <= totalDrafts
 										&& rowID != 0) {
 									menu.clear();
-									menu.setHeaderTitle(getResources().getText(
-											R.string.draft_actions));
-									menu.add(1, 0, 0, getResources().getText(
-											R.string.edit_draft));
-									menu.add(1, 1, 0, getResources().getText(
-											R.string.upload));
-									menu.add(1, 2, 0, getResources().getText(
-											R.string.delete_draft));
+									menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
+									menu.add(1, 0, 0, getResources().getText(R.string.edit_draft));
+									menu.add(1, 1, 0, getResources().getText(R.string.upload));
+									menu.add(1, 2, 0, getResources().getText(R.string.delete_draft));
 								} else if (rowID == 1
 										|| ((rowID != (totalDrafts + 1)) && rowID != 0)) {
 									menu.clear();
@@ -628,10 +614,8 @@ public class viewPosts extends ListActivity {
 
 	private class PostListAdapter extends BaseAdapter {
 		
-		//private Context mContext;
-		//private int dateHeight;
+
 		public PostListAdapter(Context context) {
-			//mContext = context;
 		}
 
 		public int getCount() {
@@ -913,7 +897,6 @@ public class viewPosts extends ListActivity {
 			case 0:
 				Intent i0 = new Intent(viewPosts.this, viewPost.class);
 				i0.putExtra("postID", String.valueOf(selectedID));
-				// i0.putExtra("postTitle", titles[selectedID]);
 				i0.putExtra("id", id);
 				i0.putExtra("accountName", accountName);
 				startActivity(i0);
@@ -921,7 +904,6 @@ public class viewPosts extends ListActivity {
 			case 1:
 				Intent i = new Intent(viewPosts.this, viewComments.class);
 				i.putExtra("postID", String.valueOf(selectedID));
-				// i.putExtra("postTitle", titles[selectedID]);
 				i.putExtra("id", id);
 				i.putExtra("accountName", accountName);
 				startActivity(i);
@@ -929,7 +911,6 @@ public class viewPosts extends ListActivity {
 			case 2:
 				Intent i2 = new Intent(viewPosts.this, editPost.class);
 				i2.putExtra("postID", String.valueOf(selectedID));
-				// i2.putExtra("postTitle", titles[selectedID]);
 				i2.putExtra("id", id);
 				i2.putExtra("accountName", accountName);
 				startActivityForResult(i2, 1);
@@ -974,7 +955,6 @@ public class viewPosts extends ListActivity {
 			case 0:
 				Intent i0 = new Intent(viewPosts.this, viewPost.class);
 				i0.putExtra("postID", String.valueOf(selectedID));
-				// i0.putExtra("postTitle", titles[selectedID]);
 				i0.putExtra("id", id);
 				i0.putExtra("accountName", accountName);
 				i0.putExtra("isPage", true);
@@ -983,7 +963,6 @@ public class viewPosts extends ListActivity {
 			case 1:
 				Intent i = new Intent(viewPosts.this, viewComments.class);
 				i.putExtra("postID", String.valueOf(selectedID));
-				// i.putExtra("postTitle", titles[selectedID]);
 				i.putExtra("id", id);
 				i.putExtra("accountName", accountName);
 				startActivity(i);
@@ -991,7 +970,6 @@ public class viewPosts extends ListActivity {
 			case 2:
 				Intent i2 = new Intent(viewPosts.this, editPost.class);
 				i2.putExtra("postID", String.valueOf(selectedID));
-				// i2.putExtra("postTitle", titles[selectedID]);
 				i2.putExtra("id", id);
 				i2.putExtra("accountName", accountName);
 				i2.putExtra("isPage", true);
@@ -1035,7 +1013,6 @@ public class viewPosts extends ListActivity {
 			case 0:
 				Intent i2 = new Intent(viewPosts.this, editPost.class);
 				i2.putExtra("postID", String.valueOf(selectedID));
-				// i2.putExtra("postTitle", titles[rowID]);
 				i2.putExtra("id", id);
 				if (isPage) {
 					i2.putExtra("isPage", true);
@@ -1277,7 +1254,6 @@ public class viewPosts extends ListActivity {
 			};
 			this.runOnUiThread(updateDialog);
 
-			// categoryID = getCategoryId(selectedCategory);
 			String[] theCategories = new String[selectedCategories.size()];
 
 			for (int i = 0; i < selectedCategories.size(); i++) {
@@ -1382,7 +1358,6 @@ public class viewPosts extends ListActivity {
 				result = (Object) client.call("metaWeblog.newPost", params);
 				success = true;
 			} catch (final XMLRPCException e) {
-				// e.printStackTrace();
 				Thread prompt = new Thread() {
 					public void run() {
 						dismissDialog(ID_DIALOG_POSTING);
@@ -1604,7 +1579,6 @@ public class viewPosts extends ListActivity {
 	public String uploadImages() {
 
 		String content = "";
-		//int thumbWidth = 0, thumbHeight = 0;
 
 		// images variables
 		String finalThumbnailUrl = null;
@@ -1636,7 +1610,7 @@ public class viewPosts extends ListActivity {
 		}
 		String sMaxImageWidth = categoriesVector.get(7).toString();
 
-		// new loop for multiple images
+		//loop for multiple images
 
 		for (int it = 0; it < selectedImageCtr; it++) {
 			final int printCtr = it;
@@ -1666,22 +1640,13 @@ public class viewPosts extends ListActivity {
 					String mimeType = "", xRes = "", yRes = "";
 					MediaFile mf = null;
 
-					if (videoUri.toString().contains("content:")) { // file is
-																	// in media
-																	// library
+					if (videoUri.toString().contains("content:")) { 
 						String[] projection;
 						Uri imgPath;
-
-						// imgPath =
-						// ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI,
-						// imgID2);
 
 						projection = new String[] { Video.Media._ID,
 								Video.Media.DATA, Video.Media.MIME_TYPE,
 								Video.Media.RESOLUTION };
-						// imgPath =
-						// ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI,
-						// imgID2);
 						imgPath = videoUri;
 
 						Cursor cur = this.managedQuery(imgPath, projection,
@@ -1798,7 +1763,7 @@ public class viewPosts extends ListActivity {
 							String mimeType = "", orientation = "", path = "";
 							MediaFile mf = null;
 
-							if (imageUri.toString().contains("content:")) { //file is in media library
+							if (imageUri.toString().contains("content:")) {
 								String[] projection;
 								Uri imgPath;
 
@@ -1806,9 +1771,7 @@ public class viewPosts extends ListActivity {
 										Images.Media.DATA,
 										Images.Media.MIME_TYPE,
 										Images.Media.ORIENTATION };
-								// imgPath =
-								// ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI,
-								// imgID2);
+	
 								imgPath = imageUri;
 
 								Cursor cur = this.managedQuery(imgPath,
@@ -1921,27 +1884,6 @@ public class viewPosts extends ListActivity {
 								}
 							}
 
-							/*int finalWidth = 500; // default to this if there's a problem
-							// Change dimensions of thumbnail
-							if (sMaxImageWidth.equals("Original Size")) {
-								finalWidth = thumbWidth;
-								finalHeight = thumbHeight;
-							} else {
-								finalWidth = Integer.parseInt(sMaxImageWidth);
-								if (finalWidth > thumbWidth) {
-									// don't resize
-									finalWidth = thumbWidth;
-									finalHeight = thumbHeight;
-								} else {
-									float percentage = (float) finalWidth
-											/ thumbWidth;
-									float proportionateHeight = thumbHeight
-											* percentage;
-									finalHeight = (int) Math
-											.rint(proportionateHeight);
-								}
-							}*/
-
 							// prepare the centering css if desired from user
 							String centerCSS = " ";
 							if (centerThumbnail) {
@@ -2051,14 +1993,7 @@ public class viewPosts extends ListActivity {
 				e.printStackTrace();
 
 			} catch (final XMLRPCException e) {
-
-				handler.post(new Runnable() {
-					public void run() {
-
-						e.printStackTrace();
-
-					}
-				});
+				e.printStackTrace();
 			}
 
 		}

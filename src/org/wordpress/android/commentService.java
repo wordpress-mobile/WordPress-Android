@@ -32,7 +32,6 @@ public class commentService extends Service {
 		}
 
 	
-	/** not using ipc... dont care about this method */
 	public IBinder onBind(Intent intent) {
 	  return null;
 	}
@@ -282,8 +281,6 @@ public class commentService extends Service {
 					}
 				});
 			}
-			
 		}
 	}
-
 }
