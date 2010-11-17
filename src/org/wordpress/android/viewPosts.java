@@ -462,8 +462,7 @@ public class viewPosts extends ListActivity {
 			List<String> newPublishList = new ArrayList<String>();
 			newPublishList.add("draftsHeader");
 			newPublishList.addAll(publishList);
-			publish = (String[]) newPublishList
-					.toArray(new String[newPublishList.size()]);
+			publish = (String[]) newPublishList.toArray(new String[newPublishList.size()]);
 
 			postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
 			titles = StringHelper.mergeStringArrays(draftTitles, titles);
@@ -601,7 +600,12 @@ public class viewPosts extends ListActivity {
 				draftIDs[i] = contentHash.get("id").toString();
 				draftTitles[i] = escapeUtils.unescapeHtml(contentHash.get(
 						"title").toString());
-				publish[i] = contentHash.get("publish").toString();
+				if (contentHash.get("status") != null){
+					publish[i] = contentHash.get("status").toString();
+				}
+				else {
+					publish[i] = "";
+				}
 				uploaded[i] = (Integer) contentHash.get("uploaded");
 			}
 
@@ -694,13 +698,17 @@ public class viewPosts extends ListActivity {
 				}
 				String customDate = date;
 
-				if (customDate.equals("1")) {
-					customDate = getResources().getText(R.string.publish_yes)
-							.toString();
+				if (customDate.equals("draft")) {
+					customDate = getResources().getText(R.string.draft).toString();
+				} else if (customDate.equals("pending")) {
+					customDate = getResources().getText(R.string.pending_review).toString();
+				}
+				else if (customDate.equals("private")) {
+					customDate = getResources().getText(R.string.post_private).toString();
+				}
+				else if (customDate.equals("publish")) {
+					customDate = getResources().getText(R.string.publish_post).toString();
 					wrapper.getDate().setTextColor(Color.parseColor("#006505"));
-				} else if (customDate.equals("0")) {
-					customDate = getResources().getText(R.string.publish_no)
-							.toString();
 				}
 				date = customDate;
 
@@ -1222,13 +1230,13 @@ public class viewPosts extends ListActivity {
 			tags = postHashMap.get("tags").toString();
 
 		}
-		int publish = Integer.valueOf(postHashMap.get("publish").toString());
+		String status = "publish";
+		if (postHashMap.get("status") != null){
+			status = postHashMap.get("status").toString();
+		}
 
 		Boolean publishThis = false;
 
-		if (publish == 1) {
-			publishThis = true;
-		}
 		String imageContent = "";
 		boolean mediaError = false;
 		if (selectedImageCtr > 0) { // did user add media to post?
@@ -1240,7 +1248,6 @@ public class viewPosts extends ListActivity {
 			} else {
 				imageContent = uploadImages();
 			}
-
 		}
 		String res = "";
 		if (!mediaError) {
@@ -1322,6 +1329,7 @@ public class viewPosts extends ListActivity {
 					contentStruct.put("categories", theCategories);
 				}
 			}
+			contentStruct.put("post_status", status);
 			Double latitude = 0.0;
 			Double longitude = 0.0;
 			if (!isPage) {

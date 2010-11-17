@@ -166,13 +166,11 @@
               android:layout_height="wrap_content"
               android:text="Status"
               style="@style/WordPressSectionHeader"/>                                       
-    <CheckBox android:id="@+id/publish"
-     		android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:layout_below="@id/l_status"
-            android:button="@drawable/wp_checkbox"
-            android:text="@string/publish"
-            /> 
+    <Spinner android:id="@+id/status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wp_spinner_bg"
+   android:layout_below="@id/l_status"/>
  </RelativeLayout>  
     		  
 <Button

@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 8;
+	private static final int DATABASE_VERSION = 9;
 	
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -30,6 +30,9 @@ public class WordPressDB {
 	
 	private static final String ADD_LATITUDE = "alter table localdrafts add latitude real";
 	private static final String ADD_LONGITUDE = "alter table localdrafts add longitude real";
+	
+	private static final String ADD_STATUS = "alter table localdrafts add status text";
+	private static final String ADD_PAGE_STATUS = "alter table localpagedrafts add status text";
 	
 	//postStore
 	private static final String CREATE_TABLE_POSTSTORE = "create table if not exists poststore (blogID text, postID text, title text, postDate text, postDateFormatted text);";
@@ -116,6 +119,8 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
 			else if (db.getVersion() == 1){ //v1.0 or v1.0.1
@@ -138,6 +143,8 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
 			else if (db.getVersion()  == 2){
@@ -158,6 +165,8 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION); 
 			}
 			else if (db.getVersion() == 3){
@@ -175,6 +184,8 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION); 
 			}
 			else if (db.getVersion() == 4){
@@ -192,6 +203,8 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 5){
@@ -206,6 +219,8 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 6){
@@ -218,10 +233,19 @@ public class WordPressDB {
 				db.execSQL(ADD_DOTCOM_FLAG);
 				db.execSQL(ADD_WP_VERSION);
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 7){
 				db.execSQL(ADD_UNIQUE_ID);
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
+				db.setVersion(DATABASE_VERSION);
+			}
+			else if (db.getVersion() == 8){
+				db.execSQL(ADD_STATUS);
+				db.execSQL(ADD_PAGE_STATUS);
 				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -620,7 +644,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	}
 	
 	//localDrafts
-	public boolean saveLocalDraft(Context ctx, String blogID, String title, String content, String picturePaths, String tags, String categories, boolean publish, Double latitude, Double longitude) {
+	public boolean saveLocalDraft(Context ctx, String blogID, String title, String content, String picturePaths, String tags, String categories, String status, Double latitude, Double longitude) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -631,7 +655,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("picturePaths", picturePaths);
 			values.put("tags", tags);
 			values.put("categories", categories);
-			values.put("publish", publish);
+			values.put("status", status);
 			values.put("latitude", latitude);
 			values.put("longitude", longitude);
 			returnValue = db.insert(LOCALDRAFTS_TABLE, null, values) > 0;
@@ -640,7 +664,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return (returnValue);
 	}
 	
-	public boolean updateLocalDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String tags, String categories, boolean publish, Double latitude, Double longitude) {
+	public boolean updateLocalDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String tags, String categories, String status, Double latitude, Double longitude) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -651,7 +675,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("picturePaths", picturePaths);
 			values.put("tags", tags);
 			values.put("categories", categories);
-			values.put("publish", publish);
+			values.put("status", status);
 			values.put("latitude", latitude);
 			values.put("longitude", longitude);
 			returnValue = db.update(LOCALDRAFTS_TABLE, values, "id=" + postID, null) > 0;
@@ -663,7 +687,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector<HashMap<String, Object>> loadPosts(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "id", "title", "publish", "uploaded"}, "blogID=" + blogID, null, null, null, "id desc");
+		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "id", "title", "status", "uploaded"}, "blogID=" + blogID, null, null, null, "id desc");
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
@@ -672,7 +696,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("id", c.getInt(0));
 		returnHash.put("title", c.getString(1));
-		returnHash.put("publish", c.getInt(2));
+		returnHash.put("status", c.getString(2));
 		returnHash.put("uploaded", c.getInt(3));
 		returnVector.add(i, returnHash);
 		}
@@ -691,7 +715,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector<HashMap<String, Object>> loadPost(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "publish", "latitude", "longitude"}, "id=" + postID, null, null, null, null);
+		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "status", "latitude", "longitude"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -704,7 +728,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		returnHash.put("picturePaths", c.getString(2));
 		returnHash.put("tags", c.getString(3));
 		returnHash.put("categories", c.getString(4));
-		returnHash.put("publish", c.getInt(5));
+		returnHash.put("status", c.getString(5));
 		returnHash.put("latitude", c.getDouble(6));
 		returnHash.put("longitude", c.getDouble(7));
 		returnVector.add(i, returnHash);
@@ -737,7 +761,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnValue;
 	}
 	
-	public boolean saveLocalPageDraft(Context ctx, String blogID, String title, String content, String picturePaths, boolean publish) {
+	public boolean saveLocalPageDraft(Context ctx, String blogID, String title, String content, String picturePaths, String status) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -746,14 +770,14 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("title", title);
 			values.put("content", content);
 			values.put("picturePaths", picturePaths);
-			values.put("publish", publish);
+			values.put("status", status);
 			returnValue = db.insert(LOCALPAGEDRAFTS_TABLE, null, values) > 0;
 
 		db.close();
 		return (returnValue);
 	}
 	
-	public boolean updateLocalPageDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, boolean publish) {
+	public boolean updateLocalPageDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String status) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -762,7 +786,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("title", title);
 			values.put("content", content);
 			values.put("picturePaths", picturePaths);
-			values.put("publish", publish);
+			values.put("status", status);
 			returnValue = db.update(LOCALPAGEDRAFTS_TABLE, values, "id=" + postID, null) > 0;
 
 		db.close();
@@ -772,7 +796,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector<HashMap<String, Object>> loadPageDrafts(Context ctx, String blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "id", "title", "publish", "uploaded"}, "blogID=" + blogID, null, null, null, "id desc");
+		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "id", "title", "status", "uploaded"}, "blogID=" + blogID, null, null, null, "id desc");
 		int numRows = c.getCount();
 		c.moveToFirst();
 		
@@ -781,7 +805,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		HashMap<String, Object> returnHash = new HashMap<String, Object>();
 		returnHash.put("id", c.getInt(0));
 		returnHash.put("title", c.getString(1));
-		returnHash.put("publish", c.getInt(2));
+		returnHash.put("status", c.getString(2));
 		returnHash.put("uploaded", c.getInt(3));
 		returnVector.add(i, returnHash);
 		}
@@ -800,7 +824,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector<HashMap<String, Object>> loadPageDraft(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "publish"}, "id=" + postID, null, null, null, null);
+		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "status"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -811,7 +835,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		returnHash.put("title", c.getString(0));
 		returnHash.put("content", c.getString(1));
 		returnHash.put("picturePaths", c.getString(2));
-		returnHash.put("publish", c.getInt(3));
+		returnHash.put("status", c.getString(3));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();

@@ -308,4 +308,10 @@
   <!-- invalid_url -->
   <string name="invalid_url">Invalid blog URL</string>
   <string name="invalid_url_message">Please check that the blog URL entered is valid.</string>
+  
+  <!-- post status -->
+  <string name="publish_post">Publish</string>
+  <string name="pending_review">Pending Review</string>
+  <string name="draft">Draft</string>
+  <string name="post_private">Private</string>
 </resources>

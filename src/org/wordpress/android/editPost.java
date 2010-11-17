@@ -64,6 +64,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -71,6 +72,7 @@ import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -115,10 +117,7 @@ public class editPost extends Activity implements LocationListener{
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-      
-        setContentView(R.layout.edit);	
-        
+        super.onCreate(icicle);	
         
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
@@ -140,13 +139,22 @@ public class editPost extends Activity implements LocationListener{
 		if (width > 480){
 			isLargeScreen = true;
 		}
-        
+		String[] items;
         if (isPage){  
         	setContentView(R.layout.edit_page);
+        	items = new String[] {getResources().getString(R.string.draft), getResources().getString(R.string.post_private), getResources().getString(R.string.publish_post)};
+
         }
         else{
         	setContentView(R.layout.edit);
+        	items = new String[] {getResources().getString(R.string.draft), getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private), getResources().getString(R.string.publish_post)};
         }
+        
+        Spinner spinner = (Spinner) findViewById(R.id.status);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
         
         String action = getIntent().getAction();
 		if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)){ //this is from a share action!
@@ -240,6 +248,33 @@ public class editPost extends Activity implements LocationListener{
         	
         	titleET.setText(postHashMap.get("title").toString());
         	contentET.setText(Html.fromHtml(postHashMap.get("content").toString()));
+	        
+        	if (postHashMap.get("status") != null){
+	        	String status = postHashMap.get("status").toString();
+	        	
+		        if (status.equals("draft")){
+		        	spinner.setSelection(0, true);
+		        }
+		        else if (status.equals("pending")){
+		        	spinner.setSelection(1, true);
+		        }
+		        else if (status.equals("private")){
+		        	if (isPage){
+		        		spinner.setSelection(1);
+		        	}
+		        	else{
+		        		spinner.setSelection(2);
+		        	}
+		        }
+		        else if (status.equals("publish")){
+		        	if (isPage){
+		        		spinner.setSelection(2);
+		        	}
+		        	else{
+		        		spinner.setSelection(3);
+		        	}
+		        }
+        	}
         	
         	String picturePaths = postHashMap.get("picturePaths").toString();
         	if (!picturePaths.equals("")){
@@ -335,13 +370,6 @@ public class editPost extends Activity implements LocationListener{
 		    		tagsET.setText(tags);
 		    	}
         	}
-        	
-        	int publish = Integer.valueOf(postHashMap.get("publish").toString());
-        	
-        	CheckBox publishCB = (CheckBox) findViewById(R.id.publish);
-        	if (publish == 1){
-        		publishCB.setChecked(true);
-        	}	
         }
         else if (isNew){
         	Button cancelBtn = (Button) findViewById(R.id.cancel);
@@ -462,12 +490,29 @@ public class editPost extends Activity implements LocationListener{
 		    	        });
 			        }
 			        
-			        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
-			        if (status.equals("publish")){
-			        	publishCB.setChecked(true);
+			        Spinner spinner = (Spinner) findViewById(R.id.status);
+			        
+			        if (status.equals("draft")){
+			        	spinner.setSelection(0, true);
 			        }
-			        else{
-			        	publishCB.setChecked(false);
+			        else if (status.equals("pending")){
+			        	spinner.setSelection(1, true);
+			        }
+			        else if (status.equals("private")){
+			        	if (isPage){
+			        		spinner.setSelection(1);
+			        	}
+			        	else{
+			        		spinner.setSelection(2);
+			        	}
+			        }
+			        else if (status.equals("publish")){
+			        	if (isPage){
+			        		spinner.setSelection(2);
+			        	}
+			        	else{
+			        		spinner.setSelection(3);
+			        	}
 			        }
 			        
 				}
@@ -1111,7 +1156,6 @@ public class editPost extends Activity implements LocationListener{
         }
         
         content = StringHelper.convertHTMLTagsForUpload(content);
-        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
         Boolean publishThis = false;
         String imageContent = "";
         boolean mediaError = false;
@@ -1127,8 +1171,6 @@ public class editPost extends Activity implements LocationListener{
         	}
 
         }
-        
-        
 
         String res = "";
         if (!mediaError){
@@ -1144,8 +1186,6 @@ public class editPost extends Activity implements LocationListener{
      	
         //before we do anything, validate that the user has entered settings
         boolean enteredSettings = checkSettings();
-        
-        
         
         if (!enteredSettings){
         	res = "invalidSettings";
@@ -1176,10 +1216,33 @@ public class editPost extends Activity implements LocationListener{
     			centerThumbnail = true;
     		}
 
-        if (publishCB.isChecked())
-        {
-        	publishThis = true;
-        }
+    		Spinner spinner = (Spinner) findViewById(R.id.status);
+            int selectedStatus = spinner.getSelectedItemPosition();
+            String status = "";
+            switch (selectedStatus){
+            	case 0:
+            		status = "draft";
+            		break;
+            	case 1:
+            		if (isPage){
+            			status = "private";
+            		}
+            		else {
+            			status = "pending";
+            		}
+            		break;
+            	case 2:
+            		if (isPage) {
+            			status = "publish";
+            		}
+            		else {
+            			status = "private";
+            		}
+            		break;
+            	case 3:
+            		status = "publish";
+            		break;
+            }
         
         Map<String, Object> contentStruct = new HashMap<String, Object>();
       
@@ -1195,6 +1258,7 @@ public class editPost extends Activity implements LocationListener{
         contentStruct.put("post_type", "post");
         contentStruct.put("title", title);
         contentStruct.put("description", content);
+        contentStruct.put("post_status", status);
         if (!isPage){
         	EditText tagsET = (EditText)findViewById(R.id.tags);
             String tags = tagsET.getText().toString();
@@ -1207,9 +1271,7 @@ public class editPost extends Activity implements LocationListener{
         contentStruct.put("categories", theCategories);
         }
         }
-        
-
-        
+      
         client = new XMLRPCClient(sURL);
         
         Object[] params = {
@@ -2240,8 +2302,7 @@ public class editPost extends Activity implements LocationListener{
         	EditText tagsET = (EditText)findViewById(R.id.tags);
         	tags = tagsET.getText().toString();
         }
-        CheckBox publishCB = (CheckBox)findViewById(R.id.publish);
-        boolean publishThis = false;
+
         String images = "";
         boolean success = false;
         
@@ -2273,12 +2334,34 @@ public class editPost extends Activity implements LocationListener{
         		images += selectedImageIDs.get(it).toString() + ",";
 
         	}
-
-        
-        	if (publishCB.isChecked())
-        	{
-        		publishThis = true;
-        	}
+        	
+            Spinner spinner = (Spinner) findViewById(R.id.status);
+            int selectedStatus = spinner.getSelectedItemPosition();
+            String status = "";
+            switch (selectedStatus){
+            	case 0:
+            		status = "draft";
+            		break;
+            	case 1:
+            		if (isPage){
+            			status = "private";
+            		}
+            		else {
+            			status = "pending";
+            		}
+            		break;
+            	case 2:
+            		if (isPage) {
+            			status = "publish";
+            		}
+            		else {
+            			status = "private";
+            		}
+            		break;
+            	case 3:
+            		status = "publish";
+            		break;
+            }
         
         	//Geotagging
         	WordPressDB settingsDB = new WordPressDB(this);
@@ -2312,18 +2395,18 @@ public class editPost extends Activity implements LocationListener{
             WordPressDB lDraftsDB = new WordPressDB(this);
         	if (isPage){
         		if (isNew){
-        			success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, publishThis);
+        			success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, status);
         		}
         		else {
-        			success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, publishThis);
+        			success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, status);
         		}
         	}
         	else {
         		if (isNew){
-        			success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, publishThis, latitude, longitude);
+        			success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, status, latitude, longitude);
         		}
         		else {
-        			success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, publishThis, latitude, longitude);
+        			success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, status, latitude, longitude);
         		}
         	}
         

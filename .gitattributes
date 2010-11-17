@@ -215,6 +215,9 @@ res/drawable-hdpi-v4/btn_check_off_pressed.png -text
 res/drawable-hdpi-v4/btn_check_off_selected.png -text
 res/drawable-hdpi-v4/btn_check_on_pressed.png -text
 res/drawable-hdpi-v4/btn_check_on_selected.png -text
+res/drawable-hdpi-v4/btn_dropdown_normal.9.png -text
+res/drawable-hdpi-v4/btn_dropdown_pressed.9.png -text
+res/drawable-hdpi-v4/btn_dropdown_selected.9.png -text
 res/drawable-hdpi-v4/comments_tab.png -text
 res/drawable-hdpi-v4/comments_tab_active.png -text
 res/drawable-hdpi-v4/content_bg.9.png -text
@@ -245,6 +248,9 @@ res/drawable/btn_check_off_pressed.png -text
 res/drawable/btn_check_off_selected.png -text
 res/drawable/btn_check_on_pressed.png -text
 res/drawable/btn_check_on_selected.png -text
+res/drawable/btn_dropdown_normal.9.png -text
+res/drawable/btn_dropdown_pressed.9.png -text
+res/drawable/btn_dropdown_selected.9.png -text
 res/drawable/comments_tab.png -text
 res/drawable/comments_tab_active.png -text
 res/drawable/content_bg.9.png -text
@@ -299,6 +305,7 @@ res/drawable/wp_small.9.png -text
 res/drawable/wp_small_down.9.png -text
 res/drawable/wp_small_over.9.png -text
 res/drawable/wp_small_toggle.9.png -text
+res/drawable/wp_spinner_bg.xml -text
 res/drawable/wpcom.png -text
 res/drawable/wplogo.png -text
 res/layout-hdpi-v4/new_account.xml -text
