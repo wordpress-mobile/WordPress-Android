@@ -1329,7 +1329,7 @@ public class viewPosts extends ListActivity {
 					contentStruct.put("categories", theCategories);
 				}
 			}
-			contentStruct.put("post_status", status);
+			contentStruct.put((isPage) ? "page_status" : "post_status", status);
 			Double latitude = 0.0;
 			Double longitude = 0.0;
 			if (!isPage) {
