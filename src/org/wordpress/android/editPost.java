@@ -899,7 +899,7 @@ public class editPost extends Activity implements LocationListener{
 	            }
 	        });
 		
-	        if (isNew){
+	        if (isNew && location){
 	        	
 	        	Button updateLocation = (Button) findViewById(R.id.updateLocation);
 	        	updateLocation.setVisibility(View.GONE);
@@ -1117,7 +1117,9 @@ public class editPost extends Activity implements LocationListener{
 		
 		imageHelper ih = imageHelper.getInstance();
 		
-		orientation = ih.getExifOrientation(path, orientation);
+		if (orientation == ""){
+			orientation = ih.getExifOrientation(path, orientation);
+		}
 
 		imageTitle = jpeg.getName();
 		

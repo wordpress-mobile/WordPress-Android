@@ -1,7 +1,6 @@
 package org.wordpress.android;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -150,47 +149,42 @@ public class imageHelper_v4 extends imageHelper{
 		           Object exif = exif_construct.newInstance(path);
 		           exif_getAttribute = android.media.ExifInterface.class.getMethod("getAttribute", new Class[] { String.class } );
 		           try {
-		        	   exifOrientation = (String) exif_getAttribute.invoke(exif, android.media.ExifInterface.TAG_ORIENTATION);
-		        	   if (exifOrientation.equals("1")){
-							orientation = "0";
-						}
-						else if (exifOrientation.equals("3")){
-							orientation = "180";
-						}
-						else if (exifOrientation.equals("6")){
-							orientation = "90";
-						}
-						else if (exifOrientation.equals("8")){
-							orientation = "270";
-						}
+		        	   exifOrientation = (String) exif_getAttribute.invoke(exif, android.media.ExifInterface.TAG_ORIENTATION);	
+		        	   if (exifOrientation != null){
+			        	    if (exifOrientation.equals("1")){
+								orientation = "0";
+							}
+							else if (exifOrientation.equals("3")){
+								orientation = "180";
+							}
+							else if (exifOrientation.equals("6")){
+								orientation = "90";
+							}
+							else if (exifOrientation.equals("8")){
+								orientation = "270";
+							}
+		        	   }
+		        	   else{
+		        		   orientation = "0";
+		        	   }
 		           } catch (InvocationTargetException ite) {
 		               /* unpack original exception when possible */
-		               Throwable cause = ite.getCause();
-		               if (cause instanceof IOException) {
-		                   try {
-							throw (IOException) cause;
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-		               } else if (cause instanceof RuntimeException) {
-		                   throw (RuntimeException) cause;
-		               } else if (cause instanceof Error) {
-		                   throw (Error) cause;
-		               } else {
-		                   /* unexpected checked exception; wrap and re-throw */
-		                   throw new RuntimeException(ite);
-		               }
+		               orientation = "0";
 		           } catch (IllegalAccessException ie) {
 		               System.err.println("unexpected " + ie);
+		               orientation = "0";
 		           }
 		           /* success, this is a newer device */
 		       } catch (NoSuchMethodException nsme) {
-		           /* failure, must be older device */
+		    	   orientation = "0";
 		       } catch (IllegalArgumentException e) {
+		    	   orientation = "0";
 			} catch (InstantiationException e) {
+				orientation = "0";
 			} catch (IllegalAccessException e) {
+				orientation = "0";
 			} catch (InvocationTargetException e) {
+				orientation = "0";
 			}
 
 

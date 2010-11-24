@@ -205,7 +205,6 @@ bin/org/xmlrpc/android/XMLRPCException.class -text
 bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
-bin/wp-android.apk -text
 /default.properties -text
 res/anim/cycle_5.xml -text
 res/anim/shake.xml -text
