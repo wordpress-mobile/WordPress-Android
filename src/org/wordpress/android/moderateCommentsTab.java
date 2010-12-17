@@ -268,15 +268,6 @@ public class moderateCommentsTab extends ListActivity {
 				HashMap contentHash, postHash = new HashMap();
 				contentHash = (HashMap) allComments.get(curCommentID);
 				postHash.put("status", newStatus);
-				Date d = new Date();
-				SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
-				String cDate = contentHash.get("commentDate").toString();
-				try{  
-					d = sdf.parse(cDate);
-				} catch (ParseException pe){  
-					pe.printStackTrace();  
-				}  
-				postHash.put("date_created_gmt", d);
 				postHash.put("content", contentHash.get("comment"));
 				postHash.put("author", contentHash.get("author"));
 				postHash.put("author_url", contentHash.get("url"));
@@ -1441,16 +1432,7 @@ public class moderateCommentsTab extends ListActivity {
 
 		HashMap contentHash, postHash = new HashMap();
 		contentHash = (HashMap) allComments.get(sSelCommentID);
-		postHash.put("status", newStatus);
-		Date d = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
-		String cDate = contentHash.get("commentDate").toString();
-		try{  
-			d = sdf.parse(cDate);
-		} catch (ParseException pe){  
-			pe.printStackTrace();  
-		}  
-		postHash.put("date_created_gmt", d);
+		postHash.put("status", newStatus); 
 		postHash.put("content", contentHash.get("comment"));
 		postHash.put("author", contentHash.get("author"));
 		postHash.put("author_url", contentHash.get("url"));
