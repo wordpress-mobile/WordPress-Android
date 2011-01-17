@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -81,6 +82,10 @@ public class WordPressDB {
 	//add new unique identifier to no longer use device imei
 	private static final String ADD_UNIQUE_ID = "alter table eula add uuid text;";
 	
+	//add new table for QuickPress homescreen shortcuts
+	private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
+	private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
+	
 	private SQLiteDatabase db;
 
 	public WordPressDB(Context ctx) {
@@ -99,6 +104,8 @@ public class WordPressDB {
 		db.execSQL(CREATE_TABLE_COMMENTS);
 		
 		db.execSQL(CREATE_TABLE_CATEGORIES);
+		
+		db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
 		
 		try {
 			if (db.getVersion() < 1){ //user is new install
@@ -384,7 +391,28 @@ public class WordPressDB {
 		if (rowsAffected > 0){
 			returnValue = true;
 		}
-		db.close();
+		
+		// delete QuickPress homescreen shortcuts connected with this account
+	    Vector<HashMap<String, Object>> shortcuts = this.getQuickPressShortcuts(ctx, id);
+	    for(int i = 0; i < shortcuts.size(); i++) {
+	    	HashMap<String, Object> shortcutHash = shortcuts.get(i);
+	    	
+	    	Intent shortcutIntent = new Intent();
+	    	shortcutIntent.setClassName(editPost.class.getPackage().getName(), editPost.class.getName());
+	    	shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    	shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    	shortcutIntent.setAction(Intent.ACTION_VIEW); 
+	    	Intent broadcastShortcutIntent = new Intent();
+	    	broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+	    	broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, shortcutHash.get("name").toString());
+	    	broadcastShortcutIntent.putExtra("duplicate", false);
+	    	broadcastShortcutIntent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
+	    	ctx.sendBroadcast(broadcastShortcutIntent);
+	    	
+	    	deleteQuickPressShortcut(ctx, shortcutHash.get("id").toString());
+	    }
+	    
+	    db.close();
 		return (returnValue);
 	}
 
@@ -1287,6 +1315,57 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
 		return returnValue;
 		
+	}
+	
+	public boolean addQuickPressShortcut(Context ctx, String accountId, String name) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		ContentValues values = new ContentValues();
+		values.put("accountId", accountId);
+		values.put("name", name);
+		boolean returnValue = db.insert(QUICKPRESS_SHORTCUTS_TABLE, null, values) > 0;
+		db.close();
+		return (returnValue);
+	}
+	
+	public Vector<HashMap<String, Object>> getQuickPressShortcuts(Context ctx, String accountId) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id", "accountId", "name"}, "accountId = "+accountId, null, null, null, null);
+		String id, name;
+		int numRows = c.getCount();
+		c.moveToFirst();
+		Vector<HashMap<String, Object>> accounts = new Vector<HashMap<String, Object>>();
+		for (int i = 0; i < numRows; i++) {
+			
+			id = c.getString(0);
+			name = c.getString(2);
+			if (id != null)
+			{	
+				HashMap<String, Object> thisHash = new HashMap<String, Object>();
+				
+				thisHash.put("id", id);
+				thisHash.put("name", name);
+				accounts.add(thisHash);
+			}
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+		
+		return accounts;
+	}
+	
+	public boolean deleteQuickPressShortcut(Context ctx, String id) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		int rowsAffected = db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=" + id, null);
+		
+		boolean returnValue = false;
+		if (rowsAffected > 0){
+			returnValue = true;
+		}
+	    
+	    db.close();
+		
+		return (returnValue);
 	}
 
 }

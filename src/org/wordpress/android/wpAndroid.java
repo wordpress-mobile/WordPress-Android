@@ -61,9 +61,9 @@ public class wpAndroid extends ListActivity {
 	public String[] blogNames;
 	public String[] accountUsers;
 	public String[] blavatars;
-	private String selectedID = "";
-	private ThumbnailAdapter thumbs = null;
-	private static final int[] IMAGE_IDS = { R.id.blavatar };
+	protected String selectedID = "";
+	protected ThumbnailAdapter thumbs = null;
+	protected static final int[] IMAGE_IDS = { R.id.blavatar };
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -523,7 +523,7 @@ public class wpAndroid extends ListActivity {
 		return false;
 	}
 
-	private class HomeListAdapter extends BaseAdapter {
+	protected class HomeListAdapter extends BaseAdapter {
 
 		public HomeListAdapter(Context context) {
 		}
