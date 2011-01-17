@@ -2596,7 +2596,14 @@ public class editPost extends Activity implements LocationListener{
 	protected void setContent() {
 		Intent intent = getIntent();
 		String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+		String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
 		if (text != null) {
+			EditText titleET = (EditText) findViewById(R.id.title);
+			
+			if (title != null){
+				titleET.setText(title);
+			}
+			
 			EditText contentET = (EditText) findViewById(R.id.content);
 			//It's a youtube video link! need to strip some parameters so the embed will work
 			if (text.contains("youtube_gdata")){
