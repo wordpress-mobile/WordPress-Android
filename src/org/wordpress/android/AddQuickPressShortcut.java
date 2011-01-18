@@ -88,68 +88,68 @@ public class AddQuickPressShortcut extends wpAndroid {
 			setListAdapter(thumbs);
 			
 			listView.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> arg0, View row, int positionParam, long id) {
-					final int position = positionParam;
-					
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddQuickPressShortcut.this);
-					dialogBuilder.setTitle("Set shortcut name");
-					
-					final EditText quickPressShortcutName = new EditText(AddQuickPressShortcut.this);
-					quickPressShortcutName.setText("QP "+ escapeUtils.unescapeHtml(accountNames.get(position)));
-					dialogBuilder.setView(quickPressShortcutName);
-					
-					dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-						
-						public void onClick(DialogInterface dialog, int which) {
-							if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
-							    Toast t = Toast.makeText(AddQuickPressShortcut.this, R.string.quickpress_add_error, Toast.LENGTH_LONG);
-							    t.show();
-							} else {
-								Intent shortcutIntent = new Intent();
-				        		shortcutIntent.setClassName(editPost.class.getPackage().getName(), editPost.class.getName());
-				        		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				        		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				        		shortcutIntent.putExtra("id", accountIDs[position]);
-				        		shortcutIntent.putExtra("accountName", escapeUtils.unescapeHtml(accountNames.get(position)));
-				        		shortcutIntent.putExtra("isNew", true);
-				        		
-				        		Intent addIntent = new Intent();
-				        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-				        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
-				        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcut.this, R.drawable.app_icon));
-				        		
-				        		WordPressDB wpDB = new WordPressDB(AddQuickPressShortcut.this);
-				        		wpDB.addQuickPressShortcut(AddQuickPressShortcut.this.getApplicationContext(), accountIDs[position], quickPressShortcutName.getText().toString());
-				        		
-				        		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-				        		AddQuickPressShortcut.this.sendBroadcast(addIntent);
-							    finish();
-							}
-						}
-					});
-					dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-						// just let the dialog close
-						public void onClick(DialogInterface dialog, int which) {}
-					});
-					
-					dialogBuilder.setCancelable(false);
-					dialogBuilder.create().show();
+				public void onItemClick(AdapterView<?> arg0, View row, int position, long id) {
+					AddQuickPressShortcut.this.buildDialog(position);
 				}
 			});
+			
+			if(accounts.size() == 1) {
+				AddQuickPressShortcut.this.buildDialog(0);
+			}
 			
 		} else {
 			// no account, load new account view
 			Intent i = new Intent(AddQuickPressShortcut.this, newAccount.class);
 
 			startActivityForResult(i, 0);
-			
-			finish();
-
 		}
 	}
 	
-	protected void onPause() {
-		super.onPause();
-		finish();
+	private void buildDialog(int positionParam) {
+		final int position = positionParam;
+		
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddQuickPressShortcut.this);
+		dialogBuilder.setTitle("Set shortcut name");
+		
+		final EditText quickPressShortcutName = new EditText(AddQuickPressShortcut.this);
+		quickPressShortcutName.setText("QP " + escapeUtils.unescapeHtml(accountNames.get(position)));
+		dialogBuilder.setView(quickPressShortcutName);
+		
+		dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
+				    Toast t = Toast.makeText(AddQuickPressShortcut.this, R.string.quickpress_add_error, Toast.LENGTH_LONG);
+				    t.show();
+				} else {
+					Intent shortcutIntent = new Intent();
+	        		shortcutIntent.setClassName(editPost.class.getPackage().getName(), editPost.class.getName());
+	        		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	        		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        		shortcutIntent.putExtra("id", accountIDs[position]);
+	        		shortcutIntent.putExtra("accountName", escapeUtils.unescapeHtml(accountNames.get(position)));
+	        		shortcutIntent.putExtra("isNew", true);
+	        		
+	        		Intent addIntent = new Intent();
+	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
+	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcut.this, R.drawable.app_icon));
+	        		
+	        		WordPressDB wpDB = new WordPressDB(AddQuickPressShortcut.this);
+	        		wpDB.addQuickPressShortcut(AddQuickPressShortcut.this.getApplicationContext(), accountIDs[position], quickPressShortcutName.getText().toString());
+	        		
+	        		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+	        		AddQuickPressShortcut.this.sendBroadcast(addIntent);
+				    AddQuickPressShortcut.this.finish();
+				}
+			}
+		});
+		dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+			// just let the dialog close
+			public void onClick(DialogInterface dialog, int which) {}
+		});
+		
+		dialogBuilder.setCancelable(false);
+		dialogBuilder.create().show();
 	}
 }
