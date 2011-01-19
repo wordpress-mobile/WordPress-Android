@@ -1,20 +1,27 @@
 package org.wordpress.android;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -23,7 +30,15 @@ import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
-public class AddQuickPressShortcut extends wpAndroid {
+public class AddQuickPressShortcut extends ListActivity {
+	public Vector<?> accounts;
+	public String[] blogNames;
+	public String[] accountIDs;
+	public String[] accountUsers;
+	public String[] blavatars;
+	public Vector<String> accountNames = new Vector<String>();
+	protected ThumbnailAdapter thumbs = null;
+	protected static final int[] IMAGE_IDS = { R.id.blavatar };
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +47,10 @@ public class AddQuickPressShortcut extends wpAndroid {
 		setContentView(R.layout.add_quickpress_shortcut);
 		setTitle(getResources().getText(R.string.quickpress_window_title));
 		
+		displayAccounts();
+	}
+	
+	private void displayAccounts() {
 		WordPressDB settingsDB = new WordPressDB(this);
 		accounts = settingsDB.getAccounts(this);
 		
@@ -100,7 +119,6 @@ public class AddQuickPressShortcut extends wpAndroid {
 		} else {
 			// no account, load new account view
 			Intent i = new Intent(AddQuickPressShortcut.this, newAccount.class);
-
 			startActivityForResult(i, 0);
 		}
 	}
@@ -151,5 +169,122 @@ public class AddQuickPressShortcut extends wpAndroid {
 		
 		dialogBuilder.setCancelable(false);
 		dialogBuilder.create().show();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data != null) {
+			switch (requestCode) {
+			case 0:
+				WordPressDB settingsDB = new WordPressDB(this);
+				accounts = settingsDB.getAccounts(this);
+
+				if (accounts.size() == 0) {
+					finish();
+				} else {
+					displayAccounts();
+				}
+				break;
+			}
+		}// end null check
+		else {
+			displayAccounts();
+		}
+	}
+	
+	protected class HomeListAdapter extends BaseAdapter {
+
+		public HomeListAdapter(Context context) {
+		}
+
+		public int getCount() {
+			return accounts.size();
+		}
+
+		public Object getItem(int position) {
+			return position;
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View pv = convertView;
+			ViewWrapper wrapper = null;
+			if (pv == null) {
+				LayoutInflater inflater = getLayoutInflater();
+				pv = inflater.inflate(R.layout.home_row, parent, false);
+				wrapper = new ViewWrapper(pv);
+				/*if (position == 0) {
+					usenameHeight = wrapper.getBlogUsername().getHeight();
+				}*/
+				pv.setTag(wrapper);
+				wrapper = new ViewWrapper(pv);
+				pv.setTag(wrapper);
+			} else {
+				wrapper = (ViewWrapper) pv.getTag();
+			}
+			String username = accountUsers[position];
+			pv.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.list_bg_selector));
+			pv.setId(Integer.valueOf(accountIDs[position]));
+			if (wrapper.getBlogUsername().getHeight() == 0) {
+				wrapper.getBlogUsername().setHeight(
+						(int) wrapper.getBlogName().getTextSize()
+								+ wrapper.getBlogUsername().getPaddingBottom());
+			}
+
+			wrapper.getBlogName().setText(
+					escapeUtils.unescapeHtml(blogNames[position]));
+			wrapper.getBlogUsername().setText(
+					escapeUtils.unescapeHtml(username));
+
+			if (wrapper.getBlavatar() != null) {
+				try {
+					wrapper.getBlavatar().setImageResource(R.drawable.app_icon);
+					wrapper.getBlavatar().setTag(blavatars[position]);
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+
+			return pv;
+
+		}
+
+	}
+	
+	class ViewWrapper {
+		View base;
+		TextView blogName = null;
+		TextView blogUsername = null;
+		ImageView blavatar = null;
+
+		ViewWrapper(View base) {
+			this.base = base;
+		}
+
+		TextView getBlogName() {
+			if (blogName == null) {
+				blogName = (TextView) base.findViewById(R.id.blogName);
+			}
+			return (blogName);
+		}
+
+		TextView getBlogUsername() {
+			if (blogUsername == null) {
+				blogUsername = (TextView) base.findViewById(R.id.blogUser);
+			}
+			return (blogUsername);
+		}
+
+		ImageView getBlavatar() {
+			if (blavatar == null) {
+				blavatar = (ImageView) base.findViewById(R.id.blavatar);
+			}
+			return (blavatar);
+		}
 	}
 }
