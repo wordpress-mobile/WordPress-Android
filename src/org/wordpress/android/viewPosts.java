@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,9 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
+
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -31,22 +39,26 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.util.Log;
+import android.util.Xml;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -55,7 +67,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class viewPosts extends ListActivity {
 	/** Called when the activity is first created. */
@@ -537,12 +548,14 @@ public class viewPosts extends ListActivity {
 										menu.add(2,1,0,getResources().getText(R.string.view_comments));
 										menu.add(2, 2, 0, getResources().getText(R.string.edit_page));
 										menu.add(2, 3, 0, getResources().getText(R.string.delete_page));
+										menu.add(2, 4, 0, getResources().getText(R.string.share_url));
 									} else {
 										menu.setHeaderTitle(getResources().getText(R.string.post_actions));
 										menu.add(0,0,0,getResources().getText(R.string.preview_post));
 										menu.add(0,1,0,getResources().getText(R.string.view_comments));
 										menu.add(0, 2, 0, getResources().getText(R.string.edit_post));
 										menu.add(0, 3, 0, getResources().getText(R.string.delete_post));
+										menu.add(0, 4, 0, getResources().getText(R.string.share_url));
 									}
 								}
 							}
@@ -956,6 +969,17 @@ public class viewPosts extends ListActivity {
 				}
 
 				return true;
+			case 4:
+				loadingDialog = ProgressDialog.show(this, getResources().getText(R.string.share_url), getResources().getText(R.string.attempting_fetch_url), true, false);				
+				Thread action = new Thread() { 
+				  public void run() {
+					  Looper.prepare();
+					  shareURL(id, String.valueOf(selectedID), false);
+					  Looper.loop();
+				  } 
+				};
+				action.start();
+				return true;
 			}
 
 		} else if (item.getGroupId() == 2) {
@@ -1013,6 +1037,17 @@ public class viewPosts extends ListActivity {
 				if (!isFinishing()) {
 					dialogBuilder.create().show();
 				}
+				return true;
+			case 4:
+				loadingDialog = ProgressDialog.show(this, getResources().getText(R.string.share_url), getResources().getText(R.string.attempting_fetch_url), true, false);				
+				Thread action = new Thread() { 
+				  public void run() {
+					  Looper.prepare();
+					  shareURL(id, String.valueOf(selectedID), true);
+					  Looper.loop();
+				  } 
+				};
+				action.start();
 				return true;
 			}
 
@@ -2048,6 +2083,178 @@ public class viewPosts extends ListActivity {
 		loading.setLayoutAnimation(controller);
 
 		loading.setVisibility(View.INVISIBLE);
+	}
+	
+	private void shareURL(String accountId, String postId, final boolean isPage) {
+		WordPressDB settingsDB = new WordPressDB(this);
+	    Vector<?> settings = settingsDB.loadSettings(this, accountId);
+	    String errorStr = null;
+	    
+		String username = settings.get(2).toString();
+		String password = settings.get(3).toString();
+		String blogID = settings.get(10).toString();
+		
+		String url = settings.get(0).toString();
+		
+		client = new XMLRPCClient(url);
+	    
+	    Object versionResult = new Object();
+	    try {
+	    	if(isPage) {
+	    		Object[] vParams = { blogID, postId, username, password };
+	    		versionResult = (Object) client.call("wp.getPage", vParams);
+	    	} else {
+	    		Object[] vParams = { postId, username, password };
+	    		versionResult = (Object) client.call("metaWeblog.getPost", vParams);
+	    	}
+		} catch (XMLRPCException e) {
+			errorStr = e.getMessage();
+			Log.d("WP", "Error", e);
+		}
+		
+		if (errorStr == null && versionResult != null){
+			try {
+				HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
+				
+				if((isPage && !"publish".equals(contentHash.get("page_status").toString())) ||
+						(!isPage && !"publish".equals(contentHash.get("post_status").toString()))) {
+					Thread prompt = new Thread() {
+						public void run() {
+							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+							dialogBuilder.setTitle(getResources().getText(R.string.share_url));
+							if(isPage) {
+								dialogBuilder.setMessage(viewPosts.this.getResources().getText(R.string.page_not_published));
+							} else {
+								dialogBuilder.setMessage(viewPosts.this.getResources().getText(R.string.post_not_published));
+							}
+							dialogBuilder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {}
+							});
+							dialogBuilder.setCancelable(true);
+							dialogBuilder.create().show();
+						}
+					};
+					this.runOnUiThread(prompt);
+				} else {
+					String postURL = contentHash.get("permaLink").toString();
+					String shortlink = getShortlinkTagHref(postURL);
+					Intent share = new Intent(Intent.ACTION_SEND);
+					share.setType("text/plain");
+					if(shortlink == null) {
+						share.putExtra(Intent.EXTRA_TEXT, postURL);						
+					} else {
+						share.putExtra(Intent.EXTRA_TEXT, shortlink);
+					}
+					share.putExtra(Intent.EXTRA_SUBJECT, contentHash.get("title").toString());
+					startActivity(Intent.createChooser(share, this.getText(R.string.share_url)));
+				}
+			} catch (Exception e) {
+				errorStr = e.getMessage();
+				Log.d("WP", "Error", e);
+			}
+		}
+		
+		loadingDialog.dismiss();
+		if(errorStr != null) {
+			final String fErrorStr = errorStr; 
+			Thread prompt = new Thread() {
+				public void run() {
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(viewPosts.this);
+					dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
+					dialogBuilder.setMessage(fErrorStr);
+					dialogBuilder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			};
+			this.runOnUiThread(prompt);
+		}
+	}
+	
+	private String getShortlinkTagHref(String urlString) {
+		InputStream in = getResponse(urlString);
+
+		if(in != null) {
+			XmlPullParser parser = Xml.newPullParser();
+			try {
+	            // auto-detect the encoding from the stream
+	            parser.setInput(in, null);
+	            int eventType = parser.getEventType();
+	            while (eventType != XmlPullParser.END_DOCUMENT){
+	                String name = null;
+	                String rel="";
+					String href="";
+	                switch (eventType){
+	                    case XmlPullParser.START_TAG:
+	                        name = parser.getName();
+	                            if (name.equalsIgnoreCase("link")){
+	                            	for (int i = 0; i < parser.getAttributeCount(); i++) {
+	      							  String attrName = parser.getAttributeName(i);
+	      							  String attrValue = parser.getAttributeValue(i);
+	      					           if(attrName.equals("rel")){
+	      					        	   rel = attrValue;
+	      					           } else if(attrName.equals("href")) {
+	      					        	   href = attrValue;
+	      					           }
+	      					        }
+	      							
+	      						  if(rel.equals("shortlink")){
+	      							  return href;
+	      						  }
+	                            }                          
+	                        break;
+	                }
+	                eventType = parser.next();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+
+		}
+		return null;  //never found the shortlink tag
+	}
+	
+	private InputStream getResponse(String urlString) {
+		InputStream in = null;
+		int response = -1;
+        
+        URL url = null;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+			return null;
+		} 
+        URLConnection conn = null;
+		try {
+			conn = url.openConnection();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+        
+        try{
+            HttpURLConnection httpConn = (HttpURLConnection) conn;
+            httpConn.setAllowUserInteraction(false);
+            httpConn.setInstanceFollowRedirects(true);
+            httpConn.setRequestMethod("GET");
+            httpConn.addRequestProperty("user-agent", "Mozilla/5.0");
+            httpConn.connect(); 
+
+            response = httpConn.getResponseCode();                 
+            if (response == HttpURLConnection.HTTP_OK) {
+                in = httpConn.getInputStream();                                 
+            }                     
+        }
+        catch (Exception ex)
+        {
+        	ex.printStackTrace();
+            return null;           
+        } 
+		return in;
 	}
 
 }
