@@ -67,7 +67,6 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageView;
@@ -373,7 +372,7 @@ public class editPost extends Activity implements LocationListener{
         }
         else if (isNew){
         	Button cancelBtn = (Button) findViewById(R.id.cancel);
-        	cancelBtn.setText("Upload Now");
+        	cancelBtn.setText(getResources().getText(R.string.upload_now));
         	
         	if (!isAction){
 	        	WordPressDB settingsDB = new WordPressDB(this);

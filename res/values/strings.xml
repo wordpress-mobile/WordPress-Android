@@ -275,6 +275,8 @@
   <string name="location">Location</string>
   <string name="geotag">Geotag Posts</string>
   <string name="location_toast">Location data not yet available, please wait.</string>
+  <string name="view_map">View Map</string>
+  <string name="update_location">Update Location</string>
   
   <!--  preferences -->
   <string name="preferences">Preferences</string>

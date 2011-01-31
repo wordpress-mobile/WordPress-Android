@@ -122,7 +122,7 @@
     		  android:layout_marginBottom="6dip"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:text="Media"
+              android:text="@string/media"
               style="@style/WordPressSectionHeader"/> 
 <Button
 			android:id="@+id/addPictureButton"
@@ -225,7 +225,7 @@
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:textSize="18dip"
-            android:text="View Map" />     
+            android:text="@string/view_map" />     
             <Button
 			android:id="@+id/updateLocation"
 			android:background="@drawable/wp_button_small"
@@ -234,7 +234,7 @@
             android:layout_width="wrap_content"  
             android:layout_height="wrap_content"
             android:textSize="18dip"
-            android:text="Update Location" />                                
+            android:text="@string/update_location" />                                
  </RelativeLayout> 
  </RelativeLayout>
  <RelativeLayout android:layout_width="fill_parent" 
@@ -248,7 +248,7 @@
     		  android:layout_marginBottom="6dip"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content"
-              android:text="Status"
+              android:text="@string/status"
               style="@style/WordPressSectionHeader"/>                                       
     <Spinner android:id="@+id/status"
         android:layout_width="fill_parent"
