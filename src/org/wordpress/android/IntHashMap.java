@@ -47,7 +47,6 @@ class IntHashMap {
      */
     private static class Entry {
         int hash;
-        int key;
         Object value;
         Entry next;
 
@@ -59,9 +58,8 @@ class IntHashMap {
          * @param value The value for this key
          * @param next A reference to the next entry in the table
          */
-        protected Entry(int hash, int key, Object value, Entry next) {
+        protected Entry(int hash, Object value, Entry next) {
             this.hash = hash;
-            this.key = key;
             this.value = value;
             this.next = next;
         }
@@ -292,7 +290,7 @@ class IntHashMap {
         }
 
         // Creates the new entry.
-        Entry e = new Entry(hash, key, value, tab[index]);
+        Entry e = new Entry(hash, value, tab[index]);
         tab[index] = e;
         count++;
         return null;

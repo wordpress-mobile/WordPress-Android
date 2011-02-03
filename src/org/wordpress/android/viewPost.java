@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.Window;
+import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -30,6 +31,8 @@ public class viewPost extends Activity {
 	private String id = "";
 	private String postID = "";
 	private String accountName = "";
+	private String httpuser = "";
+	private String httppassword = "";
 	private boolean isPage = false;
 	public ProgressDialog pd;
     @Override
@@ -72,10 +75,12 @@ protected void loadPostFromPermalink() {
     
 	String username = settings.get(2).toString();
 	String password = settings.get(3).toString();
+	httpuser = settings.get(4).toString();
+	httppassword = settings.get(5).toString();
 	
 	String url = settings.get(0).toString();
 	
-	client = new XMLRPCClient(url);
+	client = new XMLRPCClient(url, httpuser, httppassword);
     
     Object[] vParams = {
     		postID,
@@ -102,10 +107,8 @@ protected void loadPostFromPermalink() {
 		}
 	}
 	
-	displayResults(permaLink, html, status);
-
-		
-	}
+	displayResults(permaLink, html, status);		
+  }
 
 private void displayResults(final String permaLink, final String html, final String status) {
 	Thread t = new Thread() 
@@ -196,14 +199,16 @@ private class WordPressWebViewClient extends WebViewClient {
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){ 
     	handler.proceed();
     }
-}
-
-@Override
-public void onConfigurationChanged(Configuration newConfig) {
+    @Override
+    public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+    	handler.proceed(httpuser, httppassword);
+    }
+  }
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
   //ignore orientation change
-  super.onConfigurationChanged(newConfig);
-}
-
+      super.onConfigurationChanged(newConfig); 
+  }
 }
 
 

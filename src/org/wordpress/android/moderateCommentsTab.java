@@ -254,13 +254,15 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 
 		for (int i=0;i < checkedComments.size(); i++)
 		{
 			if (checkedComments.get(i).toString().equals("true")){
 
-				client = new XMLRPCClient(sURL);
+				client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 				CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
@@ -394,13 +396,15 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 		
 		for (int i=0;i < checkedComments.size(); i++)
 		{
 			if (checkedComments.get(i).toString().equals("true")){
 
-				client = new XMLRPCClient(sURL);
+				client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 				CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
@@ -662,9 +666,11 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		sUsername = settings.get(2).toString();
 		sPassword = settings.get(3).toString();
-		sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		sBlogId = Integer.parseInt(settings.get(12).toString());
 
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		HashMap hPost = new HashMap();
 		hPost.put("status", "");
@@ -1426,9 +1432,11 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		HashMap contentHash, postHash = new HashMap();
 		contentHash = (HashMap) allComments.get(sSelCommentID);
@@ -1517,9 +1525,11 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		Object[] params = {
 				sBlogId,
@@ -1591,9 +1601,11 @@ public class moderateCommentsTab extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		HashMap<String, Object> replyHash = new HashMap<String, Object>();
 		replyHash.put("comment_parent", commentID);

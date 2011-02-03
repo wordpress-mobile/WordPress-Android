@@ -42,9 +42,11 @@ public class ApiHelper extends Activity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		hPost.put("status", "");

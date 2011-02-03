@@ -284,7 +284,7 @@ public class viewStats extends Activity {
 
 			sURL = sURL.replace("https://", "http://");
 
-			String blogID = settings.get(10).toString();
+			String blogID = settings.get(12).toString();
 			showProgressBar();
 			new statsUserDataTask().execute(sUsername, sPassword, sURL, blogID);
 		} else {

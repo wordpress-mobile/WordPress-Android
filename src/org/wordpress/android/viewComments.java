@@ -59,13 +59,15 @@ public class viewComments extends ListActivity {
     	}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
             
             HashMap<String, Object> hPost = new HashMap<String, Object>();
             hPost.put("status", "approve");
             hPost.put("post_id", postID);
             hPost.put("number", 10);
 
-        	client = new XMLRPCClient(sURL);
+        	client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
         	
         	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
 				public void callFinished(Object[] result) {

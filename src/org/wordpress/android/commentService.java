@@ -109,8 +109,10 @@ public class commentService extends Service {
     	}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
 		
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
     	
         HashMap<String, Object> hPost = new HashMap<String, Object>();
         hPost.put("status", "");

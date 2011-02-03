@@ -48,6 +48,8 @@ public class addAccount extends Activity {
 	public boolean success = false;
 	public String blogURL, xmlrpcURL;
 	public ProgressDialog pd;
+	private String httpuser = "";
+	private String httppassword = "";
 	private boolean wpcom = false;
 	private int blogCtr = 0;
 	public ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
@@ -77,7 +79,22 @@ public class addAccount extends Activity {
         	logo.setImageDrawable(getResources().getDrawable(R.drawable.wplogo));
         }
         
+        final Button settingsButton = (Button) findViewById(R.id.settingsButton);
+        if (!wpcom) {
+	        settingsButton.setOnClickListener(new Button.OnClickListener() {
+	            public void onClick(View v) {
+	            	Intent settings = new Intent(addAccount.this, addAcountSettings.class);
+	            	settings.putExtra("httpuser", httpuser);
+	            	settings.putExtra("httppassword", httppassword);
+	            	startActivityForResult(settings, R.id.settingsButton);
+	            }
+	        });
+        }
+        else {
+        	settingsButton.setVisibility(View.GONE);
+        }
         
+
         final Button cancelButton = (Button) findViewById(R.id.cancel);
         final Button saveButton = (Button) findViewById(R.id.save);
         
@@ -115,8 +132,7 @@ public class addAccount extends Activity {
             }
         });
         
-        Button signUp = (Button) findViewById(R.id.wordpressdotcom);
-        
+        Button signUp = (Button) findViewById(R.id.wordpressdotcom);     
         signUp.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
@@ -141,6 +157,7 @@ public class addAccount extends Activity {
         final String username = usernameET.getText().toString().trim();
         EditText passwordET = (EditText)findViewById(R.id.password);
         final String password = passwordET.getText().toString().trim();
+
         boolean invalidURL = false;
         try {
 			URI.create(blogURL);
@@ -209,7 +226,7 @@ public class addAccount extends Activity {
         }
         
         //verify settings
-        client = new XMLRPCClient(fBlogURL);
+        client = new XMLRPCClient(fBlogURL, httpuser, httppassword);
     	
     	XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 			@SuppressWarnings("unchecked")
@@ -335,7 +352,7 @@ public class addAccount extends Activity {
 		                          	for (int i=0; i<selectedItems.size();i++){
 		                          		if (selectedItems.get(selectedItems.keyAt(i)) == true){
 		                          			int rowID = selectedItems.keyAt(i);
-		                          			success = settingsDB.addAccount(addAccount.this, urls[rowID], blogNames[rowID], username, password, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
+		                          			success = settingsDB.addAccount(addAccount.this, urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
 		                          		}
 		                          	}
 		                          	Bundle bundle = new Bundle();
@@ -352,7 +369,7 @@ public class addAccount extends Activity {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                        	  WordPressDB settingsDB = new WordPressDB(addAccount.this);
 		                        	  for (int i=0;i<blogCtr;i++){
-		                        		  success = settingsDB.addAccount(addAccount.this, urls[i], blogNames[i], username, password, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+		                        		  success = settingsDB.addAccount(addAccount.this, urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 		                        	  }
 		                        	  Bundle bundle = new Bundle();
 						                bundle.putString("returnStatus", "SAVE");
@@ -391,7 +408,7 @@ public class addAccount extends Activity {
 				            
 				    	}
 				    	else {
-                  		  	success = settingsDB.addAccount(addAccount.this, urls[0], blogNames[0], username, password, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                  		  	success = settingsDB.addAccount(addAccount.this, urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
 						    Bundle bundle = new Bundle();
 			                bundle.putString("returnStatus", "SAVE");
 			                Intent mIntent = new Intent();
@@ -411,6 +428,20 @@ public class addAccount extends Activity {
         
         method.call(params);
         }	
+	}
+	
+	@Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    // See which child activity is calling us back.
+	    switch (requestCode) {
+	        case R.id.settingsButton:
+	            if (resultCode == RESULT_OK) {
+	            	Bundle extras = data.getExtras();
+	            	httpuser = extras.getString("httpuser");
+	            	httppassword = extras.getString("httppassword");
+	            }
+	        default:
+	            break;
+	    }
 	}
 
 	@Override public boolean onKeyDown(int i, KeyEvent event) {

@@ -228,9 +228,11 @@ public class viewPosts extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		XMLRPCMethod method = new XMLRPCMethod((isPage) ? "wp.getPageList"
 				: "blogger.getRecentPosts", new XMLRPCMethodCallback() {
@@ -1135,9 +1137,11 @@ public class viewPosts extends ListActivity {
 		}
 		String sUsername = settings.get(2).toString();
 		String sPassword = settings.get(3).toString();
-		int sBlogId = Integer.parseInt(settings.get(10).toString());
+		String sHttpuser = settings.get(4).toString();
+		String sHttppassword = settings.get(5).toString();
+		int sBlogId = Integer.parseInt(settings.get(12).toString());
 		String selPostID = String.valueOf(selectedID);
-		client = new XMLRPCClient(sURL);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 		Object[] postParams = { "", selPostID, sUsername, sPassword };
 		Object[] pageParams = { sBlogId, sUsername, sPassword, selPostID };
@@ -1314,9 +1318,11 @@ public class viewPosts extends ListActivity {
 			}
 			String sUsername = settingsVector.get(2).toString();
 			String sPassword = settingsVector.get(3).toString();
-			String sImagePlacement = settingsVector.get(4).toString();
+			String sHttpuser = settingsVector.get(4).toString();
+			String sHttppassword = settingsVector.get(5).toString();
+			String sImagePlacement = settingsVector.get(6).toString();
 
-			int sBlogId = Integer.parseInt(settingsVector.get(10).toString());
+			int sBlogId = Integer.parseInt(settingsVector.get(12).toString());
 
 			Map<String, Object> contentStruct = new HashMap<String, Object>();
 
@@ -1390,7 +1396,7 @@ public class viewPosts extends ListActivity {
 				}
 			}
 
-			client = new XMLRPCClient(sURL);
+			client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 			Object[] params = { sBlogId, sUsername, sPassword, contentStruct,
 					publishThis };
@@ -1605,8 +1611,8 @@ public class viewPosts extends ListActivity {
 		String sURL = null, sUsername = null, sPassword = null;
 		if (categoriesVector != null) {
 			sURL = categoriesVector.get(0).toString();
-			sUsername = categoriesVector.get(1).toString();
-			sPassword = categoriesVector.get(2).toString();
+			sUsername = categoriesVector.get(2).toString();
+			sPassword = categoriesVector.get(3).toString();
 		}
 
 		boolean validSettings = false;
@@ -1620,7 +1626,6 @@ public class viewPosts extends ListActivity {
 	}
 
 	public String uploadImages() {
-
 		String content = "";
 
 		// images variables
@@ -1639,9 +1644,11 @@ public class viewPosts extends ListActivity {
 		}
 		String sUsername = categoriesVector.get(2).toString();
 		String sPassword = categoriesVector.get(3).toString();
-		String sImagePlacement = categoriesVector.get(4).toString();
-		String sCenterThumbnailString = categoriesVector.get(5).toString();
-		String sFullSizeImageString = categoriesVector.get(6).toString();
+		String sHttpuser = categoriesVector.get(4).toString();
+		String sHttppassword = categoriesVector.get(5).toString();
+		String sImagePlacement = categoriesVector.get(6).toString();
+		String sCenterThumbnailString = categoriesVector.get(7).toString();
+		String sFullSizeImageString = categoriesVector.get(8).toString();
 		boolean sFullSizeImage = false;
 		if (sFullSizeImageString.equals("1")) {
 			sFullSizeImage = true;
@@ -1651,7 +1658,7 @@ public class viewPosts extends ListActivity {
 		if (sCenterThumbnailString.equals("1")) {
 			centerThumbnail = true;
 		}
-		String sMaxImageWidth = categoriesVector.get(7).toString();
+		String sMaxImageWidth = categoriesVector.get(9).toString();
 
 		//loop for multiple images
 
@@ -1666,7 +1673,7 @@ public class viewPosts extends ListActivity {
 			this.runOnUiThread(prompt);
 			// check for image, and upload it
 			if (imageUrl.get(it) != null) {
-				client = new XMLRPCClient(sURL);
+				client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
 				String curImagePath = "";
 
@@ -2092,11 +2099,13 @@ public class viewPosts extends ListActivity {
 	    
 		String username = settings.get(2).toString();
 		String password = settings.get(3).toString();
-		String blogID = settings.get(10).toString();
+		String httpuser = settings.get(4).toString();
+		String httppassword = settings.get(5).toString();
+		String blogID = settings.get(12).toString();
 		
 		String url = settings.get(0).toString();
 		
-		client = new XMLRPCClient(url);
+		client = new XMLRPCClient(url, httpuser, httppassword);
 	    
 	    Object versionResult = new Object();
 	    try {

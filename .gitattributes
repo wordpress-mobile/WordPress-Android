@@ -312,6 +312,7 @@ res/layout-hdpi-v4/new_account.xml -text
 res/layout-small-v4/new_account.xml -text
 res/layout-v4/row.xml -text
 res/layout/add_account.xml -text
+res/layout/add_account_settings.xml -text
 res/layout/add_category.xml -text
 res/layout/add_quickpress_shortcut.xml -text
 res/layout/blogs_row.xml -text
@@ -391,6 +392,7 @@ src/org/wordpress/android/UploadDialog.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
 src/org/wordpress/android/addAccount.java -text
+src/org/wordpress/android/addAcountSettings.java -text
 src/org/wordpress/android/addCategory.java -text
 src/org/wordpress/android/broadcastReceiver.java -text
 src/org/wordpress/android/commentService.java -text

@@ -283,7 +283,9 @@ public class selectCategories extends ListActivity {
 	        	}
         		String sUsername = categoriesVector.get(2).toString();
         		String sPassword = categoriesVector.get(3).toString();
-        	
+        		String sHttpuser = categoriesVector.get(4).toString();
+        		String sHttppassword = categoriesVector.get(5).toString();
+       	
 
         
         	Object result[] = null;
@@ -294,7 +296,7 @@ public class selectCategories extends ListActivity {
             		sPassword,
             };
         	
-            client = new XMLRPCClient(sURL);
+            client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
             
             boolean success = false;
             
@@ -350,8 +352,8 @@ public class selectCategories extends ListActivity {
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
 	    		sURL = categoriesVector.get(0).toString();
-	    		sUsername = categoriesVector.get(1).toString();
-	    		sPassword = categoriesVector.get(2).toString();
+	    		sUsername = categoriesVector.get(2).toString();
+	    		sPassword = categoriesVector.get(3).toString();
 	    	}
  
         boolean validSettings = false;
@@ -388,7 +390,9 @@ public class selectCategories extends ListActivity {
     	
 		String sUsername = settingsVector.get(2).toString();
 		String sPassword = settingsVector.get(3).toString();
-		int sBlogId = Integer.parseInt(settingsVector.get(10).toString());
+		String sHttpuser = settingsVector.get(4).toString();
+		String sHttppassword = settingsVector.get(5).toString();
+		int sBlogId = Integer.parseInt(settingsVector.get(12).toString());
     
 		//	Store the parameters for wp.addCategory
 	    Map<String, Object> struct = new HashMap<String, Object>();
@@ -397,7 +401,7 @@ public class selectCategories extends ListActivity {
 	    struct.put("description", category_desc);
 	    struct.put("parent_id", parent_id);
 
-	    client = new XMLRPCClient(sURL);
+	    client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 	    
 	    Object[] params = {
 	    		sBlogId,

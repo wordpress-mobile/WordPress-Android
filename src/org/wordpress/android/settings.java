@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 
 public class settings extends Activity {
@@ -48,12 +49,14 @@ public class settings extends Activity {
     		String savedUsername = categoriesVector.get(2).toString();
     		originalUsername = savedUsername;
     		String savedPassword = categoriesVector.get(3).toString();
-    		String imagePlacement = categoriesVector.get(4).toString();
-    		String sCenterThumbnailString = categoriesVector.get(5).toString();
-    		String sFullSizeImageString = categoriesVector.get(6).toString();
-    		String location = categoriesVector.get(11).toString();
+    		String savedHttpuser = categoriesVector.get(4).toString();
+    		String savedHttppassword = categoriesVector.get(5).toString();
+    		String imagePlacement = categoriesVector.get(6).toString();
+    		String sCenterThumbnailString = categoriesVector.get(7).toString();
+    		String sFullSizeImageString = categoriesVector.get(8).toString();
+    		String location = categoriesVector.get(13).toString();
     		
-    		String sWPCom = categoriesVector.get(12).toString();
+    		String sWPCom = categoriesVector.get(14).toString();
     		if (sWPCom.equals("1")){
     			isWPCom = true;
     		}
@@ -74,7 +77,7 @@ public class settings extends Activity {
     			sLocation = true;
     		}
     		
-    		String maxImageWidthId = categoriesVector.get(8).toString();
+    		String maxImageWidthId = categoriesVector.get(10).toString();
     		int maxImageWidthIdInt = Integer.parseInt(maxImageWidthId);
     		//int maxImageWidthId = Integer.parseInt(maxImageWidthIdString);
             
@@ -83,6 +86,25 @@ public class settings extends Activity {
             
             EditText passwordET = (EditText)findViewById(R.id.password);
             passwordET.setText(savedPassword);
+            
+            
+            
+            EditText httpUserET = (EditText)findViewById(R.id.httpuser);
+            httpUserET.setText(savedHttpuser);
+            
+            EditText httpPasswordET = (EditText)findViewById(R.id.httppassword);
+            httpPasswordET.setText(savedHttppassword);
+            if (isWPCom){
+            	TextView httpPasswordLabel = (TextView) findViewById(R.id.l_httppassword);
+            	TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
+            	
+            	httpPasswordLabel.setVisibility(View.GONE);
+            	httpPasswordET.setVisibility(View.GONE);
+            	
+            	httpUserLabel.setVisibility(View.GONE);
+            	httpUserET.setVisibility(View.GONE);
+            }
+            
             //radio buttons for image placement
 
             RadioButton aboveTextRB = (RadioButton)findViewById(R.id.aboveText);
@@ -129,6 +151,10 @@ public class settings extends Activity {
                 String username = usernameET.getText().toString();
                 EditText passwordET = (EditText)findViewById(R.id.password);
                 String password = passwordET.getText().toString();
+                EditText httpuserET = (EditText)findViewById(R.id.httpuser);
+                String httpuser = httpuserET.getText().toString();
+                EditText httppasswordET = (EditText)findViewById(R.id.httppassword);
+                String httppassword = httppasswordET.getText().toString();
                 
                 // trac #55
                 String buttonValue = ""; 
@@ -155,7 +181,7 @@ public class settings extends Activity {
 
                 WordPressDB settingsDB = new WordPressDB(settings.this);
 
-                settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, locationValue, isWPCom, originalUsername);
+                settingsDB.saveSettings(settings.this, id, xmlrpcPath, username, password, httpuser, httppassword, buttonValue, centerThumbnailValue, fullSizeImageValue, maxImageWidth, maxImageWidthIdInt, locationValue, isWPCom, originalUsername);
 
         		//exit settings screen
                 Bundle bundle = new Bundle();

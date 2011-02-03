@@ -50,19 +50,19 @@ public class XMLRPCClient {
 	 * XMLRPCClient constructor. Creates new instance based on server URI
 	 * @param XMLRPC server URI
 	 */
-	public XMLRPCClient(URI uri) {
+	public XMLRPCClient(URI uri, String httpuser, String httppasswd) {
 		postMethod = new HttpPost(uri);
 		postMethod.addHeader("Content-Type", "text/xml");
 		
 		postMethod.addHeader("charset", "UTF-8");
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/1.3.9");
+		postMethod.addHeader("User-Agent", "wp-android/1.4.0");
 		
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
 		
 		//username & password not needed
-		UsernamePasswordCredentials creds = new UsernamePasswordCredentials("", "");
+		UsernamePasswordCredentials creds = new UsernamePasswordCredentials(httpuser, httppasswd);
 		
 		//this gets connections working over https
 		if (uri.getScheme() != null){
@@ -102,21 +102,21 @@ public class XMLRPCClient {
 		
 		serializer = Xml.newSerializer();
 	}
-	
+
 	/**
 	 * Convenience constructor. Creates new instance based on server String address
 	 * @param XMLRPC server address
 	 */
-	public XMLRPCClient(String url) {
-		this(URI.create(url));
+	public XMLRPCClient(String url, String httpuser, String httppasswd) {
+		this(URI.create(url), httpuser, httppasswd);
 	}
 	
 	/**
 	 * Convenience XMLRPCClient constructor. Creates new instance based on server URL
 	 * @param XMLRPC server URL
 	 */
-	public XMLRPCClient(URL url) {
-		this(URI.create(url.toExternalForm()));
+	public XMLRPCClient(URL url, String httpuser, String httppasswd) {
+		this(URI.create(url.toExternalForm()), httpuser, httppasswd);
 	}
 
 	/**

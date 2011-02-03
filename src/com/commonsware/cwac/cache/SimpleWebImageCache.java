@@ -32,7 +32,7 @@ import com.commonsware.cwac.task.AsyncTaskEx;
 
 public class SimpleWebImageCache<B extends AbstractBus, M>
 	extends CacheBase<String, Drawable> {
-	private static final String TAG="SimpleWebImageCache";
+	//private static final String TAG="SimpleWebImageCache";
 	private B bus=null;
 	
 	static public File buildCachedImagePath(File cacheRoot, String url)

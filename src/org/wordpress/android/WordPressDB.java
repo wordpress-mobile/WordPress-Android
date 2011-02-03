@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 10;
 	
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -79,6 +79,10 @@ public class WordPressDB {
 	private static final String ADD_DOTCOM_FLAG = "alter table accounts add dotcomFlag boolean default false;";
 	private static final String ADD_WP_VERSION = "alter table accounts add wpVersion text;";
 	
+	//add httpuser and httppassword
+	private static final String ADD_HTTPUSER = "alter table accounts add httpuser text;";
+	private static final String ADD_HTTPPASSWORD = "alter table accounts add httppassword text;";
+	
 	//add new unique identifier to no longer use device imei
 	private static final String ADD_UNIQUE_ID = "alter table eula add uuid text;";
 	
@@ -128,6 +132,8 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
 			else if (db.getVersion() == 1){ //v1.0 or v1.0.1
@@ -152,6 +158,8 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
 			else if (db.getVersion()  == 2){
@@ -174,6 +182,8 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION); 
 			}
 			else if (db.getVersion() == 3){
@@ -193,6 +203,8 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION); 
 			}
 			else if (db.getVersion() == 4){
@@ -212,6 +224,8 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 5){
@@ -228,6 +242,8 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 6){
@@ -242,17 +258,28 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 7){
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 8){
 				db.execSQL(ADD_STATUS);
 				db.execSQL(ADD_PAGE_STATUS);
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
+				db.setVersion(DATABASE_VERSION);
+			}
+			else if (db.getVersion() == 9){
+				db.execSQL(ADD_HTTPUSER);
+				db.execSQL(ADD_HTTPPASSWORD);
 				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -263,13 +290,15 @@ public class WordPressDB {
 	}
 
 	
-	public boolean addAccount(Context ctx, String url, String blogName, String username, String password, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean runService, int blogId, boolean wpcom, String wpVersion) {
+	public boolean addAccount(Context ctx, String url, String blogName, String username, String password, String httpuser, String httppassword, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean runService, int blogId, boolean wpcom, String wpVersion) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("url", url);
 		values.put("blogName", blogName);
 		values.put("username", username);
 		values.put("password", password);
+		values.put("httpuser", httpuser);
+		values.put("httppassword", httppassword);
 		values.put("imagePlacement", imagePlacement);
 		values.put("centerThumbnail", centerThumbnail);
 		values.put("fullSizeImage", fullSizeImage);
@@ -359,12 +388,14 @@ public class WordPressDB {
         return sb.toString();
     }
 
-	public boolean saveSettings(Context ctx, String id, String url, String username, String password, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean location, boolean isWPCom, String originalUsername) {
+	public boolean saveSettings(Context ctx, String id, String url, String username, String password, String httpuser, String httppassword, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean location, boolean isWPCom, String originalUsername) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("url", url);
 		values.put("username", username);
 		values.put("password", password);
+		values.put("httpuser", httpuser);
+		values.put("httppassword", httppassword);
 		values.put("imagePlacement", imagePlacement);
 		values.put("centerThumbnail", centerThumbnail);
 		values.put("fullSizeImage", fullSizeImage);
@@ -419,7 +450,7 @@ public class WordPressDB {
 	public Vector<Object> loadSettings(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag"}, "id=" + id, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag"}, "id=" + id, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -431,15 +462,27 @@ public class WordPressDB {
 			returnVector.add(c.getString(1));
 			returnVector.add(c.getString(2));
 			returnVector.add(c.getString(3));
-			returnVector.add(c.getString(4));
-			returnVector.add(c.getInt(5));
+			if (c.getString(4) == null) {
+				returnVector.add("");
+			}
+			else {
+				returnVector.add(c.getString(4));	
+			}
+			if (c.getString(5) == null) {
+				returnVector.add("");
+			}
+			else {
+				returnVector.add(c.getString(5));	
+			}
 			returnVector.add(c.getString(6));
-			returnVector.add(c.getString(7));
-			returnVector.add(c.getInt(8));
-			returnVector.add(c.getInt(9));
+			returnVector.add(c.getInt(7));
+			returnVector.add(c.getString(8));
+			returnVector.add(c.getString(9));
 			returnVector.add(c.getInt(10));
 			returnVector.add(c.getInt(11));
 			returnVector.add(c.getInt(12));
+			returnVector.add(c.getInt(13));
+			returnVector.add(c.getInt(14));
 			}
 			else
 			{

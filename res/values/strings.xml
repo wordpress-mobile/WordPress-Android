@@ -324,4 +324,10 @@
   <!-- QuickPress -->
   <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
   <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
+  
+  <!-- HTTP Authentication -->
+  <string name="httpuser">HTTP Username (optional):</string> 
+  <string name="httppassword">HTTP Password (optional):</string> 
+  <string name="settings">Settings</string>
+  <string name="optional_settings">Optional Settings</string>
 </resources>

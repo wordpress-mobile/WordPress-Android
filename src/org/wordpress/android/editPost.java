@@ -67,6 +67,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageView;
@@ -307,7 +308,7 @@ public class editPost extends Activity implements LocationListener{
 		    	WordPressDB settingsDB = new WordPressDB(this);
 	        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
 	        	
-	    		String sLocation = settingsVector.get(11).toString();
+	    		String sLocation = settingsVector.get(13).toString();
 	    		
 	    		location = false;
 	    		if (sLocation.equals("1")){
@@ -378,7 +379,7 @@ public class editPost extends Activity implements LocationListener{
 	        	WordPressDB settingsDB = new WordPressDB(this);
 	        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
 	        	
-	    		String sLocation = settingsVector.get(11).toString();
+	    		String sLocation = settingsVector.get(13).toString();
 	    		if (!isPage){
 		    		location = false;
 		    		if (sLocation.equals("1")){
@@ -407,8 +408,10 @@ public class editPost extends Activity implements LocationListener{
     	
 		String sUsername = categoriesVector.get(2).toString();
 		String sPassword = categoriesVector.get(3).toString();
-        
-    	client = new XMLRPCClient(sURL);
+		String sHttpuser = categoriesVector.get(4).toString();
+		String sHttppassword = categoriesVector.get(5).toString();
+		
+    	client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
     	
     	EditText titleET = (EditText)findViewById(R.id.title);
     	String setTitle = titleET.getText().toString();
@@ -553,10 +556,10 @@ public class editPost extends Activity implements LocationListener{
         postButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             
-            if(localDraft || isNew){
+            if(localDraft || isNew) {
             	boolean result = savePost();
             	
-            	if (result){
+            	if (result) {
             		Bundle bundle = new Bundle();                   
                     bundle.putString("returnStatus", "OK");
                     Intent mIntent = new Intent();
@@ -1210,8 +1213,10 @@ public class editPost extends Activity implements LocationListener{
 	    	}
     		String sUsername = categoriesVector.get(2).toString();
     		String sPassword = categoriesVector.get(3).toString();
-    		String sImagePlacement = categoriesVector.get(4).toString();
-    		String sCenterThumbnailString = categoriesVector.get(5).toString();
+    		String sHttpuser = categoriesVector.get(4).toString();
+    		String sHttppassword = categoriesVector.get(5).toString();
+    		String sImagePlacement = categoriesVector.get(6).toString();
+    		String sCenterThumbnailString = categoriesVector.get(7).toString();
 
     		if (sCenterThumbnailString.equals("1")){
     			centerThumbnail = true;
@@ -1273,7 +1278,7 @@ public class editPost extends Activity implements LocationListener{
         }
         }
       
-        client = new XMLRPCClient(sURL);
+        client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
         
         Object[] params = {
         		postID,
@@ -1374,9 +1379,11 @@ public class editPost extends Activity implements LocationListener{
 	    	}
 			String sUsername = categoriesVector.get(2).toString();
 			String sPassword = categoriesVector.get(3).toString();
-			String sImagePlacement = categoriesVector.get(4).toString();
-			String sCenterThumbnailString = categoriesVector.get(5).toString();
-			String sFullSizeImageString = categoriesVector.get(6).toString();
+			String sHttpuser = categoriesVector.get(4).toString();
+			String sHttppassword = categoriesVector.get(5).toString();
+			String sImagePlacement = categoriesVector.get(6).toString();
+			String sCenterThumbnailString = categoriesVector.get(7).toString();
+			String sFullSizeImageString = categoriesVector.get(8).toString();
 			boolean sFullSizeImage  = false;
 			if (sFullSizeImageString.equals("1")){
 				sFullSizeImage = true;
@@ -1386,7 +1393,7 @@ public class editPost extends Activity implements LocationListener{
 			if (sCenterThumbnailString.equals("1")){
 				centerThumbnail = true;
 			}
-			String sMaxImageWidth = categoriesVector.get(7).toString();
+			String sMaxImageWidth = categoriesVector.get(9).toString();
 			
 	    //new loop for multiple images
 	    
@@ -1404,7 +1411,7 @@ public class editPost extends Activity implements LocationListener{
 	    //check for image, and upload it
 	    if (imageUrl.get(it) != null)
 	    {
-	       client = new XMLRPCClient(sURL);
+	       client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 	 	   
 	 	   String curImagePath = "";
 	 	   
@@ -1688,8 +1695,8 @@ public class editPost extends Activity implements LocationListener{
 	    	String sURL = null, sUsername = null, sPassword = null;
 	    	if (categoriesVector != null){
 	    		sURL = categoriesVector.get(0).toString();
-	    		sUsername = categoriesVector.get(1).toString();
-	    		sPassword = categoriesVector.get(2).toString();
+	    		sUsername = categoriesVector.get(2).toString();
+	    		sPassword = categoriesVector.get(3).toString();
 	    	}
  
         boolean validSettings = false;
@@ -2368,7 +2375,7 @@ public class editPost extends Activity implements LocationListener{
         	WordPressDB settingsDB = new WordPressDB(this);
         	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
         	
-    		String sLocation = settingsVector.get(11).toString();
+    		String sLocation = settingsVector.get(13).toString();
     		
     		boolean location = false;
     		if (sLocation.equals("1")){
@@ -2774,7 +2781,7 @@ protected void lbsCheck() {
 	WordPressDB settingsDB = new WordPressDB(editPost.this);
 	Vector<?> settingsVector = settingsDB.loadSettings(editPost.this, id);   	
 
-	String sLocation = settingsVector.get(11).toString();
+	String sLocation = settingsVector.get(13).toString();
 
 	if (sLocation.equals("1")){
 		location = true;
