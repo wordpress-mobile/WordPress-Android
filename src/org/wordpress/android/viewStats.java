@@ -197,6 +197,9 @@ public class viewStats extends Activity {
 
 			}
 		});
+		
+		Spinner reportInterval = (Spinner) findViewById(R.id.reportInterval);
+		reportInterval.setSelection(1);
 
 	}
 
@@ -205,18 +208,21 @@ public class viewStats extends Activity {
 		switch (position) {
 
 		case 0:
-			interval = 7;
+			interval = 1;
 			break;
 		case 1:
-			interval = 30;
+			interval = 7;
 			break;
 		case 2:
-			interval = 90;
+			interval = 30;
 			break;
 		case 3:
-			interval = 365;
+			interval = 90;
 			break;
 		case 4:
+			interval = 365;
+			break;
+		case 5:
 			interval = -1;
 			break;
 		}
@@ -417,6 +423,7 @@ public class viewStats extends Activity {
 				// only continue if we received data from the api
 
 				// ui thread
+				final int intervalT = interval;
 				Thread uiThread = new Thread() {
 					public void run() {
 
@@ -428,7 +435,11 @@ public class viewStats extends Activity {
 						ImageView iv = (ImageView) findViewById(R.id.chart);
 
 						if (reportType.equals("views")) {
-							iv.setVisibility(View.VISIBLE);
+							if (intervalT != 1) {
+								iv.setVisibility(View.VISIBLE);
+							} else {
+								iv.setVisibility(View.GONE);
+							}
 							reportTitle.setText(getResources().getText(
 									R.string.report_views));
 							String dataValues = "", dateStrings = "";

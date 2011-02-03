@@ -288,6 +288,7 @@
   <string name="report_searchterms">Search Terms</string>
   <string name="report_clicks">Clicks</string>
   <string name="report_videoplays">Video Plays</string>
+  <string name="today">Today</string>
   <string name="seven_days">7 Days</string>
   <string name="thirty_days">30 Days</string>
   <string name="quarter">Quarter</string>
