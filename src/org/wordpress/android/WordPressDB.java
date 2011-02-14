@@ -4,12 +4,18 @@ import java.text.StringCharacterIterator;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Base64;
 
 public class WordPressDB {
 
@@ -34,6 +40,9 @@ public class WordPressDB {
 	
 	private static final String ADD_STATUS = "alter table localdrafts add status text";
 	private static final String ADD_PAGE_STATUS = "alter table localpagedrafts add status text";
+	
+	private static final String ADD_LOCALDRAFT_DATE = "alter table localdrafts add date integer;";
+	private static final String ADD_LOCALPAGEDRAFT_DATE = "alter table localpagedrafts add date integer;";
 	
 	//postStore
 	private static final String CREATE_TABLE_POSTSTORE = "create table if not exists poststore (blogID text, postID text, title text, postDate text, postDateFormatted text);";
@@ -90,7 +99,15 @@ public class WordPressDB {
 	private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
 	private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
 	
+	//add password column to poststore, localdrafts, pages and localpagedrafts
+	private static final String ADD_PASSWORD_TO_POSTSTORE = "alter table poststore add password text;";
+	private static final String ADD_PASSWORD_TO_LOCALDRAFTS = "alter table localdrafts add password text;";
+	private static final String ADD_PASSWORD_TO_PAGES = "alter table pages add password text;";
+	private static final String ADD_PASSWORD_TO_LOCALPAGEDRAFTS = "alter table localpagedrafts add password text;";
+	
 	private SQLiteDatabase db;
+	
+	protected static final String PASSWORD_SECRET = "makemetopsecretforrelease!";
 
 	public WordPressDB(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
@@ -134,6 +151,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
 			else if (db.getVersion() == 1){ //v1.0 or v1.0.1
@@ -160,6 +184,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
 			else if (db.getVersion()  == 2){
@@ -184,6 +215,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); 
 			}
 			else if (db.getVersion() == 3){
@@ -205,6 +243,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); 
 			}
 			else if (db.getVersion() == 4){
@@ -226,6 +271,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 5){
@@ -244,6 +296,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 6){
@@ -260,6 +319,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 7){
@@ -268,6 +334,13 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 8){
@@ -275,11 +348,25 @@ public class WordPressDB {
 				db.execSQL(ADD_PAGE_STATUS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 9){
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+				db.execSQL(ADD_PASSWORD_TO_POSTSTORE);
+				db.execSQL(ADD_PASSWORD_TO_LOCALDRAFTS);
+				db.execSQL(ADD_PASSWORD_TO_PAGES);
+				db.execSQL(ADD_PASSWORD_TO_LOCALPAGEDRAFTS);
+				db.execSQL(ADD_LOCALDRAFT_DATE);
+				db.execSQL(ADD_LOCALPAGEDRAFT_DATE);
+				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -296,9 +383,9 @@ public class WordPressDB {
 		values.put("url", url);
 		values.put("blogName", blogName);
 		values.put("username", username);
-		values.put("password", password);
+		values.put("password", encryptPassword(password));
 		values.put("httpuser", httpuser);
-		values.put("httppassword", httppassword);
+		values.put("httppassword", encryptPassword(httppassword));
 		values.put("imagePlacement", imagePlacement);
 		values.put("centerThumbnail", centerThumbnail);
 		values.put("fullSizeImage", fullSizeImage);
@@ -393,9 +480,9 @@ public class WordPressDB {
 		ContentValues values = new ContentValues();
 		values.put("url", url);
 		values.put("username", username);
-		values.put("password", password);
+		values.put("password", encryptPassword(password));
 		values.put("httpuser", httpuser);
-		values.put("httppassword", httppassword);
+		values.put("httppassword", encryptPassword(httppassword));
 		values.put("imagePlacement", imagePlacement);
 		values.put("centerThumbnail", centerThumbnail);
 		values.put("fullSizeImage", fullSizeImage);
@@ -407,7 +494,7 @@ public class WordPressDB {
 			//update the login for other wordpress.com accounts
 			ContentValues userPass = new ContentValues();
 			userPass.put("username", username);
-			userPass.put("password", password);
+			userPass.put("password", encryptPassword(password));
 			returnValue = db.update(SETTINGS_TABLE, userPass, "username=\"" + originalUsername + "\" AND dotcomFlag=1" , null) > 0;
 		}
 		db.close();
@@ -461,7 +548,7 @@ public class WordPressDB {
 			returnVector.add(c.getString(0));
 			returnVector.add(c.getString(1));
 			returnVector.add(c.getString(2));
-			returnVector.add(c.getString(3));
+			returnVector.add(decryptPassword(c.getString(3)));
 			if (c.getString(4) == null) {
 				returnVector.add("");
 			}
@@ -472,7 +559,7 @@ public class WordPressDB {
 				returnVector.add("");
 			}
 			else {
-				returnVector.add(c.getString(5));	
+				returnVector.add(decryptPassword(c.getString(5)));	
 			}
 			returnVector.add(c.getString(6));
 			returnVector.add(c.getInt(7));
@@ -505,7 +592,7 @@ public class WordPressDB {
 		Vector<String> returnVector = new Vector<String>();
 		if (c.getString(0) != null){
 		returnVector.add(c.getString(0));
-		returnVector.add(c.getString(1));
+		returnVector.add(decryptPassword(c.getString(1)));
 		}
 		else
 		{
@@ -521,7 +608,7 @@ public class WordPressDB {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("dotcom_username", statsUsername);
-		values.put("dotcom_password", statsPassword);
+		values.put("dotcom_password", encryptPassword(statsPassword));
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
 		db.close();
 		
@@ -715,7 +802,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	}
 	
 	//localDrafts
-	public boolean saveLocalDraft(Context ctx, String blogID, String title, String content, String picturePaths, String tags, String categories, String status, Double latitude, Double longitude) {
+	public boolean saveLocalDraft(Context ctx, String blogID, String title, String content, String picturePaths, String tags, String categories, String status, Double latitude, Double longitude, String password, long pubDate) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -729,13 +816,15 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("status", status);
 			values.put("latitude", latitude);
 			values.put("longitude", longitude);
+			values.put("password", password);
+			values.put("date", pubDate);
 			returnValue = db.insert(LOCALDRAFTS_TABLE, null, values) > 0;
 
 		db.close();
 		return (returnValue);
 	}
 	
-	public boolean updateLocalDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String tags, String categories, String status, Double latitude, Double longitude) {
+	public boolean updateLocalDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String tags, String categories, String status, Double latitude, Double longitude, String password, long pubDate) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -749,6 +838,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("status", status);
 			values.put("latitude", latitude);
 			values.put("longitude", longitude);
+			values.put("password", password);
 			returnValue = db.update(LOCALDRAFTS_TABLE, values, "id=" + postID, null) > 0;
 
 		db.close();
@@ -786,7 +876,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector<HashMap<String, Object>> loadPost(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "status", "latitude", "longitude"}, "id=" + postID, null, null, null, null);
+		Cursor c = db.query(LOCALDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "tags", "categories", "status", "latitude", "longitude", "password", "date"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -802,6 +892,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		returnHash.put("status", c.getString(5));
 		returnHash.put("latitude", c.getDouble(6));
 		returnHash.put("longitude", c.getDouble(7));
+		returnHash.put("password", c.getString(8));
+		returnHash.put("pubDate", c.getLong(9));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();
@@ -832,7 +924,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return returnValue;
 	}
 	
-	public boolean saveLocalPageDraft(Context ctx, String blogID, String title, String content, String picturePaths, String status) {
+	public boolean saveLocalPageDraft(Context ctx, String blogID, String title, String content, String picturePaths, String status, String password, long pubDate) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -842,13 +934,15 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("content", content);
 			values.put("picturePaths", picturePaths);
 			values.put("status", status);
+			values.put("password", password);
+			values.put("date", pubDate);
 			returnValue = db.insert(LOCALPAGEDRAFTS_TABLE, null, values) > 0;
 
 		db.close();
 		return (returnValue);
 	}
 	
-	public boolean updateLocalPageDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String status) {
+	public boolean updateLocalPageDraft(Context ctx, String blogID, String postID, String title, String content, String picturePaths, String status, String password, long pubDate) {
 		boolean returnValue = false;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
@@ -858,6 +952,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("content", content);
 			values.put("picturePaths", picturePaths);
 			values.put("status", status);
+			values.put("password", password);
+			values.put("date", pubDate);
 			returnValue = db.update(LOCALPAGEDRAFTS_TABLE, values, "id=" + postID, null) > 0;
 
 		db.close();
@@ -895,7 +991,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	public Vector<HashMap<String, Object>> loadPageDraft(Context ctx, String postID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "status"}, "id=" + postID, null, null, null, null);
+		Cursor c = db.query(LOCALPAGEDRAFTS_TABLE, new String[] { "title", "content", "picturePaths", "status", "password", "date"}, "id=" + postID, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -907,6 +1003,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		returnHash.put("content", c.getString(1));
 		returnHash.put("picturePaths", c.getString(2));
 		returnHash.put("status", c.getString(3));
+		returnHash.put("password", c.getString(4));
+		returnHash.put("date", c.getString(5));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();
@@ -1409,6 +1507,66 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 	    db.close();
 		
 		return (returnValue);
+	}
+	
+	protected String encryptPassword(String clearText) {
+		try {
+			DESKeySpec keySpec = new DESKeySpec(PASSWORD_SECRET.getBytes("UTF-8"));
+			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			
+			Cipher cipher = Cipher.getInstance("DES");
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			String encrypedPwd = Base64.encodeToString(cipher.doFinal(clearText.getBytes("UTF-8")), Base64.DEFAULT);
+			return encrypedPwd;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return clearText;
+	}
+	
+	protected String decryptPassword(String encryptedPwd) {
+		try {
+			DESKeySpec keySpec = new DESKeySpec(PASSWORD_SECRET.getBytes("UTF-8"));
+			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+			SecretKey key = keyFactory.generateSecret(keySpec);
+			
+			byte[] encryptedWithoutB64 = Base64.decode(encryptedPwd, Base64.DEFAULT);
+			Cipher cipher = Cipher.getInstance("DES");
+			cipher.init(Cipher.DECRYPT_MODE, key);
+			byte[] plainTextPwdBytes = cipher.doFinal(encryptedWithoutB64);
+			return new String(plainTextPwdBytes);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return encryptedPwd;
+	}
+	
+	private void migratePasswords(Context ctx) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "password", "httppassword", "dotcom_password"}, null, null, null, null, null);
+		int numRows = c.getCount();
+		c.moveToFirst();
+
+		for (int i = 0; i < numRows; i++) {
+			ContentValues values = new ContentValues();
+			
+			if(c.getString(1) != null){
+				values.put("password", encryptPassword(c.getString(1)));
+			}
+			if(c.getString(2) != null){
+				values.put("httppassword", encryptPassword(c.getString(2)));
+			}
+			if(c.getString(3) != null){
+				values.put("dotcom_password", encryptPassword(c.getString(3)));
+			}
+			
+			db.update(SETTINGS_TABLE, values, "id=" + c.getInt(0), null);
+			
+			c.moveToNext();
+		}
+		c.close();
 	}
 
 }

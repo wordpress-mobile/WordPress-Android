@@ -15,14 +15,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Map.Entry;
 
 import org.wordpress.android.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
-
-import android.util.Log;
 
 class XMLRPCSerializer {
 	static final String TAG_NAME = "name";
@@ -44,7 +43,7 @@ class XMLRPCSerializer {
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
 
 	@SuppressWarnings("unchecked")
-	static void serialize(XmlSerializer serializer, Object object ) throws IOException {
+	static void serialize(XmlSerializer serializer, Object object, boolean convertToGMT ) throws IOException {
 		// check for scalar types:
 		if (object instanceof Integer || object instanceof Short || object instanceof Byte) {
 			serializer.startTag(null, TYPE_I4).text(object.toString()).endTag(null, TYPE_I4);
@@ -64,12 +63,20 @@ class XMLRPCSerializer {
 			serializer.startTag(null, TYPE_STRING).text(object.toString()).endTag(null, TYPE_STRING);
 		} else
 		if (object instanceof Date || object instanceof Calendar) {
-			String dateStr = dateFormat.format(object);
-			serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(dateStr).endTag(null, TYPE_DATE_TIME_ISO8601);
+			Date date = (Date) object;
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+    		if (convertToGMT){
+    			long pubDate = date.getTime();
+    			TimeZone tz = TimeZone.getDefault();
+    			long offset = tz.getOffset(pubDate);
+    			pubDate += offset * -1;
+    			date = new Date(pubDate);
+    		}
+    		String sDate = dateFormat.format(date);
+			serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
 		} else
 		if (object instanceof byte[] ){
 			String value = new String(Base64Coder.encode((byte[])object));
-			//String value = "/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAACgAA/+4ADkFkb2JlAGTAAAAAAf/bAIQAFBAQGRIZJxcXJzImHyYyLiYmJiYuPjU1NTU1PkRBQUFBQUFERERERERERERERERERERERERERERERERERERERAEVGRkgHCAmGBgmNiYgJjZENisrNkREREI1QkRERERERERERERERERERERERERERERERERERERERERERERERERE/8AAEQgAAgACAwEiAAIRAQMRAf/EAEsAAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAEEAEAAAAAAAAAAAAAAAAAAAAAEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCAADP/2Q==";
 			serializer.startTag(null, TYPE_BASE64).text(value).endTag(null, TYPE_BASE64);
 		} 
 		else if( object instanceof MediaFile ) {
@@ -81,14 +88,14 @@ class XMLRPCSerializer {
 			int length = -1;
 			String chunk = null;
 			//int ctr = 0;
-			Log.i("WordPress", "converting media file to base64");
+			//Log.i("WordPress", "converting media file to base64");
 			while ((length = inStream.read(buffer)) > 0) {
 				chunk = Base64.encodeBytes(buffer, 0, length);
 				serializer.text(chunk);
 				//ctr+=3600;
 				//Log.i("WordPress", "chunk " + ctr);
 			}
-			Log.i("WordPress", "conversion done!");
+			//Log.i("WordPress", "conversion done!");
 			inStream.close();
 			serializer.endTag(null, "base64");
 		}else
@@ -99,7 +106,7 @@ class XMLRPCSerializer {
 			while (iter.hasNext()) {
 				Object o = iter.next();
 				serializer.startTag(null, TAG_VALUE);
-				serialize(serializer, o);
+				serialize(serializer, o, convertToGMT);
 				serializer.endTag(null, TAG_VALUE);
 			}
 			serializer.endTag(null, TAG_DATA).endTag(null, TYPE_ARRAY);
@@ -110,7 +117,7 @@ class XMLRPCSerializer {
 			for (int i=0; i<objects.length; i++) {
 				Object o = objects[i];
 				serializer.startTag(null, TAG_VALUE);
-				serialize(serializer, o);
+				serialize(serializer, o, convertToGMT);
 				serializer.endTag(null, TAG_VALUE);
 			}
 			serializer.endTag(null, TAG_DATA).endTag(null, TYPE_ARRAY);
@@ -127,7 +134,7 @@ class XMLRPCSerializer {
 				serializer.startTag(null, TAG_MEMBER);
 				serializer.startTag(null, TAG_NAME).text(key).endTag(null, TAG_NAME);
 				serializer.startTag(null, TAG_VALUE);
-				serialize(serializer, value);
+				serialize(serializer, value, convertToGMT);
 				serializer.endTag(null, TAG_VALUE);
 				serializer.endTag(null, TAG_MEMBER);
 			}

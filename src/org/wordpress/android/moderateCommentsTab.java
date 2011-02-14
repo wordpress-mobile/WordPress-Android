@@ -896,8 +896,12 @@ public class moderateCommentsTab extends ListActivity {
 			else {
 				wrapper=(CommentEntryWrapper)row.getTag();
 			}
-			row.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
-			wrapper.populateFrom(getItem(position), position);
+			CommentEntry commentEntry = getItem(position);
+			if("hold".equals(commentEntry.status))
+				row.setBackgroundDrawable(getResources().getDrawable(R.drawable.comment_pending_bg_selector));
+			else
+				row.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_bg_selector));
+			wrapper.populateFrom(commentEntry, position);
 
 			return(row);
 		}

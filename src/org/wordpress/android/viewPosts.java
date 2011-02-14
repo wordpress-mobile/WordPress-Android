@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1238,7 +1239,9 @@ public class viewPosts extends ListActivity {
 		String title = postHashMap.get("title").toString();
 		String content = StringHelper.convertHTMLTagsForUpload(postHashMap.get(
 				"content").toString());
-
+		String password = null;
+		if(postHashMap.get("password") != null)
+			password = postHashMap.get("password").toString();
 		String picturePaths = postHashMap.get("picturePaths").toString();
 
 		if (!picturePaths.equals("")) {
@@ -1358,6 +1361,11 @@ public class viewPosts extends ListActivity {
 
 			contentStruct.put("post_type", (isPage) ? "page" : "post");
 			contentStruct.put("title", title);
+			long pubDate = Long.parseLong(postHashMap.get("pubDate").toString());
+	    	if (pubDate != 0){
+	    		Date date = new Date(pubDate);
+	    		contentStruct.put("date_created_gmt", date);
+	    	}
 			// for trac #53, add <p> and <br /> tags
 			content = content.replace("/\n\n/g", "</p><p>");
 			content = content.replace("/\n/g", "<br />");
@@ -1395,9 +1403,11 @@ public class viewPosts extends ListActivity {
 					contentStruct.put("custom_fields", geo);
 				}
 			}
-
+			
 			client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
-
+			if(password != null && !"".equals(password)){
+				contentStruct.put("wp_password", password);
+			}
 			Object[] params = { sBlogId, sUsername, sPassword, contentStruct,
 					publishThis };
 

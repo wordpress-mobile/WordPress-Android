@@ -251,6 +251,8 @@ res/drawable/btn_check_on_selected.png -text
 res/drawable/btn_dropdown_normal.9.png -text
 res/drawable/btn_dropdown_pressed.9.png -text
 res/drawable/btn_dropdown_selected.9.png -text
+res/drawable/comment_pending_bg_selector.xml -text
+res/drawable/comment_pending_gradient.xml -text
 res/drawable/comments_tab.png -text
 res/drawable/comments_tab_active.png -text
 res/drawable/content_bg.9.png -text

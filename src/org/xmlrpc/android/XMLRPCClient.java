@@ -326,7 +326,7 @@ public class XMLRPCClient {
 					serializer.startTag(null, TAG_PARAMS);
 					for (int i=0; i<params.length; i++) {
 						serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-						XMLRPCSerializer.serialize(serializer, params[i]);
+						XMLRPCSerializer.serialize(serializer, params[i], false);
 						serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
 					}
 					serializer.endTag(null, TAG_PARAMS);
@@ -356,7 +356,13 @@ public class XMLRPCClient {
 					serializer.startTag(null, TAG_PARAMS);
 					for (int i=0; i<params.length; i++) {
 						serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-						XMLRPCSerializer.serialize(serializer, params[i]);
+						if (method.equals("metaWeblog.editPost") || method.equals("metaWeblog.newPost")) {
+							XMLRPCSerializer.serialize(serializer, params[i], true);
+						}
+						else {
+							XMLRPCSerializer.serialize(serializer, params[i], false);
+
+						}
 						serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
 					}
 					serializer.endTag(null, TAG_PARAMS);

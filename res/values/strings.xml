@@ -90,6 +90,7 @@
   <string name="uploading_content">Uploading Content</string>
   <string name="load_more">Load More</string>
   <string name="load_settings">Load settings now?</string>
+  <string name="immediately">Immediately</string>
   
   <!--  tab titles -->
   <string name="tab_comments">Comments</string>
@@ -131,6 +132,7 @@
   <string name="permalink_not_found">The permalink was not found.</string>
   <string name="basic_html">Showing basic HTML preview until post status is set to published.</string>
   <string name="vp_upgrade">The video was not uploaded due to invalid file type.  You can upload videos to your blog using the VideoPress upgrade. Would you like to learn more about VideoPress?</string>
+  <string name="post_password">Password (optional)</string>
   
   <!--  page view -->
   <string name="page_id">Page ID #</string>

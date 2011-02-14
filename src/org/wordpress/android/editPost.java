@@ -9,11 +9,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
@@ -23,8 +28,10 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +45,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -67,13 +75,14 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -94,27 +103,27 @@ public class editPost extends Activity implements LocationListener{
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "";
+	public String categoryErrorMsg = "", id = "", accountName = "", postID = "", SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
 	private XMLRPCClient client;
-	public String id = "";
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
-    private String accountName = "";
-    private String postID = "";
-    private boolean localDraft = false;
-    private int ID_DIALOG_POSTING = 1;
-    public int ID_DIALOG_LOADING = 2;
+    private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
-    public Boolean centerThumbnail, xmlrpcError = false, isPage = false, isNew = false, isAction = false, isUrl = false;
-    public String SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
+    public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false, isPage = false, isNew = false, 
+    isAction = false, isUrl = false, location = false, locationActive = false, isLargeScreen = false, isCustomPubDate = false;
     public Vector<Object> imgThumbs = new Vector<Object>();
     LocationManager lm;
     Criteria criteria;
     String provider;
     Location curLocation;
     ProgressDialog postingDialog;
-    public boolean location = false, locationActive = false, isLargeScreen = false;
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
+    //date holders
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private int mHour;
+    private int mMinute;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);	
@@ -143,7 +152,6 @@ public class editPost extends Activity implements LocationListener{
         if (isPage){  
         	setContentView(R.layout.edit_page);
         	items = new String[] {getResources().getString(R.string.draft), getResources().getString(R.string.post_private), getResources().getString(R.string.publish_post)};
-
         }
         else{
         	setContentView(R.layout.edit);
@@ -245,9 +253,27 @@ public class editPost extends Activity implements LocationListener{
         	
         	EditText titleET = (EditText)findViewById(R.id.title);
         	EditText contentET = (EditText)findViewById(R.id.content);
+        	EditText passwordET = (EditText)findViewById(R.id.post_password);
         	
         	titleET.setText(postHashMap.get("title").toString());
         	contentET.setText(Html.fromHtml(postHashMap.get("content").toString()));
+        	
+        	long pubDate = Long.parseLong(postHashMap.get("pubDate").toString());
+        	if (pubDate != 0){
+        		try {
+					Date date = new Date(pubDate);
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a"); 
+					String sPubDate = sdf.format(date);
+					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+					tvPubDate.setText(sPubDate);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        	
+        	if(postHashMap.get("password") != null)
+        		passwordET.setText(postHashMap.get("password").toString());
 	        
         	if (postHashMap.get("status") != null){
 	        	String status = postHashMap.get("status").toString();
@@ -443,6 +469,31 @@ public class editPost extends Activity implements LocationListener{
 			        }
 			        
 			        contentET.setText(content);
+			        
+			        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			        Calendar cal = Calendar.getInstance();
+			        TimeZone tz = cal.getTimeZone();
+			        String shortDisplayName = "";
+			        shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
+			        
+			     // make the date pretty
+					String cDate = contentHash.get("dateCreated").toString().replace(tz.getID(),
+							shortDisplayName);
+					try {
+						Date d = sdf.parse(cDate);
+						SimpleDateFormat sdfOut = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
+						TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+						tvPubDate.setText(sdfOut.format(d));
+					} catch (ParseException pe) {
+						pe.printStackTrace();
+					} catch (java.text.ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			        
+			        EditText passwordET = (EditText)findViewById(R.id.post_password);
+			        if(contentHash.get("wp_password") != null)
+			        	passwordET.setText(contentHash.get("wp_password").toString());
 			        
 			        Toast.makeText(editPost.this, getResources().getText(R.string.html), Toast.LENGTH_SHORT).show();
 			        
@@ -871,7 +922,22 @@ public class editPost extends Activity implements LocationListener{
                 }
         });            
           
-            
+			Button pubDate = (Button) findViewById(R.id.pubDateButton);
+	        pubDate.setOnClickListener(new TextView.OnClickListener() {
+	            public void onClick(View v) {
+	            	
+	            	// get the current date
+	                Calendar c = Calendar.getInstance();
+	                mYear = c.get(Calendar.YEAR);
+	                mMonth = c.get(Calendar.MONTH);
+	                mDay = c.get(Calendar.DAY_OF_MONTH);
+	                mHour = c.get(Calendar.HOUR_OF_DAY);
+	                mMinute = c.get(Calendar.MINUTE);
+	            	
+	            	showDialog(ID_DIALOG_DATE);
+	            	         	
+	            }
+	    });   
             
 }
     
@@ -1261,10 +1327,35 @@ public class editPost extends Activity implements LocationListener{
         	}
         }
         
+        EditText passwordET = (EditText)findViewById(R.id.post_password);
+        String wpPassword = passwordET.getText().toString();
+        
         contentStruct.put("post_type", "post");
         contentStruct.put("title", title);
         contentStruct.put("description", content);
         contentStruct.put("post_status", status);
+        
+        TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+        String pubDate = tvPubDate.getText().toString();
+
+        if (!pubDate.equals(getResources().getText(R.string.immediately))){
+        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm");
+        	Date d = new Date();
+        	try {
+				d = sdf.parse(pubDate);
+				contentStruct.put("date_created_gmt", d);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        
+        if(wpPassword != null && !"".equals(wpPassword)) {
+        	contentStruct.put("wp_password", wpPassword); 
+        }
         if (!isPage){
         	EditText tagsET = (EditText)findViewById(R.id.tags);
             String tags = tagsET.getText().toString();
@@ -2283,6 +2374,20 @@ public class editPost extends Activity implements LocationListener{
 		loadingDialog.setCancelable(true);
 		return loadingDialog;
 	}
+	else if (id == ID_DIALOG_DATE){
+		DatePickerDialog dpd = new DatePickerDialog(this,
+                mDateSetListener,
+                mYear, mMonth, mDay);
+		dpd.setTitle("");
+		return dpd;
+	}
+	else if (id == ID_DIALOG_TIME){
+		TimePickerDialog tpd = new TimePickerDialog(this,
+                mTimeSetListener,
+                mHour, mMinute, false);
+		tpd.setTitle("");
+		return tpd;
+	}
 
 	return super.onCreateDialog(id);
 	}
@@ -2301,10 +2406,33 @@ public class editPost extends Activity implements LocationListener{
         String title = titleET.getText().toString();
         EditText contentET = (EditText)findViewById(R.id.content);
         String content = escapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
+        EditText passwordET = (EditText)findViewById(R.id.post_password);
+        String password = passwordET.getText().toString();
         //replace duplicate <p> tags so there's not duplicates, trac #86
         content = content.replace("<p><p>", "<p>");
         content = content.replace("</p></p>", "</p>");
         content = content.replace("<br><br>", "<br>");
+        
+        TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+        String pubDate = tvPubDate.getText().toString();
+
+    	long pubDateTimestamp = 0;
+        if (!pubDate.equals(getResources().getText(R.string.immediately))){
+        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm");
+        	Date d = new Date();
+        	try {
+				d = sdf.parse(pubDate);
+				pubDateTimestamp = d.getTime();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+        }
+        
         String tags = "";
         if (!isPage){
         	EditText tagsET = (EditText)findViewById(R.id.tags);
@@ -2403,18 +2531,18 @@ public class editPost extends Activity implements LocationListener{
             WordPressDB lDraftsDB = new WordPressDB(this);
         	if (isPage){
         		if (isNew){
-        			success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, status);
+        			success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, status, password, pubDateTimestamp);
         		}
         		else {
-        			success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, status);
+        			success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, status, password, pubDateTimestamp);
         		}
         	}
         	else {
         		if (isNew){
-        			success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, status, latitude, longitude);
+        			success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, status, latitude, longitude, password, pubDateTimestamp);
         		}
         		else {
-        			success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, status, latitude, longitude);
+        			success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, status, latitude, longitude, password, pubDateTimestamp);
         		}
         	}
         
@@ -2805,6 +2933,44 @@ protected void lbsCheck() {
 	}
 
 }
+
+private DatePickerDialog.OnDateSetListener mDateSetListener =
+    new DatePickerDialog.OnDateSetListener() {
+
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			mYear = year;
+			mMonth = monthOfYear;
+			mDay = dayOfMonth;
+			
+			showDialog(ID_DIALOG_TIME);
+			
+		}
+    };
+    
+    
+	
+private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+    new TimePickerDialog.OnTimeSetListener() {
+
+		public void onTimeSet(TimePicker view, int hour, int minute) {
+			mHour = hour;
+			mMinute = minute;
+			String AMPM = "AM";
+			if (mHour >= 12){
+				AMPM = "PM";
+				if (mHour > 12){
+					mHour -= 12;
+				}
+			}
+			TextView pubDate = (TextView) findViewById(R.id.pubDate);
+			String[] shortMonths = new DateFormatSymbols().getShortMonths();
+			pubDate.setText(shortMonths[mMonth] + " " + String.format("%02d", mDay) + ", " + mYear + " " + String.format("%02d", mHour) + ":" + String.format("%02d", mMinute) + " " + AMPM);
+			
+			isCustomPubDate = true;
+		}
+
+    };
     
 }
 
