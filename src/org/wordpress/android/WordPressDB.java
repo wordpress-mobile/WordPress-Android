@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Base64;
 
 public class WordPressDB {
 
@@ -1517,7 +1516,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			
 			Cipher cipher = Cipher.getInstance("DES");
 			cipher.init(Cipher.ENCRYPT_MODE, key);
-			String encrypedPwd = Base64.encodeToString(cipher.doFinal(clearText.getBytes("UTF-8")), Base64.DEFAULT);
+			String encrypedPwd = Base64.encodeBytes(cipher.doFinal(clearText.getBytes("UTF-8")));
 			return encrypedPwd;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -1531,7 +1530,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
 			SecretKey key = keyFactory.generateSecret(keySpec);
 			
-			byte[] encryptedWithoutB64 = Base64.decode(encryptedPwd, Base64.DEFAULT);
+			byte[] encryptedWithoutB64 = Base64.decode(encryptedPwd);
 			Cipher cipher = Cipher.getInstance("DES");
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] plainTextPwdBytes = cipher.doFinal(encryptedWithoutB64);
