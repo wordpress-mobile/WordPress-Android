@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class WordPressDB {
 
@@ -1271,7 +1272,13 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		String blogID = firstHash.get("blogID").toString();
 		//delete existing values, if user hit refresh button
 		if (!loadMore){
-			db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
+			try {
+				db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
+			} catch (Exception e) {
+				Log.i("WordPress", e.getMessage());
+				db.close();
+				return false;
+			}
 		}
 
 		for (int i = 0; i < commentValues.size(); i++){
@@ -1288,10 +1295,14 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("url", thisHash.get("url").toString());
 			values.put("email", thisHash.get("email").toString());
 			values.put("postTitle", thisHash.get("postTitle").toString());
-			returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
+			try {
+				returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
+			} catch (Exception e) {
+				Log.i("WordPress", e.getMessage());
+				db.close();
+				return false;
+			}
 		}
-		
-		
 		db.close();
 		return (returnValue);
 		
