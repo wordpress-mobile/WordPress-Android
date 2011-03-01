@@ -1275,7 +1275,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			try {
 				db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
 			} catch (Exception e) {
-				Log.i("WordPress", e.getMessage());
 				db.close();
 				return false;
 			}
@@ -1298,7 +1297,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			try {
 				returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
 			} catch (Exception e) {
-				Log.i("WordPress", e.getMessage());
 				db.close();
 				return false;
 			}
