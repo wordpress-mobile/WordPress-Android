@@ -1400,7 +1400,9 @@ public class editPost extends Activity implements LocationListener{
 	              	}
 	              });
 	              dialogBuilder.setCancelable(true);
-	             dialogBuilder.create().show();
+	              if (!isFinishing()){
+	            	  dialogBuilder.create().show();
+	              }
 			  } 
 			}; 
 			this.runOnUiThread(prompt);
@@ -1874,7 +1876,9 @@ public class editPost extends Activity implements LocationListener{
 							{ 
 							  public void run() 
 							  {
-								  dialogBuilder.create().show();
+								  if (!isFinishing()){
+									  dialogBuilder.create().show();
+								  }
 							  } 
 							}; 
 							runOnUiThread(action);
@@ -1923,7 +1927,9 @@ public class editPost extends Activity implements LocationListener{
 								{ 
 								  public void run() 
 								  {
-									  dialogBuilder.create().show();
+									  if (!isFinishing()) {
+										  dialogBuilder.create().show();
+									  }
 								  } 
 								}; 
 								runOnUiThread(action);
@@ -1989,7 +1995,9 @@ public class editPost extends Activity implements LocationListener{
 	                          }
 	                      });
 			              dialogBuilder.setCancelable(true);
-			             dialogBuilder.create().show();
+			              if (!isFinishing()) {
+			            	  dialogBuilder.create().show();
+			              }
 			             
 					
 			} catch (final XMLRPCException e) {
@@ -2015,7 +2023,9 @@ public class editPost extends Activity implements LocationListener{
 		                          }
 		                      });
 				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
+				              if (!isFinishing()) {
+				            	  dialogBuilder.create().show();
+				              }
 						}
 						//Log.d("Test", "error", e);
 						
@@ -2189,7 +2199,9 @@ public class editPost extends Activity implements LocationListener{
 	                        }
 	                    });
 	                  dialogBuilder.setCancelable(true);
-	                 dialogBuilder.create().show();
+	                  if (!isFinishing()) {
+	                	  dialogBuilder.create().show();
+	                  }
 					}
                 }
                 else{
@@ -2218,7 +2230,9 @@ public class editPost extends Activity implements LocationListener{
                         }
                     });
                   dialogBuilder.setCancelable(true);
-                 dialogBuilder.create().show();
+                  if (!isFinishing()) {
+                	  dialogBuilder.create().show();
+                  }
                 }
 
         }
@@ -2233,7 +2247,9 @@ public class editPost extends Activity implements LocationListener{
                 }
             });
           dialogBuilder.setCancelable(true);
-         dialogBuilder.create().show();
+          if (!isFinishing()) {
+        	  dialogBuilder.create().show();
+          }
         }
 
 		     	break;
@@ -2270,7 +2286,9 @@ public class editPost extends Activity implements LocationListener{
             }
         });
       dialogBuilder.setCancelable(true);
-     dialogBuilder.create().show();
+      if (!isFinishing()) {
+    	  dialogBuilder.create().show();
+      }
     }
 
 	     	break;
@@ -2349,7 +2367,9 @@ public class editPost extends Activity implements LocationListener{
                       }
                   });
 	              dialogBuilder.setCancelable(true);
-	             dialogBuilder.create().show();
+	              if (!isFinishing()) {
+	            	  dialogBuilder.create().show();
+	              }
 			}
 			else if (finalResult.equals("FAIL")){
 				dismissDialog(editPost.this.ID_DIALOG_POSTING);	

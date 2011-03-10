@@ -176,7 +176,9 @@ private void displayResults(final String permaLink, final String html, final Str
         }
     });
       dialogBuilder.setCancelable(true);
-     dialogBuilder.create().show();
+      if (!isFinishing()) {
+    	  dialogBuilder.create().show();
+      }
 	}
 	  }
 	};
