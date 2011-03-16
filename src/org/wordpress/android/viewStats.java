@@ -775,7 +775,9 @@ public class viewStats extends Activity {
 								Toast.LENGTH_SHORT).show();
 					}
 				};
-				this.runOnUiThread(alert);
+				if (!isFinishing()) {
+					this.runOnUiThread(alert);
+				}
 			}
 
 		} catch (ClientProtocolException e) {
