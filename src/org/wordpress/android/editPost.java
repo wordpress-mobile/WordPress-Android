@@ -1339,7 +1339,7 @@ public class editPost extends Activity implements LocationListener{
         String pubDate = tvPubDate.getText().toString();
 
         if (!pubDate.equals(getResources().getText(R.string.immediately))){
-        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm");
+        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
         	Date d = new Date();
         	try {
 				d = sdf.parse(pubDate);
@@ -2438,7 +2438,7 @@ public class editPost extends Activity implements LocationListener{
 
     	long pubDateTimestamp = 0;
         if (!pubDate.equals(getResources().getText(R.string.immediately))){
-        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm");
+        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
         	Date d = new Date();
         	try {
 				d = sdf.parse(pubDate);

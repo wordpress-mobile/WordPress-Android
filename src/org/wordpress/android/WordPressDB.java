@@ -839,6 +839,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("latitude", latitude);
 			values.put("longitude", longitude);
 			values.put("password", password);
+			values.put("date", pubDate);
 			returnValue = db.update(LOCALDRAFTS_TABLE, values, "id=" + postID, null) > 0;
 
 		db.close();
