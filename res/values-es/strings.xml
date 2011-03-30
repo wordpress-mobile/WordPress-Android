@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="immediately">Inmediatamente</string>
+	<string name="post_password">Contraseña (opcional)</string>
+	<string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
+	<string name="settings">Ajustes</string>
+	<string name="today">Hoy</string>
+	<string name="optional_settings">Ajustes Opcionales</string>
+	<string name="view_map">Ver Mapa</string>
+	<string name="update_location">Actualizar Ubicación</string>
+	<string name="share_url">Compartir URL</string>
+	<string name="attempting_fetch_url">Intententando recuperar la URL</string>
+	<string name="post_not_published">Entrada no publicada</string>
+	<string name="page_not_published">Página no publicada</string>
 	<string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
 	<string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
 	<string name="publish_post">Publicar</string>
@@ -40,7 +52,6 @@
 	<string name="help_stats">¿Necesitas ayuda con las estadísticas de WordPress.com?</string>
 	<string name="retrieving_stats">Recuperando Estadísticas</string>
 	<string name="attempt_retrieve">Intentando recuperar las estadísticas</string>
-	<string name="underline"></string>
 	<string name="stats_login">Acceso a estadísticas</string>
 	<string name="comments_moderated">Comentarios moderados correctamente</string>
 	<string name="deleting_comments">Eliminando comentarios</string>

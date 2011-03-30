@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_password">Hasło (opcjonalnie)</string>
+	<string name="immediately">Natychmiast</string>
+	<string name="quickpress_add_alert_title">Wpisz nazwę skrótu</string>
+	<string name="today">Dzisiaj</string>
+	<string name="httpuser">Nazwa użytkownika HTTP (opcjonalnie):</string>
+	<string name="httppassword">Hasło HTTP (opcjonalnie):</string>
+	<string name="settings">Ustawienia</string>
+	<string name="optional_settings">Ustawienia opcjonalne</string>
+	<string name="update_location">Aktualizacja lokalizacji</string>
+	<string name="view_map">Zobacz mapę</string>
+	<string name="page_not_published">Status strony nie jest opublikowany</string>
+	<string name="share_url">Udostępnij URL</string>
+	<string name="attempting_fetch_url">Próba pobrania URL</string>
+	<string name="post_not_published">Status wpisu nie jest publikowany</string>
+	<string name="quickpress_window_title">Wybierz blog dla skrótu QuickPress</string>
+	<string name="quickpress_add_error">Nazwa skrótu nie może być pusta</string>
+	<string name="eula">GNU GENERAL PUBLIC LICENSE</string>
+	<string name="publish_post">Publikuj</string>
+	<string name="pending_review">W oczekiwaniu na przegląd</string>
+	<string name="draft">Szkic</string>
+	<string name="post_private">Prywatny</string>
+	<string name="upload_full_size_image">Prześlij i podłącz do pełnego obrazu</string>
+	<string name="invalid_url">Niepoprawny URL bloga</string>
+	<string name="invalid_url_message">Sprawdź, czy wprowadzony URL bloga jest prawidłowy.</string>
 	<string name="i_have_wp_blog">Dodaj blog prowadzony na WordPress.com</string>
 	<string name="i_have_blog">Dodaj blog prowadzony na własnym serwerze WordPress</string>
 	<string name="html">Aktywowano edytor HTML</string>
@@ -60,10 +84,10 @@
 	<string name="post_deleted">Wpis został usunięty</string>
 	<string name="attempt_delete_post">Usuwanie wpisu</string>
 	<string name="delete_sure_post">Czy na pewno chcesz usunąć ten wpis?</string>
-	<string name="post_edited_image_error">Post został pomyślnie edytowany, ale wystąpił błąd podczas przesyłania mediów</string>
 	<string name="page_edited_image_error">Strona została pomyślnie edytowana, ale wystąpił błąd podczas przesyłania mediów</string>
 	<string name="added_successfully_image_error">pomyślnie dodano, ale wystąpił błąd podczas przesyłania mediów</string>
 	<string name="file_error_encountered">Wystąpił błąd podczas przygotowywania przechwyconych mediów.</string>
+	<string name="post_edited_image_error">Wpis został pomyślnie edytowany, ale wystąpił błąd podczas przesyłania mediów</string>
 	<string name="notification_vibrate">Wibracja</string>
 	<string name="notification_sound">Odtwórz dźwięk powiadomienia</string>
 	<string name="notification_blink">Mruganie diody LED przy powiadiomieniach</string>
@@ -117,7 +141,6 @@
 	<string name="take_photo">Zrób nowe zdjęcie</string>
 	<string name="select_photo">Wybierz zdjęcie z albumu</string>
 	<string name="add_media">Dodaj media</string>
-	<string name="upload_full_size_image">Prześlij i pokaż odnośnik do całego obrazka:</string>
 	<string name="local_drafts">Lokalne szkice</string>
 	<string name="add">Dodaj</string>
 	<string name="above_text">Nad tekstem</string>
@@ -126,7 +149,6 @@
 	<string name="add_account">Dodaj konto</string>
 	<string name="success">Sukces</string>
 	<string name="blog_settings">Ustawienia blogu</string>
-	<string name="reply_added">Odpowiedz pomyślnie dodana</string>
 	<string name="comment_moderated">Moderowane pomyślnie zakończone</string>
 	<string name="moderating_comment">Moderowanie komentarzy</string>
 	<string name="moderate_comments">Moderuj komentarze</string>
@@ -171,7 +193,6 @@
 	<string name="error">Błąd</string>
 	<string name="selected_categories">Wybrane kategorie:</string>
 	<string name="get_free_blog">Utwórz bezpłatny blog na WordPress.com</string>
-	<string name="eula">EULA</string>
 	<string name="username">Login:</string>
 	<string name="getting_page">Pobieranie strony</string>
 	<string name="edit_post">Edytuj wpis</string>
@@ -209,13 +230,11 @@
 	<string name="delete_sure">Czy na pewno chcesz usunąć szkic</string>
 	<string name="page_actions">Działania na stronach</string>
 	<string name="page_attempt_upload">Próba przesłania strony</string>
-	<string name="post_actions">Działania na wpisach</string>
 	<string name="post_attempt_upload">Próba przesłania wpisu</string>
 	<string name="comment_actions">Działania na komentarzu</string>
 	<string name="mark_approved">Oznacz jako zatwierdzony</string>
 	<string name="mark_unapproved">Oznacz jako niezatwierdzony</string>
 	<string name="mark_spam">Oznacz jako spam</string>
-	<string name="reply">Odpowiedz</string>
 	<string name="publish_yes">Opublikować: Tak</string>
 	<string name="publish_no">Opublikować: Nie</string>
 	<string name="account_setup">Ustawienia konta</string>
@@ -236,5 +255,8 @@
 	<string name="accept">Akceptuję</string>
 	<string name="decline">Odmawiam</string>
 	<string name="hint_menu_to_add_acc">Wybierz "Menu" aby dodać inne konto lub skonfigurować powiadomienia komentarzy.</string>
+	<string name="reply">Odpisz</string>
+	<string name="reply_added">Odpowiedź pomyślnie dodana</string>
+	<string name="post_actions">Czynności na wpisach</string>
 	<string name="no_data_found">Nie znaleziono statystyk. Spróbuj ponownie</string>
 </resources>

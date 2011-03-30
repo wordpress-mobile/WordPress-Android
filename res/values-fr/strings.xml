@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_password">Mot de passe (optionnel)</string>
+	<string name="immediately">Immédiatement</string>
+	<string name="quickpress_add_alert_title">Choisir le nom du raccourci</string>
+	<string name="settings">Paramètres</string>
+	<string name="httpuser">HTTP Nom d\'utilisateur (optionnel) :</string>
+	<string name="httppassword">HTTP Mot de passe (optionnel) :</string>
+	<string name="optional_settings">Paramètres optionels</string>
+	<string name="today">Aujourd\'hui</string>
+	<string name="view_map">Voir la carte</string>
+	<string name="update_location">Mettre à jour la localisation</string>
+	<string name="share_url">Partager cette URL</string>
+	<string name="attempting_fetch_url">Essaye de récupérer l\'URL</string>
+	<string name="post_not_published">L\'état du posts n\'est pas publié</string>
+	<string name="page_not_published">L\'état de la page est non publiée</string>
+	<string name="quickpress_window_title">Sélectionner le blog pour le raccourci QuickPress</string>
+	<string name="quickpress_add_error">Le nom du raccourci ne peut pas être vide</string>
+	<string name="eula">LICENCE PUBLIQUE GENERALE GNU</string>
 	<string name="draft">Brouillon</string>
 	<string name="publish_post">Publier</string>
 	<string name="post_private">Privé</string>
@@ -39,15 +56,11 @@
 	<string name="tags_separate_with_commas">Tags (séparez les tags par des virgules)</string>
 	<string name="post_content">Contenu de l\'entrée</string>
 	<string name="report_clicks">Clics</string>
-	<string name="link"></string>
-	<string name="strike"></string>
-	<string name="underline"></string>
 	<string name="report_videoplays">Affichage video en cours</string>
 	<string name="thirty_days">30 jours</string>
 	<string name="quarter">Trimestre</string>
 	<string name="year">Un an</string>
 	<string name="all">Toujours</string>
-	<string name="report_searchterms"></string>
 	<string name="report_postviews">nombre de vues de l\'article</string>
 	<string name="report_views">Vues</string>
 	<string name="load_more">Chargez d\'avantage</string>
@@ -68,9 +81,6 @@
 	<string name="attempt_delete_page">Tentative d\'effacement de la page</string>
 	<string name="delete_page">Effacer la page</string>
 	<string name="added_successfully_image_error">Ajouté avec succes...erreur en cours de chargement !</string>
-	<string name="file_error_encountered"></string>
-	<string name="post_edited_image_error"></string>
-	<string name="page_edited_image_error"></string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Faire clignoter le voyant de notification</string>
 	<string name="notification_sound">Faire retentir la sonnerie</string>
