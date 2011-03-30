@@ -1005,7 +1005,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		returnHash.put("picturePaths", c.getString(2));
 		returnHash.put("status", c.getString(3));
 		returnHash.put("password", c.getString(4));
-		returnHash.put("date", c.getString(5));
+		returnHash.put("pubDate", c.getString(5));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();

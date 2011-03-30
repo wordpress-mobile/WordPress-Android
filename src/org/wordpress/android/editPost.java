@@ -148,16 +148,14 @@ public class editPost extends Activity implements LocationListener{
 		if (width > 480){
 			isLargeScreen = true;
 		}
-		String[] items;
+		
         if (isPage){  
-        	setContentView(R.layout.edit_page);
-        	items = new String[] {getResources().getString(R.string.draft), getResources().getString(R.string.post_private), getResources().getString(R.string.publish_post)};
-        }
+        	setContentView(R.layout.edit_page);        }
         else{
         	setContentView(R.layout.edit);
-        	items = new String[] {getResources().getString(R.string.draft), getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private), getResources().getString(R.string.publish_post)};
         }
         
+        String[] items = new String[] {getResources().getString(R.string.publish_post), getResources().getString(R.string.draft), getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
         Spinner spinner = (Spinner) findViewById(R.id.status);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_spinner_item, items);
@@ -278,27 +276,17 @@ public class editPost extends Activity implements LocationListener{
         	if (postHashMap.get("status") != null){
 	        	String status = postHashMap.get("status").toString();
 	        	
-		        if (status.equals("draft")){
+		        if (status.equals("publish")){
 		        	spinner.setSelection(0, true);
 		        }
-		        else if (status.equals("pending")){
+		        else if (status.equals("draft")){
 		        	spinner.setSelection(1, true);
 		        }
-		        else if (status.equals("private")){
-		        	if (isPage){
-		        		spinner.setSelection(1);
-		        	}
-		        	else{
-		        		spinner.setSelection(2);
-		        	}
+		        else if (status.equals("pending")){
+		        	spinner.setSelection(2, true);
 		        }
-		        else if (status.equals("publish")){
-		        	if (isPage){
-		        		spinner.setSelection(2);
-		        	}
-		        	else{
-		        		spinner.setSelection(3);
-		        	}
+		        else if (status.equals("private")){
+		        	spinner.setSelection(3, true);
 		        }
         	}
         	
@@ -545,27 +533,17 @@ public class editPost extends Activity implements LocationListener{
 			        
 			        Spinner spinner = (Spinner) findViewById(R.id.status);
 			        
-			        if (status.equals("draft")){
+			        if (status.equals("publish")){
 			        	spinner.setSelection(0, true);
 			        }
-			        else if (status.equals("pending")){
+			        else if (status.equals("draft")){
 			        	spinner.setSelection(1, true);
 			        }
-			        else if (status.equals("private")){
-			        	if (isPage){
-			        		spinner.setSelection(1);
-			        	}
-			        	else{
-			        		spinner.setSelection(2);
-			        	}
+			        else if (status.equals("pending")){
+			        	spinner.setSelection(2, true);
 			        }
-			        else if (status.equals("publish")){
-			        	if (isPage){
-			        		spinner.setSelection(2);
-			        	}
-			        	else{
-			        		spinner.setSelection(3);
-			        	}
+			        else if (status.equals("private")){
+			        	spinner.setSelection(3, true);
 			        }
 			        
 				}
@@ -1293,26 +1271,16 @@ public class editPost extends Activity implements LocationListener{
             String status = "";
             switch (selectedStatus){
             	case 0:
-            		status = "draft";
+            		status = "publish";
             		break;
             	case 1:
-            		if (isPage){
-            			status = "private";
-            		}
-            		else {
-            			status = "pending";
-            		}
+            		status = "draft";
             		break;
             	case 2:
-            		if (isPage) {
-            			status = "publish";
-            		}
-            		else {
-            			status = "private";
-            		}
+            		status = "pending";
             		break;
             	case 3:
-            		status = "publish";
+            		status = "private";
             		break;
             }
         
@@ -2496,26 +2464,16 @@ public class editPost extends Activity implements LocationListener{
             String status = "";
             switch (selectedStatus){
             	case 0:
-            		status = "draft";
+            		status = "publish";
             		break;
             	case 1:
-            		if (isPage){
-            			status = "private";
-            		}
-            		else {
-            			status = "pending";
-            		}
+            		status = "draft";
             		break;
             	case 2:
-            		if (isPage) {
-            			status = "publish";
-            		}
-            		else {
-            			status = "private";
-            		}
+            		status = "pending";
             		break;
             	case 3:
-            		status = "publish";
+            		status = "private";
             		break;
             }
         
