@@ -1460,8 +1460,6 @@ public class viewPosts extends ListActivity {
 												(isPage) ? R.string.page_id
 														: R.string.post_id)
 												+ " "
-												+ newID
-												+ " "
 												+ getResources()
 														.getText(
 																R.string.added_successfully_image_error)
@@ -1502,8 +1500,6 @@ public class viewPosts extends ListActivity {
 											(isPage) ? R.string.page_id
 													: R.string.post_id)
 											+ " "
-											+ newID
-											+ " "
 											+ getResources()
 													.getText(
 															R.string.added_successfully_image_error)
@@ -1512,8 +1508,6 @@ public class viewPosts extends ListActivity {
 							dialogBuilder.setMessage(getResources().getText(
 									(isPage) ? R.string.page_id
 											: R.string.post_id)
-									+ " "
-									+ newID
 									+ " "
 									+ getResources().getText(
 											R.string.added_successfully));

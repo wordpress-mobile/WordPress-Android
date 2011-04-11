@@ -126,7 +126,7 @@
   <!--  post view  -->
   <string name="new_post">New Post</string>
   <string name="post_added">Post Added</string>
-  <string name="post_id">Post ID #</string>
+  <string name="post_id">Post</string>
   <string name="added_successfully">added successfully</string>
   <string name="added_successfully_image_error">added successfully, but an error was encountered when uploading media</string>
   <string name="permalink_not_found">The permalink was not found.</string>
@@ -135,7 +135,7 @@
   <string name="post_password">Password (optional)</string>
   
   <!--  page view -->
-  <string name="page_id">Page ID #</string>
+  <string name="page_id">Page</string>
   
   <!--  reply view  -->
   <string name="reply_enter">Enter a reply:</string>

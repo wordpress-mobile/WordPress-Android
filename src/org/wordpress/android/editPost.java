@@ -2109,8 +2109,19 @@ public class editPost extends Activity implements LocationListener{
         		selectionStart = temp;
         	}
         	
-    		Spannable str = contentText.getText();
-			str.setSpan(new URLSpan(linkText),  selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        	if (localDraft) {
+        		Spannable str = contentText.getText();
+				str.setSpan(new URLSpan(linkText),  selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        	}
+        	else{
+        		String textToLink = contentText.getText().toString().substring(selectionStart, selectionEnd); 
+        		textToLink = "<a href=\"" + linkText + "\">"+ textToLink + "</a>";
+        		String firstHalf = contentText.getText().toString().substring(0, selectionStart);
+        		String lastHalf = contentText.getText().toString().substring(selectionEnd, contentText.getText().toString().length());
+        		contentText.setText(firstHalf + textToLink + lastHalf);
+        		Editable etext = (Editable) contentText.getText(); 
+        		Selection.setSelection(etext, selectionStart + textToLink.length());
+        	}
 			}
 			}
 			break;			
