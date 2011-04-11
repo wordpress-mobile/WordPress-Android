@@ -373,6 +373,7 @@ res/values-sk/strings.xml -text
 res/values-sv/strings.xml -text
 res/values-tr/strings.xml -text
 res/values/arrays.xml -text
+res/values/ids.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
 src/com/commonsware/cwac/cache/AsyncCache.java -text

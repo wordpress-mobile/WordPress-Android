@@ -74,8 +74,8 @@ public class viewPosts extends ListActivity {
 	private XMLRPCClient client;
 	private String[] postIDs, titles, dateCreated, dateCreatedFormatted, draftIDs, draftTitles, publish;
 	private Integer[] uploaded;
-	private String id = "",accountName = "", newID = "";
-	int selectedID = 0, rowID = 0;
+	private String id = "",accountName = "", newID = "", selectedID = "";
+	int rowID = 0;
 	private int ID_DIALOG_DELETING = 1, ID_DIALOG_POSTING = 2;
 	Vector<String> selectedCategories = new Vector<String>();
 	public boolean inDrafts = false;
@@ -114,7 +114,7 @@ public class viewPosts extends ListActivity {
 		// user came from action intent
 		if (action != null && !isPage) {
 			if (action.equals("upload")) {
-				selectedID = extras.getInt("uploadID");
+				selectedID = String.valueOf(extras.getInt("uploadID"));
 				showDialog(ID_DIALOG_POSTING);
 
 				new Thread() {
@@ -531,7 +531,7 @@ public class viewPosts extends ListActivity {
 									return;
 								}
 
-								selectedID = info.targetView.getId();
+								selectedID = (String) info.targetView.getTag(R.id.row_post_id);
 								rowID = info.position;
 
 								if (totalDrafts > 0 && rowID <= totalDrafts
@@ -706,7 +706,14 @@ public class viewPosts extends ListActivity {
 				wrapper.getTitle().setTextScaleX(1.0f);
 				wrapper.getTitle().setTextSize(16);
 				wrapper.getDate().setTextColor(Color.parseColor("#888888"));
-				pv.setId(Integer.valueOf(postIDs[position]));
+				
+				try {
+					//pv.setId(Integer.valueOf(postIDs[position]));
+					pv.setTag(R.id.row_post_id, postIDs[position]);
+				} catch (NumberFormatException e) {
+					//e.printStackTrace();
+				}
+
 				if (wrapper.getDate().getHeight() == 0) {
 					wrapper.getDate().setHeight(
 							(int) wrapper.getTitle().getTextSize()
@@ -881,7 +888,7 @@ public class viewPosts extends ListActivity {
 						uploadNow = extras.getBoolean("upload");
 						if (uploadNow) {
 							int uploadID = extras.getInt("newID");
-							selectedID = uploadID;
+							selectedID = String.valueOf(uploadID);
 							showDialog(ID_DIALOG_POSTING);
 
 							new Thread() {
