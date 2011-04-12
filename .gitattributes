@@ -372,6 +372,7 @@ res/values-ru/strings.xml -text
 res/values-sk/strings.xml -text
 res/values-sv/strings.xml -text
 res/values-tr/strings.xml -text
+res/values-zh/strings.xml -text
 res/values/arrays.xml -text
 res/values/ids.xml -text
 res/values/strings.xml -text
