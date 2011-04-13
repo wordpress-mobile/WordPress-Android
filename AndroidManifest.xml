@@ -3,12 +3,7 @@
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:debuggable="false">
-		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
+		<activity android:name=".wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name=".settings" android:label="Settings"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity android:name=".link" android:theme="@android:style/Theme.Dialog"
@@ -36,6 +31,10 @@
 		<activity android:name="replyToComment" android:theme="@android:style/Theme.Dialog" />
 		<activity android:icon="@drawable/app_icon" android:screenOrientation="portrait" android:name="splashScreen"
 			android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
 		</activity>
 <activity android:name="selectCategories" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:theme="@android:style/Theme.Dialog" android:name="addCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
