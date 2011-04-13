@@ -75,7 +75,7 @@
 	 	android:layout_width="fill_parent"  
 	 	android:layout_height="wrap_content"  
 	 	android:layout_below="@id/httpuser" 
-	 	android:text="@string/httpuser"/>            
+	 	android:text="@string/httppassword"/>            
  	<EditText android:id="@+id/httppassword"  
 	 	android:layout_width="fill_parent"  
 	 	android:layout_height="wrap_content" 

@@ -91,7 +91,7 @@ public class editPost extends Activity implements LocationListener{
 	public static long globalData = 0;
 	public ProgressDialog pd;
 	public boolean postStatus = false;
-	String[] mFiles=null;
+	String[] mFiles = null;
 	public String thumbnailPath = null;
 	public String imagePath = null;
 	public String imageTitle = null;
@@ -119,11 +119,7 @@ public class editPost extends Activity implements LocationListener{
     ProgressDialog postingDialog;
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     //date holders
-    private int mYear;
-    private int mMonth;
-    private int mDay;
-    private int mHour;
-    private int mMinute;
+    private int mYear, mMonth, mDay, mHour, mMinute;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);	
@@ -2399,7 +2395,6 @@ public class editPost extends Activity implements LocationListener{
 	
 	public boolean savePost() {
 		
-		
 		//grab the form data
         EditText titleET = (EditText)findViewById(R.id.title);
         String title = titleET.getText().toString();
@@ -2516,7 +2511,7 @@ public class editPost extends Activity implements LocationListener{
 
         	}
         
-        	//new feature, automatically save a post as a draft just in case the posting fails
+        	//automatically save a post as a draft just in case the posting fails
             WordPressDB lDraftsDB = new WordPressDB(this);
         	if (isPage){
         		if (isNew){
@@ -2558,22 +2553,19 @@ public class editPost extends Activity implements LocationListener{
                         mIntent.putExtras(bundle);
                         setResult(RESULT_OK, mIntent);
                         finish();
-
-                
                     }
                 });
               dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
             		  DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     	//just close the dialog window
-
                     }
                 });
               dialogBuilder.setCancelable(true);
              dialogBuilder.create().show();
 		  }
 
-		  return false; // propagate this keyevent
+		  return false;
 		}
 	
 	public void onCreateContextMenu(
@@ -2885,11 +2877,11 @@ private void addMedia(String imgPath, Uri curStream, boolean noUI) {
 		imgThumbs.add("video");
 	}
 	if (!noUI){
-	Gallery gallery = (Gallery) findViewById(R.id.gallery);
-	gallery.setVisibility(View.VISIBLE);
-	gallery.setAdapter(new ImageAdapter(editPost.this));
-	Button clearMedia = (Button) findViewById(R.id.clearPicture);
-	clearMedia.setVisibility(View.VISIBLE);
+		Gallery gallery = (Gallery) findViewById(R.id.gallery);
+		gallery.setVisibility(View.VISIBLE);
+		gallery.setAdapter(new ImageAdapter(editPost.this));
+		Button clearMedia = (Button) findViewById(R.id.clearPicture);
+		clearMedia.setVisibility(View.VISIBLE);
 	}
 	
 }
@@ -2962,8 +2954,3 @@ private TimePickerDialog.OnTimeSetListener mTimeSetListener =
     };
     
 }
-
-
-
-
-
