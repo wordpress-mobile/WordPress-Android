@@ -2105,7 +2105,7 @@ public class editPost extends Activity implements LocationListener{
         		selectionStart = temp;
         	}
         	
-        	if (localDraft) {
+        	if (localDraft || isNew) {
         		Spannable str = contentText.getText();
 				str.setSpan(new URLSpan(linkText),  selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         	}
