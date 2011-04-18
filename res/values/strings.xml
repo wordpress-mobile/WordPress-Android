@@ -334,4 +334,8 @@
   <string name="httppassword">HTTP Password (optional):</string> 
   <string name="settings">Settings</string>
   <string name="optional_settings">Optional Settings</string>
+  
+  <!-- post scheduling and password -->
+  <string name="publish_date">Publish:</string>
+  <string name="edit">Edit</string>
 </resources>

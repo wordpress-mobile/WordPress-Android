@@ -259,7 +259,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/status"
-        android:text="Publish:"
+        android:text="@string/publish_date"
         android:layout_marginLeft="4dip"
         android:layout_marginTop="10dip"/>
    <TextView android:id="@+id/pubDate"
@@ -267,7 +267,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/status"
         android:layout_toRightOf="@id/pubDateLabel"
-        android:text="Immediately"
+        android:text="@string/immediately"
         android:layout_marginLeft="4dip"
         android:layout_marginTop="10dip"/>
    <Button android:id="@+id/pubDateButton"
@@ -276,7 +276,7 @@
         android:layout_below="@id/status"
         android:background="@drawable/wp_button_small"
         android:layout_toRightOf="@id/pubDate"
-        android:text="Edit"
+        android:text="@string/edit"
         android:layout_marginLeft="2dip"/>
    <EditText android:id="@+id/post_password" android:minHeight="40dip"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
