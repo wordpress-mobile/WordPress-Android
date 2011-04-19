@@ -410,7 +410,13 @@ public class viewStats extends Activity {
 						if (pullParser.getText().toString() == "") {
 							numDataSet.add(rowCount, 0);
 						} else {
-							numDataSet.add(rowCount, Integer.parseInt(pullParser.getText().toString()));
+							int value = 0;
+							//sometimes we get an empty string from the stats api, adding a catch here.
+							try {
+								value = Integer.parseInt(pullParser.getText().toString());
+							} catch (NumberFormatException e) {
+							}
+							numDataSet.add(rowCount,value);
 						}
 						rowCount++;
 						foundDataItem = false;
