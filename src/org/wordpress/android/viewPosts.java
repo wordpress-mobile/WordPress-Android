@@ -1214,7 +1214,7 @@ public class viewPosts extends ListActivity {
 			loadingDialog.setMessage(getResources().getText(
 					(isPage) ? R.string.page_attempt_upload
 							: R.string.post_attempt_upload));
-			loadingDialog.setCancelable(true);
+			loadingDialog.setCancelable(false);
 			return loadingDialog;
 		} else if (id == ID_DIALOG_DELETING) {
 			loadingDialog = new ProgressDialog(this);
@@ -1223,7 +1223,7 @@ public class viewPosts extends ListActivity {
 			loadingDialog.setMessage(getResources().getText(
 					(isPage) ? R.string.attempt_delete_page
 							: R.string.attempt_delete_post));
-			loadingDialog.setCancelable(true);
+			loadingDialog.setCancelable(false);
 			return loadingDialog;
 		}
 
@@ -1453,7 +1453,6 @@ public class viewPosts extends ListActivity {
 				newID = result.toString();
 				res = "OK";
 				dismissDialog(ID_DIALOG_POSTING);
-
 				Thread action = new Thread() {
 					public void run() {
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
