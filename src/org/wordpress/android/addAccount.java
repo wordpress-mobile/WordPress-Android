@@ -536,7 +536,7 @@ public class addAccount extends Activity {
 				handler.post(new Runnable() {
 					public void run() {
 						Throwable couse = e.getCause();
-						//e.printStackTrace();
+						e.printStackTrace();
 						pd.dismiss();
 						if (couse instanceof HttpHostConnectException) {
 

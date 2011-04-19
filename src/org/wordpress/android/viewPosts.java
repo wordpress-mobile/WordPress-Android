@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -531,7 +533,23 @@ public class viewPosts extends ListActivity {
 									return;
 								}
 
-								selectedID = (String) info.targetView.getTag(R.id.row_post_id);
+								
+								Object[] args = { R.id.row_post_id };
+								
+								try {
+									Method m = android.view.View.class.getMethod("getTag");
+									m.invoke(selectedID, args);
+								}
+								 catch (NoSuchMethodException e) {
+									 	selectedID = String.valueOf(info.targetView.getId()); 
+									} catch (IllegalArgumentException e) {
+									 	selectedID = String.valueOf(info.targetView.getId()); 
+									} catch (IllegalAccessException e) {
+									 	selectedID = String.valueOf(info.targetView.getId()); 
+									} catch (InvocationTargetException e) {
+									 	selectedID = String.valueOf(info.targetView.getId()); 
+									}
+								//selectedID = (String) info.targetView.getTag(R.id.row_post_id);
 								rowID = info.position;
 
 								if (totalDrafts > 0 && rowID <= totalDrafts
@@ -706,14 +724,25 @@ public class viewPosts extends ListActivity {
 				wrapper.getTitle().setTextScaleX(1.0f);
 				wrapper.getTitle().setTextSize(16);
 				wrapper.getDate().setTextColor(Color.parseColor("#888888"));
+
+				Object[] args = { R.id.row_post_id, postIDs[position] };
 				
 				try {
-					//pv.setId(Integer.valueOf(postIDs[position]));
-					pv.setTag(R.id.row_post_id, postIDs[position]);
-				} catch (NumberFormatException e) {
-					//e.printStackTrace();
+				    Method m = android.view.View.class.getMethod("setTag");
+				    m.invoke(pv, args);
+				} catch (NoSuchMethodException e) {
+					pv.setId(Integer.valueOf(postIDs[position]));
+				} catch (IllegalArgumentException e) {
+					pv.setId(Integer.valueOf(postIDs[position]));
+				} catch (IllegalAccessException e) {
+					pv.setId(Integer.valueOf(postIDs[position]));
+				} catch (InvocationTargetException e) {
+					pv.setId(Integer.valueOf(postIDs[position]));
 				}
-
+				
+				//pv.setId(Integer.valueOf(postIDs[position]));
+				//pv.setTag(R.id.row_post_id, postIDs[position]);
+				
 				if (wrapper.getDate().getHeight() == 0) {
 					wrapper.getDate().setHeight(
 							(int) wrapper.getTitle().getTextSize()
@@ -1865,6 +1894,14 @@ public class viewPosts extends ListActivity {
 										"");
 								jpeg = new File(path);
 								mf.setFilePath(path);
+							}
+							
+							//check if the file is now gone! (removed SD card, etc)
+							if (jpeg == null)
+							{
+								xmlrpcError = true;
+								mediaErrorMsg = "Media file not found.";
+								break;
 							}
 
 							imageHelper ih = imageHelper.getInstance();
