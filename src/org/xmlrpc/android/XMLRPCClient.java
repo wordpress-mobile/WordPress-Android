@@ -56,7 +56,7 @@ public class XMLRPCClient {
 		
 		postMethod.addHeader("charset", "UTF-8");
 		//UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/1.4.0");
+		postMethod.addHeader("User-Agent", "wp-android/1.4.1");
 		
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
