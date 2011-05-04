@@ -264,7 +264,6 @@ public class viewStats extends Activity {
 		WordPressDB settingsDB = new WordPressDB(this);
 		Vector<?> settings = settingsDB.loadSettings(this, id);
 		final Vector<?> statsData = settingsDB.loadAPIData(this, id);
-
 		if (statsData == null) {
 			String sUsername = "";
 			String sPassword = "";
@@ -832,12 +831,8 @@ public class viewStats extends Activity {
 
 		Vector<String> apiInfo = null;
 
-		URI blogHost = URI.create(url);
-		String blogDomain = blogHost.getHost();
-
 		URI uri = URI
 				.create("https://public-api.wordpress.com/getuserblogs.php");
-
 		configureClient(uri, username, password);
 
 		// execute HTTP POST request
@@ -913,15 +908,14 @@ public class viewStats extends Activity {
 							foundID = false;
 						} else if (foundURL) {
 							curBlogURL = pullParser.getText();
-							URI curBlogHost = URI.create(curBlogURL);
-							String curBlogDomain = curBlogHost.getHost();
 							foundURL = false;
-							/*
-							 * if (url.endsWith("/")){ url = url.substring(0,
-							 * url.length() - 1); }
-							 */
-							if (curBlogDomain.equals(blogDomain)
-									|| storedBlogID.equals(curBlogID)) {
+							
+							//make sure we're matching with a '/' at the end of the string, the api returns both with and w/o
+							if (!curBlogURL.endsWith("/"))
+								curBlogURL += "/";
+							
+							if ((curBlogURL.equals(url)
+									|| storedBlogID.equals(curBlogID)) && !curBlogID.equals("1")) {
 								// yay, found a match
 								blogID = curBlogID;
 								apiInfo = new Vector<String>();
