@@ -108,7 +108,7 @@ public class editPost extends Activity implements LocationListener{
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
     private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
-    public String newID, imgHTML, sMaxImageWidth, sImagePlacement;
+    public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug;
     public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false, isPage = false, isNew = false, 
     isAction = false, isUrl = false, location = false, locationActive = false, isLargeScreen = false, isCustomPubDate = false;
     public Vector<Object> imgThumbs = new Vector<Object>();
@@ -443,6 +443,8 @@ public class editPost extends Activity implements LocationListener{
 					EditText titleET = (EditText)findViewById(R.id.title);
 			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
 			        EditText contentET = (EditText)findViewById(R.id.content);
+			        sSlug = contentHash.get("wp_slug").toString();
+			        
 			        String content = "";
 			        if (contentHash.get("mt_text_more").toString() != ""){
 			        	//removed toHtml function for trac ticket #68
@@ -1298,6 +1300,7 @@ public class editPost extends Activity implements LocationListener{
         contentStruct.put("title", title);
         contentStruct.put("description", content);
         contentStruct.put("post_status", status);
+        contentStruct.put("wp_slug", sSlug);
         
         TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
         String pubDate = tvPubDate.getText().toString();
