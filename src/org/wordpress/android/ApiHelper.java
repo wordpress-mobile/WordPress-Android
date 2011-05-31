@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -27,26 +28,10 @@ public class ApiHelper extends Activity {
     @SuppressWarnings("unchecked")
 	static void refreshComments(final String id, final Context ctx) {
 
-		Vector<Object> settings = new Vector<Object>();
-		final WordPressDB settingsDB = new WordPressDB(ctx);
-		settings = settingsDB.loadSettings(ctx, id); 
+    	WordPressDB db = new WordPressDB(ctx);
+		Blog blog = new Blog(id, ctx);
 
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
-
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		hPost.put("status", "");
@@ -55,9 +40,9 @@ public class ApiHelper extends Activity {
 
 
 		Object[] params = {
-				sBlogId,
-				sUsername,
-				sPassword,
+				blog.getBlogId(),
+				blog.getUsername(),
+				blog.getPassword(),
 				hPost
 		};
 		Object[] result = null;
@@ -118,14 +103,10 @@ public class ApiHelper extends Activity {
 					dbVector.add(ctr, dbValues);
 				}
 	
-				settingsDB.saveComments(ctx, dbVector, false);
-	
-	
+				db.saveComments(ctx, dbVector, false);
 			}
-	
 		}
     }
-
 }
 
 

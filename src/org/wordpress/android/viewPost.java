@@ -3,6 +3,7 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -30,11 +31,9 @@ public class viewPost extends Activity {
 	public String[] comments;
 	private String id = "";
 	private String postID = "";
-	private String accountName = "";
-	private String httpuser = "";
-	private String httppassword = "";
 	private boolean isPage = false;
 	public ProgressDialog pd;
+	private Blog blog;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -46,16 +45,16 @@ public class viewPost extends Activity {
         if(extras !=null)
         {
          id = extras.getString("id");
+         blog = new Blog(id, this);
          postID = extras.getString("postID");
-         accountName = extras.getString("accountName");
          isPage = extras.getBoolean("isPage");
         }   
         
         if (isPage){
-        	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_page));
+        	this.setTitle(escapeUtils.unescapeHtml(blog.getBlogName()) + " - " + getResources().getText(R.string.preview_page));
         }
         else{
-        	this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_post));
+        	this.setTitle(escapeUtils.unescapeHtml(blog.getBlogName()) + " - " + getResources().getText(R.string.preview_post));
         }
         
         Thread t = new Thread() 
@@ -70,22 +69,12 @@ public class viewPost extends Activity {
     }
 
 protected void loadPostFromPermalink() {
-    WordPressDB settingsDB = new WordPressDB(this);
-    Vector<?> settings = settingsDB.loadSettings(this, id);
-    
-	String username = settings.get(2).toString();
-	String password = settings.get(3).toString();
-	httpuser = settings.get(4).toString();
-	httppassword = settings.get(5).toString();
-	
-	String url = settings.get(0).toString();
-	
-	client = new XMLRPCClient(url, httpuser, httppassword);
+	client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
     
     Object[] vParams = {
     		postID,
-    		username,
-    		password
+    		blog.getUsername(),
+    		blog.getPassword()
     };
     
     Object versionResult = new Object();
@@ -131,10 +120,10 @@ private void displayResults(final String permaLink, final String html, final Str
  
                 if(progress == 100){
                 	if (isPage){
-                    	viewPost.this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_page));
+                    	viewPost.this.setTitle(escapeUtils.unescapeHtml(blog.getBlogName()) + " - " + getResources().getText(R.string.preview_page));
                     }
                     else{
-                    	viewPost.this.setTitle(escapeUtils.unescapeHtml(accountName) + " - " + getResources().getText(R.string.preview_post));
+                    	viewPost.this.setTitle(escapeUtils.unescapeHtml(blog.getBlogName()) + " - " + getResources().getText(R.string.preview_post));
                     }
                 }
             }
@@ -204,7 +193,7 @@ private class WordPressWebViewClient extends WebViewClient {
     }
     @Override
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-    	handler.proceed(httpuser, httppassword);
+    	handler.proceed(blog.getHttpuser(), blog.getHttppassword());
     }
   }
   @Override

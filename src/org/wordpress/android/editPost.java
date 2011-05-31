@@ -85,6 +85,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import org.wordpress.android.models.Blog;
 
 public class editPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
@@ -110,7 +111,7 @@ public class editPost extends Activity implements LocationListener{
     private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug;
     public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false, isPage = false, isNew = false, 
-    isAction = false, isUrl = false, location = false, locationActive = false, isLargeScreen = false, isCustomPubDate = false;
+    isAction = false, isUrl = false, locationActive = false, isLargeScreen = false, isCustomPubDate = false;
     public Vector<Object> imgThumbs = new Vector<Object>();
     LocationManager lm;
     Criteria criteria;
@@ -120,6 +121,7 @@ public class editPost extends Activity implements LocationListener{
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     //date holders
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private Blog blog;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);	
@@ -128,6 +130,7 @@ public class editPost extends Activity implements LocationListener{
         if(extras !=null)
         {
          id = extras.getString("id");
+         blog = new Blog(id, this);
          accountName = escapeUtils.unescapeHtml(extras.getString("accountName"));
          postID = extras.getString("postID");
          localDraft = extras.getBoolean("localDraft", false); 
@@ -313,19 +316,9 @@ public class editPost extends Activity implements LocationListener{
 		    		TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
 		    		tvCategories.setText("Selected categories: " + categories);
 		    		
-		    	}
-		    	
-		    	WordPressDB settingsDB = new WordPressDB(this);
-	        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
-	        	
-	    		String sLocation = settingsVector.get(13).toString();
+		    	}	
 	    		
-	    		location = false;
-	    		if (sLocation.equals("1")){
-	    			location = true;
-	    		}
-	    		
-	    		if (location){
+	    		if (blog.isLocation()){
 	    			enableLBSButtons();
 	    		}
 	    		
@@ -336,7 +329,7 @@ public class editPost extends Activity implements LocationListener{
 	    			new getAddressTask().execute(latitude, longitude);
 	    		}
 	    		
-	    		if (location && latitude > 0){
+	    		if (blog.isLocation() && latitude > 0){
 	    			Button updateLocation = (Button) findViewById(R.id.updateLocation);
 	    			
 	    			updateLocation.setOnClickListener(new Button.OnClickListener() {
@@ -358,7 +351,7 @@ public class editPost extends Activity implements LocationListener{
 		    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
 	            	locationSection.setVisibility(View.VISIBLE);
 	    		}
-	    		else if (location){
+	    		else if (blog.isLocation()){
 	    			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 		    		
 		    		lm.requestLocationUpdates(
@@ -386,42 +379,15 @@ public class editPost extends Activity implements LocationListener{
         	cancelBtn.setText(getResources().getText(R.string.upload_now));
         	
         	if (!isAction){
-	        	WordPressDB settingsDB = new WordPressDB(this);
-	        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
-	        	
-	    		String sLocation = settingsVector.get(13).toString();
 	    		if (!isPage){
-		    		location = false;
-		    		if (sLocation.equals("1")){
-		    			location = true;
-		    		}
-		    		
 		    		enableLBSButtons();
 	    		}
         	}
         	
         }
         else{
-
-        WordPressDB settingsDB = new WordPressDB(this);
-    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
-    	String sURL = "";
-    	
-    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = categoriesVector.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-    	}
-    	
-		String sUsername = categoriesVector.get(2).toString();
-		String sPassword = categoriesVector.get(3).toString();
-		String sHttpuser = categoriesVector.get(4).toString();
-		String sHttppassword = categoriesVector.get(5).toString();
 		
-    	client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+    	client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
     	
     	EditText titleET = (EditText)findViewById(R.id.title);
     	String setTitle = titleET.getText().toString();
@@ -549,8 +515,8 @@ public class editPost extends Activity implements LocationListener{
         });
         Object[] params = {
         		postID,
-        		sUsername,
-        		sPassword,
+        		blog.getUsername(),
+        		blog.getPassword(),
         };
         
         
@@ -943,7 +909,7 @@ public class editPost extends Activity implements LocationListener{
 	            }
 	        });
 		
-	        if (isNew && location){
+	        if (isNew && blog.isLocation()){
 	        	
 	        	Button updateLocation = (Button) findViewById(R.id.updateLocation);
 	        	updateLocation.setVisibility(View.GONE);
@@ -1230,40 +1196,12 @@ public class editPost extends Activity implements LocationListener{
      	}; 
      	this.runOnUiThread(updateDialog);
      	
-        //before we do anything, validate that the user has entered settings
-        boolean enteredSettings = checkSettings();
-        
-        if (!enteredSettings){
-        	res = "invalidSettings";
-        }
-        else if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
+     	if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
         {
         	res = "emptyFields";
         }
         else {
-        WordPressDB settingsDB = new WordPressDB(this);
-    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);   	
         
-	    	String sURL = "";
-	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-	    	{
-	    		sURL = categoriesVector.get(0).toString();
-	    	}
-	    	else
-	    	{
-	    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-	    	}
-    		String sUsername = categoriesVector.get(2).toString();
-    		String sPassword = categoriesVector.get(3).toString();
-    		String sHttpuser = categoriesVector.get(4).toString();
-    		String sHttppassword = categoriesVector.get(5).toString();
-    		String sImagePlacement = categoriesVector.get(6).toString();
-    		String sCenterThumbnailString = categoriesVector.get(7).toString();
-
-    		if (sCenterThumbnailString.equals("1")){
-    			centerThumbnail = true;
-    		}
-
     		Spinner spinner = (Spinner) findViewById(R.id.status);
             int selectedStatus = spinner.getSelectedItemPosition();
             String status = "";
@@ -1285,7 +1223,7 @@ public class editPost extends Activity implements LocationListener{
         Map<String, Object> contentStruct = new HashMap<String, Object>();
       
         if(imageContent != ""){
-        	if (sImagePlacement.equals("Above Text")){
+        	if (blog.getImagePlacement().equals("Above Text")){
         		content = imageContent + content;
         	}
         	else{
@@ -1336,12 +1274,12 @@ public class editPost extends Activity implements LocationListener{
         }
         }
       
-        client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
         
         Object[] params = {
         		postID,
-        		sUsername,
-        		sPassword,
+        		blog.getUsername(),
+        		blog.getPassword(),
         		contentStruct,
         		publishThis
         };
@@ -1423,39 +1361,8 @@ public class editPost extends Activity implements LocationListener{
 	    //images variables
 	    String finalThumbnailUrl = null;
 	    String finalImageUrl = null;
-	    
-	    //get the settings
-	    WordPressDB settingsDB = new WordPressDB(this);
-		Vector<?> categoriesVector = settingsDB.loadSettings(this, id);   	
-		
-	    	String sURL = "";
-	    	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-	    	{
-	    		sURL = categoriesVector.get(0).toString();
-	    	}
-	    	else
-	    	{
-	    		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-	    	}
-			String sUsername = categoriesVector.get(2).toString();
-			String sPassword = categoriesVector.get(3).toString();
-			String sHttpuser = categoriesVector.get(4).toString();
-			String sHttppassword = categoriesVector.get(5).toString();
-			String sImagePlacement = categoriesVector.get(6).toString();
-			String sCenterThumbnailString = categoriesVector.get(7).toString();
-			String sFullSizeImageString = categoriesVector.get(8).toString();
-			boolean sFullSizeImage  = false;
-			if (sFullSizeImageString.equals("1")){
-				sFullSizeImage = true;
-			}
 
-			boolean centerThumbnail = false;
-			if (sCenterThumbnailString.equals("1")){
-				centerThumbnail = true;
-			}
-			String sMaxImageWidth = categoriesVector.get(9).toString();
-			
-	    //new loop for multiple images
+	    //loop for multiple images
 	    
 	    for (int it = 0; it < selectedImageCtr; it++){
 	    	final int printCtr = it;
@@ -1471,7 +1378,7 @@ public class editPost extends Activity implements LocationListener{
 	    //check for image, and upload it
 	    if (imageUrl.get(it) != null)
 	    {
-	       client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+	       client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 	 	   
 	 	   String curImagePath = "";
 	 	   
@@ -1535,8 +1442,8 @@ public class editPost extends Activity implements LocationListener{
 	         
 	         Object[] params = {
 	         		1,
-	         		sUsername,
-	         		sPassword,
+	         		blog.getUsername(),
+	         		blog.getPassword(),
 	         		m
 	         };
 	         
@@ -1568,7 +1475,7 @@ public class editPost extends Activity implements LocationListener{
 	 
 	 		 curImagePath = imageUrl.get(it).toString();
 	 		   
-	 		if (i == 0 || sFullSizeImage)
+	 		if (i == 0 || blog.isFullSizeImage())
 	 		{
 	 	   
 	 	   Uri imageUri = Uri.parse(curImagePath);
@@ -1660,8 +1567,8 @@ public class editPost extends Activity implements LocationListener{
 	        
 	        Object[] params = {
 	        		1,
-	        		sUsername,
-	        		sPassword,
+	        		blog.getUsername(),
+	        		blog.getPassword(),
 	        		m
 	        };
 	        
@@ -1686,7 +1593,7 @@ public class editPost extends Activity implements LocationListener{
 		            	finalThumbnailUrl = resultURL;
 		            }
 		            else{
-		            	if (sFullSizeImage){
+		            	if (blog.isFullSizeImage()){
 		            	finalImageUrl = resultURL;
 		            	}
 		            	else
@@ -1702,7 +1609,7 @@ public class editPost extends Activity implements LocationListener{
 			           }
 			           
 
-			           if (i != 0 && sFullSizeImage)
+			           if (i != 0 && blog.isFullSizeImage())
 			           {
 				           if (resultURL != null)
 				           {
@@ -1718,7 +1625,7 @@ public class editPost extends Activity implements LocationListener{
 				           }
 			           }
 			           else{
-				           if (i == 0 && sFullSizeImage == false && resultURL != null)
+				           if (i == 0 && blog.isFullSizeImage() == false && resultURL != null)
 				           {
 
 				   	        	if (sImagePlacement.equals("Above Text")){
@@ -1734,42 +1641,14 @@ public class editPost extends Activity implements LocationListener{
 			           }
 	                
 	 	   }  //end if statement
-	 	   
-	       
-	       
-	 	  }//end image check
-	 	   
-	 	  }
-	 	   
+	 	  }//end image check	 	   
+	 	  } 	   
 	    }//end image stuff
 	    }//end new for loop
 
 	    return content;
 	}
-
 	
-	public boolean checkSettings(){
-		//see if the user has any saved preferences
-		 WordPressDB settingsDB = new WordPressDB(this);
-	    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
-	    	String sURL = null, sUsername = null, sPassword = null;
-	    	if (categoriesVector != null){
-	    		sURL = categoriesVector.get(0).toString();
-	    		sUsername = categoriesVector.get(2).toString();
-	    		sPassword = categoriesVector.get(3).toString();
-	    	}
- 
-        boolean validSettings = false;
-        
-        if ((sURL != "" && sUsername != "" && sPassword != "") && (sURL != null && sUsername != null && sPassword != null)){
-        	validSettings = true;
-        }
-        
-        return validSettings;
-	}
-	
-
-    
     class ImageFilter implements FilenameFilter
     {
     public boolean accept(File dir, String name)
@@ -2439,13 +2318,7 @@ public class editPost extends Activity implements LocationListener{
         String images = "";
         boolean success = false;
         
-        //before we do anything, validate that the user has entered settings
-        boolean enteredSettings = checkSettings();
-        
-        if (!enteredSettings){
-        	finalResult = "invalidSettings";
-        }
-        else if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
+        if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
         {
         	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
 			  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
@@ -2484,22 +2357,11 @@ public class editPost extends Activity implements LocationListener{
             	case 3:
             		status = "private";
             		break;
-            }
-        
-        	//Geotagging
-        	WordPressDB settingsDB = new WordPressDB(this);
-        	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
-        	
-    		String sLocation = settingsVector.get(13).toString();
-    		
-    		boolean location = false;
-    		if (sLocation.equals("1")){
-    			location = true;
-    		}
+            }	
         	
     		Double latitude = 0.0;
         	Double longitude = 0.0;
-            if (location){
+            if (blog.isLocation()){
             	         	
         		//attempt to get the device's location
         		// set up the LocationManager
@@ -2656,7 +2518,7 @@ public class editPost extends Activity implements LocationListener{
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (!isPage && location && locationActive){
+		if (!isPage && blog.isLocation() && locationActive){
 			lm.removeUpdates(this);
 		}
 	}
@@ -2664,7 +2526,7 @@ public class editPost extends Activity implements LocationListener{
 	@Override
 	protected void onDestroy() {
 		super.onPause();
-		if (!isPage && location && locationActive){
+		if (!isPage && blog.isLocation() && locationActive){
 			lm.removeUpdates(this);
 		}
 	}
@@ -2890,15 +2752,7 @@ private void addMedia(String imgPath, Uri curStream, boolean noUI) {
 }
 
 protected void lbsCheck() {
-	WordPressDB settingsDB = new WordPressDB(editPost.this);
-	Vector<?> settingsVector = settingsDB.loadSettings(editPost.this, id);   	
-
-	String sLocation = settingsVector.get(13).toString();
-
-	if (sLocation.equals("1")){
-		location = true;
-	}
-	if (location){
+	if (blog.isLocation()){
 		lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 		criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);

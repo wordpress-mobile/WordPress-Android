@@ -53,6 +53,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.wordpress.android.models.Blog;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -100,6 +101,7 @@ public class viewStats extends Activity {
 	ProgressDialog loadingDialog;
 	private int ID_DIALOG_GET_STATS = 0;
 	private int firstRun = 0;
+	private Blog blog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class viewStats extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			id = extras.getString("id");
+			blog = new Blog(id, this);
 			accountName = extras.getString("accountName");
 		}
 
@@ -260,45 +263,25 @@ public class viewStats extends Activity {
 	}
 
 	private void initStats() {
-
-		WordPressDB settingsDB = new WordPressDB(this);
-		Vector<?> settings = settingsDB.loadSettings(this, id);
-		final Vector<?> statsData = settingsDB.loadAPIData(this, id);
-		if (statsData == null) {
-			String sUsername = "";
-			String sPassword = "";
-			Vector<?> apiLogin = settingsDB.loadStatsLogin(this, id);
-			if (apiLogin != null) {
+		String sUsername, sPassword;
+		if (blog.getApi_key() == null) {
+			if (blog.getDotcom_username() != null) {
 				// we have an alternate login, use that instead
-				sUsername = apiLogin.get(0).toString();
-				sPassword = apiLogin.get(1).toString();
+				sUsername = blog.getDotcom_username();
+				sPassword = blog.getDotcom_password();
 			} else {
-				sUsername = settings.get(2).toString();
-				sPassword = settings.get(3).toString();
+				sUsername = blog.getUsername();
+				sPassword = blog.getPassword();
 			}
 
-			// no apiKey found in db, go get it
-			String sURL = "";
-			if (settings.get(0).toString().contains("xmlrpc.php")) {
-				sURL = settings.get(0).toString().replace("xmlrpc.php", "");
-			}
-
-			if (!sURL.endsWith("/")) {
-				sURL += "/";
-			}
-
-			sURL = sURL.replace("https://", "http://");
-
-			String blogID = settings.get(12).toString();
 			showProgressBar();
-			new statsUserDataTask().execute(sUsername, sPassword, sURL, blogID);
+			new statsUserDataTask().execute(sUsername, sPassword, blog.getUrl(), String.valueOf(blog.getBlogId()));
 		} else {
 			// apiKey found, load default views chart and table
 			showDialog(ID_DIALOG_GET_STATS);
 			Thread action = new Thread() {
 				public void run() {
-					getStatsData(statsData.get(0).toString(), statsData.get(1)
-							.toString(), "views", 7);
+					getStatsData(blog.getApi_key(), blog.getApi_blogid(), "views", 7);
 				}
 			};
 			action.start();
@@ -914,7 +897,7 @@ public class viewStats extends Activity {
 							if (!curBlogURL.endsWith("/"))
 								curBlogURL += "/";
 							
-							if ((curBlogURL.equals(url)
+							if ((curBlogURL.equals(url.replace("xmlrpc.php", ""))
 									|| storedBlogID.equals(curBlogID)) && !curBlogID.equals("1")) {
 								// yay, found a match
 								blogID = curBlogID;

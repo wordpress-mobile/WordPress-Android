@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -38,6 +39,7 @@ public class selectCategories extends ListActivity {
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	private final Handler mHandler = new Handler();
+	private Blog blog;
 	
     @Override
     public void onCreate(Bundle icicle) {
@@ -53,6 +55,7 @@ public class selectCategories extends ListActivity {
         if(extras !=null)
         {
          id = extras.getString("id");
+         blog = new Blog(id, this);
          checkedCategories = extras.getLongArray("checkedCategories");
          categoriesCSV = extras.getString("categoriesCSV");
         }
@@ -241,129 +244,63 @@ public class selectCategories extends ListActivity {
     	//gets the categories via xmlrpc call to wp blog
         String returnMessage = "";
 
-        //check for the settings
-        boolean enteredSettings = checkSettings();
+        
+        Object result[] = null;
 
-        if (!enteredSettings){
-        	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(selectCategories.this);
-			  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
-            dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
-          		  DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int whichButton) {
-                      // User clicked Yes so delete the contexts.
-                  	Intent i = new Intent(selectCategories.this, settings.class);
+        Object[] params = {
+        		blog.getBlogId(),
+        		blog.getUsername(),
+        		blog.getPassword(),
+        };
 
-                  	startActivityForResult(i, 0);
-              
-                  }
-              });
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
-          		  DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int whichButton) {
-                      // User clicked No so don't delete (do nothing).
-                  }
-              });
-            dialogBuilder.setCancelable(true);
-           dialogBuilder.create().show();
+        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+        boolean success = false;
+
+        try {
+        	result = (Object[]) client.call("wp.getCategories", params);
+        	success = true;
+        } catch (XMLRPCException e) {
+        	//e.getMessage();
+        	e.printStackTrace();
+        }
+
+        //Vector categoryIds = (Vector) result;
+        if (success){
+        	int size = result.length;
+
+        	//initialize database
+        	WordPressDB categoriesDB = new WordPressDB(this);
+        	//wipe out the categories table
+        	categoriesDB.clearCategories(this, id);
+
+        	for(int i=0; i<size; i++)
+        	{
+        		HashMap<?, ?> curHash = (HashMap<?, ?>) result[i];
+
+        		String categoryName = curHash.get("categoryName").toString();
+        		String categoryID = curHash.get("categoryId").toString();
+
+        		int convertedCategoryID = Integer.parseInt(categoryID);
+
+        		categoriesDB.insertCategory(this, id, convertedCategoryID, categoryName);
+
+        		//populate the spinner with the category names
+
+        		textArray.add(categoryName);
+
+        	}
+
+        	returnMessage = "gotCategories";
         }
         else{
-        	WordPressDB settingsDB = new WordPressDB(this);
-        	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
-        	
-        	
-	        	String sURL = "";
-	        	if (categoriesVector.get(0).toString().contains("xmlrpc.php"))
-	        	{
-	        		sURL = categoriesVector.get(0).toString();
-	        	}
-	        	else
-	        	{
-	        		sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-	        	}
-        		String sUsername = categoriesVector.get(2).toString();
-        		String sPassword = categoriesVector.get(3).toString();
-        		String sHttpuser = categoriesVector.get(4).toString();
-        		String sHttppassword = categoriesVector.get(5).toString();
-       	
+        	returnMessage = "FAIL";
+        }
 
-        
-        	Object result[] = null;
-        	
-        	Object[] params = {
-            		1,
-            		sUsername,
-            		sPassword,
-            };
-        	
-            client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
-            
-            boolean success = false;
-            
-            try {
-				result = (Object[]) client.call("wp.getCategories", params);
-				success = true;
-			} catch (XMLRPCException e) {
-				//e.getMessage();
-				e.printStackTrace();
-			}
-        
-            //Vector categoryIds = (Vector) result;
-            if (success){
-	            int size = result.length;
-	            
-	            //initialize database
-	            WordPressDB categoriesDB = new WordPressDB(this);
-	            //wipe out the categories table
-	            categoriesDB.clearCategories(this, id);
-	            
-	            for(int i=0; i<size; i++)
-	            {
-	              HashMap<?, ?> curHash = (HashMap<?, ?>) result[i];
-	              
-	              String categoryName = curHash.get("categoryName").toString();
-	              String categoryID = curHash.get("categoryId").toString();
-	              
-	              int convertedCategoryID = Integer.parseInt(categoryID);
-	              
-	              categoriesDB.insertCategory(this, id, convertedCategoryID, categoryName);
-	              
-	              //populate the spinner with the category names
-	              
-	              textArray.add(categoryName);
-	              
-	            }
-	            
-	            returnMessage = "gotCategories";
-            }
-            else{
-            	returnMessage = "FAIL";
-            }
-        
-        } //end valid url
+
         return returnMessage;
     	
     }
-    
-    public boolean checkSettings(){
-		//see if the user has any saved preferences
-		 WordPressDB settingsDB = new WordPressDB(this);
-	    	Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
-	    	String sURL = null, sUsername = null, sPassword = null;
-	    	if (categoriesVector != null){
-	    		sURL = categoriesVector.get(0).toString();
-	    		sUsername = categoriesVector.get(2).toString();
-	    		sPassword = categoriesVector.get(3).toString();
-	    	}
- 
-        boolean validSettings = false;
-        
-        if (((sURL != "") && (sUsername != "") && (sPassword != "")) && ((sURL != null) && (sUsername != null) && (sPassword != null))){
-        	validSettings = true;
-        }
-        
-        return validSettings;
-	}
     
     /**
      * function addCategory
@@ -374,25 +311,6 @@ public class selectCategories extends ListActivity {
     public String addCategory(String category_name, String category_slug, String category_desc, int parent_id) {
     	//	Return string
     	String returnString = "";
-    	
-    	//	Load settings
-    	WordPressDB settingsDB = new WordPressDB(this);
-    	Vector<?> settingsVector = settingsDB.loadSettings(this, id);   	
-    	
-    	//	Check if Blog-URL contains the "xmlrpc.php"
-    	String sURL = "";
-    	if (settingsVector.get(0).toString().contains("xmlrpc.php")) {
-    		sURL = settingsVector.get(0).toString();
-    	}
-    	else {
-    		sURL = settingsVector.get(0).toString() + "xmlrpc.php";
-    	}
-    	
-		String sUsername = settingsVector.get(2).toString();
-		String sPassword = settingsVector.get(3).toString();
-		String sHttpuser = settingsVector.get(4).toString();
-		String sHttppassword = settingsVector.get(5).toString();
-		int sBlogId = Integer.parseInt(settingsVector.get(12).toString());
     
 		//	Store the parameters for wp.addCategory
 	    Map<String, Object> struct = new HashMap<String, Object>();
@@ -401,12 +319,12 @@ public class selectCategories extends ListActivity {
 	    struct.put("description", category_desc);
 	    struct.put("parent_id", parent_id);
 
-	    client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+	    client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 	    
 	    Object[] params = {
-	    		sBlogId,
-	    		sUsername,
-	    		sPassword,
+	    		blog.getBlogId(),
+	    		blog.getUsername(),
+	    		blog.getPassword(),
 	    		struct
 	    };
 	    

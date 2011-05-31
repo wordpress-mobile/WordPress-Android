@@ -412,6 +412,7 @@ src/org/wordpress/android/imageHelper.java -text
 src/org/wordpress/android/imageHelper_v3.java -text
 src/org/wordpress/android/imageHelper_v4.java -text
 src/org/wordpress/android/link.java -text
+src/org/wordpress/android/models/Blog.java -text
 src/org/wordpress/android/moderateCommentsTab.java -text
 src/org/wordpress/android/newAccount.java -text
 src/org/wordpress/android/replyToComment.java -text

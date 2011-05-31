@@ -537,7 +537,7 @@ public class WordPressDB {
 	public Vector<Object> loadSettings(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag"}, "id=" + id, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid", "wpVersion"}, "id=" + id, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -563,13 +563,18 @@ public class WordPressDB {
 			}
 			returnVector.add(c.getString(6));
 			returnVector.add(c.getInt(7));
-			returnVector.add(c.getString(8));
+			returnVector.add(c.getInt(8));
 			returnVector.add(c.getString(9));
 			returnVector.add(c.getInt(10));
 			returnVector.add(c.getInt(11));
 			returnVector.add(c.getInt(12));
 			returnVector.add(c.getInt(13));
 			returnVector.add(c.getInt(14));
+			returnVector.add(c.getString(15));
+			returnVector.add(decryptPassword(c.getString(16)));
+			returnVector.add(c.getString(17));
+			returnVector.add(c.getString(18));
+			returnVector.add(c.getString(19));
 			}
 			else
 			{

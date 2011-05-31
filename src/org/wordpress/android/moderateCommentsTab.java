@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -65,8 +66,7 @@ public class moderateCommentsTab extends ListActivity {
 	private ThumbnailAdapter thumbs=null;
 	private ArrayList<CommentEntry> model=null;
 	private XMLRPCClient client;
-	private String id = "", accountName = "", sUsername = "", sPassword = "", moderateErrorMsg = "", selectedPostID = "";
-	int sBlogId;
+	private String id = "", accountName = "", moderateErrorMsg = "", selectedPostID = "";
 	public Object[] origComments;
 	public int[] changedStatuses;
 	public HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
@@ -85,6 +85,7 @@ public class moderateCommentsTab extends ListActivity {
 	private Vector<String> checkedComments;
 	private int checkedCommentTotal = 0; 
 	private boolean inModeration = false;
+	private Blog blog;
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -94,6 +95,7 @@ public class moderateCommentsTab extends ListActivity {
 		if(extras !=null)
 		{
 			id = extras.getString("id");
+			blog = new Blog(id, this);
 			accountName = extras.getString("accountName");
 			pd = new ProgressDialog(this);
 			fromNotification = extras.getBoolean("fromNotification", false);       		
@@ -239,30 +241,12 @@ public class moderateCommentsTab extends ListActivity {
 	@SuppressWarnings("unchecked")
 	protected void moderateComments(String newStatus) {
 		//handles bulk moderation
-		Vector<Object> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
-
+		WordPressDB db = new WordPressDB(this);
 		for (int i=0;i < checkedComments.size(); i++)
 		{
 			if (checkedComments.get(i).toString().equals("true")){
 
-				client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 				CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
@@ -276,9 +260,9 @@ public class moderateCommentsTab extends ListActivity {
 				postHash.put("author_email", contentHash.get("email"));
 
 				Object[] params = {
-						sBlogId,
-						sUsername,
-						sPassword,
+						blog.getBlogId(),
+						blog.getUsername(),
+						blog.getPassword(),
 						curCommentID,
 						postHash
 				};
@@ -291,7 +275,7 @@ public class moderateCommentsTab extends ListActivity {
 						checkedComments.set(i, "false");
 						listRow.status = newStatus;
 						model.set(i, listRow);
-						settingsDB.updateCommentStatus(moderateCommentsTab.this, id, listRow.commentID, newStatus);
+						db.updateCommentStatus(moderateCommentsTab.this, id, listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
 					moderateErrorMsg = e.getLocalizedMessage();
@@ -382,37 +366,20 @@ public class moderateCommentsTab extends ListActivity {
 
 	protected void deleteComments() {
 		//bulk detete comments
-		Vector<Object> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
 		
 		for (int i=0;i < checkedComments.size(); i++)
 		{
 			if (checkedComments.get(i).toString().equals("true")){
 
-				client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 				CommentEntry listRow = (CommentEntry) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
 				Object[] params = {
-						sBlogId,
-						sUsername,
-						sPassword,
+						blog.getBlogId(),
+						blog.getUsername(),
+						blog.getPassword(),
 						curCommentID
 				};
 
@@ -650,27 +617,7 @@ public class moderateCommentsTab extends ListActivity {
 		if (!loadMore && !doInBackground){
 			showProgressBar();
 		}
-
-		Vector<Object> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(this);
-		settings = settingsDB.loadSettings(this, id); 
-
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		sUsername = settings.get(2).toString();
-		sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		sBlogId = Integer.parseInt(settings.get(12).toString());
-
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 		HashMap hPost = new HashMap();
 		hPost.put("status", "");
@@ -779,9 +726,9 @@ public class moderateCommentsTab extends ListActivity {
 			}
 		});
 		Object[] params = {
-				sBlogId,
-				sUsername,
-				sPassword,
+				blog.getBlogId(),
+				blog.getUsername(),
+				blog.getPassword(),
 				hPost
 		};
 
@@ -1150,9 +1097,9 @@ public class moderateCommentsTab extends ListActivity {
 				//get the total comments
 				HashMap<Object, Object> countResult = new HashMap<Object, Object>();
 				Object[] countParams = {
-						sBlogId,
-						sUsername,
-						sPassword,
+						blog.getBlogId(),
+						blog.getUsername(),
+						blog.getPassword(),
 						0
 				};
 				try {
@@ -1422,25 +1369,8 @@ public class moderateCommentsTab extends ListActivity {
 		String sSelCommentID = String.valueOf(selCommentID);
 		ListView lv = getListView();
 		CommentEntry ce = (CommentEntry)lv.getItemAtPosition(position);
-		Vector<Object> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
-
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		WordPressDB db = new WordPressDB(this);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 		HashMap contentHash, postHash = new HashMap();
 		contentHash = (HashMap) allComments.get(sSelCommentID);
@@ -1452,9 +1382,9 @@ public class moderateCommentsTab extends ListActivity {
 
 
 		Object[] params = {
-				sBlogId,
-				sUsername,
-				sPassword,
+				blog.getBlogId(),
+				blog.getUsername(),
+				blog.getPassword(),
 				sSelCommentID,
 				postHash
 		};
@@ -1466,7 +1396,7 @@ public class moderateCommentsTab extends ListActivity {
 			if (bResult){
 				ce.status = newStatus;
 				model.set(position, ce);
-				settingsDB.updateCommentStatus(moderateCommentsTab.this, id, ce.commentID, newStatus);
+				db.updateCommentStatus(moderateCommentsTab.this, id, ce.commentID, newStatus);
 			}
 			dismissDialog(ID_DIALOG_MODERATING);
 			Thread action = new Thread() 
@@ -1514,31 +1444,13 @@ public class moderateCommentsTab extends ListActivity {
 
 	private void deleteComment(final int selCommentID) {
 		//delete individual comment
-		Vector<Object> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
-
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 		Object[] params = {
-				sBlogId,
-				sUsername,
-				sPassword,
+				blog.getBlogId(),
+				blog.getUsername(),
+				blog.getPassword(),
 				selCommentID
 		};
 
@@ -1591,25 +1503,8 @@ public class moderateCommentsTab extends ListActivity {
 	private void replyToComment(final String postID, final int commentID, final String comment) {
 		//reply to individual comment
 		Vector<Object> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(moderateCommentsTab.this);
-		settings = settingsDB.loadSettings(moderateCommentsTab.this, id);
 
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php"))
-		{
-			sURL = settings.get(0).toString();
-		}
-		else
-		{
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
-
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 		HashMap<String, Object> replyHash = new HashMap<String, Object>();
 		replyHash.put("comment_parent", commentID);
@@ -1619,9 +1514,9 @@ public class moderateCommentsTab extends ListActivity {
 		replyHash.put("author_email", "");
 
 		Object[] params = {
-				sBlogId,
-				sUsername,
-				sPassword,
+				blog.getBlogId(),
+				blog.getUsername(),
+				blog.getPassword(),
 				Integer.valueOf(postID),
 				replyHash
 		};

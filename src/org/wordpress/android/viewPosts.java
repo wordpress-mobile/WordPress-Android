@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.wordpress.android.models.Blog;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -96,7 +96,7 @@ public class viewPosts extends ListActivity {
 	int numRecords = 30;
 	private ViewSwitcher switcher;
 	private PostListAdapter pla;
-
+	private Blog blog;
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -106,6 +106,7 @@ public class viewPosts extends ListActivity {
 		String action = null;
 		if (extras != null) {
 			id = extras.getString("id");
+			blog = new Blog(id, this);
 			accountName = extras.getString("accountName");
 			isPage = extras.getBoolean("viewPages");
 			action = extras.getString("action");
@@ -219,23 +220,7 @@ public class viewPosts extends ListActivity {
 			showProgressBar();
 		}
 
-		Vector<?> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(this);
-		settings = settingsDB.loadSettings(this, id);
-
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php")) {
-			sURL = settings.get(0).toString();
-		} else {
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
-
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 		XMLRPCMethod method = new XMLRPCMethod((isPage) ? "wp.getPageList"
 				: "blogger.getRecentPosts", new XMLRPCMethodCallback() {
@@ -366,10 +351,10 @@ public class viewPosts extends ListActivity {
 			}
 		});
 		if (isPage) {
-			Object[] params = { sBlogId, sUsername, sPassword, };
+			Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), };
 			method.call(params);
 		} else {
-			Object[] params = { "spacer", sBlogId, sUsername, sPassword,
+			Object[] params = { "spacer", blog.getBlogId(), blog.getUsername(), blog.getPassword(),
 					numRecords };
 			method.call(params);
 		}
@@ -506,7 +491,7 @@ public class viewPosts extends ListActivity {
 				pla.notifyDataSetChanged();
 			} else {
 				pla = new PostListAdapter(viewPosts.this);
-				setListAdapter(pla);
+				listView.setAdapter(pla);
 
 				listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -1161,27 +1146,12 @@ public class viewPosts extends ListActivity {
 	}
 
 	private void deletePost() {
-
-		Vector<?> settings = new Vector<Object>();
-		WordPressDB settingsDB = new WordPressDB(viewPosts.this);
-		settings = settingsDB.loadSettings(viewPosts.this, id);
-
-		String sURL = "";
-		if (settings.get(0).toString().contains("xmlrpc.php")) {
-			sURL = settings.get(0).toString();
-		} else {
-			sURL = settings.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
-		int sBlogId = Integer.parseInt(settings.get(12).toString());
+		
 		String selPostID = String.valueOf(selectedID);
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-		Object[] postParams = { "", selPostID, sUsername, sPassword };
-		Object[] pageParams = { sBlogId, sUsername, sPassword, selPostID };
+		Object[] postParams = { "", selPostID, blog.getUsername(), blog.getPassword() };
+		Object[] pageParams = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), selPostID };
 
 		
 		try {
@@ -1347,21 +1317,6 @@ public class viewPosts extends ListActivity {
 
 			//
 			WordPressDB settingsDB = new WordPressDB(this);
-			Vector<?> settingsVector = settingsDB.loadSettings(this, id);
-
-			String sURL = "";
-			if (settingsVector.get(0).toString().contains("xmlrpc.php")) {
-				sURL = settingsVector.get(0).toString();
-			} else {
-				sURL = settingsVector.get(0).toString() + "xmlrpc.php";
-			}
-			String sUsername = settingsVector.get(2).toString();
-			String sPassword = settingsVector.get(3).toString();
-			String sHttpuser = settingsVector.get(4).toString();
-			String sHttppassword = settingsVector.get(5).toString();
-			String sImagePlacement = settingsVector.get(6).toString();
-
-			int sBlogId = Integer.parseInt(settingsVector.get(12).toString());
 
 			Map<String, Object> contentStruct = new HashMap<String, Object>();
 
@@ -1440,11 +1395,11 @@ public class viewPosts extends ListActivity {
 				}
 			}
 			
-			client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 			if(password != null && !"".equals(password)){
 				contentStruct.put("wp_password", password);
 			}
-			Object[] params = { sBlogId, sUsername, sPassword, contentStruct,
+			Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), contentStruct,
 					publishThis };
 
 			Object result = null;
@@ -1643,61 +1598,12 @@ public class viewPosts extends ListActivity {
 
 	}
 
-	public boolean checkSettings() {
-		// see if the user has any saved preferences
-		WordPressDB settingsDB = new WordPressDB(this);
-		Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
-		String sURL = null, sUsername = null, sPassword = null;
-		if (categoriesVector != null) {
-			sURL = categoriesVector.get(0).toString();
-			sUsername = categoriesVector.get(2).toString();
-			sPassword = categoriesVector.get(3).toString();
-		}
-
-		boolean validSettings = false;
-
-		if ((sURL != "" && sUsername != "" && sPassword != "")
-				&& (sURL != null && sUsername != null && sPassword != null)) {
-			validSettings = true;
-		}
-
-		return validSettings;
-	}
-
 	public String uploadImages() {
 		String content = "";
 
 		// images variables
 		String finalThumbnailUrl = null;
 		String finalImageUrl = null;
-
-		// get the settings
-		WordPressDB settingsDB = new WordPressDB(this);
-		Vector<?> categoriesVector = settingsDB.loadSettings(this, id);
-
-		String sURL = "";
-		if (categoriesVector.get(0).toString().contains("xmlrpc.php")) {
-			sURL = categoriesVector.get(0).toString();
-		} else {
-			sURL = categoriesVector.get(0).toString() + "xmlrpc.php";
-		}
-		String sUsername = categoriesVector.get(2).toString();
-		String sPassword = categoriesVector.get(3).toString();
-		String sHttpuser = categoriesVector.get(4).toString();
-		String sHttppassword = categoriesVector.get(5).toString();
-		String sImagePlacement = categoriesVector.get(6).toString();
-		String sCenterThumbnailString = categoriesVector.get(7).toString();
-		String sFullSizeImageString = categoriesVector.get(8).toString();
-		boolean sFullSizeImage = false;
-		if (sFullSizeImageString.equals("1")) {
-			sFullSizeImage = true;
-		}
-
-		boolean centerThumbnail = false;
-		if (sCenterThumbnailString.equals("1")) {
-			centerThumbnail = true;
-		}
-		String sMaxImageWidth = categoriesVector.get(9).toString();
 
 		//loop for multiple images
 
@@ -1712,7 +1618,7 @@ public class viewPosts extends ListActivity {
 			this.runOnUiThread(prompt);
 			// check for image, and upload it
 			if (imageUrl.get(it) != null) {
-				client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
+				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 				String curImagePath = "";
 
@@ -1793,7 +1699,7 @@ public class viewPosts extends ListActivity {
 					m.put("bits", mf);
 					m.put("overwrite", true);
 
-					Object[] params = { 1, sUsername, sPassword, m };
+					Object[] params = { 1, blog.getUsername(), blog.getPassword(), m };
 
 					Object result = null;
 
@@ -1845,7 +1751,7 @@ public class viewPosts extends ListActivity {
 
 						curImagePath = imageUrl.get(it).toString();
 
-						if (i == 0 || sFullSizeImage) {
+						if (i == 0 || blog.isFullSizeImage()) {
 
 							Uri imageUri = Uri.parse(curImagePath);
 							File jpeg = null;
@@ -1950,7 +1856,7 @@ public class viewPosts extends ListActivity {
 							}
 							m.put("overwrite", true);
 
-							Object[] params = { 1, sUsername, sPassword, m };
+							Object[] params = { 1, blog.getUsername(), blog.getPassword(), m };
 
 							Object result = null;
 
@@ -1974,7 +1880,7 @@ public class viewPosts extends ListActivity {
 							if (i == 0) {
 								finalThumbnailUrl = resultURL;
 							} else {
-								if (sFullSizeImage) {
+								if (blog.isFullSizeImage()) {
 									finalImageUrl = resultURL;
 								} else {
 									finalImageUrl = "";
@@ -1987,7 +1893,7 @@ public class viewPosts extends ListActivity {
 								centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
 							}
 
-							if (i != 0 && sFullSizeImage) {
+							if (i != 0 && blog.isFullSizeImage()) {
 								if (resultURL != null) {
 
 									if (sImagePlacement.equals("Above Text")) {
@@ -2010,7 +1916,7 @@ public class viewPosts extends ListActivity {
 
 								}
 							} else {
-								if (i == 0 && sFullSizeImage == false
+								if (i == 0 && blog.isFullSizeImage() == false
 										&& resultURL != null) {
 
 									if (sImagePlacement.equals("Above Text")) {
@@ -2140,27 +2046,18 @@ public class viewPosts extends ListActivity {
 	}
 	
 	private void shareURL(String accountId, String postId, final boolean isPage) {
-		WordPressDB settingsDB = new WordPressDB(this);
-	    Vector<?> settings = settingsDB.loadSettings(this, accountId);
+
 	    String errorStr = null;
-	    
-		String username = settings.get(2).toString();
-		String password = settings.get(3).toString();
-		String httpuser = settings.get(4).toString();
-		String httppassword = settings.get(5).toString();
-		String blogID = settings.get(12).toString();
-		
-		String url = settings.get(0).toString();
-		
-		client = new XMLRPCClient(url, httpuser, httppassword);
+
+		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 	    
 	    Object versionResult = new Object();
 	    try {
 	    	if(isPage) {
-	    		Object[] vParams = { blogID, postId, username, password };
+	    		Object[] vParams = { blog.getBlogId(), postId, blog.getUsername(), blog.getPassword() };
 	    		versionResult = (Object) client.call("wp.getPage", vParams);
 	    	} else {
-	    		Object[] vParams = { postId, username, password };
+	    		Object[] vParams = { postId, blog.getUsername(), blog.getPassword() };
 	    		versionResult = (Object) client.call("metaWeblog.getPost", vParams);
 	    	}
 		} catch (XMLRPCException e) {

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
+import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -31,6 +32,7 @@ public class viewComments extends ListActivity {
 	private String id = "";
 	private String postID = "";
 	private String accountName = "";
+	private Blog blog;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -40,68 +42,54 @@ public class viewComments extends ListActivity {
         if(extras !=null)
         {
          id = extras.getString("id");
+         blog = new Blog(id, this);
          postID = extras.getString("postID");
          accountName = extras.getString("accountName");
         }      
         
         this.setTitle(accountName + " - " + getResources().getText(R.string.view_comments));
-        WordPressDB settingsDB = new WordPressDB(this);
-        Vector<?> settings = settingsDB.loadSettings(this, id);
-        
-    	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
-    	{
-    		sURL = settings.get(0).toString();
-    	}
-    	else
-    	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
-    	}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
+
             
-            HashMap<String, Object> hPost = new HashMap<String, Object>();
-            hPost.put("status", "approve");
-            hPost.put("post_id", postID);
-            hPost.put("number", 10);
+        HashMap<String, Object> hPost = new HashMap<String, Object>();
+        hPost.put("status", "approve");
+        hPost.put("post_id", postID);
+        hPost.put("number", 10);
 
-        	client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
-        	
-        	XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
-				public void callFinished(Object[] result) {
-					
-					if (result.length == 0){
-						comments = new String[1];
-						authors = new String[1];
-						comments[0] = getResources().getText(R.string.no_approved_comments).toString();
-						authors[0] = "";
-					}
-					else{
-						comments = new String[result.length];
-						authors = new String[result.length];
-						
-					    for (int ctr = 0; ctr < result.length; ctr++) {
-					    	HashMap<?, ?> contentHash = (HashMap<?, ?>) result[ctr];
-					        comments[ctr] = contentHash.get("content").toString();
-					        authors[ctr] = contentHash.get("author").toString();
-					    }
-					}  
-		        
-					 setListAdapter(new CommentListAdapter(viewComments.this));
+        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
-				}
-	        });
-	        Object[] params = {
-	        		1,
-	        		sUsername,
-	        		sPassword,
-	        		hPost
-	        };
-	        
-	        
-	        method.call(params);
+        XMLRPCMethod method = new XMLRPCMethod("wp.getComments", new XMLRPCMethodCallback() {
+        	public void callFinished(Object[] result) {
+
+        		if (result.length == 0){
+        			comments = new String[1];
+        			authors = new String[1];
+        			comments[0] = getResources().getText(R.string.no_approved_comments).toString();
+        			authors[0] = "";
+        		}
+        		else{
+        			comments = new String[result.length];
+        			authors = new String[result.length];
+
+        			for (int ctr = 0; ctr < result.length; ctr++) {
+        				HashMap<?, ?> contentHash = (HashMap<?, ?>) result[ctr];
+        				comments[ctr] = contentHash.get("content").toString();
+        				authors[ctr] = contentHash.get("author").toString();
+        			}
+        		}  
+
+        		setListAdapter(new CommentListAdapter(viewComments.this));
+
+        	}
+        });
+        Object[] params = {
+        		1,
+        		blog.getUsername(),
+        		blog.getPassword(),
+        		hPost
+        };
+
+
+        method.call(params);
     }
 
 

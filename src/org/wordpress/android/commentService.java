@@ -93,7 +93,7 @@ public class commentService extends Service {
     			
     			accountID = notificationAccounts.get(i).toString();
     			accountName = settingsDB.getAccountName(this, accountID);
-    			Log.i("WordPressCommentService", "Checking Comments for " + accountName);
+    			//Log.i("WordPressCommentService", "Checking Comments for " + accountName);
 
     	Vector<?> settings = settingsDB.loadSettings(this, accountID);
     	final int latestCommentID = settingsDB.getLatestCommentID(this, accountID);
@@ -151,8 +151,6 @@ public class commentService extends Service {
 				else{
 				
 				HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
-			    
-				;
 				
 				//loop this!
 				    for (int ctr = 0; ctr < result.length; ctr++){
@@ -163,12 +161,12 @@ public class commentService extends Service {
 				String commentID = contentHash.get("comment_id").toString();
 				if (latestCommentID == 0){
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));
-					Log.i("WordPressCommentService", "comment was zero");
+					////Log.i("WordPressCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){
 					
 					//update the comments
-					ApiHelper.refreshComments(accountID, commentService.this);
+					//ApiHelper.refreshComments(accountID, commentService.this);
 					
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 					Intent notificationIntent = new Intent(commentService.this, tabView.class);
@@ -199,10 +197,10 @@ public class commentService extends Service {
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					
 					settingsDB.updateLatestCommentID(commentService.this, accountID, Integer.valueOf(commentID));
-					Log.i("WordPressCommentService", "found a new comment!");
+					//Log.i("WordPressCommentService", "found a new comment!");
 				}
 				else{
-					Log.i("WordPressCommentService", "no new comments");
+					//Log.i("WordPressCommentService", "no new comments");
 				}
 
 				}  
