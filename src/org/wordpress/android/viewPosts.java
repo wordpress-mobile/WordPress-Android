@@ -24,6 +24,11 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.wordpress.android.R;
+import org.wordpress.android.R.drawable;
+import org.wordpress.android.R.id;
+import org.wordpress.android.R.layout;
+import org.wordpress.android.R.string;
 import org.wordpress.android.models.Blog;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
