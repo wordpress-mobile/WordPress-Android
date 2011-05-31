@@ -1,3 +1,7 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 <LinearLayout android:id="@+id/LinearLayout01" 
 android:layout_width="fill_parent" 
 android:layout_height="fill_parent" 
@@ -70,3 +74,4 @@ android:orientation="vertical">
             android:background="@drawable/wp_button"
             android:text="@string/i_have_blog" />
 </LinearLayout>
+</ScrollView>
