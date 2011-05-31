@@ -3,6 +3,10 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.wordpress.android.R;
+import org.wordpress.android.R.id;
+import org.wordpress.android.R.layout;
+import org.wordpress.android.R.string;
 import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
