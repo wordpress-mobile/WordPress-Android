@@ -48,7 +48,6 @@
 			</intent-filter>
 		</activity>
 <activity android:name="addAcountSettings"></activity>
-<activity android:name=".tablet.EU4You"></activity>
 <activity android:name="viewPosts"></activity>
 </application>
 
