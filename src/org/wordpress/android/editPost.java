@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import org.apache.http.conn.HttpHostConnectException;
@@ -58,7 +57,9 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.Html.ImageGetter;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -86,6 +87,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
 
 public class editPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
@@ -98,16 +100,15 @@ public class editPost extends Activity implements LocationListener{
 	public String imageTitle = null;
 	public Vector<String> imageUrl = new Vector<String>();
 	public Vector<Object> thumbnailUrl = new Vector<Object>();
-	private final Handler mHandler = new Handler();
 	public String finalResult = null;
 	Vector<String> selectedCategories = new Vector<String>();
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "", id = "", accountName = "", postID = "", SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
-	private XMLRPCClient client;
+	public String categoryErrorMsg = "", id = "", accountName = "", SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
+	long postID;
     private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug;
     public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false, isPage = false, isNew = false, 
@@ -122,6 +123,7 @@ public class editPost extends Activity implements LocationListener{
     //date holders
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Blog blog;
+    private Post post;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);	
@@ -132,10 +134,12 @@ public class editPost extends Activity implements LocationListener{
          id = extras.getString("id");
          blog = new Blog(id, this);
          accountName = escapeUtils.unescapeHtml(extras.getString("accountName"));
-         postID = extras.getString("postID");
+         postID = extras.getLong("postID");
          localDraft = extras.getBoolean("localDraft", false); 
          isPage = extras.getBoolean("isPage", false);
          isNew = extras.getBoolean("isNew", false);
+         if (!isNew)
+             post = new Post(id, postID, isPage, this);
         }
         
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
@@ -236,7 +240,145 @@ public class editPost extends Activity implements LocationListener{
         	setTitle(accountName + " - " + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
 		}
         
-        if (localDraft){
+		if (isNew){
+        	if (!isAction){
+	    		if (!isPage){
+		    		enableLBSButtons();
+	    		}
+        	}
+        	
+        }
+		else{
+			
+			EditText titleET = (EditText)findViewById(R.id.title);
+        	EditText contentET = (EditText)findViewById(R.id.content);
+        	EditText passwordET = (EditText)findViewById(R.id.post_password);
+        	
+        	titleET.setText(post.getTitle());
+        	
+        	contentET.setText(Html.fromHtml(post.getDescription() + post.getMt_text_more()));
+
+        	long pubDate = post.getDate_created_gmt();
+        	if (pubDate != 0){
+        		try {
+					Date date = new Date(pubDate);
+					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a"); 
+					String sPubDate = sdf.format(date);
+					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+					tvPubDate.setText(sPubDate);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        	
+        	if(post.getWP_password() != null)
+        		passwordET.setText(post.getWP_password());
+	        
+        	if (post.getPost_status() != null){
+	        	String status = post.getPost_status();
+	        	
+		        if (status.equals("publish")){
+		        	spinner.setSelection(0, true);
+		        }
+		        else if (status.equals("draft")){
+		        	spinner.setSelection(1, true);
+		        }
+		        else if (status.equals("pending")){
+		        	spinner.setSelection(2, true);
+		        }
+		        else if (status.equals("private")){
+		        	spinner.setSelection(3, true);
+		        }
+        	}
+        	
+        	/*String picturePaths = postHashMap.get("picturePaths").toString();
+        	if (!picturePaths.equals("")){
+        		String[] pPaths = picturePaths.split(",");
+        		
+        		for (int i = 0; i < pPaths.length; i++)
+        		{
+        			Uri imagePath = Uri.parse(pPaths[i]); 
+        			addMedia(imagePath.getEncodedPath(), imagePath);
+        		}
+        		
+        	}*/
+        	
+        	if (!isPage){
+        		if (post.getCategories() != null) {
+        			categories = post.getCategories().toString();
+        			if (!categories.equals("")){
+
+        				String[] aCategories = categories.split(",");
+
+        				for (int i=0; i < aCategories.length; i++)
+        				{
+        					selectedCategories.add(aCategories[i]);
+        				}
+
+        				TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
+        				tvCategories.setText("Selected categories: " + categories);
+
+        			}
+        		}
+        	}
+	    		
+	    		/*if (blog.isLocation()){
+	    			enableLBSButtons();
+	    		}
+	    		
+	    		Double latitude = (Double) postHashMap.get("latitude");
+	    		Double longitude = (Double) postHashMap.get("longitude");
+
+	    		if (latitude != 0.0){
+	    			new getAddressTask().execute(latitude, longitude);
+	    		}
+	    		
+	    		if (blog.isLocation() && latitude > 0){
+	    			Button updateLocation = (Button) findViewById(R.id.updateLocation);
+	    			
+	    			updateLocation.setOnClickListener(new Button.OnClickListener() {
+	    	            public void onClick(View v) {
+	    	            	 
+	    	            	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+	    		    		
+	    		    		lm.requestLocationUpdates(
+	    				            LocationManager.GPS_PROVIDER, 
+	    				            20000, 
+	    				            0, 
+	    				            editPost.this
+	    				    );
+	    					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+	    					locationActive = true;
+	    	            }
+	    	        });
+	    			
+		    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+	            	locationSection.setVisibility(View.VISIBLE);
+	    		}
+	    		else if (blog.isLocation()){
+	    			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+		    		
+		    		lm.requestLocationUpdates(
+				            LocationManager.GPS_PROVIDER, 
+				            20000, 
+				            0, 
+				            editPost.this
+				    );
+					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+					locationActive = true;
+					
+					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+	            	locationSection.setVisibility(View.VISIBLE);
+	    		}*/
+		    	
+		    	String tags = post.getMt_keywords();
+		    	if (!tags.equals("")){
+		    		EditText tagsET = (EditText) findViewById(R.id.tags);
+		    		tagsET.setText(tags);
+		    	}
+			
+			/*
         	WordPressDB lDraftsDB = new WordPressDB(this);
         	Vector<?> post;
         	if (isPage){
@@ -372,159 +514,8 @@ public class editPost extends Activity implements LocationListener{
 		    		EditText tagsET = (EditText) findViewById(R.id.tags);
 		    		tagsET.setText(tags);
 		    	}
-        	}
+        	}*/
         }
-        else if (isNew){
-        	Button cancelBtn = (Button) findViewById(R.id.cancel);
-        	cancelBtn.setText(getResources().getText(R.string.upload_now));
-        	
-        	if (!isAction){
-	    		if (!isPage){
-		    		enableLBSButtons();
-	    		}
-        	}
-        	
-        }
-        else{
-		
-    	client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-    	
-    	EditText titleET = (EditText)findViewById(R.id.title);
-    	String setTitle = titleET.getText().toString();
-    	if (setTitle.equals("")){
-    	
-    	pd = ProgressDialog.show(editPost.this,
-    			getResources().getText((isPage) ? R.string.getting_page : R.string.getting_post), getResources().getText((isPage) ? R.string.please_wait_getting_page : R.string.please_wait_getting_post), true, false);
-    	
-    	XMLRPCMethod method = new XMLRPCMethod("metaWeblog.getPost", new XMLRPCMethodCallback() {
-			public void callFinished(Object result) {
-				pd.dismiss();
-				
-				if (result == null){
-					//prompt that something went wrong?
-				}
-				else{
-					HashMap<?, ?> contentHash = (HashMap<?, ?>) result;
-					
-					EditText titleET = (EditText)findViewById(R.id.title);
-			        titleET.setText(escapeUtils.unescapeHtml(contentHash.get("title").toString()));
-			        EditText contentET = (EditText)findViewById(R.id.content);
-			        sSlug = contentHash.get("wp_slug").toString();
-			        
-			        String content = "";
-			        if (contentHash.get("mt_text_more").toString() != ""){
-			        	//removed toHtml function for trac ticket #68
-			        	content = contentHash.get("description").toString() + "<!--more-->\n" + contentHash.get("mt_text_more").toString();
-			        }
-			        else{
-			        	content = contentHash.get("description").toString();
-			        }
-			        
-			        contentET.setText(content);
-			        
-			        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-			        Calendar cal = Calendar.getInstance();
-			        TimeZone tz = cal.getTimeZone();
-			        String shortDisplayName = "";
-			        shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
-			        
-			     // make the date pretty
-					String cDate = contentHash.get("dateCreated").toString().replace(tz.getID(),
-							shortDisplayName);
-					try {
-						Date d = sdf.parse(cDate);
-						SimpleDateFormat sdfOut = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-						TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
-						tvPubDate.setText(sdfOut.format(d));
-					} catch (ParseException pe) {
-						pe.printStackTrace();
-					} catch (java.text.ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			        
-			        EditText passwordET = (EditText)findViewById(R.id.post_password);
-			        if(contentHash.get("wp_password") != null)
-			        	passwordET.setText(contentHash.get("wp_password").toString());
-			        
-			        Toast.makeText(editPost.this, getResources().getText(R.string.html), Toast.LENGTH_SHORT).show();
-			        
-			        String status = contentHash.get("post_status").toString();
-			        
-			        if (!isPage){
-				        EditText tagsET = (EditText)findViewById(R.id.tags);
-				        tagsET.setText(escapeUtils.unescapeHtml(contentHash.get("mt_keywords").toString()));
-				        TextView categoriesTV = (TextView)findViewById(R.id.selectedCategories);
-			        
-				        Object categoriesArray[] = (Object[]) contentHash.get("categories");
-				        
-				        if (categoriesArray != null){
-				        	
-				        	categories = "";
-						    for (int ctr = 0; ctr < categoriesArray.length; ctr++){
-						        String category = categoriesArray[ctr].toString();
-						        if (!selectedCategories.contains(category))
-			                	{
-						        categories += category + ",";
-			                	selectedCategories.add(category);
-			                	}					    
-				        }	
-						    categories = categories.trim();
-			            	if (categories.endsWith(",")){
-			            		categories = categories.substring(0, categories.length() - 1);
-			            	}
-			            	if (categories != ""){
-			            		categoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + categories);
-			            	}
-				        }
-				        
-				        Button selectCategories = (Button) findViewById(R.id.selectCategories);   
-		    	        
-		    	        selectCategories.setOnClickListener(new Button.OnClickListener() {
-		    	            public void onClick(View v) {
-		    	            	 
-		    	            	Bundle bundle = new Bundle();
-		    					bundle.putString("id", id);
-		    					if (categories != ""){
-		    					bundle.putString("categoriesCSV", categories);
-		    					}
-		    			    	Intent i = new Intent(editPost.this, selectCategories.class);
-		    			    	i.putExtras(bundle);
-		    			    	startActivityForResult(i, 5);
-		    	            }
-		    	        });
-			        }
-			        
-			        Spinner spinner = (Spinner) findViewById(R.id.status);
-			        
-			        if (status.equals("publish")){
-			        	spinner.setSelection(0, true);
-			        }
-			        else if (status.equals("draft")){
-			        	spinner.setSelection(1, true);
-			        }
-			        else if (status.equals("pending")){
-			        	spinner.setSelection(2, true);
-			        }
-			        else if (status.equals("private")){
-			        	spinner.setSelection(3, true);
-			        }
-			        
-				}
-			}
-        });
-        Object[] params = {
-        		postID,
-        		blog.getUsername(),
-        		blog.getPassword(),
-        };
-        
-        
-        method.call(params);
-    	
-    	}
-    	
-        } 
         
         if ((localDraft || isNew) && !isPage){
         	Button selectCategories = (Button) findViewById(R.id.selectCategories);   
@@ -547,40 +538,19 @@ public class editPost extends Activity implements LocationListener{
         final Button postButton = (Button) findViewById(R.id.post);
         
         postButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-            
-            if(localDraft || isNew) {
-            	boolean result = savePost();
-            	
-            	if (result) {
-            		Bundle bundle = new Bundle();                   
-                    bundle.putString("returnStatus", "OK");
-                    Intent mIntent = new Intent();
-                    mIntent.putExtras(bundle);
-                    setResult(RESULT_OK, mIntent);
-                    finish(); 
-            	}
-            }
-            else{
-            	
-            	showDialog(ID_DIALOG_POSTING);
-            		Thread t = new Thread() {
-        				public void run() {
-							try {
-								finalResult = submitPost();
+        	public void onClick(View v) {
 
-								mHandler.post(mUpdateResults);
-								
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-
-        				}
-        			};
-        			t.start();
-            }
-            		
-            }
+        		boolean result = savePost();
+        		if (result) {
+        			Bundle bundle = new Bundle();                   
+        			bundle.putString("returnStatus", "OK");
+        			bundle.putLong("newID", post.getId());
+        			Intent mIntent = new Intent();
+        			mIntent.putExtras(bundle);
+        			setResult(RESULT_OK, mIntent);
+        			finish(); 
+        		}
+        	}
         });
         
             final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);   
@@ -776,74 +746,34 @@ public class editPost extends Activity implements LocationListener{
             final Button cancelButton = (Button) findViewById(R.id.cancel);   
             
             cancelButton.setOnClickListener(new Button.OnClickListener() {
-                public void onClick(View v) {
-                	if (isNew){
-                		boolean result = savePost();
+            	public void onClick(View v) {
+            		boolean result = savePost();
 
-        				if (result){
+            		if (result){
+            			Bundle bundle = new Bundle();
+            			if (isAction){
+            				Intent mIntent = new Intent(editPost.this, tabView.class);
+            				bundle.putString("activateTab", "posts");
+            				bundle.putString("id", id);
+            				bundle.putLong("uploadID", post.getId());
+            				bundle.putString("accountName", accountName);
+            				bundle.putString("action", "upload");
+            				mIntent.putExtras(bundle);
+            				startActivity(mIntent);
+            			}
+            			else{
+            				bundle.putString("returnStatus", "OK");
+            				bundle.putBoolean("upload", true);
+            				bundle.putLong("newID", post.getId());
+            				Intent mIntent = new Intent();
+            				mIntent.putExtras(bundle);
+            				setResult(RESULT_OK, mIntent); 
+            			}
 
-        					WordPressDB lddb = new WordPressDB(editPost.this);
-        					int newID = -1;
-        					if (isPage){
-        						newID = lddb.getLatestPageDraftID(editPost.this, id);
-        					}
-        					else{
-        						newID = lddb.getLatestDraftID(editPost.this, id);
-        					}
-        					Bundle bundle = new Bundle();
-        					if (newID != -1){
-
-        						if (isAction){
-        							Intent mIntent = new Intent(editPost.this, tabView.class);
-        							bundle.putString("activateTab", "posts");
-        							bundle.putString("id", id);
-        							bundle.putInt("uploadID", newID);
-        							bundle.putString("accountName", accountName);
-        							bundle.putString("action", "upload");
-        							mIntent.putExtras(bundle);
-        							startActivity(mIntent);
-        						}
-        						else{
-        							bundle.putString("returnStatus", "OK");
-        							bundle.putBoolean("upload", true);
-        							bundle.putInt("newID", newID);
-        							Intent mIntent = new Intent();
-        							mIntent.putExtras(bundle);
-        							setResult(RESULT_OK, mIntent); 
-        						}
-
-        						finish();
-        					}
-        				}
-                	}
-                	else {
-	                	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-	                	dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-	                	dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
-	                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
-	                  	DialogInterface.OnClickListener() {
-	                    public void onClick(DialogInterface dialog, int whichButton) {
-	                    	Bundle bundle = new Bundle();
-	                        bundle.putString("returnStatus", "CANCEL");
-		                    Intent mIntent = new Intent();
-		                    mIntent.putExtras(bundle);
-		                    setResult(RESULT_OK, mIntent);
-		                    finish();
-	                    }
-	                    });
-	                    dialogBuilder.setNegativeButton(getResources().getText(R.string.no),  new
-	                  		  DialogInterface.OnClickListener() {
-	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                          	//just close the dialog window
-	
-	                          }
-	                      });
-	                   dialogBuilder.setCancelable(true);
-	                   dialogBuilder.create().show();            	
-	                }  
-                }
-                
-        });
+            			finish();
+            		}
+            	}
+            });
             
             final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
             
@@ -1149,737 +1079,6 @@ public class editPost extends Activity implements LocationListener{
 		Button clearMedia = (Button) findViewById(R.id.clearPicture);
 		clearMedia.setVisibility(View.VISIBLE);
 		
-	}
-
-
-	public String submitPost() throws IOException {
-		
-		
-		//grab the form data
-        EditText titleET = (EditText)findViewById(R.id.title);
-        String title = titleET.getText().toString();
-        EditText contentET = (EditText)findViewById(R.id.content);
-        String content;
-        if (localDraft){
-        	content = escapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
-        }
-        else{
-        	content = contentET.getText().toString();
-        }
-        
-        content = StringHelper.convertHTMLTagsForUpload(content);
-        Boolean publishThis = false;
-        String imageContent = "";
-        boolean mediaError = false;
-        if (selectedImageCtr > 0){  //did user add media to post?
-        	//upload the images and return the HTML
-        	String state = android.os.Environment.getExternalStorageState();
-        	if(!state.equals(android.os.Environment.MEDIA_MOUNTED))  {
-                //we need an SD card to submit media, stop this train!
-        		mediaError = true;
-            }
-        	else{
-        		imageContent =  uploadImages();
-        	}
-
-        }
-
-        String res = "";
-        if (!mediaError){
-        	
-    	Thread updateDialog = new Thread() 
-     	{ 
-     	  public void run() 
-     	  {
-     		 postingDialog.setMessage(getResources().getText((isPage) ? R.string.page_attempt_upload : R.string.post_attempt_upload));
-     	  } 
-     	}; 
-     	this.runOnUiThread(updateDialog);
-     	
-     	if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
-        {
-        	res = "emptyFields";
-        }
-        else {
-        
-    		Spinner spinner = (Spinner) findViewById(R.id.status);
-            int selectedStatus = spinner.getSelectedItemPosition();
-            String status = "";
-            switch (selectedStatus){
-            	case 0:
-            		status = "publish";
-            		break;
-            	case 1:
-            		status = "draft";
-            		break;
-            	case 2:
-            		status = "pending";
-            		break;
-            	case 3:
-            		status = "private";
-            		break;
-            }
-        
-        Map<String, Object> contentStruct = new HashMap<String, Object>();
-      
-        if(imageContent != ""){
-        	if (blog.getImagePlacement().equals("Above Text")){
-        		content = imageContent + content;
-        	}
-        	else{
-        		content = content + imageContent;
-        	}
-        }
-        
-        EditText passwordET = (EditText)findViewById(R.id.post_password);
-        String wpPassword = passwordET.getText().toString();
-        
-        contentStruct.put("post_type", "post");
-        contentStruct.put("title", title);
-        contentStruct.put("description", content);
-        contentStruct.put("post_status", status);
-        contentStruct.put("wp_slug", sSlug);
-        
-        TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
-        String pubDate = tvPubDate.getText().toString();
-
-        if (!pubDate.equals(getResources().getText(R.string.immediately))){
-        	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-        	Date d = new Date();
-        	try {
-				d = sdf.parse(pubDate);
-				contentStruct.put("date_created_gmt", d);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (java.text.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-        
-        if(wpPassword != null && !"".equals(wpPassword)) {
-        	contentStruct.put("wp_password", wpPassword); 
-        }
-        if (!isPage){
-        	EditText tagsET = (EditText)findViewById(R.id.tags);
-            String tags = tagsET.getText().toString();
-            // categoryID = getCategoryId(selectedCategory);
-            String[] theCategories = categories.split(",");
-        if (tags != ""){
-        contentStruct.put("mt_keywords", tags);
-        }
-        if (theCategories.length > 0){
-        contentStruct.put("categories", theCategories);
-        }
-        }
-      
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-        
-        Object[] params = {
-        		postID,
-        		blog.getUsername(),
-        		blog.getPassword(),
-        		contentStruct,
-        		publishThis
-        };
-        
-        Object result = null;
-        boolean success = false;
-        try {
-			result = (Object) client.call("metaWeblog.editPost", params);
-			success = true;
-		} catch (final XMLRPCException e) {
-			Thread prompt = new Thread() 
-			{ 
-			  public void run() 
-			  {
-				dismissDialog(ID_DIALOG_POSTING);
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-				  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-	              dialogBuilder.setMessage(e.getMessage());
-	              dialogBuilder.setPositiveButton("OK",  new
-	            		  DialogInterface.OnClickListener() {
-	              public void onClick(DialogInterface dialog, int whichButton) {
-	                  // Just close the window.
-	              	}
-	              });
-	              dialogBuilder.setCancelable(true);
-	              if (!isFinishing()){
-	            	  dialogBuilder.create().show();
-	              }
-			  } 
-			}; 
-			this.runOnUiThread(prompt);
-		}
-		
-		if (success){
-
-				newID = result.toString();
-				res = "OK";
-		}
-		else{
-			res = "FAIL";
-		}
-			
-
-        }// if/then for valid settings
-        
-		
-        }
-        else {
-        	Thread prompt = new Thread() 
-    		{ 
-    		  public void run() 
-    		  {
-    			dismissDialog(ID_DIALOG_POSTING);
-    			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-    			  dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
-                  dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
-                  dialogBuilder.setPositiveButton("OK",  new
-                		  DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int whichButton) {
-                	  //just close the dialog
-                  	}
-
-                  });
-                  dialogBuilder.setCancelable(true);
-                 dialogBuilder.create().show();
-    		  } 
-    		}; 
-    		this.runOnUiThread(prompt);
-    		res = "mediaError";
-        }
-        return res;
-	}
-
-	@SuppressWarnings("unchecked")
-	public String uploadImages(){
-		
-	    String content = "";
-	    
-	    //images variables
-	    String finalThumbnailUrl = null;
-	    String finalImageUrl = null;
-
-	    //loop for multiple images
-	    
-	    for (int it = 0; it < selectedImageCtr; it++){
-	    	final int printCtr = it;
-	    	Thread prompt = new Thread() 
-	     	{ 
-	     	  public void run() 
-	     	  {
-	     		  postingDialog.setMessage("Uploading Media File #" + String.valueOf(printCtr + 1));
-	     		  postingDialog.setProgress(postingDialog.getProgress() + (100 / (selectedImageCtr + 1)));
-	     	  } 
-	     	}; 
-	     	this.runOnUiThread(prompt);
-	    //check for image, and upload it
-	    if (imageUrl.get(it) != null)
-	    {
-	       client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-	 	   
-	 	   String curImagePath = "";
-	 	   
-	 	  curImagePath = imageUrl.get(it).toString();
-	 	 boolean video = false;
-	 	  if (curImagePath.contains("video")){
-	 		  video = true;
-	 	  }
-	 	   
-	 	  if (video){ //upload the video
-	  	   
-	  	   Uri videoUri = Uri.parse(curImagePath);
-	  	   File fVideo = null;
-	  	   String mimeType = "";
-	  	   MediaFile mf = null;
-	  	  
-	  	   if (videoUri.toString().contains("content:")){ //file is in media library
-	 		 	   
-	 		 	  String[] projection; 
-	 		 	 Uri imgPath;
-
-	 			 	  projection = new String[] {
-	 			       		    Video.Media._ID,
-	 			       		    Video.Media.DATA,
-	 			       		    Video.Media.MIME_TYPE
-	 			       		};
-	 			 	  imgPath = videoUri;
-
-	 		 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
-	 		 	  String thumbData = "";
-	 		 	 
-	 		 	  if (cur.moveToFirst()) {
-	 		 		  
-	 		 		int dataColumn, mimeTypeColumn;
-
-		 	        dataColumn = cur.getColumnIndex(Video.Media.DATA);
-		 	        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
-          	            
-	 		       mf = new MediaFile();
-	 		       
-	 		       thumbData = cur.getString(dataColumn);
-	 		       mimeType = cur.getString(mimeTypeColumn);
-	 		       fVideo = new File(thumbData);
-	 				mf.setFilePath(fVideo.getPath());
-
-	 		 	  }
-	  	   }
-	  	   else{ //file is not in media library
-	  		   fVideo = new File(videoUri.toString().replace("file://", ""));
-	  	   }
-	  	   
-	  	   imageTitle = fVideo.getName();
-
-	         //try to upload the video
-	         Map<String, Object> m = new HashMap<String, Object>();
-	         
-	         m.put("name", imageTitle);
-	         m.put("type", mimeType);
-	         m.put("bits", mf);
-	         m.put("overwrite", true);
-	         
-	         Object[] params = {
-	         		1,
-	         		blog.getUsername(),
-	         		blog.getPassword(),
-	         		m
-	         };
-	         
-	         Object result = null;
-	         
-	         try {
-	 			result = (Object) client.call("wp.uploadFile", params);
-	 		} catch (XMLRPCException e) {
-	 			mediaErrorMsg = e.getMessage();
-	 			xmlrpcError = true;
-	 			break;
-	 		}
-	 				
-	 				HashMap<Object, Object> contentHash = (HashMap<Object, Object>) result;
-
-	 				String resultURL = contentHash.get("url").toString();
-	 				if (contentHash.containsKey("videopress_shortcode")){
-	 					resultURL = contentHash.get("videopress_shortcode").toString() + "<br />";
-	 				}
-	 				else{
-	 					resultURL = "<a type=\"" + mimeType + "\" href=\"" + resultURL + "\">View Video</a><br />";
-	 				}
-	 				
-	 				content = content + resultURL;
-
-	 	  } //end video
-	 	  else{
-	 	   for (int i = 0; i < 2; i++){
-	 
-	 		 curImagePath = imageUrl.get(it).toString();
-	 		   
-	 		if (i == 0 || blog.isFullSizeImage())
-	 		{
-	 	   
-	 	   Uri imageUri = Uri.parse(curImagePath);
-	 	   File jpeg = null;
-	 	   String mimeType = "", orientation = "";
-	 	   MediaFile mf = null;
-	 	 
-	 	   if (imageUri.toString().contains("content:")){ //file is in media library
-			 	   
-			 	 String[] projection; 
-			 	 Uri imgPath;
-
-				 	  projection = new String[] {
-				       		    Images.Media._ID,
-				       		    Images.Media.DATA,
-				       		    Images.Media.MIME_TYPE,
-				       		    Images.Media.ORIENTATION
-				       		};
-				 	  //imgPath = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, imgID2);
-				 	  imgPath = imageUri;
-
-			 	  Cursor cur = this.managedQuery(imgPath, projection, null, null, null);
-			 	  String thumbData = "";
-			 	 
-			 	  if (cur.moveToFirst()) {
-			 		  
-			 		int dataColumn, mimeTypeColumn, orientationColumn;
-
-			 	        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-			 	        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-			 	       orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-	              	            
-			       mf = new MediaFile();
-			       orientation = cur.getString(orientationColumn);
-			       thumbData = cur.getString(dataColumn);
-			       mimeType = cur.getString(mimeTypeColumn);
-			       jpeg = new File(thumbData);
-				   mf.setFilePath(jpeg.getPath());
-
-			 	  }
-	 	   }
-	 	   else{ //file is not in media library
-	 		   String path = imageUri.toString().replace("file://", "");
-	 		   jpeg = new File(path);
-	 		   mf = new MediaFile();
-	 		   mf.setFilePath(path);
-	 	   }
-	 	   
-	 	   imageTitle = jpeg.getName();
-	 	   
-	 	   byte[] finalBytes = null;
-	 	   
-	 	   if (i == 0){
-			 	byte[] bytes = new byte[(int) jpeg.length()];
-			 	   
-			 	DataInputStream in = null;
-				try {
-					in = new DataInputStream(new FileInputStream(jpeg));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-			 	   try {
-					in.readFully(bytes);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			 	   try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				imageHelper ih = imageHelper.getInstance();
-				finalBytes = ih.createThumbnail(bytes, sMaxImageWidth, orientation, false);
-	 	   }
-
-	        //try to upload the image
-	        Map<String, Object> m = new HashMap<String, Object>();
-	
-	        m.put("name", imageTitle);
-	        m.put("type", mimeType);
-	        if (i == 0){
-	        	m.put("bits", finalBytes);
-	        }
-	        else {
-	        	m.put("bits", mf);
-	        }
-	        m.put("overwrite", true);
-	        
-	        Object[] params = {
-	        		1,
-	        		blog.getUsername(),
-	        		blog.getPassword(),
-	        		m
-	        };
-	        
-	        Object result = null;
-	        
-	        try {
-				result = (Object) client.call("wp.uploadFile", params);
-			} catch (XMLRPCException e) {
-				e.printStackTrace();
-				e.getMessage();
-				xmlrpcError = true;
-				break;
-			}
-					
-					HashMap contentHash = new HashMap();
-					    
-					contentHash = (HashMap) result;
-
-					String resultURL = contentHash.get("url").toString();
-					
-					if (i == 0){
-		            	finalThumbnailUrl = resultURL;
-		            }
-		            else{
-		            	if (blog.isFullSizeImage()){
-		            	finalImageUrl = resultURL;
-		            	}
-		            	else
-		            	{
-		            		finalImageUrl = "";
-		            	}
-		            }
-
-					//prepare the centering css if desired from user
-			           String centerCSS = " ";
-			           if (centerThumbnail){
-			        	   centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
-			           }
-			           
-
-			           if (i != 0 && blog.isFullSizeImage())
-			           {
-				           if (resultURL != null)
-				           {
-
-				   	        	if (sImagePlacement.equals("Above Text")){
-				   	        		content = content + "<a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a><br /><br />";
-				   	        	}
-				   	        	else{
-				   	        		content = content + "<br /><a alt=\"image\" href=\"" + finalImageUrl + "\"><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
-				   	        	}        		
-				           	
-				           		
-				           }
-			           }
-			           else{
-				           if (i == 0 && blog.isFullSizeImage() == false && resultURL != null)
-				           {
-
-				   	        	if (sImagePlacement.equals("Above Text")){
-				   	        		
-				   	        		content = content + "<img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /><br /><br />";
-				   	        	}
-				   	        	else{
-				   	        		content = content + "<br /><img " + centerCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" />";
-				   	        	}        		
-				           	
-				           		
-				           }
-			           }
-	                
-	 	   }  //end if statement
-	 	  }//end image check	 	   
-	 	  } 	   
-	    }//end image stuff
-	    }//end new for loop
-
-	    return content;
-	}
-	
-    class ImageFilter implements FilenameFilter
-    {
-    public boolean accept(File dir, String name)
-    {
-        return (name.endsWith(".jpg"));
-    }
-    }
-    
-
-
-	
-	interface XMLRPCMethodCallback {
-		void callFinished(Object result);
-	}
-
-	class XMLRPCMethod extends Thread {
-		private String method;
-		private Object[] params;
-		private Handler handler;
-		private XMLRPCMethodCallback callBack;
-		public XMLRPCMethod(String method, XMLRPCMethodCallback callBack) {
-			this.method = method;
-			this.callBack = callBack;
-			handler = new Handler();
-			
-		}
-		public void call() {
-			call(null);
-		}
-		public void call(Object[] params) {
-			this.params = params;
-			start();
-		}
-		@Override
-		public void run() {
-			
-			try {
-				final Object result;
-				result = (Object) client.call(method, params);
-				handler.post(new Runnable() {
-					public void run() {
-						callBack.callFinished(result);
-					}
-				});
-			} catch (final XMLRPCFault e) {
-				e.printStackTrace();
-				if (pd.isShowing()){
-					pd.dismiss();
-				}
-				else{
-				dismissDialog(editPost.this.ID_DIALOG_POSTING);
-				}
-						final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                        	  Bundle bundle = new Bundle();
-	                              
-	                              bundle.putString("returnStatus", "CANCEL");
-	                              Intent mIntent = new Intent();
-	                              mIntent.putExtras(bundle);
-	                              setResult(RESULT_OK, mIntent);
-	                              finish(); 
-	                      
-	                          }
-	                      });
-			              dialogBuilder.setCancelable(true);
-			              Thread action = new Thread() 
-							{ 
-							  public void run() 
-							  {
-								  if (!isFinishing()){
-									  dialogBuilder.create().show();
-								  }
-							  } 
-							}; 
-							runOnUiThread(action);
-			             
-			             
-					
-			} catch (final XMLRPCException e) {
-				
-				handler.post(new Runnable() {
-					public void run() {
-						
-						Throwable couse = e.getCause();
-						if (couse instanceof HttpHostConnectException) {
-							if (pd.isShowing()){
-								pd.dismiss();
-							}
-							else{
-							dismissDialog(editPost.this.ID_DIALOG_POSTING);
-							}
-
-						} else {
-							if (pd.isShowing()){
-								pd.dismiss();
-							}
-							else{
-							dismissDialog(editPost.this.ID_DIALOG_POSTING);
-							}
-							final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
-				              dialogBuilder.setPositiveButton("OK",  new
-				            		  DialogInterface.OnClickListener() {
-		                          public void onClick(DialogInterface dialog, int whichButton) {
-		                        	  Bundle bundle = new Bundle();
-		                              
-		                              bundle.putString("returnStatus", "CANCEL");
-		                              Intent mIntent = new Intent();
-		                              mIntent.putExtras(bundle);
-		                              setResult(RESULT_OK, mIntent);
-		                              finish(); 
-		                      
-		                          }
-		                      });
-				              dialogBuilder.setCancelable(true);
-				              Thread action = new Thread() 
-								{ 
-								  public void run() 
-								  {
-									  if (!isFinishing()) {
-										  dialogBuilder.create().show();
-									  }
-								  } 
-								}; 
-								runOnUiThread(action);
-						}
-						//Log.d("Test", "error", e);
-						
-					}
-				});
-			}
-			
-		}
-	}
-	
-	class XMLRPCMethodImages extends Thread {
-		private String method;
-		private Object[] params;
-		private Handler handler;
-		private XMLRPCMethodCallback callBack;
-		public XMLRPCMethodImages(String method, XMLRPCMethodCallback callBack) {
-			this.method = method;
-			this.callBack = callBack;
-			
-		}
-		public void call() throws InterruptedException {
-			call(null);
-		}
-		public void call(Object[] params) throws InterruptedException {		
-			this.params = params;
-			final Object result;
-			try {
-				result = (Object) client.call(method, params);
-				callBack.callFinished(result);
-			} catch (XMLRPCException e) {
-
-				xmlrpcError = true;
-			}
-		}
-		@Override
-		public void run() {
-			
-			try {
-				final Object result;
-				result = (Object) client.call(method, params);
-				handler.post(new Runnable() {
-					public void run() {
-
-						callBack.callFinished(result);
-					
-					
-					}
-				});
-			} catch (final XMLRPCFault e) {
-						//pd.dismiss();
-						dismissDialog(editPost.this.ID_DIALOG_POSTING);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-						  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-			              dialogBuilder.setMessage(e.getFaultString());
-			              dialogBuilder.setPositiveButton("OK",  new
-			            		  DialogInterface.OnClickListener() {
-	                          public void onClick(DialogInterface dialog, int whichButton) {
-	                              // Just close the window.
-	                      
-	                          }
-	                      });
-			              dialogBuilder.setCancelable(true);
-			              if (!isFinishing()) {
-			            	  dialogBuilder.create().show();
-			              }
-			             
-					
-			} catch (final XMLRPCException e) {
-				
-				handler.post(new Runnable() {
-					public void run() {
-						
-						Throwable couse = e.getCause();
-						if (couse instanceof HttpHostConnectException) {
-							//pd.dismiss();
-							dismissDialog(editPost.this.ID_DIALOG_POSTING);
-						} else {
-							//pd.dismiss();
-							dismissDialog(editPost.this.ID_DIALOG_POSTING);
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(editPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-				              dialogBuilder.setMessage(e.getMessage() + e.getLocalizedMessage());
-				              dialogBuilder.setPositiveButton("OK",  new
-				            		  DialogInterface.OnClickListener() {
-		                          public void onClick(DialogInterface dialog, int whichButton) {
-		                              // Just close the window.
-		                      
-		                          }
-		                      });
-				              dialogBuilder.setCancelable(true);
-				              if (!isFinishing()) {
-				            	  dialogBuilder.create().show();
-				              }
-						}
-						//Log.d("Test", "error", e);
-						
-					}
-				});
-			}
-			
-		}
 	}
 	
 	public class ImageAdapter extends BaseAdapter {
@@ -2376,26 +1575,26 @@ public class editPost extends Activity implements LocationListener{
 
         	}
         
-        	//automatically save a post as a draft just in case the posting fails
-            WordPressDB lDraftsDB = new WordPressDB(this);
-        	if (isPage){
-        		if (isNew){
-        			success = lDraftsDB.saveLocalPageDraft(this, id, title, content, images, status, password, pubDateTimestamp);
-        		}
-        		else {
-        			success = lDraftsDB.updateLocalPageDraft(this, id, postID, title, content, images, status, password, pubDateTimestamp);
-        		}
-        	}
-        	else {
-        		if (isNew){
-        			success = lDraftsDB.saveLocalDraft(this, id, title, content, images, tags, categories, status, latitude, longitude, password, pubDateTimestamp);
-        		}
-        		else {
-        			success = lDraftsDB.updateLocalDraft(this, id, postID, title, content, images, tags, categories, status, latitude, longitude, password, pubDateTimestamp);
-        		}
-        	}
-        
-        
+            if (isNew){
+            	post = new Post(id, title, content, images, pubDateTimestamp, categories, tags, status, password, latitude, longitude, editPost.this);
+            	post.setLocalDraft(true);
+            	success = post.save();
+            }
+            else {
+            	post.setTitle(title);
+            	post.setDescription(content);
+            	post.setMediaPaths(images);
+            	post.setDate_created_gmt(pubDateTimestamp);
+            	//post.setCategories(categories);
+            	post.setMt_keywords(tags);
+            	post.setPost_status(status);
+            	post.setWP_password(password);
+            	post.setLatitude(latitude);
+            	post.setLongitude(longitude);
+            	success = post.save();
+            }
+
+
         }// if/then for valid settings
         
 		return success;

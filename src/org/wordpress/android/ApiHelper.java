@@ -14,6 +14,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 
@@ -107,6 +108,58 @@ public class ApiHelper extends Activity {
 			}
 		}
     }
+    
+    public static class getRecentPostsTask extends AsyncTask<Vector, Void, Object[]> {
+    	
+    	Context ctx;
+    	Blog blog;
+    	boolean isPage;
+
+		protected void onPostExecute(Object[] result) {
+			if (result.length > 0) {
+				HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+				Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+				WordPressDB postStoreDB = new WordPressDB(ctx);
+
+				// loop this!
+				for (int ctr = 0; ctr < result.length; ctr++) {
+					HashMap<String, Object> dbValues = new HashMap<String, Object>();
+					contentHash = (HashMap)result[ctr];
+					dbValues.put("blogID", blog.getBlogId());
+					dbVector.add(ctr, contentHash);
+				}// end for loop
+
+				postStoreDB.savePosts(ctx, dbVector, String.valueOf(blog.getId()), isPage);
+				((viewPosts) ctx).loadPosts(false);
+		}
+			((viewPosts) ctx).closeProgressBar();
+		}
+
+		@Override
+		protected Object[] doInBackground(Vector... args) {
+			
+			Vector arguments = args[0];
+			blog = (Blog) arguments.get(0);
+			isPage = (Boolean) arguments.get(1);
+			ctx = (Context) arguments.get(2);
+			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+			Object[] result = null;
+			int numRecords = 10;
+			Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), numRecords };
+			try {
+				result = (Object[]) client.call((isPage) ? "wp.getPages" : "metaWeblog.getRecentPosts", params);
+			} catch (XMLRPCException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return result;
+
+		}
+
+	}
+    
 }
 
 

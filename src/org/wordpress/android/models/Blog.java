@@ -5,7 +5,6 @@ package org.wordpress.android.models;
 import java.util.Vector;
 
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.settings;
 
 import android.content.Context;
 

@@ -207,6 +207,7 @@ bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
 bin/wp-android.apk -text
 /default.properties -text
+libs/android-support-v4.jar -text
 res/anim/cycle_5.xml -text
 res/anim/shake.xml -text
 res/drawable-hdpi-v4/add.png -text
@@ -413,6 +414,7 @@ src/org/wordpress/android/imageHelper_v3.java -text
 src/org/wordpress/android/imageHelper_v4.java -text
 src/org/wordpress/android/link.java -text
 src/org/wordpress/android/models/Blog.java -text
+src/org/wordpress/android/models/Post.java -text
 src/org/wordpress/android/moderateCommentsTab.java -text
 src/org/wordpress/android/newAccount.java -text
 src/org/wordpress/android/replyToComment.java -text

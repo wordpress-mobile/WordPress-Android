@@ -338,4 +338,10 @@
   <!-- post scheduling and password -->
   <string name="publish_date">Publish:</string>
   <string name="edit">Edit</string>
+  
+  <string name="tablet_1st_name">Link 1</string>
+  <string name="tablet_1st_url">http://www.wordpress.com</string>
+  <string name="tablet_2nd_name">Link 2</string>
+  <string name="tablet_2nd_url">http://www.google.com</string>
+  
 </resources>

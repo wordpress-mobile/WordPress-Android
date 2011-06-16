@@ -1,0 +1,922 @@
+package org.wordpress.android.models;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.wordpress.android.ApiHelper;
+import org.wordpress.android.MediaFile;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.imageHelper;
+import org.wordpress.android.viewPosts;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
+
+public class Post {
+	
+	private long id;
+	private String blogID;
+	private String categories;
+    private String custom_fields;
+    private long dateCreated;
+	private long date_created_gmt;
+    private String description;
+    private String link;
+    private boolean mt_allow_comments;
+    private boolean mt_allow_pings;
+    private String mt_excerpt;
+    private String mt_keywords;
+    private String mt_text_more;
+    private String permaLink;
+    private String post_status;
+    private String postid;
+    private String title;
+    private String userid;
+    private String wp_author_display_name;
+    private String wp_author_id;
+    private String wp_password;
+    private String wp_post_format;
+    private String wp_slug;
+    private boolean localDraft;
+    private boolean uploaded;
+    private double latitude;
+    private double longitude;
+    private boolean isPage;
+    private String mediaPaths;
+    
+	private WordPressDB db;
+	
+	private Blog blog;
+	static Context context;
+	
+	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
+	private int selectedImageCtr = 0;
+	public Vector<String> imageUrl = new Vector<String>();
+	Vector<String> selectedCategories = new Vector<String>();
+    
+    public Post(String blog_id, long post_id, boolean isPage, Context ctx){
+		//load an existing post
+    	db = new WordPressDB(ctx);
+    	context = ctx;
+    	Vector<Object> postVals = db.loadPost(ctx, blog_id, isPage, post_id);
+    	if (postVals != null) {
+    		this.blog = new Blog(blog_id, ctx);
+    		this.id = (Long)postVals.get(0);
+    		this.blogID = blog_id;
+    		this.postid = postVals.get(2).toString();
+    		this.title = postVals.get(3).toString();
+    		this.dateCreated = (Long)postVals.get(4);
+    		this.date_created_gmt = (Long)postVals.get(5);
+    		this.categories = postVals.get(6).toString();
+    		this.custom_fields = postVals.get(7).toString();
+    		this.description = postVals.get(8).toString();
+    		this.link = postVals.get(9).toString();
+    		this.mt_allow_comments = (Integer)postVals.get(10)>0;
+    		this.mt_allow_pings = (Integer)postVals.get(11)>0;
+    		this.mt_excerpt = postVals.get(12).toString();
+    		this.mt_keywords = postVals.get(13).toString();
+    		this.mt_text_more = postVals.get(14).toString();
+    		this.permaLink = postVals.get(15).toString();
+    		this.post_status = postVals.get(16).toString();
+    		this.userid = postVals.get(17).toString();
+    		this.wp_author_display_name = postVals.get(18).toString();
+    		this.wp_author_id = postVals.get(19).toString();
+    		this.wp_password = postVals.get(20).toString();
+    		this.wp_post_format = postVals.get(21).toString();
+    		this.wp_slug = postVals.get(22).toString();
+    		this.mediaPaths = postVals.get(23).toString();
+    		this.latitude = (Double) postVals.get(24);
+    		this.longitude = (Double) postVals.get(25);
+    		this.localDraft = (Integer)postVals.get(26)>0;
+    		this.uploaded = (Integer)postVals.get(27)>0;
+    		this.isPage = (Integer)postVals.get(28)>0;
+    		
+    	}
+    }
+    
+public Post(String blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, Context ctx){
+		//create a new post
+    	db = new WordPressDB(ctx);
+    	context = ctx;
+    	
+		this.blog = new Blog(blog_id, ctx);
+    	this.blogID = blog_id;
+    	this.title = title;
+    	this.description = content;
+    	this.mediaPaths = picturePaths;
+    	this.date_created_gmt = date;
+    	this.categories = categories;
+    	this.mt_keywords = tags;
+    	this.post_status = status;
+    	this.wp_password = password;
+    	
+    }
+    
+	public long getId() {
+		return id;
+	}
+
+    public long getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(long dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	
+	public long getDate_created_gmt() {
+		return date_created_gmt;
+	}
+
+	public void setDate_created_gmt(long dateCreatedGmt) {
+		date_created_gmt = dateCreatedGmt;
+	}
+
+	public String getBlogID() {
+		return blogID;
+	}
+
+	public void setBlogID(String blogID) {
+		this.blogID = blogID;
+	}
+	
+	public boolean isLocalDraft() {
+		return localDraft;
+	}
+
+	public void setLocalDraft(boolean localDraft) {
+		this.localDraft = localDraft;
+	}
+
+	public JSONArray getCategories() {
+		JSONArray jArray = null;
+		try {
+			jArray = new JSONArray(categories);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jArray;
+	}
+
+	public void setCategories(JSONArray categories) {
+		this.categories = categories.toString();
+	}
+
+	public JSONArray getCustom_fields() {
+		JSONArray jArray = null;
+		try {
+			jArray = new JSONArray(custom_fields);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jArray;
+	}
+
+	public void setCustom_fields(JSONArray customFields) {
+		custom_fields = customFields.toString();
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public boolean isMt_allow_comments() {
+		return mt_allow_comments;
+	}
+
+	public void setMt_allow_comments(boolean mtAllowComments) {
+		mt_allow_comments = mtAllowComments;
+	}
+
+	public boolean isMt_allow_pings() {
+		return mt_allow_pings;
+	}
+
+	public void setMt_allow_pings(boolean mtAllowPings) {
+		mt_allow_pings = mtAllowPings;
+	}
+
+	public String getMt_excerpt() {
+		return mt_excerpt;
+	}
+
+	public void setMt_excerpt(String mtExcerpt) {
+		mt_excerpt = mtExcerpt;
+	}
+
+	public String getMt_keywords() {
+		return mt_keywords;
+	}
+
+	public void setMt_keywords(String mtKeywords) {
+		mt_keywords = mtKeywords;
+	}
+
+	public String getMt_text_more() {
+		return mt_text_more;
+	}
+
+	public void setMt_text_more(String mtTextMore) {
+		mt_text_more = mtTextMore;
+	}
+
+	public String getPermaLink() {
+		return permaLink;
+	}
+
+	public void setPermaLink(String permaLink) {
+		this.permaLink = permaLink;
+	}
+
+	public String getPost_status() {
+		return post_status;
+	}
+
+	public void setPost_status(String postStatus) {
+		post_status = postStatus;
+	}
+
+	public String getPostid() {
+		return postid;
+	}
+
+	public void setPostid(String postid) {
+		this.postid = postid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public String getWP_author_display_name() {
+		return wp_author_display_name;
+	}
+
+	public void setWP_author_display_name(String wpAuthorDisplayName) {
+		wp_author_display_name = wpAuthorDisplayName;
+	}
+
+	public String getWP_author_id() {
+		return wp_author_id;
+	}
+
+	public void setWP_author_id(String wpAuthorId) {
+		wp_author_id = wpAuthorId;
+	}
+
+	public String getWP_password() {
+		return wp_password;
+	}
+
+	public void setWP_password(String wpPassword) {
+		wp_password = wpPassword;
+	}
+
+	public String getWP_post_format() {
+		return wp_post_format;
+	}
+
+	public void setWP_post_form(String wpPostForm) {
+		wp_post_format = wpPostForm;
+	}
+
+	public String getWP_slug() {
+		return wp_slug;
+	}
+
+	public void setWP_slug(String wpSlug) {
+		wp_slug = wpSlug;
+	}
+	
+	public String getMediaPaths() {
+		return mediaPaths;
+	}
+
+	public void setMediaPaths(String mediaPaths) {
+		this.mediaPaths = mediaPaths;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public boolean isPage() {
+		return isPage;
+	}
+
+	public void setPage(boolean isPage) {
+		this.isPage = isPage;
+	}
+
+	public boolean isUploaded() {
+		return uploaded;
+	}
+
+	public void setUploaded(boolean uploaded) {
+		this.uploaded = uploaded;
+	}
+	
+	
+	public void upload() {
+		
+		new uploadPostTask().execute(this);
+
+	}
+
+	public boolean save() {
+		long newPostID = db.savePost(context, this, this.blogID);
+		
+		if (newPostID >= 0 && this.isLocalDraft() && !this.isUploaded()) {
+			this.id = newPostID;
+			return true;
+		}
+		
+		return true;
+	}
+
+	public void delete() {
+		//deletes a post/page draft
+		db.deletePost(context, this);
+	}
+	
+	public static class uploadPostTask extends AsyncTask<Post, Void, Object[]> {
+
+		private Post post;
+		
+		@Override
+		protected Object[] doInBackground(Post...posts) {
+			
+			post = posts[0];
+			//upload a post object to the blog
+			if (post.getMediaPaths() != "") {
+				String[] pPaths = post.mediaPaths.split(",");
+
+				for (int i = 0; i < pPaths.length; i++) {
+					Uri imagePath = Uri.parse(pPaths[i]);
+					post.selectedImageIDs.add(post.selectedImageCtr, imagePath);
+					post.imageUrl.add(post.selectedImageCtr, pPaths[i]);
+					post.selectedImageCtr++;
+				}
+
+			}
+
+
+			if (!post.categories.equals("")) {
+
+				String[] aCategories = post.categories.split(",");
+
+				for (int i = 0; i < aCategories.length; i++) {
+					post.selectedCategories.add(aCategories[i]);
+				}
+
+			}
+
+			if (post.post_status == null){
+				post.post_status = "publish";
+			}
+			Boolean publishThis = false;
+
+			String imageContent = "";
+			boolean mediaError = false;
+			if (post.selectedImageCtr > 0) { // did user add media to post?
+				// upload the images and return the HTML
+				String state = android.os.Environment.getExternalStorageState();
+				if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+					// we need an SD card to submit media, stop this train!
+					mediaError = true;
+				} else {
+					imageContent = uploadImages();
+				}
+			}
+			String res = "";
+			if (!mediaError) {
+
+				String[] theCategories = new String[post.selectedCategories.size()];
+
+				for (int i = 0; i < post.selectedCategories.size(); i++) {
+					theCategories[i] = post.selectedCategories.get(i).toString();
+				}
+
+				Map<String, Object> contentStruct = new HashMap<String, Object>();
+				
+				String content = "";
+				if (imageContent != "") {
+					if (post.blog.getImagePlacement().equals("Above Text")) {
+						content = imageContent + post.description + post.mt_text_more;
+					} else {
+						content = post.description + post.mt_text_more + imageContent;
+					}
+				}
+				else{
+					content = post.description + post.mt_text_more;
+				}
+
+				if (!post.isPage) {
+					// add the tagline
+					WordPressDB db = new WordPressDB(post.context);
+					HashMap<?, ?> globalSettings = db.getNotificationOptions(post.context);
+					boolean taglineValue = false;
+					String tagline = "";
+
+					if (globalSettings != null) {
+						if (globalSettings.get("tagline_flag").toString().equals(
+								"1")) {
+							taglineValue = true;
+						}
+
+						if (taglineValue) {
+							tagline = globalSettings.get("tagline").toString();
+							if (!tagline.equals("")) {
+								content += "\n\n<span class=\"post_sig\">"
+										+ tagline + "</span>\n\n";
+							}
+						}
+					}
+				}
+
+				contentStruct.put("post_type", (post.isPage) ? "page" : "post");
+				contentStruct.put("title", post.title);
+				long pubDate = post.date_created_gmt;
+		    	if (pubDate != 0){
+		    		Date date = new Date(pubDate);
+		    		contentStruct.put("date_created_gmt", date);
+		    	}
+				// for trac #53, add <p> and <br /> tags
+				content = content.replace("/\n\n/g", "</p><p>");
+				content = content.replace("/\n/g", "<br />");
+				contentStruct.put("description", content);
+				if (!post.isPage) {
+					if (post.mt_keywords != "") {
+						contentStruct.put("mt_keywords", post.mt_keywords);
+					}
+					if (theCategories.length > 0) {
+						contentStruct.put("categories", theCategories);
+					}
+				}
+				contentStruct.put((post.isPage) ? "page_status" : "post_status", post.post_status);
+				Double latitude = 0.0;
+				Double longitude = 0.0;
+				if (!post.isPage) {
+					latitude = (Double) latitude;
+					longitude = (Double) longitude;
+
+					if (latitude > 0) {
+						HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
+						hLatitude.put("key", "geo_latitude");
+						hLatitude.put("value", latitude);
+
+						HashMap<Object, Object> hLongitude = new HashMap<Object, Object>();
+						hLongitude.put("key", "geo_longitude");
+						hLongitude.put("value", longitude);
+
+						HashMap<Object, Object> hPublic = new HashMap<Object, Object>();
+						hPublic.put("key", "geo_public");
+						hPublic.put("value", 1);
+
+						Object[] geo = { hLatitude, hLongitude, hPublic };
+
+						contentStruct.put("custom_fields", geo);
+					}
+				}
+				
+				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(), post.blog.getHttpuser(), post.blog.getHttppassword());
+				if(post.wp_password != null && !"".equals(post.wp_password)){
+					contentStruct.put("wp_password", post.wp_password);
+				}
+				Object[] params;
+				
+				if (post.isLocalDraft() && !post.uploaded)
+					params = new Object[] { post.blog.getBlogId(), post.blog.getUsername(), post.blog.getPassword(), contentStruct,
+						publishThis };
+				else
+					params = new Object[] { post.getPostid(), post.blog.getUsername(), post.blog.getPassword(), contentStruct,
+						publishThis };
+
+				Object result = null;
+				boolean success = false;
+				try {
+					result = (Object) client.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost" : "metaWeblog.editPost", params);
+					success = true;
+					((viewPosts) context).loadingDialog.dismiss();
+				} catch (final XMLRPCException e) {
+		
+				}
+
+				if (success && (post.isLocalDraft() && !post.uploaded)) {
+					post.uploaded = true;
+					post.save();
+					res = "OK";
+				}
+			}
+		
+			
+			return null;
+		}
+		
+		public String uploadImages() {
+			String content = "";
+
+			// images variables
+			String finalThumbnailUrl = null;
+			String finalImageUrl = null;
+
+			//loop for multiple images
+
+			for (int it = 0; it < post.selectedImageCtr; it++) {
+				final int printCtr = it;
+				/*Thread prompt = new Thread() {
+					public void run() {
+						loadingDialog.setMessage("Uploading Media File #"
+								+ String.valueOf(printCtr + 1));
+					}
+				};
+				this.runOnUiThread(prompt);*/
+				// check for image, and upload it
+				if (post.imageUrl.get(it) != null) {
+					XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(), post.blog.getHttpuser(), post.blog.getHttppassword());
+
+					String curImagePath = "";
+
+					curImagePath = post.imageUrl.get(it).toString();
+					boolean video = false;
+					if (curImagePath.contains("video")) {
+						video = true;
+					}
+
+					if (video) { // upload the video
+
+						Uri videoUri = Uri.parse(curImagePath);
+						File fVideo = null;
+						String mimeType = "", xRes = "", yRes = "";
+						MediaFile mf = null;
+
+						if (videoUri.toString().contains("content:")) { 
+							String[] projection;
+							Uri imgPath;
+
+							projection = new String[] { Video.Media._ID,
+									Video.Media.DATA, Video.Media.MIME_TYPE,
+									Video.Media.RESOLUTION };
+							imgPath = videoUri;
+
+							Cursor cur = ((Activity) post.context).managedQuery(imgPath, projection,
+									null, null, null);
+							String thumbData = "";
+
+							if (cur.moveToFirst()) {
+
+								int mimeTypeColumn, resolutionColumn, dataColumn;
+
+								dataColumn = cur.getColumnIndex(Video.Media.DATA);
+								mimeTypeColumn = cur
+										.getColumnIndex(Video.Media.MIME_TYPE);
+								resolutionColumn = cur
+										.getColumnIndex(Video.Media.RESOLUTION);
+								
+								mf = new MediaFile();
+
+								thumbData = cur.getString(dataColumn);
+								mimeType = cur.getString(mimeTypeColumn);
+								fVideo = new File(thumbData);
+								mf.setFilePath(fVideo.getPath());
+								String resolution = cur.getString(resolutionColumn);
+								if (resolution != null) {
+									String[] resx = resolution.split("x");
+									xRes = resx[0];
+									yRes = resx[1];
+								} else {
+									// set the width of the video to the thumbnail
+									// width, else 640x480
+									if (!post.blog.getMaxImageWidth().equals("Original Size")) {
+										xRes = post.blog.getMaxImageWidth();
+										yRes = String.valueOf(Math.round(Integer
+												.valueOf(post.blog.getMaxImageWidth()) * 0.75));
+									} else {
+										xRes = "640";
+										yRes = "480";
+									}
+
+								}
+
+							}
+						} else { // file is not in media library
+							fVideo = new File(videoUri.toString().replace(
+									"file://", ""));
+						}
+
+						String imageTitle = fVideo.getName();
+
+						// try to upload the video
+						HashMap<String, Object> m = new HashMap<String, Object>();
+
+						m.put("name", imageTitle);
+						m.put("type", mimeType);
+						m.put("bits", mf);
+						m.put("overwrite", true);
+
+						Object[] params = { 1, post.blog.getUsername(), post.blog.getPassword(), m };
+
+						Object result = null;
+
+						try {
+							result = (Object) client.call("wp.uploadFile", params);
+						} catch (XMLRPCException e) {
+							String mediaErrorMsg = e.getLocalizedMessage();
+							if (video) {
+								if (mediaErrorMsg.contains("Invalid file type")) {
+									mediaErrorMsg = post.context.getResources().getString(
+											R.string.vp_upgrade);
+									boolean vpUpgrade = true;
+								}
+							}
+							boolean xmlrpcError = true;
+							break;
+						}
+
+						HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+
+						contentHash = (HashMap<?, ?>) result;
+
+						String resultURL = contentHash.get("url").toString();
+						if (contentHash.containsKey("videopress_shortcode")) {
+							resultURL = contentHash.get("videopress_shortcode")
+									.toString()
+									+ "\n";
+						} else {
+							resultURL = "<object classid=\"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B\" width=\""
+									+ xRes
+									+ "\" height=\""
+									+ (Integer.valueOf(yRes) + 16)
+									+ "\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab\"><param name=\"scale\" value=\"aspect\"><param name=\"src\" value=\""
+									+ resultURL
+									+ "\" /><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /><object type=\"video/quicktime\" data=\""
+									+ resultURL
+									+ "\" width=\""
+									+ xRes
+									+ "\" height=\""
+									+ (Integer.valueOf(yRes) + 16)
+									+ "\"><param name=\"scale\" value=\"aspect\"><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /></object></object>\n";
+						}
+
+						content = content + resultURL;
+
+					} // end video
+					else {
+						for (int i = 0; i < 2; i++) {
+
+							curImagePath = post.imageUrl.get(it).toString();
+
+							if (i == 0 || post.blog.isFullSizeImage()) {
+
+								Uri imageUri = Uri.parse(curImagePath);
+								File jpeg = null;
+								String mimeType = "", orientation = "", path = "";
+								MediaFile mf = null;
+
+								if (imageUri.toString().contains("content:")) {
+									String[] projection;
+									Uri imgPath;
+
+									projection = new String[] { Images.Media._ID,
+											Images.Media.DATA,
+											Images.Media.MIME_TYPE,
+											Images.Media.ORIENTATION };
+		
+									imgPath = imageUri;
+
+									Cursor cur = ((Activity) post.context).managedQuery(imgPath,
+											projection, null, null, null);
+									String thumbData = "";
+
+									if (cur.moveToFirst()) {
+
+										int dataColumn, mimeTypeColumn, orientationColumn;
+
+										dataColumn = cur
+												.getColumnIndex(Images.Media.DATA);
+										mimeTypeColumn = cur
+												.getColumnIndex(Images.Media.MIME_TYPE);
+										orientationColumn = cur
+												.getColumnIndex(Images.Media.ORIENTATION);
+
+										mf = new MediaFile();
+										orientation = cur
+												.getString(orientationColumn);
+										thumbData = cur.getString(dataColumn);
+										mimeType = cur.getString(mimeTypeColumn);
+										jpeg = new File(thumbData);
+										path = thumbData;
+										mf.setFilePath(jpeg.getPath());
+
+									}
+								} else { // file is not in media library
+									mf = new MediaFile();
+									path = imageUri.toString().replace("file://",
+											"");
+									jpeg = new File(path);
+									mf.setFilePath(path);
+								}
+								
+								//check if the file is now gone! (removed SD card, etc)
+								if (jpeg == null)
+								{
+									boolean xmlrpcError = true;
+									String mediaErrorMsg = "Media file not found.";
+									break;
+								}
+
+								imageHelper ih = imageHelper.getInstance();
+								orientation = ih.getExifOrientation(path,
+										orientation);
+
+								String imageTitle = jpeg.getName();
+
+								byte[] finalBytes = null;
+
+								if (i == 0) {
+									byte[] bytes = new byte[(int) jpeg.length()];
+
+									DataInputStream in = null;
+									try {
+										in = new DataInputStream(
+												new FileInputStream(jpeg));
+									} catch (FileNotFoundException e) {
+										e.printStackTrace();
+									}
+									try {
+										in.readFully(bytes);
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+									try {
+										in.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+
+									imageHelper ih2 = imageHelper.getInstance();
+									finalBytes = ih2.createThumbnail(bytes,
+											post.blog.getMaxImageWidth(), orientation, false);
+								}
+
+								// try to upload the image
+								Map<String, Object> m = new HashMap<String, Object>();
+
+								m.put("name", imageTitle);
+								m.put("type", mimeType);
+								if (i == 0) {
+									m.put("bits", finalBytes);
+								} else {
+									m.put("bits", mf);
+								}
+								m.put("overwrite", true);
+
+								Object[] params = { 1, post.blog.getUsername(), post.blog.getPassword(), m };
+
+								Object result = null;
+
+								try {
+									result = (Object) client.call("wp.uploadFile",
+											params);
+								} catch (XMLRPCException e) {
+									e.printStackTrace();
+									e.getLocalizedMessage();
+									boolean xmlrpcError = true;
+									break;
+								}
+
+								HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+
+								contentHash = (HashMap<?, ?>) result;
+
+								String resultURL = contentHash.get("url")
+										.toString();
+
+								if (i == 0) {
+									finalThumbnailUrl = resultURL;
+								} else {
+									if (post.blog.isFullSizeImage()) {
+										finalImageUrl = resultURL;
+									} else {
+										finalImageUrl = "";
+									}
+								}
+
+								// prepare the centering css if desired from user
+								String centerCSS = " ";
+								if (post.blog.isCenterThumbnail()) {
+									centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
+								}
+
+								if (i != 0 && post.blog.isFullSizeImage()) {
+									if (resultURL != null) {
+
+										if (post.blog.getImagePlacement().equals("Above Text")) {
+											content = content
+													+ "<a alt=\"image\" href=\""
+													+ finalImageUrl + "\"><img "
+													+ centerCSS
+													+ "alt=\"image\" src=\""
+													+ finalThumbnailUrl
+													+ "\" /></a>\n\n";
+										} else {
+											content = content
+													+ "\n<a alt=\"image\" href=\""
+													+ finalImageUrl + "\"><img "
+													+ centerCSS
+													+ "alt=\"image\" src=\""
+													+ finalThumbnailUrl
+													+ "\" /></a>";
+										}
+
+									}
+								} else {
+									if (i == 0 && post.blog.isFullSizeImage() == false
+											&& resultURL != null) {
+
+										if (post.blog.getImagePlacement().equals("Above Text")) {
+
+											content = content + "<img " + centerCSS
+													+ "alt=\"image\" src=\""
+													+ finalThumbnailUrl
+													+ "\" />\n\n";
+										} else {
+											content = content + "\n<img "
+													+ centerCSS
+													+ "alt=\"image\" src=\""
+													+ finalThumbnailUrl + "\" />";
+										}
+
+									}
+								}
+
+							} // end if statement
+
+						}// end image check
+
+					}
+
+				}// end image stuff
+			}// end new for loop
+
+			return content;
+		}
+	
+	}
+
+}

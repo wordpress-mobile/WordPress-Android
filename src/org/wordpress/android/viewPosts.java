@@ -1,9 +1,5 @@
 package org.wordpress.android;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -12,28 +8,19 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import org.wordpress.android.R;
-import org.wordpress.android.R.drawable;
-import org.wordpress.android.R.id;
-import org.wordpress.android.R.layout;
-import org.wordpress.android.R.string;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -42,14 +29,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.Xml;
 import android.view.ContextMenu;
@@ -81,20 +64,18 @@ public class viewPosts extends ListActivity {
 	private XMLRPCClient client;
 	private String[] postIDs, titles, dateCreated, dateCreatedFormatted, draftIDs, draftTitles, publish;
 	private Integer[] uploaded;
-	private String id = "",accountName = "", newID = "", selectedID = "";
-	int rowID = 0;
+	private String id = "",accountName = "";
+	int rowID = 0; 
+	long selectedID;
 	private int ID_DIALOG_DELETING = 1, ID_DIALOG_POSTING = 2;
-	Vector<String> selectedCategories = new Vector<String>();
 	public boolean inDrafts = false;
-	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
-	private int selectedImageCtr = 0;
 	public String imgHTML, sImagePlacement = "", sMaxImageWidth = "";
 	public boolean centerThumbnail = false;
 	public Vector<String> imageUrl = new Vector<String>();
 	public String imageTitle = null;
 	public boolean thumbnailOnly, secondPass, xmlrpcError = false;
 	public String submitResult = "", mediaErrorMsg = "";
-	ProgressDialog loadingDialog;
+	public ProgressDialog loadingDialog;
 	public int totalDrafts = 0;
 	public boolean isPage = false, vpUpgrade = false;
 	boolean largeScreen = false;
@@ -122,21 +103,16 @@ public class viewPosts extends ListActivity {
 		// user came from action intent
 		if (action != null && !isPage) {
 			if (action.equals("upload")) {
-				selectedID = String.valueOf(extras.getInt("uploadID"));
+				selectedID = extras.getInt("uploadID");
 				showDialog(ID_DIALOG_POSTING);
 
-				new Thread() {
-					public void run() {
+				try {
+					submitResult = submitPost();
 
-						try {
-							submitResult = submitPost();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-					}
-				}.start();
 			} else {
 
 				boolean loadedPosts = loadPosts(false);
@@ -224,146 +200,12 @@ public class viewPosts extends ListActivity {
 		if (!loadMore) {
 			showProgressBar();
 		}
-
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
-		XMLRPCMethod method = new XMLRPCMethod((isPage) ? "wp.getPageList"
-				: "blogger.getRecentPosts", new XMLRPCMethodCallback() {
-			public void callFinished(Object[] result) {
-
-				if (result.length == 0) {
-					if (!loadMore) {
-						closeProgressBar();
-					} else {
-						switcher.showPrevious();
-					}
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							viewPosts.this);
-					dialogBuilder.setTitle(getResources().getText(
-							(isPage) ? R.string.pages_not_found
-									: R.string.posts_not_found));
-					dialogBuilder.setMessage(getResources().getText(
-							(isPage) ? R.string.pages_no_pages
-									: R.string.posts_no_posts));
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				} else {
-
-					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-
-					String rTitles[] = new String[result.length];
-					String rPostIDs[] = new String[result.length];
-					String rDateCreated[] = new String[result.length];
-					String rDateCreatedFormatted[] = new String[result.length];
-					String rParentID[] = new String[result.length];
-					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
-					WordPressDB postStoreDB = new WordPressDB(viewPosts.this);
-					Date d = new Date();
-					SimpleDateFormat sdf = new SimpleDateFormat(
-							"EEE MMM dd HH:mm:ss z yyyy");
-					Calendar cal = Calendar.getInstance();
-					TimeZone tz = cal.getTimeZone();
-					String shortDisplayName = "";
-					shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
-
-					// loop this!
-					for (int ctr = 0; ctr < result.length; ctr++) {
-						HashMap<String, String> dbValues = new HashMap<String, String>();
-						contentHash = (HashMap<?, ?>) result[ctr];
-						if (isPage) {
-							rTitles[ctr] = escapeUtils.unescapeHtml(contentHash
-									.get("page_title").toString());
-							rPostIDs[ctr] = contentHash.get("page_id")
-									.toString();
-							rDateCreated[ctr] = contentHash.get("dateCreated")
-									.toString();
-							rParentID[ctr] = contentHash.get("page_parent_id")
-									.toString();
-						} else {
-							rTitles[ctr] = escapeUtils.unescapeHtml(contentHash
-									.get("content").toString().substring(
-											contentHash.get("content")
-													.toString().indexOf(
-															"<title>") + 7,
-											contentHash.get("content")
-													.toString().indexOf(
-															"</title>")));
-							rPostIDs[ctr] = contentHash.get("postid")
-									.toString();
-							rDateCreated[ctr] = contentHash.get("dateCreated")
-									.toString();
-
-						}
-
-						// make the date pretty
-						String cDate = rDateCreated[ctr].replace(tz.getID(),
-								shortDisplayName);
-						try {
-							d = sdf.parse(cDate);
-							SimpleDateFormat sdfOut = new SimpleDateFormat(
-									"MMMM dd, yyyy hh:mm a");
-							rDateCreatedFormatted[ctr] = sdfOut.format(d);
-						} catch (ParseException pe) {
-							pe.printStackTrace();
-							rDateCreatedFormatted[ctr] = rDateCreated[ctr]; 
-						}
-
-						dbValues.put("blogID", id);
-						dbValues.put("title", rTitles[ctr]);
-
-						if (isPage) {
-							dbValues.put("pageID", rPostIDs[ctr]);
-							dbValues.put("pageDate", rDateCreated[ctr]);
-							dbValues.put("pageDateFormatted",
-									rDateCreatedFormatted[ctr]);
-							dbValues.put("parentID", rParentID[ctr]);
-							dbVector.add(ctr, dbValues);
-						} else {
-							dbValues.put("postID", rPostIDs[ctr]);
-							dbValues.put("postDate", rDateCreated[ctr]);
-							dbValues.put("postDateFormatted",
-									rDateCreatedFormatted[ctr]);
-							dbVector.add(ctr, dbValues);
-
-						}
-
-					}// end for loop
-
-					if (isPage) {
-						postStoreDB.savePages(viewPosts.this, dbVector);
-					} else {
-						postStoreDB.savePosts(viewPosts.this, dbVector);
-					}
-
-					loadPosts(loadMore);
-					if (!loadMore) {
-						closeProgressBar();
-					} else {
-						switcher.showPrevious();
-					}
-				}
-
-			}
-		});
-		if (isPage) {
-			Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), };
-			method.call(params);
-		} else {
-			Object[] params = { "spacer", blog.getBlogId(), blog.getUsername(), blog.getPassword(),
-					numRecords };
-			method.call(params);
-		}
-
+		Vector apiArgs = new Vector();
+		apiArgs.add(blog);
+		apiArgs.add(isPage);
+		apiArgs.add(viewPosts.this);
+		new ApiHelper.getRecentPostsTask().execute(apiArgs);
+		
 	}
 
 	public Map<String, ?> createItem(String title, String caption) {
@@ -373,14 +215,14 @@ public class viewPosts extends ListActivity {
 		return item;
 	}
 
-	private boolean loadPosts(boolean loadMore) { // loads posts from the db
+	boolean loadPosts(boolean loadMore) { // loads posts from the db
 
 		WordPressDB postStoreDB = new WordPressDB(this);
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = postStoreDB.loadPages(viewPosts.this, id);
+			loadedPosts = postStoreDB.loadUploadedPosts(viewPosts.this, id, true);
 		} else {
-			loadedPosts = postStoreDB.loadSavedPosts(viewPosts.this, id);
+			loadedPosts = postStoreDB.loadUploadedPosts(viewPosts.this, id, false);
 		}
 
 		if (loadedPosts != null) {
@@ -402,17 +244,16 @@ public class viewPosts extends ListActivity {
 				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
 				titles[i] = escapeUtils.unescapeHtml(contentHash.get("title")
 						.toString());
-				if (isPage) {
-					postIDs[i] = contentHash.get("pageID").toString();
-					dateCreated[i] = contentHash.get("pageDate").toString();
-					dateCreatedFormatted[i] = contentHash.get(
-							"pageDateFormatted").toString();
-				} else {
-					postIDs[i] = contentHash.get("postID").toString();
-					dateCreated[i] = contentHash.get("postDate").toString();
-					dateCreatedFormatted[i] = contentHash.get(
-							"postDateFormatted").toString();
-				}
+
+				postIDs[i] = contentHash.get("id").toString();
+				dateCreated[i] = contentHash.get("date_created_gmt").toString();
+				//dateCreatedFormatted[i] = contentHash.get("postDateFormatted").toString();
+				int flags = 0;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+				flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+				dateCreatedFormatted[i] = DateUtils.formatDateTime(this, (Long) contentHash.get("date_created_gmt"), flags);
 			}
 
 			// add the header
@@ -531,13 +372,13 @@ public class viewPosts extends ListActivity {
 									m.invoke(selectedID, args);
 								}
 								 catch (NoSuchMethodException e) {
-									 	selectedID = String.valueOf(info.targetView.getId()); 
+									 	selectedID = info.targetView.getId(); 
 									} catch (IllegalArgumentException e) {
-									 	selectedID = String.valueOf(info.targetView.getId()); 
+									 	selectedID = info.targetView.getId(); 
 									} catch (IllegalAccessException e) {
-									 	selectedID = String.valueOf(info.targetView.getId()); 
+									 	selectedID = info.targetView.getId();  
 									} catch (InvocationTargetException e) {
-									 	selectedID = String.valueOf(info.targetView.getId()); 
+									 	selectedID = info.targetView.getId();  
 									}
 								//selectedID = (String) info.targetView.getTag(R.id.row_post_id);
 								rowID = info.position;
@@ -608,9 +449,9 @@ public class viewPosts extends ListActivity {
 		WordPressDB lDraftsDB = new WordPressDB(this);
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = lDraftsDB.loadPageDrafts(viewPosts.this, id);
+			loadedPosts = lDraftsDB.loadDrafts(viewPosts.this, id, true);
 		} else {
-			loadedPosts = lDraftsDB.loadPosts(viewPosts.this, id);
+			loadedPosts = lDraftsDB.loadDrafts(viewPosts.this, id, false);
 		}
 		if (loadedPosts != null) {
 			draftIDs = new String[loadedPosts.size()];
@@ -764,134 +605,6 @@ public class viewPosts extends ListActivity {
 
 	}
 
-	interface XMLRPCMethodCallback {
-		void callFinished(Object[] result);
-	}
-
-	class XMLRPCMethod extends Thread {
-		private String method;
-		private Object[] params;
-		private Handler handler;
-		private XMLRPCMethodCallback callBack;
-
-		public XMLRPCMethod(String method, XMLRPCMethodCallback callBack) {
-			this.method = method;
-			this.callBack = callBack;
-			handler = new Handler();
-		}
-
-		public void call() {
-			call(null);
-		}
-
-		public void call(Object[] params) {
-			this.params = params;
-			start();
-		}
-
-		@Override
-		public void run() {
-			try {
-				final Object[] result = (Object[]) client.call(method, params);
-				handler.post(new Runnable() {
-					public void run() {
-
-						callBack.callFinished(result);
-					}
-				});
-			} catch (final XMLRPCFault e) {
-				handler.post(new Runnable() {
-					public void run() {
-						closeProgressBar();
-						if (e.getFaultCode() != 500) {
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-									viewPosts.this);
-							dialogBuilder.setTitle(getResources().getText(
-									R.string.connection_error));
-							String msg = e.getLocalizedMessage();
-							dialogBuilder.setMessage(e.getFaultString());
-							if (msg.contains("403")) {
-								dialogBuilder.setMessage(e.getFaultString()
-										+ " "
-										+ getResources().getString(
-												R.string.load_settings));
-								dialogBuilder.setPositiveButton(getResources()
-										.getString(R.string.yes),
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int whichButton) {
-												Intent i = new Intent(
-														viewPosts.this,
-														settings.class);
-												i.putExtra("id", id);
-												i.putExtra("accountName",
-														accountName);
-												startActivity(i);
-
-											}
-										});
-
-								dialogBuilder.setNegativeButton(getResources()
-										.getString(R.string.no),
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int whichButton) {
-												// Just close the window.
-
-											}
-										});
-							} else {
-								dialogBuilder.setPositiveButton("OK",
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int whichButton) {
-												// Just close the window.
-
-											}
-										});
-							}
-							dialogBuilder.setCancelable(true);
-							if (!isFinishing()) {
-								dialogBuilder.create().show();
-							}
-						} else {
-							WordPressDB postStoreDB = new WordPressDB(
-									viewPosts.this);
-							postStoreDB.clearPosts(viewPosts.this, id);
-							loadPosts(false);
-						}
-					}
-				});
-			} catch (final XMLRPCException e) {
-				handler.post(new Runnable() {
-					public void run() {
-						closeProgressBar();
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								viewPosts.this);
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.connection_error));
-						dialogBuilder.setMessage(e.getLocalizedMessage());
-						dialogBuilder.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										// Just close the window.
-
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
-							dialogBuilder.create().show();
-						}
-					}
-				});
-			}
-		}
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -905,23 +618,17 @@ public class viewPosts extends ListActivity {
 					if (returnResult.equals("OK")) {
 						boolean uploadNow = false;
 						uploadNow = extras.getBoolean("upload");
+						uploadNow = true;
 						if (uploadNow) {
-							int uploadID = extras.getInt("newID");
-							selectedID = String.valueOf(uploadID);
+							selectedID = extras.getLong("newID");
 							showDialog(ID_DIALOG_POSTING);
 
-							new Thread() {
-								public void run() {
+							try {
+								submitResult = submitPost();
 
-									try {
-										submitResult = submitPost();
-
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-
-								}
-							}.start();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 
 						} else {
 							loadPosts(false);
@@ -946,24 +653,24 @@ public class viewPosts extends ListActivity {
 			switch (item.getItemId()) {
 			case 0:
 				Intent i0 = new Intent(viewPosts.this, viewPost.class);
-				i0.putExtra("postID", String.valueOf(selectedID));
+				i0.putExtra("postID", selectedID);
 				i0.putExtra("id", id);
 				i0.putExtra("accountName", accountName);
 				startActivity(i0);
 				return true;
 			case 1:
 				Intent i = new Intent(viewPosts.this, viewComments.class);
-				i.putExtra("postID", String.valueOf(selectedID));
+				i.putExtra("postID", selectedID);
 				i.putExtra("id", id);
 				i.putExtra("accountName", accountName);
 				startActivity(i);
 				return true;
 			case 2:
 				Intent i2 = new Intent(viewPosts.this, editPost.class);
-				i2.putExtra("postID", String.valueOf(selectedID));
+				i2.putExtra("postID", selectedID);
 				i2.putExtra("id", id);
 				i2.putExtra("accountName", accountName);
-				startActivityForResult(i2, 1);
+				startActivityForResult(i2, 0);
 				return true;
 			case 3:
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
@@ -1030,11 +737,11 @@ public class viewPosts extends ListActivity {
 				return true;
 			case 2:
 				Intent i2 = new Intent(viewPosts.this, editPost.class);
-				i2.putExtra("postID", String.valueOf(selectedID));
+				i2.putExtra("postID", selectedID);
 				i2.putExtra("id", id);
 				i2.putExtra("accountName", accountName);
 				i2.putExtra("isPage", true);
-				startActivityForResult(i2, 1);
+				startActivityForResult(i2, 0);
 				return true;
 			case 3:
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
@@ -1084,7 +791,7 @@ public class viewPosts extends ListActivity {
 			switch (item.getItemId()) {
 			case 0:
 				Intent i2 = new Intent(viewPosts.this, editPost.class);
-				i2.putExtra("postID", String.valueOf(selectedID));
+				i2.putExtra("postID", selectedID);
 				i2.putExtra("id", id);
 				if (isPage) {
 					i2.putExtra("isPage", true);
@@ -1120,14 +827,10 @@ public class viewPosts extends ListActivity {
 				dialogBuilder.setPositiveButton(getResources().getText(
 						R.string.yes), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						WordPressDB lDraftsDB = new WordPressDB(viewPosts.this);
-						if (isPage) {
-							lDraftsDB.deletePageDraft(viewPosts.this, String
-									.valueOf(selectedID));
-						} else {
-							lDraftsDB.deletePost(viewPosts.this, String
-									.valueOf(selectedID));
-						}
+						
+						Post post = new Post(id, selectedID, isPage, viewPosts.this);
+						post.delete();
+
 						loadPosts(false);
 
 					}
@@ -1236,775 +939,11 @@ public class viewPosts extends ListActivity {
 
 	public String submitPost() throws IOException {
 
-		// grab the form data
-		final WordPressDB lDraftsDB = new WordPressDB(this);
-		Vector<?> post;
-		if (isPage) {
-			post = lDraftsDB.loadPageDraft(this, String.valueOf(selectedID));
-		} else {
-			post = lDraftsDB.loadPost(this, String.valueOf(selectedID));
-		}
-
-		HashMap<?, ?> postHashMap = (HashMap<?, ?>) post.get(0);
-
-		String title = postHashMap.get("title").toString();
-		String content = StringHelper.convertHTMLTagsForUpload(postHashMap.get(
-				"content").toString());
-		String password = null;
-		if(postHashMap.get("password") != null)
-			password = postHashMap.get("password").toString();
-		String picturePaths = postHashMap.get("picturePaths").toString();
-
-		if (!picturePaths.equals("")) {
-			String[] pPaths = picturePaths.split(",");
-
-			for (int i = 0; i < pPaths.length; i++) {
-				Uri imagePath = Uri.parse(pPaths[i]);
-				selectedImageIDs.add(selectedImageCtr, imagePath);
-				imageUrl.add(selectedImageCtr, pPaths[i]);
-				selectedImageCtr++;
-			}
-
-		}
-
-		String tags = "";
-		if (!isPage) {
-			String categories = postHashMap.get("categories").toString();
-			if (!categories.equals("")) {
-
-				String[] aCategories = categories.split(",");
-
-				for (int i = 0; i < aCategories.length; i++) {
-					selectedCategories.add(aCategories[i]);
-				}
-
-			}
-
-			tags = postHashMap.get("tags").toString();
-
-		}
-		String status = "publish";
-		if (postHashMap.get("status") != null){
-			status = postHashMap.get("status").toString();
-		}
-
-		Boolean publishThis = false;
-
-		String imageContent = "";
-		boolean mediaError = false;
-		if (selectedImageCtr > 0) { // did user add media to post?
-			// upload the images and return the HTML
-			String state = android.os.Environment.getExternalStorageState();
-			if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-				// we need an SD card to submit media, stop this train!
-				mediaError = true;
-			} else {
-				imageContent = uploadImages();
-			}
-		}
-		String res = "";
-		if (!mediaError) {
-
-			Thread updateDialog = new Thread() {
-				public void run() {
-					loadingDialog.setMessage(getResources().getText(
-							(isPage) ? R.string.page_attempt_upload
-									: R.string.post_attempt_upload));
-				}
-			};
-			this.runOnUiThread(updateDialog);
-
-			String[] theCategories = new String[selectedCategories.size()];
-
-			for (int i = 0; i < selectedCategories.size(); i++) {
-				theCategories[i] = selectedCategories.get(i).toString();
-			}
-
-			//
-			WordPressDB settingsDB = new WordPressDB(this);
-
-			Map<String, Object> contentStruct = new HashMap<String, Object>();
-
-			if (imageContent != "") {
-				if (sImagePlacement.equals("Above Text")) {
-					content = imageContent + content;
-				} else {
-					content = content + imageContent;
-				}
-			}
-
-			if (!isPage) {
-				// add the tagline
-				HashMap<?, ?> globalSettings = settingsDB.getNotificationOptions(this);
-				boolean taglineValue = false;
-				String tagline = "";
-
-				if (globalSettings != null) {
-					if (globalSettings.get("tagline_flag").toString().equals(
-							"1")) {
-						taglineValue = true;
-					}
-
-					if (taglineValue) {
-						tagline = globalSettings.get("tagline").toString();
-						if (!tagline.equals("")) {
-							content += "\n\n<span class=\"post_sig\">"
-									+ tagline + "</span>\n\n";
-						}
-					}
-				}
-			}
-
-			contentStruct.put("post_type", (isPage) ? "page" : "post");
-			contentStruct.put("title", title);
-			long pubDate = Long.parseLong(postHashMap.get("pubDate").toString());
-	    	if (pubDate != 0){
-	    		Date date = new Date(pubDate);
-	    		contentStruct.put("date_created_gmt", date);
-	    	}
-			// for trac #53, add <p> and <br /> tags
-			content = content.replace("/\n\n/g", "</p><p>");
-			content = content.replace("/\n/g", "<br />");
-			contentStruct.put("description", content);
-			if (!isPage) {
-				if (tags != "") {
-					contentStruct.put("mt_keywords", tags);
-				}
-				if (theCategories.length > 0) {
-					contentStruct.put("categories", theCategories);
-				}
-			}
-			contentStruct.put((isPage) ? "page_status" : "post_status", status);
-			Double latitude = 0.0;
-			Double longitude = 0.0;
-			if (!isPage) {
-				latitude = (Double) postHashMap.get("latitude");
-				longitude = (Double) postHashMap.get("longitude");
-
-				if (latitude > 0) {
-					HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
-					hLatitude.put("key", "geo_latitude");
-					hLatitude.put("value", latitude);
-
-					HashMap<Object, Object> hLongitude = new HashMap<Object, Object>();
-					hLongitude.put("key", "geo_longitude");
-					hLongitude.put("value", longitude);
-
-					HashMap<Object, Object> hPublic = new HashMap<Object, Object>();
-					hPublic.put("key", "geo_public");
-					hPublic.put("value", 1);
-
-					Object[] geo = { hLatitude, hLongitude, hPublic };
-
-					contentStruct.put("custom_fields", geo);
-				}
-			}
-			
-			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-			if(password != null && !"".equals(password)){
-				contentStruct.put("wp_password", password);
-			}
-			Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), contentStruct,
-					publishThis };
-
-			Object result = null;
-			boolean success = false;
-			try {
-				result = (Object) client.call("metaWeblog.newPost", params);
-				success = true;
-			} catch (final XMLRPCException e) {
-				Thread prompt = new Thread() {
-					public void run() {
-						dismissDialog(ID_DIALOG_POSTING);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								viewPosts.this);
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.connection_error));
-						dialogBuilder.setMessage(e.getLocalizedMessage());
-						dialogBuilder.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										clearCounters();
-
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
-							dialogBuilder.create().show();
-						}
-					}
-				};
-				this.runOnUiThread(prompt);
-			}
-
-			if (success) {
-				newID = result.toString();
-				res = "OK";
-				dismissDialog(ID_DIALOG_POSTING);
-				Thread action = new Thread() {
-					public void run() {
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								viewPosts.this);
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.success));
-						if (xmlrpcError) {
-							if (vpUpgrade) {
-								dialogBuilder
-										.setMessage(getResources().getText(
-												(isPage) ? R.string.page_id
-														: R.string.post_id)
-												+ " "
-												+ getResources()
-														.getText(
-																R.string.added_successfully_image_error)
-												+ ": " + mediaErrorMsg);
-								dialogBuilder.setNegativeButton(getResources()
-										.getString(R.string.no),
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int whichButton) {
-												boolean isInteger = false;
-
-												try {
-													Integer.parseInt(newID);
-													isInteger = true;
-												} catch (NumberFormatException e) {
-
-												}
-
-												if (isInteger) {
-
-													clearCounters();
-													// post made it, so let's
-													// delete the draft
-													if (isPage) {
-														lDraftsDB.deletePageDraft(viewPosts.this,String.valueOf(selectedID));
-													} else {
-														lDraftsDB.deletePost(viewPosts.this,String.valueOf(selectedID));
-													}
-													refreshPosts(false);
-												}
-
-											}
-										});
-							}
-							dialogBuilder
-									.setMessage(getResources().getText(
-											(isPage) ? R.string.page_id
-													: R.string.post_id)
-											+ " "
-											+ getResources()
-													.getText(
-															R.string.added_successfully_image_error)
-											+ ": " + mediaErrorMsg);
-						} else {
-							dialogBuilder.setMessage(getResources().getText(
-									(isPage) ? R.string.page_id
-											: R.string.post_id)
-									+ " "
-									+ getResources().getText(
-											R.string.added_successfully));
-						}
-						dialogBuilder.setPositiveButton(
-								(vpUpgrade) ? getResources().getString(
-										R.string.yes) : "OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-
-										boolean isInteger = false;
-
-										try {
-											Integer.parseInt(newID);
-											isInteger = true;
-										} catch (NumberFormatException e) {
-
-										}
-
-										if (isInteger) {
-
-											clearCounters();
-											// post made it, so let's delete the
-											// draft
-											if (isPage) {
-												lDraftsDB
-														.deletePageDraft(
-																viewPosts.this,
-																String
-																		.valueOf(selectedID));
-											} else {
-												lDraftsDB
-														.deletePost(
-																viewPosts.this,
-																String
-																		.valueOf(selectedID));
-											}
-											refreshPosts(false);
-										}
-
-										if (vpUpgrade) {
-											String url = "http://videopress.com";
-											Intent i = new Intent(
-													Intent.ACTION_VIEW);
-											i.setData(Uri.parse(url));
-											startActivity(i);
-										}
-
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
-							dialogBuilder.create().show();
-						}
-
-					}
-				};
-				this.runOnUiThread(action);
-			}
-		} else {
-			Thread prompt = new Thread() {
-				public void run() {
-					dismissDialog(ID_DIALOG_POSTING);
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							viewPosts.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.sdcard_title));
-					dialogBuilder.setMessage(getResources().getText(
-							R.string.sdcard_message));
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// start over
-									clearCounters();
-								}
-
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				}
-			};
-			this.runOnUiThread(prompt);
-		}
-		return res;
-	}
-
-	private void clearCounters() {
-		// resets counter variables
-		selectedImageIDs.clear();
-		imageUrl.clear();
-		selectedImageCtr = 0;
-		selectedCategories.clear();
-		xmlrpcError = false;
-
-	}
-
-	public String uploadImages() {
-		String content = "";
-
-		// images variables
-		String finalThumbnailUrl = null;
-		String finalImageUrl = null;
-
-		//loop for multiple images
-
-		for (int it = 0; it < selectedImageCtr; it++) {
-			final int printCtr = it;
-			Thread prompt = new Thread() {
-				public void run() {
-					loadingDialog.setMessage("Uploading Media File #"
-							+ String.valueOf(printCtr + 1));
-				}
-			};
-			this.runOnUiThread(prompt);
-			// check for image, and upload it
-			if (imageUrl.get(it) != null) {
-				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
-				String curImagePath = "";
-
-				curImagePath = imageUrl.get(it).toString();
-				boolean video = false;
-				if (curImagePath.contains("video")) {
-					video = true;
-				}
-
-				if (video) { // upload the video
-
-					Uri videoUri = Uri.parse(curImagePath);
-					File fVideo = null;
-					String mimeType = "", xRes = "", yRes = "";
-					MediaFile mf = null;
-
-					if (videoUri.toString().contains("content:")) { 
-						String[] projection;
-						Uri imgPath;
-
-						projection = new String[] { Video.Media._ID,
-								Video.Media.DATA, Video.Media.MIME_TYPE,
-								Video.Media.RESOLUTION };
-						imgPath = videoUri;
-
-						Cursor cur = this.managedQuery(imgPath, projection,
-								null, null, null);
-						String thumbData = "";
-
-						if (cur.moveToFirst()) {
-
-							int mimeTypeColumn, resolutionColumn, dataColumn;
-
-							dataColumn = cur.getColumnIndex(Video.Media.DATA);
-							mimeTypeColumn = cur
-									.getColumnIndex(Video.Media.MIME_TYPE);
-							resolutionColumn = cur
-									.getColumnIndex(Video.Media.RESOLUTION);
-							
-							mf = new MediaFile();
-
-							thumbData = cur.getString(dataColumn);
-							mimeType = cur.getString(mimeTypeColumn);
-							fVideo = new File(thumbData);
-							mf.setFilePath(fVideo.getPath());
-							String resolution = cur.getString(resolutionColumn);
-							if (resolution != null) {
-								String[] resx = resolution.split("x");
-								xRes = resx[0];
-								yRes = resx[1];
-							} else {
-								// set the width of the video to the thumbnail
-								// width, else 640x480
-								if (!sMaxImageWidth.equals("Original Size")) {
-									xRes = sMaxImageWidth;
-									yRes = String.valueOf(Math.round(Integer
-											.valueOf(sMaxImageWidth) * 0.75));
-								} else {
-									xRes = "640";
-									yRes = "480";
-								}
-
-							}
-
-						}
-					} else { // file is not in media library
-						fVideo = new File(videoUri.toString().replace(
-								"file://", ""));
-					}
-
-					imageTitle = fVideo.getName();
-
-					// try to upload the video
-					HashMap<String, Object> m = new HashMap<String, Object>();
-
-					m.put("name", imageTitle);
-					m.put("type", mimeType);
-					m.put("bits", mf);
-					m.put("overwrite", true);
-
-					Object[] params = { 1, blog.getUsername(), blog.getPassword(), m };
-
-					Object result = null;
-
-					try {
-						result = (Object) client.call("wp.uploadFile", params);
-					} catch (XMLRPCException e) {
-						mediaErrorMsg = e.getLocalizedMessage();
-						if (video) {
-							if (mediaErrorMsg.contains("Invalid file type")) {
-								mediaErrorMsg = getResources().getString(
-										R.string.vp_upgrade);
-								vpUpgrade = true;
-							}
-						}
-						xmlrpcError = true;
-						break;
-					}
-
-					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-
-					contentHash = (HashMap<?, ?>) result;
-
-					String resultURL = contentHash.get("url").toString();
-					if (contentHash.containsKey("videopress_shortcode")) {
-						resultURL = contentHash.get("videopress_shortcode")
-								.toString()
-								+ "\n";
-					} else {
-						resultURL = "<object classid=\"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B\" width=\""
-								+ xRes
-								+ "\" height=\""
-								+ (Integer.valueOf(yRes) + 16)
-								+ "\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab\"><param name=\"scale\" value=\"aspect\"><param name=\"src\" value=\""
-								+ resultURL
-								+ "\" /><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /><object type=\"video/quicktime\" data=\""
-								+ resultURL
-								+ "\" width=\""
-								+ xRes
-								+ "\" height=\""
-								+ (Integer.valueOf(yRes) + 16)
-								+ "\"><param name=\"scale\" value=\"aspect\"><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /></object></object>\n";
-					}
-
-					content = content + resultURL;
-
-				} // end video
-				else {
-					for (int i = 0; i < 2; i++) {
-
-						curImagePath = imageUrl.get(it).toString();
-
-						if (i == 0 || blog.isFullSizeImage()) {
-
-							Uri imageUri = Uri.parse(curImagePath);
-							File jpeg = null;
-							String mimeType = "", orientation = "", path = "";
-							MediaFile mf = null;
-
-							if (imageUri.toString().contains("content:")) {
-								String[] projection;
-								Uri imgPath;
-
-								projection = new String[] { Images.Media._ID,
-										Images.Media.DATA,
-										Images.Media.MIME_TYPE,
-										Images.Media.ORIENTATION };
-	
-								imgPath = imageUri;
-
-								Cursor cur = this.managedQuery(imgPath,
-										projection, null, null, null);
-								String thumbData = "";
-
-								if (cur.moveToFirst()) {
-
-									int dataColumn, mimeTypeColumn, orientationColumn;
-
-									dataColumn = cur
-											.getColumnIndex(Images.Media.DATA);
-									mimeTypeColumn = cur
-											.getColumnIndex(Images.Media.MIME_TYPE);
-									orientationColumn = cur
-											.getColumnIndex(Images.Media.ORIENTATION);
-
-									mf = new MediaFile();
-									orientation = cur
-											.getString(orientationColumn);
-									thumbData = cur.getString(dataColumn);
-									mimeType = cur.getString(mimeTypeColumn);
-									jpeg = new File(thumbData);
-									path = thumbData;
-									mf.setFilePath(jpeg.getPath());
-
-								}
-							} else { // file is not in media library
-								mf = new MediaFile();
-								path = imageUri.toString().replace("file://",
-										"");
-								jpeg = new File(path);
-								mf.setFilePath(path);
-							}
-							
-							//check if the file is now gone! (removed SD card, etc)
-							if (jpeg == null)
-							{
-								xmlrpcError = true;
-								mediaErrorMsg = "Media file not found.";
-								break;
-							}
-
-							imageHelper ih = imageHelper.getInstance();
-							orientation = ih.getExifOrientation(path,
-									orientation);
-
-							imageTitle = jpeg.getName();
-
-							byte[] finalBytes = null;
-
-							if (i == 0) {
-								byte[] bytes = new byte[(int) jpeg.length()];
-
-								DataInputStream in = null;
-								try {
-									in = new DataInputStream(
-											new FileInputStream(jpeg));
-								} catch (FileNotFoundException e) {
-									e.printStackTrace();
-								}
-								try {
-									in.readFully(bytes);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-								try {
-									in.close();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-
-								imageHelper ih2 = imageHelper.getInstance();
-								finalBytes = ih2.createThumbnail(bytes,
-										sMaxImageWidth, orientation, false);
-							}
-
-							// try to upload the image
-							Map<String, Object> m = new HashMap<String, Object>();
-
-							m.put("name", imageTitle);
-							m.put("type", mimeType);
-							if (i == 0) {
-								m.put("bits", finalBytes);
-							} else {
-								m.put("bits", mf);
-							}
-							m.put("overwrite", true);
-
-							Object[] params = { 1, blog.getUsername(), blog.getPassword(), m };
-
-							Object result = null;
-
-							try {
-								result = (Object) client.call("wp.uploadFile",
-										params);
-							} catch (XMLRPCException e) {
-								e.printStackTrace();
-								e.getLocalizedMessage();
-								xmlrpcError = true;
-								break;
-							}
-
-							HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-
-							contentHash = (HashMap<?, ?>) result;
-
-							String resultURL = contentHash.get("url")
-									.toString();
-
-							if (i == 0) {
-								finalThumbnailUrl = resultURL;
-							} else {
-								if (blog.isFullSizeImage()) {
-									finalImageUrl = resultURL;
-								} else {
-									finalImageUrl = "";
-								}
-							}
-
-							// prepare the centering css if desired from user
-							String centerCSS = " ";
-							if (centerThumbnail) {
-								centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
-							}
-
-							if (i != 0 && blog.isFullSizeImage()) {
-								if (resultURL != null) {
-
-									if (sImagePlacement.equals("Above Text")) {
-										content = content
-												+ "<a alt=\"image\" href=\""
-												+ finalImageUrl + "\"><img "
-												+ centerCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl
-												+ "\" /></a>\n\n";
-									} else {
-										content = content
-												+ "\n<a alt=\"image\" href=\""
-												+ finalImageUrl + "\"><img "
-												+ centerCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl
-												+ "\" /></a>";
-									}
-
-								}
-							} else {
-								if (i == 0 && blog.isFullSizeImage() == false
-										&& resultURL != null) {
-
-									if (sImagePlacement.equals("Above Text")) {
-
-										content = content + "<img " + centerCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl
-												+ "\" />\n\n";
-									} else {
-										content = content + "\n<img "
-												+ centerCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl + "\" />";
-									}
-
-								}
-							}
-
-						} // end if statement
-
-					}// end image check
-
-				}
-
-			}// end image stuff
-		}// end new for loop
-
-		return content;
-	}
-
-	interface XMLRPCMethodCallbackImages {
-		void callFinished(Object result);
-	}
-
-	class XMLRPCMethodImages extends Thread {
-		private String method;
-		private Object[] params;
-		private Handler handler;
-		private XMLRPCMethodCallbackImages callBack;
-
-		public XMLRPCMethodImages(String method,
-				XMLRPCMethodCallbackImages callBack) {
-			this.method = method;
-			this.callBack = callBack;
-		}
-
-		public void call() throws InterruptedException {
-			call(null);
-		}
-
-		public void call(Object[] params) throws InterruptedException {
-			this.params = params;
-			final Object result;
-			try {
-				result = (Object) client.call(method, params);
-				callBack.callFinished(result);
-			} catch (XMLRPCException e) {
-				xmlrpcError = true;
-				e.printStackTrace();
-			}
-		}
-
-		@Override
-		public void run() {
-
-			try {
-				final Object result;
-				result = (Object) client.call(method, params);
-				handler.post(new Runnable() {
-					public void run() {
-
-						callBack.callFinished(result);
-
-					}
-				});
-			} catch (final XMLRPCFault e) {
-				e.printStackTrace();
-
-			} catch (final XMLRPCException e) {
-				e.printStackTrace();
-			}
-
-		}
+		Post post = new Post(id, selectedID, isPage, viewPosts.this);
+		
+		post.upload();
+		
+		return "";
 	}
 
 	public void showProgressBar() {
