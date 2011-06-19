@@ -80,7 +80,8 @@ public class Post {
     		this.blog = new Blog(blog_id, ctx);
     		this.id = (Long)postVals.get(0);
     		this.blogID = blog_id;
-    		this.postid = postVals.get(2).toString();
+    		if (postVals.get(2) != null)
+    			this.postid = postVals.get(2).toString();
     		this.title = postVals.get(3).toString();
     		this.dateCreated = (Long)postVals.get(4);
     		this.date_created_gmt = (Long)postVals.get(5);
