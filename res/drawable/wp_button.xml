@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-﻿    <item android:state_window_focused="false" android:state_enabled="true"
-        android:drawable="@drawable/grey_wp_button" />
-    <item android:state_pressed="true" 
-        android:drawable="@drawable/grey_wp_button_down" />
-    <item android:state_focused="true" android:state_enabled="true"
-        android:drawable="@drawable/grey_wp_button_active" />
-    <item android:state_enabled="true"
-        android:drawable="@drawable/grey_wp_button" />
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  ﻿
+  <item
+    android:state_window_focused="false"
+    android:state_enabled="true"
+    android:drawable="@drawable/grey_wp_button" />
+  <item
+    android:state_pressed="true"
+    android:drawable="@drawable/grey_wp_button_down" />
+  <item
+    android:state_focused="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/grey_wp_button_active" />
+  <item
+    android:state_enabled="true"
+    android:drawable="@drawable/grey_wp_button" />
 </selector>

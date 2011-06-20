@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/btn_loadmorecontacts"
-    android:text="Load More"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content"
-    android:textSize="16dip"
-    android:minHeight="50dip"
-    android:textColor="#FF464646"
-    android:background="@android:drawable/list_selector_background" 
-    android:clickable="true" 
-    android:onClick="onClick" />
+<Button
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/btn_loadmorecontacts"
+  android:text="Load More"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:textSize="16dip"
+  android:minHeight="50dip"
+  android:textColor="#FF464646"
+  android:background="@android:drawable/list_selector_background"
+  android:clickable="true"
+  android:onClick="onClick" />

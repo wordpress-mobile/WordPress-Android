@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-﻿    <item android:state_window_focused="false" android:state_enabled="true"
-        android:drawable="@drawable/wp_small" />
-    <item android:state_pressed="true" 
-        android:drawable="@drawable/wp_small_down" />
-    <item android:state_focused="true" android:state_enabled="true"
-        android:drawable="@drawable/wp_small_over" />
-    <item android:state_enabled="true"
-        android:drawable="@drawable/wp_small" />
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  ﻿
+  <item
+    android:state_window_focused="false"
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_small" />
+  <item
+    android:state_pressed="true"
+    android:drawable="@drawable/wp_small_down" />
+  <item
+    android:state_focused="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_small_over" />
+  <item
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_small" />
 </selector>
 
 

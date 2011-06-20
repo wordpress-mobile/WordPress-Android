@@ -1,87 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:layout_width="fill_parent" 
-            android:layout_height="wrap_content">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent" 
-                android:layout_height="wrap_content"
-                android:padding="10dip">
-	
-	<!-- Category name -->
-    <TextView android:id="@+id/categoryNameLabel"
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:textStyle="bold"
-              android:text="@string/category_name"/>
-    <EditText android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:minHeight="40px" 
-              android:layout_below="@id/categoryNameLabel"
-              android:background="@android:drawable/editbox_background"
-              android:inputType="text"
-              android:id="@+id/category_name"/>
-	
-	<!-- Category slug -->
-    <TextView android:id="@+id/categorySlugLabel"
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:layout_below="@id/category_name"
-              android:textStyle="bold"
-              android:text="@string/category_slug"/>
-    <EditText android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:minHeight="40px" 
-              android:layout_below="@id/categorySlugLabel"
-              android:background="@android:drawable/editbox_background"
-              android:inputType="text"
-              android:id="@+id/category_slug"/>
-              
-	<!-- Category description -->
-    <TextView android:id="@+id/categoryDescLabel"
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:layout_below="@id/category_slug"
-              android:textStyle="bold"
-              android:text="@string/category_desc"/>
-    <EditText android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:minHeight="40px" 
-              android:layout_below="@id/categoryDescLabel"
-              android:background="@android:drawable/editbox_background"
-              android:inputType="text"
-              android:id="@+id/category_desc"/> 
-              
-	<!--  Parent category -->
-	<TextView android:id="@+id/parentDescLabel"
-              android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:layout_below="@id/category_desc"
-              android:textStyle="bold"
-              android:text="@string/category_parent"/>
-	<Spinner android:id="@+id/parent_category"
-			 android:layout_width="fill_parent" 
-             android:layout_height="50dip"
-             android:layout_marginBottom="16dip"
-             android:layout_below="@id/parentDescLabel"/>
-              
-<Button 
-			android:id="@+id/ok" 
-            android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dip"
-            android:textSize="20dip"
-            android:text="OK"
-            android:layout_below="@id/parent_category"/>
- 
-<Button
-		    android:id="@+id/cancel"
-     		android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/ok"
-            android:layout_toLeftOf="@id/ok"
-            android:textSize="20dip"
-            android:text="@string/cancel" />          
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+  <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dip">
 
-</RelativeLayout>
+    <!-- Category name -->
+    <TextView
+      android:id="@+id/categoryNameLabel"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textStyle="bold"
+      android:text="@string/category_name" />
+    <EditText
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="40px"
+      android:layout_below="@id/categoryNameLabel"
+      android:background="@android:drawable/editbox_background"
+      android:inputType="text"
+      android:id="@+id/category_name" />
+
+    <!-- Category slug -->
+    <TextView
+      android:id="@+id/categorySlugLabel"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/category_name"
+      android:textStyle="bold"
+      android:text="@string/category_slug" />
+    <EditText
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="40px"
+      android:layout_below="@id/categorySlugLabel"
+      android:background="@android:drawable/editbox_background"
+      android:inputType="text"
+      android:id="@+id/category_slug" />
+
+    <!-- Category description -->
+    <TextView
+      android:id="@+id/categoryDescLabel"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/category_slug"
+      android:textStyle="bold"
+      android:text="@string/category_desc" />
+    <EditText
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="40px"
+      android:layout_below="@id/categoryDescLabel"
+      android:background="@android:drawable/editbox_background"
+      android:inputType="text"
+      android:id="@+id/category_desc" />
+
+    <!--  Parent category -->
+    <TextView
+      android:id="@+id/parentDescLabel"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/category_desc"
+      android:textStyle="bold"
+      android:text="@string/category_parent" />
+    <Spinner
+      android:id="@+id/parent_category"
+      android:layout_width="fill_parent"
+      android:layout_height="50dip"
+      android:layout_marginBottom="16dip"
+      android:layout_below="@id/parentDescLabel" />
+
+    <Button
+      android:id="@+id/ok"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_marginLeft="10dip"
+      android:textSize="20dip"
+      android:text="OK"
+      android:layout_below="@id/parent_category" />
+
+    <Button
+      android:id="@+id/cancel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@id/ok"
+      android:layout_toLeftOf="@id/ok"
+      android:textSize="20dip"
+      android:text="@string/cancel" />
+
+  </RelativeLayout>
 </ScrollView>

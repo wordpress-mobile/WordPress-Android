@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
-android:layout_width="fill_parent"
-android:layout_height="?android:attr/listPreferredItemHeight"
-android:textAppearance="?android:attr/textAppearanceLarge"
-android:gravity="center_vertical"
-android:textColor="#464646"
-android:paddingLeft="6dip"
-android:paddingRight="6dip"
-android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-/>
+<CheckedTextView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="?android:attr/listPreferredItemHeight"
+  android:textAppearance="?android:attr/textAppearanceLarge"
+  android:gravity="center_vertical"
+  android:textColor="#464646"
+  android:paddingLeft="6dip"
+  android:paddingRight="6dip"
+  android:checkMark="?android:attr/listChoiceIndicatorMultiple" />
 

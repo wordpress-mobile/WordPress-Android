@@ -1,95 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical"
-	android:paddingTop="12dip"
-	android:paddingRight="12dip"
-	android:paddingLeft="12dip"
-	android:paddingBottom="6dip"
-	android:background="#FFFFFF"
-	>
-<RelativeLayout  
-			  android:layout_width="wrap_content" 
-              android:layout_height="wrap_content"
-              android:layout_weight="1.0"> 
-<ImageView android:id="@+id/gravatar" 
-android:layout_width="80dip" 
-android:layout_height="80dip"
-android:src="@drawable/placeholder">
-</ImageView>
 <LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:paddingLeft="4dip"
-		android:paddingRight="4dip"
-		>
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:layout_weight="1"
-			android:gravity="center_vertical"
-			android:layout_marginTop="-8dip"
-			android:layout_marginLeft="86dip"
-			>
-			<TextView android:gravity="left" android:textSize="20dip" android:textStyle="bold" android:id="@+id/name" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-			<TextView android:gravity="left" android:textColorLink="#21759b" android:textSize="12dip" android:id="@+id/email" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-			<TextView android:gravity="left" android:textColorLink="#21759b" android:textSize="12dip" android:id="@+id/url" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-			<TextView android:gravity="left" android:textSize="12dip" android:id="@+id/date" android:singleLine="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textColor="#777777"></TextView>
-		</LinearLayout>
-	</LinearLayout>
-<ImageView android:id="@+id/divider" 
-			android:layout_width="fill_parent"
-			android:layout_height="1px"
-			android:background="@drawable/list_divider"
-			android:layout_marginTop="12dip"
-			android:layout_below="@id/gravatar"
-			/>
-<ScrollView android:layout_below="@id/divider" 
-		android:layout_width="fill_parent" 
-		android:layout_height="fill_parent"
-		android:paddingTop="12dip"
-		android:paddingBottom="10dip">
-<TextView android:textColor="#464646" android:textSize="16dip" android:gravity="left" android:id="@+id/comment" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
-</ScrollView>
-</RelativeLayout>
-<RelativeLayout 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:gravity="bottom"
-		android:paddingTop="4dip">
-<ImageButton android:id="@+id/deleteComment" 
-		android:layout_width="48dip" 
-		android:layout_height="48dip"
-		android:background="@drawable/wp_button_small"
-		android:src="@drawable/ic_menu_delete"
-		android:layout_alignParentLeft="true"/>
-<Button android:id="@+id/approveComment" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:background="@drawable/wp_button_small"
-		android:text="@string/approve"
-		android:layout_alignParentRight="true"/>
-<Button android:id="@+id/unapproveComment" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:background="@drawable/wp_button_small"
-		android:text="@string/unapprove"
-		android:layout_toLeftOf="@id/approveComment"
-		android:layout_alignParentRight="true"/>
-<Button android:id="@+id/markSpam" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:background="@drawable/wp_button_small"
-		android:text="@string/spam"
-		android:layout_toLeftOf="@id/unapproveComment"/>
-<Button android:id="@+id/reply" 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:background="@drawable/wp_button_small"
-		android:text="@string/reply"
-		android:layout_toLeftOf="@id/markSpam"/>
-</RelativeLayout>
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical"
+  android:paddingTop="12dip"
+  android:paddingRight="12dip"
+  android:paddingLeft="12dip"
+  android:paddingBottom="6dip"
+  android:background="#FFFFFF">
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.0">
+    <ImageView
+      android:id="@+id/gravatar"
+      android:layout_width="80dip"
+      android:layout_height="80dip"
+      android:src="@drawable/placeholder">
+    </ImageView>
+    <LinearLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingLeft="4dip"
+      android:paddingRight="4dip">
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:layout_marginTop="-8dip"
+        android:layout_marginLeft="86dip">
+        <TextView
+          android:gravity="left"
+          android:textSize="20dip"
+          android:textStyle="bold"
+          android:id="@+id/name"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"></TextView>
+        <TextView
+          android:gravity="left"
+          android:textColorLink="#21759b"
+          android:textSize="12dip"
+          android:id="@+id/email"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"></TextView>
+        <TextView
+          android:gravity="left"
+          android:textColorLink="#21759b"
+          android:textSize="12dip"
+          android:id="@+id/url"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"></TextView>
+        <TextView
+          android:gravity="left"
+          android:textSize="12dip"
+          android:id="@+id/date"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:textColor="#777777"></TextView>
+      </LinearLayout>
+    </LinearLayout>
+    <ImageView
+      android:id="@+id/divider"
+      android:layout_width="fill_parent"
+      android:layout_height="1px"
+      android:background="@drawable/list_divider"
+      android:layout_marginTop="12dip"
+      android:layout_below="@id/gravatar" />
+    <ScrollView
+      android:layout_below="@id/divider"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:paddingTop="12dip"
+      android:paddingBottom="10dip">
+      <TextView
+        android:textColor="#464646"
+        android:textSize="16dip"
+        android:gravity="left"
+        android:id="@+id/comment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"></TextView>
+    </ScrollView>
+  </RelativeLayout>
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:paddingTop="4dip">
+    <ImageButton
+      android:id="@+id/deleteComment"
+      android:layout_width="48dip"
+      android:layout_height="48dip"
+      android:background="@drawable/wp_button_small"
+      android:src="@drawable/ic_menu_delete"
+      android:layout_alignParentLeft="true" />
+    <Button
+      android:id="@+id/approveComment"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/wp_button_small"
+      android:text="@string/approve"
+      android:layout_alignParentRight="true" />
+    <Button
+      android:id="@+id/unapproveComment"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/wp_button_small"
+      android:text="@string/unapprove"
+      android:layout_toLeftOf="@id/approveComment"
+      android:layout_alignParentRight="true" />
+    <Button
+      android:id="@+id/markSpam"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/wp_button_small"
+      android:text="@string/spam"
+      android:layout_toLeftOf="@id/unapproveComment" />
+    <Button
+      android:id="@+id/reply"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/wp_button_small"
+      android:text="@string/reply"
+      android:layout_toLeftOf="@id/markSpam" />
+  </RelativeLayout>
 </LinearLayout>

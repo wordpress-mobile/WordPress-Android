@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
-                android:padding="0px"
-                android:background="#F4F4F4"
-                android:orientation="vertical">   
-<RelativeLayout  
-			  android:id="@+id/mainRL" 
-			  android:layout_width="wrap_content" 
-              android:layout_height="wrap_content"
-              android:layout_weight="1.0">         
-<ListView android:id="@android:id/list"
- android:layout_width="fill_parent" android:layout_height="fill_parent"
- android:textColor="#444444"
-android:divider="@drawable/list_divider"
-android:dividerHeight="1px"
-android:cacheColorHint="#00000000">
-</ListView>
-</RelativeLayout>
-<RelativeLayout 
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:gravity="bottom"
-		android:padding="4dip"
-		android:background="@drawable/bottom_bar">
-<ImageButton android:id="@+id/newCategory" 
-android:background="@drawable/menu_button_selector"
-android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"	
-		android:padding="2dip"
-	android:src="@drawable/add"/>
-<Button
- android:id="@+id/categories_done"
-android:layout_width="wrap_content" 
-		android:background="@drawable/menu_button_selector"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:text="Done"
-		android:padding="2dip"
-		android:textStyle="bold"
-		android:textSize="20dip"
-		android:textColor="#F4F4F4"
-		android:shadowColor="#000000"
-  		android:shadowDx="0"
-  		android:shadowDy="-.5"
-  		android:shadowRadius="1"/>
-</RelativeLayout>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:padding="0px"
+  android:background="#F4F4F4"
+  android:orientation="vertical">
+  <RelativeLayout
+    android:id="@+id/mainRL"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.0">
+    <ListView
+      android:id="@android:id/list"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:textColor="#444444"
+      android:divider="@drawable/list_divider"
+      android:dividerHeight="1px"
+      android:cacheColorHint="#00000000">
+    </ListView>
+  </RelativeLayout>
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:padding="4dip"
+    android:background="@drawable/bottom_bar">
+    <ImageButton
+      android:id="@+id/newCategory"
+      android:background="@drawable/menu_button_selector"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="2dip"
+      android:src="@drawable/add" />
+    <Button
+      android:id="@+id/categories_done"
+      android:layout_width="wrap_content"
+      android:background="@drawable/menu_button_selector"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:text="Done"
+      android:padding="2dip"
+      android:textStyle="bold"
+      android:textSize="20dip"
+      android:textColor="#F4F4F4"
+      android:shadowColor="#000000"
+      android:shadowDx="0"
+      android:shadowDy="-.5"
+      android:shadowRadius="1" />
+  </RelativeLayout>
 </LinearLayout>

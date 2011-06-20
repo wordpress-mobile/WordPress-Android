@@ -1,122 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent" 
-                android:layout_height="fill_parent"
-                android:orientation="vertical">    
-<RelativeLayout  
-			  android:id="@+id/mainRL" 
-			  android:layout_width="wrap_content" 
-              android:layout_height="wrap_content"
-              android:padding="0px"
-               android:background="#F4F4F4"
-              android:layout_weight="1.0">               
-<ListView android:choiceMode="singleChoice" android:id="@android:id/list"
- android:layout_width="fill_parent" android:layout_height="fill_parent"
- android:textColor="#444444"
-android:divider="@drawable/list_divider"
-android:dividerHeight="1px"
-android:cacheColorHint="#00000000"
-android:scrollingCache="true">
-</ListView>
-<RelativeLayout android:layout_above="@id/mainRL"
-			  android:id="@+id/loading" 
-			  android:layout_width="fill_parent" 
-              android:layout_height="wrap_content"
-              android:visibility="invisible">  
-              <LinearLayout android:layout_width="fill_parent" 
-              android:layout_height="wrap_content" 
-              android:background="#AA111111"
-              android:padding="8dip"
-              android:gravity="center">     
-	<ProgressBar 
-				android:id="@+id/progress"
-				android:layout_width="24dip" 
-                android:layout_height="24dip"
-                android:layout_marginTop="6dip"
-                android:layout_marginBottom="6dip"
-                android:indeterminate="true"/>
-                <TextView 	
-                android:textColor="#FFFFFF"
-                android:shadowColor="#000000"
-		  		android:shadowDx="0"
-		  		android:shadowDy=".5"
-		  		android:shadowRadius="1"
-				android:layout_toRightOf="@id/progress"
-				android:layout_marginLeft="8dip"
-				android:text="@string/loading"
-				android:layout_width="wrap_content" 
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"/>
- 				</LinearLayout>
-</RelativeLayout> 
-	<RelativeLayout android:id="@+id/moderationBar" 
-				  android:layout_below="@id/mainRL"
-				  android:layout_alignParentBottom="true"
-				  android:layout_width="fill_parent" 
-	              android:layout_height="wrap_content"
-	              android:background="#AA111111"
-	              android:paddingTop="4dip"
-	              android:visibility="invisible">       
-	<ImageButton android:id="@+id/deleteComment" 
-			android:layout_width="48dip" 
-			android:layout_height="48dip"
-			android:padding="2dip"
-			android:background="@drawable/wp_button_small"
-			android:src="@drawable/ic_menu_delete"
-			android:layout_alignParentLeft="true"/>
-	<Button android:id="@+id/approveComment" 
-			android:textSize="12dip"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"
-			android:background="@drawable/wp_button_small"
-			android:text="@string/approve"
-			android:textColor="#FF006505"
-			android:layout_alignParentRight="true"/>
-	<Button android:id="@+id/unapproveComment" 
-	android:textSize="12dip"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"
-			android:background="@drawable/wp_button_small"
-			android:text="@string/unapprove"
-			android:textColor="#FFD98500"
-			android:layout_toLeftOf="@id/approveComment"/>
-	<Button android:id="@+id/markSpam" 
-	android:textSize="12dip"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"
-			android:background="@drawable/wp_button_small"
-			android:text="@string/spam"
-			android:textColor="#FFBC0B0B"
-			android:layout_toLeftOf="@id/unapproveComment"/>
-	</RelativeLayout>
-</RelativeLayout>  
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical">
+  <RelativeLayout
+    android:id="@+id/mainRL"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="0px"
+    android:background="#F4F4F4"
+    android:layout_weight="1.0">
+    <ListView
+      android:choiceMode="singleChoice"
+      android:id="@android:id/list"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:textColor="#444444"
+      android:divider="@drawable/list_divider"
+      android:dividerHeight="1px"
+      android:cacheColorHint="#00000000"
+      android:scrollingCache="true">
+    </ListView>
+    <RelativeLayout
+      android:layout_above="@id/mainRL"
+      android:id="@+id/loading"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:visibility="invisible">
+      <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#AA111111"
+        android:padding="8dip"
+        android:gravity="center">
+        <ProgressBar
+          android:id="@+id/progress"
+          android:layout_width="24dip"
+          android:layout_height="24dip"
+          android:layout_marginTop="6dip"
+          android:layout_marginBottom="6dip"
+          android:indeterminate="true" />
+        <TextView
+          android:textColor="#FFFFFF"
+          android:shadowColor="#000000"
+          android:shadowDx="0"
+          android:shadowDy=".5"
+          android:shadowRadius="1"
+          android:layout_toRightOf="@id/progress"
+          android:layout_marginLeft="8dip"
+          android:text="@string/loading"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true" />
+      </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+      android:id="@+id/moderationBar"
+      android:layout_below="@id/mainRL"
+      android:layout_alignParentBottom="true"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:background="#AA111111"
+      android:paddingTop="4dip"
+      android:visibility="invisible">
+      <ImageButton
+        android:id="@+id/deleteComment"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:padding="2dip"
+        android:background="@drawable/wp_button_small"
+        android:src="@drawable/ic_menu_delete"
+        android:layout_alignParentLeft="true" />
+      <Button
+        android:id="@+id/approveComment"
+        android:textSize="12dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wp_button_small"
+        android:text="@string/approve"
+        android:textColor="#FF006505"
+        android:layout_alignParentRight="true" />
+      <Button
+        android:id="@+id/unapproveComment"
+        android:textSize="12dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wp_button_small"
+        android:text="@string/unapprove"
+        android:textColor="#FFD98500"
+        android:layout_toLeftOf="@id/approveComment" />
+      <Button
+        android:id="@+id/markSpam"
+        android:textSize="12dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wp_button_small"
+        android:text="@string/spam"
+        android:textColor="#FFBC0B0B"
+        android:layout_toLeftOf="@id/unapproveComment" />
+    </RelativeLayout>
+  </RelativeLayout>
+  <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_bar"
-    android:padding="2dip"
-   >
-<Button android:id="@+id/bulkEdit"
-android:layout_width="wrap_content" 
-		android:background="@drawable/menu_button_selector"
-		android:layout_height="wrap_content"
-		android:text="Edit"
-		android:layout_marginTop="2dip"
-		android:padding="2dip"
-		android:textStyle="bold"
-		android:textSize="20dip"
-		android:textColor="#F4F4F4"
-		android:shadowColor="#000000"
-  		android:shadowDx="0"
-  		android:shadowDy="-.5"
-  		android:shadowRadius="1"/>
-<ImageButton
-android:id="@+id/refreshComments"
-android:background="@drawable/menu_button_selector"
-android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:padding="2dip"
-	android:src="@drawable/refresh"/>
-</RelativeLayout>
+    android:padding="2dip">
+    <Button
+      android:id="@+id/bulkEdit"
+      android:layout_width="wrap_content"
+      android:background="@drawable/menu_button_selector"
+      android:layout_height="wrap_content"
+      android:text="Edit"
+      android:layout_marginTop="2dip"
+      android:padding="2dip"
+      android:textStyle="bold"
+      android:textSize="20dip"
+      android:textColor="#F4F4F4"
+      android:shadowColor="#000000"
+      android:shadowDx="0"
+      android:shadowDy="-.5"
+      android:shadowRadius="1" />
+    <ImageButton
+      android:id="@+id/refreshComments"
+      android:background="@drawable/menu_button_selector"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:padding="2dip"
+      android:src="@drawable/refresh" />
+  </RelativeLayout>
 </LinearLayout>

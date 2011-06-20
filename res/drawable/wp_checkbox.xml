@@ -1,33 +1,48 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Enabled states -->
-        
-    <item android:state_checked="true" android:state_window_focused="false"
-          android:state_enabled="true"
-          android:drawable="@drawable/wp_check_on" />
-    <item android:state_checked="false" android:state_window_focused="false"
-          android:state_enabled="true"
-          android:drawable="@drawable/wp_check_off" />
+  <!-- Enabled states -->
 
-    <item android:state_checked="true" android:state_pressed="true"
-          android:state_enabled="true"
-          android:drawable="@drawable/btn_check_on_pressed" />
-    <item android:state_checked="false" android:state_pressed="true"
-          android:state_enabled="true"
-          android:drawable="@drawable/btn_check_off_pressed" />
+  <item
+    android:state_checked="true"
+    android:state_window_focused="false"
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_check_on" />
+  <item
+    android:state_checked="false"
+    android:state_window_focused="false"
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_check_off" />
 
-    <item android:state_checked="true" android:state_focused="true"
-          android:state_enabled="true"
-          android:drawable="@drawable/btn_check_on_selected" />
-    <item android:state_checked="false" android:state_focused="true"
-          android:state_enabled="true"
-          android:drawable="@drawable/btn_check_off_selected" />
+  <item
+    android:state_checked="true"
+    android:state_pressed="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/btn_check_on_pressed" />
+  <item
+    android:state_checked="false"
+    android:state_pressed="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/btn_check_off_pressed" />
 
-    <item android:state_checked="false"
-          android:state_enabled="true"
-          android:drawable="@drawable/wp_check_off" />
-    <item android:state_checked="true"
-          android:state_enabled="true"
-          android:drawable="@drawable/wp_check_on" />
+  <item
+    android:state_checked="true"
+    android:state_focused="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/btn_check_on_selected" />
+  <item
+    android:state_checked="false"
+    android:state_focused="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/btn_check_off_selected" />
+
+  <item
+    android:state_checked="false"
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_check_off" />
+  <item
+    android:state_checked="true"
+    android:state_enabled="true"
+    android:drawable="@drawable/wp_check_on" />
 
 </selector>

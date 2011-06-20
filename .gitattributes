@@ -3,9 +3,6 @@
 /.project -text
 .settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
-/CWAC-AdapterWrapper.jar -text
-/CWAC-Bus.jar -text
-/CWAC-Task.jar -text
 bin/classes.dex -text
 bin/com/roundhill/androidWP/R$attr.class -text
 bin/com/roundhill/androidWP/R$drawable.class -text
@@ -207,6 +204,9 @@ bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
 bin/wp-android.apk -text
 /default.properties -text
+libs/CWAC-AdapterWrapper.jar -text
+libs/CWAC-Bus.jar -text
+libs/CWAC-Task.jar -text
 libs/android-support-v4.jar -text
 res/anim/cycle_5.xml -text
 res/anim/shake.xml -text

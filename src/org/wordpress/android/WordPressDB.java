@@ -750,9 +750,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
 		if (loadPages)
-			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded"}, "blogID=" + blogID + " AND localDraft = 1 AND isPage=1", null, null, null, null);
+			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded"}, "blogID=" + blogID + " AND localDraft=1 AND uploaded=0 AND isPage=1", null, null, null, null);
 		else
-			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded"}, "blogID=" + blogID + " AND localDraft = 1 AND isPage=0", null, null, null, null);
+			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded"}, "blogID=" + blogID + " AND localDraft=1 AND uploaded=0 AND isPage=0", null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -897,21 +897,56 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		values.put("mt_keywords", post.getMt_keywords());
 		values.put("wp_password", post.getWP_password());
 		values.put("post_status", post.getPost_status());
+        values.put("uploaded", post.isUploaded());
 		values.put("isPage", post.isPage());
-
-		int pageInt = 0;
-		if (post.isPage())
-			pageInt = 1;
 		
-		if (!post.isLocalDraft())
-			returnValue = db.update(POSTS_TABLE, values, "blogID=" + post.getBlogID() + " AND id=" + post.getId() + " AND isPage=" + pageInt, null);
-		else
-			returnValue = db.insert(POSTS_TABLE, null, values);
+		returnValue = db.insert(POSTS_TABLE, null, values);
 
 		db.close();
 		}
 		return (returnValue);
 	}
+	
+	public int updatePost(Context ctx, Post post, String blogID) {
+        int success = 0;
+        if (post != null)
+        {
+        db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+
+        ContentValues values = new ContentValues();
+        values.put("blogID", blogID);
+        values.put("title", post.getTitle());
+        values.put("date_created_gmt", post.getDate_created_gmt());
+        values.put("description", post.getDescription());
+        values.put("uploaded", post.isUploaded());
+        
+        if (post.getCategories() != null) {
+            JSONArray jsonArray = null;
+            try {
+                jsonArray = new JSONArray(post.getCategories().toString());
+                values.put("categories", jsonArray.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        values.put("localDraft", post.isLocalDraft());
+        values.put("mediaPaths", post.getMediaPaths());
+        values.put("mt_keywords", post.getMt_keywords());
+        values.put("wp_password", post.getWP_password());
+        values.put("post_status", post.getPost_status());
+        values.put("isPage", post.isPage());
+
+        int pageInt = 0;
+        if (post.isPage())
+            pageInt = 1;
+
+        success = db.update(POSTS_TABLE, values, "blogID=" + post.getBlogID() + " AND id=" + post.getId() + " AND isPage=" + pageInt, null);
+
+        db.close();
+        }
+        return (success);
+    }
 
 	public Vector<HashMap<String, Object>> loadUploadedPosts(Context ctx, String blogID, boolean loadPages) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);

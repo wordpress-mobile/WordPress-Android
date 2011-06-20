@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.ApiHelper;
 import org.wordpress.android.MediaFile;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPressDB;
@@ -389,18 +388,36 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 		
 		return true;
 	}
+	
+	public boolean update() {
+        int success = db.updatePost(context, this, this.blogID);
+
+        return success > 0;
+    }
 
 	public void delete() {
 		//deletes a post/page draft
 		db.deletePost(context, this);
 	}
 	
-	public static class uploadPostTask extends AsyncTask<Post, Void, Object[]> {
+	public static class uploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
 
 		private Post post;
+		String error;
 		
 		@Override
-		protected Object[] doInBackground(Post...posts) {
+		protected void onPostExecute(Boolean result) {
+			
+			if (result) {
+				((viewPosts) context).uploadCompleted();
+			}
+			else {
+			    ((viewPosts) context).uploadFailed(error);
+			}
+		}
+		
+		@Override
+		protected Boolean doInBackground(Post...posts) {
 			
 			post = posts[0];
 			//upload a post object to the blog
@@ -553,20 +570,16 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 				try {
 					result = (Object) client.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost" : "metaWeblog.editPost", params);
 					success = true;
-					((viewPosts) context).loadingDialog.dismiss();
+					post.setUploaded(true);
+					post.update();
+					return true;
 				} catch (final XMLRPCException e) {
-		
-				}
-
-				if (success && (post.isLocalDraft() && !post.uploaded)) {
-					post.uploaded = true;
-					post.save();
-					res = "OK";
+					error = e.getLocalizedMessage();
 				}
 			}
 		
 			
-			return null;
+			return false;
 		}
 		
 		public String uploadImages() {
@@ -902,19 +915,14 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 													+ "alt=\"image\" src=\""
 													+ finalThumbnailUrl + "\" />";
 										}
-
 									}
 								}
-
 							} // end if statement
-
 						}// end image check
-
 					}
-
 				}// end image stuff
 			}// end new for loop
-
+			
 			return content;
 		}
 	
