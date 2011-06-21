@@ -8,7 +8,7 @@
 			android:configChanges="orientation|keyboardHidden" />
 		<activity android:name=".link" android:theme="@android:style/Theme.Dialog"
 			android:label="Enter a URL" />
-		<activity android:name="posts.viewPosts" android:theme="@style/Theme.TabView"/>
+		<activity android:name="viewPosts" android:theme="@style/Theme.TabView"/>
 		<activity android:name="viewComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:configChanges="orientation|keyboardHidden" android:name="addAccount"/>
 		<activity android:name="editPost" android:configChanges="orientation|keyboardHidden">
@@ -21,7 +21,7 @@
     				<data android:mimeType="video/*" />
   			</intent-filter>
 		</activity>
-		<activity android:name="posts.viewPost" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="viewPost" android:configChanges="orientation|keyboardHidden" />
 		<activity android:label="WordPress - Preferences" android:name="Preferences"/>
 		<service android:name="commentService" android:label="Comment Service" />
 		<receiver android:name="broadcastReceiver" />
