@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Map.Entry;
 
-import org.wordpress.android.MediaFile;
+import org.wordpress.android.models.MediaFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;

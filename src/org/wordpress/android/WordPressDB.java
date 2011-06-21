@@ -13,6 +13,7 @@ import javax.crypto.spec.DESKeySpec;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.Base64;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -442,7 +443,13 @@ public class WordPressDB {
 	
 	public boolean deleteAccount(Context ctx, String id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		int rowsAffected = db.delete(SETTINGS_TABLE, "id=" + id, null);
+
+		int rowsAffected = 0;
+		try {
+			rowsAffected = db.delete(SETTINGS_TABLE, "id=" + id, null);
+		} finally {
+			db.close();
+		}
 		
 		boolean returnValue = false;
 		if (rowsAffected > 0){
@@ -455,7 +462,7 @@ public class WordPressDB {
 	    	HashMap<String, Object> shortcutHash = shortcuts.get(i);
 	    	
 	    	Intent shortcutIntent = new Intent();
-	    	shortcutIntent.setClassName(editPost.class.getPackage().getName(), editPost.class.getName());
+	    	shortcutIntent.setClassName(EditPost.class.getPackage().getName(), EditPost.class.getName());
 	    	shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    	shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	    	shortcutIntent.setAction(Intent.ACTION_VIEW); 
@@ -469,7 +476,6 @@ public class WordPressDB {
 	    	deleteQuickPressShortcut(ctx, shortcutHash.get("id").toString());
 	    }
 	    
-	    db.close();
 		return (returnValue);
 	}
 

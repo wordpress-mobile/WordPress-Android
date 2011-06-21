@@ -12,11 +12,10 @@ import java.util.Vector;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.MediaFile;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.imageHelper;
-import org.wordpress.android.viewPosts;
+import org.wordpress.android.ViewPosts;
+import org.wordpress.android.util.ImageHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -409,10 +408,10 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 		protected void onPostExecute(Boolean result) {
 			
 			if (result) {
-				((viewPosts) context).uploadCompleted();
+				((ViewPosts) context).uploadCompleted();
 			}
 			else {
-			    ((viewPosts) context).uploadFailed(error);
+			    ((ViewPosts) context).uploadFailed(error);
 			}
 		}
 		
@@ -794,7 +793,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 									break;
 								}
 
-								imageHelper ih = imageHelper.getInstance();
+								ImageHelper ih = ImageHelper.getInstance();
 								orientation = ih.getExifOrientation(path,
 										orientation);
 
@@ -823,7 +822,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 										e.printStackTrace();
 									}
 
-									imageHelper ih2 = imageHelper.getInstance();
+									ImageHelper ih2 = ImageHelper.getInstance();
 									finalBytes = ih2.createThumbnail(bytes,
 											post.blog.getMaxImageWidth(), orientation, false);
 								}

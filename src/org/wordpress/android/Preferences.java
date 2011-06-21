@@ -3,6 +3,8 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.wordpress.android.util.EscapeUtils;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -119,7 +121,7 @@ public void displayAccounts(){
             final CheckBox checkBox = new CheckBox(this);
             checkBox.setTextColor(Color.parseColor("#444444"));
             checkBox.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-            checkBox.setText(escapeUtils.unescapeHtml(curBlogName));
+            checkBox.setText(EscapeUtils.unescapeHtml(curBlogName));
             checkBox.setId(Integer.valueOf(accountID));  
             checkBox.setLayoutParams(cbParams);
             
@@ -325,7 +327,7 @@ public void displayAccounts(){
         	        	 UPDATE_INTERVAL = 86400000;
         	         }
         	        
-        	        Intent intent = new Intent(Preferences.this, broadcastReceiver.class);
+        	        Intent intent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
                 	PendingIntent pIntent = PendingIntent.getBroadcast(Preferences.this, 0, intent, 0);
                 	
                 	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -334,12 +336,12 @@ public void displayAccounts(){
         			  
         		}
         		else{
-					Intent stopIntent = new Intent(Preferences.this, broadcastReceiver.class);
+					Intent stopIntent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
                 	PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
                 	AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 	alarmManager.cancel(stopPIntent); 
                 	
-                	Intent service = new Intent(Preferences.this, commentService.class);
+                	Intent service = new Intent(Preferences.this, CommentService.class);
                 	stopService(service);
             	}
             	
