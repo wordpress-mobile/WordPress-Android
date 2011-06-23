@@ -807,17 +807,13 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		if (postValues.size() != 0)
 		{
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		//delete existing values
-		if (isPage)
-			db.delete(POSTS_TABLE, "blogID=" + blogID + " AND localDraft=0 AND isPage=1", null);
-		else
-			db.delete(POSTS_TABLE, "blogID=" + blogID + " AND localDraft=0", null);
 
 		for (int i = 0; i < postValues.size(); i++){
 			ContentValues values = new ContentValues();
 			HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
 			values.put("blogID", blogID);
-			values.put("postid", thisHash.get((isPage) ? "page_id" : "postid").toString());
+			String postID = thisHash.get((isPage) ? "page_id" : "postid").toString();
+			values.put("postid", postID);
 			values.put("title", thisHash.get("title").toString());
 			Date d = (Date) thisHash.get("dateCreated");
 			values.put("dateCreated", d.getTime());
@@ -847,7 +843,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("post_status", thisHash.get((isPage) ? "page_status" : "post_status").toString());
 			values.put("userid", thisHash.get("userid").toString());
 			
+			int isPageInt = 0;
 			if (isPage) {
+			    isPageInt = 1;
 				values.put("isPage", true);
 				values.put("wp_page_parent_id", thisHash.get("wp_page_parent_id").toString());
 				values.put("wp_page_parent_title", thisHash.get("wp_page_parent_title").toString());
@@ -867,10 +865,12 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			
 			values.put("custom_fields", jsonArray.toString());
 
-			returnValue = db.insert(POSTS_TABLE, null, values) > 0;
+			int result = db.update(POSTS_TABLE, values, "postID=" + postID + " AND isPage=" + isPageInt, null);
+			if (result == 0)
+			    returnValue = db.insert(POSTS_TABLE, null, values) > 0;
+			else
+			    returnValue = true;
 		}
-		
-		
 		db.close();
 		}
 		return (returnValue);
