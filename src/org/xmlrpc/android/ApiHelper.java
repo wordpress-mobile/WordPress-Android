@@ -113,7 +113,7 @@ public class ApiHelper extends Activity {
     	
     	Context ctx;
     	Blog blog;
-    	boolean isPage;
+    	boolean isPage, loadMore;
 
 		protected void onPostExecute(Object[] result) {
 			if (result.length > 0) {
@@ -130,6 +130,9 @@ public class ApiHelper extends Activity {
 				}// end for loop
 
 				postStoreDB.savePosts(ctx, dbVector, String.valueOf(blog.getId()), isPage);
+				((ViewPosts) ctx).numRecords += 20;
+				if (loadMore)
+				    ((ViewPosts) ctx).switcher.showPrevious();
 				((ViewPosts) ctx).loadPosts(false);
 		}
 			((ViewPosts) ctx).closeProgressBar();
@@ -142,16 +145,17 @@ public class ApiHelper extends Activity {
 			blog = (Blog) arguments.get(0);
 			isPage = (Boolean) arguments.get(1);
 			ctx = (Context) arguments.get(2);
+			int numRecords = (Integer) arguments.get(3);
+			loadMore = (Boolean) arguments.get(4);
 			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 			Object[] result = null;
-			int numRecords = 10;
 			Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), numRecords };
 			try {
 				result = (Object[]) client.call((isPage) ? "wp.getPages" : "metaWeblog.getRecentPosts", params);
 			} catch (XMLRPCException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    if (loadMore)
+                    ((ViewPosts) ctx).switcher.showPrevious();
 			}
 
 			return result;

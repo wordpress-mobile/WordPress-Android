@@ -84,8 +84,8 @@ public class ViewPosts extends ListActivity {
     public int totalDrafts = 0;
     public boolean isPage = false, vpUpgrade = false;
     boolean largeScreen = false;
-    int numRecords = 30;
-    private ViewSwitcher switcher;
+    public int numRecords = 20;
+    public ViewSwitcher switcher;
     private PostListAdapter pla;
     private Blog blog;
 
@@ -206,12 +206,13 @@ public class ViewPosts extends ListActivity {
         if (!loadMore) {
             showProgressBar();
         }
-        Vector apiArgs = new Vector();
+        Vector<Object> apiArgs = new Vector<Object>();
         apiArgs.add(blog);
         apiArgs.add(isPage);
         apiArgs.add(ViewPosts.this);
+        apiArgs.add(numRecords);
+        apiArgs.add(loadMore);
         new ApiHelper.getRecentPostsTask().execute(apiArgs);
-
     }
 
     public Map<String, ?> createItem(String title, String caption) {
@@ -342,7 +343,7 @@ public class ViewPosts extends ListActivity {
             if (!isPage) {
                 listView.removeFooterView(switcher);
                 if (loadedPosts != null) {
-                    if (loadedPosts.size() >= 30) {
+                    if (loadedPosts.size() >= 20) {
                         listView.addFooterView(switcher);
                     }
                 }
