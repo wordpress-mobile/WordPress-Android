@@ -76,8 +76,8 @@
   <string name="category_refresh_error">Category refresh error</string>
   <string name="settings_not_found">Settings not found</string>
   <string name="settings_not_found_load_now">Some required settings were not found. Load settings now?</string>
-  <string name="empty_fields">Empty fields</string>
-  <string name="title_post_required">A Post Title with Post Content or a Media attachment is required.</string>
+  <string name="empty_fields">No Content Found</string>
+  <string name="title_post_required">Please enter some post content or attach a media item.</string>
   <string name="post_edited">Post edited</string>
   <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading media</string>
   <string name="post_edited_successfully">Post edited successfully</string>
@@ -120,6 +120,7 @@
   <!--  posts tab -->
   <string name="posts_not_found">No Posts Found</string>
   <string name="posts_no_posts">You don\'t have any posts on your blog</string>
+  <string name="untitled">Untitled</string>
   
   <string name="local_drafts">Local Drafts</string>
   

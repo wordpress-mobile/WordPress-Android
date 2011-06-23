@@ -133,7 +133,7 @@ public class ApiHelper extends Activity {
 				((ViewPosts) ctx).numRecords += 20;
 				if (loadMore)
 				    ((ViewPosts) ctx).switcher.showPrevious();
-				((ViewPosts) ctx).loadPosts(false);
+				((ViewPosts) ctx).loadPosts(loadMore);
 		}
 			((ViewPosts) ctx).closeProgressBar();
 		}

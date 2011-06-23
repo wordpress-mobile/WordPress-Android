@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -17,13 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Vector;
-
-import org.apache.http.conn.HttpHostConnectException;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -294,7 +287,7 @@ public class EditPost extends Activity implements LocationListener{
 		        }
         	}
         	
-        	/*String picturePaths = postHashMap.get("picturePaths").toString();
+        	String picturePaths = post.getMediaPaths();
         	if (!picturePaths.equals("")){
         		String[] pPaths = picturePaths.split(",");
         		
@@ -304,7 +297,7 @@ public class EditPost extends Activity implements LocationListener{
         			addMedia(imagePath.getEncodedPath(), imagePath);
         		}
         		
-        	}*/
+        	}
         	
         	if (!isPage){
         		if (post.getCategories() != null) {
@@ -325,12 +318,12 @@ public class EditPost extends Activity implements LocationListener{
         		}
         	}
 	    		
-	    		/*if (blog.isLocation()){
+	    		if (blog.isLocation()){
 	    			enableLBSButtons();
 	    		}
 	    		
-	    		Double latitude = (Double) postHashMap.get("latitude");
-	    		Double longitude = (Double) postHashMap.get("longitude");
+	    		Double latitude = post.getLatitude();
+	    		Double longitude = post.getLongitude();
 
 	    		if (latitude != 0.0){
 	    			new getAddressTask().execute(latitude, longitude);
@@ -348,9 +341,9 @@ public class EditPost extends Activity implements LocationListener{
 	    				            LocationManager.GPS_PROVIDER, 
 	    				            20000, 
 	    				            0, 
-	    				            editPost.this
+	    				            EditPost.this
 	    				    );
-	    					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+	    					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, EditPost.this);
 	    					locationActive = true;
 	    	            }
 	    	        });
@@ -365,14 +358,14 @@ public class EditPost extends Activity implements LocationListener{
 				            LocationManager.GPS_PROVIDER, 
 				            20000, 
 				            0, 
-				            editPost.this
+				            EditPost.this
 				    );
-					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
+					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, EditPost.this);
 					locationActive = true;
 					
 					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
 	            	locationSection.setVisibility(View.VISIBLE);
-	    		}*/
+	    		}
 		    	
 		    	String tags = post.getMt_keywords();
 		    	if (!tags.equals("")){
@@ -537,9 +530,9 @@ public class EditPost extends Activity implements LocationListener{
 	        });
         }
         
-        final Button postButton = (Button) findViewById(R.id.post);
+        final Button saveButton = (Button) findViewById(R.id.post);
         
-        postButton.setOnClickListener(new Button.OnClickListener() {
+        saveButton.setOnClickListener(new Button.OnClickListener() {
         	public void onClick(View v) {
 
         		boolean result = savePost();
@@ -1057,7 +1050,7 @@ public class EditPost extends Activity implements LocationListener{
 			e.printStackTrace();
 		}
 		
-		ImageHelper ih = ImageHelper.getInstance();
+		ImageHelper ih = new ImageHelper();
 		
 		if (orientation == ""){
 			orientation = ih.getExifOrientation(path, orientation);
@@ -1357,84 +1350,6 @@ public class EditPost extends Activity implements LocationListener{
 	}//end null check
 	}
 	
-	final Runnable mUpdateResults = new Runnable() {
-		public void run() {
-			if (finalResult.equals("invalidSettings")){
-				dismissDialog(EditPost.this.ID_DIALOG_POSTING);			
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.settings_not_found));
-				              dialogBuilder.setMessage(getResources().getText(R.string.settings_not_found_load_now));
-				              dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),  new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // User clicked Yes so delete the contexts.
-		                            	Intent i = new Intent(EditPost.this, Settings.class);
-
-		                            	startActivityForResult(i, 0);
-		                        
-		                            }
-		                        });
-				              dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                // User clicked No so don't delete (do nothing).
-		                            }
-		                        });
-				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
-			
-			}
-			else if (finalResult.equals("emptyFields")){
-				dismissDialog(EditPost.this.ID_DIALOG_POSTING);				
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-							  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
-				              dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
-				              dialogBuilder.setPositiveButton("OK",  new
-				            		  DialogInterface.OnClickListener() {
-		                            public void onClick(DialogInterface dialog, int whichButton) {
-		                                //Just close the window
-
-		                        
-		                            }
-		                        });
-				              dialogBuilder.setCancelable(true);
-				             dialogBuilder.create().show();
-			
-			}
-			else if (finalResult.equals("OK"))
-			{
-				dismissDialog(EditPost.this.ID_DIALOG_POSTING);	
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-				  dialogBuilder.setTitle(getResources().getText((isPage) ? R.string.page_edited : R.string.post_edited));
-				  if (xmlrpcError){
-					  dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_image_error : R.string.post_edited_image_error) + ": " + mediaErrorMsg);  
-				  }
-				  else{
-	              dialogBuilder.setMessage(getResources().getText((isPage) ? R.string.page_edited_successfully : R.string.post_edited_successfully));
-				  }
-	              dialogBuilder.setPositiveButton("OK",  new
-	            		  DialogInterface.OnClickListener() {
-                      public void onClick(DialogInterface dialog, int whichButton) {
-                    	  Bundle bundle = new Bundle();
-                          
-                          bundle.putString("returnStatus", "OK");
-                          Intent mIntent = new Intent();
-                          mIntent.putExtras(bundle);
-                          setResult(RESULT_OK, mIntent);
-                          finish(); 
-                      }
-                  });
-	              dialogBuilder.setCancelable(true);
-	              if (!isFinishing()) {
-	            	  dialogBuilder.create().show();
-	              }
-			}
-			else if (finalResult.equals("FAIL")){
-				dismissDialog(EditPost.this.ID_DIALOG_POSTING);	
-			}
-		}
-	};
-	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 	if(id == ID_DIALOG_POSTING){
@@ -1519,7 +1434,7 @@ public class EditPost extends Activity implements LocationListener{
         String images = "";
         boolean success = false;
         
-        if (title.equals("") || (content.equals("") && selectedImageIDs.size() == 0))
+        if (content.equals("") && selectedImageIDs.size() == 0)
         {
         	AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
 			  dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
@@ -1578,7 +1493,7 @@ public class EditPost extends Activity implements LocationListener{
         	}
         
             if (isNew){
-            	post = new Post(id, title, content, images, pubDateTimestamp, categories, tags, status, password, latitude, longitude, EditPost.this);
+            	post = new Post(id, title, content, images, pubDateTimestamp, categories, tags, status, password, latitude, longitude, isPage, EditPost.this);
             	post.setLocalDraft(true);
             	success = post.save();
             }
@@ -1927,7 +1842,7 @@ private void addMedia(String imgPath, Uri curStream, boolean noUI) {
 		e.printStackTrace();
 	}
 	
-	ImageHelper ih = ImageHelper.getInstance();
+	ImageHelper ih = new ImageHelper();
 	
 	orientation = ih.getExifOrientation(path, orientation);
 

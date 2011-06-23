@@ -276,7 +276,7 @@ public class WordPressDB {
 					
 					for (int i = 0; i < numRows; ++i) {
 					if (c.getString(0) != null){
-						Post post = new Post(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(10), ctx);
+						Post post = new Post(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(10), false, ctx);
 						post.setLocalDraft(true);
 						post.save();	
 					}
@@ -294,7 +294,7 @@ public class WordPressDB {
 					
 					for (int i = 0; i < numRows; ++i) {
 					if (c.getString(0) != null){
-						Post post = new Post(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), null, null, 0, 0, ctx);
+						Post post = new Post(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), null, null, 0, 0, true, ctx);
 						post.setLocalDraft(true);
 						post.setPage(true);
 						post.save();	
@@ -830,8 +830,17 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			    jsonArray.put(cats[x].toString());
 			} 
 			}
-			
 			values.put("categories", jsonArray.toString());
+			
+			Object[] custom_fields = (Object[]) thisHash.get("custom_fields");
+            jsonArray = new JSONArray(); 
+            if (custom_fields != null) { 
+               for (int x=0;x<custom_fields.length;x++){ 
+                jsonArray.put(custom_fields[x].toString());
+            } 
+            }
+            values.put("custom_fields", jsonArray.toString());
+			
 			values.put("mt_excerpt", thisHash.get((isPage) ? "excerpt" : "mt_excerpt").toString());
 			values.put("mt_text_more", thisHash.get((isPage) ? "text_more" : "mt_text_more").toString());
 			values.put("mt_allow_comments", (Integer)thisHash.get("mt_allow_comments"));
@@ -854,16 +863,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 				values.put("mt_keywords", thisHash.get("mt_keywords").toString());
 				values.put("wp_post_format", thisHash.get("wp_post_format").toString());
 			}
-			
-			Object[] customFields = (Object[]) thisHash.get("custom_fields");
-			jsonArray = new JSONArray(); 
-			if (cats != null) { 
-			   for (int x=0;x<customFields.length;x++){ 
-			    jsonArray.put(customFields[x].toString());
-			} 
-			}
-			
-			values.put("custom_fields", jsonArray.toString());
 
 			int result = db.update(POSTS_TABLE, values, "postID=" + postID + " AND isPage=" + isPageInt, null);
 			if (result == 0)

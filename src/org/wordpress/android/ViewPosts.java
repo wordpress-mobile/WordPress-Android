@@ -656,7 +656,9 @@ public class ViewPosts extends ListActivity {
                 date = customDate;
 
             }
-            wrapper.getTitle().setText(titles[position]);
+            String titleText = titles[position];
+            if (titleText == "") titleText = "(" + getResources().getText(R.string.untitled) + ")";
+            wrapper.getTitle().setText(titleText);
             wrapper.getDate().setText(date);
 
             return pv;
@@ -678,7 +680,6 @@ public class ViewPosts extends ListActivity {
                     if (returnResult.equals("OK")) {
                         boolean uploadNow = false;
                         uploadNow = extras.getBoolean("upload");
-                        uploadNow = true;
                         if (uploadNow) {
                             selectedID = extras.getLong("newID");
                             showDialog(ID_DIALOG_POSTING);

@@ -110,7 +110,7 @@ public class Post {
     	}
     }
     
-public Post(String blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, Context ctx){
+public Post(String blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, boolean isPage, Context ctx){
 		//create a new post
     	db = new WordPressDB(ctx);
     	context = ctx;
@@ -125,7 +125,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
     	this.mt_keywords = tags;
     	this.post_status = status;
     	this.wp_password = password;
-    	
+    	this.isPage = isPage;
     }
     
 	public long getId() {
@@ -793,7 +793,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 									break;
 								}
 
-								ImageHelper ih = ImageHelper.getInstance();
+								ImageHelper ih = new ImageHelper();
 								orientation = ih.getExifOrientation(path,
 										orientation);
 
@@ -822,7 +822,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 										e.printStackTrace();
 									}
 
-									ImageHelper ih2 = ImageHelper.getInstance();
+									ImageHelper ih2 = new ImageHelper();
 									finalBytes = ih2.createThumbnail(bytes,
 											post.blog.getMaxImageWidth(), orientation, false);
 								}

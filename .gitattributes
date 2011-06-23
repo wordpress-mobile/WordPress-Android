@@ -422,8 +422,6 @@ src/org/wordpress/android/util/DrawableManager.java -text
 src/org/wordpress/android/util/Entities.java -text
 src/org/wordpress/android/util/EscapeUtils.java -text
 src/org/wordpress/android/util/ImageHelper.java -text
-src/org/wordpress/android/util/ImageHelper_v3.java -text
-src/org/wordpress/android/util/ImageHelper_v4.java -text
 src/org/wordpress/android/util/IntHashMap.java -text
 src/org/wordpress/android/util/StringHelper.java -text
 src/org/wordpress/android/util/TrustAllManager.java -text
