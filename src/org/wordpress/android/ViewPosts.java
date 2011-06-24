@@ -714,7 +714,8 @@ public class ViewPosts extends ListActivity {
             switch (item.getItemId()) {
             case 0:
                 Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
-                i0.putExtra("postID", selectedID);
+                Post post = new Post(id, selectedID, isPage, ViewPosts.this);
+                i0.putExtra("postID", post.getPostid());
                 i0.putExtra("id", id);
                 i0.putExtra("accountName", accountName);
                 startActivity(i0);
