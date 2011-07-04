@@ -5,4 +5,6 @@ Labels are shown along the X and Y axis.
 The first and last label on the X axis are intentionally not centered in order to use less screen space.
 
 <img src="https://github.com/jjoe64/GraphView/raw/master/GVLine.jpg" />
+<br/>
+<img src="https://github.com/jjoe64/GraphView/raw/master/GVBar.jpg" />
 
