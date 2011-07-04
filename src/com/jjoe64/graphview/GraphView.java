@@ -18,6 +18,7 @@ public class GraphView extends View {
 	public static boolean LINE = false;
 
 	private final Paint paint;
+	private final Paint paintBackground;
 	private float[] values;
 	private String[] horlabels;
 	private String[] verlabels;
@@ -44,6 +45,10 @@ public class GraphView extends View {
 			this.verlabels = verlabels;
 		this.type = type;
 		paint = new Paint();
+		paintBackground = new Paint();
+		paintBackground.setARGB(255, 10, 20, 30);
+		paintBackground.setStrokeCap(Paint.Cap.ROUND);
+		paintBackground.setStrokeWidth(4);
 	}
 
 	private float getMax() {
@@ -64,6 +69,9 @@ public class GraphView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		// normal
+		paint.setStrokeWidth(0);
+
 		float border = 20;
 		float horstart = border * 2;
 		float height = getHeight();
@@ -112,20 +120,54 @@ public class GraphView extends View {
 					canvas.drawRect((i * colwidth) + horstart, (border - h) + graphheight, ((i * colwidth) + horstart) + (colwidth - 1), height - (border - 1), paint);
 				}
 			} else {
+				// blue version
+				paint.setARGB(255, 0, 119, 204);
+				paint.setStrokeCap(Paint.Cap.ROUND);
+				paint.setStrokeWidth(3);
+
 				float datalength = values.length;
 				float colwidth = (width - (2 * border)) / datalength;
 				float halfcol = colwidth / 2;
+
+				// first draw background
 				float lasth = 0;
 				for (int i = 0; i < values.length; i++) {
 					float val = values[i] - min;
 					float rat = val / diff;
 					float h = graphheight * rat;
-					if (i > 0)
-						canvas.drawLine(((i - 1) * colwidth) + (horstart + 1) + halfcol, (border - lasth) + graphheight, (i * colwidth) + (horstart + 1) + halfcol, (border - h) + graphheight, paint);
+
+					canvas.drawLine((i * colwidth) + horstart, (border - lasth) + graphheight +4, (i * colwidth) + horstart, graphheight+border, paintBackground);
+					if (i > 0) {
+						float startX = ((i - 1) * colwidth) + (horstart + 1) + halfcol;
+						float startY = (border - lasth) + graphheight;
+
+						float endX = (i * colwidth) + (horstart + 1) + halfcol;
+						float endY = (border - h) + graphheight;
+
+						for (int xi=1; xi<8; xi++) {
+							canvas.drawLine(startX+(endX-startX)/8*xi, startY+(endY-startY)/8*xi +4, endX+(endX-startX)/8*xi, graphheight+border, paintBackground);
+						}
+					}
+					lasth = h;
+				}
+				// draw data
+				lasth = 0;
+				for (int i = 0; i < values.length; i++) {
+					float val = values[i] - min;
+					float rat = val / diff;
+					float h = graphheight * rat;
+
+					if (i > 0) {
+						float startX = ((i - 1) * colwidth) + (horstart + 1) + halfcol;
+						float startY = (border - lasth) + graphheight;
+						float endX = (i * colwidth) + (horstart + 1) + halfcol;
+						float endY = (border - h) + graphheight;
+
+						canvas.drawLine(startX, startY, endX, endY, paint);
+					}
 					lasth = h;
 				}
 			}
 		}
 	}
-
 }
