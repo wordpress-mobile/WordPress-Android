@@ -1,4 +1,4 @@
-package arnodenhond.graphviewdemo;
+package com.jjoe64.graphview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,8 +8,8 @@ import android.graphics.Paint.Align;
 import android.view.View;
 
 /**
- * GraphView creates a scaled line or bar graph with x and y axis labels. 
- * @author Arno den Hond
+ * GraphView creates a scaled line or bar graph with x and y axis labels.
+ * @author originally: Arno den Hond
  *
  */
 public class GraphView extends View {
@@ -17,12 +17,12 @@ public class GraphView extends View {
 	public static boolean BAR = true;
 	public static boolean LINE = false;
 
-	private Paint paint;
+	private final Paint paint;
 	private float[] values;
 	private String[] horlabels;
 	private String[] verlabels;
 	private String title;
-	private boolean type;
+	private final boolean type;
 
 	public GraphView(Context context, float[] values, String title, String[] horlabels, String[] verlabels, boolean type) {
 		super(context);
@@ -44,6 +44,22 @@ public class GraphView extends View {
 			this.verlabels = verlabels;
 		this.type = type;
 		paint = new Paint();
+	}
+
+	private float getMax() {
+		float largest = Integer.MIN_VALUE;
+		for (int i = 0; i < values.length; i++)
+			if (values[i] > largest)
+				largest = values[i];
+		return largest;
+	}
+
+	private float getMin() {
+		float smallest = Integer.MAX_VALUE;
+		for (int i = 0; i < values.length; i++)
+			if (values[i] < smallest)
+				smallest = values[i];
+		return smallest;
 	}
 
 	@Override
@@ -110,22 +126,6 @@ public class GraphView extends View {
 				}
 			}
 		}
-	}
-
-	private float getMax() {
-		float largest = Integer.MIN_VALUE;
-		for (int i = 0; i < values.length; i++)
-			if (values[i] > largest)
-				largest = values[i];
-		return largest;
-	}
-
-	private float getMin() {
-		float smallest = Integer.MAX_VALUE;
-		for (int i = 0; i < values.length; i++)
-			if (values[i] < smallest)
-				smallest = values[i];
-		return smallest;
 	}
 
 }

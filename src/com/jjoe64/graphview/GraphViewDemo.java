@@ -1,11 +1,11 @@
-package arnodenhond.graphviewdemo;
+package com.jjoe64.graphview;
 
 import android.app.Activity;
 import android.os.Bundle;
 
 /**
  * GraphViewDemo creates some dummy data to demonstrate the GraphView component.
- * @author Arno den Hond
+ * @author originally: Arno den Hond
  *
  */
 public class GraphViewDemo extends Activity {
