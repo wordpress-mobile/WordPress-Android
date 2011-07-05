@@ -15,7 +15,7 @@ public class GraphViewDemo extends Activity {
 		float[] values = new float[] { 2.0f,1.5f, 2.5f, 1.0f , 3.0f };
 		String[] verlabels = new String[] { "great", "ok", "bad" };
 		String[] horlabels = new String[] { "today", "tomorrow", "next week", "next month" };
-		GraphView graphView = new GraphView(this, values, "GraphViewDemo",horlabels, verlabels, GraphView.BAR);
+		GraphView graphView = new GraphView(this, values, "GraphViewDemo", horlabels, verlabels);
 		setContentView(graphView);
 	}
 }
