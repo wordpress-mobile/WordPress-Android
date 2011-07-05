@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -19,10 +21,14 @@ public class GraphView extends LinearLayout {
 		static final float VERTICAL_LABEL_WIDTH = 100;
 		static final float HORIZONTAL_LABEL_HEIGHT = 80;
 	}
+
 	private class GraphViewContentView extends View {
+		private float lastTouchEventX;
+		private float graphOffset;
+
 		public GraphViewContentView(Context context) {
 			super(context);
-			setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
+			setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		}
 
 		@Override
@@ -46,6 +52,9 @@ public class GraphView extends LinearLayout {
 			if (horlabels == null) {
 				horlabels = generateHorlabels(graphwidth);
 			}
+			if (verlabels == null) {
+				verlabels = generateVerlabels(graphheight);
+			}
 
 			// vertical lines
 			paint.setTextAlign(Align.LEFT);
@@ -60,7 +69,7 @@ public class GraphView extends LinearLayout {
 			int hors = horlabels.length - 1;
 			for (int i = 0; i < horlabels.length; i++) {
 				paint.setColor(Color.DKGRAY);
-				float x = ((graphwidth / hors) * i) + horstart;
+				float x = ((graphwidth / hors) * i) + horstart + graphOffset;
 				canvas.drawLine(x, height - border, x, border, paint);
 				paint.setTextAlign(Align.CENTER);
 				if (i==horlabels.length-1)
@@ -101,7 +110,7 @@ public class GraphView extends LinearLayout {
 							// fill space between last and current point
 							int numSpace = (int) ((endX - lastEndX) / 3f) +1;
 							for (int xi=0; xi<numSpace; xi++) {
-								float spaceX = (float) (lastEndX + ((endX-lastEndX)*xi/(numSpace-1)));
+								float spaceX = (float) (lastEndX + ((endX-lastEndX)*xi/(numSpace-1))) + graphOffset;
 								float spaceY = (float) (lastEndY + ((endY-lastEndY)*xi/(numSpace-1)));
 
 								// start => bottom edge
@@ -132,9 +141,9 @@ public class GraphView extends LinearLayout {
 					double x = graphwidth * ratX;
 
 					if (i > 0) {
-						float startX = (float) lastEndX + (horstart + 1);
+						float startX = (float) lastEndX + (horstart + 1) + graphOffset;
 						float startY = (float) (border - lastEndY) + graphheight;
-						float endX = (float) x + (horstart + 1);
+						float endX = (float) x + (horstart + 1) + graphOffset;
 						float endY = (float) (border - y) + graphheight;
 
 						canvas.drawLine(startX, startY, endX, endY, paint);
@@ -144,7 +153,39 @@ public class GraphView extends LinearLayout {
 				}
 			}
 		}
+
+		private void onMoveGesture(float f) {
+			graphOffset += f;
+			invalidate();
+		}
+
+		@Override
+		public boolean onTouchEvent(MotionEvent event) {
+			if (!isScrollable()) {
+				return super.onTouchEvent(event);
+			}
+
+			boolean handled = false;
+			if ((event.getAction() & MotionEvent.ACTION_DOWN) == MotionEvent.ACTION_DOWN) {
+				handled = true;
+			}
+			if ((event.getAction() & MotionEvent.ACTION_UP) == MotionEvent.ACTION_UP) {
+				lastTouchEventX = 0;
+				handled = true;
+			}
+			if ((event.getAction() & MotionEvent.ACTION_MOVE) == MotionEvent.ACTION_MOVE) {
+				Log.i("GraphViewContentView", "touch action move");
+				if (lastTouchEventX != 0) {
+					onMoveGesture(event.getX() - lastTouchEventX);
+				}
+
+				lastTouchEventX = event.getX();
+				handled = true;
+			}
+			return handled;
+		}
 	}
+
 	static public class GraphViewData {
 		double valueX;
 		double valueY;
@@ -191,6 +232,7 @@ public class GraphView extends LinearLayout {
 	private String[] verlabels;
 	private String title;
 	private boolean drawBackground;
+	private boolean scrollable;
 
 	/**
 	 *
@@ -223,8 +265,7 @@ public class GraphView extends LinearLayout {
 
 		View viewVerLabels = new VerLabelsView(context);
 		addView(viewVerLabels);
-		View viewContent = new GraphViewContentView(context);
-		addView(viewContent);
+		addView(new GraphViewContentView(context), new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
 	}
 
 	private String[] generateHorlabels(float graphwidth) {
@@ -238,7 +279,7 @@ public class GraphView extends LinearLayout {
 		return labels;
 	}
 
-	private String[] generateVerlabels(float graphheight) {
+	synchronized private String[] generateVerlabels(float graphheight) {
 		int numLabels = (int) (graphheight/GraphViewConfig.HORIZONTAL_LABEL_HEIGHT);
 		String[] labels = new String[numLabels+1];
 		double min = getMinY();
@@ -275,11 +316,19 @@ public class GraphView extends LinearLayout {
 		return smallest;
 	}
 
-	public boolean isDrawBackground() {
+	public boolean getDrawBackground() {
 		return drawBackground;
+	}
+
+	public boolean isScrollable() {
+		return scrollable;
 	}
 
 	public void setDrawBackground(boolean drawBackground) {
 		this.drawBackground = drawBackground;
+	}
+
+	public void setScrollable(boolean scrollable) {
+		this.scrollable = scrollable;
 	}
 }
