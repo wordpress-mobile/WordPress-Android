@@ -34,6 +34,7 @@ public class GraphView extends View {
 	private String[] horlabels;
 	private String[] verlabels;
 	private String title;
+	private boolean drawBackground;
 
 	/**
 	 *
@@ -59,8 +60,7 @@ public class GraphView extends View {
 
 		paint = new Paint();
 		paintBackground = new Paint();
-		paintBackground.setARGB(255, 10, 20, 30);
-		paintBackground.setStrokeCap(Paint.Cap.ROUND);
+		paintBackground.setARGB(255, 20, 40, 60);
 		paintBackground.setStrokeWidth(4);
 	}
 
@@ -110,6 +110,10 @@ public class GraphView extends View {
 			if (values[i].valueY < smallest)
 				smallest = values[i].valueY;
 		return smallest;
+	}
+
+	public boolean isDrawBackground() {
+		return drawBackground;
 	}
 
 	@Override
@@ -172,9 +176,48 @@ public class GraphView extends View {
 			paint.setStrokeCap(Paint.Cap.ROUND);
 			paint.setStrokeWidth(3);
 
+			// draw background
+			double lastEndY = 0;
+			double lastEndX = 0;
+			if (drawBackground) {
+				float startY = graphheight + border;
+				for (int i = 0; i < values.length; i++) {
+					double valY = values[i].valueY - minY;
+					double ratY = valY / diffY;
+					double y = graphheight * ratY;
+
+					double valX = values[i].valueX - minX;
+					double ratX = valX / diffX;
+					double x = graphwidth * ratX;
+
+					float endX = (float) x + (horstart + 1);
+					float endY = (float) (border - y) + graphheight +2;
+
+					if (i > 0) {
+						// fill space between last and current point
+						int numSpace = (int) ((endX - lastEndX) / 3f) +1;
+						for (int xi=0; xi<numSpace; xi++) {
+							float spaceX = (float) (lastEndX + ((endX-lastEndX)*xi/(numSpace-1)));
+							float spaceY = (float) (lastEndY + ((endY-lastEndY)*xi/(numSpace-1)));
+
+							// start => bottom edge
+							float startX = spaceX;
+
+							// do not draw over the left edge
+							if (startX-horstart > 1) {
+								canvas.drawLine(startX, startY, spaceX, spaceY, paintBackground);
+							}
+						}
+					}
+
+					lastEndY = endY;
+					lastEndX = endX;
+				}
+			}
+
 			// draw data
-			double lastY = 0;
-			double lastX = 0;
+			lastEndY = 0;
+			lastEndX = 0;
 			for (int i = 0; i < values.length; i++) {
 				double valY = values[i].valueY - minY;
 				double ratY = valY / diffY;
@@ -185,16 +228,20 @@ public class GraphView extends View {
 				double x = graphwidth * ratX;
 
 				if (i > 0) {
-					float startX = (float) lastX + (horstart + 1);
-					float startY = (float) (border - lastY) + graphheight;
+					float startX = (float) lastEndX + (horstart + 1);
+					float startY = (float) (border - lastEndY) + graphheight;
 					float endX = (float) x + (horstart + 1);
 					float endY = (float) (border - y) + graphheight;
 
 					canvas.drawLine(startX, startY, endX, endY, paint);
 				}
-				lastY = y;
-				lastX = x;
+				lastEndY = y;
+				lastEndX = x;
 			}
 		}
+	}
+
+	public void setDrawBackground(boolean drawBackground) {
+		this.drawBackground = drawBackground;
 	}
 }
