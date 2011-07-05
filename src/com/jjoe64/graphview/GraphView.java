@@ -13,17 +13,35 @@ import android.view.View;
  *
  */
 public class GraphView extends View {
+	static public class GraphViewData {
+		double valueX;
+		double valueY;
+		public GraphViewData(double valueX, double valueY) {
+			super();
+			this.valueX = valueX;
+			this.valueY = valueY;
+		}
+	}
+
 	private final Paint paint;
 	private final Paint paintBackground;
-	private float[] values;
+	private GraphViewData[] values;
 	private String[] horlabels;
 	private String[] verlabels;
 	private String title;
 
-	public GraphView(Context context, float[] values, String title, String[] horlabels, String[] verlabels) {
+	/**
+	 *
+	 * @param context
+	 * @param values must be sorted by valueX ASC
+	 * @param title [optional]
+	 * @param horlabels
+	 * @param verlabels
+	 */
+	public GraphView(Context context, GraphViewData[] values, String title, String[] horlabels, String[] verlabels) {
 		super(context);
 		if (values == null)
-			values = new float[0];
+			values = new GraphViewData[0];
 		else
 			this.values = values;
 		if (title == null)
@@ -46,19 +64,29 @@ public class GraphView extends View {
 		paintBackground.setStrokeWidth(4);
 	}
 
-	private float getMax() {
-		float largest = Integer.MIN_VALUE;
+	private double getMaxX() {
+		// values must be sorted by x, so the last value has the largest X value
+		return values[values.length-1].valueX;
+	}
+
+	private double getMaxY() {
+		double largest = Integer.MIN_VALUE;
 		for (int i = 0; i < values.length; i++)
-			if (values[i] > largest)
-				largest = values[i];
+			if (values[i].valueY > largest)
+				largest = values[i].valueY;
 		return largest;
 	}
 
-	private float getMin() {
-		float smallest = Integer.MAX_VALUE;
+	private double getMinX() {
+		// values must be sorted by x, so the first value has the smallest X value
+		return values[0].valueX;
+	}
+
+	private double getMinY() {
+		double smallest = Integer.MAX_VALUE;
 		for (int i = 0; i < values.length; i++)
-			if (values[i] < smallest)
-				smallest = values[i];
+			if (values[i].valueY < smallest)
+				smallest = values[i].valueY;
 		return smallest;
 	}
 
@@ -71,9 +99,12 @@ public class GraphView extends View {
 		float horstart = border * 2;
 		float height = getHeight();
 		float width = getWidth() - 1;
-		float max = getMax();
-		float min = getMin();
-		float diff = max - min;
+		double maxY = getMaxY();
+		double minY = getMinY();
+		double diffY = maxY - minY;
+		double maxX = getMaxX();
+		double minX = getMinX();
+		double diffX = maxX - minX;
 		float graphheight = height - (2 * border);
 		float graphwidth = width - (2 * border);
 
@@ -106,53 +137,34 @@ public class GraphView extends View {
 		paint.setTextAlign(Align.CENTER);
 		canvas.drawText(title, (graphwidth / 2) + horstart, border - 4, paint);
 
-		if (max != min) {
+		if (maxY != minY) {
 			// blue version
 			paint.setARGB(255, 0, 119, 204);
 			paint.setStrokeCap(Paint.Cap.ROUND);
 			paint.setStrokeWidth(3);
 
-			float datalength = values.length;
-			float colwidth = graphwidth / (datalength -1);
-/*
-			// first draw background
-			float lasth = 0;
-			for (int i = 0; i < values.length; i++) {
-				float val = values[i] - min;
-				float rat = val / diff;
-				float h = graphheight * rat;
-
-				canvas.drawLine((i * colwidth) + horstart, (border - lasth) + graphheight +4, (i * colwidth) + horstart, graphheight+border, paintBackground);
-				if (i > 0) {
-					float startX = ((i - 1) * colwidth) + (horstart + 1) + halfcol;
-					float startY = (border - lasth) + graphheight;
-
-					float endX = (i * colwidth) + (horstart + 1) + halfcol;
-					float endY = (border - h) + graphheight;
-
-					for (int xi=1; xi<8; xi++) {
-						canvas.drawLine(startX+(endX-startX)/8*xi, startY+(endY-startY)/8*xi +4, endX+(endX-startX)/8*xi, graphheight+border, paintBackground);
-					}
-				}
-				lasth = h;
-			}
-			**/
 			// draw data
-			float lasth = 0;
+			double lastY = 0;
+			double lastX = 0;
 			for (int i = 0; i < values.length; i++) {
-				float val = values[i] - min;
-				float rat = val / diff;
-				float h = graphheight * rat;
+				double valY = values[i].valueY - minY;
+				double ratY = valY / diffY;
+				double y = graphheight * ratY;
+
+				double valX = values[i].valueX - minX;
+				double ratX = valX / diffX;
+				double x = graphwidth * ratX;
 
 				if (i > 0) {
-					float startX = ((i - 1) * colwidth) + (horstart + 1);
-					float startY = (border - lasth) + graphheight;
-					float endX = (i * colwidth) + (horstart + 1);
-					float endY = (border - h) + graphheight;
+					float startX = (float) lastX + (horstart + 1);
+					float startY = (float) (border - lastY) + graphheight;
+					float endX = (float) x + (horstart + 1);
+					float endY = (float) (border - y) + graphheight;
 
 					canvas.drawLine(startX, startY, endX, endY, paint);
 				}
-				lasth = h;
+				lastY = y;
+				lastX = x;
 			}
 		}
 	}
