@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -185,20 +186,27 @@ public class GraphView extends LinearLayout {
 			}
 
 			boolean handled = false;
-			if ((event.getAction() & MotionEvent.ACTION_DOWN) == MotionEvent.ACTION_DOWN) {
-				handled = true;
+			// first scale
+			if (scalable && scaleDetector != null) {
+				scaleDetector.onTouchEvent(event);
+				handled = scaleDetector.isInProgress();
 			}
-			if ((event.getAction() & MotionEvent.ACTION_UP) == MotionEvent.ACTION_UP) {
-				lastTouchEventX = 0;
-				handled = true;
-			}
-			if ((event.getAction() & MotionEvent.ACTION_MOVE) == MotionEvent.ACTION_MOVE) {
-				if (lastTouchEventX != 0) {
-					onMoveGesture(event.getX() - lastTouchEventX);
+			if (!handled) {
+				// if not scaled, scroll
+				if ((event.getAction() & MotionEvent.ACTION_DOWN) == MotionEvent.ACTION_DOWN) {
+					handled = true;
 				}
-
-				lastTouchEventX = event.getX();
-				handled = true;
+				if ((event.getAction() & MotionEvent.ACTION_UP) == MotionEvent.ACTION_UP) {
+					lastTouchEventX = 0;
+					handled = true;
+				}
+				if ((event.getAction() & MotionEvent.ACTION_MOVE) == MotionEvent.ACTION_MOVE) {
+					if (lastTouchEventX != 0) {
+						onMoveGesture(event.getX() - lastTouchEventX);
+					}
+					lastTouchEventX = event.getX();
+					handled = true;
+				}
 			}
 			return handled;
 		}
@@ -255,6 +263,8 @@ public class GraphView extends LinearLayout {
 	private double viewportStart;
 	private double viewportSize;
 	private final View viewVerLabels;
+	private ScaleGestureDetector scaleDetector;
+	private boolean scalable;
 
 	/**
 	 *
@@ -343,7 +353,7 @@ public class GraphView extends LinearLayout {
 		double min = getMinY();
 		double max = getMaxY();
 		for (int i=0; i<=numLabels; i++) {
-			labels[numLabels-i] = String.valueOf(min + ((max-min)*i/numLabels));
+			labels[numLabels-i] = formatLabel(min + ((max-min)*i/numLabels));
 		}
 		return labels;
 	}
@@ -398,6 +408,31 @@ public class GraphView extends LinearLayout {
 
 	public void setDrawBackground(boolean drawBackground) {
 		this.drawBackground = drawBackground;
+	}
+
+	/**
+	 * forces scrollable = true
+	 * @param scalable
+	 */
+	public void setScalable(boolean scalable) {
+		this.scalable = scalable;
+		if (scalable == true && scaleDetector == null) {
+			scrollable = true; // automatically forces this
+			scaleDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+				@Override
+				public boolean onScale(ScaleGestureDetector detector) {
+					double newSize = viewportSize*detector.getScaleFactor();
+					double diff = newSize-viewportSize;
+					viewportStart += diff/2;
+					viewportSize -= diff;
+					verlabels = null;
+					horlabels = null;
+					invalidate();
+					viewVerLabels.invalidate();
+					return true;
+				}
+			});
+		}
 	}
 
 	public void setScrollable(boolean scrollable) {

@@ -1,10 +1,11 @@
-GraphView is a custom View which easily creates Graphs.
+GraphView is a custom View which easily creates line Graphs.
 Just supply an array of values and they will be displayed in the graph.
-The graph automatically scales the values between the highest and the lowest in the supplied set.
-Labels are shown along the X and Y axis. 
-The first and last label on the X axis are intentionally not centered in order to use less screen space.
 
-<img src="https://github.com/jjoe64/GraphView/raw/master/GVLine.jpg" />
+<h1>Scrolling Support</h1>
+<h1>Scaling / Zooming Support</h1>
+
+See GraphView-Demos for examples.
+<a href="https://github.com/jjoe64/GraphView-Demos">https://github.com/jjoe64/GraphView-Demos</a>
 <br/>
-<img src="https://github.com/jjoe64/GraphView/raw/master/GVBar.jpg" />
+<img src="https://github.com/jjoe64/GraphView/raw/master/GVLine.jpg" />
 
