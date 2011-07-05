@@ -14,8 +14,6 @@ public class GraphViewDemo extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		String[] verlabels = new String[] { "great", "ok", "bad" };
-		String[] horlabels = new String[] { "today", "tomorrow", "next week", "next month" };
 		GraphView graphView = new GraphView(
 				this
 				, new GraphViewData[] {
@@ -27,8 +25,8 @@ public class GraphViewDemo extends Activity {
 						, new GraphViewData(5, 3.0d)
 				}
 				, "GraphViewDemo"
-				, horlabels
-				, verlabels
+				, null
+				, null
 		);
 		setContentView(graphView);
 	}

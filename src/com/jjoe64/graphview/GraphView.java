@@ -13,6 +13,11 @@ import android.view.View;
  *
  */
 public class GraphView extends View {
+	static final private class GraphViewConfig {
+		static final float BORDER = 20;
+		static final float VERTICAL_LABEL_WIDTH = 100;
+		static final float HORIZONTAL_LABEL_HEIGHT = 80;
+	}
 	static public class GraphViewData {
 		double valueX;
 		double valueY;
@@ -35,8 +40,8 @@ public class GraphView extends View {
 	 * @param context
 	 * @param values must be sorted by valueX ASC
 	 * @param title [optional]
-	 * @param horlabels
-	 * @param verlabels
+	 * @param horlabels [optional] if null, labels were generated automatically
+	 * @param verlabels [optional] if null, labels were generated automatically
 	 */
 	public GraphView(Context context, GraphViewData[] values, String title, String[] horlabels, String[] verlabels) {
 		super(context);
@@ -48,20 +53,37 @@ public class GraphView extends View {
 			title = "";
 		else
 			this.title = title;
-		if (horlabels == null)
-			this.horlabels = new String[0];
-		else
-			this.horlabels = horlabels;
-		if (verlabels == null)
-			this.verlabels = new String[0];
-		else
-			this.verlabels = verlabels;
+
+		this.horlabels = horlabels;
+		this.verlabels = verlabels;
 
 		paint = new Paint();
 		paintBackground = new Paint();
 		paintBackground.setARGB(255, 10, 20, 30);
 		paintBackground.setStrokeCap(Paint.Cap.ROUND);
 		paintBackground.setStrokeWidth(4);
+	}
+
+	private String[] generateHorlabels(float graphwidth) {
+		int numLabels = (int) (graphwidth/GraphViewConfig.VERTICAL_LABEL_WIDTH);
+		String[] labels = new String[numLabels+1];
+		double min = getMinX();
+		double max = getMaxX();
+		for (int i=0; i<=numLabels; i++) {
+			labels[i] = String.valueOf(min + ((max-min)*i/numLabels));
+		}
+		return labels;
+	}
+
+	private String[] generateVerlabels(float graphheight) {
+		int numLabels = (int) (graphheight/GraphViewConfig.HORIZONTAL_LABEL_HEIGHT);
+		String[] labels = new String[numLabels+1];
+		double min = getMinY();
+		double max = getMaxY();
+		for (int i=0; i<=numLabels; i++) {
+			labels[i] = String.valueOf(min + ((max-min)*i/numLabels));
+		}
+		return labels;
 	}
 
 	private double getMaxX() {
@@ -95,7 +117,7 @@ public class GraphView extends View {
 		// normal
 		paint.setStrokeWidth(0);
 
-		float border = 20;
+		float border = GraphViewConfig.BORDER;
 		float horstart = border * 2;
 		float height = getHeight();
 		float width = getWidth() - 1;
@@ -107,6 +129,13 @@ public class GraphView extends View {
 		double diffX = maxX - minX;
 		float graphheight = height - (2 * border);
 		float graphwidth = width - (2 * border);
+
+		if (horlabels == null) {
+			horlabels = generateHorlabels(graphwidth);
+		}
+		if (verlabels == null) {
+			verlabels = generateVerlabels(graphheight);
+		}
 
 		// vertical labels + lines
 		paint.setTextAlign(Align.LEFT);
