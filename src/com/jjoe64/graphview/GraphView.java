@@ -81,7 +81,7 @@ public class GraphView extends View {
 		double min = getMinY();
 		double max = getMaxY();
 		for (int i=0; i<=numLabels; i++) {
-			labels[i] = String.valueOf(min + ((max-min)*i/numLabels));
+			labels[numLabels-i] = String.valueOf(min + ((max-min)*i/numLabels));
 		}
 		return labels;
 	}
