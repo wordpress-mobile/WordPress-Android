@@ -7,7 +7,8 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 
 /**
  * GraphViewDemo creates some dummy data to demonstrate the GraphView component.
- * @author originally: Arno den Hond
+ *
+ * IMPORTANT: For examples take a look at GraphView-Demos (https://github.com/jjoe64/GraphView-Demos)
  *
  */
 public class GraphViewDemo extends Activity {
