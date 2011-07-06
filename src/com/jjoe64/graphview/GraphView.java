@@ -283,6 +283,7 @@ public class GraphView extends LinearLayout {
 	private final View viewVerLabels;
 	private ScaleGestureDetector scaleDetector;
 	private boolean scalable;
+	private NumberFormat numberformatter;
 
 	/**
 	 *
@@ -348,11 +349,27 @@ public class GraphView extends LinearLayout {
 	 * formats the label
 	 * can be overwritten
 	 * @param value x and y values
+	 * @param isValueX if false, value y wants to be formatted
 	 * @return value to display
 	 */
-	protected String formatLabel(double value) {
-		NumberFormat f = NumberFormat.getNumberInstance();
-		return f.format(value);
+	protected String formatLabel(double value, boolean isValueX) {
+		if (numberformatter == null) {
+			numberformatter = NumberFormat.getNumberInstance();
+			double highestvalue = getMaxY();
+			double lowestvalue = getMinY();
+			if (highestvalue - lowestvalue < 0.1) {
+				numberformatter.setMaximumFractionDigits(6);
+			} else if (highestvalue - lowestvalue < 1) {
+				numberformatter.setMaximumFractionDigits(4);
+			} else if (highestvalue - lowestvalue < 20) {
+				numberformatter.setMaximumFractionDigits(3);
+			} else if (highestvalue - lowestvalue < 100) {
+				numberformatter.setMaximumFractionDigits(1);
+			} else {
+				numberformatter.setMaximumFractionDigits(0);
+			}
+		}
+		return numberformatter.format(value);
 	}
 
 	private String[] generateHorlabels(float graphwidth) {
@@ -361,7 +378,7 @@ public class GraphView extends LinearLayout {
 		double min = getMinX();
 		double max = getMaxX();
 		for (int i=0; i<=numLabels; i++) {
-			labels[i] = formatLabel(min + ((max-min)*i/numLabels));
+			labels[i] = formatLabel(min + ((max-min)*i/numLabels), true);
 		}
 		return labels;
 	}
@@ -372,7 +389,7 @@ public class GraphView extends LinearLayout {
 		double min = getMinY();
 		double max = getMaxY();
 		for (int i=0; i<=numLabels; i++) {
-			labels[numLabels-i] = formatLabel(min + ((max-min)*i/numLabels));
+			labels[numLabels-i] = formatLabel(min + ((max-min)*i/numLabels), false);
 		}
 		return labels;
 	}
@@ -449,6 +466,7 @@ public class GraphView extends LinearLayout {
 					viewportSize -= diff;
 					verlabels = null;
 					horlabels = null;
+					numberformatter = null;
 					invalidate();
 					viewVerLabels.invalidate();
 					return true;
