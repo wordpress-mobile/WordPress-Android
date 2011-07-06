@@ -17,6 +17,10 @@ public class ScaleGestureDetector {
 	private Method method_isInProgress;
 	private Method method_onTouchEvent;
 
+	/**
+	 * @param context
+	 * @param simpleOnScaleGestureListener
+	 */
 	public ScaleGestureDetector(Context context, SimpleOnScaleGestureListener simpleOnScaleGestureListener) {
 		try {
 			// check if class is available

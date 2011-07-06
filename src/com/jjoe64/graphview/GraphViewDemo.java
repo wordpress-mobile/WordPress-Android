@@ -12,6 +12,9 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
  *
  */
 public class GraphViewDemo extends Activity {
+	/**
+	 * @param savedInstanceState
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

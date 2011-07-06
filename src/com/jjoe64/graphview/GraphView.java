@@ -30,11 +30,17 @@ public class GraphView extends LinearLayout {
 		private float lastTouchEventX;
 		private float graphwidth;
 
+		/**
+		 * @param context
+		 */
 		public GraphViewContentView(Context context) {
 			super(context);
 			setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		}
 
+		/**
+		 * @param canvas
+		 */
 		@Override
 		protected void onDraw(Canvas canvas) {
 			// normal
@@ -180,6 +186,9 @@ public class GraphView extends LinearLayout {
 			invalidate();
 		}
 
+		/**
+		 * @param event
+		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
 			if (!isScrollable()) {
@@ -213,6 +222,9 @@ public class GraphView extends LinearLayout {
 		}
 	}
 
+	/**
+	 * one data set for the graph
+	 */
 	static public class GraphViewData {
 		double valueX;
 		double valueY;
@@ -224,11 +236,17 @@ public class GraphView extends LinearLayout {
 	}
 
 	private class VerLabelsView extends View {
+		/**
+		 * @param context
+		 */
 		public VerLabelsView(Context context) {
 			super(context);
 			setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 10));
 		}
 
+		/**
+		 * @param canvas
+		 */
 		@Override
 		protected void onDraw(Canvas canvas) {
 			// normal
@@ -270,7 +288,7 @@ public class GraphView extends LinearLayout {
 	/**
 	 *
 	 * @param context
-	 * @param values must be sorted by valueX ASC
+	 * @param values <b>must be sorted by valueX ASC</b>
 	 * @param title [optional]
 	 * @param horlabels [optional] if null, labels were generated automatically
 	 * @param verlabels [optional] if null, labels were generated automatically
@@ -329,8 +347,9 @@ public class GraphView extends LinearLayout {
 
 	/**
 	 * formats the label
-	 * @param value
-	 * @return
+	 * can be overwritten
+	 * @param value x and y values
+	 * @return value to display
 	 */
 	protected String formatLabel(double value) {
 		NumberFormat f = NumberFormat.getNumberInstance();
@@ -407,12 +426,15 @@ public class GraphView extends LinearLayout {
 		return scrollable;
 	}
 
+	/**
+	 * @param drawBackground true for a light blue background under the graph line
+	 */
 	public void setDrawBackground(boolean drawBackground) {
 		this.drawBackground = drawBackground;
 	}
 
 	/**
-	 * forces scrollable = true
+	 * this forces scrollable = true
 	 * @param scalable
 	 */
 	public void setScalable(boolean scalable) {
@@ -436,10 +458,19 @@ public class GraphView extends LinearLayout {
 		}
 	}
 
+	/**
+	 * the user can scroll (horizontal) the graph. This is only useful if you use a viewport {@link #setViewPort(double, double)} which doesn't displays all data.
+	 * @param scrollable
+	 */
 	public void setScrollable(boolean scrollable) {
 		this.scrollable = scrollable;
 	}
 
+	/**
+	 * set's the viewport for the graph.
+	 * @param start x-value
+	 * @param size
+	 */
 	public void setViewPort(double start, double size) {
 		viewportStart = start;
 		viewportSize = size;
