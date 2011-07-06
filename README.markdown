@@ -28,6 +28,7 @@ Since Android 2.3! With two-fingers touch scale gesture, the viewport can be cha
 <h2>How to use</h2>
 <a href="http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html">http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html</a>
 
+<pre>
 // graph with dynamically genereated horizontal and vertical labels
 GraphView graphView = new GraphView(
   this // context
@@ -45,6 +46,7 @@ GraphView graphView = new GraphView(
 );
 LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
 layout.addView(graphView);
+</pre>
 
 <h2>Important</h2>
 To show you how to integrate the library into an existing project see the GraphView-Demos project!
