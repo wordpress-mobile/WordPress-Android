@@ -17,7 +17,6 @@ import com.jjoe64.graphview.compatible.ScaleGestureDetector;
 
 /**
  * GraphView creates a scaled line graph with x and y axis labels.
- *
  */
 public class GraphView extends LinearLayout {
 	static final private class GraphViewConfig {
