@@ -10,9 +10,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.jjoe64.graphview.compatible.ScaleGestureDetector;
 
 /**
  * GraphView creates a scaled line graph with x and y axis labels.
