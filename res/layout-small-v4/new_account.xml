@@ -1,74 +1,78 @@
-<LinearLayout
-  android:id="@+id/LinearLayout01"
+<ScrollView
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android"
   android:background="@drawable/home_gradient"
-  android:gravity="center_horizontal"
-  android:orientation="vertical">
-  <ImageView
-    android:scaleType="centerInside"
-    android:layout_width="140dip"
-    android:layout_height="140dip"
-    android:layout_marginTop="10dip"
-    android:id="@+id/wordpress_logo"
-    android:src="@drawable/new_account_logo">
-  </ImageView>
-  <TextView
-    android:id="@+id/welcome"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:typeface="serif"
-    android:paddingRight="20dip"
-    android:paddingLeft="20dip"
-    android:maxLines="2"
-    android:ellipsize="end"
-    android:gravity="center"
-    android:text="@string/tagline"
-    android:layout_marginTop="8dip"
-    android:layout_marginBottom="8dip"
-    android:shadowColor="#FFFFFFFF"
-    android:shadowDx="0"
-    android:shadowDy="1"
-    android:shadowRadius="1"
-    android:textSize="20dip" />
-  <Button
-    android:id="@+id/createWPAccount"
-    android:layout_width="300dip"
-    android:layout_height="wrap_content"
-    android:textSize="14dip"
-    android:shadowColor="#FFFFFFFF"
-    android:singleLine="true"
-    android:shadowDx="0"
-    android:shadowDy="2"
-    android:shadowRadius="1"
-    android:textStyle="bold"
-    android:background="@drawable/wp_button"
-    android:text="@string/new_to_wp" />
-  <Button
-    android:id="@+id/dotcomExisting"
-    android:layout_width="300dip"
-    android:layout_height="wrap_content"
-    android:textSize="14dip"
-    android:shadowColor="#FFFFFFFF"
-    android:singleLine="true"
-    android:shadowDx="0"
-    android:shadowDy="2"
-    android:shadowRadius="1"
-    android:textStyle="bold"
-    android:background="@drawable/wp_button"
-    android:text="@string/i_have_wp_blog" />
-  <Button
-    android:id="@+id/dotorgExisting"
-    android:layout_width="300dip"
-    android:layout_height="wrap_content"
-    android:textSize="14dip"
-    android:shadowColor="#FFFFFFFF"
-    android:singleLine="true"
-    android:shadowDx="0"
-    android:shadowDy="2"
-    android:shadowRadius="1"
-    android:textStyle="bold"
-    android:background="@drawable/wp_button"
-    android:text="@string/i_have_blog" />
-</LinearLayout>
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <LinearLayout
+    android:id="@+id/LinearLayout01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+    <ImageView
+      android:scaleType="centerInside"
+      android:layout_width="140dip"
+      android:layout_height="140dip"
+      android:layout_marginTop="10dip"
+      android:id="@+id/wordpress_logo"
+      android:src="@drawable/new_account_logo">
+    </ImageView>
+    <TextView
+      android:id="@+id/welcome"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:typeface="serif"
+      android:paddingRight="20dip"
+      android:paddingLeft="20dip"
+      android:maxLines="2"
+      android:ellipsize="end"
+      android:gravity="center"
+      android:text="@string/tagline"
+      android:layout_marginTop="8dip"
+      android:layout_marginBottom="8dip"
+      android:shadowColor="#FFFFFFFF"
+      android:shadowDx="0"
+      android:shadowDy="1"
+      android:shadowRadius="1"
+      android:textSize="20dip" />
+    <Button
+      android:id="@+id/createWPAccount"
+      android:layout_width="300dip"
+      android:layout_height="wrap_content"
+      android:textSize="14dip"
+      android:shadowColor="#FFFFFFFF"
+      android:singleLine="true"
+      android:shadowDx="0"
+      android:shadowDy="2"
+      android:shadowRadius="1"
+      android:textStyle="bold"
+      android:background="@drawable/wp_button"
+      android:text="@string/new_to_wp" />
+    <Button
+      android:id="@+id/dotcomExisting"
+      android:layout_width="300dip"
+      android:layout_height="wrap_content"
+      android:textSize="14dip"
+      android:shadowColor="#FFFFFFFF"
+      android:singleLine="true"
+      android:shadowDx="0"
+      android:shadowDy="2"
+      android:shadowRadius="1"
+      android:textStyle="bold"
+      android:background="@drawable/wp_button"
+      android:text="@string/i_have_wp_blog" />
+    <Button
+      android:id="@+id/dotorgExisting"
+      android:layout_width="300dip"
+      android:layout_height="wrap_content"
+      android:textSize="14dip"
+      android:shadowColor="#FFFFFFFF"
+      android:singleLine="true"
+      android:shadowDx="0"
+      android:shadowDy="2"
+      android:shadowRadius="1"
+      android:textStyle="bold"
+      android:background="@drawable/wp_button"
+      android:text="@string/i_have_blog" />
+  </LinearLayout>
+</ScrollView>
