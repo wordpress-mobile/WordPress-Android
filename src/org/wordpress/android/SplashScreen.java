@@ -1,3 +1,4 @@
+
 package org.wordpress.android;
 
 import android.app.Activity;
@@ -11,10 +12,9 @@ import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-
 public class SplashScreen extends Activity {
     /** Called when the activity is first created. */
-	
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -22,29 +22,26 @@ public class SplashScreen extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 
         setContentView(R.layout.splashscreen);
-        
-        //Display the current version number
+
+        // Display the current version number
         PackageManager pm = getPackageManager();
         try {
-			PackageInfo pi = pm.getPackageInfo("org.wordpress.android", 0);
-			TextView versionNumber = (TextView) findViewById(R.id.versionNumber);           
+            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            TextView versionNumber = (TextView) findViewById(R.id.versionNumber);
             versionNumber.setText("Version " + pi.versionName);
-		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        } catch (NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-        new Handler().postDelayed(new Runnable(){ 
-            public void run() { 
-                 /* Create an Intent that will start the Main WordPress Activity. */ 
-                 Intent mainIntent = new Intent(SplashScreen.this,wpAndroid.class); 
-                 SplashScreen.this.startActivity(mainIntent); 
-                 SplashScreen.this.finish(); 
-            } 
-       }, 0); //2900 for release
-        
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                /* Create an Intent that will start the Main WordPress Activity. */
+                Intent mainIntent = new Intent(SplashScreen.this, wpAndroid.class);
+                SplashScreen.this.startActivity(mainIntent);
+                SplashScreen.this.finish();
+            }
+        }, 0); // 2900 for release
+
+    }
 }
-}
-
-
-
