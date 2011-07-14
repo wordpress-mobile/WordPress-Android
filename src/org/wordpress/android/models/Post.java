@@ -432,17 +432,6 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 
 			}
 
-
-			if (!post.categories.equals("")) {
-
-				String[] aCategories = post.categories.split(",");
-
-				for (int i = 0; i < aCategories.length; i++) {
-					post.selectedCategories.add(aCategories[i]);
-				}
-
-			}
-
 			if (post.post_status == null){
 				post.post_status = "publish";
 			}
@@ -462,13 +451,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 			}
 			String res = "";
 			if (!mediaError) {
-
-				String[] theCategories = new String[post.selectedCategories.size()];
-
-				for (int i = 0; i < post.selectedCategories.size(); i++) {
-					theCategories[i] = post.selectedCategories.get(i).toString();
-				}
-
+			    
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
 				
 				String content = "";
@@ -521,9 +504,21 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 					if (post.mt_keywords != "") {
 						contentStruct.put("mt_keywords", post.mt_keywords);
 					}
-					if (theCategories.length > 0) {
-						contentStruct.put("categories", theCategories);
-					}
+					if (!post.categories.equals("")) {
+	                    JSONArray catsJSON;
+                        try {
+                            catsJSON = new JSONArray(post.categories);
+                            String[] theCategories = new String[catsJSON.length()];
+                            for (int i = 0; i < catsJSON.length(); i++) {
+                                theCategories[i] = catsJSON.getString(i);
+                            }
+                            if (theCategories.length > 0) {
+                                contentStruct.put("categories", theCategories);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+	                }
 				}
 				contentStruct.put((post.isPage) ? "page_status" : "post_status", post.post_status);
 				Double latitude = 0.0;

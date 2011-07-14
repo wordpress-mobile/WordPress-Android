@@ -121,13 +121,12 @@ public class ApiHelper extends Activity {
 				Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 				WordPressDB postStoreDB = new WordPressDB(ctx);
 
-				// loop this!
 				for (int ctr = 0; ctr < result.length; ctr++) {
 					HashMap<String, Object> dbValues = new HashMap<String, Object>();
 					contentHash = (HashMap)result[ctr];
 					dbValues.put("blogID", blog.getBlogId());
 					dbVector.add(ctr, contentHash);
-				}// end for loop
+				}
 
 				postStoreDB.savePosts(ctx, dbVector, String.valueOf(blog.getId()), isPage);
 				((ViewPosts) ctx).numRecords += 20;

@@ -79,6 +79,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
@@ -100,7 +103,8 @@ public class EditPost extends Activity implements LocationListener{
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "", id = "", accountName = "", SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
+	public String categoryErrorMsg = "", id = "", accountName = "", SD_CARD_TEMP_DIR = "", mediaErrorMsg = "";
+	private JSONArray categories;
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
 	long postID;
@@ -122,8 +126,8 @@ public class EditPost extends Activity implements LocationListener{
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);	
-        
         Bundle extras = getIntent().getExtras();
+        categories = new JSONArray();
         if(extras !=null)
         {
          id = extras.getString("id");
@@ -146,7 +150,7 @@ public class EditPost extends Activity implements LocationListener{
 		if (width > 480){
 			isLargeScreen = true;
 		}
-		
+				
         if (isPage){  
         	setContentView(R.layout.edit_page);        }
         else{
@@ -301,18 +305,20 @@ public class EditPost extends Activity implements LocationListener{
         	
         	if (!isPage){
         		if (post.getCategories() != null) {
-        			categories = post.getCategories().toString();
+        			categories = post.getCategories();
         			if (!categories.equals("")){
 
-        				String[] aCategories = categories.split(",");
-
-        				for (int i=0; i < aCategories.length; i++)
+        				for (int i=0; i < categories.length(); i++)
         				{
-        					selectedCategories.add(aCategories[i]);
+        					try {
+                                selectedCategories.add(categories.getString(i));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
         				}
 
         				TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-        				tvCategories.setText("Selected categories: " + categories);
+        				tvCategories.setText(getResources().getText(R.string.selected_categories) + getCategoriesCSV());
 
         			}
         		}
@@ -372,147 +378,9 @@ public class EditPost extends Activity implements LocationListener{
 		    		EditText tagsET = (EditText) findViewById(R.id.tags);
 		    		tagsET.setText(tags);
 		    	}
-			
-			/*
-        	WordPressDB lDraftsDB = new WordPressDB(this);
-        	Vector<?> post;
-        	if (isPage){
-        		post = lDraftsDB.loadPageDraft(this, postID);
-        	}
-        	else{
-        		post = lDraftsDB.loadPost(this, postID);
-        	}
-        	
-        	final HashMap<?, ?> postHashMap = (HashMap<?, ?>) post.get(0);
-        	
-        	EditText titleET = (EditText)findViewById(R.id.title);
-        	EditText contentET = (EditText)findViewById(R.id.content);
-        	EditText passwordET = (EditText)findViewById(R.id.post_password);
-        	
-        	titleET.setText(postHashMap.get("title").toString());
-        	contentET.setText(Html.fromHtml(postHashMap.get("content").toString()));
-        	
-        	long pubDate = Long.parseLong(postHashMap.get("pubDate").toString());
-        	if (pubDate != 0){
-        		try {
-					Date date = new Date(pubDate);
-					SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a"); 
-					String sPubDate = sdf.format(date);
-					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
-					tvPubDate.setText(sPubDate);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-        	}
-        	
-        	if(postHashMap.get("password") != null)
-        		passwordET.setText(postHashMap.get("password").toString());
-	        
-        	if (postHashMap.get("status") != null){
-	        	String status = postHashMap.get("status").toString();
-	        	
-		        if (status.equals("publish")){
-		        	spinner.setSelection(0, true);
-		        }
-		        else if (status.equals("draft")){
-		        	spinner.setSelection(1, true);
-		        }
-		        else if (status.equals("pending")){
-		        	spinner.setSelection(2, true);
-		        }
-		        else if (status.equals("private")){
-		        	spinner.setSelection(3, true);
-		        }
-        	}
-        	
-        	String picturePaths = postHashMap.get("picturePaths").toString();
-        	if (!picturePaths.equals("")){
-        		String[] pPaths = picturePaths.split(",");
-        		
-        		for (int i = 0; i < pPaths.length; i++)
-        		{
-        			Uri imagePath = Uri.parse(pPaths[i]); 
-        			addMedia(imagePath.getEncodedPath(), imagePath);
-        		}
-        		
-        	}
-        	
-        	if (!isPage){
-        		
-		    	categories = postHashMap.get("categories").toString();
-		    	if (!categories.equals("")){
-		    		
-		    		String[] aCategories = categories.split(",");
-		    		
-		    		for (int i=0; i < aCategories.length; i++)
-		    		{
-		    			selectedCategories.add(aCategories[i]);
-		    		}
-		    		
-		    		TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-		    		tvCategories.setText("Selected categories: " + categories);
-		    		
-		    	}	
-	    		
-	    		if (blog.isLocation()){
-	    			enableLBSButtons();
-	    		}
-	    		
-	    		Double latitude = (Double) postHashMap.get("latitude");
-	    		Double longitude = (Double) postHashMap.get("longitude");
-
-	    		if (latitude != 0.0){
-	    			new getAddressTask().execute(latitude, longitude);
-	    		}
-	    		
-	    		if (blog.isLocation() && latitude > 0){
-	    			Button updateLocation = (Button) findViewById(R.id.updateLocation);
-	    			
-	    			updateLocation.setOnClickListener(new Button.OnClickListener() {
-	    	            public void onClick(View v) {
-	    	            	 
-	    	            	lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-	    		    		
-	    		    		lm.requestLocationUpdates(
-	    				            LocationManager.GPS_PROVIDER, 
-	    				            20000, 
-	    				            0, 
-	    				            editPost.this
-	    				    );
-	    					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
-	    					locationActive = true;
-	    	            }
-	    	        });
-	    			
-		    		RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-	            	locationSection.setVisibility(View.VISIBLE);
-	    		}
-	    		else if (blog.isLocation()){
-	    			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-		    		
-		    		lm.requestLocationUpdates(
-				            LocationManager.GPS_PROVIDER, 
-				            20000, 
-				            0, 
-				            editPost.this
-				    );
-					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, editPost.this);
-					locationActive = true;
-					
-					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-	            	locationSection.setVisibility(View.VISIBLE);
-	    		}
-		    	
-		    	String tags = postHashMap.get("tags").toString();
-		    	if (!tags.equals("")){
-		    		EditText tagsET = (EditText) findViewById(R.id.tags);
-		    		tagsET.setText(tags);
-		    	}
-        	}*/
         }
         
-        if ((localDraft || isNew) && !isPage){
+        if (!isPage){
         	Button selectCategories = (Button) findViewById(R.id.selectCategories);   
 	        
 	        selectCategories.setOnClickListener(new Button.OnClickListener() {
@@ -520,8 +388,8 @@ public class EditPost extends Activity implements LocationListener{
 	            	 
 	            	Bundle bundle = new Bundle();
 					bundle.putString("id", id);
-					if (categories != ""){
-					bundle.putString("categoriesCSV", categories);
+					if (categories.length() > 0){
+					bundle.putString("categoriesCSV", getCategoriesCSV());
 					}
 			    	Intent i = new Intent(EditPost.this, SelectCategories.class);
 			    	i.putExtras(bundle);
@@ -1308,9 +1176,14 @@ public class EditPost extends Activity implements LocationListener{
 		case 5:
 			extras = data.getExtras();
 			String cats = extras.getString("selectedCategories");
-			categories = cats;
+			String[] splitCats = cats.split(",");
+			categories = new JSONArray();
+			for (int i=0;i<splitCats.length;i++)
+			{
+			    categories.put(splitCats[i]);
+			}
 			TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + cats);
+			selectedCategoriesTV.setText(getResources().getText(R.string.selected_categories) + " " + getCategoriesCSV());
 	     	break;
 		case 6:
 			 
@@ -1493,7 +1366,7 @@ public class EditPost extends Activity implements LocationListener{
         	}
         
             if (isNew){
-            	post = new Post(id, title, content, images, pubDateTimestamp, categories, tags, status, password, latitude, longitude, isPage, EditPost.this);
+            	post = new Post(id, title, content, images, pubDateTimestamp, categories.toString(), tags, status, password, latitude, longitude, isPage, EditPost.this);
             	post.setLocalDraft(true);
             	success = post.save();
             }
@@ -1502,7 +1375,7 @@ public class EditPost extends Activity implements LocationListener{
             	post.setDescription(content);
             	post.setMediaPaths(images);
             	post.setDate_created_gmt(pubDateTimestamp);
-            	//post.setCategories(categories);
+            	post.setCategories(categories);
             	post.setMt_keywords(tags);
             	post.setPost_status(status);
             	post.setWP_password(password);
@@ -1886,6 +1759,21 @@ protected void lbsCheck() {
 		}
 	}
 
+}
+
+private String getCategoriesCSV() {
+    String csv = "";
+    if (categories.length() > 0){
+        for (int i=0;i<categories.length();i++){
+            try {
+                csv += categories.getString(i) + ",";
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        csv = csv.substring(0, csv.length() - 1);
+    }
+    return csv;
 }
 
 private DatePickerDialog.OnDateSetListener mDateSetListener =

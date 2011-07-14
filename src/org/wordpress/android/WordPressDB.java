@@ -822,13 +822,15 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("description", thisHash.get("description").toString());
 			values.put("link", thisHash.get("link").toString());
 			values.put("permaLink", thisHash.get("permaLink").toString());
+			values.put("categories", thisHash.get("categories").toString());
 			
-			Object[] cats = (Object[]) thisHash.get("categories");
+			Object[] categoriesArray = (Object[]) thisHash.get("categories");
 			JSONArray jsonArray = new JSONArray(); 
-			if (cats != null) { 
-			   for (int x=0;x<cats.length;x++){ 
-			    jsonArray.put(cats[x].toString());
-			} 
+			if (categoriesArray.length > 0)
+			{
+			    for (int x=0;x<categoriesArray.length;x++){ 
+	                jsonArray.put(categoriesArray[x].toString());
+			}
 			}
 			values.put("categories", jsonArray.toString());
 			
@@ -958,9 +960,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
 		if (loadPages)
-			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=1", null, null, null, null);
+			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=1", null, null, null, "postid DESC");
 		else
-			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=0", null, null, null, null);
+			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=0", null, null, null, "postid DESC");
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -995,7 +997,6 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		if (isPage)
 			pageInt = 1;
 		Cursor c = db.query(POSTS_TABLE, null, "blogID=" + blogID + " AND id=" + id + " AND isPage=" + pageInt, null, null, null, null);
-
 		c.moveToFirst();
 		
 		if (c.getString(0) != null){
