@@ -42,17 +42,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.Spanned;
 import android.text.TextWatcher;
-import android.text.Html.ImageGetter;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -152,7 +148,8 @@ public class EditPost extends Activity implements LocationListener{
 		}
 				
         if (isPage){  
-        	setContentView(R.layout.edit_page);        }
+        	setContentView(R.layout.edit_page);
+        }
         else{
         	setContentView(R.layout.edit);
         }
@@ -248,7 +245,12 @@ public class EditPost extends Activity implements LocationListener{
         	
         }
 		else{
-			
+		  //no upload now button for uploaded posts
+	        if (post.isUploaded()) {
+	            Button uploadNowButton = (Button) findViewById(R.id.cancel);  
+	            uploadNowButton.setVisibility(View.GONE);
+	        }
+	        
 			EditText titleET = (EditText)findViewById(R.id.title);
         	EditText contentET = (EditText)findViewById(R.id.content);
         	EditText passwordET = (EditText)findViewById(R.id.post_password);
@@ -408,12 +410,45 @@ public class EditPost extends Activity implements LocationListener{
         			Bundle bundle = new Bundle();                   
         			bundle.putString("returnStatus", "OK");
         			bundle.putLong("newID", post.getId());
+        			if (post.isUploaded())
+        			    bundle.putBoolean("upload", true);
         			Intent mIntent = new Intent();
         			mIntent.putExtras(bundle);
         			setResult(RESULT_OK, mIntent);
         			finish(); 
         		}
         	}
+        });
+        final Button uploadNowButton = (Button) findViewById(R.id.cancel);   
+        
+        uploadNowButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                boolean result = savePost();
+
+                if (result){
+                    Bundle bundle = new Bundle();
+                    if (isAction){
+                        Intent mIntent = new Intent(EditPost.this, TabView.class);
+                        bundle.putString("activateTab", "posts");
+                        bundle.putString("id", id);
+                        bundle.putLong("uploadID", post.getId());
+                        bundle.putString("accountName", accountName);
+                        bundle.putString("action", "upload");
+                        mIntent.putExtras(bundle);
+                        startActivity(mIntent);
+                    }
+                    else{
+                        bundle.putString("returnStatus", "OK");
+                        bundle.putBoolean("upload", true);
+                        bundle.putLong("newID", post.getId());
+                        Intent mIntent = new Intent();
+                        mIntent.putExtras(bundle);
+                        setResult(RESULT_OK, mIntent); 
+                    }
+
+                    finish();
+                }
+            }
         });
         
             final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);   
@@ -604,39 +639,6 @@ public class EditPost extends Activity implements LocationListener{
 
                 }
         });
-            
-            
-            final Button cancelButton = (Button) findViewById(R.id.cancel);   
-            
-            cancelButton.setOnClickListener(new Button.OnClickListener() {
-            	public void onClick(View v) {
-            		boolean result = savePost();
-
-            		if (result){
-            			Bundle bundle = new Bundle();
-            			if (isAction){
-            				Intent mIntent = new Intent(EditPost.this, TabView.class);
-            				bundle.putString("activateTab", "posts");
-            				bundle.putString("id", id);
-            				bundle.putLong("uploadID", post.getId());
-            				bundle.putString("accountName", accountName);
-            				bundle.putString("action", "upload");
-            				mIntent.putExtras(bundle);
-            				startActivity(mIntent);
-            			}
-            			else{
-            				bundle.putString("returnStatus", "OK");
-            				bundle.putBoolean("upload", true);
-            				bundle.putLong("newID", post.getId());
-            				Intent mIntent = new Intent();
-            				mIntent.putExtras(bundle);
-            				setResult(RESULT_OK, mIntent); 
-            			}
-
-            			finish();
-            		}
-            	}
-            });
             
             final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);   
             

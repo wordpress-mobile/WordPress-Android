@@ -903,7 +903,12 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
         values.put("uploaded", post.isUploaded());
 		values.put("isPage", post.isPage());
 		
-		returnValue = db.insert(POSTS_TABLE, null, values);
+		if (post.isUploaded()){
+		    returnValue = db.update(POSTS_TABLE, values, "blogID=" + blogID + " AND postid=" + post.getPostid(), null);
+		}
+		else {
+		    returnValue = db.insert(POSTS_TABLE, null, values);
+		}
 
 		db.close();
 		}
