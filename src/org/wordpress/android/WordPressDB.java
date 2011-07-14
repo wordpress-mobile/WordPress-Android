@@ -807,7 +807,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		if (postValues.size() != 0)
 		{
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-
+		db.delete(POSTS_TABLE, "blogID=" + blogID + " AND uploaded=1 AND isPage=" + ((isPage) ? 1 : 0), null);
 		for (int i = 0; i < postValues.size(); i++){
 			ContentValues values = new ContentValues();
 			HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
@@ -823,6 +823,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("link", thisHash.get("link").toString());
 			values.put("permaLink", thisHash.get("permaLink").toString());
 			values.put("categories", thisHash.get("categories").toString());
+			values.put("uploaded", true);
 			
 			Object[] categoriesArray = (Object[]) thisHash.get("categories");
 			JSONArray jsonArray = new JSONArray(); 
@@ -854,9 +855,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("post_status", thisHash.get((isPage) ? "page_status" : "post_status").toString());
 			values.put("userid", thisHash.get("userid").toString());
 			
-			int isPageInt = 0;
 			if (isPage) {
-			    isPageInt = 1;
 				values.put("isPage", true);
 				values.put("wp_page_parent_id", thisHash.get("wp_page_parent_id").toString());
 				values.put("wp_page_parent_title", thisHash.get("wp_page_parent_title").toString());
@@ -866,11 +865,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 				values.put("wp_post_format", thisHash.get("wp_post_format").toString());
 			}
 
-			int result = db.update(POSTS_TABLE, values, "postID=" + postID + " AND isPage=" + isPageInt, null);
-			if (result == 0)
-			    returnValue = db.insert(POSTS_TABLE, null, values) > 0;
-			else
-			    returnValue = true;
+			returnValue = db.insert(POSTS_TABLE, null, values) > 0;
+
 		}
 		db.close();
 		}

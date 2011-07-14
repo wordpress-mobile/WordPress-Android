@@ -922,14 +922,14 @@ public class ViewPosts extends ListActivity {
 
     private void deletePost() {
 
-        String selPostID = String.valueOf(selectedID);
+        Post post = new Post(id, selectedID, isPage, ViewPosts.this);
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog
                 .getHttppassword());
 
-        Object[] postParams = { "", selPostID, blog.getUsername(),
+        Object[] postParams = { "", post.getPostid(), blog.getUsername(),
                 blog.getPassword() };
         Object[] pageParams = { blog.getBlogId(), blog.getUsername(),
-                blog.getPassword(), selPostID };
+                blog.getPassword(), post.getPostid() };
 
         try {
             client.call((isPage) ? "wp.deletePage" : "blogger.deletePost",

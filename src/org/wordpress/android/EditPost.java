@@ -318,7 +318,7 @@ public class EditPost extends Activity implements LocationListener{
         				}
 
         				TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-        				tvCategories.setText(getResources().getText(R.string.selected_categories) + getCategoriesCSV());
+        				tvCategories.setText(getResources().getText(R.string.selected_categories) + " " + getCategoriesCSV());
 
         			}
         		}
