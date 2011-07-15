@@ -906,7 +906,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		values.put("longitude", post.getLongitude());
 		
 		if (post.isUploaded() || post.getId() > 0){
-		    returnValue = db.update(POSTS_TABLE, values, "blogID=" + blogID + " AND id=" + post.getId(), null);
+		    db.update(POSTS_TABLE, values, "blogID=" + blogID + " AND id=" + post.getId(), null);
+		    returnValue = -1;
 		}
 		else {
 		    returnValue = db.insert(POSTS_TABLE, null, values);

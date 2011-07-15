@@ -1355,12 +1355,9 @@ public class EditPost extends Activity implements LocationListener{
             if (blog.isLocation()){
             	         	
         		//attempt to get the device's location
-        		// set up the LocationManager
-            	
                 try {
-        			Location loc = lm.getLastKnownLocation(provider);
-        			latitude = loc.getLatitude();
-        			longitude = loc.getLongitude();
+        			latitude = curLocation.getLatitude();
+        			longitude = curLocation.getLongitude();
         		} catch (Exception e) {
         			e.printStackTrace();
         		}

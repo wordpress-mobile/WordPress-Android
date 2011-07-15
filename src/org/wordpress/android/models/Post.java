@@ -125,6 +125,8 @@ public Post(String blog_id, String title, String content, String picturePaths, l
     	this.mt_keywords = tags;
     	this.post_status = status;
     	this.wp_password = password;
+    	this.latitude = latitude;
+    	this.longitude = longitude;
     	this.isPage = isPage;
     }
     
@@ -523,9 +525,9 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 				contentStruct.put((post.isPage) ? "page_status" : "post_status", post.post_status);
 				Double latitude = 0.0;
 				Double longitude = 0.0;
-				if (!post.isPage) {
-					latitude = (Double) latitude;
-					longitude = (Double) longitude;
+				if (!post.isPage && post.getLatitude() > 0) {
+					latitude = post.getLatitude();
+					longitude = post.getLongitude();
 
 					if (latitude > 0) {
 						HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
