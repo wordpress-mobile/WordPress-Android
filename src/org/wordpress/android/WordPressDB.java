@@ -902,9 +902,11 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		values.put("post_status", post.getPost_status());
         values.put("uploaded", post.isUploaded());
 		values.put("isPage", post.isPage());
+		values.put("latitude", post.getLatitude());
+		values.put("longitude", post.getLongitude());
 		
-		if (post.isUploaded()){
-		    returnValue = db.update(POSTS_TABLE, values, "blogID=" + blogID + " AND postid=" + post.getPostid(), null);
+		if (post.isUploaded() || post.getId() > 0){
+		    returnValue = db.update(POSTS_TABLE, values, "blogID=" + blogID + " AND id=" + post.getId(), null);
 		}
 		else {
 		    returnValue = db.insert(POSTS_TABLE, null, values);
