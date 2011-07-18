@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AlertUtil;
 
 import android.app.Activity;
 import android.content.Context;
@@ -116,7 +119,10 @@ public class ApiHelper extends Activity {
     	boolean isPage, loadMore;
 
 		protected void onPostExecute(Object[] result) {
-			if (result.length > 0) {
+		    if (result == null) {
+		        AlertUtil.showAlert(ctx, R.string.connection_error,R.string.connection_error_occured);
+		    }
+		    else if (result.length > 0) {
 				HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 				Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 				WordPressDB postStoreDB = new WordPressDB(ctx);
@@ -162,6 +168,45 @@ public class ApiHelper extends Activity {
 		}
 
 	}
+    
+public static class getPostFormatsTask extends AsyncTask<Vector, Void, Object> {
+        
+        Context ctx;
+        Blog blog;
+        boolean isPage, loadMore;
+
+        protected void onPostExecute(Object result) {
+            try {
+                HashMap postFormats = (HashMap) result;
+                JSONObject jsonPostFormats = new JSONObject(postFormats);
+                blog.setPostFormats(jsonPostFormats.toString());
+                blog.save(ctx, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Object doInBackground(Vector... args) {
+            
+            Vector arguments = args[0];
+            blog = (Blog) arguments.get(0);
+            ctx = (Context) arguments.get(1);
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+
+            Object result = null;
+            Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), "show-supported" };
+            try {
+                result = (Object) client.call("wp.getPostFormats", params);
+            } catch (XMLRPCException e) {
+                e.printStackTrace();
+            }
+            
+            return result;
+
+        }
+
+    }
     
 }
 
