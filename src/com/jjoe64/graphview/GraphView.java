@@ -453,7 +453,7 @@ public class GraphView extends LinearLayout {
 	 * this forces scrollable = true
 	 * @param scalable
 	 */
-	public void setScalable(boolean scalable) {
+	synchronized public void setScalable(boolean scalable) {
 		this.scalable = scalable;
 		if (scalable == true && scaleDetector == null) {
 			scrollable = true; // automatically forces this
@@ -464,6 +464,25 @@ public class GraphView extends LinearLayout {
 					double diff = newSize-viewportSize;
 					viewportStart += diff/2;
 					viewportSize -= diff;
+					if (diff < 0) {
+						// viewportStart must not be < minX
+						if (viewportStart < values[0].valueX) {
+							viewportStart = values[0].valueX;
+						}
+
+						// viewportStart + viewportSize must not be > maxX
+						double overlap = viewportStart + viewportSize - values[values.length-1].valueX;
+						if (overlap > 0) {
+							// scroll left
+							if (viewportStart-overlap > values[0].valueX) {
+								viewportStart -= overlap;
+							} else {
+								// maximal scale
+								viewportStart = values[0].valueX;
+								viewportSize = values[values.length-1].valueX - viewportStart;
+							}
+						}
+					}
 					verlabels = null;
 					horlabels = null;
 					numberformatter = null;
