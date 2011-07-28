@@ -18,7 +18,7 @@ public class GraphViewDemo extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		GraphView graphView = new GraphView(
+		LineGraphView graphView = new LineGraphView(
 				this
 				, new GraphViewData[] {
 						new GraphViewData(1, 2.0d)

@@ -16,9 +16,13 @@ import android.widget.LinearLayout;
 import com.jjoe64.graphview.compatible.ScaleGestureDetector;
 
 /**
- * GraphView creates a scaled line graph with x and y axis labels.
+ * GraphView is a Android View for creating zoomable and scrollable graphs.
+ * This is the abstract base class for all graphs. Extend this class and implement {@link #drawData(Canvas, float, float, float, double, double, double, double, float)} to display a custom graph.
+ * Use {@link LineGraphView} for creating a line chart.
+ *
+ * @author jjoe64 - jonas gehring - http://www.jjoe64.com
  */
-public class GraphView extends LinearLayout {
+abstract public class GraphView extends LinearLayout {
 	static final private class GraphViewConfig {
 		static final float BORDER = 20;
 		static final float VERTICAL_LABEL_WIDTH = 100;
@@ -98,70 +102,7 @@ public class GraphView extends LinearLayout {
 				paint.setStrokeCap(Paint.Cap.ROUND);
 				paint.setStrokeWidth(3);
 
-				GraphViewData[] values = _values();
-
-				// draw background
-				double lastEndY = 0;
-				double lastEndX = 0;
-				if (drawBackground) {
-					float startY = graphheight + border;
-					for (int i = 0; i < values.length; i++) {
-						double valY = values[i].valueY - minY;
-						double ratY = valY / diffY;
-						double y = graphheight * ratY;
-
-						double valX = values[i].valueX - minX;
-						double ratX = valX / diffX;
-						double x = graphwidth * ratX;
-
-						float endX = (float) x + (horstart + 1);
-						float endY = (float) (border - y) + graphheight +2;
-
-						if (i > 0) {
-							// fill space between last and current point
-							int numSpace = (int) ((endX - lastEndX) / 3f) +1;
-							for (int xi=0; xi<numSpace; xi++) {
-								float spaceX = (float) (lastEndX + ((endX-lastEndX)*xi/(numSpace-1)));
-								float spaceY = (float) (lastEndY + ((endY-lastEndY)*xi/(numSpace-1)));
-
-								// start => bottom edge
-								float startX = spaceX;
-
-								// do not draw over the left edge
-								if (startX-horstart > 1) {
-									canvas.drawLine(startX, startY, spaceX, spaceY, paintBackground);
-								}
-							}
-						}
-
-						lastEndY = endY;
-						lastEndX = endX;
-					}
-				}
-
-				// draw data
-				lastEndY = 0;
-				lastEndX = 0;
-				for (int i = 0; i < values.length; i++) {
-					double valY = values[i].valueY - minY;
-					double ratY = valY / diffY;
-					double y = graphheight * ratY;
-
-					double valX = values[i].valueX - minX;
-					double ratX = valX / diffX;
-					double x = graphwidth * ratX;
-
-					if (i > 0) {
-						float startX = (float) lastEndX + (horstart + 1);
-						float startY = (float) (border - lastEndY) + graphheight;
-						float endX = (float) x + (horstart + 1);
-						float endY = (float) (border - y) + graphheight;
-
-						canvas.drawLine(startX, startY, endX, endY, paint);
-					}
-					lastEndY = y;
-					lastEndX = x;
-				}
+				drawData(canvas, graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart);
 			}
 		}
 
@@ -270,13 +211,11 @@ public class GraphView extends LinearLayout {
 		}
 	}
 
-	private final Paint paint;
-	private final Paint paintBackground;
+	protected final Paint paint;
 	private GraphViewData[] values;
 	private String[] horlabels;
 	private String[] verlabels;
 	private String title;
-	private boolean drawBackground;
 	private boolean scrollable;
 	private double viewportStart;
 	private double viewportSize;
@@ -310,16 +249,13 @@ public class GraphView extends LinearLayout {
 		this.verlabels = verlabels;
 
 		paint = new Paint();
-		paintBackground = new Paint();
-		paintBackground.setARGB(255, 20, 40, 60);
-		paintBackground.setStrokeWidth(4);
 
 		viewVerLabels = new VerLabelsView(context);
 		addView(viewVerLabels);
 		addView(new GraphViewContentView(context), new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
 	}
 
-	private GraphViewData[] _values() {
+	protected GraphViewData[] _values() {
 		if (viewportStart == 0 && viewportSize == 0) {
 			// all data
 			return values;
@@ -344,6 +280,8 @@ public class GraphView extends LinearLayout {
 			return listData.toArray(new GraphViewData[listData.size()]);
 		}
 	}
+
+	abstract public void drawData(Canvas canvas, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart);
 
 	/**
 	 * formats the label
@@ -394,10 +332,6 @@ public class GraphView extends LinearLayout {
 		return labels;
 	}
 
-	public boolean getDrawBackground() {
-		return drawBackground;
-	}
-
 	private double getMaxX() {
 		// if viewport is set, use this
 		if (viewportSize != 0) {
@@ -440,13 +374,6 @@ public class GraphView extends LinearLayout {
 
 	public boolean isScrollable() {
 		return scrollable;
-	}
-
-	/**
-	 * @param drawBackground true for a light blue background under the graph line
-	 */
-	public void setDrawBackground(boolean drawBackground) {
-		this.drawBackground = drawBackground;
 	}
 
 	/**
