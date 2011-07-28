@@ -56,6 +56,6 @@ layout.addView(graphView);
 <h2>Important</h2>
 To show you how to integrate the library into an existing project see the GraphView-Demos project!
 See GraphView-Demos for examples.
-<a href="https://github.com/jjoe64/GraphView-Demos">https://github.com/jjoe64/GraphView-Demos</a><br/>
+<a href="https://github.com/jjoe64/GraphView-Demos">https://github.com/jjoe64/GraphView-Demos<br/>
 <a href="http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html">http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html</a>
 
