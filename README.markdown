@@ -2,9 +2,7 @@ Chart and Graph Library for Android
 ====================================
 
 <h2>What is GraphView</h2>
-GraphView is a small library for Android to programmatically create flexible and nice-looking line diagramms. It is easy to understand, to integrate and to customize it.
-
-GraphView was originally created by arnodenhond, but I did a complete remake and so now I can say it is "my" library ;-)
+GraphView is a library for Android to programmatically create flexible and nice-looking diagramms. It is easy to understand, to integrate and to customize it.
 
 Tested on Android 1.6, 2.2, 2.3 and 3.0 (honeycomb, tablet).
 
@@ -29,8 +27,8 @@ Since Android 2.3! With two-fingers touch scale gesture, the viewport can be cha
 <a href="http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html">http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html</a>
 
 <pre>
-// graph with dynamically genereated horizontal and vertical labels
-GraphView graphView = new GraphView(
+// line graph with dynamically genereated horizontal and vertical labels
+LineGraphView graphView = new LineGraphView(
   this // context
   , new GraphViewData[] {
     new GraphViewData(1, 2.0d)
