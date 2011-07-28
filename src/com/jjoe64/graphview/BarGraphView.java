@@ -3,6 +3,10 @@ package com.jjoe64.graphview;
 import android.content.Context;
 import android.graphics.Canvas;
 
+/**
+ * Draws a Bar Chart
+ * @author Muhammad Shahab Hameed
+ */
 public class BarGraphView extends GraphView {
 	public BarGraphView(Context context, GraphViewData[] values, String title,
 			String[] horlabels, String[] verlabels) {
