@@ -4,8 +4,10 @@ Chart and Graph Library for Android
 <h2>What is GraphView</h2>
 GraphView is a library for Android to programmatically create flexible and nice-looking diagramms. It is easy to understand, to integrate and to customize it.
 At the moment there are two different types:
-* Line Charts
-* Bar Charts
+<ul>
+<li>Line Charts</li>
+<li>Bar Charts</li>
+</ul>
 
 Tested on Android 1.6, 2.2, 2.3 and 3.0 (honeycomb, tablet).
 
@@ -14,6 +16,7 @@ Tested on Android 1.6, 2.2, 2.3 and 3.0 (honeycomb, tablet).
 
 <h2>Features</h2>
 
+* Two types: Line and Bar
 * Custom labels
 The labels for the x- and y-axis are generated automatically. But you can set your only labels, Strings are possible.
 * Background
@@ -53,6 +56,6 @@ layout.addView(graphView);
 <h2>Important</h2>
 To show you how to integrate the library into an existing project see the GraphView-Demos project!
 See GraphView-Demos for examples.
-<a href="https://github.com/jjoe64/GraphView-Demos">https://github.com/jjoe64/GraphView-Demos</a>
+<a href="https://github.com/jjoe64/GraphView-Demos">https://github.com/jjoe64/GraphView-Demos</a><br/>
 <a href="http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html">http://www.jjoe64.com/2011/07/chart-and-graph-library-for-android.html</a>
 
