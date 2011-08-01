@@ -10,6 +10,9 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
  *
  * IMPORTANT: For examples take a look at GraphView-Demos (https://github.com/jjoe64/GraphView-Demos)
  *
+ * Copyright (C) 2011 Jonas Gehring
+ * Licensed under the GNU Lesser General Public License (LGPL)
+ * http://www.gnu.org/licenses/lgpl.html
  */
 public class GraphViewDemo extends Activity {
 	/**

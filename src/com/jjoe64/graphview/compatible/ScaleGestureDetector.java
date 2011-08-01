@@ -7,6 +7,11 @@ import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/**
+ * Copyright (C) 2011 Jonas Gehring
+ * Licensed under the GNU Lesser General Public License (LGPL)
+ * http://www.gnu.org/licenses/lgpl.html
+ */
 public class ScaleGestureDetector {
 	public interface SimpleOnScaleGestureListener {
 		boolean onScale(ScaleGestureDetector detector);
