@@ -33,6 +33,7 @@ public class Blog {
 	private String httpuser;
 	private String httppassword;
 	private WordPressDB db;
+	private String postFormats;
 	
 	public Blog(String blog_id, Context ctx){
 		//instantiate a new blog
@@ -68,6 +69,7 @@ public class Blog {
 				this.api_blogid = blogVals.get(18).toString();
 			if (blogVals.get(19) != null)
 				this.wpVersion = blogVals.get(19).toString();
+			//this.postFormats = blogVals.get(20).toString();
 		}		
 	}
 
@@ -249,13 +251,16 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-        
-		
-		db.saveSettings(ctx, String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername);
-        
-        
-		
+        db.saveSettings(ctx, String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername);
 	}
+
+    public String getPostFormats() {
+        return postFormats;
+    }
+
+    public void setPostFormats(String postFormats) {
+        this.postFormats = postFormats;
+    }
 	
 	
 	

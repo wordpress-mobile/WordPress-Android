@@ -16,11 +16,9 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import org.wordpress.android.R;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.StringHelper;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -40,20 +38,20 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.Xml;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -62,6 +60,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ViewPosts extends ListActivity {
     /** Called when the activity is first created. */
@@ -99,10 +98,132 @@ public class ViewPosts extends ListActivity {
         if (extras != null) {
             id = extras.getString("id");
             blog = new Blog(id, this);
-            accountName = extras.getString("accountName");
             isPage = extras.getBoolean("viewPages");
             action = extras.getString("action");
         }
+        
+        TextView blogname = (TextView) findViewById(R.id.blogname);
+		blogname.setText(blog.getBlogName());
+        ImageButton home = (ImageButton) findViewById(R.id.home_small);
+		ImageButton add = (ImageButton) findViewById(R.id.add_small);
+		
+		home.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, wpAndroid.class);		
+				startActivity(i);
+			}
+		});
+				
+		final ActionItem newpost = new ActionItem();
+		
+		newpost.setTitle("Add New Post");
+		newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
+		newpost.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);				
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		
+		final ActionItem newpage = new ActionItem();
+		
+		newpage.setTitle("Add New Page");
+		newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
+		newpage.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				i.putExtra("isPage", true);
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		
+		final ActionItem addOldPhoto = new ActionItem();
+		addOldPhoto.setTitle("Add Image From Gallery");
+		addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
+		addOldPhoto.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "photoPicker");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		
+		final ActionItem takeNewPhoto = new ActionItem();
+		takeNewPhoto.setTitle("Take Photo");
+		takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
+		takeNewPhoto.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "takePhotoFromCamera");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		final ActionItem addOldVideo = new ActionItem();
+		addOldVideo.setTitle("Add Video from Gallery");
+		addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
+		addOldVideo.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "videoPicker");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		final ActionItem takeNewVideo = new ActionItem();
+		takeNewVideo.setTitle("Take Video");
+		takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
+		takeNewVideo.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewPosts.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "takeVideo");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		add.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+
+				QuickAction qa = new QuickAction(v);				
+				qa.addActionItem(newpost);
+				qa.addActionItem(newpage);
+				qa.addActionItem(addOldPhoto);
+				qa.addActionItem(takeNewPhoto);
+				qa.addActionItem(addOldVideo);
+				qa.addActionItem(takeNewVideo);
+				qa.setAnimStyle(QuickAction.ANIM_AUTO);				
+				qa.show();
+			}
+		});	
 
         createSwitcher();
 
@@ -164,9 +285,7 @@ public class ViewPosts extends ListActivity {
 
         refresh.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-
                 refreshPosts(false);
-
             }
         });
 
@@ -302,7 +421,7 @@ public class ViewPosts extends ListActivity {
                     .toArray(new String[newDateFormattedList.size()]);
         }
         // load drafts
-        boolean drafts = loadDrafts();
+        /*boolean drafts = loadDrafts();
 
         if (drafts) {
 
@@ -335,9 +454,13 @@ public class ViewPosts extends ListActivity {
             if (pla != null) {
                 pla.notifyDataSetChanged();
             }
+        }*/
+        
+        if (pla != null) {
+            pla.notifyDataSetChanged();
         }
-
-        if (loadedPosts != null || drafts == true) {
+        
+        if (loadedPosts != null) {
             ListView listView = (ListView) findViewById(android.R.id.list);
 
             if (!isPage) {
@@ -501,42 +624,6 @@ public class ViewPosts extends ListActivity {
                 date = (TextView) base.findViewById(R.id.date);
             }
             return (date);
-        }
-    }
-
-    private boolean loadDrafts() { // loads drafts from the db
-
-        WordPressDB lDraftsDB = new WordPressDB(this);
-        Vector<?> loadedPosts;
-        if (isPage) {
-            loadedPosts = lDraftsDB.loadDrafts(ViewPosts.this, id, true);
-        } else {
-            loadedPosts = lDraftsDB.loadDrafts(ViewPosts.this, id, false);
-        }
-        if (loadedPosts != null) {
-            draftIDs = new String[loadedPosts.size()];
-            draftTitles = new String[loadedPosts.size()];
-            publish = new String[loadedPosts.size()];
-            uploaded = new Integer[loadedPosts.size()];
-            totalDrafts = loadedPosts.size();
-
-            for (int i = 0; i < loadedPosts.size(); i++) {
-                HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
-                draftIDs[i] = contentHash.get("id").toString();
-                draftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
-                        "title").toString());
-                if (contentHash.get("status") != null) {
-                    publish[i] = contentHash.get("status").toString();
-                } else {
-                    publish[i] = "";
-                }
-                uploaded[i] = (Integer) contentHash.get("uploaded");
-            }
-
-            return true;
-        } else {
-            totalDrafts = 0;
-            return false;
         }
     }
 
@@ -714,8 +801,7 @@ public class ViewPosts extends ListActivity {
             switch (item.getItemId()) {
             case 0:
                 Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
-                Post post = new Post(id, selectedID, isPage, ViewPosts.this);
-                i0.putExtra("postID", post.getPostid());
+                i0.putExtra("postID", selectedID);
                 i0.putExtra("id", id);
                 i0.putExtra("accountName", accountName);
                 startActivity(i0);
@@ -922,14 +1008,14 @@ public class ViewPosts extends ListActivity {
 
     private void deletePost() {
 
-        Post post = new Post(id, selectedID, isPage, ViewPosts.this);
+        String selPostID = String.valueOf(selectedID);
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog
                 .getHttppassword());
 
-        Object[] postParams = { "", post.getPostid(), blog.getUsername(),
+        Object[] postParams = { "", selPostID, blog.getUsername(),
                 blog.getPassword() };
         Object[] pageParams = { blog.getBlogId(), blog.getUsername(),
-                blog.getPassword(), post.getPostid() };
+                blog.getPassword(), selPostID };
 
         try {
             client.call((isPage) ? "wp.deletePage" : "blogger.deletePost",

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -78,10 +79,12 @@ import android.widget.ToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
+import org.xmlrpc.android.ApiHelper;
 
 public class EditPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
@@ -152,6 +155,36 @@ public class EditPost extends Activity implements LocationListener{
         }
         else{
         	setContentView(R.layout.edit);
+/*        	if (blog.getPostFormats().equals("")) {
+                Vector args = new Vector();
+                args.add(blog);
+                args.add(this);
+                new ApiHelper.getPostFormatsTask().execute(args);
+            }
+            else {
+                try {
+                    JSONObject jsonPostFormats = new JSONObject(blog.getPostFormats());
+                    String[] postFormats = new String[jsonPostFormats.length()];
+                    String[] postFormatTitles = new String[jsonPostFormats.length()];
+                    Iterator it = jsonPostFormats.keys();
+                    int i = 0;
+                    while (it.hasNext()) {
+                      String key = (String) it.next();
+                      String val = (String)jsonPostFormats.get(key);
+                      postFormats[i] = key;
+                      postFormatTitles[i] = val;
+                      i++;
+                    }
+                    Spinner pfSpinner = (Spinner) findViewById(R.id.postFormat);
+                    ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(this,
+                                android.R.layout.simple_spinner_item, postFormatTitles);
+                    pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    pfSpinner.setAdapter(pfAdapter);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }*/
         }
         
         String[] items = new String[] {getResources().getString(R.string.publish_post), getResources().getString(R.string.draft), getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};

@@ -9,11 +9,9 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import org.json.JSONObject;
-import org.wordpress.android.R;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AlertUtil;
 
 import android.app.Activity;
 import android.content.Context;
@@ -118,30 +116,33 @@ public class ApiHelper extends Activity {
     	Blog blog;
     	boolean isPage, loadMore;
 
-		protected void onPostExecute(Object[] result) {
-		    if (result == null) {
-		        AlertUtil.showAlert(ctx, R.string.connection_error,R.string.connection_error_occured);
-		    }
-		    else if (result.length > 0) {
-				HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-				Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
-				WordPressDB postStoreDB = new WordPressDB(ctx);
+        protected void onPostExecute(Object[] result) {
+            if (result != null) {
+                if (result.length > 0) {
+                    HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+                    Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+                    WordPressDB postStoreDB = new WordPressDB(ctx);
 
-				for (int ctr = 0; ctr < result.length; ctr++) {
-					HashMap<String, Object> dbValues = new HashMap<String, Object>();
-					contentHash = (HashMap)result[ctr];
-					dbValues.put("blogID", blog.getBlogId());
-					dbVector.add(ctr, contentHash);
-				}
+                    // loop this!
+                    for (int ctr = 0; ctr < result.length; ctr++) {
+                        HashMap<String, Object> dbValues = new HashMap<String, Object>();
+                        contentHash = (HashMap) result[ctr];
+                        dbValues.put("blogID", blog.getBlogId());
+                        dbVector.add(ctr, contentHash);
+                    }// end for loop
 
-				postStoreDB.savePosts(ctx, dbVector, String.valueOf(blog.getId()), isPage);
-				((ViewPosts) ctx).numRecords += 20;
-				if (loadMore)
-				    ((ViewPosts) ctx).switcher.showPrevious();
-				((ViewPosts) ctx).loadPosts(loadMore);
-		}
-			((ViewPosts) ctx).closeProgressBar();
-		}
+                    postStoreDB.savePosts(ctx, dbVector, String.valueOf(blog.getId()), isPage);
+                    ((ViewPosts) ctx).numRecords += 20;
+                    if (loadMore)
+                        ((ViewPosts) ctx).switcher.showPrevious();
+                    ((ViewPosts) ctx).loadPosts(loadMore);
+                }
+                ((ViewPosts) ctx).closeProgressBar();
+            } else {
+                ((ViewPosts) ctx).closeProgressBar();
+            }
+        }
+		
 
 		@Override
 		protected Object[] doInBackground(Vector... args) {

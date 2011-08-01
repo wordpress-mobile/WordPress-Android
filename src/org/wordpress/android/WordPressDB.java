@@ -91,9 +91,14 @@ public class WordPressDB {
 	private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
 	private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
 	
+	//add field to store last used blog
+    private static final String ADD_LAST_BLOG_ID = "alter table eula add last_blog_id text;";
+	
 	private SQLiteDatabase db;
 	
 	protected static final String PASSWORD_SECRET = "nottherealpasscode";
+	
+	public String defaultBlog = "";
 
 	public WordPressDB(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
@@ -127,6 +132,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
@@ -150,6 +156,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
@@ -171,6 +178,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); 
 			}
@@ -189,6 +197,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); 
 			}
@@ -207,6 +216,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -224,6 +234,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -239,6 +250,7 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -246,18 +258,21 @@ public class WordPressDB {
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 8){
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
 			else if (db.getVersion() == 9){
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
+                db.execSQL(ADD_LAST_BLOG_ID);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -308,11 +323,13 @@ public class WordPressDB {
 					// didn't work, that's ok.
 				}
 				
-				db.setVersion(DATABASE_VERSION);
+				db.execSQL(ADD_LAST_BLOG_ID);
+		        db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		db.close();
 	}
 
@@ -699,7 +716,7 @@ public class WordPressDB {
 	}
 	
 	public String getInterval(Context ctx) {
-db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+	    db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query("eula", new String[] { "interval" }, "id=0", null, null, null, null);
 		int numRows = c.getCount();
@@ -751,6 +768,34 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		return thisHash;
 	}
 
+	public void updateLastBlogID(Context ctx, int blogID ) {
+        db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+        ContentValues values = new ContentValues();
+        values.put("last_blog_id", blogID);
+
+        db.update("eula", values, null, null);
+
+        db.close();
+        
+    }
+	
+	public int getLastBlogID(Context ctx) {
+        db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+        int returnValue = -1;
+        Cursor c = db.query("eula", new String[] { "last_blog_id" }, "id=0", null, null, null, null);
+        int numRows = c.getCount();
+        c.moveToFirst();
+        if (numRows == 1){
+            if (c.getString(0) != null){
+            returnValue = c.getInt(0);
+            }
+        }
+        c.close();
+        db.close();
+
+        return returnValue;
+    }
+	
 	public Vector<HashMap<String, Object>> loadDrafts(Context ctx, String blogID, boolean loadPages) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
@@ -807,7 +852,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		if (postValues.size() != 0)
 		{
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		db.delete(POSTS_TABLE, "blogID=" + blogID + " AND uploaded=1 AND isPage=" + ((isPage) ? 1 : 0), null);
+
 		for (int i = 0; i < postValues.size(); i++){
 			ContentValues values = new ContentValues();
 			HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
@@ -822,16 +867,13 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("description", thisHash.get("description").toString());
 			values.put("link", thisHash.get("link").toString());
 			values.put("permaLink", thisHash.get("permaLink").toString());
-			values.put("categories", thisHash.get("categories").toString());
-			values.put("uploaded", true);
 			
-			Object[] categoriesArray = (Object[]) thisHash.get("categories");
+			Object[] cats = (Object[]) thisHash.get("categories");
 			JSONArray jsonArray = new JSONArray(); 
-			if (categoriesArray.length > 0)
-			{
-			    for (int x=0;x<categoriesArray.length;x++){ 
-	                jsonArray.put(categoriesArray[x].toString());
-			}
+			if (cats != null) { 
+			   for (int x=0;x<cats.length;x++){ 
+			    jsonArray.put(cats[x].toString());
+			} 
 			}
 			values.put("categories", jsonArray.toString());
 			
@@ -855,7 +897,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 			values.put("post_status", thisHash.get((isPage) ? "page_status" : "post_status").toString());
 			values.put("userid", thisHash.get("userid").toString());
 			
+			int isPageInt = 0;
 			if (isPage) {
+			    isPageInt = 1;
 				values.put("isPage", true);
 				values.put("wp_page_parent_id", thisHash.get("wp_page_parent_id").toString());
 				values.put("wp_page_parent_title", thisHash.get("wp_page_parent_title").toString());
@@ -865,8 +909,11 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 				values.put("wp_post_format", thisHash.get("wp_post_format").toString());
 			}
 
-			returnValue = db.insert(POSTS_TABLE, null, values) > 0;
-
+			int result = db.update(POSTS_TABLE, values, "postID=" + postID + " AND isPage=" + isPageInt, null);
+			if (result == 0)
+			    returnValue = db.insert(POSTS_TABLE, null, values) > 0;
+			else
+			    returnValue = true;
 		}
 		db.close();
 		}
@@ -902,16 +949,8 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		values.put("post_status", post.getPost_status());
         values.put("uploaded", post.isUploaded());
 		values.put("isPage", post.isPage());
-		values.put("latitude", post.getLatitude());
-		values.put("longitude", post.getLongitude());
 		
-		if (post.isUploaded() || post.getId() > 0){
-		    db.update(POSTS_TABLE, values, "blogID=" + blogID + " AND id=" + post.getId(), null);
-		    returnValue = -1;
-		}
-		else {
-		    returnValue = db.insert(POSTS_TABLE, null, values);
-		}
+		returnValue = db.insert(POSTS_TABLE, null, values);
 
 		db.close();
 		}
@@ -964,9 +1003,9 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
 		if (loadPages)
-			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=1", null, null, null, "postid DESC");
+			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=1", null, null, null, null);
 		else
-			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=0", null, null, null, "postid DESC");
+			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid", "title", "date_created_gmt", "dateCreated"}, "blogID=" + blogID + " AND localDraft != 1 AND isPage=0", null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -1001,6 +1040,7 @@ db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		if (isPage)
 			pageInt = 1;
 		Cursor c = db.query(POSTS_TABLE, null, "blogID=" + blogID + " AND id=" + id + " AND isPage=" + pageInt, null, null, null, null);
+
 		c.moveToFirst();
 		
 		if (c.getString(0) != null){

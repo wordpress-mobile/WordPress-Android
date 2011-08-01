@@ -140,7 +140,6 @@
         android:layout_below="@id/l_media"
         android:textSize="20dip"
         android:text="@string/add" />
-
       <Button
         android:id="@+id/clearPicture"
         android:background="@drawable/wp_button_small"
@@ -299,6 +298,13 @@
         android:layout_toRightOf="@id/pubDate"
         android:text="@string/edit"
         android:layout_marginLeft="2dip" />
+      <Spinner
+        android:id="@+id/postFormat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wp_spinner_bg"
+        android:layout_below="@id/pubDateButton"
+        android:prompt="@string/save" />
       <EditText
         android:id="@+id/post_password"
         android:minHeight="40dip"
@@ -307,7 +313,7 @@
         android:background="@android:drawable/editbox_background"
         android:autoText="true"
         android:hint="@string/post_password"
-        android:layout_below="@id/pubDateButton"
+        android:layout_below="@id/postFormat"
         android:layout_marginBottom="10dip"
         android:password="true" />
     </RelativeLayout>

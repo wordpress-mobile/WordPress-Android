@@ -59,6 +59,7 @@
     </style>
     
     <style name="WordPress" parent="@android:style/Theme.Light">
+    	<item name="android:windowNoTitle">true</item>
     	<item name="android:textViewStyle">@style/WordPressTextAppearance</item> 
     	<item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
     	<item name="android:buttonStyle">@style/WordPressButtonAppearance</item> 
@@ -94,6 +95,7 @@
     
     <style name="Theme.TabView">
     <item name="android:windowBackground">@drawable/screen_background_black</item>
+    	<item name="android:windowNoTitle">true</item>
     	<item name="android:progressBarStyle">@android:style/Widget.ProgressBar</item>
         <item name="android:progressBarStyleHorizontal">@android:style/Widget.ProgressBar.Horizontal</item>
         <item name="android:progressBarStyleSmall">@android:style/Widget.ProgressBar.Small</item>
@@ -122,6 +124,56 @@
    <style name="WindowTitleBackground">     
         <item name="android:background">@drawable/title_bar_gradient</item>  
         <item name="android:paddingLeft">4dip</item>                 
+    </style>
+    
+    <style name="Animations" />
+
+	<!-- PopDownMenu -->
+	<style name="Animations.PopDownMenu" />
+	
+	<style name="Animations.PopDownMenu.Left">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_topleft_to_bottomright</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomright_to_topleft</item>
+	</style>
+	
+	<style name="Animations.PopDownMenu.Right">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_topright_to_bottomleft</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottomleft_to_topright</item>
+	</style>
+	
+	<style name="Animations.PopDownMenu.Center">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_bottom</item>
+	</style>
+	
+	<!-- PopUpMenu -->
+	<style name="Animations.PopUpMenu" />
+	
+	<style name="Animations.PopUpMenu.Left">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottomleft_to_topright</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_topright_to_bottomleft</item>
+	</style>
+	
+	<style name="Animations.PopUpMenu.Right">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottomright_to_topleft</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_topleft_to_bottomright</item>
+	</style>
+	
+	<style name="Animations.PopUpMenu.Center">
+		<item name="@android:windowEnterAnimation">@anim/grow_from_bottom</item>
+		<item name="@android:windowExitAnimation">@anim/shrink_from_top</item>
+	</style>
+  
+  <style name="DashboardButton">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:textSize">12dip</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#464646</item>
+        <item name="android:background">@null</item>
     </style>
 
 </resources>

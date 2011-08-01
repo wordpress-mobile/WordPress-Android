@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionCode="33" android:versionName="1.4.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionCode="33" android:versionName="1.5 Alpha">
 	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true" android:debuggable="true">
@@ -49,6 +49,8 @@
 		</activity>
 <activity android:name="AddAcountSettings"></activity>
 <activity android:name="ViewPosts"></activity>
+<activity android:name="Dashboard"></activity>
+<activity android:name="ViewDrafts"></activity>
 </application>
 
 	<supports-screens android:smallScreens="true"

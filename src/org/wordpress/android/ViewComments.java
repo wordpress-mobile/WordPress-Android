@@ -97,11 +97,133 @@ public class ViewComments extends ListActivity {
 		{
 			id = extras.getString("id");
 			blog = new Blog(id, this);
-			accountName = extras.getString("accountName");
 			pd = new ProgressDialog(this);
 			fromNotification = extras.getBoolean("fromNotification", false);       		
 		}      
 
+		TextView blogname = (TextView) findViewById(R.id.blogname);
+		blogname.setText(blog.getBlogName());
+
+        ImageButton home = (ImageButton) findViewById(R.id.home_small);
+		ImageButton add = (ImageButton) findViewById(R.id.add_small);
+		
+		home.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, wpAndroid.class);		
+				startActivity(i);
+			}
+		});
+				
+		final ActionItem newpost = new ActionItem();
+		
+		newpost.setTitle("Add New Post");
+		newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
+		newpost.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);				
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		
+		final ActionItem newpage = new ActionItem();
+		
+		newpage.setTitle("Add New Page");
+		newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
+		newpage.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				i.putExtra("isPage", true);
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		
+		final ActionItem addOldPhoto = new ActionItem();
+		addOldPhoto.setTitle("Add Image From Gallery");
+		addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
+		addOldPhoto.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "photoPicker");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		
+		final ActionItem takeNewPhoto = new ActionItem();
+		takeNewPhoto.setTitle("Take Photo");
+		takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
+		takeNewPhoto.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "takePhotoFromCamera");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		final ActionItem addOldVideo = new ActionItem();
+		addOldVideo.setTitle("Add Video from Gallery");
+		addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
+		addOldVideo.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "videoPicker");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		final ActionItem takeNewVideo = new ActionItem();
+		takeNewVideo.setTitle("Take Video");
+		takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
+		takeNewVideo.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(ViewComments.this, EditPost.class);
+				i.putExtra("accountName", accountName);
+				i.putExtra("id", id);
+				i.putExtra("isNew", true);
+				//i.putExtra("blavatar", blavatar_url);
+				i.putExtra("viewPages", true);    	    	
+				i.putExtra("option", "takeVideo");
+				startActivityForResult(i, 0);
+			}
+		});
+		
+		add.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				QuickAction qa = new QuickAction(v);				
+				qa.addActionItem(newpost);
+				qa.addActionItem(newpage);
+				qa.addActionItem(addOldPhoto);
+				qa.addActionItem(takeNewPhoto);
+				qa.addActionItem(addOldVideo);
+				qa.addActionItem(takeNewVideo);
+				qa.setAnimStyle(QuickAction.ANIM_AUTO);				
+				qa.show();
+			}
+		});	
+		
 		//create the ViewSwitcher in the current context
 		switcher = new ViewSwitcher(this);
 		Button footer = (Button)View.inflate(this, R.layout.list_footer_btn, null);
@@ -135,27 +257,19 @@ public class ViewComments extends ListActivity {
 			refreshComments(false, false, false);
 		}
 
-		final ImageButton refresh = (ImageButton) findViewById(R.id.refreshComments);   
-
-		refresh.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-
-				refreshComments(false, true, false);
-
-			}
-		});
-		Button bulkEdit = (Button) findViewById(R.id.bulkEdit);   
+		
+		/*Button bulkEdit = (Button) findViewById(R.id.bulkEdit);   
 
 		bulkEdit.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				inModeration = !inModeration;
 				showOrHideBulkCheckBoxes();
 			}
-		}); 
+		});*/ 
 
-		ImageButton deleteComments = (ImageButton) findViewById(R.id.deleteComment);   
+		Button deleteComments = (Button) findViewById(R.id.deleteComment);   
 
-		deleteComments.setOnClickListener(new ImageButton.OnClickListener() {
+		deleteComments.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(ID_DIALOG_DELETING);
 				new Thread() {
@@ -229,12 +343,13 @@ public class ViewComments extends ListActivity {
 		}
 		for (int i=0; i < loopMax;i++){
 			RelativeLayout rl = (RelativeLayout) (View)listView.getChildAt(i).findViewById(R.id.bulkEditGroup);
-			if (inModeration){
+			showBulkCheckBoxes(rl);
+			/*if (inModeration){
 				showBulkCheckBoxes(rl);
 			}
 			else{
 				hideBulkCheckBoxes(rl);
-			}
+			}*/
 		}
 
 	}
@@ -477,18 +592,6 @@ public class ViewComments extends ListActivity {
 					authorURL = EscapeUtils.unescapeHtml(contentHash.get("url").toString());
 					postTitle = EscapeUtils.unescapeHtml(contentHash.get("postTitle").toString());
 					
-					//more 1.5 htc sense fix
-					if (sdk_int == 3){
-						postTitle = postTitle.replace("Ô", "'");
-						postTitle = postTitle.replace("Õ", "'");
-						postTitle = postTitle.replace('Ó', '"');
-						postTitle = postTitle.replace('Ò', '"');
-						postTitle = postTitle.replace('Ð', '-');
-						postTitle = postTitle.replaceAll("[^a-zA-Z0-9\'\"-]", " ");
-						author = author.replaceAll("[^a-zA-Z0-9\'\"-]", " ");
-						authorURL = authorURL.replaceAll("[^a-zA-Z0-9:'/'/.-]", " ");
-					}
-					
 					if (model == null){
 						model=new ArrayList<CommentEntry>();
 					}
@@ -613,7 +716,7 @@ public class ViewComments extends ListActivity {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void refreshComments(final boolean loadMore, final boolean refreshOnly, final boolean doInBackground) {
+	public void refreshComments(final boolean loadMore, final boolean refreshOnly, final boolean doInBackground) {
 
 		if (!loadMore && !doInBackground){
 			showProgressBar();
@@ -901,12 +1004,13 @@ public class ViewComments extends ListActivity {
 				textColor = "#006505";
 			}
 
-			if (inModeration){
+			getBulkEditGroup().setVisibility(View.VISIBLE);
+			/*if (inModeration){
 				getBulkEditGroup().setVisibility(View.VISIBLE);
 			}
 			else{
 				getBulkEditGroup().setVisibility(View.GONE);
-			}
+			}*/
 
 			getStatus().setText(prettyComment);
 			getStatus().setTextColor(Color.parseColor(textColor));

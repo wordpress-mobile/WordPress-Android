@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dashboard"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FAFAFA">
+<include layout="@layout/action_bar_spinner" />
+<org.wordpress.android.util.DashboardLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+<Button android:id="@+id/dashboard_posts_btn"
+        style="@style/DashboardButton"
+        android:text="@string/tab_posts"
+        android:drawableTop="@drawable/posts_tab_icon" />
+    <Button android:id="@+id/dashboard_pages_btn"
+        style="@style/DashboardButton"
+        android:text="@string/tab_pages"
+        android:drawableTop="@drawable/pages_tab_icon" />
+    <Button android:id="@+id/dashboard_drafts_btn"
+        style="@style/DashboardButton"
+        android:text="Drafts"
+        android:drawableTop="@drawable/drafts_icon" />
+    <Button android:id="@+id/dashboard_comments_btn"
+        style="@style/DashboardButton"
+        android:text="@string/tab_comments"
+        android:drawableTop="@drawable/comments_tab_icon" />
+    <Button android:id="@+id/dashboard_stats_btn"
+        style="@style/DashboardButton"
+        android:text="@string/tab_stats"
+        android:drawableTop="@drawable/stats_tab_icon" />
+    <Button android:id="@+id/dashboard_settings_btn"
+        style="@style/DashboardButton"
+        android:text="@string/settings"
+        android:drawableTop="@drawable/settings_icon" />
+</org.wordpress.android.util.DashboardLayout>
+<Button android:layout_width="320dp"
+  android:layout_height="60dp"
+  android:text="Quickpress"
+  android:id="@+id/quickpress"
+/>
+</LinearLayout>

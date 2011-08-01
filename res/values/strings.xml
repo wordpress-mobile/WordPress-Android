@@ -340,4 +340,15 @@
   <string name="publish_date">Publish:</string>
   <string name="edit">Edit</string>
   
+  <!-- WordPress.com signup -->
+  <string name="wpcom_signup">WordPress.com Sign Up</string>
+  <string name="blog_address">Blog Address</string>
+  <string name="your_account">Your Account</string>
+  <string name="email">E-Mail Address</string>
+  <string name="sign_up">Sign up</string>
+  <string name="dotcom_signup">.wordpress.com</string>
+  <string name="terms">You agree to the fascinating terms of service at http://wordpress.com/tos by submitting this form.</string>
+  <string name="instructions">Fill out this one-step form and you’ll be blogging seconds later!</string>
+  <string name="waiting_activation">Awaiting e-mail activation</string>
+  
 </resources>

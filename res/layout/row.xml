@@ -1,31 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
   <RelativeLayout
-    android:id="@+id/bulkEditGroup"
-    android:layout_width="wrap_content"
-    android:layout_height="238dip"
-    android:layout_alignParentRight="true"
-    android:gravity="right|center"
-    android:padding="4dip"
-    android:background="#FF888888"
-    android:layout_centerVertical="true"
-    android:visibility="gone">
-    <CheckBox
-      android:id="@+id/bulkCheck"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent"
-      android:layout_marginTop="119dip"
-      android:focusable="false"
-      android:button="@drawable/wp_checkbox" />
-  </RelativeLayout>
-  <RelativeLayout
     android:id="@+id/commentWrapper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_toLeftOf="@id/bulkEditGroup"
     android:orientation="vertical">
     <ImageView
       android:id="@+id/avatar"
@@ -49,6 +31,10 @@
         android:gravity="center_vertical"
         android:layout_marginTop="4dip"
         android:layout_marginLeft="70dip">
+        <LinearLayout android:orientation="horizontal"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	>
         <TextView
           android:id="@+id/name"
           android:layout_width="wrap_content"
@@ -62,6 +48,13 @@
           android:textColor="#444444"
           android:padding="0px"
           android:layout_marginBottom="-2dip" />
+          <CheckBox
+	      android:id="@+id/bulkCheck"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:button="@drawable/wp_checkbox" 
+	      android:layout_alignParentRight="true"/>
+      	</LinearLayout>
         <TextView
           android:id="@+id/email_url"
           android:layout_width="wrap_content"

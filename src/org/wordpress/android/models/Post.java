@@ -125,8 +125,6 @@ public Post(String blog_id, String title, String content, String picturePaths, l
     	this.mt_keywords = tags;
     	this.post_status = status;
     	this.wp_password = password;
-    	this.latitude = latitude;
-    	this.longitude = longitude;
     	this.isPage = isPage;
     }
     
@@ -434,6 +432,17 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 
 			}
 
+
+			if (!post.categories.equals("")) {
+
+				String[] aCategories = post.categories.split(",");
+
+				for (int i = 0; i < aCategories.length; i++) {
+					post.selectedCategories.add(aCategories[i]);
+				}
+
+			}
+
 			if (post.post_status == null){
 				post.post_status = "publish";
 			}
@@ -453,7 +462,13 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 			}
 			String res = "";
 			if (!mediaError) {
-			    
+
+				String[] theCategories = new String[post.selectedCategories.size()];
+
+				for (int i = 0; i < post.selectedCategories.size(); i++) {
+					theCategories[i] = post.selectedCategories.get(i).toString();
+				}
+
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
 				
 				String content = "";
@@ -506,28 +521,16 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 					if (post.mt_keywords != "") {
 						contentStruct.put("mt_keywords", post.mt_keywords);
 					}
-					if (!post.categories.equals("")) {
-	                    JSONArray catsJSON;
-                        try {
-                            catsJSON = new JSONArray(post.categories);
-                            String[] theCategories = new String[catsJSON.length()];
-                            for (int i = 0; i < catsJSON.length(); i++) {
-                                theCategories[i] = catsJSON.getString(i);
-                            }
-                            if (theCategories.length > 0) {
-                                contentStruct.put("categories", theCategories);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-	                }
+					if (theCategories.length > 0) {
+						contentStruct.put("categories", theCategories);
+					}
 				}
 				contentStruct.put((post.isPage) ? "page_status" : "post_status", post.post_status);
 				Double latitude = 0.0;
 				Double longitude = 0.0;
-				if (!post.isPage && post.getLatitude() > 0) {
-					latitude = post.getLatitude();
-					longitude = post.getLongitude();
+				if (!post.isPage) {
+					latitude = (Double) latitude;
+					longitude = (Double) longitude;
 
 					if (latitude > 0) {
 						HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
@@ -689,8 +692,7 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 							String mediaErrorMsg = e.getLocalizedMessage();
 							if (video) {
 								if (mediaErrorMsg.contains("Invalid file type")) {
-									mediaErrorMsg = post.context.getResources().getString(
-											R.string.vp_upgrade);
+									mediaErrorMsg = post.context.getResources().getString(R.string.vp_upgrade);
 									boolean vpUpgrade = true;
 								}
 							}
