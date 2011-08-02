@@ -28,7 +28,6 @@
 	android:layout_marginLeft="2dip"
 	android:layout_marginRight="2dip"
 />
-
 </LinearLayout>
 
 <RelativeLayout android:layout_width="wrap_content"
@@ -54,7 +53,7 @@
 	android:layout_marginRight="2dip"
     />
 
-<ImageButton
+  <ImageButton
 	android:layout_height="fill_parent"
 	android:layout_width="wrap_content"
 	android:src="@drawable/home_small"
@@ -65,7 +64,7 @@
 	android:background="@null"
 	/>
 	
-<View android:id="@+id/View01"
+  <View android:id="@+id/View01"
 	android:layout_width="1dip"
 	android:layout_height="42dip"
 	android:background="#C0C0C0"

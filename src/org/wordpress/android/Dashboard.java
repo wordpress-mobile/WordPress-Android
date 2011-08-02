@@ -35,24 +35,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class Dashboard extends Activity {
@@ -65,6 +59,7 @@ public class Dashboard extends Activity {
     public ArrayList<String> defBlogNames = new ArrayList<String>();
     public int[] blogIDs;
     public Integer default_blog;
+    QuickAction qa;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -446,6 +441,9 @@ public class Dashboard extends Activity {
                     i.putExtra("id", id);
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
+                    if (qa != null)
+                        qa.dismiss();
+                    
                 }
             });
 
@@ -533,7 +531,7 @@ public class Dashboard extends Activity {
 
                     id = blog_num.toString();
 
-                    QuickAction qa = new QuickAction(v);
+                    qa = new QuickAction(v);
                     qa.addActionItem(newpost);
                     qa.addActionItem(newpage);
                     qa.addActionItem(addOldPhoto);

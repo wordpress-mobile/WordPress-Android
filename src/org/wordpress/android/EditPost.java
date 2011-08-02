@@ -440,14 +440,8 @@ public class EditPost extends Activity implements LocationListener{
 
         		boolean result = savePost();
         		if (result) {
-        			Bundle bundle = new Bundle();                   
-        			bundle.putString("returnStatus", "OK");
-        			bundle.putLong("newID", post.getId());
         			if (post.isUploaded())
-        			    bundle.putBoolean("upload", true);
-        			Intent mIntent = new Intent();
-        			mIntent.putExtras(bundle);
-        			setResult(RESULT_OK, mIntent);
+        			    post.upload();
         			finish(); 
         		}
         	}
@@ -457,26 +451,13 @@ public class EditPost extends Activity implements LocationListener{
         uploadNowButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 boolean result = savePost();
-
+                post.upload();
                 if (result){
                     Bundle bundle = new Bundle();
                     if (isAction){
-                        Intent mIntent = new Intent(EditPost.this, TabView.class);
-                        bundle.putString("activateTab", "posts");
-                        bundle.putString("id", id);
-                        bundle.putLong("uploadID", post.getId());
-                        bundle.putString("accountName", accountName);
-                        bundle.putString("action", "upload");
+                        Intent mIntent = new Intent(EditPost.this, Dashboard.class);
                         mIntent.putExtras(bundle);
                         startActivity(mIntent);
-                    }
-                    else{
-                        bundle.putString("returnStatus", "OK");
-                        bundle.putBoolean("upload", true);
-                        bundle.putLong("newID", post.getId());
-                        Intent mIntent = new Intent();
-                        mIntent.putExtras(bundle);
-                        setResult(RESULT_OK, mIntent); 
                     }
 
                     finish();

@@ -12,7 +12,11 @@ import java.util.Vector;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.wordpress.android.CommentService;
+import org.wordpress.android.Dashboard;
 import org.wordpress.android.R;
+import org.wordpress.android.TabView;
+import org.wordpress.android.ViewDrafts;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.util.ImageHelper;
@@ -20,7 +24,11 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -63,6 +71,8 @@ public class Post {
 	
 	private Blog blog;
 	static Context context;
+	private static NotificationManager nm;
+	private static int notificationID;
 	
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	private int selectedImageCtr = 0;
@@ -406,21 +416,51 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
-			
+		    //nm.cancel(notificationID);
+		    String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources().getText(R.string.post_id));
 			if (result) {
-				((ViewPosts) context).uploadCompleted();
+			    Intent notificationIntent = new Intent(context, ViewPosts.class);
+	            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+post.blogID)));
+	            notificationIntent.putExtra("id", String.valueOf(post.blog.getId()));
+	            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            Notification n = new Notification();
+	            n.flags |= Notification.FLAG_AUTO_CANCEL;
+	            n.setLatestEventInfo(context, post.blog.getBlogName(), postOrPage + " " + context.getResources().getText(R.string.uploaded_successfully), pendingIntent);
+	            nm.notify(notificationID, n); //needs a unique id
 			}
 			else {
-			    ((ViewPosts) context).uploadFailed(error);
+			    Intent notificationIntent = new Intent(context, ViewDrafts.class);
+                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+post.blogID)));
+                notificationIntent.putExtra("id", String.valueOf(post.blog.getId()));
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Notification n = new Notification();
+                n.flags |= Notification.FLAG_AUTO_CANCEL;
+                n.setLatestEventInfo(context, post.blog.getBlogName(), context.getResources().getText(R.string.error) + " " + context.getResources().getText(R.string.uploading) + " " + postOrPage, pendingIntent);
+                nm.notify(notificationID, n); //needs a unique id
 			}
 		}
 		
 		@Override
 		protected Boolean doInBackground(Post...posts) {
+		    
+		    post = posts[0];
+		    
+		    //add the uploader to the notification bar
+		    nm = (NotificationManager) context.getSystemService("notification");
+            Intent notificationIntent = new Intent(context, Dashboard.class);
+            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+post.blogID)));
+            notificationIntent.putExtra("fromNotification", true);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            
+            Notification n = new Notification(R.drawable.wp_logo, "Uploading post", System.currentTimeMillis());
+
+            n.flags |= Notification.FLAG_AUTO_CANCEL;
+            n.setLatestEventInfo(context, post.blog.getBlogName(), "Uploading post", pendingIntent);
+            notificationID = 22 + Integer.valueOf(post.blogID);
+            nm.notify(notificationID, n); //needs a unique id
 			
-			post = posts[0];
 			//upload a post object to the blog
-			if (post.getMediaPaths() != "") {
+			if (!post.getMediaPaths().equals("")) {
 				String[] pPaths = post.mediaPaths.split(",");
 
 				for (int i = 0; i < pPaths.length; i++) {
@@ -480,7 +520,10 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 					}
 				}
 				else{
-					content = post.description + post.mt_text_more;
+				    if (post.mt_text_more != null)
+				        content = post.description + post.mt_text_more;
+				    else 
+				        content = post.description;
 				}
 
 				if (!post.isPage) {
