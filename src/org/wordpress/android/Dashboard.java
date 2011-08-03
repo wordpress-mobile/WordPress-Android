@@ -81,7 +81,11 @@ public class Dashboard extends Activity {
             blavatar_url = extras.getString("blavatar");
             default_blog = extras.getInt("default_blog");
         }
-
+    }
+    
+    @Override
+    protected void onResume () {
+        super.onResume();
         boolean eula = checkEULA();
         if (eula == false) {
 
@@ -109,8 +113,19 @@ public class Dashboard extends Activity {
         } else {
             displayAccounts();
         }
-
-        
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null )
+        {
+            Bundle bundle = data.getExtras();
+            String status = bundle.getString("returnStatus");
+            if (status.equals("CANCEL") && blogIDs == null) {
+                finish();
+            }
+        }
     }
 
     public boolean checkEULA() {

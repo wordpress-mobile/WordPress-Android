@@ -29,13 +29,6 @@
 		<activity android:name="ViewComments" android:configChanges="keyboardHidden|orientation"/>
 		<activity android:name="ViewComment" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name="ReplyToComment" android:theme="@android:style/Theme.Dialog" />
-		<activity android:icon="@drawable/app_icon" android:screenOrientation="portrait" android:name="SplashScreen"
-			android:theme="@android:style/Theme.NoTitleBar">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
 <activity android:name="SelectCategories" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Signup" android:configChanges="orientation|keyboardHidden"></activity>
@@ -49,7 +42,12 @@
 		</activity>
 <activity android:name="AddAcountSettings"></activity>
 <activity android:name="ViewPosts"></activity>
-<activity android:name="Dashboard"></activity>
+<activity android:name="Dashboard">
+  <intent-filter>
+	<action android:name="android.intent.action.MAIN" />
+	<category android:name="android.intent.category.LAUNCHER" />
+  </intent-filter>
+</activity>
 <activity android:name="ViewDrafts"></activity>
 </application>
 
