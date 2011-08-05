@@ -63,6 +63,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -108,7 +109,7 @@ public class EditPost extends Activity implements LocationListener{
 	private int selectedImageCtr = 0;
 	long postID;
     private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
-    public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug;
+    public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug, setText, option;
     public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false, isPage = false, isNew = false, 
     isAction = false, isUrl = false, locationActive = false, isLargeScreen = false, isCustomPubDate = false;
     public Vector<Object> imgThumbs = new Vector<Object>();
@@ -136,6 +137,8 @@ public class EditPost extends Activity implements LocationListener{
          localDraft = extras.getBoolean("localDraft", false); 
          isPage = extras.getBoolean("isPage", false);
          isNew = extras.getBoolean("isNew", false);
+         setText = extras.getString("setText");
+         option = extras.getString("option");
          if (!isNew)
              post = new Post(id, postID, isPage, this);
         }
@@ -432,6 +435,20 @@ public class EditPost extends Activity implements LocationListener{
 	            }
 	        });
         }
+        
+        final Button fullScreen = (Button) findViewById(R.id.fullscreen);
+        
+        fullScreen.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(EditPost.this, Write.class);
+                i.putExtra("accountName", accountName);
+                i.putExtra("setText", setText); 
+                i.putExtra("id", id);
+                i.putExtra("isNew", true);              
+                startActivityForResult(i, 0);
+                finish();
+            }
+        });
         
         final Button saveButton = (Button) findViewById(R.id.post);
         

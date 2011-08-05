@@ -173,6 +173,8 @@
   <string name="blog_settings">Blog Settings</string>
   <string name="remove_account">Remove Blog</string>
   <string name="blog_removed_successfully">Blog Removed Successfully</string>
+  <string name="save_and_exit">Save and Exit Fullscreen</string>
+  <string name="exit_without_saving">Exit without Saving</string>
   
   <!--  draft actions -->
   <string name="draft_actions">Draft Actions</string>

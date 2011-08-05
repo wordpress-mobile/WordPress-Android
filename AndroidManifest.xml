@@ -49,6 +49,7 @@
   </intent-filter>
 </activity>
 <activity android:name="ViewDrafts"></activity>
+<activity android:name="Write"></activity>
 </application>
 
 	<supports-screens android:smallScreens="true"

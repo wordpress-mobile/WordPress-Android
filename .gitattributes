@@ -379,6 +379,7 @@ res/layout/moderatecomments.xml -text
 res/layout/new_account.xml -text
 res/layout/pages_tab_selector.xml -text
 res/layout/popup.xml -text
+res/layout/post_fullscreen.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/quickaction.xml -text
 res/layout/reply.xml -text
@@ -464,6 +465,7 @@ src/org/wordpress/android/ViewPosts.java -text
 src/org/wordpress/android/ViewStats.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
+src/org/wordpress/android/Write.java -text
 src/org/wordpress/android/models/Blog.java -text
 src/org/wordpress/android/models/MediaFile.java -text
 src/org/wordpress/android/models/Post.java -text
