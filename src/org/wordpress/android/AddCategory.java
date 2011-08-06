@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import java.util.ArrayList;
-import java.util.Vector;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,8 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 public class AddCategory extends Activity {
-	String id = "";
+	private int id;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -26,7 +27,7 @@ public class AddCategory extends Activity {
 		Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
-         id = extras.getString("id");
+         id = extras.getInt("id");
         }
         
         loadCategories();

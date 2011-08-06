@@ -1,5 +1,15 @@
 package org.xmlrpc.android;
 
+import org.json.JSONObject;
+import org.wordpress.android.ViewPosts;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Bundle;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -7,16 +17,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
-
-import org.json.JSONObject;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ViewPosts;
-import org.wordpress.android.models.Blog;
-
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Bundle;
 
 
 public class ApiHelper extends Activity {
@@ -28,7 +28,7 @@ public class ApiHelper extends Activity {
     }
     
     @SuppressWarnings("unchecked")
-	static void refreshComments(final String id, final Context ctx) {
+	static void refreshComments(final int id, final Context ctx) {
 
     	WordPressDB db = new WordPressDB(ctx);
 		Blog blog = new Blog(id, ctx);
@@ -91,7 +91,7 @@ public class ApiHelper extends Activity {
 						dateCreatedFormatted = dateCreated;  //just make it the ugly date if it doesn't work
 					} 
 	
-					dbValues.put("blogID", id);
+					dbValues.put("blogID", String.valueOf(id));
 					dbValues.put("postID", postID);
 					dbValues.put("commentID", commentID);
 					dbValues.put("author", author);
@@ -131,7 +131,7 @@ public class ApiHelper extends Activity {
                         dbVector.add(ctr, contentHash);
                     }// end for loop
 
-                    postStoreDB.savePosts(ctx, dbVector, String.valueOf(blog.getId()), isPage);
+                    postStoreDB.savePosts(ctx, dbVector, blog.getId(), isPage);
                     ((ViewPosts) ctx).numRecords += 20;
                     if (loadMore)
                         ((ViewPosts) ctx).switcher.showPrevious();

@@ -1,5 +1,8 @@
 package com.commonsware.cwac.thumbnail;
 
+import com.commonsware.cwac.adapter.AdapterWrapper;
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,9 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
-
-import com.commonsware.cwac.adapter.AdapterWrapper;
-import com.commonsware.cwac.cache.SimpleWebImageCache;
 
 public class ThumbnailAdapter extends AdapterWrapper {
 	private static final String TAG="ThumbnailAdapter";

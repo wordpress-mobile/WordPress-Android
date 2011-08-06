@@ -1,23 +1,11 @@
 package org.wordpress.android;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.ImageHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -78,14 +66,23 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.ImageHelper;
-import org.xmlrpc.android.ApiHelper;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Vector;
 
 public class EditPost extends Activity implements LocationListener{
     /** Called when the activity is first created. */
@@ -103,10 +100,10 @@ public class EditPost extends Activity implements LocationListener{
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "", id = "", accountName = "", SD_CARD_TEMP_DIR = "", mediaErrorMsg = "";
+	public String categoryErrorMsg = "", accountName = "", SD_CARD_TEMP_DIR = "", mediaErrorMsg = "";
 	private JSONArray categories;
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
-	private int selectedImageCtr = 0;
+	private int selectedImageCtr = 0, id;
 	long postID;
     private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
     public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug, setText, option;
@@ -130,7 +127,7 @@ public class EditPost extends Activity implements LocationListener{
         categories = new JSONArray();
         if(extras !=null)
         {
-         id = extras.getString("id");
+         id = extras.getInt("id");
          blog = new Blog(id, this);
          accountName = EscapeUtils.unescapeHtml(extras.getString("accountName"));
          postID = extras.getLong("postID");
@@ -207,7 +204,7 @@ public class EditPost extends Activity implements LocationListener{
 			if (accounts.size() > 0){
 
 				final String blogNames[] = new String[accounts.size()];
-				final String accountIDs[] = new String[accounts.size()];
+				final int accountIDs[] = new int[accounts.size()];
 
 				for (int i = 0; i < accounts.size(); i++) {
 
@@ -217,7 +214,7 @@ public class EditPost extends Activity implements LocationListener{
 					} catch (Exception e) {
 						blogNames[i] = "(No Blog Title)";
 					}
-					accountIDs[i] = curHash.get("id").toString();
+					accountIDs[i] = (Integer)curHash.get("id");
 
 				} 
 
@@ -425,7 +422,7 @@ public class EditPost extends Activity implements LocationListener{
 	            public void onClick(View v) {
 	            	 
 	            	Bundle bundle = new Bundle();
-					bundle.putString("id", id);
+					bundle.putInt("id", id);
 					if (categories.length() > 0){
 					bundle.putString("categoriesCSV", getCategoriesCSV());
 					}

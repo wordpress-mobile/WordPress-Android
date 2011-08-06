@@ -1,21 +1,5 @@
 package org.wordpress.android;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.Vector;
-
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
@@ -35,7 +19,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.Xml;
 import android.view.ContextMenu;
@@ -63,13 +46,28 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import android.widget.AdapterView.OnItemClickListener;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 public class ViewDrafts extends ListActivity {
     /** Called when the activity is first created. */
     private XMLRPCClient client;
     private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
             draftIDs, draftTitles, publish;
     private Integer[] uploaded;
-    private String id = "", accountName = "";
+    private String accountName = "";
     int rowID = 0;
     long selectedID;
     private int ID_DIALOG_DELETING = 1, ID_DIALOG_POSTING = 2;
@@ -81,7 +79,7 @@ public class ViewDrafts extends ListActivity {
     public boolean thumbnailOnly, secondPass, xmlrpcError = false;
     public String submitResult = "", mediaErrorMsg = "";
     public ProgressDialog loadingDialog;
-    public int totalDrafts = 0;
+    public int totalDrafts = 0, id;
     public boolean isPage = false, vpUpgrade = false;
     boolean largeScreen = false;
     public int numRecords = 20;
@@ -97,134 +95,11 @@ public class ViewDrafts extends ListActivity {
         Bundle extras = getIntent().getExtras();
         String action = null;
         if (extras != null) {
-            id = extras.getString("id");
+            id = extras.getInt("id");
             blog = new Blog(id, this);
             isPage = extras.getBoolean("viewPages");
             action = extras.getString("action");
         }
-        
-        TextView blogname = (TextView) findViewById(R.id.blogname);
-		blogname.setText(blog.getBlogName());
-        ImageButton home = (ImageButton) findViewById(R.id.home_small);
-		ImageButton add = (ImageButton) findViewById(R.id.add_small);
-		
-		home.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, Dashboard.class);		
-				startActivity(i);
-			}
-		});
-				
-		final ActionItem newpost = new ActionItem();
-		
-		newpost.setTitle("Add New Post");
-		newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
-		newpost.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, EditPost.class);
-				i.putExtra("accountName", accountName);
-				i.putExtra("id", id);
-				i.putExtra("isNew", true);				
-				startActivityForResult(i, 0);
-			}
-		});
-		
-		
-		final ActionItem newpage = new ActionItem();
-		
-		newpage.setTitle("Add New Page");
-		newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
-		newpage.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, EditPost.class);
-				i.putExtra("accountName", accountName);
-				i.putExtra("id", id);
-				i.putExtra("isNew", true);
-				i.putExtra("isPage", true);
-				startActivityForResult(i, 0);
-			}
-		});
-		
-		
-		final ActionItem addOldPhoto = new ActionItem();
-		addOldPhoto.setTitle("Add Image From Gallery");
-		addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-		addOldPhoto.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, EditPost.class);
-				i.putExtra("accountName", accountName);
-				i.putExtra("id", id);
-				i.putExtra("isNew", true);
-				//i.putExtra("blavatar", blavatar_url);
-				i.putExtra("viewPages", true);    	    	
-				i.putExtra("option", "photoPicker");
-				startActivityForResult(i, 0);
-			}
-		});
-		
-		
-		final ActionItem takeNewPhoto = new ActionItem();
-		takeNewPhoto.setTitle("Take Photo");
-		takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-		takeNewPhoto.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, EditPost.class);
-				i.putExtra("accountName", accountName);
-				i.putExtra("id", id);
-				i.putExtra("isNew", true);
-				//i.putExtra("blavatar", blavatar_url);
-				i.putExtra("viewPages", true);    	    	
-				i.putExtra("option", "takePhotoFromCamera");
-				startActivityForResult(i, 0);
-			}
-		});
-		
-		final ActionItem addOldVideo = new ActionItem();
-		addOldVideo.setTitle("Add Video from Gallery");
-		addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
-		addOldVideo.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, EditPost.class);
-				i.putExtra("accountName", accountName);
-				i.putExtra("id", id);
-				i.putExtra("isNew", true);
-				//i.putExtra("blavatar", blavatar_url);
-				i.putExtra("viewPages", true);    	    	
-				i.putExtra("option", "videoPicker");
-				startActivityForResult(i, 0);
-			}
-		});
-		
-		final ActionItem takeNewVideo = new ActionItem();
-		takeNewVideo.setTitle("Take Video");
-		takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
-		takeNewVideo.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, EditPost.class);
-				i.putExtra("accountName", accountName);
-				i.putExtra("id", id);
-				i.putExtra("isNew", true);
-				//i.putExtra("blavatar", blavatar_url);
-				i.putExtra("viewPages", true);    	    	
-				i.putExtra("option", "takeVideo");
-				startActivityForResult(i, 0);
-			}
-		});
-		
-		add.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				QuickAction qa = new QuickAction(v);				
-				qa.addActionItem(newpost);
-				qa.addActionItem(newpage);
-				qa.addActionItem(addOldPhoto);
-				qa.addActionItem(takeNewPhoto);
-				qa.addActionItem(addOldVideo);
-				qa.addActionItem(takeNewVideo);
-				qa.setAnimStyle(QuickAction.ANIM_AUTO);				
-				qa.show();
-			}
-		});	
-
 
         createSwitcher();
 
@@ -339,7 +214,7 @@ public class ViewDrafts extends ListActivity {
 
     public void loadPosts(boolean loadMore) { // loads posts from the db
 
-    	WordPressDB lDraftsDB = new WordPressDB(this);
+        WordPressDB lDraftsDB = new WordPressDB(this);
         Vector<?> loadedPosts;
         if (isPage) {
             loadedPosts = lDraftsDB.loadDrafts(ViewDrafts.this, id, true);
@@ -535,8 +410,8 @@ public class ViewDrafts extends ListActivity {
                         });
             }
         } else {
-        	TextView noDrafts = (TextView) findViewById (R.id.noDrafts);
-        	noDrafts.setVisibility(View.VISIBLE);
+            TextView noDrafts = (TextView) findViewById (R.id.noDrafts);
+            noDrafts.setVisibility(View.VISIBLE);
         }
 
     }
@@ -1082,7 +957,7 @@ public class ViewDrafts extends ListActivity {
         loading.setVisibility(View.INVISIBLE);
     }
 
-    private void shareURL(String accountId, String postId, final boolean isPage) {
+    private void shareURL(int accountId, String postId, final boolean isPage) {
 
         String errorStr = null;
 

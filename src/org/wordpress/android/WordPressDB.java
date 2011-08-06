@@ -1,15 +1,5 @@
 package org.wordpress.android;
 
-import java.text.StringCharacterIterator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Vector;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.models.Post;
@@ -21,6 +11,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.text.StringCharacterIterator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Vector;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
@@ -291,7 +291,7 @@ public class WordPressDB {
 					
 					for (int i = 0; i < numRows; ++i) {
 					if (c.getString(0) != null){
-						Post post = new Post(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(10), false, ctx);
+						Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(10), false, ctx);
 						post.setLocalDraft(true);
 						post.save();	
 					}
@@ -309,7 +309,7 @@ public class WordPressDB {
 					
 					for (int i = 0; i < numRows; ++i) {
 					if (c.getString(0) != null){
-						Post post = new Post(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), null, null, 0, 0, true, ctx);
+						Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), null, null, 0, 0, true, ctx);
 						post.setLocalDraft(true);
 						post.setPage(true);
 						post.save();	
@@ -496,7 +496,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public Vector<Object> loadSettings(Context ctx, String id) {
+	public Vector<Object> loadSettings(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid", "wpVersion"}, "id=" + id, null, null, null, null);
@@ -571,7 +571,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 	
-	public boolean saveStatsLogin(Context ctx, String id, String statsUsername, String statsPassword) {
+	public boolean saveStatsLogin(Context ctx, int id, String statsUsername, String statsPassword) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("dotcom_username", statsUsername);
@@ -583,7 +583,7 @@ public class WordPressDB {
 		
 	}
 	
-	public Vector<String> loadAPIData(Context ctx, String id) {
+	public Vector<String> loadAPIData(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "api_key", "api_blogid"}, "id=" + id, null, null, null, null);
@@ -605,7 +605,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 	
-	public boolean saveAPIData(Context ctx, String id, String apiKey, String apiBlogID) {
+	public boolean saveAPIData(Context ctx, int id, String apiKey, String apiBlogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("api_key", apiKey);
@@ -631,7 +631,7 @@ public class WordPressDB {
 	}
 
 
-	public boolean updateLatestCommentID(Context ctx, String id, Integer newCommentID) {
+	public boolean updateLatestCommentID(Context ctx, int id, Integer newCommentID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("lastCommentId", newCommentID);
@@ -796,7 +796,7 @@ public class WordPressDB {
         return returnValue;
     }
 	
-	public Vector<HashMap<String, Object>> loadDrafts(Context ctx, String blogID, boolean loadPages) {
+	public Vector<HashMap<String, Object>> loadDrafts(Context ctx, int blogID, boolean loadPages) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
@@ -847,7 +847,7 @@ public class WordPressDB {
 		return returnValue;
 	}
 
-	public boolean savePosts(Context ctx, Vector<?> postValues, String blogID, boolean isPage) {
+	public boolean savePosts(Context ctx, Vector<?> postValues, int blogID, boolean isPage) {
 		boolean returnValue = false;
 		if (postValues.size() != 0)
 		{
@@ -920,7 +920,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 	
-	public long savePost(Context ctx, Post post, String blogID) {
+	public long savePost(Context ctx, Post post, int blogID) {
 		long returnValue = -1;
 		if (post != null)
 		{
@@ -957,7 +957,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 	
-	public int updatePost(Context ctx, Post post, String blogID) {
+	public int updatePost(Context ctx, Post post, int blogID) {
         int success = 0;
         if (post != null)
         {
@@ -998,7 +998,7 @@ public class WordPressDB {
         return (success);
     }
 
-	public Vector<HashMap<String, Object>> loadUploadedPosts(Context ctx, String blogID, boolean loadPages) {
+	public Vector<HashMap<String, Object>> loadUploadedPosts(Context ctx, int blogID, boolean loadPages) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
@@ -1033,7 +1033,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 	
-	public Vector<Object> loadPost(Context ctx, String blogID, boolean isPage, long id) {
+	public Vector<Object> loadPost(Context ctx, int blogID, boolean isPage, long id) {
 		Vector<Object> values = null;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		int pageInt = 0;
@@ -1081,7 +1081,7 @@ public class WordPressDB {
 		return values;
 	}
 	
-	public Vector<HashMap<String, Object>> loadComments(Context ctx, String blogID) {
+	public Vector<HashMap<String, Object>> loadComments(Context ctx, int blogID) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "iCommentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, null);
@@ -1124,7 +1124,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 	
-	public Vector<HashMap<String, Object>> loadMoreComments(Context ctx, String blogID, int limit) {
+	public Vector<HashMap<String, Object>> loadMoreComments(Context ctx, int blogID, int limit) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE, new String[] { "blogID", "postID", "iCommentID", "author", "comment", "commentDate", "commentDateFormatted", "status", "url", "email", "postTitle"}, "blogID=" + blogID, null, null, null, "iCommentID ASC", String.valueOf(limit));
@@ -1206,7 +1206,7 @@ public class WordPressDB {
 		
 	}
 	
-	public void updateCommentStatus(Context ctx, String blogID, String id, String newStatus) {
+	public void updateCommentStatus(Context ctx, int blogID, String id, String newStatus) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		ContentValues values = new ContentValues();
@@ -1281,7 +1281,7 @@ public class WordPressDB {
 	}
 	
 	//categories
-	public boolean insertCategory(Context ctx, String id, int wp_id, String category_name) {
+	public boolean insertCategory(Context ctx, int id, int wp_id, String category_name) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("blog_id", id);
@@ -1292,7 +1292,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public Vector<String> loadCategories(Context ctx, String id) {
+	public Vector<String> loadCategories(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id", "category_name" }, "blog_id=" + id, null, null, null, null);
@@ -1313,7 +1313,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 	
-	public int getCategoryId(Context ctx, String id, String category){
+	public int getCategoryId(Context ctx, int id, String category){
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] {"wp_id"}, "category_name=\"" + category + "\" AND blog_id=" + id, null, null, null, null);
@@ -1324,7 +1324,7 @@ public class WordPressDB {
 		return categoryID;
 	}
 	
-	public void clearCategories(Context ctx, String id){
+	public void clearCategories(Context ctx, int id){
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		//clear out the table since we are refreshing the whole enchilada
 		db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
@@ -1469,4 +1469,22 @@ public class WordPressDB {
 		}
 		c.close();
 	}
+
+
+    public int getUnmoderatedCommentCount(Context ctx, int blogID) {
+            int commentCount = 0;
+            db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+            Cursor c = db.rawQuery("select count(*) from comments where blogID=? AND status='hold'", new String[] { String.valueOf(blogID) });
+            int numRows = c.getCount();
+            c.moveToFirst();
+            
+            HashMap<String, Object> numRecords = new HashMap<String, Object>();
+            if (numRows > 0){
+                commentCount=c.getInt(0);
+            }
+            
+            c.close();
+            db.close();
+        return commentCount;
+    }
 }

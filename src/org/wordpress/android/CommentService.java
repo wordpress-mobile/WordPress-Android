@@ -1,9 +1,6 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.Vector;
-
+import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -17,13 +14,17 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
+
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.Vector;
 
 public class CommentService extends Service {
 
 	public static final String response = "true";
 	public static ServiceUpdateUIListener UI_UPDATE_LISTENER;
-	public String accountID = "", accountName = "", updateInterval = "";
+	public String accountName = "", updateInterval = "";
+	public int accountID;
 	private XMLRPCClient client;
 	private Timer timer = new Timer();
 
@@ -91,26 +92,26 @@ public class CommentService extends Service {
     		for (int i = 0; i < notificationAccounts.size(); i++)
     		{
     			
-    			accountID = notificationAccounts.get(i).toString();
-    			accountName = settingsDB.getAccountName(this, accountID);
+    			accountID = (Integer)notificationAccounts.get(i);
+                Blog blog = new Blog(accountID, CommentService.this);
+    			accountName = blog.getBlogName();
     			//Log.i("WordPressCommentService", "Checking Comments for " + accountName);
 
-    	Vector<?> settings = settingsDB.loadSettings(this, accountID);
-    	final int latestCommentID = settingsDB.getLatestCommentID(this, accountID);
+    	final int latestCommentID = blog.getLastCommentId();
     	
     	String sURL = "";
-    	if (settings.get(0).toString().contains("xmlrpc.php"))
+    	if (blog.getUrl().contains("xmlrpc.php"))
     	{
-    		sURL = settings.get(0).toString();
+    		sURL = blog.getUrl();
     	}
     	else
     	{
-    		sURL = settings.get(0).toString() + "xmlrpc.php";
+    		sURL = blog.getUrl() + "xmlrpc.php";
     	}
-		String sUsername = settings.get(2).toString();
-		String sPassword = settings.get(3).toString();
-		String sHttpuser = settings.get(4).toString();
-		String sHttppassword = settings.get(5).toString();
+		String sUsername = blog.getUsername();
+		String sPassword = blog.getPassword();
+		String sHttpuser = blog.getHttpuser();
+		String sHttppassword = blog.getHttppassword();
 		
 		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
     	

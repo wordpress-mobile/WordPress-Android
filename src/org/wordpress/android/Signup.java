@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -18,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashMap;
 
 public class Signup extends Activity {
 	public Activity activity = this;

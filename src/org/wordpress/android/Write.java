@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import java.util.Vector;
-
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
@@ -28,13 +26,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.util.Vector;
+
 public class Write extends Activity {
     /** Called when the activity is first created. */
-	public String categoryErrorMsg = "", id = "", accountName = "", SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
+	public String categoryErrorMsg = "", accountName = "", SD_CARD_TEMP_DIR = "", categories = "", mediaErrorMsg = "";
 	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
 	long postID;
     public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false, isPage = false, isNew = false, 
@@ -42,6 +41,7 @@ public class Write extends Activity {
     private Blog blog;
     private Post post;
     public String setText;
+    public int id;
     int styleStart = -1, cursorLoc = 0, screenDensity = 0;
     @Override
     public void onCreate(Bundle icicle) {
@@ -54,7 +54,7 @@ public class Write extends Activity {
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
-         id = extras.getString("id");
+         id = extras.getInt("id");
          blog = new Blog(id, this);
          accountName = EscapeUtils.unescapeHtml(extras.getString("accountName"));
          postID = extras.getLong("postID");

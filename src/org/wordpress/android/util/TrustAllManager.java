@@ -1,9 +1,9 @@
 package org.wordpress.android.util;
 
-import java.security.cert.CertificateException; 
-import java.security.cert.X509Certificate; 
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
-import javax.net.ssl.X509TrustManager; 
+import javax.net.ssl.X509TrustManager;
 
 public class TrustAllManager implements X509TrustManager { 
     public void checkClientTrusted(X509Certificate[] cert, String authType) throws CertificateException { } 

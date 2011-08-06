@@ -27,24 +27,6 @@ package org.wordpress.android;
  https://public-api.wordpress.com/getuserblogs.php?f=json
  */
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Vector;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -91,17 +73,35 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Vector;
+
 public class ViewStats extends Activity {
 	public boolean success = false;
 	public String blogURL, xmlrpcURL;
 	private ConnectionClient client;
 	private HttpPost postMethod;
 	private HttpParams httpParams;
-	String id = "", accountName = "", errorMsg = "";
+	String accountName = "", errorMsg = "";
 	boolean loginShowing = false;
 	ProgressDialog loadingDialog;
 	private int ID_DIALOG_GET_STATS = 0;
-	private int firstRun = 0;
+	private int firstRun = 0, id;
 	private Blog blog;
 
 	@Override
@@ -112,7 +112,7 @@ public class ViewStats extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			id = extras.getString("id");
+			id = extras.getInt("id");
 			blog = new Blog(id, this);
 			accountName = extras.getString("accountName");
 		}

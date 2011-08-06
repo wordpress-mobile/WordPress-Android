@@ -15,9 +15,10 @@
 	 
 package com.commonsware.cwac.thumbnail;
 
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+
 import android.app.ListActivity;
 import android.widget.ListAdapter;
-import com.commonsware.cwac.cache.SimpleWebImageCache;
 
 abstract public class ThumbnailActivity extends ListActivity {
 	abstract protected int[] getImageIdArray();

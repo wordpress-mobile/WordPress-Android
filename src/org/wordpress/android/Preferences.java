@@ -1,8 +1,5 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Vector;
-
 import org.wordpress.android.util.EscapeUtils;
 
 import android.app.Activity;
@@ -25,6 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.Vector;
 
 
 public class Preferences extends Activity {

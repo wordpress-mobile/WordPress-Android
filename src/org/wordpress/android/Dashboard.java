@@ -1,23 +1,13 @@
 
 package org.wordpress.android;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 
@@ -40,14 +30,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
 
 public class Dashboard extends Activity {
     public Vector<?> accounts;
@@ -56,10 +56,8 @@ public class Dashboard extends Activity {
     private String blavatar_url;
     boolean fromNotification = false;
     int uploadID = 0;
-    public ArrayList<String> defBlogNames = new ArrayList<String>();
-    public int[] blogIDs;
     public Integer default_blog;
-    QuickAction qa;
+    TextView commentBadge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,16 +69,10 @@ public class Dashboard extends Activity {
 
         final WordPressDB settingsDB = new WordPressDB(this);
         accounts = settingsDB.getAccounts(this);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            activateTab = extras.getString("activateTab");
-            fromNotification = extras.getBoolean("fromNotification", false);
-            action = extras.getString("action");
-            uploadID = extras.getInt("uploadID");
-            blavatar_url = extras.getString("blavatar");
-            default_blog = extras.getInt("default_blog");
-        }
+        
+        Animation rotateAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_comment_badge);
+        commentBadge = (TextView) findViewById(R.id.comment_badge);
+        commentBadge.setAnimation(rotateAnim);
     }
     
     @Override
@@ -122,7 +114,7 @@ public class Dashboard extends Activity {
         {
             Bundle bundle = data.getExtras();
             String status = bundle.getString("returnStatus");
-            if (status.equals("CANCEL") && blogIDs == null) {
+            if (status.equals("CANCEL") && WordPress.currentBlog != null) {
                 finish();
             }
         }
@@ -356,20 +348,14 @@ public class Dashboard extends Activity {
     
     public void displayAccounts() {
 
-        /*setContentView(R.layout.home);
-        setTitle(getResources().getText(R.string.app_name));*/
-
         // settings time!
-        WordPressDB settingsDB = new WordPressDB(this);
+        final WordPressDB settingsDB = new WordPressDB(this);
         accounts = settingsDB.getAccounts(this);
 
         // upload stats
         checkStats(accounts.size());
 
         if (accounts.size() > 0) {
-            
-            ImageButton home = (ImageButton) findViewById(R.id.home_small);
-            ImageButton add = (ImageButton) findViewById(R.id.add_small);
 
             try {
                 ImageView i = (ImageView) findViewById(R.id.blavatar_img);
@@ -382,187 +368,18 @@ public class Dashboard extends Activity {
                 e.printStackTrace();
             }
 
-            blogIDs = new int[accounts.size()];
+            //Integer blog_num = blog_select.getSelectedItemPosition();
+            //blog_num = blog_num + 1;
+
+            //id = blog_num.toString();
             
-            for (int i = 0; i < accounts.size(); i++) {
-                HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
-                String curBlogName = EscapeUtils.unescapeHtml(defHash.get("blogName").toString());
-
-                defBlogNames.add(curBlogName);
-                blogIDs[i] = Integer.valueOf(defHash.get("id").toString());
-            }
-
-            final Spinner blog_select = (Spinner) findViewById(R.id.blogname);
-            ArrayAdapter blog_list = new ArrayAdapter(this,
-                    android.R.layout.simple_spinner_item, defBlogNames);
-            blog_select.setAdapter(blog_list);
-            
-            blog_select.setOnItemSelectedListener(new OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long row_id) {
-
-                    WordPressDB wpDB = new WordPressDB(Dashboard.this);
-                    wpDB.updateLastBlogID(Dashboard.this, blogIDs[position]);
-                    id = String.valueOf(blogIDs[position]);
-                }
-
-                public void onNothingSelected(AdapterView<?> parentView) {
-                    // your code here
-                }
-
-            });
-            
-            int lastBlogID = settingsDB.getLastBlogID(this);
-            if (lastBlogID != -1) {
-                try {
-                    boolean matchedID = false;
-                    for (int i=0;i<blogIDs.length;i++) {
-                        if (blogIDs[i] == lastBlogID) {
-                            blog_select.setSelection(i); 
-                            matchedID = true;
-                        }
-                    }
-                    if (!matchedID) {
-                        blog_select.setSelection(0);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                blog_select.setSelection(0);
-            }
-
-            Integer blog_num = blog_select.getSelectedItemPosition();
-            blog_num = blog_num + 1;
-
-            id = blog_num.toString();
-
-            home.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, Dashboard.class);
-                    startActivity(i);
-                }
-            });
-
-            final ActionItem newpost = new ActionItem();
-
-            newpost.setTitle("Add New Post");
-            newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
-            newpost.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-
-                    Intent i = new Intent(Dashboard.this, EditPost.class);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("id", id);
-                    i.putExtra("isNew", true);
-                    startActivityForResult(i, 0);
-                    if (qa != null)
-                        qa.dismiss();
-                    
-                }
-            });
-
-            final ActionItem newpage = new ActionItem();
-
-            newpage.setTitle("Add New Page");
-            newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
-            newpage.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-
-                    Intent i = new Intent(Dashboard.this, EditPost.class);
-                    i.putExtra("id", id);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("isNew", true);
-                    i.putExtra("isPage", true);
-                    startActivityForResult(i, 0);
-                }
-            });
-
-            final ActionItem addOldPhoto = new ActionItem();
-            addOldPhoto.setTitle("Add Image From Gallery");
-            addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-            addOldPhoto.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, EditPost.class);
-                    i.putExtra("id", id);
-                    i.putExtra("isNew", true);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("viewPages", true);
-                    i.putExtra("option", "photoPicker");
-                    startActivityForResult(i, 0);
-                }
-            });
-
-            final ActionItem takeNewPhoto = new ActionItem();
-            takeNewPhoto.setTitle("Take Photo");
-            takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-            takeNewPhoto.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, EditPost.class);
-                    i.putExtra("id", id);
-                    i.putExtra("isNew", true);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("viewPages", true);
-                    i.putExtra("option", "takePhotoFromCamera");
-                    startActivityForResult(i, 0);
-                }
-            });
-
-            final ActionItem addOldVideo = new ActionItem();
-            addOldVideo.setTitle("Add Video from Gallery");
-            addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
-            addOldVideo.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, EditPost.class);
-                    i.putExtra("id", id);
-                    i.putExtra("isNew", true);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("viewPages", true);
-                    i.putExtra("option", "videoPicker");
-                    startActivityForResult(i, 0);
-                }
-            });
-
-            final ActionItem takeNewVideo = new ActionItem();
-            takeNewVideo.setTitle("Take Video");
-            takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
-            takeNewVideo.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, EditPost.class);
-                    i.putExtra("id", id);
-                    i.putExtra("isNew", true);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("viewPages", true);
-                    i.putExtra("option", "takeVideo");
-                    startActivityForResult(i, 0);
-                }
-            });
-
-            add.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-
-                    Integer blog_num = blog_select.getSelectedItemPosition();
-                    blog_num = blog_num + 1;
-
-                    id = blog_num.toString();
-
-                    qa = new QuickAction(v);
-                    qa.addActionItem(newpost);
-                    qa.addActionItem(newpage);
-                    qa.addActionItem(addOldPhoto);
-                    qa.addActionItem(takeNewPhoto);
-                    qa.addActionItem(addOldVideo);
-                    qa.addActionItem(takeNewVideo);
-                    qa.setAnimStyle(QuickAction.ANIM_AUTO);
-                    qa.show();
-                }
-            });
+            updateCommentBadge();
 
             Button postsButton = (Button) findViewById(R.id.dashboard_posts_btn);
             postsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent i = new Intent(Dashboard.this, ViewPosts.class);
-                    i.putExtra("id", id);
+                    i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
@@ -573,7 +390,7 @@ public class Dashboard extends Activity {
             pagesButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent i = new Intent(Dashboard.this, ViewPosts.class);
-                    i.putExtra("id", id);
+                    i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("isNew", true);
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("viewPages", true);
@@ -581,7 +398,7 @@ public class Dashboard extends Activity {
                 }
             });
             
-            Button draftsButton = (Button) findViewById(R.id.dashboard_drafts_btn);
+            /*Button draftsButton = (Button) findViewById(R.id.dashboard_drafts_btn);
             draftsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent i = new Intent(Dashboard.this, ViewDrafts.class);
@@ -590,13 +407,13 @@ public class Dashboard extends Activity {
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
                 }
-            });
+            });*/
             
             Button commentsButton = (Button) findViewById(R.id.dashboard_comments_btn);
             commentsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent i = new Intent(Dashboard.this, ViewComments.class);
-                    i.putExtra("id", id);
+                    i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
@@ -607,7 +424,7 @@ public class Dashboard extends Activity {
             statsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent i = new Intent(Dashboard.this, ViewStats.class);
-                    i.putExtra("id", id);
+                    i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
@@ -618,7 +435,7 @@ public class Dashboard extends Activity {
             settingsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent i = new Intent(Dashboard.this, Settings.class);
-                    i.putExtra("id", id);
+                    i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
@@ -629,13 +446,13 @@ public class Dashboard extends Activity {
 
             quickpress.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Integer blog_num = blog_select.getSelectedItemPosition();
-                    blog_num = blog_num + 1;
+                    //Integer blog_num = blog_select.getSelectedItemPosition();
+                    //blog_num = blog_num + 1;
 
-                    id = blog_num.toString();
+                    //id = blog_num.toString();
                     Intent i = new Intent(Dashboard.this, EditPost.class);
                     i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("id", id);
+                    i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("isNew", true);
                     i.putExtra("option", "");
                     startActivityForResult(i, 0);
@@ -648,6 +465,12 @@ public class Dashboard extends Activity {
 
             startActivityForResult(i, 0);
 
+        }
+    }
+    
+    public void updateCommentBadge(){
+        if (WordPress.currentBlog != null) {
+            commentBadge.setText(String.valueOf(WordPress.currentBlog.getUnmoderatedCommentCount(this)));
         }
     }
 }

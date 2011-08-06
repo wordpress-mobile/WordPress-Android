@@ -2,11 +2,11 @@
 
 package org.wordpress.android.models;
 
-import java.util.Vector;
-
 import org.wordpress.android.WordPressDB;
 
 import android.content.Context;
+
+import java.util.Vector;
 
 public class Blog {
 	
@@ -35,14 +35,14 @@ public class Blog {
 	private WordPressDB db;
 	private String postFormats;
 	
-	public Blog(String blog_id, Context ctx){
+	public Blog(int blog_id, Context ctx){
 		//instantiate a new blog
 		db = new WordPressDB(ctx);
 		
 		Vector<Object> blogVals = db.loadSettings(ctx, blog_id);
 		
 		if (blogVals != null) {
-			this.id = Integer.parseInt(blog_id);
+			this.id = blog_id;
 			this.url = blogVals.get(0).toString();
 			this.blogName = blogVals.get(1).toString();
 			this.username = blogVals.get(2).toString();
@@ -262,6 +262,8 @@ public class Blog {
         this.postFormats = postFormats;
     }
 	
-	
+	public int getUnmoderatedCommentCount(Context ctx) {
+	    return db.getUnmoderatedCommentCount(ctx, this.id);
+	}
 	
 }

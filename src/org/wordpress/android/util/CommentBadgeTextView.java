@@ -1,0 +1,32 @@
+
+package org.wordpress.android.util;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.util.AttributeSet;
+import android.widget.TextView;
+
+public class CommentBadgeTextView extends TextView {
+
+    public CommentBadgeTextView(Context context) {
+        super(context);
+    }
+
+    public CommentBadgeTextView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public CommentBadgeTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        canvas.save();
+        canvas.rotate(45);
+        super.onDraw(canvas);
+        canvas.restore();
+
+    }
+
+}

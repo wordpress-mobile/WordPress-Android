@@ -1,8 +1,5 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Vector;
-
 import org.apache.http.conn.HttpHostConnectException;
 import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
@@ -22,6 +19,8 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 
 public class ViewPostComments extends ListActivity {
     /** Called when the activity is first created. */
@@ -29,7 +28,7 @@ public class ViewPostComments extends ListActivity {
 	public String[] authors;
 	public String[] comments;
 	public String[] status;
-	private String id = "";
+	private int id;
 	private String postID = "";
 	private String accountName = "";
 	private Blog blog;
@@ -41,7 +40,7 @@ public class ViewPostComments extends ListActivity {
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
-         id = extras.getString("id");
+         id = extras.getInt("id");
          blog = new Blog(id, this);
          postID = extras.getString("postID");
          accountName = extras.getString("accountName");

@@ -14,9 +14,9 @@
 
 package com.commonsware.cwac.cache;
 
-import java.io.File;
-
 import com.commonsware.cwac.bus.AbstractBus;
+
+import java.io.File;
 
 abstract public class AsyncCache<K, V, B extends AbstractBus<?, ?, ?>, M>
 	extends CacheBase<K,V> {

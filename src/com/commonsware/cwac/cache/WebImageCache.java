@@ -14,12 +14,16 @@
 
 package com.commonsware.cwac.cache;
 
+import com.commonsware.cwac.bus.SimpleBus;
+import com.commonsware.cwac.task.AsyncTaskEx;
+
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,8 +33,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
-import com.commonsware.cwac.bus.SimpleBus;
-import com.commonsware.cwac.task.AsyncTaskEx;
 
 public class WebImageCache
 	extends AsyncCache<String, Drawable, SimpleBus, Bundle> {

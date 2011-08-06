@@ -14,12 +14,14 @@
 
 package com.commonsware.cwac.cache;
 
+import com.commonsware.cwac.task.AsyncTaskEx;
+
 import android.util.Log;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import com.commonsware.cwac.task.AsyncTaskEx;
 
 abstract public class CacheBase<K, V> {
 	public static final int CACHE_MEMORY=1;

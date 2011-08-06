@@ -1,17 +1,5 @@
 package org.xmlrpc.android;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PushbackInputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.Map;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -30,6 +18,18 @@ import org.xmlpull.v1.XmlSerializer;
 import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PushbackInputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.util.Map;
 
 public class XMLRPCClient {
 	private static final String TAG_METHOD_CALL = "methodCall";

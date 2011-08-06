@@ -1,6 +1,4 @@
 package org.wordpress.android;
-import java.util.Vector;
-
 import org.wordpress.android.models.Blog;
 
 import android.app.Activity;
@@ -19,9 +17,10 @@ import android.widget.TextView;
 
 public class Settings extends Activity {
 	protected static Intent svc = null;
-	private String id = "", originalUsername;
+	private String originalUsername;
 	private String xmlrpcPath;
 	private Blog blog;
+	private int id;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,7 +31,7 @@ public class Settings extends Activity {
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
-         id = extras.getString("id");
+         id = extras.getInt("id");
          blog = new Blog(id, this);
         }
 		

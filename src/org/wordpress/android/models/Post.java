@@ -1,24 +1,12 @@
 package org.wordpress.android.models;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.CommentService;
 import org.wordpress.android.Dashboard;
 import org.wordpress.android.R;
-import org.wordpress.android.TabView;
 import org.wordpress.android.ViewDrafts;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ViewPosts;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.ImageHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -35,10 +23,20 @@ import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
 public class Post {
 	
 	private long id;
-	private String blogID;
+	private int blogID;
 	private String categories;
     private String custom_fields;
     private long dateCreated;
@@ -79,7 +77,7 @@ public class Post {
 	public Vector<String> imageUrl = new Vector<String>();
 	Vector<String> selectedCategories = new Vector<String>();
     
-    public Post(String blog_id, long post_id, boolean isPage, Context ctx){
+    public Post(int blog_id, long post_id, boolean isPage, Context ctx){
 		//load an existing post
     	db = new WordPressDB(ctx);
     	context = ctx;
@@ -120,7 +118,7 @@ public class Post {
     	}
     }
     
-public Post(String blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, boolean isPage, Context ctx){
+public Post(int blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, boolean isPage, Context ctx){
 		//create a new post
     	db = new WordPressDB(ctx);
     	context = ctx;
@@ -158,11 +156,11 @@ public Post(String blog_id, String title, String content, String picturePaths, l
 		date_created_gmt = dateCreatedGmt;
 	}
 
-	public String getBlogID() {
+	public int getBlogID() {
 		return blogID;
 	}
 
-	public void setBlogID(String blogID) {
+	public void setBlogID(int blogID) {
 		this.blogID = blogID;
 	}
 	

@@ -1,7 +1,7 @@
 package org.wordpress.android;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.view.View.OnClickListener;
 
 /**
  * Action item, displayed as menu with icon and text.
@@ -11,8 +11,9 @@ import android.view.View.OnClickListener;
  */
 public class ActionItem {
 	private Drawable icon;
+	private Bitmap thumb;
 	private String title;
-	private OnClickListener listener;
+	private boolean selected;
 	
 	/**
 	 * Constructor
@@ -64,20 +65,38 @@ public class ActionItem {
 	}
 	
 	/**
-	 * Set on click listener
+	 * Set selected flag;
 	 * 
-	 * @param listener on click listener {@link View.OnClickListener}
+	 * @param selected Flag to indicate the item is selected
 	 */
-	public void setOnClickListener(OnClickListener listener) {
-		this.listener = listener;
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 	
 	/**
-	 * Get on click listener
+	 * Check if item is selected
 	 * 
-	 * @return on click listener {@link View.OnClickListener}
+	 * @return true or false
 	 */
-	public OnClickListener getListener() {
-		return this.listener;
+	public boolean isSelected() {
+		return this.selected;
+	}
+
+	/**
+	 * Set thumb
+	 * 
+	 * @param thumb Thumb image
+	 */
+	public void setThumb(Bitmap thumb) {
+		this.thumb = thumb;
+	}
+	
+	/**
+	 * Get thumb image
+	 * 
+	 * @return Thumb image
+	 */
+	public Bitmap getThumb() {
+		return this.thumb;
 	}
 }

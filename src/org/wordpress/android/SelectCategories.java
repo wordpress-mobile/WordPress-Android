@@ -1,10 +1,5 @@
 package org.wordpress.android;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 import org.wordpress.android.models.Blog;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -27,10 +22,15 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
 
 public class SelectCategories extends ListActivity {
     /** Called when the activity is first created. */
-	String id = "", categoriesCSV = "";
+	String categoriesCSV = "";
 	long[] checkedCategories;
 	private XMLRPCClient client;
 	String finalResult = "", addCategoryResult = "";
@@ -40,6 +40,7 @@ public class SelectCategories extends ListActivity {
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	private final Handler mHandler = new Handler();
 	private Blog blog;
+	private int id;
 	
     @Override
     public void onCreate(Bundle icicle) {
@@ -54,7 +55,7 @@ public class SelectCategories extends ListActivity {
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
-         id = extras.getString("id");
+         id = extras.getInt("id");
          blog = new Blog(id, this);
          checkedCategories = extras.getLongArray("checkedCategories");
          categoriesCSV = extras.getString("categoriesCSV");
@@ -68,7 +69,7 @@ public class SelectCategories extends ListActivity {
         	public void onClick(View v) {
         		
         		Bundle bundle = new Bundle();
-            	bundle.putString("id", id);
+            	bundle.putInt("id", id);
                 Intent i = new Intent(SelectCategories.this, AddCategory.class);
         		i.putExtras(bundle);
         		startActivityForResult(i, 0);

@@ -1,11 +1,6 @@
 package org.wordpress.android;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
+import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -28,7 +23,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -42,7 +36,6 @@ import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,7 +44,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
 
 public class wpAndroid extends ListActivity {
 	/** Called when the activity is first created. */

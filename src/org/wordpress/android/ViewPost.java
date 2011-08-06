@@ -1,9 +1,6 @@
 
 package org.wordpress.android;
 
-import java.util.HashMap;
-
-import org.wordpress.android.R;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
@@ -23,12 +20,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 public class ViewPost extends Activity {
     /** Called when the activity is first created. */
     private XMLRPCClient client;
     public String[] authors;
     public String[] comments;
-    private String id = "";
+    private int id;
     private String postID = "";
     private boolean isPage = false;
     private Blog blog;
@@ -42,7 +41,7 @@ public class ViewPost extends Activity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            id = extras.getString("id");
+            id = extras.getInt("id");
             blog = new Blog(id, this);
             postID = extras.getString("postID");
             isPage = extras.getBoolean("isPage");

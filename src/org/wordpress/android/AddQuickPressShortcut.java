@@ -1,7 +1,9 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Vector;
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
+import com.commonsware.cwac.thumbnail.ThumbnailBus;
+import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 import org.wordpress.android.util.EscapeUtils;
 
@@ -27,10 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.commonsware.cwac.cache.SimpleWebImageCache;
-import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
-import com.commonsware.cwac.thumbnail.ThumbnailBus;
-import com.commonsware.cwac.thumbnail.ThumbnailMessage;
+import java.util.HashMap;
+import java.util.Vector;
 
 public class AddQuickPressShortcut extends ListActivity {
 	public Vector<?> accounts;

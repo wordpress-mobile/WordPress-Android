@@ -1,19 +1,19 @@
 package org.wordpress.android.util;
 
-import java.io.IOException; 
-import java.net.InetAddress; 
-import java.net.Socket; 
-import java.security.KeyManagementException; 
-import java.security.KeyStoreException; 
-import java.security.NoSuchAlgorithmException; 
-import java.security.UnrecoverableKeyException; 
+import org.apache.http.conn.scheme.SocketFactory;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
-import javax.net.ssl.SSLContext; 
-import javax.net.ssl.TrustManager; 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 
-import org.apache.http.conn.scheme.SocketFactory; 
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier; 
-import org.apache.http.conn.ssl.SSLSocketFactory; 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 public class TrustAllSSLSocketFactory extends SSLSocketFactory { 
     private javax.net.ssl.SSLSocketFactory factory; 

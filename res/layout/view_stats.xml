@@ -5,11 +5,11 @@
   android:layout_height="fill_parent"
   android:background="#FFFFFFFF"
   android:fillViewport="true">
-  <include layout="@layout/action_bar" /> 
-  <RelativeLayout
+  <LinearLayout
     android:id="@+id/mainRL"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <include layout="@layout/action_bar" /> 
     <RelativeLayout
       android:layout_above="@id/mainRL"
       android:id="@+id/loading"
@@ -172,5 +172,5 @@
         android:paddingLeft="4dip"
         android:text="@string/help_stats" />
     </RelativeLayout>
-  </RelativeLayout>
+  </LinearLayout>
 </ScrollView>
