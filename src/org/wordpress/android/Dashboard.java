@@ -439,7 +439,7 @@ public class Dashboard extends Activity {
 
             home.setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, wpAndroid.class);
+                    Intent i = new Intent(Dashboard.this, Dashboard.class);
                     startActivity(i);
                 }
             });

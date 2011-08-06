@@ -109,7 +109,7 @@ public class ViewPosts extends ListActivity {
 		
 		home.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(ViewPosts.this, wpAndroid.class);		
+				Intent i = new Intent(ViewPosts.this, Dashboard.class);		
 				startActivity(i);
 			}
 		});

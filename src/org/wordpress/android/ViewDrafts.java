@@ -110,7 +110,7 @@ public class ViewDrafts extends ListActivity {
 		
 		home.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(ViewDrafts.this, wpAndroid.class);		
+				Intent i = new Intent(ViewDrafts.this, Dashboard.class);		
 				startActivity(i);
 			}
 		});
