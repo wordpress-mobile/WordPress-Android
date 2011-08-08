@@ -4,6 +4,7 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.widget.TextView;
 
 public class CommentBadgeTextView extends TextView {
@@ -23,7 +24,13 @@ public class CommentBadgeTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
-        canvas.rotate(45);
+        
+        //calculate the center position based on the device's screen density
+        float centerPos = 27.0f;
+        float scale = getResources().getDisplayMetrics().density;
+        int fCenter = (int) (centerPos * scale + 0.5f);
+        
+        canvas.rotate(45, fCenter, fCenter);
         super.onDraw(canvas);
         canvas.restore();
 

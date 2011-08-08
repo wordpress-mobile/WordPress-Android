@@ -2,10 +2,12 @@ package org.wordpress.android;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
+import org.xmlrpc.android.ApiHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -80,6 +82,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -120,6 +123,9 @@ public class EditPost extends Activity implements LocationListener{
     private int mYear, mMonth, mDay, mHour, mMinute;
     private Blog blog;
     private Post post;
+    //post formats
+    String[] postFormats;
+    String[] postFormatTitles = null;
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);	
@@ -127,7 +133,7 @@ public class EditPost extends Activity implements LocationListener{
         categories = new JSONArray();
         if(extras !=null)
         {
-         id = extras.getInt("id");
+         id = WordPress.currentBlog.getId();
          blog = new Blog(id, this);
          accountName = EscapeUtils.unescapeHtml(extras.getString("accountName"));
          postID = extras.getLong("postID");
@@ -155,17 +161,20 @@ public class EditPost extends Activity implements LocationListener{
         }
         else{
         	setContentView(R.layout.edit);
-/*        	if (blog.getPostFormats().equals("")) {
+        	if (blog.getPostFormats().equals("")) {
                 Vector args = new Vector();
                 args.add(blog);
                 args.add(this);
                 new ApiHelper.getPostFormatsTask().execute(args);
+                postFormatTitles = getResources().getStringArray(R.array.post_formats_array);
+                String defaultPostFormatTitles[] = {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
+                postFormats = defaultPostFormatTitles;
             }
             else {
                 try {
                     JSONObject jsonPostFormats = new JSONObject(blog.getPostFormats());
-                    String[] postFormats = new String[jsonPostFormats.length()];
-                    String[] postFormatTitles = new String[jsonPostFormats.length()];
+                    postFormats = new String[jsonPostFormats.length()];
+                    postFormatTitles = new String[jsonPostFormats.length()];
                     Iterator it = jsonPostFormats.keys();
                     int i = 0;
                     while (it.hasNext()) {
@@ -175,16 +184,31 @@ public class EditPost extends Activity implements LocationListener{
                       postFormatTitles[i] = val;
                       i++;
                     }
-                    Spinner pfSpinner = (Spinner) findViewById(R.id.postFormat);
-                    ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(this,
-                                android.R.layout.simple_spinner_item, postFormatTitles);
-                    pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    pfSpinner.setAdapter(pfAdapter);
+                    
+                    //note: submit patch to wp.org to sort post format server side?
+                    java.util.Arrays.sort(postFormats);
+                    java.util.Arrays.sort(postFormatTitles);
+                    
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-            }*/
+            }
+        	Spinner pfSpinner = (Spinner) findViewById(R.id.postFormat);
+            ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(this,
+                        android.R.layout.simple_spinner_item, postFormatTitles);
+            pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            pfSpinner.setAdapter(pfAdapter);
+            String activePostFormat = "standard";
+            if (!isNew) {
+                if (!post.getWP_post_format().equals(""))
+                    activePostFormat = post.getWP_post_format();
+            }
+            for (int i=0; i < postFormats.length; i++) {
+                if (postFormats[i].equals(activePostFormat))
+                    pfSpinner.setSelection(i);
+            }
+                
         }
         
         String[] items = new String[] {getResources().getString(R.string.publish_post), getResources().getString(R.string.draft), getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
@@ -1391,9 +1415,13 @@ public class EditPost extends Activity implements LocationListener{
         		}
 
         	}
+            
+            //post format
+            Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
+            String postFormat = postFormats[postFormatSpinner.getSelectedItemPosition()];
         
             if (isNew){
-            	post = new Post(id, title, content, images, pubDateTimestamp, categories.toString(), tags, status, password, latitude, longitude, isPage, EditPost.this);
+            	post = new Post(id, title, content, images, pubDateTimestamp, categories.toString(), tags, status, password, latitude, longitude, isPage, postFormat, EditPost.this);
             	post.setLocalDraft(true);
             	success = post.save();
             }
@@ -1408,6 +1436,7 @@ public class EditPost extends Activity implements LocationListener{
             	post.setWP_password(password);
             	post.setLatitude(latitude);
             	post.setLongitude(longitude);
+            	post.setWP_post_form(postFormat);
             	success = post.save();
             }
 

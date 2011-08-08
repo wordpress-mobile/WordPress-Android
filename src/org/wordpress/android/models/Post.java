@@ -118,7 +118,7 @@ public class Post {
     	}
     }
     
-public Post(int blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, boolean isPage, Context ctx){
+public Post(int blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status, String password, double latitude, double longitude, boolean isPage, String postFormat, Context ctx){
 		//create a new post
     	db = new WordPressDB(ctx);
     	context = ctx;
@@ -134,6 +134,7 @@ public Post(int blog_id, String title, String content, String picturePaths, long
     	this.post_status = status;
     	this.wp_password = password;
     	this.isPage = isPage;
+    	this.wp_post_format = postFormat;
     }
     
 	public long getId() {
@@ -545,6 +546,11 @@ public Post(int blog_id, String title, String content, String picturePaths, long
 							}
 						}
 					}
+					
+					//post format
+					if (!post.getWP_post_format().equals("")){
+		                contentStruct.put("wp_post_format", post.getWP_post_format());
+		            }
 				}
 
 				contentStruct.put("post_type", (post.isPage) ? "page" : "post");

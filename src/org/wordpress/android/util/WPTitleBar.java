@@ -2,8 +2,6 @@
 package org.wordpress.android.util;
 
 import org.wordpress.android.ActionItem;
-import org.wordpress.android.Dashboard;
-import org.wordpress.android.EditPost;
 import org.wordpress.android.QuickAction;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -11,14 +9,11 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 
 import android.content.Context;
-import android.location.LocationManager;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +66,7 @@ public class WPTitleBar extends LinearLayout {
                     settingsDB.updateLastBlogID(context, blogIDs[pos]);
                 }
             });
-            
+
             blogTitle = (Button) findViewById(R.id.blog_title);
             blogTitle.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -85,12 +80,12 @@ public class WPTitleBar extends LinearLayout {
             qaBlogs.addActionItem(blogIA);
 
         }
-        
+
         int lastBlogID = settingsDB.getLastBlogID(context);
         if (lastBlogID != -1) {
             try {
                 boolean matchedID = false;
-                for (int i=0;i<blogIDs.length;i++) {
+                for (int i = 0; i < blogIDs.length; i++) {
                     if (blogIDs[i] == lastBlogID) {
                         matchedID = true;
                         WordPress.currentBlog = new Blog(blogIDs[i], context);
@@ -102,53 +97,57 @@ public class WPTitleBar extends LinearLayout {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            if (blogIDs.length > 0)
+                WordPress.currentBlog = new Blog(blogIDs[0], context);
         }
-        else {
-            WordPress.currentBlog = new Blog(blogIDs[0], context);
+
+        if (WordPress.currentBlog != null) {
+
+            blogTitle.setText(WordPress.currentBlog.getBlogName());
+
+            final ActionItem newpost = new ActionItem();
+
+            newpost.setTitle("Add New Post");
+            newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
+
+            final ActionItem newpage = new ActionItem();
+
+            newpage.setTitle("Add New Page");
+            newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
+
+            final ActionItem addOldPhoto = new ActionItem();
+            addOldPhoto.setTitle("Add Image From Gallery");
+            addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
+
+            final ActionItem takeNewPhoto = new ActionItem();
+            takeNewPhoto.setTitle("Take Photo");
+            takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
+
+            final ActionItem addOldVideo = new ActionItem();
+            addOldVideo.setTitle("Add Video from Gallery");
+            addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
+
+            final ActionItem takeNewVideo = new ActionItem();
+            takeNewVideo.setTitle("Take Video");
+            takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
+
+            ImageButton add = (ImageButton) findViewById(R.id.add_small);
+
+            add.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                    qa = new QuickAction(context);
+                    qa.addActionItem(newpost);
+                    qa.addActionItem(newpage);
+                    qa.addActionItem(addOldPhoto);
+                    qa.addActionItem(takeNewPhoto);
+                    qa.addActionItem(addOldVideo);
+                    qa.addActionItem(takeNewVideo);
+                    qa.setAnimStyle(QuickAction.ANIM_AUTO);
+                    qa.show(v);
+                }
+            });
         }
-        blogTitle.setText(WordPress.currentBlog.getBlogName());
-
-        final ActionItem newpost = new ActionItem();
-
-        newpost.setTitle("Add New Post");
-        newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
-
-        final ActionItem newpage = new ActionItem();
-
-        newpage.setTitle("Add New Page");
-        newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
-
-        final ActionItem addOldPhoto = new ActionItem();
-        addOldPhoto.setTitle("Add Image From Gallery");
-        addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-
-        final ActionItem takeNewPhoto = new ActionItem();
-        takeNewPhoto.setTitle("Take Photo");
-        takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-
-        final ActionItem addOldVideo = new ActionItem();
-        addOldVideo.setTitle("Add Video from Gallery");
-        addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
-
-        final ActionItem takeNewVideo = new ActionItem();
-        takeNewVideo.setTitle("Take Video");
-        takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
-
-        ImageButton add = (ImageButton) findViewById(R.id.add_small);
-
-        add.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                qa = new QuickAction(context);
-                qa.addActionItem(newpost);
-                qa.addActionItem(newpage);
-                qa.addActionItem(addOldPhoto);
-                qa.addActionItem(takeNewPhoto);
-                qa.addActionItem(addOldVideo);
-                qa.addActionItem(takeNewVideo);
-                qa.setAnimStyle(QuickAction.ANIM_AUTO);
-                qa.show(v);
-            }
-        });
     }
 }

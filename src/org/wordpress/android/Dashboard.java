@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -67,17 +68,14 @@ public class Dashboard extends Activity {
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 
+        commentBadge = (TextView) findViewById(R.id.comment_badge);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         final WordPressDB settingsDB = new WordPressDB(this);
         accounts = settingsDB.getAccounts(this);
-        
-        Animation rotateAnim = AnimationUtils.loadAnimation(this, R.anim.rotate_comment_badge);
-        commentBadge = (TextView) findViewById(R.id.comment_badge);
-        commentBadge.setAnimation(rotateAnim);
-    }
-    
-    @Override
-    protected void onResume () {
-        super.onResume();
         boolean eula = checkEULA();
         if (eula == false) {
 
@@ -106,12 +104,11 @@ public class Dashboard extends Activity {
             displayAccounts();
         }
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null )
-        {
+        if (data != null) {
             Bundle bundle = data.getExtras();
             String status = bundle.getString("returnStatus");
             if (status.equals("CANCEL") && WordPress.currentBlog != null) {
@@ -345,7 +342,7 @@ public class Dashboard extends Activity {
         }
 
     }
-    
+
     public void displayAccounts() {
 
         // settings time!
@@ -368,11 +365,11 @@ public class Dashboard extends Activity {
                 e.printStackTrace();
             }
 
-            //Integer blog_num = blog_select.getSelectedItemPosition();
-            //blog_num = blog_num + 1;
+            // Integer blog_num = blog_select.getSelectedItemPosition();
+            // blog_num = blog_num + 1;
 
-            //id = blog_num.toString();
-            
+            // id = blog_num.toString();
+
             updateCommentBadge();
 
             Button postsButton = (Button) findViewById(R.id.dashboard_posts_btn);
@@ -385,7 +382,7 @@ public class Dashboard extends Activity {
                     startActivityForResult(i, 0);
                 }
             });
-            
+
             Button pagesButton = (Button) findViewById(R.id.dashboard_pages_btn);
             pagesButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -397,18 +394,17 @@ public class Dashboard extends Activity {
                     startActivityForResult(i, 0);
                 }
             });
-            
-            /*Button draftsButton = (Button) findViewById(R.id.dashboard_drafts_btn);
-            draftsButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, ViewDrafts.class);
-                    i.putExtra("id", id);
-                    i.putExtra("blavatar", blavatar_url);
-                    i.putExtra("isNew", true);
-                    startActivityForResult(i, 0);
-                }
-            });*/
-            
+
+            /*
+             * Button draftsButton = (Button)
+             * findViewById(R.id.dashboard_drafts_btn);
+             * draftsButton.setOnClickListener(new View.OnClickListener() {
+             * public void onClick(View v) { Intent i = new
+             * Intent(Dashboard.this, ViewDrafts.class); i.putExtra("id", id);
+             * i.putExtra("blavatar", blavatar_url); i.putExtra("isNew", true);
+             * startActivityForResult(i, 0); } });
+             */
+
             Button commentsButton = (Button) findViewById(R.id.dashboard_comments_btn);
             commentsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -419,7 +415,7 @@ public class Dashboard extends Activity {
                     startActivityForResult(i, 0);
                 }
             });
-            
+
             Button statsButton = (Button) findViewById(R.id.dashboard_stats_btn);
             statsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -430,7 +426,7 @@ public class Dashboard extends Activity {
                     startActivityForResult(i, 0);
                 }
             });
-            
+
             Button settingsButton = (Button) findViewById(R.id.dashboard_settings_btn);
             settingsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -446,19 +442,19 @@ public class Dashboard extends Activity {
 
             quickpress.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    //Integer blog_num = blog_select.getSelectedItemPosition();
-                    //blog_num = blog_num + 1;
+                    // Integer blog_num = blog_select.getSelectedItemPosition();
+                    // blog_num = blog_num + 1;
 
-                    //id = blog_num.toString();
+                    // id = blog_num.toString();
                     Intent i = new Intent(Dashboard.this, EditPost.class);
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("id", WordPress.currentBlog.getId());
                     i.putExtra("isNew", true);
                     i.putExtra("option", "");
-                    startActivityForResult(i, 0);
+                    startActivity(i);
                 }
             });
-            
+
         } else {
             // no account, load new account view
             Intent i = new Intent(Dashboard.this, NewAccount.class);
@@ -467,10 +463,11 @@ public class Dashboard extends Activity {
 
         }
     }
-    
-    public void updateCommentBadge(){
+
+    public void updateCommentBadge() {
         if (WordPress.currentBlog != null) {
-            commentBadge.setText(String.valueOf(WordPress.currentBlog.getUnmoderatedCommentCount(this)));
+            commentBadge.setText(String.valueOf(WordPress.currentBlog
+                    .getUnmoderatedCommentCount(this)));
         }
     }
 }

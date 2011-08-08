@@ -93,6 +93,9 @@ public class WordPressDB {
 	
 	//add field to store last used blog
     private static final String ADD_LAST_BLOG_ID = "alter table eula add last_blog_id text;";
+    
+    //add field to store last used blog
+    private static final String ADD_POST_FORMATS = "alter table accounts add postFormats text default '';";
 	
 	private SQLiteDatabase db;
 	
@@ -133,6 +136,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
@@ -157,6 +161,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); //set to latest revision
 			}
@@ -179,6 +184,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); 
 			}
@@ -198,6 +204,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); 
 			}
@@ -217,6 +224,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -235,6 +243,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -251,6 +260,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -259,6 +269,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -266,6 +277,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -273,6 +285,7 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
                 db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			}
@@ -291,7 +304,7 @@ public class WordPressDB {
 					
 					for (int i = 0; i < numRows; ++i) {
 					if (c.getString(0) != null){
-						Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(10), false, ctx);
+						Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getDouble(9), c.getDouble(10), false, "", ctx);
 						post.setLocalDraft(true);
 						post.save();	
 					}
@@ -309,7 +322,7 @@ public class WordPressDB {
 					
 					for (int i = 0; i < numRows; ++i) {
 					if (c.getString(0) != null){
-						Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), null, null, 0, 0, true, ctx);
+						Post post = new Post(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getLong(4), c.getString(5), c.getString(6), null, null, 0, 0, true, "", ctx);
 						post.setLocalDraft(true);
 						post.setPage(true);
 						post.save();	
@@ -324,6 +337,7 @@ public class WordPressDB {
 				}
 				
 				db.execSQL(ADD_LAST_BLOG_ID);
+                db.execSQL(ADD_POST_FORMATS);
 		        db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -432,7 +446,7 @@ public class WordPressDB {
         return sb.toString();
     }
 
-	public boolean saveSettings(Context ctx, String id, String url, String username, String password, String httpuser, String httppassword, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean location, boolean isWPCom, String originalUsername) {
+	public boolean saveSettings(Context ctx, String id, String url, String username, String password, String httpuser, String httppassword, String imagePlacement, boolean centerThumbnail, boolean fullSizeImage, String maxImageWidth, int maxImageWidthId, boolean location, boolean isWPCom, String originalUsername, String postFormats) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -446,6 +460,7 @@ public class WordPressDB {
 		values.put("maxImageWidth", maxImageWidth);
 		values.put("maxImageWidthId", maxImageWidthId);
 		values.put("location", location);
+		values.put("postFormats", postFormats);
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
 		if (isWPCom){
 			//update the login for other wordpress.com accounts
@@ -499,7 +514,7 @@ public class WordPressDB {
 	public Vector<Object> loadSettings(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid", "wpVersion"}, "id=" + id, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid", "wpVersion", "postFormats"}, "id=" + id, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -537,6 +552,7 @@ public class WordPressDB {
 			returnVector.add(c.getString(17));
 			returnVector.add(c.getString(18));
 			returnVector.add(c.getString(19));
+			returnVector.add(c.getString(20));
 			}
 			else
 			{
@@ -949,6 +965,7 @@ public class WordPressDB {
 		values.put("post_status", post.getPost_status());
         values.put("uploaded", post.isUploaded());
 		values.put("isPage", post.isPage());
+		values.put("wp_post_format", post.getWP_post_format());
 		
 		returnValue = db.insert(POSTS_TABLE, null, values);
 
@@ -986,6 +1003,7 @@ public class WordPressDB {
         values.put("wp_password", post.getWP_password());
         values.put("post_status", post.getPost_status());
         values.put("isPage", post.isPage());
+        values.put("wp_post_format", post.getWP_post_format());
 
         int pageInt = 0;
         if (post.isPage())
