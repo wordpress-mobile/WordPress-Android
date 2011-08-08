@@ -101,12 +101,11 @@ abstract public class GraphView extends LinearLayout {
 			canvas.drawText(title, (graphwidth / 2) + horstart, border - 4, paint);
 
 			if (maxY != minY) {
-				// blue version
-				paint.setARGB(255, 0, 119, 204);
 				paint.setStrokeCap(Paint.Cap.ROUND);
 				paint.setStrokeWidth(3);
 
 				for (int i=0; i<graphSeries.size(); i++) {
+					paint.setColor(graphSeries.get(i).color);
 					drawSeries(canvas, _values(i), graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart);
 				}
 			}
@@ -188,11 +187,14 @@ abstract public class GraphView extends LinearLayout {
 	 */
 	static public class GraphViewSeries {
 		final String description;
-		final Integer color;
+		final int color;
 		final GraphViewData[] values;
 		public GraphViewSeries(String description, Integer color, GraphViewData[] values) {
 			super();
 			this.description = description;
+			if (color == null) {
+				color = 0xff0077cc; // blue version
+			}
 			this.color = color;
 			this.values = values;
 		}
