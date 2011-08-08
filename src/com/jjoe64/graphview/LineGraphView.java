@@ -16,8 +16,8 @@ public class LineGraphView extends GraphView {
 	private final Paint paintBackground;
 	private boolean drawBackground;
 
-	public LineGraphView(Context context, GraphViewData[] values, String title, String[] horlabels, String[] verlabels) {
-		super(context, values, title, horlabels, verlabels);
+	public LineGraphView(Context context, String title) {
+		super(context, title);
 
 		paintBackground = new Paint();
 		paintBackground.setARGB(255, 20, 40, 60);
@@ -25,9 +25,7 @@ public class LineGraphView extends GraphView {
 	}
 
 	@Override
-	public void drawData(Canvas canvas, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart) {
-		GraphViewData[] values = _values();
-
+	public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart) {
 		// draw background
 		double lastEndY = 0;
 		double lastEndX = 0;

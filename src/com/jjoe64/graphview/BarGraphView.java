@@ -8,17 +8,14 @@ import android.graphics.Canvas;
  * @author Muhammad Shahab Hameed
  */
 public class BarGraphView extends GraphView {
-	public BarGraphView(Context context, GraphViewData[] values, String title,
-			String[] horlabels, String[] verlabels) {
-		super(context, values, title, horlabels, verlabels);
+	public BarGraphView(Context context, String title) {
+		super(context, title);
 	}
 
 	@Override
-	public void drawData(Canvas canvas, float graphwidth, float graphheight,
+	public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight,
 			float border, double minX, double minY, double diffX, double diffY,
 			float horstart) {
-		GraphViewData[] values = _values();
-
 		float colwidth = (graphwidth - (2 * border)) / values.length;
 
 		// draw data

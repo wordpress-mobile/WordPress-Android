@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.GraphViewSeries;
 
 /**
  * GraphViewDemo creates some dummy data to demonstrate the GraphView component.
@@ -23,18 +24,16 @@ public class GraphViewDemo extends Activity {
 		super.onCreate(savedInstanceState);
 		LineGraphView graphView = new LineGraphView(
 				this
-				, new GraphViewData[] {
-						new GraphViewData(1, 2.0d)
-						, new GraphViewData(2, 1.5d)
-						, new GraphViewData(2.5, 3.0d)
-						, new GraphViewData(3, 2.5d)
-						, new GraphViewData(4, 1.0d)
-						, new GraphViewData(5, 3.0d)
-				}
 				, "GraphViewDemo"
-				, null
-				, null
 		);
+		graphView.addSeries(new GraphViewSeries(null, null, new GraphViewData[] {
+				new GraphViewData(1, 2.0d)
+				, new GraphViewData(2, 1.5d)
+				, new GraphViewData(2.5, 3.0d)
+				, new GraphViewData(3, 2.5d)
+				, new GraphViewData(4, 1.0d)
+				, new GraphViewData(5, 3.0d)
+		}));
 		setContentView(graphView);
 	}
 }
