@@ -26,7 +26,7 @@ public class GraphViewDemo extends Activity {
 				this
 				, "GraphViewDemo"
 		);
-		graphView.addSeries(new GraphViewSeries(null, null, new GraphViewData[] {
+		graphView.addSeries(new GraphViewSeries(new GraphViewData[] {
 				new GraphViewData(1, 2.0d)
 				, new GraphViewData(2, 1.5d)
 				, new GraphViewData(2.5, 3.0d)

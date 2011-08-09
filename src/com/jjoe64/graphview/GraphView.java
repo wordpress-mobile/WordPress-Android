@@ -192,6 +192,11 @@ abstract public class GraphView extends LinearLayout {
 		final String description;
 		final int color;
 		final GraphViewData[] values;
+		public GraphViewSeries(GraphViewData[] values) {
+			description = null;
+			color = 0xff0077cc; // blue version
+			this.values = values;
+		}
 		public GraphViewSeries(String description, Integer color, GraphViewData[] values) {
 			super();
 			this.description = description;
