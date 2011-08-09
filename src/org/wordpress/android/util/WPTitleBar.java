@@ -27,6 +27,7 @@ public class WPTitleBar extends LinearLayout {
     public Vector<?> accounts;
     private Context context;
     Button blogTitle;
+    public ImageButton refreshButton;
 
     public WPTitleBar(final Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
@@ -104,6 +105,8 @@ public class WPTitleBar extends LinearLayout {
 
         if (WordPress.currentBlog != null) {
 
+            refreshButton = (ImageButton) findViewById(R.id.action_refresh);
+            
             blogTitle.setText(WordPress.currentBlog.getBlogName());
 
             final ActionItem newpost = new ActionItem();
@@ -149,5 +152,9 @@ public class WPTitleBar extends LinearLayout {
                 }
             });
         }
+    }
+    
+    public void addRefreshButton() {
+        refreshButton.setVisibility(View.VISIBLE);
     }
 }

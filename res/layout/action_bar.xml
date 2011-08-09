@@ -47,6 +47,17 @@
       android:layout_marginRight="4dip"
       android:layout_marginLeft="4dip"
       android:background="@null" />
+      
+<ImageButton
+      android:id="@+id/action_refresh"
+      android:layout_width="wrap_content"
+      android:layout_height="fill_parent"
+      android:src="@drawable/refresh"
+      android:layout_toLeftOf="@id/add_small"
+      android:layout_marginRight="4dip"
+      android:layout_marginLeft="4dip"
+      android:background="@null"
+      android:visibility="gone" />
 
   </RelativeLayout>
 </org.wordpress.android.util.WPTitleBar>

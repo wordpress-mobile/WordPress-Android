@@ -213,6 +213,7 @@
         android:text="@string/selected_categories"
         android:layout_below="@id/selectCategories"
         android:textColor="#444444" />
+
     </RelativeLayout>
     <RelativeLayout
       android:id="@+id/location_wrapper"
@@ -309,13 +310,21 @@
         android:layout_toRightOf="@id/pubDate"
         android:text="@string/edit"
         android:layout_marginLeft="2dip" />
+      <TextView
+        android:id="@+id/postFormatLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pubDateButton"
+        android:text="@string/post_format"
+        android:layout_marginLeft="4dip"
+        android:layout_marginTop="6dip" />
       <Spinner
         android:id="@+id/postFormat"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/wp_spinner_bg"
-        android:layout_below="@id/pubDateButton"
-        android:prompt="@string/save" />
+        android:layout_below="@id/postFormatLabel"
+        android:prompt="@string/post_format" />
       <EditText
         android:id="@+id/post_password"
         android:minHeight="40dip"

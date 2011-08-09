@@ -135,31 +135,7 @@ public class ViewDrafts extends ListActivity {
             largeScreen = true;
         }
 
-        final ImageButton addNewPost = (ImageButton) findViewById(R.id.newPost);
-
-        addNewPost.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent i = new Intent(ViewDrafts.this, EditPost.class);
-                i.putExtra("accountName", accountName);
-                i.putExtra("id", id);
-                i.putExtra("isNew", true);
-                if (isPage) {
-                    i.putExtra("isPage", true);
-                }
-                startActivityForResult(i, 0);
-
-            }
-        });
-
-        final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
-
-        refresh.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                refreshPosts(false);
-            }
-        });
-
+        
     }
 
     private void createSwitcher() {

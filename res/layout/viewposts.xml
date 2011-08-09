@@ -6,7 +6,7 @@
   android:padding="0px"
   android:background="#F4F4F4"
   android:orientation="vertical">
-  <include layout="@layout/action_bar" />
+  <include layout="@layout/action_bar" android:id="@+id/actionBar" />
   <RelativeLayout
   	android:layout_width="wrap_content"
   	android:layout_height="wrap_content"
@@ -71,27 +71,5 @@
           android:layout_alignParentTop="true" />
       </LinearLayout>
     </RelativeLayout>
-  </RelativeLayout>
-  <RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bottom_bar"
-    android:gravity="bottom"
-    android:padding="2dip">
-    <ImageButton
-      android:id="@+id/newPost"
-      android:background="@drawable/menu_button_selector"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:padding="2dip"
-      android:src="@drawable/add" />
-    <ImageButton
-      android:background="@drawable/menu_button_selector"
-      android:id="@+id/refresh"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:padding="2dip"
-      android:src="@drawable/refresh" />
   </RelativeLayout>
 </LinearLayout>

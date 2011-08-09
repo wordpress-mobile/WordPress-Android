@@ -1,3 +1,4 @@
+
 package org.wordpress.android;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.WPTitleBar;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -102,6 +104,17 @@ public class ViewPosts extends ListActivity {
             action = extras.getString("action");
         }
 
+        WPTitleBar titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+        titleBar.addRefreshButton();
+
+        titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+
+                refreshPosts(false);
+
+            }
+        });
+
         createSwitcher();
 
         // user came from action intent
@@ -140,34 +153,6 @@ public class ViewPosts extends ListActivity {
         if (width > 480 || height > 480) {
             largeScreen = true;
         }
-
-        final ImageButton addNewPost = (ImageButton) findViewById(R.id.newPost);
-
-        addNewPost.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent i = new Intent(ViewPosts.this, EditPost.class);
-                i.putExtra("accountName", WordPress.currentBlog.getBlogName());
-                i.putExtra("id", id);
-                i.putExtra("isNew", true);
-                if (isPage) {
-                    i.putExtra("isPage", true);
-                }
-                startActivityForResult(i, 0);
-
-            }
-        });
-
-        final ImageButton refresh = (ImageButton) findViewById(R.id.refresh);
-
-        refresh.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-
-                refreshPosts(false);
-
-            }
-        });
-
     }
 
     private void createSwitcher() {
@@ -378,7 +363,9 @@ public class ViewPosts extends ListActivity {
                                     return;
                                 }
 
-                                Object[] args = { R.id.row_post_id };
+                                Object[] args = {
+                                    R.id.row_post_id
+                                };
 
                                 try {
                                     Method m = android.view.View.class
@@ -612,7 +599,9 @@ public class ViewPosts extends ListActivity {
                 wrapper.getTitle().setTextSize(16);
                 wrapper.getDate().setTextColor(Color.parseColor("#888888"));
 
-                Object[] args = { R.id.row_post_id, postIDs[position] };
+                Object[] args = {
+                        R.id.row_post_id, postIDs[position]
+                };
 
                 try {
                     Method m = android.view.View.class.getMethod("setTag");
@@ -655,7 +644,8 @@ public class ViewPosts extends ListActivity {
 
             }
             String titleText = titles[position];
-            if (titleText == "") titleText = "(" + getResources().getText(R.string.untitled) + ")";
+            if (titleText == "")
+                titleText = "(" + getResources().getText(R.string.untitled) + ")";
             wrapper.getTitle().setText(titleText);
             wrapper.getDate().setText(date);
 
@@ -674,31 +664,31 @@ public class ViewPosts extends ListActivity {
 
             if (returnResult != null) {
                 switch (requestCode) {
-                case 0:
-                    if (returnResult.equals("OK")) {
-                        boolean uploadNow = false;
-                        uploadNow = extras.getBoolean("upload");
-                        if (uploadNow) {
-                            selectedID = extras.getLong("newID");
-                            showDialog(ID_DIALOG_POSTING);
+                    case 0:
+                        if (returnResult.equals("OK")) {
+                            boolean uploadNow = false;
+                            uploadNow = extras.getBoolean("upload");
+                            if (uploadNow) {
+                                selectedID = extras.getLong("newID");
+                                showDialog(ID_DIALOG_POSTING);
 
-                            try {
-                                submitResult = submitPost();
+                                try {
+                                    submitResult = submitPost();
 
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+                                loadPosts(false);
                             }
-
-                        } else {
-                            loadPosts(false);
                         }
-                    }
-                    break;
-                case 1:
-                    if (returnResult.equals("OK")) {
-                        refreshPosts(false);
-                    }
-                    break;
+                        break;
+                    case 1:
+                        if (returnResult.equals("OK")) {
+                            refreshPosts(false);
+                        }
+                        break;
                 }
             }
         }
@@ -710,207 +700,207 @@ public class ViewPosts extends ListActivity {
         /* Switch on the ID of the item, to get what the user selected. */
         if (item.getGroupId() == 0) {
             switch (item.getItemId()) {
-            case 0:
-                Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
-                Post post = new Post(id, selectedID, isPage, ViewPosts.this);
-                i0.putExtra("postID", post.getPostid());
-                i0.putExtra("id", id);
-                i0.putExtra("accountName", accountName);
-                startActivity(i0);
-                return true;
-            case 1:
-                Intent i = new Intent(ViewPosts.this, ViewPostComments.class);
-                i.putExtra("postID", selectedID);
-                i.putExtra("id", id);
-                i.putExtra("accountName", accountName);
-                startActivity(i);
-                return true;
-            case 2:
-                Intent i2 = new Intent(ViewPosts.this, EditPost.class);
-                i2.putExtra("postID", selectedID);
-                i2.putExtra("id", id);
-                i2.putExtra("accountName", accountName);
-                startActivityForResult(i2, 0);
-                return true;
-            case 3:
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        ViewPosts.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.delete_post));
-                dialogBuilder.setMessage(getResources().getText(
-                        R.string.delete_sure_post)
-                        + " '" + titles[rowID] + "'?");
-                dialogBuilder.setPositiveButton(getResources().getText(
-                        R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        showDialog(ID_DIALOG_DELETING);
-                        new Thread() {
-                            public void run() {
-                                deletePost();
-                            }
-                        }.start();
+                case 0:
+                    Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
+                    Post post = new Post(id, selectedID, isPage, ViewPosts.this);
+                    i0.putExtra("postID", post.getPostid());
+                    i0.putExtra("id", id);
+                    i0.putExtra("accountName", accountName);
+                    startActivity(i0);
+                    return true;
+                case 1:
+                    Intent i = new Intent(ViewPosts.this, ViewPostComments.class);
+                    i.putExtra("postID", selectedID);
+                    i.putExtra("id", id);
+                    i.putExtra("accountName", accountName);
+                    startActivity(i);
+                    return true;
+                case 2:
+                    Intent i2 = new Intent(ViewPosts.this, EditPost.class);
+                    i2.putExtra("postID", selectedID);
+                    i2.putExtra("id", id);
+                    i2.putExtra("accountName", accountName);
+                    startActivityForResult(i2, 0);
+                    return true;
+                case 3:
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                            ViewPosts.this);
+                    dialogBuilder.setTitle(getResources().getText(
+                            R.string.delete_post));
+                    dialogBuilder.setMessage(getResources().getText(
+                            R.string.delete_sure_post)
+                            + " '" + titles[rowID] + "'?");
+                    dialogBuilder.setPositiveButton(getResources().getText(
+                            R.string.yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            showDialog(ID_DIALOG_DELETING);
+                            new Thread() {
+                                public void run() {
+                                    deletePost();
+                                }
+                            }.start();
 
-                    }
-                });
-                dialogBuilder.setNegativeButton(getResources().getText(
-                        R.string.no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
+                        }
+                    });
+                    dialogBuilder.setNegativeButton(getResources().getText(
+                            R.string.no), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Just close the window.
 
+                        }
+                    });
+                    dialogBuilder.setCancelable(true);
+                    if (!isFinishing()) {
+                        dialogBuilder.create().show();
                     }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
 
-                return true;
-            case 4:
-                loadingDialog = ProgressDialog.show(this, getResources()
-                        .getText(R.string.share_url), getResources().getText(
-                        R.string.attempting_fetch_url), true, false);
-                Thread action = new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        shareURL(id, String.valueOf(selectedID), false);
-                        Looper.loop();
-                    }
-                };
-                action.start();
-                return true;
+                    return true;
+                case 4:
+                    loadingDialog = ProgressDialog.show(this, getResources()
+                            .getText(R.string.share_url), getResources().getText(
+                            R.string.attempting_fetch_url), true, false);
+                    Thread action = new Thread() {
+                        public void run() {
+                            Looper.prepare();
+                            shareURL(id, String.valueOf(selectedID), false);
+                            Looper.loop();
+                        }
+                    };
+                    action.start();
+                    return true;
             }
 
         } else if (item.getGroupId() == 2) {
             switch (item.getItemId()) {
-            case 0:
-                Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
-                i0.putExtra("postID", String.valueOf(selectedID));
-                i0.putExtra("id", id);
-                i0.putExtra("accountName", accountName);
-                i0.putExtra("isPage", true);
-                startActivity(i0);
-                return true;
-            case 1:
-                Intent i = new Intent(ViewPosts.this, ViewPostComments.class);
-                i.putExtra("postID", String.valueOf(selectedID));
-                i.putExtra("id", id);
-                i.putExtra("accountName", accountName);
-                startActivity(i);
-                return true;
-            case 2:
-                Intent i2 = new Intent(ViewPosts.this, EditPost.class);
-                i2.putExtra("postID", selectedID);
-                i2.putExtra("id", id);
-                i2.putExtra("accountName", accountName);
-                i2.putExtra("isPage", true);
-                startActivityForResult(i2, 0);
-                return true;
-            case 3:
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        ViewPosts.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.delete_page));
-                dialogBuilder.setMessage(getResources().getText(
-                        R.string.delete_sure_page)
-                        + " '" + titles[rowID] + "'?");
-                dialogBuilder.setPositiveButton(getResources().getText(
-                        R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        showDialog(ID_DIALOG_DELETING);
-                        new Thread() {
-                            public void run() {
-                                deletePost();
-                            }
-                        }.start();
-                    }
-                });
-                dialogBuilder.setNegativeButton(getResources().getText(
-                        R.string.no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
+                case 0:
+                    Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
+                    i0.putExtra("postID", String.valueOf(selectedID));
+                    i0.putExtra("id", id);
+                    i0.putExtra("accountName", accountName);
+                    i0.putExtra("isPage", true);
+                    startActivity(i0);
+                    return true;
+                case 1:
+                    Intent i = new Intent(ViewPosts.this, ViewPostComments.class);
+                    i.putExtra("postID", String.valueOf(selectedID));
+                    i.putExtra("id", id);
+                    i.putExtra("accountName", accountName);
+                    startActivity(i);
+                    return true;
+                case 2:
+                    Intent i2 = new Intent(ViewPosts.this, EditPost.class);
+                    i2.putExtra("postID", selectedID);
+                    i2.putExtra("id", id);
+                    i2.putExtra("accountName", accountName);
+                    i2.putExtra("isPage", true);
+                    startActivityForResult(i2, 0);
+                    return true;
+                case 3:
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                            ViewPosts.this);
+                    dialogBuilder.setTitle(getResources().getText(
+                            R.string.delete_page));
+                    dialogBuilder.setMessage(getResources().getText(
+                            R.string.delete_sure_page)
+                            + " '" + titles[rowID] + "'?");
+                    dialogBuilder.setPositiveButton(getResources().getText(
+                            R.string.yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            showDialog(ID_DIALOG_DELETING);
+                            new Thread() {
+                                public void run() {
+                                    deletePost();
+                                }
+                            }.start();
+                        }
+                    });
+                    dialogBuilder.setNegativeButton(getResources().getText(
+                            R.string.no), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Just close the window.
 
+                        }
+                    });
+                    dialogBuilder.setCancelable(true);
+                    if (!isFinishing()) {
+                        dialogBuilder.create().show();
                     }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-                return true;
-            case 4:
-                loadingDialog = ProgressDialog.show(this, getResources()
-                        .getText(R.string.share_url), getResources().getText(
-                        R.string.attempting_fetch_url), true, false);
-                Thread action = new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        shareURL(id, String.valueOf(selectedID), true);
-                        Looper.loop();
-                    }
-                };
-                action.start();
-                return true;
+                    return true;
+                case 4:
+                    loadingDialog = ProgressDialog.show(this, getResources()
+                            .getText(R.string.share_url), getResources().getText(
+                            R.string.attempting_fetch_url), true, false);
+                    Thread action = new Thread() {
+                        public void run() {
+                            Looper.prepare();
+                            shareURL(id, String.valueOf(selectedID), true);
+                            Looper.loop();
+                        }
+                    };
+                    action.start();
+                    return true;
             }
 
         } else {
             switch (item.getItemId()) {
-            case 0:
-                Intent i2 = new Intent(ViewPosts.this, EditPost.class);
-                i2.putExtra("postID", selectedID);
-                i2.putExtra("id", id);
-                if (isPage) {
-                    i2.putExtra("isPage", true);
-                }
-                i2.putExtra("accountName", accountName);
-                i2.putExtra("localDraft", true);
-                startActivityForResult(i2, 0);
-                return true;
-            case 1:
-                showDialog(ID_DIALOG_POSTING);
+                case 0:
+                    Intent i2 = new Intent(ViewPosts.this, EditPost.class);
+                    i2.putExtra("postID", selectedID);
+                    i2.putExtra("id", id);
+                    if (isPage) {
+                        i2.putExtra("isPage", true);
+                    }
+                    i2.putExtra("accountName", accountName);
+                    i2.putExtra("localDraft", true);
+                    startActivityForResult(i2, 0);
+                    return true;
+                case 1:
+                    showDialog(ID_DIALOG_POSTING);
 
-                new Thread() {
-                    public void run() {
+                    new Thread() {
+                        public void run() {
 
-                        try {
-                            submitResult = submitPost();
+                            try {
+                                submitResult = submitPost();
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         }
+                    }.start();
+                    return true;
+                case 2:
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                            ViewPosts.this);
+                    dialogBuilder.setTitle(getResources().getText(
+                            R.string.delete_draft));
+                    dialogBuilder.setMessage(getResources().getText(
+                            R.string.delete_sure)
+                            + " '" + titles[rowID] + "'?");
+                    dialogBuilder.setPositiveButton(getResources().getText(
+                            R.string.yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
 
+                            Post post = new Post(id, selectedID, isPage,
+                                    ViewPosts.this);
+                            post.delete();
+
+                            loadPosts(false);
+
+                        }
+                    });
+                    dialogBuilder.setNegativeButton(getResources().getText(
+                            R.string.no), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Just close the window.
+
+                        }
+                    });
+                    dialogBuilder.setCancelable(true);
+                    if (!isFinishing()) {
+                        dialogBuilder.create().show();
                     }
-                }.start();
-                return true;
-            case 2:
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        ViewPosts.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.delete_draft));
-                dialogBuilder.setMessage(getResources().getText(
-                        R.string.delete_sure)
-                        + " '" + titles[rowID] + "'?");
-                dialogBuilder.setPositiveButton(getResources().getText(
-                        R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        Post post = new Post(id, selectedID, isPage,
-                                ViewPosts.this);
-                        post.delete();
-
-                        loadPosts(false);
-
-                    }
-                });
-                dialogBuilder.setNegativeButton(getResources().getText(
-                        R.string.no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
 
             }
         }
@@ -924,10 +914,14 @@ public class ViewPosts extends ListActivity {
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog
                 .getHttppassword());
 
-        Object[] postParams = { "", post.getPostid(), blog.getUsername(),
-                blog.getPassword() };
-        Object[] pageParams = { blog.getBlogId(), blog.getUsername(),
-                blog.getPassword(), post.getPostid() };
+        Object[] postParams = {
+                "", post.getPostid(), blog.getUsername(),
+                blog.getPassword()
+        };
+        Object[] pageParams = {
+                blog.getBlogId(), blog.getUsername(),
+                blog.getPassword(), post.getPostid()
+        };
 
         try {
             client.call((isPage) ? "wp.deletePage" : "blogger.deletePost",
@@ -1066,12 +1060,16 @@ public class ViewPosts extends ListActivity {
         Object versionResult = new Object();
         try {
             if (isPage) {
-                Object[] vParams = { blog.getBlogId(), postId,
-                        blog.getUsername(), blog.getPassword() };
+                Object[] vParams = {
+                        blog.getBlogId(), postId,
+                        blog.getUsername(), blog.getPassword()
+                };
                 versionResult = (Object) client.call("wp.getPage", vParams);
             } else {
-                Object[] vParams = { postId, blog.getUsername(),
-                        blog.getPassword() };
+                Object[] vParams = {
+                        postId, blog.getUsername(),
+                        blog.getPassword()
+                };
                 versionResult = (Object) client.call("metaWeblog.getPost",
                         vParams);
             }
@@ -1174,24 +1172,24 @@ public class ViewPosts extends ListActivity {
                     String rel = "";
                     String href = "";
                     switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        name = parser.getName();
-                        if (name.equalsIgnoreCase("link")) {
-                            for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                String attrName = parser.getAttributeName(i);
-                                String attrValue = parser.getAttributeValue(i);
-                                if (attrName.equals("rel")) {
-                                    rel = attrValue;
-                                } else if (attrName.equals("href")) {
-                                    href = attrValue;
+                        case XmlPullParser.START_TAG:
+                            name = parser.getName();
+                            if (name.equalsIgnoreCase("link")) {
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    String attrName = parser.getAttributeName(i);
+                                    String attrValue = parser.getAttributeValue(i);
+                                    if (attrName.equals("rel")) {
+                                        rel = attrValue;
+                                    } else if (attrName.equals("href")) {
+                                        href = attrValue;
+                                    }
+                                }
+
+                                if (rel.equals("shortlink")) {
+                                    return href;
                                 }
                             }
-
-                            if (rel.equals("shortlink")) {
-                                return href;
-                            }
-                        }
-                        break;
+                            break;
                     }
                     eventType = parser.next();
                 }
@@ -1246,7 +1244,7 @@ public class ViewPosts extends ListActivity {
         this.dismissDialog(ID_DIALOG_POSTING);
         this.refreshPosts(false);
     }
-    
+
     public void uploadFailed(String error) {
         this.dismissDialog(ID_DIALOG_POSTING);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
