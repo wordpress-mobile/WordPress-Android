@@ -7,6 +7,7 @@ import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.WPTitleBar;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -28,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
@@ -90,6 +92,7 @@ public class ViewComments extends ListActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.moderatecomments);
 		boolean fromNotification = false;
 		Bundle extras = getIntent().getExtras();
@@ -100,6 +103,17 @@ public class ViewComments extends ListActivity {
 			pd = new ProgressDialog(this);
 			fromNotification = extras.getBoolean("fromNotification", false);       		
 		}      
+		
+		WPTitleBar titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+        titleBar.addRefreshButton();
+
+        titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+
+                refreshComments(false, false, false);
+
+            }
+        });
 
 		//create the ViewSwitcher in the current context
 		switcher = new ViewSwitcher(this);

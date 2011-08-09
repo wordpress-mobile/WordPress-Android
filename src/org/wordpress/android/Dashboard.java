@@ -65,6 +65,7 @@ public class Dashboard extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.dashboard);
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFormat(PixelFormat.RGBA_8888);
@@ -447,6 +448,16 @@ public class Dashboard extends Activity {
                     i.putExtra("blavatar", blavatar_url);
                     i.putExtra("isNew", true);
                     startActivityForResult(i, 0);
+                }
+            });
+            
+            Button subsButton = (Button) findViewById(R.id.dashboard_subs_btn);
+            subsButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(Dashboard.this, ViewPost.class);
+                    i.putExtra("id", WordPress.currentBlog.getId());
+                    i.putExtra("loadReader", true);
+                    startActivity(i);
                 }
             });
 

@@ -47,6 +47,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;

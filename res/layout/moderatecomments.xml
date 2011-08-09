@@ -4,7 +4,7 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <include layout="@layout/action_bar" />
+  <include layout="@layout/action_bar" android:id="@+id/actionBar" />
   <RelativeLayout
     android:id="@+id/mainRL"
     android:layout_width="wrap_content"
@@ -110,35 +110,5 @@
         android:layout_marginRight="2dip"
         android:layout_toRightOf="@id/unapproveComment" />
     </RelativeLayout>
-  </RelativeLayout>
-  <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bottom_bar"
-    android:padding="2dip">
-    <Button
-      android:id="@+id/bulkEdit"
-      android:layout_width="wrap_content"
-      android:background="@drawable/menu_button_selector"
-      android:layout_height="wrap_content"
-      android:text="Edit"
-      android:layout_marginTop="2dip"
-      android:padding="2dip"
-      android:textStyle="bold"
-      android:textSize="20dip"
-      android:textColor="#F4F4F4"
-      android:shadowColor="#000000"
-      android:shadowDx="0"
-      android:shadowDy="-.5"
-      android:shadowRadius="1" />
-    <ImageButton
-      android:id="@+id/refreshComments"
-      android:background="@drawable/menu_button_selector"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:padding="2dip"
-      android:src="@drawable/refresh" />
   </RelativeLayout>
 </LinearLayout>

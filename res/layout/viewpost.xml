@@ -6,9 +6,39 @@
   android:layout_height="fill_parent"
   android:padding="0px"
   android:orientation="vertical">
+  <include
+    layout="@layout/action_bar" android:id="@+id/actionBar"/>
   <WebView
     android:id="@+id/webView"
     android:layout_width="wrap_content"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_weight="1">
   </WebView>
+  <LinearLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_height="wrap_content"
+ android:layout_width="fill_parent"
+ android:orientation="horizontal"
+ android:weightSum="1.0"
+ android:paddingTop="4dip"
+ android:background="@drawable/home_gradient">
+    <ImageButton
+      android:id="@+id/browserBack"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Back"
+      android:src="@drawable/ic_menu_back"
+      android:layout_weight="0.5"
+      android:padding="0dip"
+      android:visibility="gone"/>
+    <ImageButton
+      android:id="@+id/browserForward"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Back"
+      android:src="@drawable/ic_menu_forward"
+      android:layout_weight="0.5" 
+      android:padding="0dip"
+      android:visibility="gone"/>
+</LinearLayout>
 </LinearLayout>
