@@ -10,6 +10,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.WPTitleBar;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -69,6 +71,7 @@ public class Dashboard extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 
         commentBadge = (TextView) findViewById(R.id.comment_badge);
+
     }
 
     @Override
@@ -345,6 +348,15 @@ public class Dashboard extends Activity {
 
     public void displayAccounts() {
 
+        WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.actionBar);
+        actionBar.setOnBlogChangedListener(new OnBlogChangedListener() {
+
+            @Override
+            public void OnBlogChanged() {
+                updateCommentBadge();
+            }
+        });
+        
         // settings time!
         final WordPressDB settingsDB = new WordPressDB(this);
         accounts = settingsDB.getAccounts(this);

@@ -7,7 +7,7 @@
   android:layout_height="fill_parent"
   android:background="@drawable/dashboard_bg">
   <include
-    layout="@layout/action_bar" />
+    layout="@layout/action_bar" android:id="@+id/actionBar"/>
   <ImageView
     android:layout_width="60dip"
     android:layout_height="60dip"

@@ -21,13 +21,15 @@ import java.util.Vector;
 
 public class WPTitleBar extends LinearLayout {
 
-    QuickAction qa, qaBlogs;
+    QuickAction qa;
+    public QuickAction qaBlogs;
     public ArrayList<String> defBlogNames = new ArrayList<String>();
     public int[] blogIDs;
     public Vector<?> accounts;
     private Context context;
     Button blogTitle;
     public ImageButton refreshButton;
+    OnBlogChangedListener onBlogChangedListener = null;
 
     public WPTitleBar(final Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
@@ -65,6 +67,10 @@ public class WPTitleBar extends LinearLayout {
                     blogTitle.setText(defBlogNames.get(pos));
                     WordPress.currentBlog = new Blog(blogIDs[pos], context);
                     settingsDB.updateLastBlogID(context, blogIDs[pos]);
+                    if (onBlogChangedListener != null) {
+                        onBlogChangedListener.OnBlogChanged();
+                    }
+
                 }
             });
 
@@ -106,7 +112,7 @@ public class WPTitleBar extends LinearLayout {
         if (WordPress.currentBlog != null) {
 
             refreshButton = (ImageButton) findViewById(R.id.action_refresh);
-            
+
             blogTitle.setText(WordPress.currentBlog.getBlogName());
 
             final ActionItem newpost = new ActionItem();
@@ -153,8 +159,17 @@ public class WPTitleBar extends LinearLayout {
             });
         }
     }
-    
+
     public void addRefreshButton() {
         refreshButton.setVisibility(View.VISIBLE);
+    }
+
+    // Listener for when user changes blog in the ActionBar
+    public interface OnBlogChangedListener {
+        public abstract void OnBlogChanged();
+    }
+
+    public void setOnBlogChangedListener(OnBlogChangedListener listener) {
+        onBlogChangedListener = listener;
     }
 }
