@@ -488,6 +488,8 @@
     like to learn more about VideoPress?</string>
   <string
     name="post_password">Password (optional)</string>
+  <string
+    name="fullscreen">Write in Fullscreen</string>
 
   <!--  page view -->
   <string
@@ -897,5 +899,5 @@
     <item>Status</item>
     <item>Video</item>
   </string-array>
-  
+
 </resources>

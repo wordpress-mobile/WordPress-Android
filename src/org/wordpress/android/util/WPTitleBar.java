@@ -2,6 +2,7 @@
 package org.wordpress.android.util;
 
 import org.wordpress.android.ActionItem;
+import org.wordpress.android.EditPost;
 import org.wordpress.android.QuickAction;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -9,6 +10,8 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -141,19 +144,48 @@ public class WPTitleBar extends LinearLayout {
             takeNewVideo.setTitle("Take Video");
             takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
 
+            qa = new QuickAction(context);
+            qa.addActionItem(newpost);
+            qa.addActionItem(newpage);
+            qa.addActionItem(addOldPhoto);
+            qa.addActionItem(takeNewPhoto);
+            qa.addActionItem(addOldVideo);
+            qa.addActionItem(takeNewVideo);
+            qa.setAnimStyle(QuickAction.ANIM_AUTO);
+
+            qa.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+                @Override
+                public void onItemClick(int pos) {
+                    Intent i = new Intent(context, EditPost.class);
+
+                    switch (pos) {
+                        case 1:
+                            i.putExtra("isPage", true);
+                            break;
+                        case 2:
+                            i.putExtra("option", "photolibrary");
+                            break;
+                        case 3:
+                            i.putExtra("option", "newphoto");
+                            break;
+                        case 4:
+                            i.putExtra("option", "videolibrary");
+                            break;
+                        case 5:
+                            i.putExtra("option", "newvideo");
+                            break;
+                    }
+
+                    i.putExtra("isNew", true);
+                    context.startActivity(i);
+                }
+            });
+
             ImageButton add = (ImageButton) findViewById(R.id.add_small);
 
             add.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-                    qa = new QuickAction(context);
-                    qa.addActionItem(newpost);
-                    qa.addActionItem(newpage);
-                    qa.addActionItem(addOldPhoto);
-                    qa.addActionItem(takeNewPhoto);
-                    qa.addActionItem(addOldVideo);
-                    qa.addActionItem(takeNewVideo);
-                    qa.setAnimStyle(QuickAction.ANIM_AUTO);
                     qa.show(v);
                 }
             });
@@ -167,7 +199,7 @@ public class WPTitleBar extends LinearLayout {
     public void reloadBlogs() {
         onFinishInflate();
     }
-    
+
     // Listener for when user changes blog in the ActionBar
     public interface OnBlogChangedListener {
         public abstract void OnBlogChanged();

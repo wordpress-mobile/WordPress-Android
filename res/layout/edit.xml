@@ -123,7 +123,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="17dip"
-        android:text="Write in Fullscreen"
+        android:text="@string/fullscreen"
         android:layout_below="@id/bold"
         android:textColor="#464646" />
 
