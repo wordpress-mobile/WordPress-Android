@@ -164,6 +164,10 @@ public class WPTitleBar extends LinearLayout {
         refreshButton.setVisibility(View.VISIBLE);
     }
 
+    public void reloadBlogs() {
+        onFinishInflate();
+    }
+    
     // Listener for when user changes blog in the ActionBar
     public interface OnBlogChangedListener {
         public abstract void OnBlogChanged();

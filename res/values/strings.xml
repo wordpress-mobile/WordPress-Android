@@ -876,6 +876,12 @@
     later!</string>
   <string
     name="waiting_activation">Awaiting e-mail activation</string>
+  <string
+    name="post_format">Post Format:</string>
+
+  <!--  reader -->
+  <string
+    name="reader">WordPress.com Reader</string>
 
   <!-- Post Formats -->
   <string-array
@@ -892,9 +898,4 @@
     <item>Video</item>
   </string-array>
   
-  <string name="post_format">Post Format:</string>
-  
-  <!--  reader -->
-  <string name="reader">WordPress.com Reader</string>
-
 </resources>

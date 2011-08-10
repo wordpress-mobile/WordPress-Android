@@ -26,7 +26,7 @@
     android:layout_height="wrap_content"
     android:gravity="bottom"
     android:padding="4dip"
-    android:background="@drawable/bottom_bar">
+    android:background="#FF464646">
     <ImageButton
       android:id="@+id/newCategory"
       android:background="@drawable/menu_button_selector"

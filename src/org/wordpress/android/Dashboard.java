@@ -7,9 +7,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 
@@ -31,12 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +40,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -55,7 +47,6 @@ import java.util.Vector;
 public class Dashboard extends Activity {
     public Vector<?> accounts;
     private String id = "";
-    private String activateTab = "", action = "";
     private String blavatar_url;
     boolean fromNotification = false;
     int uploadID = 0;
@@ -117,6 +108,10 @@ public class Dashboard extends Activity {
             String status = bundle.getString("returnStatus");
             if (status.equals("CANCEL") && WordPress.currentBlog != null) {
                 finish();
+            }
+            else {
+                WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.actionBar);
+                actionBar.reloadBlogs();
             }
         }
     }
