@@ -1,5 +1,7 @@
 package org.wordpress.android;
 
+import java.util.Vector;
+
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
@@ -28,8 +30,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import java.util.Vector;
 
 public class Write extends Activity {
     /** Called when the activity is first created. */

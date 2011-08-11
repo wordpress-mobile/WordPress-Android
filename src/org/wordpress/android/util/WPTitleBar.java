@@ -1,6 +1,10 @@
 
 package org.wordpress.android.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
+
 import org.wordpress.android.ActionItem;
 import org.wordpress.android.EditPost;
 import org.wordpress.android.QuickAction;
@@ -11,16 +15,11 @@ import org.wordpress.android.models.Blog;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Vector;
 
 public class WPTitleBar extends LinearLayout {
 
@@ -116,7 +115,7 @@ public class WPTitleBar extends LinearLayout {
 
             refreshButton = (ImageButton) findViewById(R.id.action_refresh);
 
-            blogTitle.setText(WordPress.currentBlog.getBlogName());
+            blogTitle.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()));
 
             final ActionItem newpost = new ActionItem();
 
