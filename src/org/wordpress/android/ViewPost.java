@@ -285,7 +285,7 @@ private class WordPressWebViewClient extends WebViewClient {
                            ViewPost.this.setTitle(getResources().getText(R.string.reader));
                            //commenting out for now, may not be possible to support this with the WP.com reader
                            /*if (wv.getTitle() != null) {
-                              if (!wv.canGoBack() || wv.getTitle().equals("WordPress.com Mobile Reader Ñ WordPress.com")) {
+                              if (!wv.canGoBack() || wv.getTitle().equals("WordPress.com Mobile Reader ï¿½ WordPress.com")) {
                                   backButton.setEnabled(false);
                               }
                               else {

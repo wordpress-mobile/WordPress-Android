@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/about"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/dashboard_bg"
+	>
+	
+	<ImageView
+	android:id="@+id/about_wp_logo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dip"
+    android:layout_gravity="center_horizontal"
+    android:src="@drawable/wp_logo_home" />
+    
+    <TextView
+    android:id="@+id/about_first_line"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/about_wp_logo"
+    android:layout_gravity="center_horizontal"
+	android:text="Wordpress for Android"
+	android:textSize="25dip"
+	/>
+	
+	<TextView
+	android:id="@+id/about_second_line"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/about_first_line"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="40dip"
+	android:text="Publisher: Automattic, Inc"
+	android:textSize="18dip"
+	/>
+	
+	<TextView
+	android:id="@+id/about_third_line"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/about_second_line"
+	android:layout_gravity="center_horizontal"
+	android:text="Copyright: Automattic, Inc"
+	android:textSize="18dip"
+	/>
+	
+	<Button 
+	android:id="@+id/about_tos"
+	android:layout_width="220dip"
+	android:layout_height="wrap_content"
+	android:layout_marginTop="60dip"
+	android:layout_below="@id/about_third_line"
+	android:layout_gravity="center_horizontal"
+	android:text="Terms of Service"
+	/>
+	
+	<Button 
+	android:id="@+id/about_privacy"
+	android:layout_width="220dip"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/about_tos"
+	android:layout_gravity="center_horizontal"
+	android:layout_marginTop="20dip"
+	android:text="Privacy Policy"
+	/>
+	
+</LinearLayout>

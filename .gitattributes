@@ -385,6 +385,7 @@ res/drawable/wplogo.png -text
 res/layout-hdpi-v4/new_account.xml -text
 res/layout-small-v4/new_account.xml -text
 res/layout-v4/row.xml -text
+res/layout/about.xml -text
 res/layout/action_bar.xml -text
 res/layout/action_item.xml -text
 res/layout/add_account.xml -text
@@ -463,6 +464,7 @@ src/com/commonsware/cwac/thumbnail/ThumbnailActivity.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailAdapter.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailBus.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailMessage.java -text
+src/org/wordpress/android/About.java -text
 src/org/wordpress/android/ActionItem.java -text
 src/org/wordpress/android/AddAccount.java -text
 src/org/wordpress/android/AddAcountSettings.java -text

@@ -50,6 +50,7 @@
 </activity>
 <activity android:name="ViewDrafts"></activity>
 <activity android:name="Write"></activity>
+<activity android:name="About"></activity>
 </application>
 
 	<supports-screens android:smallScreens="true"

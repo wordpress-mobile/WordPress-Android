@@ -379,6 +379,18 @@ public class Dashboard extends Activity {
             // id = blog_num.toString();
 
             updateCommentBadge();
+            
+            Button writeButton = (Button) findViewById(R.id.dashboard_write_btn);
+            writeButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					 Intent i = new Intent(Dashboard.this, EditPost.class);
+	                 i.putExtra("blavatar", blavatar_url);
+	                 i.putExtra("id", WordPress.currentBlog.getId());
+	                 i.putExtra("isNew", true);
+	                 i.putExtra("option", "");
+	                 startActivity(i);
+				}
+			});
 
             Button postsButton = (Button) findViewById(R.id.dashboard_posts_btn);
             postsButton.setOnClickListener(new View.OnClickListener() {
@@ -449,9 +461,9 @@ public class Dashboard extends Activity {
             Button subsButton = (Button) findViewById(R.id.dashboard_subs_btn);
             subsButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Intent i = new Intent(Dashboard.this, ViewPost.class);
-                    i.putExtra("id", WordPress.currentBlog.getId());
-                    i.putExtra("loadReader", true);
+                    Intent i = new Intent(Dashboard.this, About.class);
+                    //i.putExtra("id", WordPress.currentBlog.getId());
+                    //i.putExtra("loadReader", true);
                     startActivity(i);
                 }
             });
