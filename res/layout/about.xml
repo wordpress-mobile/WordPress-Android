@@ -15,7 +15,7 @@
     android:layout_marginTop="10dip"
     android:layout_gravity="center_horizontal"
     android:src="@drawable/wp_logo_home" />
-    
+       
     <TextView
     android:id="@+id/about_first_line"
     android:layout_width="wrap_content"
@@ -25,12 +25,21 @@
 	android:text="Wordpress for Android"
 	android:textSize="25dip"
 	/>
+	 
+    <TextView
+	android:id="@+id/about_version"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/about_first_line"
+	android:layout_gravity="center_horizontal"
+	android:text="Version 1.5 alpha"
+	/>
 	
 	<TextView
 	android:id="@+id/about_second_line"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@id/about_first_line"
+    android:layout_below="@id/about_version"
     android:layout_gravity="center_horizontal"
     android:layout_marginTop="40dip"
 	android:text="Publisher: Automattic, Inc"
@@ -65,6 +74,7 @@
 	android:layout_gravity="center_horizontal"
 	android:layout_marginTop="20dip"
 	android:text="Privacy Policy"
-	/>
+	/>	
+	
 	
 </LinearLayout>
