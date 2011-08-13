@@ -455,6 +455,26 @@ public class Dashboard extends Activity {
                     startActivity(i);
                 }
             });
+            
+            Button picButton = (Button) findViewById(R.id.dashboard_picture_btn);
+            picButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					Intent i = new Intent(Dashboard.this, EditPost.class);
+					i.putExtra("option", "newphoto");
+					i.putExtra("isNew", true);
+					startActivity(i);					
+				}
+			});
+            
+            Button videoButton = (Button) findViewById(R.id.dashboard_video_btn);
+            videoButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					Intent i = new Intent(Dashboard.this, EditPost.class);
+					i.putExtra("option", "newvideo");
+					i.putExtra("isNew", true);
+					startActivity(i);					
+				}
+			});
 
             final Button quickpress = (Button) findViewById(R.id.quickpress);
 
