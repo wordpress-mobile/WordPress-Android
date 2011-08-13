@@ -23,6 +23,7 @@
       android:id="@+id/blog_title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginRight="80dip"
       android:shadowColor="#FF464646"
       android:shadowDy="1"
       android:shadowRadius="1"
