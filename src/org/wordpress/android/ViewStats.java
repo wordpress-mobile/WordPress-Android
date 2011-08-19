@@ -562,28 +562,20 @@ public class ViewStats extends Activity {
 							}
 
 							// build the google chart api url
-							final String chartViewURL = "http://chart.apis.google.com/chart?chts=464646,20&cht=lc&chd=t:"
-									+ dataValues
-									+ "&chs="
-									+ screenSize
-									+ "&chl="
-									+ dateArray[0].toString()
-									+ "|"
-									+ dateArray[dateArray.length - 1]
-											.toString()
-									+ "&chxt=y"
-									+ "&chds="
-									+ minBuffer
-									+ ","
-									+ maxBuffer
-									+ "&chxr=0,"
-									+ minBuffer
-									+ ","
-									+ maxBuffer
-									+ ","
-									+ yInterval
-									+ "&chf=c,lg,90,E2E2E2,0,FEFEFE,0.5&chm=o,14568A,0,-1,10.0&chco=14568A&chls=4&chg="
-									+ xGrid + "," + yGrid;
+							final String chartViewURL = "http://chart.apis.google.com/chart?chts=464646,20"
+									+ "&cht=bvs"
+									+ "&chbh=a"
+									+ "&chd=t:" + dataValues
+									+ "&chs=" + screenSize
+									+ "&chl=" + dateArray[0].toString() + "|" + dateArray[dateArray.length - 1].toString()
+									+ "&chxt=y,x"
+									+ "&chds=" + minBuffer + "," + maxBuffer
+									+ "&chxr=0," + minBuffer + "," + maxBuffer + "," + yInterval
+									+ "&chf=c,lg,90,FFFFFF,0,FFFFFF,0.5"
+									+ "&chm=o,14568A,0,-1,10.0"
+									+ "&chco=a3bcd3,cccccc77"
+									+ "&chls=4"
+									+ "&chg=" + xGrid + "," + yGrid;
 
 							try {
 								URL url = new URL(chartViewURL);
