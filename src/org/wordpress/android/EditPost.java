@@ -552,6 +552,7 @@ public class EditPost extends Activity implements LocationListener {
         });
 
         final EditText contentEdit = (EditText) findViewById(R.id.content);
+        contentEdit.setText(setText);
         contentEdit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 if (localDraft || isNew) {
