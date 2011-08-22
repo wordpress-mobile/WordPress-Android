@@ -59,21 +59,27 @@
 	<Button 
 	android:id="@+id/about_tos"
 	android:layout_width="220dip"
-	android:layout_height="wrap_content"
+	android:layout_height="40dip"
 	android:layout_marginTop="60dip"
 	android:layout_below="@id/about_third_line"
 	android:layout_gravity="center_horizontal"
+	style="@style/DashboardButton"
+    android:background="@drawable/wp_button_dashboard"
 	android:text="Terms of Service"
+	android:textSize="18dip"
 	/>
 	
 	<Button 
 	android:id="@+id/about_privacy"
 	android:layout_width="220dip"
-	android:layout_height="wrap_content"
+	android:layout_height="40dip"
 	android:layout_below="@id/about_tos"
 	android:layout_gravity="center_horizontal"
 	android:layout_marginTop="20dip"
 	android:text="Privacy Policy"
+	style="@style/DashboardButton"
+    android:background="@drawable/wp_button_dashboard"
+    android:textSize="18dip"
 	/>	
 	
 	
