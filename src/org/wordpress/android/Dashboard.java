@@ -17,6 +17,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
@@ -45,8 +46,6 @@ import android.widget.LinearLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SlidingDrawer.OnDrawerCloseListener;
-import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
 public class Dashboard extends Activity{
     public Vector<?> accounts;
@@ -58,6 +57,8 @@ public class Dashboard extends Activity{
     TextView commentBadge;
     private SlidingDrawer slidingDrawer;
     public LinearLayout mainDashboard;
+    Vector<?> loadedPosts, loadedPages, loadedComments;
+    public Blog blog;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,24 @@ public class Dashboard extends Activity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 
         commentBadge = (TextView) findViewById(R.id.comment_badge);
-
+        
+        Integer id1 = WordPress.currentBlog.getId();
+        blog = new Blog(id1, this);
+        
+        WordPressDB postStoreDB = new WordPressDB(this);
+        
+        loadedPosts = postStoreDB.loadUploadedPosts(Dashboard.this, id1, false);
+        loadedPages = postStoreDB.loadUploadedPosts(Dashboard.this, id1, true);
+        loadedComments = postStoreDB.loadComments(Dashboard.this, id1);
+        
+        TextView pov = (TextView) findViewById(R.id.posts_value);
+        pov.setText(Integer.toString(loadedPosts.size()));
+        
+        TextView pav = (TextView) findViewById(R.id.pages_value);
+        pav.setText(Integer.toString(loadedPages.size()));
+        
+        TextView cov = (TextView) findViewById(R.id.comments_value);
+        cov.setText(Integer.toString(loadedComments.size())); 
     }
 
     @Override
