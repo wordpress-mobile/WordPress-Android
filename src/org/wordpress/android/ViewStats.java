@@ -94,7 +94,7 @@ import java.util.Vector;
 
 public class ViewStats extends Activity {
 	public boolean success = false;
-	public String blogURL, xmlrpcURL;
+	public String blogURL, xmlrpcURL, vsoURI;
 	private ConnectionClient client;
 	private HttpPost postMethod;
 	private HttpParams httpParams;
@@ -316,6 +316,7 @@ public class ViewStats extends Activity {
 				+ apiKey + "&blog_id=" + blogID + "&format=xml&table="
 				+ reportType + "&end=" + sdf.format(c1.getTime()) + "&days="
 				+ interval + "&limit=-1" + period;
+		vsoURI = uriString;
 		if (!reportType.equals("views")) {
 			uriString += "&summarize";
 		}
@@ -424,25 +425,14 @@ public class ViewStats extends Activity {
 						TextView reportTitle = (TextView) findViewById(R.id.chartTitle);
 						reportTitle.setVisibility(View.VISIBLE);
 						ImageView iv = (ImageView) findViewById(R.id.chart);
-						Button vso = (Button) findViewById(R.id.viewStatsOnline);
 						
 						if (reportType.equals("views")) {
 							if (intervalT != 1) {
 								iv.setVisibility(View.VISIBLE);
-								vso.setVisibility(View.VISIBLE);
 							} else {
 								iv.setVisibility(View.GONE);
-								vso.setVisibility(View.GONE);
 							}
-							
-/*							vso.setOnClickListener(new View.OnClickListener() {
-								
-								public void onClick(View v) {
-									Uri uri = Uri.parse();
-									startActivity(new Intent(Intent.ACTION_VIEW, uri));
-								}
-							});
-*/						
+					
 							reportTitle.setText(getResources().getText(
 									R.string.report_views));
 							String dataValues = "", dateStrings = "";

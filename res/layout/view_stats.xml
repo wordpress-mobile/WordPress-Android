@@ -106,25 +106,12 @@
         android:paddingLeft="6dip"
         android:paddingRight="6dip"
         android:visibility="invisible" />
-      <Button 
-      	android:id="@+id/viewStatsOnline"
-      	android:layout_width="wrap_content"
-      	android:layout_height="40dip"
-      	android:paddingLeft="6dip"
-      	android:paddingRight="6dip"
-      	android:layout_below="@id/chart"
-      	android:text="View Stats Online"
-      	style="@style/DashboardButton"
-      	android:background="@drawable/wp_button_dashboard"
-      	android:textSize="18dip"
-      	android:visibility="invisible"/>
-      	/>
       <TableLayout
         android:id="@+id/dataTable"
         android:layout_marginTop="10dip"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/viewStatsOnline"
+        android:layout_below="@id/chart"
         android:stretchColumns="*"
         android:padding="6dip">
       </TableLayout>
