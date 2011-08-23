@@ -204,6 +204,7 @@ bin/org/xmlrpc/android/XMLRPCSerializer.class -text
 bin/resources.ap_ -text
 bin/wp-android.apk -text
 /default.properties -text
+gen/org/wordpress/android/R.java -text
 libs/CWAC-AdapterWrapper.jar -text
 libs/CWAC-Bus.jar -text
 libs/CWAC-Task.jar -text
