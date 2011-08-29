@@ -757,19 +757,7 @@ public Post(int blog_id, String title, String content, String picturePaths, long
 									.toString()
 									+ "\n";
 						} else {
-							resultURL = "<object classid=\"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B\" width=\""
-									+ xRes
-									+ "\" height=\""
-									+ (Integer.valueOf(yRes) + 16)
-									+ "\" codebase=\"http://www.apple.com/qtactivex/qtplugin.cab\"><param name=\"scale\" value=\"aspect\"><param name=\"src\" value=\""
-									+ resultURL
-									+ "\" /><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /><object type=\"video/quicktime\" data=\""
-									+ resultURL
-									+ "\" width=\""
-									+ xRes
-									+ "\" height=\""
-									+ (Integer.valueOf(yRes) + 16)
-									+ "\"><param name=\"scale\" value=\"aspect\"><param name=\"autoplay\" value=\"false\" /><param name=\"controller\" value=\"true\" /></object></object>\n";
+							resultURL = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>", xRes, yRes, resultURL, mimeType, resultURL);
 						}
 
 						content = content + resultURL;
