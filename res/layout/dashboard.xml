@@ -1,294 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-  	android:id="@+id/full_dashboard"
-  	android:orientation="vertical"
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	>
-  	<include layout="@layout/action_bar" android:id="@+id/actionBar"/>
-  	
-<FrameLayout  
-  android:id="@+id/dashboard"
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/full_dashboard"
   android:orientation="vertical"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:layout_marginTop="0dip"
-  android:background="@drawable/dashboard_bg">
-    
-  <LinearLayout
-  	android:id="@+id/main_dashboard"
-  	android:orientation="vertical"
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	>
-  <ImageView
-    android:layout_width="60dip"
-    android:layout_height="60dip"
-    android:layout_marginTop="10dip"
-    android:layout_gravity="center_horizontal"
-    android:src="@drawable/wp_logo_home" />
-    
-  <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content">
+  <FrameLayout
+    android:id="@+id/dashboard"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginTop="12dip"
-    android:gravity="center_horizontal"
-    android:layout_weight="1">
-    <Button
-      android:id="@+id/dashboard_write_btn"
-      style="@style/DashboardButton"
-      android:text="Write"
-      android:drawableTop="@drawable/dashboard_icon_write"
-      android:background="@drawable/wp_button_dashboard_top_left" />
-    <Button
-      android:id="@+id/dashboard_pages_btn"
-      style="@style/DashboardButton"
-      android:text="@string/tab_pages"
-      android:drawableTop="@drawable/dashboard_icon_pages"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_write_btn" />
-    <Button
-      android:id="@+id/dashboard_comments_btn"
-      style="@style/DashboardButton"
-      android:text="@string/tab_comments"
-      android:drawableTop="@drawable/dashboard_icon_comments"
-      android:background="@drawable/wp_button_dashboard_top_right"
-      android:layout_toRightOf="@id/dashboard_pages_btn" />
-    <Button
-      android:id="@+id/dashboard_posts_btn"
-      style="@style/DashboardButton"
-      android:text="@string/tab_posts"
-      android:drawableTop="@drawable/dashboard_icon_posts"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_below="@id/dashboard_write_btn" />
-    <Button
-      android:id="@+id/dashboard_picture_btn"
-      style="@style/DashboardButton"
-      android:text="Picture"
-      android:drawableTop="@drawable/dashboard_icon_photo"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_posts_btn"
-      android:layout_below="@id/dashboard_pages_btn" />
-    <Button
-      android:id="@+id/dashboard_video_btn"
-      style="@style/DashboardButton"
-      android:text="Video"
-      android:drawableTop="@drawable/dashboard_icon_video"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_picture_btn"
-      android:layout_below="@id/dashboard_comments_btn" />
-    <Button
-      android:id="@+id/dashboard_settings_btn"
-      style="@style/DashboardButton"
-      android:text="Settings"
-      android:drawableTop="@drawable/dashboard_icon_settings"
-      android:background="@drawable/wp_button_dashboard_bottom_left"
-      android:layout_below="@id/dashboard_posts_btn" />
-    <Button
-      android:id="@+id/dashboard_stats_btn"
-      style="@style/DashboardButton"
-      android:text="Stats"
-      android:drawableTop="@drawable/dashboard_icon_stats"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_settings_btn"
-      android:layout_below="@id/dashboard_picture_btn" />
-    <Button
-      android:id="@+id/dashboard_subs_btn"
-      style="@style/DashboardButton"
-      android:text="About"
-      android:drawableTop="@drawable/dashboard_icon_subs"
-      android:background="@drawable/wp_button_dashboard_bottom_right"
-      android:layout_toRightOf="@id/dashboard_stats_btn"
-      android:layout_below="@id/dashboard_video_btn" />
-    <TextView
-      android:id="@+id/comment_badge"
-      android:layout_width="53dip"
-      android:layout_height="53dip"
-      android:gravity="center"
-      android:layout_marginTop="-15dip"
-      android:layout_marginRight="-15dip"
-      android:text="0"
-      android:textStyle="bold"
-      android:textSize="13dip"
-      android:shadowDy="1"
-      android:shadowRadius="1"
-      android:shadowColor="#FF464646"
-      android:textColor="#FFFFFFFF"
-      android:background="@drawable/comment_badge"
-      android:layout_alignTop="@id/dashboard_comments_btn"
-      android:layout_alignRight="@id/dashboard_comments_btn" />
-  </RelativeLayout>
-  
-  
-  <Button
-    android:layout_width="fill_parent"
-    android:layout_height="70dp"
-    android:text="Tap to QuickPress"
-    android:id="@+id/quickpress"
-    android:textColor="#FF111111"
-    android:background="@drawable/wp_button_small"
-    android:layout_marginLeft="16dip"
-    android:layout_marginRight="16dip"
-    android:layout_marginBottom="10dip" 
-    android:visibility="gone"/>
-    
+    android:layout_marginTop="47dp"
+    android:background="#323638">
+    <LinearLayout
+      android:id="@+id/main_dashboard"
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
+
+      <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="12dip"
+        android:gravity="center_horizontal"
+        android:layout_weight="1">
+        <Button
+          android:id="@+id/dashboard_write_btn"
+          style="@style/DashboardButton"
+          android:text="Write"
+          android:drawableTop="@drawable/dashboard_icon_write"
+          android:background="@drawable/wp_button_dashboard_top_left" />
+        <Button
+          android:id="@+id/dashboard_pages_btn"
+          style="@style/DashboardButton"
+          android:text="@string/tab_pages"
+          android:drawableTop="@drawable/dashboard_icon_pages"
+          android:background="@drawable/wp_button_dashboard"
+          android:layout_toRightOf="@id/dashboard_write_btn" />
+        <Button
+          android:id="@+id/dashboard_comments_btn"
+          style="@style/DashboardButton"
+          android:text="@string/tab_comments"
+          android:drawableTop="@drawable/dashboard_icon_comments"
+          android:background="@drawable/wp_button_dashboard_top_right"
+          android:layout_toRightOf="@id/dashboard_pages_btn" />
+        <Button
+          android:id="@+id/dashboard_posts_btn"
+          style="@style/DashboardButton"
+          android:text="@string/tab_posts"
+          android:drawableTop="@drawable/dashboard_icon_posts"
+          android:background="@drawable/wp_button_dashboard"
+          android:layout_below="@id/dashboard_write_btn" />
+        <Button
+          android:id="@+id/dashboard_picture_btn"
+          style="@style/DashboardButton"
+          android:text="Picture"
+          android:drawableTop="@drawable/dashboard_icon_photo"
+          android:background="@drawable/wp_button_dashboard"
+          android:layout_toRightOf="@id/dashboard_posts_btn"
+          android:layout_below="@id/dashboard_pages_btn" />
+        <Button
+          android:id="@+id/dashboard_video_btn"
+          style="@style/DashboardButton"
+          android:text="Video"
+          android:drawableTop="@drawable/dashboard_icon_video"
+          android:background="@drawable/wp_button_dashboard"
+          android:layout_toRightOf="@id/dashboard_picture_btn"
+          android:layout_below="@id/dashboard_comments_btn" />
+        <Button
+          android:id="@+id/dashboard_settings_btn"
+          style="@style/DashboardButton"
+          android:text="Settings"
+          android:drawableTop="@drawable/dashboard_icon_settings"
+          android:background="@drawable/wp_button_dashboard_bottom_left"
+          android:layout_below="@id/dashboard_posts_btn" />
+        <Button
+          android:id="@+id/dashboard_stats_btn"
+          style="@style/DashboardButton"
+          android:text="Stats"
+          android:drawableTop="@drawable/dashboard_icon_stats"
+          android:background="@drawable/wp_button_dashboard"
+          android:layout_toRightOf="@id/dashboard_settings_btn"
+          android:layout_below="@id/dashboard_picture_btn" />
+        <Button
+          android:id="@+id/dashboard_subs_btn"
+          style="@style/DashboardButton"
+          android:text="About"
+          android:drawableTop="@drawable/dashboard_icon_subs"
+          android:background="@drawable/wp_button_dashboard_bottom_right"
+          android:layout_toRightOf="@id/dashboard_stats_btn"
+          android:layout_below="@id/dashboard_video_btn" />
+        <TextView
+          android:id="@+id/comment_badge"
+          android:layout_width="53dip"
+          android:layout_height="53dip"
+          android:gravity="center"
+          android:layout_marginTop="-15dip"
+          android:layout_marginRight="-15dip"
+          android:text="0"
+          android:textStyle="bold"
+          android:textSize="13dip"
+          android:shadowDy="1"
+          android:shadowRadius="1"
+          android:shadowColor="#FF464646"
+          android:textColor="#FFFFFFFF"
+          android:background="@drawable/comment_badge"
+          android:layout_alignTop="@id/dashboard_comments_btn"
+          android:layout_alignRight="@id/dashboard_comments_btn" />
+      </RelativeLayout>
+
+
+      <Button
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:text="Tap to QuickPress"
+        android:id="@+id/quickpress"
+        android:textColor="#FF111111"
+        android:background="@drawable/wp_button_small"
+        android:layout_marginLeft="16dip"
+        android:layout_marginRight="16dip"
+        android:layout_marginBottom="10dip"
+        android:visibility="gone" />
+
     </LinearLayout>
-    
+
     <SlidingDrawer
-		android:id="@+id/slidingDrawer"
-		android:handle="@+id/drawerHandle"
-		android:content="@+id/contentLayout"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		>
+      android:id="@+id/slidingDrawer"
+      android:handle="@+id/drawerHandle"
+      android:content="@+id/contentLayout"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
 
-		<Button
-			android:id="@+id/drawerHandle"
-			android:text="Right Now"
-    		android:background="@drawable/title_bar_gradient"
-			android:layout_width="fill_parent"
-			android:layout_height="40dip"
-			android:orientation="horizontal"
-			android:shadowColor="#FF464646"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold"
-      		android:textColor="#FFFFFF"
-      		android:textSize="18dp"      	
-      		android:gravity="center"	
-			/>	
+      <Button
+        android:id="@+id/drawerHandle"
+        android:text="Right Now"
+        android:background="@drawable/title_bar_gradient"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:orientation="horizontal"
+        android:shadowColor="#FF464646"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:paddingTop="4dip"
+        android:paddingBottom="4dip"
+        android:singleLine="True"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"
+        android:gravity="center" />
 
-		<LinearLayout
-			android:id="@+id/contentLayout"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:background="@drawable/dashboard_bg"
-			android:orientation="vertical"
-			>
-			<TextView
-				android:text="Content"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/content_text"
-				android:shadowColor="#00464646"
-      			android:shadowDy="1"
-      			android:shadowRadius="1"
-      			android:paddingTop="4dip"
-      			android:paddingBottom="4dip"
-      			android:singleLine="True"
-      			android:textStyle="bold"
-      			android:textColor="#000000"
-      			android:textSize="22dp"      		
-				>
-			</TextView>
-			<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal">
-			<TextView
-				android:id="@+id/posts_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:shadowColor="#FF464646"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold" 
-      		android:textColor="#000000"
-      		android:textSize="22dp"      	
-				/>
-			<TextView
-				android:text="Posts"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				
-			android:shadowColor="#FF464646"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold" 
-      		android:textColor="#000000"
-      		android:textSize="22dp"      	
-      		/>
-      		</LinearLayout>
-      		<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal">
-				<TextView
-				android:id="@+id/pages_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold" 
-      		android:textColor="#000000"
-      		android:textSize="22dp"      	
-      		/>
-			<TextView
-				android:text="Pages"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+      <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dashboard_bg"
+        android:orientation="vertical">
+        <TextView
+          android:text="Content"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/content_text"
+          android:shadowColor="#00464646"
+          android:shadowDy="1"
+          android:shadowRadius="1"
+          android:paddingTop="4dip"
+          android:paddingBottom="4dip"
+          android:singleLine="True"
+          android:textStyle="bold"
+          android:textColor="#000000"
+          android:textSize="22dp">
+        </TextView>
+        <LinearLayout
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+          <TextView
+            android:id="@+id/posts_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#FF464646"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:singleLine="True"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+          <TextView
+            android:text="Posts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-			android:shadowColor="#FF464646"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold"
-      		android:textColor="#000000"
-      		android:textSize="22dp"      	
-      		/>
-      		</LinearLayout>
-      		<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal">
-				<TextView
-				android:id="@+id/comments_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:shadowColor="#FF464646"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold" 
-      		android:textColor="#000000"
-      		android:textSize="22dp"      	
-				/>
-			<TextView
-				android:text="Comments"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-			android:shadowColor="#FF464646"
-      		android:shadowDy="1"
-      		android:shadowRadius="1"
-      		android:paddingTop="4dip"
-      		android:paddingBottom="4dip"
-      		android:singleLine="True"
-      		android:textStyle="bold"
-      		android:textColor="#000000"
-      		android:textSize="22dp"      	
-				/>
-				</LinearLayout>
-		</LinearLayout>
-	</SlidingDrawer>
-    
-</FrameLayout>
-</LinearLayout>
+            android:shadowColor="#FF464646"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:singleLine="True"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+        </LinearLayout>
+        <LinearLayout
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+          <TextView
+            android:id="@+id/pages_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:singleLine="True"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+          <TextView
+            android:text="Pages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:shadowColor="#FF464646"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:singleLine="True"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+        </LinearLayout>
+        <LinearLayout
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+          <TextView
+            android:id="@+id/comments_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#FF464646"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:singleLine="True"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+          <TextView
+            android:text="Comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="#FF464646"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:paddingTop="4dip"
+            android:paddingBottom="4dip"
+            android:singleLine="True"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="22dp" />
+        </LinearLayout>
+      </LinearLayout>
+    </SlidingDrawer>
+  </FrameLayout>
+  <include
+    layout="@layout/action_bar"
+    android:id="@+id/actionBar"
+    android:layout_above="@id/dashboard" />
+</RelativeLayout>

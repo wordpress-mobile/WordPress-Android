@@ -104,8 +104,6 @@ public class ViewPosts extends ListActivity {
         }
 
         WPTitleBar titleBar = (WPTitleBar) findViewById(R.id.actionBar);
-        titleBar.addRefreshButton();
-
         titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 

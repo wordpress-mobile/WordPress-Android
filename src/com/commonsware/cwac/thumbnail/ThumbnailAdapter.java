@@ -128,7 +128,7 @@ public class ThumbnailAdapter extends AdapterWrapper {
 	    final Paint paint = new Paint();
 	    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 	    final RectF rectF = new RectF(rect);
-	    final float roundPx = 8;
+	    final float roundPx = 4;
 	 
 	    paint.setAntiAlias(true);
 	    canvas.drawARGB(0, 0, 0, 0);

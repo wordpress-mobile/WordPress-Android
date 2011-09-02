@@ -10,7 +10,6 @@
     android:layout_alignParentRight="true"
     android:gravity="right|center"
     android:padding="4dip"
-    android:background="#FF888888"
     android:layout_centerVertical="true"
     android:visibility="gone">
     <CheckBox

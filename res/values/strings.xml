@@ -421,6 +421,8 @@
     name="tab_pages">Pages</string>
   <string
     name="tab_stats">Stats</string>
+    <string
+    name="choose_blog">Choose a blog:</string>
 
 
   <!--  link view -->

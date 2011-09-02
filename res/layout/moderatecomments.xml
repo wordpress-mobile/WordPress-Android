@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/moderatecomments"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <include layout="@layout/action_bar" android:id="@+id/actionBar" />
   <RelativeLayout
     android:id="@+id/mainRL"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="0px"
     android:background="#F4F4F4"
-    android:layout_weight="1.0">
+    android:layout_weight="1.0"
+    android:layout_marginTop="47dp">
     <ListView
       android:choiceMode="singleChoice"
       android:id="@android:id/list"
@@ -33,14 +34,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#AA111111"
-        android:padding="8dip"
+        android:padding="8dp"
         android:gravity="center">
         <ProgressBar
           android:id="@+id/progress"
-          android:layout_width="24dip"
-          android:layout_height="24dip"
-          android:layout_marginTop="6dip"
-          android:layout_marginBottom="6dip"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_marginTop="6dp"
+          android:layout_marginBottom="6dp"
           android:indeterminate="true" />
         <TextView
           android:textColor="#FFFFFF"
@@ -49,7 +50,7 @@
           android:shadowDy=".5"
           android:shadowRadius="1"
           android:layout_toRightOf="@id/progress"
-          android:layout_marginLeft="8dip"
+          android:layout_marginLeft="8dp"
           android:text="@string/loading"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -61,54 +62,58 @@
       android:layout_below="@id/mainRL"
       android:layout_alignParentBottom="true"
       android:layout_width="fill_parent"
-      android:layout_height="40dip"
-      android:background="#EE111111"
-      android:paddingTop="4dip"
+      android:layout_height="52dp"
+      android:background="#88000000"
+      android:paddingTop="4dp"
       android:visibility="invisible">
       <Button
         android:id="@+id/deleteComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dip"
-        android:background="@null"
+        android:textSize="14dp"
+        android:background="@drawable/wp_button_small"
         android:text="@string/delete"
         android:textColor="#FFBC0B0B"
-        android:layout_marginLeft="2dip"
-        android:layout_marginRight="2dip"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_alignParentRight="true" />
       <Button
         android:id="@+id/approveComment"
-        android:textSize="20dip"
+        android:textSize="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@drawable/wp_button_small"
         android:text="@string/approve"
         android:textColor="#FF006505"
-        android:layout_marginLeft="2dip"
-        android:layout_marginRight="2dip"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_alignParentLeft="true" />
       <Button
         android:id="@+id/unapproveComment"
-        android:textSize="20dip"
+        android:textSize="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@drawable/wp_button_small"
         android:text="@string/unapprove"
-        android:layout_marginLeft="2dip"
+        android:layout_marginLeft="2dp"
         android:textColor="#FFD98500"
-        android:layout_marginRight="2dip"
+        android:layout_marginRight="2dp"
         android:layout_toRightOf="@id/approveComment" />
       <Button
         android:id="@+id/markSpam"
-        android:textSize="20dip"
+        android:textSize="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@drawable/wp_button_small"
         android:text="@string/spam"
         android:textColor="#FFBC0B0B"
-        android:layout_marginLeft="2dip"
-        android:layout_marginRight="2dip"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_toRightOf="@id/unapproveComment" />
     </RelativeLayout>
   </RelativeLayout>
-</LinearLayout>
+  <include
+    layout="@layout/action_bar"
+    android:id="@+id/actionBar"
+    android:layout_above="@id/moderatecomments" />
+</RelativeLayout>

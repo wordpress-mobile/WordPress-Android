@@ -89,6 +89,7 @@ public class ViewComments extends ListActivity {
 	private int checkedCommentTotal = 0; 
 	private boolean inModeration = false;
 	private Blog blog;
+	private WPTitleBar titleBar;
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -104,12 +105,11 @@ public class ViewComments extends ListActivity {
 			fromNotification = extras.getBoolean("fromNotification", false);       		
 		}      
 		
-		WPTitleBar titleBar = (WPTitleBar) findViewById(R.id.actionBar);
-        titleBar.addRefreshButton();
-
+		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
         titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
+            	titleBar.startRotatingRefreshIcon();
                 refreshComments(false, false, false);
 
             }
@@ -636,6 +636,7 @@ public class ViewComments extends ListActivity {
 					{
 						pd.dismiss();
 					}
+					titleBar.stopRotatingRefreshIcon();
 				}
 				else{
 					origComments = result;
@@ -708,6 +709,8 @@ public class ViewComments extends ListActivity {
 					{
 						pd.dismiss();
 					}
+					
+					titleBar.stopRotatingRefreshIcon();
 
 				}  
 				
@@ -1118,6 +1121,7 @@ public class ViewComments extends ListActivity {
 						{
 							pd.dismiss();
 						}
+						titleBar.stopRotatingRefreshIcon();
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ViewComments.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
@@ -1166,6 +1170,7 @@ public class ViewComments extends ListActivity {
 						{
 							pd.dismiss();
 						}
+						titleBar.stopRotatingRefreshIcon();
 						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ViewComments.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));

@@ -1,11 +1,7 @@
 
 package org.wordpress.android;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,8 +27,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -41,7 +35,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
@@ -65,13 +58,12 @@ public class Dashboard extends Activity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.dashboard);
-        // requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 
         commentBadge = (TextView) findViewById(R.id.comment_badge);
         
-        Integer id1 = WordPress.currentBlog.getId();
+        /*Integer id1 = WordPress.currentBlog.getId();
         blog = new Blog(id1, this);
         
         WordPressDB postStoreDB = new WordPressDB(this);
@@ -87,7 +79,7 @@ public class Dashboard extends Activity{
         pav.setText(Integer.toString(loadedPages.size()));
         
         TextView cov = (TextView) findViewById(R.id.comments_value);
-        cov.setText(Integer.toString(loadedComments.size())); 
+        cov.setText(Integer.toString(loadedComments.size())); */
     }
 
     @Override
@@ -385,18 +377,6 @@ public class Dashboard extends Activity{
         checkStats(accounts.size());
 
         if (accounts.size() > 0) {
-
-            try {
-                ImageView i = (ImageView) findViewById(R.id.blavatar_img);
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(blavatar_url)
-                        .getContent());
-                i.setImageBitmap(bitmap);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             // Integer blog_num = blog_select.getSelectedItemPosition();
             // blog_num = blog_num + 1;
 

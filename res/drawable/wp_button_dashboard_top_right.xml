@@ -7,11 +7,11 @@
     android:drawable="@drawable/dashboard_btn_top_right" />
   <item
     android:state_pressed="true"
-    android:drawable="@drawable/dashboard_btn_down" />
+    android:drawable="@drawable/dashboard_btn_down_shadow" />
   <item
     android:state_focused="true"
     android:state_enabled="true"
-    android:drawable="@drawable/dashboard_btn_down" />
+    android:drawable="@drawable/dashboard_btn_down_shadow" />
   <item
     android:state_enabled="true"
     android:drawable="@drawable/dashboard_btn_top_right" />

@@ -64,6 +64,7 @@
     	<item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
     	<item name="android:buttonStyle">@style/WordPressButtonAppearance</item> 
 	    <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
 	</style>	
     
     <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
@@ -176,15 +177,15 @@
   
   <style name="DashboardButton">
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_width">94dip</item>
-        <item name="android:layout_height">94dip</item>
+        <item name="android:layout_width">94dp</item>
+        <item name="android:layout_height">94dp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:drawablePadding">2dp</item>
         <item name="android:textSize">12dip</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#111111</item>
-        <item name="android:background">@null</item>
-        <item name="android:paddingTop">6dip</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
     </style>
 
 </resources>

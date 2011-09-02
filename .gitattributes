@@ -209,6 +209,7 @@ libs/CWAC-AdapterWrapper.jar -text
 libs/CWAC-Bus.jar -text
 libs/CWAC-Task.jar -text
 libs/android-support-v4.jar -text
+/local.properties -text
 res/anim/cycle_5.xml -text
 res/anim/disappear.xml -text
 res/anim/grow_from_bottom.xml -text
@@ -266,12 +267,15 @@ res/drawable-hdpi-v4/posts_tab_icon.png -text
 res/drawable-hdpi-v4/refresh.png -text
 res/drawable-hdpi-v4/stats_tab.png -text
 res/drawable-hdpi-v4/stats_tab_active.png -text
+res/drawable-hdpi-v4/title_bar_shadow.9.png -text
 res/drawable-hdpi-v4/wp_check_off.png -text
 res/drawable-hdpi-v4/wp_check_on.png -text
 res/drawable-hdpi-v4/wp_small.9.png -text
 res/drawable-hdpi-v4/wp_small_down.9.png -text
 res/drawable-hdpi-v4/wp_small_over.9.png -text
 res/drawable-hdpi-v4/wp_small_toggle.9.png -text
+res/drawable/action_bar_btn_selector.xml -text
+res/drawable/action_bar_shadow.9.png -text
 res/drawable/action_item_btn.xml -text
 res/drawable/action_item_selected.9.png -text
 res/drawable/add.png -text
@@ -296,9 +300,12 @@ res/drawable/dashboard_btn.xml -text
 res/drawable/dashboard_btn_bottom_left.xml -text
 res/drawable/dashboard_btn_bottom_right.xml -text
 res/drawable/dashboard_btn_down.xml -text
+res/drawable/dashboard_btn_down_shadow.9.png -text
 res/drawable/dashboard_btn_top_left.xml -text
 res/drawable/dashboard_btn_top_right.xml -text
+res/drawable/dashboard_button_down.9.png -text
 res/drawable/drafts_icon.png -text
+res/drawable/drop_down_arrow.png -text
 res/drawable/gallery_selected_default.9.png -text
 res/drawable/grey_wp_button.9.png -text
 res/drawable/grey_wp_button_active.9.png -text
@@ -317,6 +324,8 @@ res/drawable/ic_menu_preferences.png -text
 res/drawable/ic_menu_prefs.png -text
 res/drawable/ic_menu_rotate.png -text
 res/drawable/ic_popup_sync_1.png -text
+res/drawable/icon_titlebar_home.png -text
+res/drawable/icon_titlebar_refresh.png -text
 res/drawable/list_bg.xml -text
 res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
@@ -359,6 +368,8 @@ res/drawable/tab_bg_selector.xml -text
 res/drawable/tab_color_selector.xml -text
 res/drawable/tab_unselected.xml -text
 res/drawable/title_bar_gradient.xml -text
+res/drawable/title_bar_item_bg.xml -text
+res/drawable/title_bar_shadow.9.png -text
 res/drawable/title_bg.xml -text
 res/drawable/video.png -text
 res/drawable/wordpress_gallery_background.xml -text
@@ -383,6 +394,7 @@ res/drawable/wp_spinner_bg.xml -text
 res/drawable/wp_spinner_title_bar_bg.xml -text
 res/drawable/wpcom.png -text
 res/drawable/wplogo.png -text
+res/layout-hdpi-v4/action_bar.xml -text
 res/layout-hdpi-v4/new_account.xml -text
 res/layout-small-v4/new_account.xml -text
 res/layout-v4/row.xml -text
@@ -394,6 +406,7 @@ res/layout/add_account_settings.xml -text
 res/layout/add_category.xml -text
 res/layout/add_quickpress_shortcut.xml -text
 res/layout/blogs_row.xml -text
+res/layout/blogs_row_actionbar.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/dashboard.xml -text
