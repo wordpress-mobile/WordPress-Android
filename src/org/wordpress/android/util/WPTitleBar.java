@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.wordpress.android.ActionItem;
 import org.wordpress.android.EditPost;
-import org.wordpress.android.QuickAction;
+import org.wordpress.android.QuickDashboard;
 import org.wordpress.android.R;
 import org.wordpress.android.ViewComments;
 import org.wordpress.android.WordPress;
@@ -17,6 +17,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,8 +31,7 @@ import android.widget.TextView;
 
 public class WPTitleBar extends RelativeLayout {
 
-	QuickAction qa;
-	public QuickAction qaBlogs;
+	QuickDashboard qa;
 	public CharSequence[] blogNames;
 	public int[] blogIDs;
 	public Vector<?> accounts;
@@ -40,11 +40,13 @@ public class WPTitleBar extends RelativeLayout {
 	public Button refreshButton;
 	OnBlogChangedListener onBlogChangedListener = null;
 	AlertDialog.Builder dialogBuilder;
+	public boolean showPopoverOnLoad;
 
 	public WPTitleBar(final Context ctx, AttributeSet attrs) {
 		super(ctx, attrs);
 
 		context = ctx;
+		
 	}
 
 	@Override
@@ -56,9 +58,6 @@ public class WPTitleBar extends RelativeLayout {
 
 		blogNames = new CharSequence[accounts.size()];
 		blogIDs = new int[accounts.size()];
-
-		qaBlogs = new QuickAction(context);
-		qaBlogs.setAnimStyle(QuickAction.ANIM_AUTO);
 
 		for (int i = 0; i < accounts.size(); i++) {
 			HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
@@ -131,69 +130,8 @@ public class WPTitleBar extends RelativeLayout {
 			blogTitle.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog
 					.getBlogName()));
 
-			final ActionItem newpost = new ActionItem();
-
-			newpost.setTitle("Add New Post");
-			newpost.setIcon(getResources().getDrawable(R.drawable.posts_tab));
-
-			final ActionItem newpage = new ActionItem();
-
-			newpage.setTitle("Add New Page");
-			newpage.setIcon(getResources().getDrawable(R.drawable.pages_tab));
-
-			final ActionItem addOldPhoto = new ActionItem();
-			addOldPhoto.setTitle("Add Image From Gallery");
-			addOldPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-
-			final ActionItem takeNewPhoto = new ActionItem();
-			takeNewPhoto.setTitle("Take Photo");
-			takeNewPhoto.setIcon(getResources().getDrawable(R.drawable.media));
-
-			final ActionItem addOldVideo = new ActionItem();
-			addOldVideo.setTitle("Add Video from Gallery");
-			addOldVideo.setIcon(getResources().getDrawable(R.drawable.media));
-
-			final ActionItem takeNewVideo = new ActionItem();
-			takeNewVideo.setTitle("Take Video");
-			takeNewVideo.setIcon(getResources().getDrawable(R.drawable.media));
-
-			qa = new QuickAction(context);
-			qa.addActionItem(newpost);
-			qa.addActionItem(newpage);
-			qa.addActionItem(addOldPhoto);
-			qa.addActionItem(takeNewPhoto);
-			qa.addActionItem(addOldVideo);
-			qa.addActionItem(takeNewVideo);
-			qa.setAnimStyle(QuickAction.ANIM_AUTO);
-
-			qa.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
-				@Override
-				public void onItemClick(int pos) {
-					Intent i = new Intent(context, EditPost.class);
-
-					switch (pos) {
-					case 1:
-						i.putExtra("isPage", true);
-						break;
-					case 2:
-						i.putExtra("option", "photolibrary");
-						break;
-					case 3:
-						i.putExtra("option", "newphoto");
-						break;
-					case 4:
-						i.putExtra("option", "videolibrary");
-						break;
-					case 5:
-						i.putExtra("option", "newvideo");
-						break;
-					}
-
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-				}
-			});
-
+			qa = new QuickDashboard(context);
+			
 			ImageButton showDashboard = (ImageButton) findViewById(R.id.home_small);
 
 			showDashboard.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +141,22 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 		}
+	}
+	
+	public void showDashboard() {
+		final ImageButton showDashboard = (ImageButton) findViewById(R.id.home_small);
+		
+		showDashboard.postDelayed(new Runnable()
+		{ 
+		    public void run()
+		    { 
+		    	if (!qa.isShowing) {
+		    		showDashboard.performClick();
+		    		showDashboard.setSelected(true);
+		    	}
+		    }
+		}, 0);
+		
 	}
 
 	private void updateBlavatarImage() {

@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.Dashboard;
 import org.wordpress.android.R;
-import org.wordpress.android.ViewDrafts;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.ImageHelper;
@@ -426,16 +425,6 @@ public Post(int blog_id, String title, String content, String picturePaths, long
 	            n.flags |= Notification.FLAG_AUTO_CANCEL;
 	            n.setLatestEventInfo(context, post.blog.getBlogName(), postOrPage + " " + context.getResources().getText(R.string.uploaded_successfully), pendingIntent);
 	            nm.notify(notificationID, n); //needs a unique id
-			}
-			else {
-			    Intent notificationIntent = new Intent(context, ViewDrafts.class);
-                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+post.blogID)));
-                notificationIntent.putExtra("id", String.valueOf(post.blog.getId()));
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                Notification n = new Notification();
-                n.flags |= Notification.FLAG_AUTO_CANCEL;
-                n.setLatestEventInfo(context, post.blog.getBlogName(), context.getResources().getText(R.string.error) + " " + context.getResources().getText(R.string.uploading) + " " + postOrPage, pendingIntent);
-                nm.notify(notificationID, n); //needs a unique id
 			}
 		}
 		

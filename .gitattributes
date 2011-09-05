@@ -410,6 +410,7 @@ res/layout/blogs_row_actionbar.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/dashboard.xml -text
+res/layout/dashboard_popover.xml -text
 res/layout/edit.xml -text
 res/layout/edit_page.xml -text
 res/layout/global_settings.xml -text
@@ -492,7 +493,7 @@ src/org/wordpress/android/Link.java -text
 src/org/wordpress/android/NewAccount.java -text
 src/org/wordpress/android/PopupWindows.java -text
 src/org/wordpress/android/Preferences.java -text
-src/org/wordpress/android/QuickAction.java -text
+src/org/wordpress/android/QuickDashboard.java -text
 src/org/wordpress/android/ReplyToComment.java -text
 src/org/wordpress/android/SelectCategories.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
@@ -502,7 +503,6 @@ src/org/wordpress/android/TabView.java -text
 src/org/wordpress/android/UploadDialog.java -text
 src/org/wordpress/android/ViewComment.java -text
 src/org/wordpress/android/ViewComments.java -text
-src/org/wordpress/android/ViewDrafts.java -text
 src/org/wordpress/android/ViewPost.java -text
 src/org/wordpress/android/ViewPostComments.java -text
 src/org/wordpress/android/ViewPosts.java -text

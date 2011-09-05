@@ -22,6 +22,7 @@ public class PopupWindows {
 	protected View mRootView;
 	protected Drawable mBackground = null;
 	protected WindowManager mWindowManager;
+	public boolean isShowing;
 	
 	/**
 	 * Constructor.
@@ -51,13 +52,15 @@ public class PopupWindows {
 	/**
 	 * On dismiss
 	 */
-	protected void onDismiss() {		
+	protected void onDismiss() {	
+		isShowing = false;
 	}
 	
 	/**
 	 * On show
 	 */
-	protected void onShow() {		
+	protected void onShow() {	
+		isShowing = true;
 	}
 
 	/**
@@ -74,7 +77,7 @@ public class PopupWindows {
 		else 
 			mWindow.setBackgroundDrawable(mBackground);
 
-		mWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+		mWindow.setWidth(WindowManager.LayoutParams.FILL_PARENT);
 		mWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 		mWindow.setTouchable(true);
 		mWindow.setFocusable(true);

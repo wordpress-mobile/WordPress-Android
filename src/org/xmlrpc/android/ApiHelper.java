@@ -137,9 +137,9 @@ public class ApiHelper extends Activity {
                         ((ViewPosts) ctx).switcher.showPrevious();
                     ((ViewPosts) ctx).loadPosts(loadMore);
                 }
-                ((ViewPosts) ctx).closeProgressBar();
+               ((ViewPosts) ctx).stopRotating();
             } else {
-                ((ViewPosts) ctx).closeProgressBar();
+            	((ViewPosts) ctx).stopRotating();
             }
         }
 		

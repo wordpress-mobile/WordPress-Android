@@ -88,6 +88,7 @@ public class ViewPosts extends ListActivity {
     public ViewSwitcher switcher;
     private PostListAdapter pla;
     private Blog blog;
+	private WPTitleBar titleBar;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -97,16 +98,17 @@ public class ViewPosts extends ListActivity {
         Bundle extras = getIntent().getExtras();
         String action = null;
         if (extras != null) {
-            id = WordPress.currentBlog.getId();
-            blog = new Blog(id, this);
             isPage = extras.getBoolean("viewPages");
             action = extras.getString("action");
         }
+        id = WordPress.currentBlog.getId();
+        blog = new Blog(id, this);
 
-        WPTitleBar titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+        titleBar = (WPTitleBar) findViewById(R.id.actionBar);
         titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
 
+            	titleBar.startRotatingRefreshIcon();
                 refreshPosts(false);
 
             }
@@ -131,6 +133,7 @@ public class ViewPosts extends ListActivity {
 
                 boolean loadedPosts = loadPosts(false);
                 if (!loadedPosts) {
+                	titleBar.startRotatingRefreshIcon();
                     refreshPosts(false);
                 }
             }
@@ -140,6 +143,7 @@ public class ViewPosts extends ListActivity {
             boolean loadedPosts = loadPosts(false);
 
             if (!loadedPosts) {
+            	titleBar.startRotatingRefreshIcon();
                 refreshPosts(false);
             }
         }
@@ -184,7 +188,7 @@ public class ViewPosts extends ListActivity {
     public void refreshPosts(final boolean loadMore) {
 
         if (!loadMore) {
-            showProgressBar();
+        	titleBar.startRotatingRefreshIcon();
         }
         Vector<Object> apiArgs = new Vector<Object>();
         apiArgs.add(blog);
@@ -1004,49 +1008,6 @@ public class ViewPosts extends ListActivity {
         return "";
     }
 
-    public void showProgressBar() {
-        AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        LayoutAnimationController controller = new LayoutAnimationController(
-                set, 0.5f);
-        RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);
-        loading.setVisibility(View.VISIBLE);
-        loading.setLayoutAnimation(controller);
-    }
-
-    public void closeProgressBar() {
-
-        AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
-        animation.setDuration(500);
-        set.addAnimation(animation);
-
-        LayoutAnimationController controller = new LayoutAnimationController(
-                set, 0.5f);
-        RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);
-
-        loading.setLayoutAnimation(controller);
-
-        loading.setVisibility(View.INVISIBLE);
-    }
-
     private void shareURL(int accountId, String postId, final boolean isPage) {
 
         String errorStr = null;
@@ -1259,5 +1220,10 @@ public class ViewPosts extends ListActivity {
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
     }
+
+	public void stopRotating() {
+		titleBar.stopRotatingRefreshIcon();
+		
+	}
 
 }
