@@ -1496,7 +1496,6 @@ public class WordPressDB {
             int numRows = c.getCount();
             c.moveToFirst();
             
-            HashMap<String, Object> numRecords = new HashMap<String, Object>();
             if (numRows > 0){
                 commentCount=c.getInt(0);
             }

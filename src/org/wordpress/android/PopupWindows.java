@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 /**
  * Custom popup window.
@@ -37,16 +38,22 @@ public class PopupWindows {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-					mWindow.dismiss();
 					
 					return true;
 				}
-				
+				if (event.getY() < 0)
+					actionBarTapped();
+
 				return false;
 			}
+
 		});
 
 		mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+	}
+	
+	public void actionBarTapped() {
+		
 	}
 	
 	/**
@@ -82,7 +89,6 @@ public class PopupWindows {
 		mWindow.setTouchable(true);
 		mWindow.setFocusable(true);
 		mWindow.setOutsideTouchable(true);
-
 		mWindow.setContentView(mRootView);
 	}
 

@@ -212,23 +212,10 @@ libs/android-support-v4.jar -text
 /local.properties -text
 res/anim/cycle_5.xml -text
 res/anim/disappear.xml -text
-res/anim/grow_from_bottom.xml -text
-res/anim/grow_from_bottomleft_to_topright.xml -text
-res/anim/grow_from_bottomright_to_topleft.xml -text
-res/anim/grow_from_top.xml -text
-res/anim/grow_from_topleft_to_bottomright.xml -text
 res/anim/grow_from_topright_to_bottomleft.xml -text
-res/anim/pump_bottom.xml -text
-res/anim/pump_top.xml -text
 res/anim/rail.xml -text
-res/anim/rotate_comment_badge.xml -text
 res/anim/shake.xml -text
-res/anim/shrink_from_bottom.xml -text
 res/anim/shrink_from_bottomleft_to_topright.xml -text
-res/anim/shrink_from_bottomright_to_topleft.xml -text
-res/anim/shrink_from_top.xml -text
-res/anim/shrink_from_topleft_to_bottomright.xml -text
-res/anim/shrink_from_topright_to_bottomleft.xml -text
 res/drawable-hdpi-v4/add.png -text
 res/drawable-hdpi-v4/app_icon.png -text
 res/drawable-hdpi-v4/btn_check_off_pressed.png -text
@@ -410,7 +397,6 @@ res/layout/blogs_row_actionbar.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/dashboard.xml -text
-res/layout/dashboard_popover.xml -text
 res/layout/edit.xml -text
 res/layout/edit_page.xml -text
 res/layout/global_settings.xml -text
@@ -426,7 +412,6 @@ res/layout/pages_tab_selector.xml -text
 res/layout/popup.xml -text
 res/layout/post_fullscreen.xml -text
 res/layout/posts_tab_selector.xml -text
-res/layout/quickaction.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/row_post_page.xml -text
@@ -480,7 +465,6 @@ src/com/commonsware/cwac/thumbnail/ThumbnailAdapter.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailBus.java -text
 src/com/commonsware/cwac/thumbnail/ThumbnailMessage.java -text
 src/org/wordpress/android/About.java -text
-src/org/wordpress/android/ActionItem.java -text
 src/org/wordpress/android/AddAccount.java -text
 src/org/wordpress/android/AddAcountSettings.java -text
 src/org/wordpress/android/AddCategory.java -text
@@ -493,7 +477,6 @@ src/org/wordpress/android/Link.java -text
 src/org/wordpress/android/NewAccount.java -text
 src/org/wordpress/android/PopupWindows.java -text
 src/org/wordpress/android/Preferences.java -text
-src/org/wordpress/android/QuickDashboard.java -text
 src/org/wordpress/android/ReplyToComment.java -text
 src/org/wordpress/android/SelectCategories.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
