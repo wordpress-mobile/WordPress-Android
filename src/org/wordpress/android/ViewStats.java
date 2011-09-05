@@ -978,7 +978,6 @@ public class ViewStats extends Activity {
 	private class statsUserDataTask extends AsyncTask<String, Void, Vector<?>> {
 
 		protected void onPostExecute(Vector<?> result) {
-			closeProgressBar();
 			WordPressDB settingsDB = new WordPressDB(ViewStats.this);
 			if (result != null) {
 				// user's original login data worked
@@ -1074,32 +1073,6 @@ public class ViewStats extends Activity {
 				-1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 		animation.setDuration(500);
 		set.addAnimation(animation);
-
-		LayoutAnimationController controller = new LayoutAnimationController(
-				set, 0.5f);
-		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);
-		loading.setVisibility(View.VISIBLE);
-		loading.setLayoutAnimation(controller);
-	}
-
-	public void closeProgressBar() {
-
-		AnimationSet set = new AnimationSet(true);
-
-		Animation animation = new AlphaAnimation(1.0f, 0.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-
-		animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-
-		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);
-
-		loading.startAnimation(set);
-		loading.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
