@@ -25,6 +25,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -148,12 +149,24 @@ public class WPTitleBar extends RelativeLayout {
 			});
 			
 			//dashboard button click handlers
-			Button writeButton = (Button) findViewById(R.id.dashboard_write_btn);
+			Button writeButton = (Button) findViewById(R.id.dashboard_newpost_btn);
 	        writeButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					 Intent i = new Intent(context, EditPost.class);
 	                 i.putExtra("id", WordPress.currentBlog.getId());
 	                 i.putExtra("isNew", true);
+	                 i.putExtra("option", "");
+	                 context.startActivity(i);
+				}
+			});
+	        
+	        Button newPageButton = (Button) findViewById(R.id.dashboard_newpage_btn);
+	        newPageButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					 Intent i = new Intent(context, EditPost.class);
+	                 i.putExtra("id", WordPress.currentBlog.getId());
+	                 i.putExtra("isNew", true);
+	                 i.putExtra("isPage", true);
 	                 i.putExtra("option", "");
 	                 context.startActivity(i);
 				}
@@ -218,7 +231,7 @@ public class WPTitleBar extends RelativeLayout {
 	            }
 	        });
 	        
-	        Button picButton = (Button) findViewById(R.id.dashboard_picture_btn);
+	        Button picButton = (Button) findViewById(R.id.dashboard_quickphoto_btn);
 	        picButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, EditPost.class);
@@ -228,7 +241,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 	        
-	        Button videoButton = (Button) findViewById(R.id.dashboard_video_btn);
+	        Button videoButton = (Button) findViewById(R.id.dashboard_quickvideo_btn);
 	        videoButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, EditPost.class);

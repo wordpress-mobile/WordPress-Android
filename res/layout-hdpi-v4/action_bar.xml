@@ -52,7 +52,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp" />
     </RelativeLayout>
-
     <RelativeLayout
       android:layout_width="wrap_content"
       android:layout_height="fill_parent">
@@ -67,7 +66,6 @@
         android:layout_marginRight="-1dp"
         android:scaleType="fitCenter"
         android:background="@drawable/action_bar_btn_selector" />
-
       <FrameLayout
         android:layout_width="47dp"
         android:layout_height="47dp"
@@ -100,100 +98,148 @@
     android:scaleType="fitXY"
     android:background="@android:color/transparent"
     android:layout_marginTop="47dp" />
-
   <RelativeLayout
     android:id="@+id/dashboard"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop="22dp"
+    android:paddingTop="17dp"
     android:layout_below="@id/actionBarWrapper"
     android:gravity="center_horizontal"
     android:layout_weight="1"
     android:visibility="gone"
     android:background="#88000000">
-    <Button
-      android:id="@+id/dashboard_write_btn"
-      style="@style/DashboardButton"
-      android:text="Write"
-      android:drawableTop="@drawable/dashboard_icon_write"
-      android:background="@drawable/wp_button_dashboard_top_left" />
-    <Button
-  android:id="@+id/dashboard_pages_btn"
-  style="@style/DashboardButton"
-  android:text="@string/tab_pages"
-  android:drawableTop="@drawable/dashboard_icon_pages"
-  android:background="@drawable/wp_button_dashboard"
-  android:layout_toRightOf="@id/dashboard_write_btn" />
-    <Button
-      android:id="@+id/dashboard_comments_btn"
-      style="@style/DashboardButton"
-      android:text="@string/tab_comments"
-      android:drawableTop="@drawable/dashboard_icon_comments"
-      android:background="@drawable/wp_button_dashboard_top_right"
-      android:layout_toRightOf="@id/dashboard_pages_btn" />
-    <Button
-      android:id="@+id/dashboard_posts_btn"
-      style="@style/DashboardButton"
-      android:text="@string/tab_posts"
-      android:drawableTop="@drawable/dashboard_icon_posts"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_below="@id/dashboard_write_btn" />
-    <Button
-      android:id="@+id/dashboard_picture_btn"
-      style="@style/DashboardButton"
-      android:text="Picture"
-      android:drawableTop="@drawable/dashboard_icon_photo"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_posts_btn"
-      android:layout_below="@id/dashboard_pages_btn" />
-    <Button
-      android:id="@+id/dashboard_video_btn"
-      style="@style/DashboardButton"
-      android:text="Video"
-      android:drawableTop="@drawable/dashboard_icon_video"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_picture_btn"
-      android:layout_below="@id/dashboard_comments_btn" />
-    <Button
-      android:id="@+id/dashboard_settings_btn"
-      style="@style/DashboardButton"
-      android:text="Settings"
-      android:drawableTop="@drawable/dashboard_icon_settings"
-      android:background="@drawable/wp_button_dashboard_bottom_left"
-      android:layout_below="@id/dashboard_posts_btn" />
-    <Button
-      android:id="@+id/dashboard_stats_btn"
-      style="@style/DashboardButton"
-      android:text="Stats"
-      android:drawableTop="@drawable/dashboard_icon_stats"
-      android:background="@drawable/wp_button_dashboard"
-      android:layout_toRightOf="@id/dashboard_settings_btn"
-      android:layout_below="@id/dashboard_picture_btn" />
-    <Button
-      android:id="@+id/dashboard_subs_btn"
-      style="@style/DashboardButton"
-      android:text="About"
-      android:drawableTop="@drawable/dashboard_icon_subs"
-      android:background="@drawable/wp_button_dashboard_bottom_right"
-      android:layout_toRightOf="@id/dashboard_stats_btn"
-      android:layout_below="@id/dashboard_video_btn" />
-    <org.wordpress.android.util.CommentBadgeTextView
-      android:id="@+id/comment_badge"
-      android:layout_width="53dp"
-      android:layout_height="53dp"
-      android:gravity="center"
-      android:layout_marginTop="-15dp"
-      android:layout_marginRight="-15dp"
-      android:text="0"
-      android:textStyle="bold"
-      android:textSize="13dp"
-      android:shadowDy="1"
-      android:shadowRadius="1"
-      android:shadowColor="#FF464646"
-      android:textColor="#FFFFFFFF"
-      android:background="@drawable/comment_badge"
-      android:layout_alignTop="@id/dashboard_comments_btn"
-      android:layout_alignRight="@id/dashboard_comments_btn" />
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:background="@drawable/dashboard_bg">
+      <Button
+        android:id="@+id/dashboard_newpost_btn"
+        style="@style/DashboardButton"
+        android:text="New Post"
+        android:layout_width="215px"
+        android:layout_height="171px"
+        android:drawableTop="@drawable/dashboard_icon_write"
+        android:background="@drawable/wp_button_dashboard_top_left" />
+      <Button
+        android:id="@+id/dashboard_newpage_btn"
+        style="@style/DashboardButton"
+        android:text="New Page"
+        android:drawableTop="@drawable/dashboard_icon_pages"
+        android:background="@drawable/wp_button_dashboard_top_right"
+        android:layout_width="215px"
+        android:layout_height="171px"
+        android:layout_toRightOf="@id/dashboard_newpost_btn"
+        android:layout_marginLeft="2px" />
+      <Button
+        android:id="@+id/dashboard_quickphoto_btn"
+        style="@style/DashboardButton"
+        android:text="Quick Photo"
+        android:layout_width="215px"
+        android:layout_height="171px"
+        android:drawableTop="@drawable/dashboard_icon_photo"
+        android:background="@drawable/wp_button_dashboard"
+        android:layout_marginTop="1px"
+        android:layout_below="@id/dashboard_newpost_btn" />
+      <Button
+        android:id="@+id/dashboard_quickvideo_btn"
+        style="@style/DashboardButton"
+        android:text="Quick Video"
+        android:layout_width="215px"
+        android:layout_height="171px"
+        android:drawableTop="@drawable/dashboard_icon_video"
+        android:background="@drawable/wp_button_dashboard"
+        android:layout_toRightOf="@id/dashboard_quickphoto_btn"
+        android:layout_below="@id/dashboard_newpage_btn"
+        android:layout_marginTop="1px"
+        android:layout_marginLeft="2px" />
+      <Button
+        android:id="@+id/dashboard_posts_btn"
+        style="@style/DashboardButton"
+        android:text="Posts"
+        android:layout_width="143px"
+        android:layout_height="144px"
+        android:layout_marginTop="4px"
+        android:drawableTop="@drawable/dashboard_icon_posts"
+        android:background="@drawable/wp_button_dashboard"
+        android:layout_below="@id/dashboard_quickphoto_btn" />
+      <Button
+        android:id="@+id/dashboard_pages_btn"
+        style="@style/DashboardButton"
+        android:text="Pages"
+        android:layout_width="142px"
+        android:layout_height="144px"
+        android:layout_marginTop="4px"
+        android:layout_marginLeft="1dp"
+        android:drawableTop="@drawable/dashboard_icon_pages"
+        android:background="@drawable/wp_button_dashboard"
+        android:layout_toRightOf="@id/dashboard_posts_btn"
+        android:layout_below="@id/dashboard_quickphoto_btn" />
+      <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4px"
+        android:layout_marginLeft="1dp"
+        android:layout_toRightOf="@id/dashboard_pages_btn"
+        android:layout_below="@id/dashboard_quickphoto_btn">
+        <Button
+          android:id="@+id/dashboard_comments_btn"
+          style="@style/DashboardButton"
+          android:text="Comments"
+          android:layout_width="143px"
+          android:layout_height="144px"
+          android:drawableTop="@drawable/dashboard_icon_comments"
+          android:background="@drawable/wp_button_dashboard" />
+        <org.wordpress.android.util.CommentBadgeTextView
+          android:id="@+id/comment_badge"
+          android:layout_width="46dp"
+          android:layout_height="46dp"
+          android:gravity="center_horizontal"
+          android:text="0"
+          android:layout_gravity="right"
+          android:textStyle="bold"
+          android:textSize="12dp"
+          android:shadowDy="1"
+          android:shadowRadius="1"
+          android:shadowColor="#FF464646"
+          android:textColor="#FFFFFFFF"
+          android:background="@drawable/comment_badge" />
+      </FrameLayout>
+      <Button
+        android:id="@+id/dashboard_settings_btn"
+        style="@style/DashboardButton"
+        android:text="Settings"
+        android:layout_width="143px"
+        android:layout_height="144px"
+        android:layout_marginTop="1px"
+        android:drawableTop="@drawable/dashboard_icon_settings"
+        android:background="@drawable/wp_button_dashboard_bottom_left"
+        android:layout_below="@id/dashboard_posts_btn" />
+      <Button
+        android:id="@+id/dashboard_subs_btn"
+        style="@style/DashboardButton"
+        android:text="Following"
+        android:layout_width="142px"
+        android:layout_height="144px"
+        android:layout_marginTop="1px"
+        android:layout_marginLeft="2px"
+        android:drawableTop="@drawable/dashboard_icon_subs"
+        android:background="@drawable/wp_button_dashboard_bottom_center"
+        android:layout_toRightOf="@id/dashboard_settings_btn"
+        android:layout_below="@id/dashboard_posts_btn" />
+      <Button
+        android:id="@+id/dashboard_stats_btn"
+        style="@style/DashboardButton"
+        android:text="Stats"
+        android:layout_width="143px"
+        android:layout_height="144px"
+        android:layout_marginTop="1px"
+        android:layout_marginLeft="2px"
+        android:drawableTop="@drawable/dashboard_icon_stats"
+        android:background="@drawable/wp_button_dashboard_bottom_right"
+        android:layout_toRightOf="@id/dashboard_subs_btn"
+        android:layout_below="@id/dashboard_posts_btn" />
+    </RelativeLayout>
   </RelativeLayout>
 </org.wordpress.android.util.WPTitleBar>

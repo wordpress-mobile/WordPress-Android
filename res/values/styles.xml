@@ -129,12 +129,9 @@
   
   <style name="DashboardButton">
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_width">94dp</item>
-        <item name="android:layout_height">94dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">12dip</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#111111</item>
+        <item name="android:textColor">#333333</item>
         <item name="android:paddingBottom">0dp</item>
         <item name="android:paddingRight">0dp</item>
         <item name="android:paddingLeft">0dp</item>
