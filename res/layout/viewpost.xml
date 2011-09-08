@@ -6,39 +6,45 @@
   android:layout_height="fill_parent"
   android:padding="0px"
   android:orientation="vertical">
-  <include
-    layout="@layout/action_bar" android:id="@+id/actionBar"/>
   <WebView
     android:id="@+id/webView"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:layout_weight="1">
   </WebView>
-  <LinearLayout
+  <RelativeLayout
  xmlns:android="http://schemas.android.com/apk/res/android"
+ android:id="@+id/navBar"
  android:layout_height="wrap_content"
  android:layout_width="fill_parent"
  android:orientation="horizontal"
  android:weightSum="1.0"
  android:paddingTop="4dip"
- android:background="@drawable/home_gradient">
+ android:background="@drawable/view_post_navbar_bg">
     <ImageButton
       android:id="@+id/browserBack"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:text="Back"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:scaleType="centerInside"
+      android:background="@drawable/menu_button_selector"
       android:src="@drawable/ic_menu_back"
-      android:layout_weight="0.5"
-      android:padding="0dip"
-      android:visibility="gone"/>
+      android:padding="0dip"/>
     <ImageButton
       android:id="@+id/browserForward"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:text="Back"
+      android:layout_width="40dp"
+      android:layout_toRightOf="@id/browserBack"
+      android:layout_height="40dp"
+      android:scaleType="centerInside"
       android:src="@drawable/ic_menu_forward"
-      android:layout_weight="0.5" 
-      android:padding="0dip"
-      android:visibility="gone"/>
-</LinearLayout>
+      android:background="@drawable/menu_button_selector"
+      android:padding="0dip"/>
+   <ImageButton
+      android:id="@+id/browserRefresh"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:scaleType="centerInside"
+      android:layout_alignParentRight="true"
+      android:src="@drawable/browser_reload"
+      android:background="@drawable/menu_button_selector"/>
+</RelativeLayout>
 </LinearLayout>

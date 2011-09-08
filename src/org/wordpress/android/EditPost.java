@@ -112,7 +112,7 @@ public class EditPost extends Activity implements LocationListener {
     long postID;
     private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3,
             ID_DIALOG_TIME = 4;
-    public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug, setText = "", option;
+    public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug, option;
     public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false,
             isPage = false, isNew = false,
             isAction = false, isUrl = false, locationActive = false, isLargeScreen = false,
@@ -145,7 +145,6 @@ public class EditPost extends Activity implements LocationListener {
             localDraft = extras.getBoolean("localDraft", false);
             isPage = extras.getBoolean("isPage", false);
             isNew = extras.getBoolean("isNew", false);
-            setText = extras.getString("setText");
             option = extras.getString("option");
             if (!isNew)
                 post = new Post(id, postID, isPage, this);
@@ -290,7 +289,7 @@ public class EditPost extends Activity implements LocationListener {
                 }
             } else {
                 // no account, load main view to load new account view
-                Intent i = new Intent(this, wpAndroid.class);
+                Intent i = new Intent(this, Dashboard.class);
                 Toast.makeText(getApplicationContext(),
                         getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
                 startActivity(i);
@@ -347,13 +346,13 @@ public class EditPost extends Activity implements LocationListener {
             }
 
             EditText titleET = (EditText) findViewById(R.id.title);
-            EditText contentET = (EditText) findViewById(R.id.content);
+            EditText contentET = (EditText) findViewById(R.id.postContent);
             EditText passwordET = (EditText) findViewById(R.id.post_password);
 
             titleET.setText(post.getTitle());
 
             contentET.setText(Html.fromHtml(post.getDescription() + post.getMt_text_more()));
-
+            
             long pubDate = post.getDate_created_gmt();
             if (pubDate != 0) {
                 try {
@@ -493,20 +492,6 @@ public class EditPost extends Activity implements LocationListener {
             });
         }
 
-        final Button fullScreen = (Button) findViewById(R.id.fullscreen);
-
-        fullScreen.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(EditPost.this, Write.class);
-                i.putExtra("accountName", accountName);
-                i.putExtra("setText", setText);
-                i.putExtra("id", id);
-                i.putExtra("isNew", true);
-                startActivityForResult(i, 0);
-                finish();
-            }
-        });
-
         final Button saveButton = (Button) findViewById(R.id.post);
 
         saveButton.setOnClickListener(new Button.OnClickListener() {
@@ -551,8 +536,7 @@ public class EditPost extends Activity implements LocationListener {
             }
         });
 
-        final EditText contentEdit = (EditText) findViewById(R.id.content);
-        contentEdit.setText(setText);
+        final EditText contentEdit = (EditText) findViewById(R.id.postContent);
         contentEdit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 if (localDraft || isNew) {
@@ -662,7 +646,7 @@ public class EditPost extends Activity implements LocationListener {
         linkButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
-                TextView contentText = (TextView) findViewById(R.id.content);
+                TextView contentText = (TextView) findViewById(R.id.postContent);
 
                 int selectionStart = contentText.getSelectionStart();
 
@@ -825,7 +809,7 @@ public class EditPost extends Activity implements LocationListener {
     }
 
     protected void formatBtnClick(ToggleButton toggleButton, String tag) {
-        EditText contentText = (EditText) findViewById(R.id.content);
+        EditText contentText = (EditText) findViewById(R.id.postContent);
 
         int selectionStart = contentText.getSelectionStart();
 
@@ -1129,7 +1113,7 @@ public class EditPost extends Activity implements LocationListener {
 
                         if (linkText.equals("CANCEL") != true) {
 
-                            EditText contentText = (EditText) findViewById(R.id.content);
+                            EditText contentText = (EditText) findViewById(R.id.postContent);
 
                             int selectionStart = contentText.getSelectionStart();
 
@@ -1368,7 +1352,7 @@ public class EditPost extends Activity implements LocationListener {
         // grab the form data
         EditText titleET = (EditText) findViewById(R.id.title);
         String title = titleET.getText().toString();
-        EditText contentET = (EditText) findViewById(R.id.content);
+        EditText contentET = (EditText) findViewById(R.id.postContent);
         String content = EscapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
         EditText passwordET = (EditText) findViewById(R.id.post_password);
         String password = passwordET.getText().toString();
@@ -1481,7 +1465,7 @@ public class EditPost extends Activity implements LocationListener {
                 post.setLatitude(latitude);
                 post.setLongitude(longitude);
                 post.setWP_post_form(postFormat);
-                success = post.save();
+                success = post.update();
             }
 
         }// if/then for valid settings
@@ -1681,7 +1665,7 @@ public class EditPost extends Activity implements LocationListener {
                 titleET.setText(title);
             }
 
-            EditText contentET = (EditText) findViewById(R.id.content);
+            EditText contentET = (EditText) findViewById(R.id.postContent);
             // It's a youtube video link! need to strip some parameters so the
             // embed will work
             if (text.contains("youtube_gdata")) {

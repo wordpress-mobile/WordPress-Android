@@ -170,7 +170,7 @@ public class CommentService extends Service {
 					//ApiHelper.refreshComments(accountID, commentService.this);
 					
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-					Intent notificationIntent = new Intent(CommentService.this, TabView.class);
+					Intent notificationIntent = new Intent(CommentService.this, ViewComments.class);
     		  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+accountID)));
     		  		notificationIntent.putExtra("id", accountID);
     		  		notificationIntent.putExtra("accountName", accountName);

@@ -19,7 +19,7 @@
       android:layout_height="fill_parent"
       android:gravity="center_vertical"
       android:background="@drawable/action_bar_btn_selector"
-      android:layout_marginTop="1dp"
+      android:layout_marginTop="1px"
       android:layout_marginRight="95dp"
       android:padding="0dp">
       <ImageView
@@ -63,8 +63,8 @@
         android:padding="10dp"
         android:src="@drawable/icon_titlebar_home"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="1dp"
-        android:layout_marginRight="-1dp"
+        android:layout_marginTop="1px"
+        android:layout_marginRight="-1px"
         android:scaleType="fitCenter"
         android:background="@drawable/action_bar_btn_selector" />
 
@@ -72,8 +72,8 @@
         android:layout_width="47dp"
         android:layout_height="47dp"
         android:layout_toLeftOf="@id/home_small"
-        android:layout_marginTop="1dp"
-        android:layout_marginRight="1dp">
+        android:layout_marginTop="1px"
+        android:layout_marginRight="1px">
         <Button
           android:id="@+id/action_refresh"
           android:layout_width="47dp"
@@ -128,8 +128,8 @@
           android:text="New Post"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="10dp"
-          android:paddingTop="14dp"
+          android:paddingBottom="6dp"
+          android:paddingTop="8dp"
           android:layout_weight=".50"
           android:drawableTop="@drawable/dashboard_icon_new_post"
           android:background="@drawable/wp_button_dashboard_top_left" />
@@ -141,8 +141,8 @@
           android:background="@drawable/wp_button_dashboard_top_right"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="10dp"
-          android:paddingTop="14dp"
+          android:paddingBottom="6dp"
+          android:paddingTop="8dp"
           android:layout_weight=".50"
           android:layout_toRightOf="@id/dashboard_newpost_btn"
           android:layout_marginLeft="2px" />
@@ -157,8 +157,8 @@
           android:text="Quick Photo"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="10dp"
-          android:paddingTop="14dp"
+          android:paddingBottom="6dp"
+          android:paddingTop="8dp"
           android:drawableTop="@drawable/dashboard_icon_photo"
           android:background="@drawable/wp_button_dashboard"
           android:layout_marginTop="1px"
@@ -169,8 +169,8 @@
           android:text="Quick Video"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="10dp"
-          android:paddingTop="14dp"
+          android:paddingBottom="6dp"
+          android:paddingTop="8dp"
           android:drawableTop="@drawable/dashboard_icon_video"
           android:background="@drawable/wp_button_dashboard"
           android:layout_marginTop="1px"
@@ -181,15 +181,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:weightSum="3.0"
-        android:layout_marginTop="3px">
+        android:layout_marginTop="2px">
         <Button
           android:id="@+id/dashboard_posts_btn"
           style="@style/DashboardButton"
           android:text="Posts"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="9dp"
-          android:paddingTop="12dp"
+          android:paddingBottom="4dp"
+          android:paddingTop="6dp"
           android:drawableTop="@drawable/dashboard_icon_posts"
           android:background="@drawable/wp_button_dashboard"
           android:layout_weight="1.0" />
@@ -199,8 +199,8 @@
           android:text="Pages"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="9dp"
-          android:paddingTop="12dp"
+          android:paddingBottom="4dp"
+          android:paddingTop="6dp"
           android:layout_marginLeft="2px"
           android:drawableTop="@drawable/dashboard_icon_pages"
           android:background="@drawable/wp_button_dashboard"
@@ -217,8 +217,8 @@
             android:text="Comments"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="9dp"
-            android:paddingTop="12dp"
+          android:paddingBottom="4dp"
+          android:paddingTop="6dp"
             android:drawableTop="@drawable/dashboard_icon_comments"
             android:background="@drawable/wp_button_dashboard" />
           <org.wordpress.android.util.CommentBadgeTextView
@@ -248,8 +248,8 @@
           android:text="Settings"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="9dp"
-          android:paddingTop="12dp"
+          android:paddingBottom="4dp"
+          android:paddingTop="6dp"
           android:drawableTop="@drawable/dashboard_icon_settings"
           android:background="@drawable/wp_button_dashboard_bottom_left"
           android:layout_weight="1.0" />
@@ -259,8 +259,8 @@
           android:text="Following"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="9dp"
-          android:paddingTop="12dp"
+          android:paddingBottom="4dp"
+          android:paddingTop="6dp"
           android:layout_marginLeft="2px"
           android:drawableTop="@drawable/dashboard_icon_subs"
           android:background="@drawable/wp_button_dashboard_bottom_center"
@@ -271,8 +271,8 @@
           android:text="Stats"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:paddingBottom="9dp"
-          android:paddingTop="12dp"
+          android:paddingBottom="4dp"
+          android:paddingTop="6dp"
           android:layout_marginLeft="2px"
           android:drawableTop="@drawable/dashboard_icon_stats"
           android:background="@drawable/wp_button_dashboard_bottom_right"

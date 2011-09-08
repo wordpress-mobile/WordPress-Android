@@ -473,7 +473,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 	
-	public boolean deleteAccount(Context ctx, String id) {
+	public boolean deleteAccount(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
 		int rowsAffected = 0;
@@ -1387,7 +1387,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 	
-	public Vector<HashMap<String, Object>> getQuickPressShortcuts(Context ctx, String accountId) {
+	public Vector<HashMap<String, Object>> getQuickPressShortcuts(Context ctx, int accountId) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id", "accountId", "name"}, "accountId = "+accountId, null, null, null, null);
 		String id, name;

@@ -21,7 +21,7 @@
     				<data android:mimeType="video/*" />
   			</intent-filter>
 		</activity>
-		<activity android:name="ViewPost" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="ViewPost" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Light"/>
 		<activity android:label="WordPress - Preferences" android:name="Preferences"/>
 		<service android:name="CommentService" android:label="Comment Service" />
 		<receiver android:name="CommentBroadcastReceiver" />

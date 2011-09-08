@@ -36,7 +36,7 @@
         android:layout_below="@id/l_section1"
         android:layout_marginBottom="10dip" />
       <EditText
-        android:id="@+id/content"
+        android:id="@+id/postContent"
         android:gravity="top"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
         android:background="@drawable/wp_button_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/content"
+        android:layout_below="@id/postContent"
         android:textStyle="bold"
         android:textSize="17dip"
         android:textOn="B"
@@ -113,11 +113,13 @@
         android:layout_alignTop="@id/link"
         android:layout_toRightOf="@id/link"
         android:textSize="17dip"
-        android:textOn="b-quote"
-        android:textOff="b-quote"
+        android:textOn='"'
+        android:textOff='"'
+        android:typeface="serif"
+        android:textStyle="bold"
         android:textColor="#464646" />
-        
-        <Button
+
+      <Button
         android:id="@+id/fullscreen"
         android:background="@drawable/wp_button_toggle"
         android:layout_width="fill_parent"

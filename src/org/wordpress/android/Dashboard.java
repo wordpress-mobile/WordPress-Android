@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.WPTitleBar;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,17 +33,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class Dashboard extends Activity {
 	public Vector<?> accounts;
-	private String id = "";
+	private int id;
 	boolean fromNotification = false;
 	int uploadID = 0;
 	public Integer default_blog;
 	public LinearLayout mainDashboard;
 	Vector<?> loadedPosts, loadedPages, loadedComments;
 	public Blog blog;
+	WPTitleBar titleBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,7 @@ public class Dashboard extends Activity {
 		if (data != null) {
 			Bundle bundle = data.getExtras();
 			String status = bundle.getString("returnStatus");
-			if (status.equals("CANCEL") && WordPress.currentBlog != null) {
+			if (status.equals("CANCEL") && WordPress.currentBlog == null) {
 				finish();
 			} else {
 				WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.actionBar);
@@ -164,8 +167,6 @@ public class Dashboard extends Activity {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
-							// User clicked Accept so set that they've
-							// agreed to the eula.
 							WordPressDB settingsDB = new WordPressDB(
 									Dashboard.this);
 							boolean deleteSuccess = settingsDB.deleteAccount(
@@ -177,7 +178,8 @@ public class Dashboard extends Activity {
 												.getText(
 														R.string.blog_removed_successfully),
 										Toast.LENGTH_SHORT).show();
-								finish();
+								titleBar.reloadBlogs();
+								displayAccounts();
 							} else {
 								AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 										Dashboard.this);
@@ -357,8 +359,21 @@ public class Dashboard extends Activity {
 			startActivityForResult(i, 0);
 		}
 		else {
-			WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.actionBar);
-			actionBar.showDashboard();
+			id = WordPress.currentBlog.getId();
+			titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+			titleBar.showDashboard();
+			
+			titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
+				//user selected new blog in the title bar
+				@Override
+				public void OnBlogChanged() {
+					
+					id = WordPress.currentBlog.getId();
+					blog = new Blog(id, Dashboard.this);
+
+				}
+			});
+			
 		}
 	}
 }

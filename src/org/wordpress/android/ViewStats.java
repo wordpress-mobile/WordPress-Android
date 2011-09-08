@@ -37,6 +37,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ConnectionClient;
+import org.wordpress.android.util.WPTitleBar;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -56,6 +58,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -66,7 +69,9 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -104,6 +109,7 @@ public class ViewStats extends Activity {
 	private int ID_DIALOG_GET_STATS = 0;
 	private int firstRun = 0, id;
 	private Blog blog;
+	private WPTitleBar titleBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +169,7 @@ public class ViewStats extends Activity {
 			}
 		});
 
-		Button go = (Button) findViewById(R.id.go);
+		final Button go = (Button) findViewById(R.id.go);
 
 		go.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
@@ -189,6 +195,39 @@ public class ViewStats extends Activity {
 				};
 				action.start();
 
+			}
+		});
+		
+		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+		titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+
+            	go.performClick();
+            }
+        });
+		
+		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
+			//user selected new blog in the title bar
+			@Override
+			public void OnBlogChanged() {
+				
+				id = WordPress.currentBlog.getId();
+				blog = new Blog(id, ViewStats.this);
+				
+				//hide all of the report views
+				ImageView iv = (ImageView) findViewById(R.id.chart);
+				iv.setVisibility(View.GONE);
+				RelativeLayout filters = (RelativeLayout) findViewById(R.id.filters);
+				filters.setVisibility(View.GONE);
+				TableLayout tl = (TableLayout) findViewById(R.id.dataTable);
+				tl.removeAllViews();
+				RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.dotcomLogin);
+				moderationBar.setVisibility(View.GONE);
+				TextView reportTitle = (TextView) findViewById(R.id.chartTitle);
+				reportTitle.setVisibility(View.GONE);
+				
+				//load stats again for the new blog
+				initStats();
 			}
 		});
 
@@ -1089,6 +1128,17 @@ public class ViewStats extends Activity {
 		}
 
 		return super.onCreateDialog(id);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
+	        titleBar.hideDashboardOverlay();
+	    	
+	        return false;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
 	}
 
 }

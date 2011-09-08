@@ -8,6 +8,7 @@ import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.WPTitleBar;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -25,6 +26,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,17 +79,11 @@ public class ViewComments extends ListActivity {
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
 	public boolean initializing = true;
-	public int selectedID = 0;
-	public int rowID = 0, id;
+	public int selectedID = 0, rowID = 0, numRecords = 0, id, totalComments = 0, commentsToLoad = 30, checkedCommentTotal = 0;
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
-	private int numRecords = 0;
 	boolean loadMore = false;
-	int totalComments = 0;
-	int commentsToLoad = 30;
 	private Vector<String> checkedComments;
-	private int checkedCommentTotal = 0; 
-	private boolean inModeration = false;
 	private Blog blog;
 	private WPTitleBar titleBar;
 	@Override
@@ -114,6 +110,28 @@ public class ViewComments extends ListActivity {
 
             }
         });
+        
+        titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
+			//user selected new blog in the title bar
+			@Override
+			public void OnBlogChanged() {
+				//remove footer 'load more' button
+				ListView listView = (ListView) findViewById(android.R.id.list);
+				listView.removeFooterView(switcher);
+				model.clear();
+				thumbs.notifyDataSetChanged();
+				
+				id = WordPress.currentBlog.getId();
+				blog = new Blog(id, ViewComments.this);
+				// query for comments and refresh view
+				boolean loadedComments = loadComments(false, false);
+
+				if (!loadedComments){
+
+					refreshComments(false, false, false);
+				}
+			}
+		});
 
 		//create the ViewSwitcher in the current context
 		switcher = new ViewSwitcher(this);
@@ -147,16 +165,6 @@ public class ViewComments extends ListActivity {
 
 			refreshComments(false, false, false);
 		}
-
-		
-		/*Button bulkEdit = (Button) findViewById(R.id.bulkEdit);   
-
-		bulkEdit.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				inModeration = !inModeration;
-				showOrHideBulkCheckBoxes();
-			}
-		});*/ 
 
 		Button deleteComments = (Button) findViewById(R.id.deleteComment);   
 
@@ -235,12 +243,6 @@ public class ViewComments extends ListActivity {
 		for (int i=0; i < loopMax;i++){
 			RelativeLayout rl = (RelativeLayout) (View)listView.getChildAt(i).findViewById(R.id.bulkEditGroup);
 			showBulkCheckBoxes(rl);
-			/*if (inModeration){
-				showBulkCheckBoxes(rl);
-			}
-			else{
-				hideBulkCheckBoxes(rl);
-			}*/
 		}
 
 	}
@@ -320,7 +322,6 @@ public class ViewComments extends ListActivity {
 		if (moderateErrorMsg == ""){
 			//no errors, refresh list
 			checkedCommentTotal = 0;
-			inModeration = false;
 			Thread action2 = new Thread() 
 			{ 
 				public void run() 
@@ -437,7 +438,6 @@ public class ViewComments extends ListActivity {
 		}; 
 		this.runOnUiThread(action2);
 		checkedCommentTotal = 0;
-		inModeration = false;
 
 	}
 
@@ -610,7 +610,7 @@ public class ViewComments extends ListActivity {
 	public void refreshComments(final boolean loadMore, final boolean refreshOnly, final boolean doInBackground) {
 
 		if (!loadMore && !doInBackground){
-			showProgressBar();
+			titleBar.startRotatingRefreshIcon();
 		}
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
@@ -715,7 +715,7 @@ public class ViewComments extends ListActivity {
 				}  
 				
 				if (!loadMore && !doInBackground){
-					closeProgressBar();
+					titleBar.stopRotatingRefreshIcon();
 				}
 				else if (loadMore){
 					switcher.showPrevious();
@@ -732,41 +732,6 @@ public class ViewComments extends ListActivity {
 
 		method.call(params);
 
-	}
-
-	public void showProgressBar() {
-		AnimationSet set = new AnimationSet(true);
-		Animation animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		animation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
-		);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		LayoutAnimationController controller =
-			new LayoutAnimationController(set, 0.5f);
-		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
-		loading.setVisibility(View.VISIBLE);
-		loading.setLayoutAnimation(controller);
-	}
-
-	public void closeProgressBar() {
-
-		AnimationSet set = new AnimationSet(true);
-		Animation animation = new AlphaAnimation(1.0f, 0.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		animation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, -1.0f
-		);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		RelativeLayout loading = (RelativeLayout) findViewById(R.id.loading);       
-		loading.startAnimation(set);
-		loading.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -899,12 +864,6 @@ public class ViewComments extends ListActivity {
 			}
 
 			getBulkEditGroup().setVisibility(View.VISIBLE);
-			/*if (inModeration){
-				getBulkEditGroup().setVisibility(View.VISIBLE);
-			}
-			else{
-				getBulkEditGroup().setVisibility(View.GONE);
-			}*/
 
 			getStatus().setText(prettyComment);
 			getStatus().setTextColor(Color.parseColor(textColor));
@@ -1122,7 +1081,6 @@ public class ViewComments extends ListActivity {
 							pd.dismiss();
 						}
 						titleBar.stopRotatingRefreshIcon();
-						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ViewComments.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 						String msg = e.getLocalizedMessage();
@@ -1171,7 +1129,6 @@ public class ViewComments extends ListActivity {
 							pd.dismiss();
 						}
 						titleBar.stopRotatingRefreshIcon();
-						closeProgressBar();
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ViewComments.this);
 						dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 						dialogBuilder.setMessage(e.getLocalizedMessage());
@@ -1639,5 +1596,16 @@ public class ViewComments extends ListActivity {
 				break;
 			}
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
+	        titleBar.hideDashboardOverlay();
+	    	
+	        return false;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
 	}
 }

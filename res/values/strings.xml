@@ -1,84 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!--  account setup -->
-  <string
-    name="required_fields">Required Fields</string>
-  <string
-    name="required_field">Required Field</string>
-  <string
-    name="url_username_password_required">Please fill in all of the fields before submitting.</string>
+  <!-- account setup -->
+  <string name="required_fields">Required Fields</string>
+  <string name="required_field">Required Field</string>
+  <string name="url_username_password_required">Please fill in all of the fields before
+    submitting.</string>
 
-  <!--  form labels -->
-  <string
-    name="categories">Categories</string>
-  <string
-    name="select_categories">Select Categories</string>
-  <string
-    name="tags_separate_with_commas">Tags (separate tags with commas)</string>
-  <string
-    name="post_content">Post Content</string>
-  <string
-    name="post_title">Post Title</string>
-  <string
-    name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
-  <string
-    name="align_thumb_to_center">Align thumbnail to center</string>
-  <string
-    name="max_thumbnail_px_width">Maximum thumbnail pixel width</string>
-  <string
-    name="below_text">Below Text</string>
-  <string
-    name="above_text">Above Text</string>
-  <string
-    name="place_image">Place image:</string>
-  <string
-    name="password">Password:</string>
-  <string
-    name="get_free_blog">Get a free blog at WordPress.com</string>
-  <string
-    name="tagline">Start blogging from your mobile in seconds.</string>
-  <string
-    name="i_have_wp_blog">Add blog hosted at WordPress.com</string>
-  <string
-    name="i_have_blog">Add self-hosted WordPress blog</string>
-  <string
-    name="new_to_wp">Start a new blog at WordPress.com</string>
-  <string
-    name="blogs">Blogs</string>
-  <string
-    name="upload_now">Upload Now</string>
-  <string
-    name="account_details">Account Details</string>
-  <string
-    name="status">Status</string>
+  <!-- form labels -->
+  <string name="categories">Categories</string>
+  <string name="select_categories">Select Categories</string>
+  <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
+  <string name="post_content">Post Content</string>
+  <string name="post_title">Post Title</string>
+  <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
+  <string name="align_thumb_to_center">Align thumbnail to center</string>
+  <string name="max_thumbnail_px_width">Maximum thumbnail pixel width</string>
+  <string name="below_text">Below Text</string>
+  <string name="above_text">Above Text</string>
+  <string name="place_image">Place image:</string>
+  <string name="password">Password:</string>
+  <string name="get_free_blog">Get a free blog at WordPress.com</string>
+  <string name="tagline">Start blogging from your mobile in seconds.
+  </string>
+  <string name="i_have_wp_blog">Add blog hosted at WordPress.com</string>
+  <string name="i_have_blog">Add self-hosted WordPress blog</string>
+  <string name="new_to_wp">Start a new blog at WordPress.com</string>
+  <string name="blogs">Blogs</string>
+  <string name="upload_now">Upload Now</string>
+  <string name="account_details">Account Details</string>
+  <string name="status">Status</string>
 
-  <!--  general strings -->
-  <string
-    name="app_name">WordPress</string>
-  <string
-    name="eula">GNU GENERAL PUBLIC LICENSE</string>
-  <string
-    name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991 Free Software
-    Foundation, Inc.\n675 Mass Ave, Cambridge, MA 02139, USA\nEveryone
-    is permitted to copy and distribute verbatim copies of this license
-    document, but changing it is not allowed.\n\nPreamble\n\nThe
-    licenses for most software are designed to take away your freedom to
-    share and change it. By contrast, the GNU General Public License is
-    intended to guarantee your freedom to share and change free
-    software--to make sure the software is free for all its users. This
-    General Public License applies to most of the Free Software
-    Foundation\'s software and to any other program whose authors commit
-    to using it. (Some other Free Software Foundation software is
-    covered by the GNU Library General Public License instead.) You can
-    apply it to your programs, too.\n\nWhen we speak of free software,
-    we are referring to freedom, not price. Our General Public Licenses
-    are designed to make sure that you have the freedom to distribute
-    copies of free software (and charge for this service if you wish),
-    that you receive source code or can get it if you want it, that you
-    can change the software or use pieces of it in new free programs;
-    and that you know you can do these things.\n\nTo protect your
-    rights, we need to make restrictions that forbid anyone to deny you
+  <!-- general strings -->
+  <string name="app_name">WordPress</string>
+  <string name="eula">GNU GENERAL PUBLIC LICENSE</string>
+  <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991
+    Free Software
+    Foundation, Inc.\n675 Mass Ave, Cambridge, MA 02139,
+    USA\nEveryone
+    is permitted to copy and distribute verbatim copies of
+    this license
+    document, but changing it is not
+    allowed.\n\nPreamble\n\nThe
+    licenses for most software are designed
+    to take away your freedom to
+    share and change it. By contrast, the
+    GNU General Public License is
+    intended to guarantee your freedom to
+    share and change free
+    software--to make sure the software is free for
+    all its users. This
+    General Public License applies to most of the
+    Free Software
+    Foundation\'s software and to any other program whose
+    authors commit
+    to using it. (Some other Free Software Foundation
+    software is
+    covered by the GNU Library General Public License
+    instead.) You can
+    apply it to your programs, too.\n\nWhen we speak of
+    free software,
+    we are referring to freedom, not price. Our General
+    Public Licenses
+    are designed to make sure that you have the freedom
+    to distribute
+    copies of free software (and charge for this service if
+    you wish),
+    that you receive source code or can get it if you want it,
+    that you
+    can change the software or use pieces of it in new free
+    programs;
+    and that you know you can do these things.\n\nTo protect
+    your
+    rights, we need to make restrictions that forbid anyone to deny
+    you
     these rights or to ask you to surrender the rights. These
     restrictions translate to certain responsibilities for you if you
     distribute copies of the software, or if you modify it.\n\nFor
@@ -285,611 +280,405 @@
     INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE
     OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH
     HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
-    DAMAGES.\n\nEND OF TERMS AND CONDITIONS</string>
-  <string
-    name="username">Username:</string>
-  <string
-    name="cancel">Cancel</string>
-  <string
-    name="save">Save</string>
-  <string
-    name="add">Add</string>
-  <string
-    name="clear">Clear</string>
-  <string
-    name="selected_categories">Selected categories:</string>
-  <string
-    name="publish">Publish? </string>
-  <string
-    name="success">Success</string>
-  <string
-    name="accept">Accept</string>
-  <string
-    name="decline">Decline</string>
-  <string
-    name="hint_menu_to_add_acc">Select \'Menu\' to add another account or to configure comment
-    notifications.</string>
-  <string
-    name="add_account">Add Account</string>
-  <string
-    name="notification_settings">Settings</string>
-  <string
-    name="notification_sound">Play notification sound</string>
-  <string
-    name="notification_vibrate">Vibrate</string>
-  <string
-    name="notification_blink">Blink notification light</string>
-  <string
-    name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
-  <string
-    name="yes">Yes</string>
-  <string
-    name="no">No</string>
-  <string
-    name="account_removed_successfully">Blog removed successfully</string>
-  <string
-    name="error">Error</string>
-  <string
-    name="could_not_remove_account">Could not remove blog.</string>
-  <string
-    name="edit_page">Edit Page</string>
-  <string
-    name="getting_page">Getting page</string>
-  <string
-    name="please_wait_getting_page">Please wait while attempting to get page (note - pictures will
-    not be loaded)</string>
-  <string
-    name="edit_post">Edit Post</string>
-  <string
-    name="getting_post">Getting post</string>
-  <string
-    name="please_wait_getting_post">Please wait while attempting to get post (note - pictures will
-    not be loaded)</string>
-  <string
-    name="no_text_selected">No text selected</string>
-  <string
-    name="howto_select_text">You can select text by long pressing in the text area.</string>
-  <string
-    name="select_text_to_bold">Please select some text first in order to bold it.</string>
-  <string
-    name="select_text_to_link">Please select some text first in order to link it.</string>
-  <string
-    name="select_text_to_emphasize">Please select some text in order to emphasize it.</string>
-  <string
-    name="select_text_to_blockquote">Please select some text in order to place it in a blockquote.
+    DAMAGES.\n\nEND OF TERMS AND CONDITIONS
   </string>
-  <string
-    name="original_size">Original Size</string>
-  <string
-    name="refreshing_categories">Refreshing Categories</string>
-  <string
-    name="attempting_categories_refresh">Attempting to refresh categories</string>
-  <string
-    name="connection_error">Connection Error</string>
-  <string
-    name="connection_error_occured">A connection error has occurred. Please try again later.
+  <string name="username">Username:</string>
+  <string name="cancel">Cancel</string>
+  <string name="save">Save</string>
+  <string name="add">Add</string>
+  <string name="clear">Clear</string>
+  <string name="selected_categories">Selected categories:</string>
+  <string name="publish">Publish? </string>
+  <string name="success">Success</string>
+  <string name="accept">Accept</string>
+  <string name="decline">Decline</string>
+  <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or to
+    configure comment
+    notifications.
   </string>
-  <string
-    name="categories_refreshed">Categories refreshed</string>
-  <string
-    name="category_refresh_error">Category refresh error</string>
-  <string
-    name="settings_not_found">Settings not found</string>
-  <string
-    name="settings_not_found_load_now">Some required settings were not found. Load settings now?
+  <string name="add_account">Add Account</string>
+  <string name="notification_settings">Settings</string>
+  <string name="notification_sound">Play notification sound</string>
+  <string name="notification_vibrate">Vibrate</string>
+  <string name="notification_blink">Blink notification light</string>
+  <string name="sure_to_remove_account">Are you sure you want to remove this blog?
   </string>
-  <string
-    name="empty_fields">No Content Found</string>
-  <string
-    name="title_post_required">Please enter some post content or attach a media item.</string>
-  <string
-    name="post_edited">Post edited</string>
-  <string
-    name="post_edited_image_error">Post edited successfully, but an error was encountered when
-    uploading media</string>
-  <string
-    name="post_edited_successfully">Post edited successfully</string>
-  <string
-    name="attempting_edit_post">Attempting to edit Post</string>
-  <string
-    name="cancel_edit">Cancel Edit</string>
-  <string
-    name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?</string>
-  <string
-    name="saved_to_local_drafts">Saved to local drafts</string>
-  <string
-    name="new_account">New Account</string>
-  <string
-    name="upload_full_size_image">Upload and link to full image</string>
-  <string
-    name="uploading_content">Uploading Content</string>
-  <string
-    name="load_more">Load More</string>
-  <string
-    name="load_settings">Load settings now?</string>
-  <string
-    name="immediately">Immediately</string>
-  <string
-    name="uploading">uploading</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="account_removed_successfully">Blog removed successfully</string>
+  <string name="error">Error</string>
+  <string name="could_not_remove_account">Could not remove blog.</string>
+  <string name="edit_page">Edit Page</string>
+  <string name="getting_page">Getting page</string>
+  <string name="please_wait_getting_page">Please wait while attempting to get page (note -
+    pictures will
+    not be loaded)
+  </string>
+  <string name="edit_post">Edit Post</string>
+  <string name="getting_post">Getting post</string>
+  <string name="please_wait_getting_post">Please wait while attempting to get post (note -
+    pictures will
+    not be loaded)
+  </string>
+  <string name="no_text_selected">No text selected</string>
+  <string name="howto_select_text">You can select text by long pressing in the text
+    area.</string>
+  <string name="select_text_to_bold">Please select some text first in order to bold it.
+  </string>
+  <string name="select_text_to_link">Please select some text first in order to link it.
+  </string>
+  <string name="select_text_to_emphasize">Please select some text in order to emphasize it.
+  </string>
+  <string name="select_text_to_blockquote">Please select some text in order to place it in a
+    blockquote.
+  </string>
+  <string name="original_size">Original Size</string>
+  <string name="refreshing_categories">Refreshing Categories</string>
+  <string name="attempting_categories_refresh">Attempting to refresh categories</string>
+  <string name="connection_error">Connection Error</string>
+  <string name="connection_error_occured">A connection error has occurred. Please try again
+    later.
+  </string>
+  <string name="categories_refreshed">Categories refreshed</string>
+  <string name="category_refresh_error">Category refresh error</string>
+  <string name="settings_not_found">Settings not found</string>
+  <string name="settings_not_found_load_now">Some required settings were not found. Load
+    settings now?
+  </string>
+  <string name="empty_fields">No Content Found</string>
+  <string name="title_post_required">Please enter some post content or attach a media
+    item.</string>
+  <string name="post_edited">Post edited</string>
+  <string name="post_edited_image_error">Post edited successfully, but an error was
+    encountered when
+    uploading media
+  </string>
+  <string name="post_edited_successfully">Post edited successfully</string>
+  <string name="attempting_edit_post">Attempting to edit Post</string>
+  <string name="cancel_edit">Cancel Edit</string>
+  <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?
+  </string>
+  <string name="saved_to_local_drafts">Saved to local drafts</string>
+  <string name="new_account">New Account</string>
+  <string name="upload_full_size_image">Upload and link to full image</string>
+  <string name="uploading_content">Uploading Content</string>
+  <string name="load_more">Load More</string>
+  <string name="load_settings">Load settings now?</string>
+  <string name="immediately">Immediately</string>
+  <string name="uploading">uploading</string>
 
-  <!--  tab titles -->
-  <string
-    name="tab_comments">Comments</string>
-  <string
-    name="tab_posts">Posts</string>
-  <string
-    name="tab_pages">Pages</string>
-  <string
-    name="tab_stats">Stats</string>
-    <string
-    name="choose_blog">Choose a blog:</string>
+  <!-- tab titles -->
+  <string name="tab_comments">Comments</string>
+  <string name="tab_posts">Posts</string>
+  <string name="tab_pages">Pages</string>
+  <string name="tab_stats">Stats</string>
+  <string name="choose_blog">Choose a blog:</string>
 
 
-  <!--  link view -->
-  <string
-    name="link_enter_url">Enter a URL:</string>
+  <!-- link view -->
+  <string name="link_enter_url">Enter a URL:</string>
 
-  <!--  page view -->
-  <string
-    name="page_content">Page Content</string>
-  <string
-    name="title">Title</string>
-  <string
-    name="content">Content</string>
-  <string
-    name="page_edited">Page Edited</string>
-  <string
-    name="page_edited_image_error">Page edited successfully, but an error was encountered when
-    uploading media</string>
-  <string
-    name="page_edited_successfully">Page edited successfully</string>
-  <string
-    name="attempting_edit_page">Attempting to edit Page</string>
-  <string
-    name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
-  <string
-    name="new_page">New Page</string>
+  <!-- page view -->
+  <string name="page_content">Page Content</string>
+  <string name="title">Title</string>
+  <string name="content">Content</string>
+  <string name="page_edited">Page Edited</string>
+  <string name="page_edited_image_error">Page edited successfully, but an error was
+    encountered when
+    uploading media
+  </string>
+  <string name="page_edited_successfully">Page edited successfully</string>
+  <string name="attempting_edit_page">Attempting to edit Page</string>
+  <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?
+  </string>
+  <string name="new_page">New Page</string>
 
-  <!--  pages tab -->
-  <string
-    name="pages_not_found">No Pages Found</string>
-  <string
-    name="pages_no_pages">You don\'t have any pages on your blog</string>
+  <!-- pages tab -->
+  <string name="pages_not_found">No Pages Found</string>
+  <string name="pages_no_pages">You don\'t have any pages on your blog</string>
 
-  <!--  posts tab -->
-  <string
-    name="posts_not_found">No Posts Found</string>
-  <string
-    name="posts_no_posts">You don\'t have any posts on your blog</string>
-  <string
-    name="untitled">Untitled</string>
+  <!-- posts tab -->
+  <string name="posts_not_found">No Posts Found</string>
+  <string name="posts_no_posts">You don\'t have any posts on your blog</string>
+  <string name="untitled">Untitled</string>
 
-  <string
-    name="local_drafts">Local Drafts</string>
+  <string name="local_drafts">Local Drafts</string>
 
-  <!--  post view  -->
-  <string
-    name="new_post">New Post</string>
-  <string
-    name="post_added">Post Added</string>
-  <string
-    name="post_id">Post</string>
-  <string
-    name="uploaded_successfully">uploaded successfully</string>
-  <string
-    name="uploaded_successfully_image_error">added successfully, but an error was encountered when uploading
-    media</string>
-  <string
-    name="permalink_not_found">The permalink was not found.</string>
-  <string
-    name="basic_html">Showing basic HTML preview until post status is set to
-    published.</string>
-  <string
-    name="vp_upgrade">The video was not uploaded due to invalid file type. You can
-    upload videos to your blog using the VideoPress upgrade. Would you
-    like to learn more about VideoPress?</string>
-  <string
-    name="post_password">Password (optional)</string>
-  <string
-    name="fullscreen">Write in Fullscreen</string>
+  <!-- post view -->
+  <string name="new_post">New Post</string>
+  <string name="post_added">Post Added</string>
+  <string name="post_id">Post</string>
+  <string name="uploaded_successfully">uploaded successfully</string>
+  <string name="uploaded_successfully_image_error">added successfully, but an error was encountered
+    when uploading
+    media
+  </string>
+  <string name="permalink_not_found">The permalink was not found.</string>
+  <string name="basic_html">Showing basic HTML preview until post status is
+    set to
+    published.
+  </string>
+  <string name="vp_upgrade">The video was not uploaded due to invalid file
+    type. You can
+    upload videos to your blog using the VideoPress
+    upgrade. Would you
+    like to learn more about VideoPress?
+  </string>
+  <string name="post_password">Password (optional)</string>
+  <string name="fullscreen">Write in Fullscreen</string>
 
-  <!--  page view -->
-  <string
-    name="page_id">Page</string>
+  <!-- page view -->
+  <string name="page_id">Page</string>
 
-  <!--  reply view  -->
-  <string
-    name="reply_enter">Enter a reply:</string>
-  <string
-    name="reply_send">Send Reply</string>
-  <string
-    name="reply_to_comment">Reply to Comment</string>
-  <string
-    name="reply_required">Required Field</string>
-  <string
-    name="reply_please_enter">Please enter something in the reply field.</string>
+  <!-- reply view -->
+  <string name="reply_enter">Enter a reply:</string>
+  <string name="reply_send">Send Reply</string>
+  <string name="reply_to_comment">Reply to Comment</string>
+  <string name="reply_required">Required Field</string>
+  <string name="reply_please_enter">Please enter something in the reply field.
+  </string>
 
   <!-- view post comments -->
-  <string
-    name="view_comments">View Comments</string>
-  <string
-    name="no_approved_comments">There are no approved comments for this post</string>
+  <string name="view_comments">View Comments</string>
+  <string name="no_approved_comments">There are no approved comments for this post
+  </string>
 
-  <!-- reload drop down-->
-  <string
-    name="loading">Loading...</string>
+  <!-- reload drop down -->
+  <string name="loading">Loading...</string>
 
-  <!--  comment view -->
-  <string
-    name="on">on</string> <!--  ex. on My favorite Things -->
-  <string
-    name="approved">Approved</string>
-  <string
-    name="unapproved">Unapproved</string>
-  <string
-    name="spam">Spam</string>
-  <string
-    name="moderate_comments">Moderate Comments</string>
-  <string
-    name="moderating_comment">Moderating comment</string>
-  <string
-    name="moderating_comments">Moderating comments</string>
-  <string
-    name="replying_comment">Replying to comment</string>
-  <string
-    name="deleting_comment">Deleting comment</string>
-  <string
-    name="deleting_comments">Deleting comments</string>
-  <string
-    name="comment_moderated">Comment Moderated Successfully</string>
-  <string
-    name="comments_moderated">Comments Moderated Successfully</string>
-  <string
-    name="reply_added">Reply Added Successfully</string>
-  <string
-    name="view_comment_from">Comment from</string>
+  <!-- comment view -->
+  <string name="on">on</string> <!-- ex. on My favorite Things -->
+  <string name="approved">Approved</string>
+  <string name="unapproved">Unapproved</string>
+  <string name="spam">Spam</string>
+  <string name="moderate_comments">Moderate Comments</string>
+  <string name="moderating_comment">Moderating comment</string>
+  <string name="moderating_comments">Moderating comments</string>
+  <string name="replying_comment">Replying to comment</string>
+  <string name="deleting_comment">Deleting comment</string>
+  <string name="deleting_comments">Deleting comments</string>
+  <string name="comment_moderated">Comment Moderated Successfully</string>
+  <string name="comments_moderated">Comments Moderated Successfully</string>
+  <string name="reply_added">Reply Added Successfully</string>
+  <string name="view_comment_from">Comment from</string>
 
-  <!--  context menu -->
-  <string
-    name="blog_settings">Blog Settings</string>
-  <string
-    name="remove_account">Remove Blog</string>
-  <string
-    name="blog_removed_successfully">Blog Removed Successfully</string>
-  <string
-    name="save_and_exit">Save and Exit Fullscreen</string>
-  <string
-    name="exit_without_saving">Exit without Saving</string>
+  <!-- context menu -->
+  <string name="blog_settings">Blog Settings</string>
+  <string name="remove_account">Remove Blog</string>
+  <string name="blog_removed_successfully">Blog Removed Successfully</string>
+  <string name="save_and_exit">Save and Exit Fullscreen</string>
+  <string name="exit_without_saving">Exit without Saving</string>
 
-  <!--  draft actions -->
-  <string
-    name="draft_actions">Draft Actions</string>
-  <string
-    name="edit_draft">Edit Draft</string>
-  <string
-    name="upload">Upload Draft to Blog</string>
-  <string
-    name="delete_draft">Delete Draft</string>
-  <string
-    name="delete_sure">Are you sure you want to delete the draft</string>
+  <!-- draft actions -->
+  <string name="draft_actions">Draft Actions</string>
+  <string name="edit_draft">Edit Draft</string>
+  <string name="upload">Upload Draft to Blog</string>
+  <string name="delete_draft">Delete Draft</string>
+  <string name="delete_sure">Are you sure you want to delete the draft</string>
 
-  <!--  page actions -->
-  <string
-    name="page_actions">Page Actions</string>
-  <string
-    name="preview_page">View Page</string>
-  <string
-    name="page_attempt_upload">Attempting to upload page</string>
-  <string
-    name="delete_page">Delete Page</string>
-  <string
-    name="page_deleted">Page Deleted Successfully</string>
-  <string
-    name="delete_sure_page">Are you sure you want to delete the page</string>
-  <string
-    name="attempt_delete_page">Attempting to delete page</string>
+  <!-- page actions -->
+  <string name="page_actions">Page Actions</string>
+  <string name="preview_page">View Page</string>
+  <string name="page_attempt_upload">Attempting to upload page</string>
+  <string name="delete_page">Delete Page</string>
+  <string name="page_deleted">Page Deleted Successfully</string>
+  <string name="delete_sure_page">Are you sure you want to delete the page</string>
+  <string name="attempt_delete_page">Attempting to delete page</string>
 
-  <!--  post actions -->
-  <string
-    name="post_actions">Post Actions</string>
-  <string
-    name="preview_post">View Post</string>
-  <string
-    name="post_attempt_upload">Attempting to upload post</string>
-  <string
-    name="delete_post">Delete Post</string>
-  <string
-    name="post_deleted">Post Deleted Successfully</string>
-  <string
-    name="delete_sure_post">Are you sure you want to delete the post</string>
-  <string
-    name="attempt_delete_post">Attempting to delete post</string>
-  <string
-    name="html">HTML Editor Activated</string>
-  <string
-    name="share_url">Share URL</string>
-  <string
-    name="attempting_fetch_url">Attempting to fetch URL</string>
-  <string
-    name="post_not_published">Post status is not published</string>
-  <string
-    name="page_not_published">Page status is not published</string>
+  <!-- post actions -->
+  <string name="post_actions">Post Actions</string>
+  <string name="preview_post">View Post</string>
+  <string name="post_attempt_upload">Attempting to upload post</string>
+  <string name="delete_post">Delete Post</string>
+  <string name="post_deleted">Post Deleted Successfully</string>
+  <string name="delete_sure_post">Are you sure you want to delete the post</string>
+  <string name="attempt_delete_post">Attempting to delete post</string>
+  <string name="html">HTML Editor Activated</string>
+  <string name="share_url">Share URL</string>
+  <string name="attempting_fetch_url">Attempting to fetch URL</string>
+  <string name="post_not_published">Post status is not published</string>
+  <string name="page_not_published">Page status is not published</string>
+  <string name="view_in_browser">View in Browser</string>
 
-  <!--  comment actions -->
-  <string
-    name="comment_actions">Comment Actions</string>
-  <string
-    name="mark_approved">Mark Approved</string>
-  <string
-    name="mark_unapproved">Mark Unapproved</string>
-  <string
-    name="mark_spam">Mark Spam</string>
-  <string
-    name="reply">Reply</string>
-  <string
-    name="delete">Delete</string>
-  <string
-    name="approve">Approve</string>
-  <string
-    name="unapprove">Unapprove</string>
+  <!-- comment actions -->
+  <string name="comment_actions">Comment Actions</string>
+  <string name="mark_approved">Mark Approved</string>
+  <string name="mark_unapproved">Mark Unapproved</string>
+  <string name="mark_spam">Mark Spam</string>
+  <string name="reply">Reply</string>
+  <string name="delete">Delete</string>
+  <string name="approve">Approve</string>
+  <string name="unapprove">Unapprove</string>
 
   <!-- publish yes/no -->
-  <string
-    name="publish_yes">Publish: Yes</string>
-  <string
-    name="publish_no">Publish: No</string>
+  <string name="publish_yes">Publish: Yes</string>
+  <string name="publish_no">Publish: No</string>
 
-  <!--  new account view -->
-  <string
-    name="account_setup">Account Setup</string>
-  <string
-    name="attempting_configure">Attempting to configure account</string>
-  <string
-    name="account_exists">Account Exists</string>
-  <string
-    name="account_already_exists">There is already a WordPress account for this WordPress blog
-    configured.</string>
-  <string
-    name="account_added">Account/Blog added successfully</string>
+  <!-- new account view -->
+  <string name="account_setup">Account Setup</string>
+  <string name="attempting_configure">Attempting to configure account</string>
+  <string name="account_exists">Account Exists</string>
+  <string name="account_already_exists">There is already a WordPress account for this
+    WordPress blog
+    configured.
+  </string>
+  <string name="account_added">Account/Blog added successfully</string>
 
-  <!--  drafts -->
-  <string
-    name="cancel_draft">Cancel Draft</string>
-  <string
-    name="sure_cancel_draft">Are you sure you want to cancel this draft?</string>
+  <!-- drafts -->
+  <string name="cancel_draft">Cancel Draft</string>
+  <string name="sure_cancel_draft">Are you sure you want to cancel this draft?
+  </string>
 
-  <!--  comment notifications -->
-  <string
-    name="notifications_select">Select which blogs to receive comment notifications:</string>
-  <string
-    name="notifications_interval">Update interval:</string>
-  <string
-    name="minutes">minutes</string>
-  <string
-    name="hour">hour</string>
-  <string
-    name="hours">hours</string>
-  <string
-    name="daily">daily</string>
-  <string
-    name="new_comment">New Comment Received</string>
+  <!-- comment notifications -->
+  <string name="notifications_select">Select which blogs to receive comment
+    notifications:</string>
+  <string name="notifications_interval">Update interval:</string>
+  <string name="minutes">minutes</string>
+  <string name="hour">hour</string>
+  <string name="hours">hours</string>
+  <string name="daily">daily</string>
+  <string name="new_comment">New Comment Received</string>
 
-  <!--  media selection -->
-  <string
-    name="select_photo">Select a photo from gallery</string>
-  <string
-    name="take_photo">Take a new photo</string>
-  <string
-    name="select_video">Select a video from gallery</string>
-  <string
-    name="take_video">Take a new video</string>
-  <string
-    name="add_media">Add Media</string>
-  <string
-    name="media">Media</string>
+  <!-- media selection -->
+  <string name="select_photo">Select a photo from gallery</string>
+  <string name="take_photo">Take a new photo</string>
+  <string name="select_video">Select a video from gallery</string>
+  <string name="take_video">Take a new video</string>
+  <string name="add_media">Add Media</string>
+  <string name="media">Media</string>
 
-  <!--  category management -->
-  <string
-    name="refresh_categories">Refresh Categories</string>
-  <string
-    name="add_new_category">Add New Category</string>
-  <string
-    name="category_name">Category Name:</string>
-  <string
-    name="category_slug">Category Slug (optional):</string>
-  <string
-    name="category_desc">Category Description (optional):</string>
-  <string
-    name="category_parent">Category Parent (optional):</string>
-  <string
-    name="none">None</string>
-  <string
-    name="adding_cat_failed">Adding category failed.</string>
-  <string
-    name="adding_cat_failed_check">Please check your settings and try again.</string>
-  <string
-    name="adding_cat_success">Category added successfully.</string>
-  <string
-    name="duplicated_cat">Duplicated category</string>
-  <string
-    name="cat_already_exists">A category with the name you specified already exists.</string>
-  <string
-    name="cat_name_required">The Category Name field is required.</string>
-  <string
-    name="cat_adding_category">Adding Category</string>
-  <string
-    name="cat_attempt_add_category">Attempting to add category</string>
+  <!-- category management -->
+  <string name="refresh_categories">Refresh Categories</string>
+  <string name="add_new_category">Add New Category</string>
+  <string name="category_name">Category Name:</string>
+  <string name="category_slug">Category Slug (optional):</string>
+  <string name="category_desc">Category Description (optional):</string>
+  <string name="category_parent">Category Parent (optional):</string>
+  <string name="none">None</string>
+  <string name="adding_cat_failed">Adding category failed.</string>
+  <string name="adding_cat_failed_check">Please check your settings and try again.</string>
+  <string name="adding_cat_success">Category added successfully.</string>
+  <string name="duplicated_cat">Duplicated category</string>
+  <string name="cat_already_exists">A category with the name you specified already
+    exists.</string>
+  <string name="cat_name_required">The Category Name field is required.</string>
+  <string name="cat_adding_category">Adding Category</string>
+  <string name="cat_attempt_add_category">Attempting to add category</string>
 
-  <!--  action from share intents -->
-  <string
-    name="select_a_blog">Select a Blog</string>
-  <string
-    name="no_account">No WordPress account found, please add an account and try
-    again.</string>
+  <!-- action from share intents -->
+  <string name="select_a_blog">Select a Blog</string>
+  <string name="no_account">No WordPress account found, please add an account
+    and try
+    again.
+  </string>
 
-  <!--  file errors -->
-  <string
-    name="file_error">File Error</string>
-  <string
-    name="file_error_encountered">An error occurred while setting up the captured media.</string>
+  <!-- file errors -->
+  <string name="file_error">File Error</string>
+  <string name="file_error_encountered">An error occurred while setting up the captured
+    media.</string>
 
-  <!--  SD Card errors -->
-  <string
-    name="sdcard_title">SD Card Required</string>
-  <string
-    name="sdcard_message">A mounted SD card is required to upload media.</string>
+  <!-- SD Card errors -->
+  <string name="sdcard_title">SD Card Required</string>
+  <string name="sdcard_message">A mounted SD card is required to upload media.
+  </string>
 
-  <!--  location -->
-  <string
-    name="location">Location</string>
-  <string
-    name="geotag">Geotag Posts</string>
-  <string
-    name="location_toast">Location data not yet available, please wait.</string>
-  <string
-    name="view_map">View Map</string>
-  <string
-    name="update_location">Update Location</string>
+  <!-- location -->
+  <string name="location">Location</string>
+  <string name="geotag">Geotag Posts</string>
+  <string name="location_toast">Location data not yet available, please wait.
+  </string>
+  <string name="view_map">View Map</string>
+  <string name="update_location">Update Location</string>
 
-  <!--  preferences -->
-  <string
-    name="preferences">Preferences</string>
+  <!-- preferences -->
+  <string name="preferences">Preferences</string>
 
-  <!--  stats -->
-  <string
-    name="report_views">Views</string>
-  <string
-    name="report_postviews">Post Views</string>
-  <string
-    name="report_referrers">Referrers</string>
-  <string
-    name="report_searchterms">Search Terms</string>
-  <string
-    name="report_clicks">Clicks</string>
-  <string
-    name="report_videoplays">Video Plays</string>
-  <string
-    name="today">Today</string>
-  <string
-    name="seven_days">7 Days</string>
-  <string
-    name="thirty_days">30 Days</string>
-  <string
-    name="quarter">Quarter</string>
-  <string
-    name="year">Year</string>
-  <string
-    name="all">All Time</string>
-  <string
-    name="username_password_required">Username and Password are required fields.</string>
-  <string
-    name="help_stats">Need help with WordPress.com stats?</string>
-  <string
-    name="stats_username">Username</string>
-  <string
-    name="stats_password">Password</string>
-  <string
-    name="date">Date</string>
-  <string
-    name="report_post_title">Post Title</string>
-  <string
-    name="retrieving_stats">Retrieving Stats</string>
-  <string
-    name="attempt_retrieve">Attempting to retrieve stats</string>
-  <string
-    name="stats_login">Stats Login</string>
-  <string
-    name="no_data_found">No stats data found. Please try again.</string>
-  <string
-    name="invalid_login">Incorrect Login</string>
-  <string
-    name="site_not_found">or site not found.</string>
+  <!-- stats -->
+  <string name="report_views">Views</string>
+  <string name="report_postviews">Post Views</string>
+  <string name="report_referrers">Referrers</string>
+  <string name="report_searchterms">Search Terms</string>
+  <string name="report_clicks">Clicks</string>
+  <string name="report_videoplays">Video Plays</string>
+  <string name="today">Today</string>
+  <string name="seven_days">7 Days</string>
+  <string name="thirty_days">30 Days</string>
+  <string name="quarter">Quarter</string>
+  <string name="year">Year</string>
+  <string name="all">All Time</string>
+  <string name="username_password_required">Username and Password are required fields.
+  </string>
+  <string name="help_stats">Need help with WordPress.com stats?</string>
+  <string name="stats_username">Username</string>
+  <string name="stats_password">Password</string>
+  <string name="date">Date</string>
+  <string name="report_post_title">Post Title</string>
+  <string name="retrieving_stats">Retrieving Stats</string>
+  <string name="attempt_retrieve">Attempting to retrieve stats</string>
+  <string name="stats_login">Stats Login</string>
+  <string name="no_data_found">No stats data found. Please try again.</string>
+  <string name="invalid_login">Incorrect Login</string>
+  <string name="site_not_found">or site not found.</string>
 
   <!-- editor button -->
-  <string
-    name="strike">
+  <string name="strike">
     <strike>ABC</strike>
   </string>
-  <string
-    name="link">
+  <string name="link">
     <u>link</u>
   </string>
-  <string
-    name="underline">
+  <string name="underline">
     <u>U</u>
   </string>
 
   <!-- invalid_url -->
-  <string
-    name="invalid_url">Invalid blog URL</string>
-  <string
-    name="invalid_url_message">Please check that the blog URL entered is valid.</string>
+  <string name="invalid_url">Invalid blog URL</string>
+  <string name="invalid_url_message">Please check that the blog URL entered is valid.
+  </string>
 
   <!-- post status -->
-  <string
-    name="publish_post">Publish</string>
-  <string
-    name="pending_review">Pending Review</string>
-  <string
-    name="draft">Draft</string>
-  <string
-    name="post_private">Private</string>
+  <string name="publish_post">Publish</string>
+  <string name="pending_review">Pending Review</string>
+  <string name="draft">Draft</string>
+  <string name="post_private">Private</string>
 
   <!-- QuickPress -->
-  <string
-    name="quickpress_window_title">Select blog for QuickPress shortcut</string>
-  <string
-    name="quickpress_add_error">Shortcut name can\'t be empty</string>
-  <string
-    name="quickpress_add_alert_title">Set shortcut name</string>
+  <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
+  <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
+  <string name="quickpress_add_alert_title">Set shortcut name</string>
 
   <!-- HTTP Authentication -->
-  <string
-    name="httpuser">HTTP Username (optional):</string>
-  <string
-    name="httppassword">HTTP Password (optional):</string>
-  <string
-    name="settings">Settings</string>
-  <string
-    name="optional_settings">Optional Settings</string>
+  <string name="httpuser">HTTP Username (optional):</string>
+  <string name="httppassword">HTTP Password (optional):</string>
+  <string name="settings">Settings</string>
+  <string name="optional_settings">Optional Settings</string>
 
   <!-- post scheduling and password -->
-  <string
-    name="publish_date">Publish:</string>
-  <string
-    name="edit">Edit</string>
+  <string name="publish_date">Publish:</string>
+  <string name="edit">Edit</string>
 
   <!-- WordPress.com signup -->
-  <string
-    name="wpcom_signup">WordPress.com Sign Up</string>
-  <string
-    name="blog_address">Blog Address</string>
-  <string
-    name="your_account">Your Account</string>
-  <string
-    name="email">E-Mail Address</string>
-  <string
-    name="sign_up">Sign up</string>
-  <string
-    name="dotcom_signup">.wordpress.com</string>
-  <string
-    name="terms">You agree to the fascinating terms of service at
-    http://wordpress.com/tos by submitting this form.</string>
-  <string
-    name="instructions">Fill out this one-step form and you’ll be blogging seconds
-    later!</string>
-  <string
-    name="waiting_activation">Awaiting e-mail activation</string>
-  <string
-    name="post_format">Post Format:</string>
+  <string name="wpcom_signup">WordPress.com Sign Up</string>
+  <string name="blog_address">Blog Address</string>
+  <string name="your_account">Your Account</string>
+  <string name="email">E-Mail Address</string>
+  <string name="sign_up">Sign up</string>
+  <string name="dotcom_signup">.wordpress.com</string>
+  <string name="terms">You agree to the fascinating terms of service at
+    http://wordpress.com/tos by submitting this form.
+  </string>
+  <string name="instructions">Fill out this one-step form and you’ll be blogging
+    seconds
+    later!
+  </string>
+  <string name="waiting_activation">Awaiting e-mail activation</string>
+  <string name="post_format">Post Format:</string>
 
-  <!--  reader -->
-  <string
-    name="reader">WordPress.com Reader</string>
+  <!-- reader -->
+  <string name="reader">WordPress.com Reader</string>
 
   <!-- Post Formats -->
-  <string-array
-    name="post_formats_array">
+  <string-array name="post_formats_array">
     <item>Aside</item>
     <item>Audio</item>
     <item>Chat</item>
