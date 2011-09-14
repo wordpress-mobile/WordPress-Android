@@ -150,7 +150,7 @@ public class WPTitleBar extends RelativeLayout {
 			});
 
 			// dashboard button click handlers
-			Button writeButton = (Button) findViewById(R.id.dashboard_newpost_btn);
+			LinearLayout writeButton = (LinearLayout) findViewById(R.id.dashboard_newpost_btn);
 			writeButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, EditPost.class);
@@ -161,7 +161,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button newPageButton = (Button) findViewById(R.id.dashboard_newpage_btn);
+			LinearLayout newPageButton = (LinearLayout) findViewById(R.id.dashboard_newpage_btn);
 			newPageButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, EditPost.class);
@@ -173,7 +173,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button postsButton = (Button) findViewById(R.id.dashboard_posts_btn);
+			LinearLayout postsButton = (LinearLayout) findViewById(R.id.dashboard_posts_btn);
 			postsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, ViewPosts.class);
@@ -181,7 +181,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button pagesButton = (Button) findViewById(R.id.dashboard_pages_btn);
+			LinearLayout pagesButton = (LinearLayout) findViewById(R.id.dashboard_pages_btn);
 			pagesButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, ViewPosts.class);
@@ -192,7 +192,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button commentsButton = (Button) findViewById(R.id.dashboard_comments_btn);
+			LinearLayout commentsButton = (LinearLayout) findViewById(R.id.dashboard_comments_btn);
 			commentsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, ViewComments.class);
@@ -202,7 +202,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button statsButton = (Button) findViewById(R.id.dashboard_stats_btn);
+			LinearLayout statsButton = (LinearLayout) findViewById(R.id.dashboard_stats_btn);
 			statsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, ViewStats.class);
@@ -212,7 +212,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button settingsButton = (Button) findViewById(R.id.dashboard_settings_btn);
+			LinearLayout settingsButton = (LinearLayout) findViewById(R.id.dashboard_settings_btn);
 			settingsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, Settings.class);
@@ -222,7 +222,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button subsButton = (Button) findViewById(R.id.dashboard_subs_btn);
+			LinearLayout subsButton = (LinearLayout) findViewById(R.id.dashboard_subs_btn);
 			subsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, ViewPost.class);
@@ -232,7 +232,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button picButton = (Button) findViewById(R.id.dashboard_quickphoto_btn);
+			LinearLayout picButton = (LinearLayout) findViewById(R.id.dashboard_quickphoto_btn);
 			picButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, EditPost.class);
@@ -242,7 +242,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			Button videoButton = (Button) findViewById(R.id.dashboard_quickvideo_btn);
+			LinearLayout videoButton = (LinearLayout) findViewById(R.id.dashboard_quickvideo_btn);
 			videoButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent i = new Intent(context, EditPost.class);

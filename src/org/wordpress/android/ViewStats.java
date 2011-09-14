@@ -36,12 +36,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.ConnectionClient;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlrpc.android.ConnectionClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;

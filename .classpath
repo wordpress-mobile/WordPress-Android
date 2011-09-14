@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/CWAC-AdapterWrapper.jar"/>
 	<classpathentry kind="lib" path="libs/CWAC-Bus.jar"/>
 	<classpathentry kind="lib" path="libs/CWAC-Task.jar"/>
+	<classpathentry kind="lib" path="/Users/dan/Desktop/httpcomponents-client-4.1.2/lib/httpmime-4.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

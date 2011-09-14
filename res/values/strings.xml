@@ -5,7 +5,8 @@
   <string name="required_fields">Required Fields</string>
   <string name="required_field">Required Field</string>
   <string name="url_username_password_required">Please fill in all of the fields before
-    submitting.</string>
+    submitting.
+  </string>
 
   <!-- form labels -->
   <string name="categories">Categories</string>
@@ -322,7 +323,8 @@
   </string>
   <string name="no_text_selected">No text selected</string>
   <string name="howto_select_text">You can select text by long pressing in the text
-    area.</string>
+    area.
+  </string>
   <string name="select_text_to_bold">Please select some text first in order to bold it.
   </string>
   <string name="select_text_to_link">Please select some text first in order to link it.
@@ -347,7 +349,8 @@
   </string>
   <string name="empty_fields">No Content Found</string>
   <string name="title_post_required">Please enter some post content or attach a media
-    item.</string>
+    item.
+  </string>
   <string name="post_edited">Post edited</string>
   <string name="post_edited_image_error">Post edited successfully, but an error was
     encountered when
@@ -408,11 +411,12 @@
   <string name="new_post">New Post</string>
   <string name="post_added">Post Added</string>
   <string name="post_id">Post</string>
-  <string name="uploaded_successfully">uploaded successfully</string>
+  <string name="uploaded_successfully">Uploaded Successfully</string>
   <string name="uploaded_successfully_image_error">added successfully, but an error was encountered
     when uploading
     media
   </string>
+  <string name="upload_failed">Upload Failed</string>
   <string name="permalink_not_found">The permalink was not found.</string>
   <string name="basic_html">Showing basic HTML preview until post status is
     set to
@@ -531,7 +535,8 @@
 
   <!-- comment notifications -->
   <string name="notifications_select">Select which blogs to receive comment
-    notifications:</string>
+    notifications:
+  </string>
   <string name="notifications_interval">Update interval:</string>
   <string name="minutes">minutes</string>
   <string name="hour">hour</string>
@@ -560,7 +565,8 @@
   <string name="adding_cat_success">Category added successfully.</string>
   <string name="duplicated_cat">Duplicated category</string>
   <string name="cat_already_exists">A category with the name you specified already
-    exists.</string>
+    exists.
+  </string>
   <string name="cat_name_required">The Category Name field is required.</string>
   <string name="cat_adding_category">Adding Category</string>
   <string name="cat_attempt_add_category">Attempting to add category</string>
@@ -575,7 +581,8 @@
   <!-- file errors -->
   <string name="file_error">File Error</string>
   <string name="file_error_encountered">An error occurred while setting up the captured
-    media.</string>
+    media.
+  </string>
 
   <!-- SD Card errors -->
   <string name="sdcard_title">SD Card Required</string>

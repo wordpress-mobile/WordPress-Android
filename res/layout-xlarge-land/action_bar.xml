@@ -109,14 +109,17 @@
     android:gravity="center"
     android:layout_weight="1"
     android:visibility="gone"
-    android:background="#88000000">
+    android:background="#88000000"
+    android:paddingLeft="200dp"
+    android:paddingRight="200dp"
+    android:paddingTop="120dp"
+    android:paddingBottom="120dp">
     <LinearLayout
       android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="fill_parent"
       android:orientation="horizontal"
       android:background="@drawable/dashboard_bg"
-      android:layout_marginLeft="20dp"
-      android:layout_marginRight="20dp"
+      android:layout_margin="20dp"
       android:weightSum="4.0">
       <LinearLayout
         android:layout_width="wrap_content"
@@ -124,29 +127,49 @@
         android:layout_weight="1.00"
         android:orientation="vertical"
         android:weightSum="2.0">
-        <Button
+        <LinearLayout
           android:id="@+id/dashboard_newpost_btn"
-          style="@style/DashboardButton"
-          android:text="New Post"
           android:layout_width="fill_parent"
           android:layout_height="fill_parent"
-          android:paddingBottom="16dp"
-          android:paddingTop="22dp"
           android:layout_weight="1.0"
-          android:drawableTop="@drawable/dashboard_icon_new_post"
-          android:background="@drawable/wp_button_dashboard_top_left" />
-        <Button
+          android:orientation="vertical"
+          android:clickable="true"
+          android:background="@drawable/wp_button_dashboard_top_left"
+          android:gravity="center"
+          android:padding="10dp">
+          <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/dashboard_icon_new_post"
+            android:scaleType="centerInside" />
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButtonText"
+            android:text="New Post" />
+        </LinearLayout>
+        <LinearLayout
           android:id="@+id/dashboard_quickphoto_btn"
-          style="@style/DashboardButton"
-          android:text="Quick Photo"
           android:layout_width="fill_parent"
           android:layout_height="fill_parent"
-          android:paddingBottom="16dp"
-          android:paddingTop="22dp"
           android:layout_weight="1.0"
-          android:drawableTop="@drawable/dashboard_icon_photo"
+          android:layout_marginTop="1px"
+          android:orientation="vertical"
+          android:clickable="true"
           android:background="@drawable/wp_button_dashboard_bottom_left"
-          android:layout_marginTop="1px" />
+          android:gravity="center"
+          android:padding="10dp">
+          <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/dashboard_icon_photo"
+            android:scaleType="centerInside" />
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButtonText"
+            android:text="Quick Photo" />
+        </LinearLayout>
       </LinearLayout>
       <LinearLayout
         android:layout_width="wrap_content"
@@ -155,32 +178,51 @@
         android:orientation="vertical"
         android:layout_marginLeft="2px"
         android:weightSum="2.0">
-        <Button
+        <LinearLayout
           android:id="@+id/dashboard_newpage_btn"
-          style="@style/DashboardButton"
-          android:text="New Page"
-          android:drawableTop="@drawable/dashboard_icon_new_page"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:layout_weight="1.0"
+          android:layout_marginLeft="2px"
+          android:orientation="vertical"
+          android:clickable="true"
           android:background="@drawable/wp_button_dashboard"
-          android:layout_width="fill_parent"
-          android:layout_height="fill_parent"
-          android:paddingBottom="16dp"
-          android:paddingTop="22dp"
-          android:layout_weight="1.0"
-          android:layout_toRightOf="@id/dashboard_newpost_btn"
-          android:layout_marginLeft="2px" />
-        <Button
+          android:gravity="center"
+          android:padding="10dp">
+          <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/dashboard_icon_new_page"
+            android:scaleType="centerInside" />
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButtonText"
+            android:text="New Page" />
+        </LinearLayout>
+        <LinearLayout
           android:id="@+id/dashboard_quickvideo_btn"
-          style="@style/DashboardButton"
-          android:text="Quick Video"
           android:layout_width="fill_parent"
           android:layout_height="fill_parent"
-          android:paddingBottom="16dp"
-          android:paddingTop="22dp"
           android:layout_weight="1.0"
-          android:drawableTop="@drawable/dashboard_icon_video"
-          android:background="@drawable/wp_button_dashboard_bottom_center"
           android:layout_marginTop="1px"
-          android:layout_marginLeft="2px" />
+          android:layout_marginLeft="2px"
+          android:orientation="vertical"
+          android:clickable="true"
+          android:background="@drawable/wp_button_dashboard_bottom_center"
+          android:gravity="center"
+          android:padding="10dp">
+          <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/dashboard_icon_video"
+            android:scaleType="centerInside" />
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButtonText"
+            android:text="Quick Photo" />
+        </LinearLayout>
       </LinearLayout>
       <LinearLayout
         android:layout_width="wrap_content"
@@ -195,45 +237,79 @@
           android:weightSum="3.0"
           android:orientation="horizontal"
           android:layout_weight="1.0">
-          <Button
+          <LinearLayout
             android:id="@+id/dashboard_posts_btn"
-            style="@style/DashboardButton"
-            android:text="Posts"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="22dp"
-            android:drawableTop="@drawable/dashboard_icon_posts"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:clickable="true"
             android:background="@drawable/wp_button_dashboard"
-            android:layout_weight="1.0" />
-          <Button
+            android:gravity="center"
+            android:padding="10dp">
+            <ImageView
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:src="@drawable/dashboard_icon_posts"
+              android:scaleType="centerInside" />
+            <TextView
+              android:id="@+id/button_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              style="@style/DashboardButtonText"
+              android:text="Posts" />
+          </LinearLayout>
+          <LinearLayout
             android:id="@+id/dashboard_pages_btn"
-            style="@style/DashboardButton"
-            android:text="Pages"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="22dp"
-            android:layout_marginLeft="2px"
-            android:drawableTop="@drawable/dashboard_icon_pages"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:clickable="true"
             android:background="@drawable/wp_button_dashboard"
-            android:layout_weight="1.0" />
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginLeft="2px">
+            <ImageView
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:src="@drawable/dashboard_icon_pages"
+              android:scaleType="centerInside" />
+            <TextView
+              android:id="@+id/button_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              style="@style/DashboardButtonText"
+              android:text="Pages" />
+          </LinearLayout>
           <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginLeft="2px"
             android:layout_weight="1.0"
             android:padding="0dp">
-            <Button
+            <LinearLayout
               android:id="@+id/dashboard_comments_btn"
-              style="@style/DashboardButton"
-              android:text="Comments"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:paddingBottom="16dp"
-              android:paddingTop="22dp"
-              android:drawableTop="@drawable/dashboard_icon_comments"
-              android:background="@drawable/wp_button_dashboard_top_right" />
+              android:layout_weight="1.0"
+              android:orientation="vertical"
+              android:clickable="true"
+              android:background="@drawable/wp_button_dashboard_top_right"
+              android:gravity="center"
+              android:padding="10dp">
+              <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/dashboard_icon_comments"
+                android:scaleType="centerInside" />
+              <TextView
+                android:id="@+id/button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/DashboardButtonText"
+                android:text="Comments" />
+            </LinearLayout>
             <org.wordpress.android.util.CommentBadgeTextView
               android:id="@+id/comment_badge"
               android:layout_width="46dp"
@@ -257,41 +333,74 @@
           android:layout_marginTop="1px"
           android:orientation="horizontal"
           android:layout_weight="1.0">
-          <Button
+          <LinearLayout
             android:id="@+id/dashboard_settings_btn"
-            style="@style/DashboardButton"
-            android:text="Settings"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="22dp"
-            android:drawableTop="@drawable/dashboard_icon_settings"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:clickable="true"
             android:background="@drawable/wp_button_dashboard_bottom_center"
-            android:layout_weight="1.0" />
-          <Button
+            android:gravity="center"
+            android:padding="10dp">
+            <ImageView
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:src="@drawable/dashboard_icon_settings"
+              android:scaleType="centerInside" />
+            <TextView
+              android:id="@+id/button_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              style="@style/DashboardButtonText"
+              android:text="Settings" />
+          </LinearLayout>
+          <LinearLayout
             android:id="@+id/dashboard_subs_btn"
-            style="@style/DashboardButton"
-            android:text="Following"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="22dp"
-            android:layout_marginLeft="2px"
-            android:drawableTop="@drawable/dashboard_icon_subs"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:clickable="true"
             android:background="@drawable/wp_button_dashboard_bottom_center"
-            android:layout_weight="1.0" />
-          <Button
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginLeft="2px">
+            <ImageView
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:src="@drawable/dashboard_icon_subs"
+              android:scaleType="centerInside" />
+            <TextView
+              android:id="@+id/button_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              style="@style/DashboardButtonText"
+              android:text="Following" />
+          </LinearLayout>
+          <LinearLayout
             android:id="@+id/dashboard_stats_btn"
-            style="@style/DashboardButton"
-            android:text="Stats"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="22dp"
-            android:layout_marginLeft="2px"
-            android:drawableTop="@drawable/dashboard_icon_stats"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:clickable="true"
             android:background="@drawable/wp_button_dashboard_bottom_right"
-            android:layout_weight="1.0" />
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginLeft="2px">
+            <ImageView
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:src="@drawable/dashboard_icon_stats"
+              android:scaleType="centerInside" />
+            <TextView
+              android:id="@+id/button_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              style="@style/DashboardButtonText"
+              android:text="Stats" />
+          </LinearLayout>
         </LinearLayout>
       </LinearLayout>
     </LinearLayout>

@@ -262,6 +262,7 @@ res/drawable-hdpi/wp_small.9.png -text
 res/drawable-hdpi/wp_small_down.9.png -text
 res/drawable-hdpi/wp_small_over.9.png -text
 res/drawable-hdpi/wp_small_toggle.9.png -text
+res/drawable-hdpi/wp_statusbar_icon.png -text
 res/drawable/action_bar_btn_selector.xml -text
 res/drawable/action_bar_shadow.9.png -text
 res/drawable/action_item_btn.xml -text
@@ -396,16 +397,16 @@ res/drawable/wp_small_over.9.png -text
 res/drawable/wp_small_toggle.9.png -text
 res/drawable/wp_spinner_bg.xml -text
 res/drawable/wp_spinner_title_bar_bg.xml -text
+res/drawable/wp_statusbar_icon.png -text
 res/drawable/wpcom.png -text
 res/drawable/wplogo.png -text
-res/layout-hdpi/action_bar.xml -text
 res/layout-hdpi/new_account.xml -text
-res/layout-land-hdpi/action_bar.xml -text
-res/layout-small/action_bar.xml -text
+res/layout-land/action_bar.xml -text
 res/layout-small/new_account.xml -text
 res/layout-v4/row.xml -text
+res/layout-xlarge-land/action_bar.xml -text
+res/layout-xlarge/action_bar.xml -text
 res/layout/about.xml -text
-res/layout/action_bar.xml -text
 res/layout/action_item.xml -text
 res/layout/add_account.xml -text
 res/layout/add_account_settings.xml -text
@@ -441,6 +442,7 @@ res/layout/spinner_textview.xml -text
 res/layout/stats_tab_selector.xml -text
 res/layout/table_row.xml -text
 res/layout/table_row_header.xml -text
+res/layout/upload_progress.xml -text
 res/layout/view_comment.xml -text
 res/layout/view_stats.xml -text
 res/layout/viewcomments.xml -text
@@ -515,7 +517,6 @@ src/org/wordpress/android/models/Post.java -text
 src/org/wordpress/android/util/AlertUtil.java -text
 src/org/wordpress/android/util/Base64.java -text
 src/org/wordpress/android/util/CommentBadgeTextView.java -text
-src/org/wordpress/android/util/ConnectionClient.java -text
 src/org/wordpress/android/util/DashboardLayout.java -text
 src/org/wordpress/android/util/DrawableManager.java -text
 src/org/wordpress/android/util/Entities.java -text
@@ -529,6 +530,8 @@ src/org/wordpress/android/util/WPTitleBar.java -text
 src/org/xmlrpc/android/ApiHelper.java -text
 src/org/xmlrpc/android/Base64.java -text
 src/org/xmlrpc/android/Base64Coder.java -text
+src/org/xmlrpc/android/ConnectionClient.java -text
+src/org/xmlrpc/android/CustomMultipartEntity.java -text
 src/org/xmlrpc/android/XMLRPCClient.java -text
 src/org/xmlrpc/android/XMLRPCException.java -text
 src/org/xmlrpc/android/XMLRPCFault.java -text

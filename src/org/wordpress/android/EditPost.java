@@ -1,4 +1,3 @@
-
 package org.wordpress.android;
 
 import org.json.JSONArray;
@@ -89,1821 +88,1902 @@ import java.util.Locale;
 import java.util.Vector;
 
 public class EditPost extends Activity implements LocationListener {
-    /** Called when the activity is first created. */
-    public static long globalData = 0;
-    public ProgressDialog pd;
-    public boolean postStatus = false;
-    String[] mFiles = null;
-    public String thumbnailPath = null;
-    public String imagePath = null;
-    public String imageTitle = null;
-    public Vector<String> imageUrl = new Vector<String>();
-    public Vector<Object> thumbnailUrl = new Vector<Object>();
-    public String finalResult = null;
-    Vector<String> selectedCategories = new Vector<String>();
-    public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
-    public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
-    public Boolean newStart = true;
-    public String categoryErrorMsg = "", accountName = "", SD_CARD_TEMP_DIR = "",
-            mediaErrorMsg = "";
-    private JSONArray categories;
-    private Vector<Uri> selectedImageIDs = new Vector<Uri>();
-    private int selectedImageCtr = 0, id;
-    long postID;
-    private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2, ID_DIALOG_DATE = 3,
-            ID_DIALOG_TIME = 4;
-    public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug, option;
-    public Boolean localDraft = false, centerThumbnail = false, xmlrpcError = false,
-            isPage = false, isNew = false,
-            isAction = false, isUrl = false, locationActive = false, isLargeScreen = false,
-            isCustomPubDate = false;
-    public Vector<Object> imgThumbs = new Vector<Object>();
-    LocationManager lm;
-    Criteria criteria;
-    String provider;
-    Location curLocation;
-    ProgressDialog postingDialog;
-    int styleStart = -1, cursorLoc = 0, screenDensity = 0;
-    // date holders
-    private int mYear, mMonth, mDay, mHour, mMinute;
-    private Blog blog;
-    private Post post;
-    // post formats
-    String[] postFormats;
-    String[] postFormatTitles = null;
-
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        Bundle extras = getIntent().getExtras();
-        categories = new JSONArray();
-        if (extras != null) {
-            id = WordPress.currentBlog.getId();
-            blog = new Blog(id, this);
-            accountName = EscapeUtils.unescapeHtml(extras.getString("accountName"));
-            postID = extras.getLong("postID");
-            localDraft = extras.getBoolean("localDraft", false);
-            isPage = extras.getBoolean("isPage", false);
-            isNew = extras.getBoolean("isNew", false);
-            option = extras.getString("option");
-            if (!isNew)
-                post = new Post(id, postID, isPage, this);
-        }
-
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-                .getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        if (height > width) {
-            width = height;
-        }
-        if (width > 480) {
-            isLargeScreen = true;
-        }
-
-        if (isPage) {
-            setContentView(R.layout.edit_page);
-        } else {
-            setContentView(R.layout.edit);
-            if (blog.getPostFormats().equals("")) {
-                Vector args = new Vector();
-                args.add(blog);
-                args.add(this);
-                new ApiHelper.getPostFormatsTask().execute(args);
-                postFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-                String defaultPostFormatTitles[] = {
-                        "aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
-                        "status", "video"
-                };
-                postFormats = defaultPostFormatTitles;
-            } else {
-                try {
-                    JSONObject jsonPostFormats = new JSONObject(blog.getPostFormats());
-                    postFormats = new String[jsonPostFormats.length()];
-                    postFormatTitles = new String[jsonPostFormats.length()];
-                    Iterator it = jsonPostFormats.keys();
-                    int i = 0;
-                    while (it.hasNext()) {
-                        String key = (String) it.next();
-                        String val = (String) jsonPostFormats.get(key);
-                        postFormats[i] = key;
-                        postFormatTitles[i] = val;
-                        i++;
-                    }
-
-                    // note: submit patch to wp.org to sort post format server
-                    // side?
-                    java.util.Arrays.sort(postFormats);
-                    java.util.Arrays.sort(postFormatTitles);
-
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            Spinner pfSpinner = (Spinner) findViewById(R.id.postFormat);
-            ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(this,
-                        android.R.layout.simple_spinner_item, postFormatTitles);
-            pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            pfSpinner.setAdapter(pfAdapter);
-            String activePostFormat = "standard";
-            if (!isNew) {
-                if (!post.getWP_post_format().equals(""))
-                    activePostFormat = post.getWP_post_format();
-            }
-            for (int i = 0; i < postFormats.length; i++) {
-                if (postFormats[i].equals(activePostFormat))
-                    pfSpinner.setSelection(i);
-            }
-
-        }
-
-        String[] items = new String[] {
-                getResources().getString(R.string.publish_post),
-                getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review),
-                getResources().getString(R.string.post_private)
-        };
-        Spinner spinner = (Spinner) findViewById(R.id.status);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) { // this
-            // is
-            // from
-            // a
-            // share
-            // action!
-            isAction = true;
-            isNew = true;
-            WordPressDB settingsDB = new WordPressDB(this);
-            Vector<?> accounts = settingsDB.getAccounts(this);
-
-            if (accounts.size() > 0) {
-
-                final String blogNames[] = new String[accounts.size()];
-                final int accountIDs[] = new int[accounts.size()];
-
-                for (int i = 0; i < accounts.size(); i++) {
-
-                    HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
-                    try {
-                        blogNames[i] = EscapeUtils.unescapeHtml(curHash.get("blogName").toString());
-                    } catch (Exception e) {
-                        blogNames[i] = "(No Blog Title)";
-                    }
-                    accountIDs[i] = (Integer) curHash.get("id");
-
-                }
-
-                // Don't prompt if they have one blog only
-                if (accounts.size() != 1) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(getResources().getText(R.string.select_a_blog));
-                    builder.setItems(blogNames, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int item) {
-                            id = accountIDs[item];
-                            accountName = blogNames[item];
-                            setTitle(accountName
-                                    + " - "
-                                    + getResources().getText(
-                                            (isPage) ? R.string.new_page : R.string.new_post));
-                            setContent();
-                            lbsCheck();
-
-                        }
-                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                } else {
-                    id = accountIDs[0];
-                    accountName = blogNames[0];
-                    setTitle(accountName
-                            + " - "
-                            + getResources().getText(
-                                    (isPage) ? R.string.new_page : R.string.new_post));
-                    setContent();
-                }
-            } else {
-                // no account, load main view to load new account view
-                Intent i = new Intent(this, Dashboard.class);
-                Toast.makeText(getApplicationContext(),
-                        getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-                startActivity(i);
-                finish();
-            }
-
-        } else {
-            // clear up some variables
-            selectedImageIDs.clear();
-            selectedImageCtr = 0;
-
-            if (!isPage) {
-                lbsCheck();
-            }
-
-        }
-
-        if (isNew) {
-            setTitle(accountName + " - "
-                    + getResources().getText((isPage) ? R.string.new_page : R.string.new_post));
-        } else {
-            setTitle(accountName + " - "
-                    + getResources().getText((isPage) ? R.string.edit_page : R.string.edit_post));
-        }
-
-        if (isNew) {
-            if (!isAction) {
-                if (!isPage) {
-                    enableLBSButtons();
-                }
-            }
-            
-            //handles selections from the quick action bar
-            if (option != null) {
-                if (option.equals("newphoto")) {
-                    launchCamera();
-                }
-                else if (option.equals("photolibrary")) {
-                    launchPictureLibrary();
-                }
-                if (option.equals("newvideo")) {
-                    launchVideoCamera();
-                }
-                else if (option.equals("videolibrary")) {
-                    launchVideoLibrary();
-                }
-            }
-
-        } else {
-            // no upload now button for uploaded posts
-            if (post.isUploaded()) {
-                Button uploadNowButton = (Button) findViewById(R.id.cancel);
-                uploadNowButton.setVisibility(View.GONE);
-            }
-
-            EditText titleET = (EditText) findViewById(R.id.title);
-            EditText contentET = (EditText) findViewById(R.id.postContent);
-            EditText passwordET = (EditText) findViewById(R.id.post_password);
-
-            titleET.setText(post.getTitle());
-
-            contentET.setText(Html.fromHtml(post.getDescription() + post.getMt_text_more()));
-            
-            long pubDate = post.getDate_created_gmt();
-            if (pubDate != 0) {
-                try {
-                    Date date = new Date(pubDate);
-                    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a");
-                    String sPubDate = sdf.format(date);
-                    TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
-                    tvPubDate.setText(sPubDate);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-
-            if (post.getWP_password() != null)
-                passwordET.setText(post.getWP_password());
-
-            if (post.getPost_status() != null) {
-                String status = post.getPost_status();
-
-                if (status.equals("publish")) {
-                    spinner.setSelection(0, true);
-                } else if (status.equals("draft")) {
-                    spinner.setSelection(1, true);
-                } else if (status.equals("pending")) {
-                    spinner.setSelection(2, true);
-                } else if (status.equals("private")) {
-                    spinner.setSelection(3, true);
-                }
-            }
-
-            String picturePaths = post.getMediaPaths();
-            if (!picturePaths.equals("")) {
-                String[] pPaths = picturePaths.split(",");
-
-                for (int i = 0; i < pPaths.length; i++) {
-                    Uri imagePath = Uri.parse(pPaths[i]);
-                    addMedia(imagePath.getEncodedPath(), imagePath);
-                }
-
-            }
-
-            if (!isPage) {
-                if (post.getCategories() != null) {
-                    categories = post.getCategories();
-                    if (!categories.equals("")) {
-
-                        for (int i = 0; i < categories.length(); i++) {
-                            try {
-                                selectedCategories.add(categories.getString(i));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
-                        tvCategories.setText(getResources().getText(R.string.selected_categories)
-                                + " " + getCategoriesCSV());
-
-                    }
-                }
-            }
-
-            if (blog.isLocation()) {
-                enableLBSButtons();
-            }
-
-            Double latitude = post.getLatitude();
-            Double longitude = post.getLongitude();
-
-            if (latitude != 0.0) {
-                new getAddressTask().execute(latitude, longitude);
-            }
-
-            if (blog.isLocation() && latitude > 0) {
-                Button updateLocation = (Button) findViewById(R.id.updateLocation);
-
-                updateLocation.setOnClickListener(new Button.OnClickListener() {
-                    public void onClick(View v) {
-
-                        lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-                        lm.requestLocationUpdates(
-                                    LocationManager.GPS_PROVIDER,
-                                    20000,
-                                    0,
-                                    EditPost.this
-                                );
-                        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0,
-                                EditPost.this);
-                        locationActive = true;
-                    }
-                });
-
-                RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-                locationSection.setVisibility(View.VISIBLE);
-            } else if (blog.isLocation()) {
-                lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-                lm.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER,
-                            20000,
-                            0,
-                            EditPost.this
-                        );
-                lm
-                        .requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0,
-                                EditPost.this);
-                locationActive = true;
-
-                RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-                locationSection.setVisibility(View.VISIBLE);
-            }
-
-            String tags = post.getMt_keywords();
-            if (!tags.equals("")) {
-                EditText tagsET = (EditText) findViewById(R.id.tags);
-                tagsET.setText(tags);
-            }
-        }
-
-        if (!isPage) {
-            Button selectCategories = (Button) findViewById(R.id.selectCategories);
-
-            selectCategories.setOnClickListener(new Button.OnClickListener() {
-                public void onClick(View v) {
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", id);
-                    if (categories.length() > 0) {
-                        bundle.putString("categoriesCSV", getCategoriesCSV());
-                    }
-                    Intent i = new Intent(EditPost.this, SelectCategories.class);
-                    i.putExtras(bundle);
-                    startActivityForResult(i, 5);
-                }
-            });
-        }
-
-        final Button saveButton = (Button) findViewById(R.id.post);
-
-        saveButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                boolean result = savePost();
-                if (result) {
-                    if (post.isUploaded())
-                        post.upload();
-                    finish();
-                }
-            }
-        });
-        final Button uploadNowButton = (Button) findViewById(R.id.cancel);
-
-        uploadNowButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                boolean result = savePost();
-                post.upload();
-                if (result) {
-                    Bundle bundle = new Bundle();
-                    if (isAction) {
-                        Intent mIntent = new Intent(EditPost.this, Dashboard.class);
-                        mIntent.putExtras(bundle);
-                        startActivity(mIntent);
-                    }
-
-                    finish();
-                }
-            }
-        });
-
-        final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);
-
-        registerForContextMenu(addPictureButton);
-
-        addPictureButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                addPictureButton.performLongClick();
-
-            }
-        });
-
-        final EditText contentEdit = (EditText) findViewById(R.id.postContent);
-        contentEdit.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (localDraft || isNew) {
-                    // add style as the user types if a toggle button is enabled
-                    ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
-                    ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
-                    ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
-                    ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
-                    ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
-                    int position = Selection.getSelectionStart(contentEdit.getText());
-                    if (position < 0) {
-                        position = 0;
-                    }
-
-                    if (position > 0) {
-
-                        if (styleStart > position || position > (cursorLoc + 1)) {
-                            // user changed cursor location, reset
-                            if (position - cursorLoc > 1) {
-                                // user pasted text
-                                styleStart = cursorLoc;
-                            }
-                                else {
-                                    styleStart = position - 1;
-                                }
-                            }
-
-                            if (boldButton.isChecked()) {
-                                StyleSpan[] ss = s.getSpans(styleStart, position, StyleSpan.class);
-
-                                for (int i = 0; i < ss.length; i++) {
-                                    if (ss[i].getStyle() == android.graphics.Typeface.BOLD) {
-                                        s.removeSpan(ss[i]);
-                                    }
-                                }
-                                s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
-                                        styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                            if (emButton.isChecked()) {
-                                StyleSpan[] ss = s.getSpans(styleStart, position, StyleSpan.class);
-
-                                for (int i = 0; i < ss.length; i++) {
-                                    if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
-                                        s.removeSpan(ss[i]);
-                                    }
-                                }
-                                s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC),
-                                        styleStart, position, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                            if (bquoteButton.isChecked()) {
-
-                                QuoteSpan[] ss = s.getSpans(styleStart, position, QuoteSpan.class);
-
-                                for (int i = 0; i < ss.length; i++) {
-                                    s.removeSpan(ss[i]);
-                                }
-                                s.setSpan(new QuoteSpan(), styleStart, position,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                            if (underlineButton.isChecked()) {
-                                UnderlineSpan[] ss = s.getSpans(styleStart, position,
-                                        UnderlineSpan.class);
-
-                                for (int i = 0; i < ss.length; i++) {
-                                    s.removeSpan(ss[i]);
-                                }
-                                s.setSpan(new UnderlineSpan(), styleStart, position,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                            if (strikeButton.isChecked()) {
-                                StrikethroughSpan[] ss = s.getSpans(styleStart, position,
-                                        StrikethroughSpan.class);
-
-                                for (int i = 0; i < ss.length; i++) {
-                                    s.removeSpan(ss[i]);
-                                }
-                                s.setSpan(new StrikethroughSpan(), styleStart, position,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            }
-                        }
-
-                        cursorLoc = Selection.getSelectionStart(contentEdit.getText());
-                    }
-                }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // unused
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // unused
-            }
-
-        });
-
-        final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
-
-        boldButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                formatBtnClick(boldButton, "strong");
-            }
-        });
-
-        final Button linkButton = (Button) findViewById(R.id.link);
-
-        linkButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                TextView contentText = (TextView) findViewById(R.id.postContent);
-
-                int selectionStart = contentText.getSelectionStart();
-
-                styleStart = selectionStart;
-
-                int selectionEnd = contentText.getSelectionEnd();
-
-                if (selectionStart > selectionEnd) {
-                    int temp = selectionEnd;
-                    selectionEnd = selectionStart;
-                    selectionStart = temp;
-                }
-
-                if (selectionStart == -1
-                        || selectionStart == contentText.getText().toString().length()
-                        || (selectionStart == selectionEnd)) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-                    dialogBuilder.setTitle(getResources().getText(R.string.no_text_selected));
-                    dialogBuilder.setMessage(getResources().getText(R.string.select_text_to_link)
-                            + " " + getResources().getText(R.string.howto_select_text));
-                    dialogBuilder.setPositiveButton("OK", new
-                              DialogInterface.OnClickListener() {
-                                  public void onClick(DialogInterface dialog, int whichButton) {
-                                      // just close the dialog
-
-                                  }
-                              });
-                    dialogBuilder.setCancelable(true);
-                    dialogBuilder.create().show();
-                }
-                    else
-                    {
-                        Intent i = new Intent(EditPost.this, Link.class);
-
-                        startActivityForResult(i, 2);
-                    }
-                }
-        });
-
-        final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
-
-        emButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                formatBtnClick(emButton, "em");
-            }
-        });
-
-        final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
-
-        underlineButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                formatBtnClick(underlineButton, "u");
-            }
-        });
-
-        final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
-
-        strikeButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                formatBtnClick(strikeButton, "strike");
-            }
-        });
-
-        final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
-
-        bquoteButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                formatBtnClick(bquoteButton, "blockquote");
-
-            }
-        });
-
-        final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
-
-        clearPictureButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                imageUrl.clear();
-                thumbnailUrl.clear();
-                selectedImageIDs = new Vector<Uri>();
-                selectedImageCtr = 0;
-                imgThumbs.clear();
-                Gallery gallery = (Gallery) findViewById(R.id.gallery);
-                gallery.setVisibility(View.GONE);
-                gallery.setAdapter(null);
-                clearPictureButton.setVisibility(View.GONE);
-
-            }
-        });
-
-        Button pubDate = (Button) findViewById(R.id.pubDateButton);
-        pubDate.setOnClickListener(new TextView.OnClickListener() {
-            public void onClick(View v) {
-
-                // get the current date
-                Calendar c = Calendar.getInstance();
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMinute = c.get(Calendar.MINUTE);
-
-                showDialog(ID_DIALOG_DATE);
-
-            }
-        });
-
-    }
-
-    private void enableLBSButtons() {
-
-        final Button viewMap = (Button) findViewById(R.id.viewMap);
-
-        viewMap.setOnClickListener(new TextView.OnClickListener() {
-            public void onClick(View v) {
-
-                Double latitude = 0.0;
-                try {
-                    latitude = curLocation.getLatitude();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (latitude != 0.0) {
-                    String uri = "geo:" + latitude + "," + curLocation.getLongitude();
-                    startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-                }
-                    else {
-                        Toast
-                                .makeText(EditPost.this,
-                                        getResources().getText(R.string.location_toast),
-                                        Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-        });
-
-        if (isNew && blog.isLocation()) {
-
-            Button updateLocation = (Button) findViewById(R.id.updateLocation);
-            updateLocation.setVisibility(View.GONE);
-
-            lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-            lm.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        20000,
-                        0,
-                        EditPost.this
-                    );
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000, 0, EditPost.this);
-            locationActive = true;
-
-            RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-            locationSection.setVisibility(View.VISIBLE);
-        }
-    }
-
-    protected void formatBtnClick(ToggleButton toggleButton, String tag) {
-        EditText contentText = (EditText) findViewById(R.id.postContent);
-
-        int selectionStart = contentText.getSelectionStart();
-
-        String startTag = "<" + tag + ">";
-        String endTag = "</" + tag + ">";
-
-        styleStart = selectionStart;
-
-        int selectionEnd = contentText.getSelectionEnd();
-
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
-        }
-
-        if (localDraft || isNew) {
-            if (selectionEnd > selectionStart) {
-                Spannable str = contentText.getText();
-                if (tag.equals("blockquote")) {
-
-                    QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd, QuoteSpan.class);
-
-                    boolean exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        str.removeSpan(ss[i]);
-                        exists = true;
-                    }
-
-                    if (!exists) {
-                        str.setSpan(new QuoteSpan(), selectionStart, selectionEnd,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-
-                    toggleButton.setChecked(false);
-                } else if (tag.equals("strong")) {
-                    StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
-
-                    boolean exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        int style = ((StyleSpan) ss[i]).getStyle();
-                        if (style == android.graphics.Typeface.BOLD) {
-                            str.removeSpan(ss[i]);
-                            exists = true;
-                        }
-                    }
-
-                    if (!exists) {
-                        str.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart,
-                                selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                    toggleButton.setChecked(false);
-                } else if (tag.equals("em")) {
-                    StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd, StyleSpan.class);
-
-                    boolean exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        int style = ((StyleSpan) ss[i]).getStyle();
-                        if (style == android.graphics.Typeface.ITALIC) {
-                            str.removeSpan(ss[i]);
-                            exists = true;
-                        }
-                    }
-
-                    if (!exists) {
-                        str.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC),
-                                selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                    toggleButton.setChecked(false);
-                } else if (tag.equals("u")) {
-
-                    UnderlineSpan[] ss = str.getSpans(selectionStart, selectionEnd,
-                            UnderlineSpan.class);
-
-                    boolean exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        str.removeSpan(ss[i]);
-                        exists = true;
-                    }
-
-                    if (!exists) {
-                        str.setSpan(new UnderlineSpan(), selectionStart, selectionEnd,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-
-                    toggleButton.setChecked(false);
-                } else if (tag.equals("strike")) {
-
-                    StrikethroughSpan[] ss = str.getSpans(selectionStart, selectionEnd,
-                            StrikethroughSpan.class);
-
-                    boolean exists = false;
-                    for (int i = 0; i < ss.length; i++) {
-                        str.removeSpan(ss[i]);
-                        exists = true;
-                    }
-
-                    if (!exists) {
-                        str.setSpan(new StrikethroughSpan(), selectionStart, selectionEnd,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-
-                    toggleButton.setChecked(false);
-                }
-            }
-        } else {
-            String content = contentText.getText().toString();
-            if (selectionEnd > selectionStart) {
-                contentText.setText(content.substring(0, selectionStart) + startTag
-                        + content.substring(selectionStart, selectionEnd) + endTag
-                        + content.substring(selectionEnd, content.length()));
-
-                toggleButton.setChecked(false);
-                contentText.setSelection(selectionStart
-                        + content.substring(selectionStart, selectionEnd).length()
-                        + startTag.length() + endTag.length());
-            } else if (toggleButton.isChecked()) {
-                contentText.setText(content.substring(0, selectionStart) + startTag
-                        + content.substring(selectionStart, content.length()));
-                contentText.setSelection(selectionEnd + startTag.length());
-            } else if (!toggleButton.isChecked()) {
-                contentText.setText(content.substring(0, selectionStart) + endTag
-                        + content.substring(selectionStart, content.length()));
-                contentText.setSelection(selectionEnd + endTag.length());
-            }
-        }
-
-    }
-
-    private void addMedia(String imgPath, Uri curStream) {
-        selectedImageIDs.add(selectedImageCtr, curStream);
-        imageUrl.add(selectedImageCtr, imgPath);
-        selectedImageCtr++;
-
-        if (!imgPath.contains("video")) {
-
-            String[] projection = new String[] {
-                    Images.Thumbnails._ID,
-                    Images.Thumbnails.DATA,
-                    Images.Media.ORIENTATION
-            };
-            String orientation = "", path = "";
-            Cursor cur = managedQuery(curStream, projection, null, null, null);
-            File jpeg = null;
-            if (cur != null) {
-                String thumbData = "";
-
-                if (cur.moveToFirst()) {
-
-                    int dataColumn, orientationColumn;
-
-                    dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                    orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-
-                    thumbData = cur.getString(dataColumn);
-                    orientation = cur.getString(orientationColumn);
-                }
-
-                jpeg = new File(thumbData);
-                path = thumbData;
-            } else {
-                path = curStream.toString().replace("file://", "");
-                jpeg = new File(curStream.toString().replace("file://", ""));
-
-            }
-
-            imageTitle = jpeg.getName();
-
-            byte[] finalBytes = null;
-
-            byte[] bytes = new byte[(int) jpeg.length()];
-
-            DataInputStream in = null;
-            try {
-                in = new DataInputStream(new FileInputStream(jpeg));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                in.readFully(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            ImageHelper ih = new ImageHelper();
-
-            if (orientation == "") {
-                orientation = ih.getExifOrientation(path, orientation);
-            }
-
-            imageTitle = jpeg.getName();
-
-            finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
-
-            Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
-            imgThumbs.add(resizedBitmap);
-
-        } else {
-            imgThumbs.add("video");
-        }
-
-        Gallery gallery = (Gallery) findViewById(R.id.gallery);
-        gallery.setVisibility(View.VISIBLE);
-        gallery.setAdapter(new ImageAdapter(EditPost.this));
-        Button clearMedia = (Button) findViewById(R.id.clearPicture);
-        clearMedia.setVisibility(View.VISIBLE);
-
-    }
-
-    public class ImageAdapter extends BaseAdapter {
-        private Context mContext;
-
-        public ImageAdapter(Context c) {
-            mContext = c;
-        }
-
-        public int getCount() {
-            return selectedImageIDs.size();
-        }
-
-        public Object getItem(int position) {
-            return null;
-        }
-
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        // create a new ImageView for each item referenced by the Adapter
-        public View getView(int position, View convertView, ViewGroup parent) {
-            boolean isVideo = false;
-            ViewHolder holder;
-            if (convertView == null) { // if it's not recycled, initialize some
-                // attributes
-                convertView = new ImageView(mContext);
-                holder = new ViewHolder();
-
-                holder.imageView = (ImageView) convertView;
-
-                int width, height;
-                if (isLargeScreen) {
-                    width = 240;
-                    height = 160;
-                } else {
-                    width = 125;
-                    height = 100;
-                }
-                holder.imageView.setLayoutParams(new Gallery.LayoutParams(width, height));
-                holder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                holder.imageView.setBackgroundResource(R.drawable.wordpress_gallery_background);
-
-                Uri tempURI = (Uri) selectedImageIDs.get(position);
-
-                if (!tempURI.toString().contains("video")) {
-
-                } else {
-                    holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
-                    isVideo = true;
-                }
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            if (!isVideo) {
-                holder.imageView.setImageBitmap((Bitmap) imgThumbs.get(position));
-            }
-
-            // holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
-
-            return convertView;
-
-        }
-
-        class ViewHolder {
-            ImageView imageView;
-        }
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null || requestCode == 4) {
-            Bundle extras;
-            switch (requestCode) {
-                case 0:
-                    extras = data.getExtras();
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    extras = data.getExtras();
-                    String linkText = extras.getString("linkText");
-                    if (linkText.equals("http://") != true) {
-
-                        if (linkText.equals("CANCEL") != true) {
-
-                            EditText contentText = (EditText) findViewById(R.id.postContent);
-
-                            int selectionStart = contentText.getSelectionStart();
-
-                            int selectionEnd = contentText.getSelectionEnd();
-
-                            if (selectionStart > selectionEnd) {
-                                int temp = selectionEnd;
-                                selectionEnd = selectionStart;
-                                selectionStart = temp;
-                            }
-
-                            if (localDraft || isNew) {
-                                Spannable str = contentText.getText();
-                                str.setSpan(new URLSpan(linkText), selectionStart, selectionEnd,
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            } else {
-                                String textToLink = contentText.getText().toString().substring(
-                                        selectionStart, selectionEnd);
-                                textToLink = "<a href=\"" + linkText + "\">" + textToLink + "</a>";
-                                String firstHalf = contentText.getText().toString().substring(0,
-                                        selectionStart);
-                                String lastHalf = contentText.getText().toString().substring(
-                                        selectionEnd, contentText.getText().toString().length());
-                                contentText.setText(firstHalf + textToLink + lastHalf);
-                                Editable etext = (Editable) contentText.getText();
-                                Selection.setSelection(etext, selectionStart + textToLink.length());
-                            }
-                        }
-                    }
-                    break;
-                case 3:
-
-                    Uri imageUri = data.getData();
-                    String imgPath = imageUri.toString();
-
-                    addMedia(imgPath, imageUri);
-                    break;
-                case 4:
-                    if (resultCode == Activity.RESULT_OK) {
-
-                        // http://code.google.com/p/android/issues/detail?id=1480
-                        File f = null;
-                        int sdk_int = 0;
-                        try {
-                            sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
-                        } catch (Exception e1) {
-                            sdk_int = 3; // assume they are on cupcake
-                        }
-                        if (data != null && (sdk_int <= 4)) { // Older HTC Sense
-                            // Devices return
-                            // different data
-                            // for image
-                            // capture
-                            try {
-                                String[] projection;
-                                Uri imagePath = data.getData();
-                                projection = new String[] {
-                                        Images.Media._ID,
-                                        Images.Media.DATA,
-                                        Images.Media.MIME_TYPE,
-                                        Images.Media.ORIENTATION
-                                };
-
-                                Cursor cur = this.managedQuery(imagePath, projection, null, null,
-                                        null);
-                                String thumbData = "";
-
-                                if (cur.moveToFirst()) {
-
-                                    int dataColumn;
-
-                                    dataColumn = cur.getColumnIndex(Images.Media.DATA);
-
-                                    thumbData = cur.getString(dataColumn);
-                                    f = new File(thumbData);
-                                }
-                            } catch (Exception e) {
-                                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                                        EditPost.this);
-                                dialogBuilder.setTitle(getResources().getText(R.string.error));
-                                dialogBuilder.setMessage(e.getMessage());
-                                dialogBuilder.setPositiveButton("OK", new
-                                        DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
-                                                // just close the dialog
-                                            }
-                                        });
-                                dialogBuilder.setCancelable(true);
-                                if (!isFinishing()) {
-                                    dialogBuilder.create().show();
-                                }
-                            }
-                        } else {
-                            f = new File(SD_CARD_TEMP_DIR);
-                        }
-                        try {
-                            Uri capturedImage =
-                                    Uri.parse(android.provider.MediaStore.Images.Media.insertImage(
-                                            getContentResolver(),
-                                            f.getAbsolutePath(), null, null));
-
-                            Log.i("camera", "Selected image: " + capturedImage.toString());
-
-                            f.delete();
-
-                            addMedia(capturedImage.toString(), capturedImage);
-
-                        } catch (FileNotFoundException e) {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                                    EditPost.this);
-                            dialogBuilder.setTitle(getResources().getText(R.string.file_error));
-                            dialogBuilder.setMessage(getResources().getText(
-                                    R.string.file_error_encountered));
-                            dialogBuilder.setPositiveButton("OK", new
-                                    DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            // just close the dialog
-                                        }
-                                    });
-                            dialogBuilder.setCancelable(true);
-                            if (!isFinishing()) {
-                                dialogBuilder.create().show();
-                            }
-                        }
-
-                    } else {
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-                        dialogBuilder.setTitle(getResources().getText(R.string.file_error));
-                        dialogBuilder.setMessage(getResources().getText(
-                                R.string.file_error_encountered));
-                        dialogBuilder.setPositiveButton("OK", new
-                                DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        // just close the dialog
-                                    }
-                                });
-                        dialogBuilder.setCancelable(true);
-                        if (!isFinishing()) {
-                            dialogBuilder.create().show();
-                        }
-                    }
-
-                    break;
-
-                case 5:
-                    extras = data.getExtras();
-                    String cats = extras.getString("selectedCategories");
-                    String[] splitCats = cats.split(",");
-                    categories = new JSONArray();
-                    for (int i = 0; i < splitCats.length; i++) {
-                        categories.put(splitCats[i]);
-                    }
-                    TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
-                    selectedCategoriesTV.setText(getResources().getText(
-                            R.string.selected_categories)
-                            + " " + getCategoriesCSV());
-                    break;
-                case 6:
-
-                    Uri videoUri = data.getData();
-                    String videoPath = videoUri.toString();
-
-                    addMedia(videoPath, videoUri);
-
-                    break;
-                case 7:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideo = data.getData();
-
-                        addMedia(capturedVideo.toString(), capturedVideo);
-                    } else {
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-                        dialogBuilder.setTitle(getResources().getText(R.string.file_error));
-                        dialogBuilder.setMessage(getResources().getText(
-                                R.string.file_error_encountered));
-                        dialogBuilder.setPositiveButton("OK", new
-                                DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        // just close the dialog
-                                    }
-                                });
-                        dialogBuilder.setCancelable(true);
-                        if (!isFinishing()) {
-                            dialogBuilder.create().show();
-                        }
-                    }
-
-                    break;
-            }
-
-        }// end null check
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == ID_DIALOG_POSTING) {
-            postingDialog = new ProgressDialog(this);
-            postingDialog.setTitle(getResources().getText(R.string.uploading_content));
-            postingDialog.setMessage(getResources().getText(
-                    (isPage) ? R.string.attempting_edit_page : R.string.attempting_edit_post));
-            postingDialog.setIndeterminate(true);
-            postingDialog.setCancelable(true);
-            return postingDialog;
-        } else if (id == ID_DIALOG_LOADING) {
-            ProgressDialog loadingDialog = new ProgressDialog(this);
-            loadingDialog.setMessage(getResources().getText(R.string.loading));
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(true);
-            return loadingDialog;
-        } else if (id == ID_DIALOG_DATE) {
-            DatePickerDialog dpd = new DatePickerDialog(this,
-                    mDateSetListener,
-                    mYear, mMonth, mDay);
-            dpd.setTitle("");
-            return dpd;
-        } else if (id == ID_DIALOG_TIME) {
-            TimePickerDialog tpd = new TimePickerDialog(this,
-                    mTimeSetListener,
-                    mHour, mMinute, false);
-            tpd.setTitle("");
-            return tpd;
-        }
-
-        return super.onCreateDialog(id);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-
-        super.onConfigurationChanged(newConfig);
-    }
-
-    public boolean savePost() {
-
-        // grab the form data
-        EditText titleET = (EditText) findViewById(R.id.title);
-        String title = titleET.getText().toString();
-        EditText contentET = (EditText) findViewById(R.id.postContent);
-        String content = EscapeUtils.unescapeHtml(Html.toHtml(contentET.getText()));
-        EditText passwordET = (EditText) findViewById(R.id.post_password);
-        String password = passwordET.getText().toString();
-        // replace duplicate <p> tags so there's not duplicates, trac #86
-        content = content.replace("<p><p>", "<p>");
-        content = content.replace("</p></p>", "</p>");
-        content = content.replace("<br><br>", "<br>");
-
-        TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
-        String pubDate = tvPubDate.getText().toString();
-
-        long pubDateTimestamp = 0;
-        if (!pubDate.equals(getResources().getText(R.string.immediately))) {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-            Date d = new Date();
-            try {
-                d = sdf.parse(pubDate);
-                pubDateTimestamp = d.getTime();
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (java.text.ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
-
-        String tags = "";
-        if (!isPage) {
-            EditText tagsET = (EditText) findViewById(R.id.tags);
-            tags = tagsET.getText().toString();
-        }
-
-        String images = "";
-        boolean success = false;
-
-        if (content.equals("") && selectedImageIDs.size() == 0) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
-            dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
-            dialogBuilder.setPositiveButton("OK", new
-                    DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Just close the window
-                        }
-                    });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-
-            // update the images
-            for (int it = 0; it < selectedImageCtr; it++) {
-
-                images += selectedImageIDs.get(it).toString() + ",";
-
-            }
-
-            Spinner spinner = (Spinner) findViewById(R.id.status);
-            int selectedStatus = spinner.getSelectedItemPosition();
-            String status = "";
-            switch (selectedStatus) {
-                case 0:
-                    status = "publish";
-                    break;
-                case 1:
-                    status = "draft";
-                    break;
-                case 2:
-                    status = "pending";
-                    break;
-                case 3:
-                    status = "private";
-                    break;
-            }
-
-            Double latitude = 0.0;
-            Double longitude = 0.0;
-            if (blog.isLocation()) {
-
-                // attempt to get the device's location
-                try {
-                    latitude = curLocation.getLatitude();
-                    longitude = curLocation.getLongitude();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            // post format
-            Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
-            String postFormat = postFormats[postFormatSpinner.getSelectedItemPosition()];
-
-            if (isNew) {
-                post = new Post(id, title, content, images, pubDateTimestamp,
-                        categories.toString(), tags, status, password, latitude, longitude, isPage,
-                        postFormat, EditPost.this);
-                post.setLocalDraft(true);
-                success = post.save();
-            } else {
-                post.setTitle(title);
-                post.setDescription(content);
-                post.setMediaPaths(images);
-                post.setDate_created_gmt(pubDateTimestamp);
-                post.setCategories(categories);
-                post.setMt_keywords(tags);
-                post.setPost_status(status);
-                post.setWP_password(password);
-                post.setLatitude(latitude);
-                post.setLongitude(longitude);
-                post.setWP_post_form(postFormat);
-                success = post.update();
-            }
-
-        }// if/then for valid settings
-
-        return success;
-    }
-
-    @Override
-    public boolean onKeyDown(int i, KeyEvent event) {
-
-        // only intercept back button press
-        if (i == KeyEvent.KEYCODE_BACK) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-            dialogBuilder.setMessage(getResources().getText(
-                    (isPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new
-                      DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                              Bundle bundle = new Bundle();
-
-                              bundle.putString("returnStatus", "CANCEL");
-                              Intent mIntent = new Intent();
-                              mIntent.putExtras(bundle);
-                              setResult(RESULT_OK, mIntent);
-                              finish();
-                          }
-                      });
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new
-                      DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface dialog, int whichButton) {
-                              // just close the dialog window
-                          }
-                      });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        }
-
-        return false;
-    }
-
-    public void onCreateContextMenu(
-              ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-        menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
-        menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-        menu.add(0, 3, 0, getResources().getText(R.string.take_video));
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case 0:
-                launchPictureLibrary();
-                return true;
-            case 1:
-                launchCamera();
-                return true;
-            case 2:
-                launchVideoLibrary();
-                return true;
-            case 3:
-                launchVideoCamera();
-                return true;
-        }
-        return false;
-    }
-
-    private void launchVideoLibrary() {
-        Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
-        videoPickerIntent.setType("video/*");
-        startActivityForResult(videoPickerIntent, 6);
-    }
-
-    private void launchPictureLibrary() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, 3);
-    }
-
-    private void launchVideoCamera() {
-        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        startActivityForResult(takeVideoIntent, 7);
-    }
-
-    private void launchCamera() {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
-            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
-            dialogBuilder.setPositiveButton("OK", new
-                    DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // just close the dialog
-
-                        }
-                    });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory() + File.separator
-                    + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
-            Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri
-                    .fromFile(new File(SD_CARD_TEMP_DIR)));
-
-            // make sure the directory we plan to store the recording in exists
-            File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
-            if (!directory.exists() && !directory.mkdirs()) {
-                try {
-                    throw new IOException("Path to file could not be created.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            startActivityForResult(takePictureFromCameraIntent, 4);
-        }
-    }
-
-    /** Register for the updates when Activity is in foreground */
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    /** Stop the updates when Activity is paused */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (!isPage && blog.isLocation() && locationActive) {
-            lm.removeUpdates(this);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onPause();
-        if (!isPage && blog.isLocation() && locationActive) {
-            lm.removeUpdates(this);
-        }
-    }
-
-    public void onLocationChanged(Location location) {
-        curLocation = location;
-        new getAddressTask().execute(location.getLatitude(), location.getLongitude());
-        lm.removeUpdates(this);
-    }
-
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    private class getAddressTask extends AsyncTask<Double, Void, String> {
-
-        protected void onPostExecute(String result) {
-            TextView map = (TextView) findViewById(R.id.locationText);
-            map.setText(result);
-        }
-
-        @Override
-        protected String doInBackground(Double... args) {
-            Geocoder gcd = new Geocoder(EditPost.this, Locale.getDefault());
-            String finalText = "";
-            List<Address> addresses;
-            try {
-                addresses = gcd.getFromLocation(args[0], args[1], 1);
-                if (addresses.size() > 0) {
-                    finalText = addresses.get(0).getLocality() + ", "
-                            + addresses.get(0).getAdminArea();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return finalText;
-        }
-
-    }
-
-    protected void setContent() {
-        Intent intent = getIntent();
-        String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-        if (text != null) {
-            EditText titleET = (EditText) findViewById(R.id.title);
-
-            if (title != null) {
-                titleET.setText(title);
-            }
-
-            EditText contentET = (EditText) findViewById(R.id.postContent);
-            // It's a youtube video link! need to strip some parameters so the
-            // embed will work
-            if (text.contains("youtube_gdata")) {
-                text = text.replace("feature=youtube_gdata", "");
-                text = text.replace("&", "");
-                text = text.replace("_player", "");
-                text = text.replace("watch?v=", "v/");
-                text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\""
-                        + text
-                        + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\""
-                        + text
-                        + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
-                contentET.setText(text);
-            } else {
-                // add link tag around URLs, trac #64
-                String[] parts = text.split("\\s");
-                String finalText = "";
-
-                // Attempt to convert each item into an URL.
-                for (String item : parts)
-                    try {
-                        URL url = new URL(item);
-                        finalText += "<a href=\"" + url + "\">" + url + "</a> ";
-                        contentET.setText(Html.fromHtml(finalText));
-                        isUrl = true;
-                    } catch (MalformedURLException e) {
-                        finalText += item + " ";
-                        contentET.setText(finalText);
-                    }
-            }
-        } else {
-            String action = intent.getAction();
-            final String type = intent.getType();
-            final ArrayList<Uri> multi_stream;
-            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-            } else {
-                multi_stream = new ArrayList<Uri>();
-                multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
-            }
-
-            Vector<Serializable> params = new Vector<Serializable>();
-            params.add(multi_stream);
-            params.add(type);
-            new processAttachmentsTask().execute(params);
-        }
-
-    }
-
-    private class processAttachmentsTask extends AsyncTask<Vector<?>, Void, Boolean> {
-
-        protected void onPreExecute() {
-
-            showDialog(ID_DIALOG_LOADING);
-        }
-
-        protected void onPostExecute(Boolean result) {
-            dismissDialog(ID_DIALOG_LOADING);
-            Gallery gallery = (Gallery) findViewById(R.id.gallery);
-            gallery.setVisibility(View.VISIBLE);
-            gallery.setAdapter(new ImageAdapter(EditPost.this));
-            Button clearMedia = (Button) findViewById(R.id.clearPicture);
-            clearMedia.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Boolean doInBackground(Vector<?>... args) {
-            ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
-            String type = (String) args[0].get(1);
-            for (int i = 0; i < multi_stream.size(); i++) {
-                Uri curStream = (Uri) multi_stream.get(i);
-                if (curStream != null && type != null) {
-                    String imgPath = curStream.getEncodedPath();
-
-                    addMedia(imgPath, curStream, true);
-
-                }
-            }
-            return true;
-        }
-    }
-
-    private void addMedia(String imgPath, Uri curStream, boolean noUI) {
-        selectedImageIDs.add(selectedImageCtr, curStream);
-        imageUrl.add(selectedImageCtr, imgPath);
-        selectedImageCtr++;
-
-        if (!imgPath.contains("video")) {
-
-            String[] projection = new String[] {
-                    Images.Thumbnails._ID,
-                    Images.Thumbnails.DATA,
-                    Images.Media.ORIENTATION
-            };
-            String orientation = "", path = "";
-            Cursor cur = managedQuery(curStream, projection, null, null, null);
-            File jpeg = null;
-            if (cur != null) {
-                String thumbData = "";
-
-                if (cur.moveToFirst()) {
-
-                    int dataColumn, orientationColumn;
-
-                    dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                    orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
-
-                    thumbData = cur.getString(dataColumn);
-                    orientation = cur.getString(orientationColumn);
-                }
-
-                jpeg = new File(thumbData);
-                path = thumbData;
-            } else {
-                path = curStream.toString().replace("file://", "");
-                jpeg = new File(curStream.toString().replace("file://", ""));
-
-            }
-
-            imageTitle = jpeg.getName();
-
-            byte[] finalBytes = null;
-
-            byte[] bytes = new byte[(int) jpeg.length()];
-
-            DataInputStream in = null;
-            try {
-                in = new DataInputStream(new FileInputStream(jpeg));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                in.readFully(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            ImageHelper ih = new ImageHelper();
-
-            orientation = ih.getExifOrientation(path, orientation);
-
-            imageTitle = jpeg.getName();
-
-            finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
-
-            Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
-            imgThumbs.add(resizedBitmap);
-
-        } else {
-            imgThumbs.add("video");
-        }
-        if (!noUI) {
-            Gallery gallery = (Gallery) findViewById(R.id.gallery);
-            gallery.setVisibility(View.VISIBLE);
-            gallery.setAdapter(new ImageAdapter(EditPost.this));
-            Button clearMedia = (Button) findViewById(R.id.clearPicture);
-            clearMedia.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    protected void lbsCheck() {
-        if (blog.isLocation()) {
-            lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-            criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            criteria.setAltitudeRequired(false);
-            criteria.setBearingRequired(false);
-            criteria.setCostAllowed(true);
-            criteria.setPowerRequirement(Criteria.POWER_HIGH);
-
-            provider = lm.getBestProvider(criteria, true);
-            RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-            locationSection.setVisibility(View.VISIBLE);
-
-            if (isAction) {
-                enableLBSButtons();
-            }
-        }
-
-    }
-
-    private String getCategoriesCSV() {
-        String csv = "";
-        if (categories.length() > 0) {
-            for (int i = 0; i < categories.length(); i++) {
-                try {
-                    csv += categories.getString(i) + ",";
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            csv = csv.substring(0, csv.length() - 1);
-        }
-        return csv;
-    }
-
-    private DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-
-                public void onDateSet(DatePicker view, int year, int monthOfYear,
-                        int dayOfMonth) {
-                    mYear = year;
-                    mMonth = monthOfYear;
-                    mDay = dayOfMonth;
-
-                    showDialog(ID_DIALOG_TIME);
-
-                }
-            };
-
-    private TimePickerDialog.OnTimeSetListener mTimeSetListener =
-            new TimePickerDialog.OnTimeSetListener() {
-
-                public void onTimeSet(TimePicker view, int hour, int minute) {
-                    mHour = hour;
-                    mMinute = minute;
-                    String AMPM = "AM";
-                    if (mHour >= 12) {
-                        AMPM = "PM";
-                        if (mHour > 12) {
-                            mHour -= 12;
-                        }
-                    }
-                    TextView pubDate = (TextView) findViewById(R.id.pubDate);
-                    String[] shortMonths = new DateFormatSymbols().getShortMonths();
-                    pubDate.setText(shortMonths[mMonth] + " " + String.format("%02d", mDay) + ", "
-                            + mYear + " " + String.format("%02d", mHour) + ":"
-                            + String.format("%02d", mMinute) + " " + AMPM);
-
-                    isCustomPubDate = true;
-                }
-
-            };
+	/** Called when the activity is first created. */
+	public static long globalData = 0;
+	public ProgressDialog pd;
+	public boolean postStatus = false;
+	String[] mFiles = null;
+	public String thumbnailPath = null;
+	public String imagePath = null;
+	public String imageTitle = null;
+	public Vector<String> imageUrl = new Vector<String>();
+	public Vector<Object> thumbnailUrl = new Vector<Object>();
+	public String finalResult = null;
+	Vector<String> selectedCategories = new Vector<String>();
+	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
+	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
+	public Boolean newStart = true;
+	public String categoryErrorMsg = "", accountName = "",
+			SD_CARD_TEMP_DIR = "", mediaErrorMsg = "";
+	private JSONArray categories;
+	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
+	private int selectedImageCtr = 0, id;
+	long postID;
+	private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2,
+			ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
+	public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug,
+			option;
+	public Boolean localDraft = false, centerThumbnail = false,
+			xmlrpcError = false, isPage = false, isNew = false,
+			isAction = false, isUrl = false, locationActive = false,
+			isLargeScreen = false, isCustomPubDate = false;
+	public Vector<Object> imgThumbs = new Vector<Object>();
+	LocationManager lm;
+	Criteria criteria;
+	String provider;
+	Location curLocation;
+	ProgressDialog postingDialog;
+	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
+	// date holders
+	private int mYear, mMonth, mDay, mHour, mMinute;
+	private Blog blog;
+	private Post post;
+	// post formats
+	String[] postFormats;
+	String[] postFormatTitles = null;
+
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		Bundle extras = getIntent().getExtras();
+		categories = new JSONArray();
+		String action = getIntent().getAction();
+		if (Intent.ACTION_SEND.equals(action)
+				|| Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+			// we arrived here from a share action
+			isAction = true;
+			isNew = true;
+			WordPressDB settingsDB = new WordPressDB(this);
+			Vector<?> accounts = settingsDB.getAccounts(this);
+
+			if (accounts.size() > 0) {
+
+				final String blogNames[] = new String[accounts.size()];
+				final int accountIDs[] = new int[accounts.size()];
+
+				for (int i = 0; i < accounts.size(); i++) {
+
+					HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
+					try {
+						blogNames[i] = EscapeUtils.unescapeHtml(curHash.get(
+								"blogName").toString());
+					} catch (Exception e) {
+						blogNames[i] = "(No Blog Title)";
+					}
+					accountIDs[i] = (Integer) curHash.get("id");
+					blog = new Blog(accountIDs[i], EditPost.this);
+
+				}
+
+				// Don't prompt if they have one blog only
+				if (accounts.size() != 1) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle(getResources().getText(
+							R.string.select_a_blog));
+					builder.setItems(blogNames,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int item) {
+									id = accountIDs[item];
+									blog = new Blog(id, EditPost.this);
+									accountName = blogNames[item];
+									setTitle(accountName
+											+ " - "
+											+ getResources()
+													.getText(
+															(isPage) ? R.string.new_page
+																	: R.string.new_post));
+									setContent();
+									lbsCheck();
+
+								}
+							});
+					AlertDialog alert = builder.create();
+					alert.show();
+				} else {
+					id = accountIDs[0];
+					blog = new Blog(id, EditPost.this);
+					accountName = blogNames[0];
+					setTitle(accountName
+							+ " - "
+							+ getResources().getText(
+									(isPage) ? R.string.new_page
+											: R.string.new_post));
+					setContent();
+				}
+			} else {
+				// no account, load main view to load new account view
+				Intent i = new Intent(this, Dashboard.class);
+				Toast.makeText(getApplicationContext(),
+						getResources().getText(R.string.no_account),
+						Toast.LENGTH_LONG).show();
+				startActivity(i);
+				finish();
+			}
+
+		} else {
+			// clear up some variables
+			selectedImageIDs.clear();
+			selectedImageCtr = 0;
+
+			if (!isPage) {
+				lbsCheck();
+			}
+
+		}
+		if (extras != null && !isAction) {
+			id = WordPress.currentBlog.getId();
+			blog = new Blog(id, this);
+			accountName = EscapeUtils.unescapeHtml(extras
+					.getString("accountName"));
+			postID = extras.getLong("postID");
+			localDraft = extras.getBoolean("localDraft", false);
+			isPage = extras.getBoolean("isPage", false);
+			isNew = extras.getBoolean("isNew", false);
+			option = extras.getString("option");
+			if (!isNew)
+				post = new Post(id, postID, isPage, this);
+		}
+
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
+				.getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		if (height > width) {
+			width = height;
+		}
+		if (width > 480) {
+			isLargeScreen = true;
+		}
+
+		if (isPage) {
+			setContentView(R.layout.edit_page);
+		} else {
+			setContentView(R.layout.edit);
+			if (blog.getPostFormats().equals("")) {
+				Vector args = new Vector();
+				args.add(blog);
+				args.add(this);
+				new ApiHelper.getPostFormatsTask().execute(args);
+				postFormatTitles = getResources().getStringArray(
+						R.array.post_formats_array);
+				String defaultPostFormatTitles[] = { "aside", "audio", "chat",
+						"gallery", "image", "link", "quote", "standard",
+						"status", "video" };
+				postFormats = defaultPostFormatTitles;
+			} else {
+				try {
+					JSONObject jsonPostFormats = new JSONObject(
+							blog.getPostFormats());
+					postFormats = new String[jsonPostFormats.length()];
+					postFormatTitles = new String[jsonPostFormats.length()];
+					Iterator it = jsonPostFormats.keys();
+					int i = 0;
+					while (it.hasNext()) {
+						String key = (String) it.next();
+						String val = (String) jsonPostFormats.get(key);
+						postFormats[i] = key;
+						postFormatTitles[i] = val;
+						i++;
+					}
+
+					// note: submit patch to wp.org to sort post format server
+					// side?
+					java.util.Arrays.sort(postFormats);
+					java.util.Arrays.sort(postFormatTitles);
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			Spinner pfSpinner = (Spinner) findViewById(R.id.postFormat);
+			ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_spinner_item, postFormatTitles);
+			pfAdapter
+					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			pfSpinner.setAdapter(pfAdapter);
+			String activePostFormat = "standard";
+			if (!isNew) {
+				if (!post.getWP_post_format().equals(""))
+					activePostFormat = post.getWP_post_format();
+			}
+			for (int i = 0; i < postFormats.length; i++) {
+				if (postFormats[i].equals(activePostFormat))
+					pfSpinner.setSelection(i);
+			}
+
+		}
+
+		String[] items = new String[] {
+				getResources().getString(R.string.publish_post),
+				getResources().getString(R.string.draft),
+				getResources().getString(R.string.pending_review),
+				getResources().getString(R.string.post_private) };
+		Spinner spinner = (Spinner) findViewById(R.id.status);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, items);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+
+		if (isNew) {
+			setTitle(accountName
+					+ " - "
+					+ getResources().getText(
+							(isPage) ? R.string.new_page : R.string.new_post));
+		} else {
+			setTitle(accountName
+					+ " - "
+					+ getResources().getText(
+							(isPage) ? R.string.edit_page : R.string.edit_post));
+		}
+
+		if (isNew) {
+			if (!isAction) {
+				if (!isPage) {
+					enableLBSButtons();
+				}
+			}
+
+			// handles selections from the quick action bar
+			if (option != null) {
+				if (option.equals("newphoto")) {
+					launchCamera();
+				} else if (option.equals("photolibrary")) {
+					launchPictureLibrary();
+				}
+				if (option.equals("newvideo")) {
+					launchVideoCamera();
+				} else if (option.equals("videolibrary")) {
+					launchVideoLibrary();
+				}
+			}
+
+		} else {
+			// no upload now button for uploaded posts
+			if (post.isUploaded()) {
+				Button uploadNowButton = (Button) findViewById(R.id.cancel);
+				uploadNowButton.setVisibility(View.GONE);
+			}
+
+			EditText titleET = (EditText) findViewById(R.id.title);
+			EditText contentET = (EditText) findViewById(R.id.postContent);
+			EditText passwordET = (EditText) findViewById(R.id.post_password);
+
+			titleET.setText(post.getTitle());
+
+			contentET.setText(Html.fromHtml(post.getDescription()
+					+ post.getMt_text_more()));
+
+			long pubDate = post.getDate_created_gmt();
+			if (pubDate != 0) {
+				try {
+					Date date = new Date(pubDate);
+					SimpleDateFormat sdf = new SimpleDateFormat(
+							"MMM dd, yyyy 'at' hh:mm a");
+					String sPubDate = sdf.format(date);
+					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+					tvPubDate.setText(sPubDate);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (post.getWP_password() != null)
+				passwordET.setText(post.getWP_password());
+
+			if (post.getPost_status() != null) {
+				String status = post.getPost_status();
+
+				if (status.equals("publish")) {
+					spinner.setSelection(0, true);
+				} else if (status.equals("draft")) {
+					spinner.setSelection(1, true);
+				} else if (status.equals("pending")) {
+					spinner.setSelection(2, true);
+				} else if (status.equals("private")) {
+					spinner.setSelection(3, true);
+				}
+			}
+
+			String picturePaths = post.getMediaPaths();
+			if (!picturePaths.equals("")) {
+				String[] pPaths = picturePaths.split(",");
+
+				for (int i = 0; i < pPaths.length; i++) {
+					Uri imagePath = Uri.parse(pPaths[i]);
+					addMedia(imagePath.getEncodedPath(), imagePath);
+				}
+
+			}
+
+			if (!isPage) {
+				if (post.getCategories() != null) {
+					categories = post.getCategories();
+					if (!categories.equals("")) {
+
+						for (int i = 0; i < categories.length(); i++) {
+							try {
+								selectedCategories.add(categories.getString(i));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+
+						TextView tvCategories = (TextView) findViewById(R.id.selectedCategories);
+						tvCategories.setText(getResources().getText(
+								R.string.selected_categories)
+								+ " " + getCategoriesCSV());
+
+					}
+				}
+			}
+
+			if (blog.isLocation()) {
+				enableLBSButtons();
+			}
+
+			Double latitude = post.getLatitude();
+			Double longitude = post.getLongitude();
+
+			if (latitude != 0.0) {
+				new getAddressTask().execute(latitude, longitude);
+			}
+
+			if (blog.isLocation() && latitude > 0) {
+				Button updateLocation = (Button) findViewById(R.id.updateLocation);
+
+				updateLocation.setOnClickListener(new Button.OnClickListener() {
+					public void onClick(View v) {
+
+						lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+						lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+								20000, 0, EditPost.this);
+						lm.requestLocationUpdates(
+								LocationManager.NETWORK_PROVIDER, 20000, 0,
+								EditPost.this);
+						locationActive = true;
+					}
+				});
+
+				RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+				locationSection.setVisibility(View.VISIBLE);
+			} else if (blog.isLocation()) {
+				lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000,
+						0, EditPost.this);
+				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+						20000, 0, EditPost.this);
+				locationActive = true;
+
+				RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+				locationSection.setVisibility(View.VISIBLE);
+			}
+
+			String tags = post.getMt_keywords();
+			if (!tags.equals("")) {
+				EditText tagsET = (EditText) findViewById(R.id.tags);
+				tagsET.setText(tags);
+			}
+		}
+
+		if (!isPage) {
+			Button selectCategories = (Button) findViewById(R.id.selectCategories);
+
+			selectCategories.setOnClickListener(new Button.OnClickListener() {
+				public void onClick(View v) {
+
+					Bundle bundle = new Bundle();
+					bundle.putInt("id", id);
+					if (categories.length() > 0) {
+						bundle.putString("categoriesCSV", getCategoriesCSV());
+					}
+					Intent i = new Intent(EditPost.this, SelectCategories.class);
+					i.putExtras(bundle);
+					startActivityForResult(i, 5);
+				}
+			});
+		}
+
+		final Button saveButton = (Button) findViewById(R.id.post);
+
+		saveButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				boolean result = savePost();
+				if (result) {
+					if (post.isUploaded())
+						post.upload();
+					finish();
+				}
+			}
+		});
+		final Button uploadNowButton = (Button) findViewById(R.id.cancel);
+
+		uploadNowButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				boolean result = savePost();
+				post.upload();
+				if (result) {
+					Bundle bundle = new Bundle();
+					if (isAction) {
+						Intent mIntent = new Intent(EditPost.this,
+								Dashboard.class);
+						mIntent.putExtras(bundle);
+						startActivity(mIntent);
+					}
+
+					finish();
+				}
+			}
+		});
+
+		final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);
+
+		registerForContextMenu(addPictureButton);
+
+		addPictureButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				addPictureButton.performLongClick();
+
+			}
+		});
+
+		final EditText contentEdit = (EditText) findViewById(R.id.postContent);
+		contentEdit.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable s) {
+				if (localDraft || isNew) {
+					// add style as the user types if a toggle button is enabled
+					ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+					ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+					ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+					ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+					ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+					int position = Selection.getSelectionStart(contentEdit
+							.getText());
+					if (position < 0) {
+						position = 0;
+					}
+
+					if (position > 0) {
+
+						if (styleStart > position || position > (cursorLoc + 1)) {
+							// user changed cursor location, reset
+							if (position - cursorLoc > 1) {
+								// user pasted text
+								styleStart = cursorLoc;
+							} else {
+								styleStart = position - 1;
+							}
+						}
+
+						if (boldButton.isChecked()) {
+							StyleSpan[] ss = s.getSpans(styleStart, position,
+									StyleSpan.class);
+
+							for (int i = 0; i < ss.length; i++) {
+								if (ss[i].getStyle() == android.graphics.Typeface.BOLD) {
+									s.removeSpan(ss[i]);
+								}
+							}
+							s.setSpan(new StyleSpan(
+									android.graphics.Typeface.BOLD),
+									styleStart, position,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						if (emButton.isChecked()) {
+							StyleSpan[] ss = s.getSpans(styleStart, position,
+									StyleSpan.class);
+
+							for (int i = 0; i < ss.length; i++) {
+								if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
+									s.removeSpan(ss[i]);
+								}
+							}
+							s.setSpan(new StyleSpan(
+									android.graphics.Typeface.ITALIC),
+									styleStart, position,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						if (bquoteButton.isChecked()) {
+
+							QuoteSpan[] ss = s.getSpans(styleStart, position,
+									QuoteSpan.class);
+
+							for (int i = 0; i < ss.length; i++) {
+								s.removeSpan(ss[i]);
+							}
+							s.setSpan(new QuoteSpan(), styleStart, position,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						if (underlineButton.isChecked()) {
+							UnderlineSpan[] ss = s.getSpans(styleStart,
+									position, UnderlineSpan.class);
+
+							for (int i = 0; i < ss.length; i++) {
+								s.removeSpan(ss[i]);
+							}
+							s.setSpan(new UnderlineSpan(), styleStart,
+									position,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						if (strikeButton.isChecked()) {
+							StrikethroughSpan[] ss = s.getSpans(styleStart,
+									position, StrikethroughSpan.class);
+
+							for (int i = 0; i < ss.length; i++) {
+								s.removeSpan(ss[i]);
+							}
+							s.setSpan(new StrikethroughSpan(), styleStart,
+									position,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+					}
+
+					cursorLoc = Selection.getSelectionStart(contentEdit
+							.getText());
+				}
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// unused
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// unused
+			}
+
+		});
+
+		final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+
+		boldButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(boldButton, "strong");
+			}
+		});
+
+		final Button linkButton = (Button) findViewById(R.id.link);
+
+		linkButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				TextView contentText = (TextView) findViewById(R.id.postContent);
+
+				int selectionStart = contentText.getSelectionStart();
+
+				styleStart = selectionStart;
+
+				int selectionEnd = contentText.getSelectionEnd();
+
+				if (selectionStart > selectionEnd) {
+					int temp = selectionEnd;
+					selectionEnd = selectionStart;
+					selectionStart = temp;
+				}
+
+				if (selectionStart == -1
+						|| selectionStart == contentText.getText().toString()
+								.length() || (selectionStart == selectionEnd)) {
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+							EditPost.this);
+					dialogBuilder.setTitle(getResources().getText(
+							R.string.no_text_selected));
+					dialogBuilder.setMessage(getResources().getText(
+							R.string.select_text_to_link)
+							+ " "
+							+ getResources()
+									.getText(R.string.howto_select_text));
+					dialogBuilder.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									// just close the dialog
+
+								}
+							});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				} else {
+					Intent i = new Intent(EditPost.this, Link.class);
+
+					startActivityForResult(i, 2);
+				}
+			}
+		});
+
+		final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+
+		emButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(emButton, "em");
+			}
+		});
+
+		final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+
+		underlineButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(underlineButton, "u");
+			}
+		});
+
+		final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+
+		strikeButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(strikeButton, "strike");
+			}
+		});
+
+		final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+
+		bquoteButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(bquoteButton, "blockquote");
+
+			}
+		});
+
+		final Button clearPictureButton = (Button) findViewById(R.id.clearPicture);
+
+		clearPictureButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				imageUrl.clear();
+				thumbnailUrl.clear();
+				selectedImageIDs = new Vector<Uri>();
+				selectedImageCtr = 0;
+				imgThumbs.clear();
+				Gallery gallery = (Gallery) findViewById(R.id.gallery);
+				gallery.setVisibility(View.GONE);
+				gallery.setAdapter(null);
+				clearPictureButton.setVisibility(View.GONE);
+
+			}
+		});
+
+		Button pubDate = (Button) findViewById(R.id.pubDateButton);
+		pubDate.setOnClickListener(new TextView.OnClickListener() {
+			public void onClick(View v) {
+
+				// get the current date
+				Calendar c = Calendar.getInstance();
+				mYear = c.get(Calendar.YEAR);
+				mMonth = c.get(Calendar.MONTH);
+				mDay = c.get(Calendar.DAY_OF_MONTH);
+				mHour = c.get(Calendar.HOUR_OF_DAY);
+				mMinute = c.get(Calendar.MINUTE);
+
+				showDialog(ID_DIALOG_DATE);
+
+			}
+		});
+
+	}
+
+	private void enableLBSButtons() {
+
+		final Button viewMap = (Button) findViewById(R.id.viewMap);
+
+		viewMap.setOnClickListener(new TextView.OnClickListener() {
+			public void onClick(View v) {
+
+				Double latitude = 0.0;
+				try {
+					latitude = curLocation.getLatitude();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (latitude != 0.0) {
+					String uri = "geo:" + latitude + ","
+							+ curLocation.getLongitude();
+					startActivity(new Intent(
+							android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+				} else {
+					Toast.makeText(EditPost.this,
+							getResources().getText(R.string.location_toast),
+							Toast.LENGTH_SHORT).show();
+				}
+
+			}
+		});
+
+		if (isNew && blog.isLocation()) {
+
+			Button updateLocation = (Button) findViewById(R.id.updateLocation);
+			updateLocation.setVisibility(View.GONE);
+
+			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 0,
+					EditPost.this);
+			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000,
+					0, EditPost.this);
+			locationActive = true;
+
+			RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+			locationSection.setVisibility(View.VISIBLE);
+		}
+	}
+
+	protected void formatBtnClick(ToggleButton toggleButton, String tag) {
+		EditText contentText = (EditText) findViewById(R.id.postContent);
+
+		int selectionStart = contentText.getSelectionStart();
+
+		String startTag = "<" + tag + ">";
+		String endTag = "</" + tag + ">";
+
+		styleStart = selectionStart;
+
+		int selectionEnd = contentText.getSelectionEnd();
+
+		if (selectionStart > selectionEnd) {
+			int temp = selectionEnd;
+			selectionEnd = selectionStart;
+			selectionStart = temp;
+		}
+
+		if (localDraft || isNew) {
+			if (selectionEnd > selectionStart) {
+				Spannable str = contentText.getText();
+				if (tag.equals("blockquote")) {
+
+					QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd,
+							QuoteSpan.class);
+
+					boolean exists = false;
+					for (int i = 0; i < ss.length; i++) {
+						str.removeSpan(ss[i]);
+						exists = true;
+					}
+
+					if (!exists) {
+						str.setSpan(new QuoteSpan(), selectionStart,
+								selectionEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+
+					toggleButton.setChecked(false);
+				} else if (tag.equals("strong")) {
+					StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd,
+							StyleSpan.class);
+
+					boolean exists = false;
+					for (int i = 0; i < ss.length; i++) {
+						int style = ((StyleSpan) ss[i]).getStyle();
+						if (style == android.graphics.Typeface.BOLD) {
+							str.removeSpan(ss[i]);
+							exists = true;
+						}
+					}
+
+					if (!exists) {
+						str.setSpan(new StyleSpan(
+								android.graphics.Typeface.BOLD),
+								selectionStart, selectionEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+					toggleButton.setChecked(false);
+				} else if (tag.equals("em")) {
+					StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd,
+							StyleSpan.class);
+
+					boolean exists = false;
+					for (int i = 0; i < ss.length; i++) {
+						int style = ((StyleSpan) ss[i]).getStyle();
+						if (style == android.graphics.Typeface.ITALIC) {
+							str.removeSpan(ss[i]);
+							exists = true;
+						}
+					}
+
+					if (!exists) {
+						str.setSpan(new StyleSpan(
+								android.graphics.Typeface.ITALIC),
+								selectionStart, selectionEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+					toggleButton.setChecked(false);
+				} else if (tag.equals("u")) {
+
+					UnderlineSpan[] ss = str.getSpans(selectionStart,
+							selectionEnd, UnderlineSpan.class);
+
+					boolean exists = false;
+					for (int i = 0; i < ss.length; i++) {
+						str.removeSpan(ss[i]);
+						exists = true;
+					}
+
+					if (!exists) {
+						str.setSpan(new UnderlineSpan(), selectionStart,
+								selectionEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+
+					toggleButton.setChecked(false);
+				} else if (tag.equals("strike")) {
+
+					StrikethroughSpan[] ss = str.getSpans(selectionStart,
+							selectionEnd, StrikethroughSpan.class);
+
+					boolean exists = false;
+					for (int i = 0; i < ss.length; i++) {
+						str.removeSpan(ss[i]);
+						exists = true;
+					}
+
+					if (!exists) {
+						str.setSpan(new StrikethroughSpan(), selectionStart,
+								selectionEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+
+					toggleButton.setChecked(false);
+				}
+			}
+		} else {
+			String content = contentText.getText().toString();
+			if (selectionEnd > selectionStart) {
+				contentText.setText(content.substring(0, selectionStart)
+						+ startTag
+						+ content.substring(selectionStart, selectionEnd)
+						+ endTag
+						+ content.substring(selectionEnd, content.length()));
+
+				toggleButton.setChecked(false);
+				contentText
+						.setSelection(selectionStart
+								+ content.substring(selectionStart,
+										selectionEnd).length()
+								+ startTag.length() + endTag.length());
+			} else if (toggleButton.isChecked()) {
+				contentText.setText(content.substring(0, selectionStart)
+						+ startTag
+						+ content.substring(selectionStart, content.length()));
+				contentText.setSelection(selectionEnd + startTag.length());
+			} else if (!toggleButton.isChecked()) {
+				contentText.setText(content.substring(0, selectionStart)
+						+ endTag
+						+ content.substring(selectionStart, content.length()));
+				contentText.setSelection(selectionEnd + endTag.length());
+			}
+		}
+
+	}
+
+	private void addMedia(String imgPath, Uri curStream) {
+		selectedImageIDs.add(selectedImageCtr, curStream);
+		imageUrl.add(selectedImageCtr, imgPath);
+		selectedImageCtr++;
+
+		if (!imgPath.contains("video")) {
+
+			String[] projection = new String[] { Images.Thumbnails._ID,
+					Images.Thumbnails.DATA, Images.Media.ORIENTATION };
+			String orientation = "", path = "";
+			Cursor cur = managedQuery(curStream, projection, null, null, null);
+			File jpeg = null;
+			if (cur != null) {
+				String thumbData = "";
+
+				if (cur.moveToFirst()) {
+
+					int dataColumn, orientationColumn;
+
+					dataColumn = cur.getColumnIndex(Images.Media.DATA);
+					orientationColumn = cur
+							.getColumnIndex(Images.Media.ORIENTATION);
+
+					thumbData = cur.getString(dataColumn);
+					orientation = cur.getString(orientationColumn);
+				}
+
+				jpeg = new File(thumbData);
+				path = thumbData;
+			} else {
+				path = curStream.toString().replace("file://", "");
+				jpeg = new File(curStream.toString().replace("file://", ""));
+
+			}
+
+			imageTitle = jpeg.getName();
+
+			byte[] finalBytes = null;
+
+			byte[] bytes = new byte[(int) jpeg.length()];
+
+			DataInputStream in = null;
+			try {
+				in = new DataInputStream(new FileInputStream(jpeg));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			try {
+				in.readFully(bytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			ImageHelper ih = new ImageHelper();
+
+			if (orientation == "") {
+				orientation = ih.getExifOrientation(path, orientation);
+			}
+
+			imageTitle = jpeg.getName();
+
+			finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
+
+			Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
+					finalBytes.length);
+			imgThumbs.add(resizedBitmap);
+
+		} else {
+			imgThumbs.add("video");
+		}
+
+		Gallery gallery = (Gallery) findViewById(R.id.gallery);
+		gallery.setVisibility(View.VISIBLE);
+		gallery.setAdapter(new ImageAdapter(EditPost.this));
+		Button clearMedia = (Button) findViewById(R.id.clearPicture);
+		clearMedia.setVisibility(View.VISIBLE);
+
+	}
+
+	public class ImageAdapter extends BaseAdapter {
+		private Context mContext;
+
+		public ImageAdapter(Context c) {
+			mContext = c;
+		}
+
+		public int getCount() {
+			return selectedImageIDs.size();
+		}
+
+		public Object getItem(int position) {
+			return null;
+		}
+
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		// create a new ImageView for each item referenced by the Adapter
+		public View getView(int position, View convertView, ViewGroup parent) {
+			boolean isVideo = false;
+			ViewHolder holder;
+			if (convertView == null) { // if it's not recycled, initialize some
+				// attributes
+				convertView = new ImageView(mContext);
+				holder = new ViewHolder();
+
+				holder.imageView = (ImageView) convertView;
+
+				int width, height;
+				if (isLargeScreen) {
+					width = 240;
+					height = 160;
+				} else {
+					width = 125;
+					height = 100;
+				}
+				holder.imageView.setLayoutParams(new Gallery.LayoutParams(
+						width, height));
+				holder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				holder.imageView
+						.setBackgroundResource(R.drawable.wordpress_gallery_background);
+
+				Uri tempURI = (Uri) selectedImageIDs.get(position);
+
+				if (!tempURI.toString().contains("video")) {
+
+				} else {
+					holder.imageView.setImageDrawable(getResources()
+							.getDrawable(R.drawable.video));
+					isVideo = true;
+				}
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+
+			if (!isVideo) {
+				holder.imageView.setImageBitmap((Bitmap) imgThumbs
+						.get(position));
+			}
+
+			// holder.imageView.setImageDrawable(getResources().getDrawable(R.drawable.video));
+
+			return convertView;
+
+		}
+
+		class ViewHolder {
+			ImageView imageView;
+		}
+
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data != null || requestCode == 4) {
+			Bundle extras;
+			switch (requestCode) {
+			case 0:
+				extras = data.getExtras();
+				break;
+			case 1:
+				break;
+			case 2:
+				extras = data.getExtras();
+				String linkText = extras.getString("linkText");
+				if (linkText.equals("http://") != true) {
+
+					if (linkText.equals("CANCEL") != true) {
+
+						EditText contentText = (EditText) findViewById(R.id.postContent);
+
+						int selectionStart = contentText.getSelectionStart();
+
+						int selectionEnd = contentText.getSelectionEnd();
+
+						if (selectionStart > selectionEnd) {
+							int temp = selectionEnd;
+							selectionEnd = selectionStart;
+							selectionStart = temp;
+						}
+
+						if (localDraft || isNew) {
+							Spannable str = contentText.getText();
+							str.setSpan(new URLSpan(linkText), selectionStart,
+									selectionEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						} else {
+							String textToLink = contentText.getText()
+									.toString()
+									.substring(selectionStart, selectionEnd);
+							textToLink = "<a href=\"" + linkText + "\">"
+									+ textToLink + "</a>";
+							String firstHalf = contentText.getText().toString()
+									.substring(0, selectionStart);
+							String lastHalf = contentText
+									.getText()
+									.toString()
+									.substring(
+											selectionEnd,
+											contentText.getText().toString()
+													.length());
+							contentText.setText(firstHalf + textToLink
+									+ lastHalf);
+							Editable etext = (Editable) contentText.getText();
+							Selection.setSelection(etext, selectionStart
+									+ textToLink.length());
+						}
+					}
+				}
+				break;
+			case 3:
+
+				Uri imageUri = data.getData();
+				String imgPath = imageUri.toString();
+
+				addMedia(imgPath, imageUri);
+				break;
+			case 4:
+				if (resultCode == Activity.RESULT_OK) {
+
+					// http://code.google.com/p/android/issues/detail?id=1480
+					File f = null;
+					int sdk_int = 0;
+					try {
+						sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
+					} catch (Exception e1) {
+						sdk_int = 3; // assume they are on cupcake
+					}
+					if (data != null && (sdk_int <= 4)) { // Older HTC Sense
+						// Devices return
+						// different data
+						// for image
+						// capture
+						try {
+							String[] projection;
+							Uri imagePath = data.getData();
+							projection = new String[] { Images.Media._ID,
+									Images.Media.DATA, Images.Media.MIME_TYPE,
+									Images.Media.ORIENTATION };
+
+							Cursor cur = this.managedQuery(imagePath,
+									projection, null, null, null);
+							String thumbData = "";
+
+							if (cur.moveToFirst()) {
+
+								int dataColumn;
+
+								dataColumn = cur
+										.getColumnIndex(Images.Media.DATA);
+
+								thumbData = cur.getString(dataColumn);
+								f = new File(thumbData);
+							}
+						} catch (Exception e) {
+							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+									EditPost.this);
+							dialogBuilder.setTitle(getResources().getText(
+									R.string.error));
+							dialogBuilder.setMessage(e.getMessage());
+							dialogBuilder.setPositiveButton("OK",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int whichButton) {
+											// just close the dialog
+										}
+									});
+							dialogBuilder.setCancelable(true);
+							if (!isFinishing()) {
+								dialogBuilder.create().show();
+							}
+						}
+					} else {
+						f = new File(SD_CARD_TEMP_DIR);
+					}
+					try {
+						Uri capturedImage = Uri
+								.parse(android.provider.MediaStore.Images.Media
+										.insertImage(getContentResolver(),
+												f.getAbsolutePath(), null, null));
+
+						Log.i("camera",
+								"Selected image: " + capturedImage.toString());
+
+						f.delete();
+
+						addMedia(capturedImage.toString(), capturedImage);
+
+					} catch (FileNotFoundException e) {
+						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+								EditPost.this);
+						dialogBuilder.setTitle(getResources().getText(
+								R.string.file_error));
+						dialogBuilder.setMessage(getResources().getText(
+								R.string.file_error_encountered));
+						dialogBuilder.setPositiveButton("OK",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int whichButton) {
+										// just close the dialog
+									}
+								});
+						dialogBuilder.setCancelable(true);
+						if (!isFinishing()) {
+							dialogBuilder.create().show();
+						}
+					}
+
+				} else {
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+							EditPost.this);
+					dialogBuilder.setTitle(getResources().getText(
+							R.string.file_error));
+					dialogBuilder.setMessage(getResources().getText(
+							R.string.file_error_encountered));
+					dialogBuilder.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									// just close the dialog
+								}
+							});
+					dialogBuilder.setCancelable(true);
+					if (!isFinishing()) {
+						dialogBuilder.create().show();
+					}
+				}
+
+				break;
+
+			case 5:
+				extras = data.getExtras();
+				String cats = extras.getString("selectedCategories");
+				String[] splitCats = cats.split(",");
+				categories = new JSONArray();
+				for (int i = 0; i < splitCats.length; i++) {
+					categories.put(splitCats[i]);
+				}
+				TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
+				selectedCategoriesTV.setText(getResources().getText(
+						R.string.selected_categories)
+						+ " " + getCategoriesCSV());
+				break;
+			case 6:
+
+				Uri videoUri = data.getData();
+				String videoPath = videoUri.toString();
+
+				addMedia(videoPath, videoUri);
+
+				break;
+			case 7:
+				if (resultCode == Activity.RESULT_OK) {
+					Uri capturedVideo = data.getData();
+
+					addMedia(capturedVideo.toString(), capturedVideo);
+				} else {
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+							EditPost.this);
+					dialogBuilder.setTitle(getResources().getText(
+							R.string.file_error));
+					dialogBuilder.setMessage(getResources().getText(
+							R.string.file_error_encountered));
+					dialogBuilder.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									// just close the dialog
+								}
+							});
+					dialogBuilder.setCancelable(true);
+					if (!isFinishing()) {
+						dialogBuilder.create().show();
+					}
+				}
+
+				break;
+			}
+
+		}// end null check
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		if (id == ID_DIALOG_POSTING) {
+			postingDialog = new ProgressDialog(this);
+			postingDialog.setTitle(getResources().getText(
+					R.string.uploading_content));
+			postingDialog.setMessage(getResources().getText(
+					(isPage) ? R.string.attempting_edit_page
+							: R.string.attempting_edit_post));
+			postingDialog.setIndeterminate(true);
+			postingDialog.setCancelable(true);
+			return postingDialog;
+		} else if (id == ID_DIALOG_LOADING) {
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			loadingDialog.setMessage(getResources().getText(R.string.loading));
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(true);
+			return loadingDialog;
+		} else if (id == ID_DIALOG_DATE) {
+			DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener,
+					mYear, mMonth, mDay);
+			dpd.setTitle("");
+			return dpd;
+		} else if (id == ID_DIALOG_TIME) {
+			TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener,
+					mHour, mMinute, false);
+			tpd.setTitle("");
+			return tpd;
+		}
+
+		return super.onCreateDialog(id);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+
+		super.onConfigurationChanged(newConfig);
+	}
+
+	public boolean savePost() {
+
+		// grab the form data
+		EditText titleET = (EditText) findViewById(R.id.title);
+		String title = titleET.getText().toString();
+		EditText contentET = (EditText) findViewById(R.id.postContent);
+		String content = EscapeUtils.unescapeHtml(Html.toHtml(contentET
+				.getText()));
+		EditText passwordET = (EditText) findViewById(R.id.post_password);
+		String password = passwordET.getText().toString();
+		// replace duplicate <p> tags so there's not duplicates, trac #86
+		content = content.replace("<p><p>", "<p>");
+		content = content.replace("</p></p>", "</p>");
+		content = content.replace("<br><br>", "<br>");
+
+		TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+		String pubDate = tvPubDate.getText().toString();
+
+		long pubDateTimestamp = 0;
+		if (!pubDate.equals(getResources().getText(R.string.immediately))) {
+			SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
+			Date d = new Date();
+			try {
+				d = sdf.parse(pubDate);
+				pubDateTimestamp = d.getTime();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		String tags = "";
+		if (!isPage) {
+			EditText tagsET = (EditText) findViewById(R.id.tags);
+			tags = tagsET.getText().toString();
+		}
+
+		String images = "";
+		boolean success = false;
+
+		if (content.equals("") && selectedImageIDs.size() == 0) {
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+					EditPost.this);
+			dialogBuilder.setTitle(getResources()
+					.getText(R.string.empty_fields));
+			dialogBuilder.setMessage(getResources().getText(
+					R.string.title_post_required));
+			dialogBuilder.setPositiveButton("OK",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							// Just close the window
+						}
+					});
+			dialogBuilder.setCancelable(true);
+			dialogBuilder.create().show();
+		} else {
+
+			// update the images
+			for (int it = 0; it < selectedImageCtr; it++) {
+
+				images += selectedImageIDs.get(it).toString() + ",";
+
+			}
+
+			Spinner spinner = (Spinner) findViewById(R.id.status);
+			int selectedStatus = spinner.getSelectedItemPosition();
+			String status = "";
+			switch (selectedStatus) {
+			case 0:
+				status = "publish";
+				break;
+			case 1:
+				status = "draft";
+				break;
+			case 2:
+				status = "pending";
+				break;
+			case 3:
+				status = "private";
+				break;
+			}
+
+			Double latitude = 0.0;
+			Double longitude = 0.0;
+			if (blog.isLocation()) {
+
+				// attempt to get the device's location
+				try {
+					latitude = curLocation.getLatitude();
+					longitude = curLocation.getLongitude();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+
+			// post format
+			Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
+			String postFormat = postFormats[postFormatSpinner
+					.getSelectedItemPosition()];
+
+			if (isNew) {
+				post = new Post(id, title, content, images, pubDateTimestamp,
+						categories.toString(), tags, status, password,
+						latitude, longitude, isPage, postFormat, EditPost.this);
+				post.setLocalDraft(true);
+				success = post.save();
+			} else {
+				post.setTitle(title);
+				post.setDescription(content);
+				post.setMediaPaths(images);
+				post.setDate_created_gmt(pubDateTimestamp);
+				post.setCategories(categories);
+				post.setMt_keywords(tags);
+				post.setPost_status(status);
+				post.setWP_password(password);
+				post.setLatitude(latitude);
+				post.setLongitude(longitude);
+				post.setWP_post_form(postFormat);
+				success = post.update();
+			}
+
+		}// if/then for valid settings
+
+		return success;
+	}
+
+	@Override
+	public boolean onKeyDown(int i, KeyEvent event) {
+
+		// only intercept back button press
+		if (i == KeyEvent.KEYCODE_BACK) {
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+					EditPost.this);
+			dialogBuilder
+					.setTitle(getResources().getText(R.string.cancel_edit));
+			dialogBuilder.setMessage(getResources().getText(
+					(isPage) ? R.string.sure_to_cancel_edit_page
+							: R.string.sure_to_cancel_edit));
+			dialogBuilder.setPositiveButton(getResources()
+					.getText(R.string.yes),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							Bundle bundle = new Bundle();
+
+							bundle.putString("returnStatus", "CANCEL");
+							Intent mIntent = new Intent();
+							mIntent.putExtras(bundle);
+							setResult(RESULT_OK, mIntent);
+							finish();
+						}
+					});
+			dialogBuilder.setNegativeButton(
+					getResources().getText(R.string.no),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							// just close the dialog window
+						}
+					});
+			dialogBuilder.setCancelable(true);
+			dialogBuilder.create().show();
+		}
+
+		return false;
+	}
+
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
+		menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+		menu.add(0, 2, 0, getResources().getText(R.string.select_video));
+		menu.add(0, 3, 0, getResources().getText(R.string.take_video));
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 0:
+			launchPictureLibrary();
+			return true;
+		case 1:
+			launchCamera();
+			return true;
+		case 2:
+			launchVideoLibrary();
+			return true;
+		case 3:
+			launchVideoCamera();
+			return true;
+		}
+		return false;
+	}
+
+	private void launchVideoLibrary() {
+		Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
+		videoPickerIntent.setType("video/*");
+		startActivityForResult(videoPickerIntent, 6);
+	}
+
+	private void launchPictureLibrary() {
+		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+		photoPickerIntent.setType("image/*");
+		startActivityForResult(photoPickerIntent, 3);
+	}
+
+	private void launchVideoCamera() {
+		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+		startActivityForResult(takeVideoIntent, 7);
+	}
+
+	private void launchCamera() {
+		String state = android.os.Environment.getExternalStorageState();
+		if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+					EditPost.this);
+			dialogBuilder.setTitle(getResources()
+					.getText(R.string.sdcard_title));
+			dialogBuilder.setMessage(getResources().getText(
+					R.string.sdcard_message));
+			dialogBuilder.setPositiveButton("OK",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							// just close the dialog
+
+						}
+					});
+			dialogBuilder.setCancelable(true);
+			dialogBuilder.create().show();
+		} else {
+			SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory()
+					+ File.separator + "wordpress" + File.separator + "wp-"
+					+ System.currentTimeMillis() + ".jpg";
+			Intent takePictureFromCameraIntent = new Intent(
+					MediaStore.ACTION_IMAGE_CAPTURE);
+			takePictureFromCameraIntent.putExtra(
+					android.provider.MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(new File(SD_CARD_TEMP_DIR)));
+
+			// make sure the directory we plan to store the recording in exists
+			File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
+			if (!directory.exists() && !directory.mkdirs()) {
+				try {
+					throw new IOException("Path to file could not be created.");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			startActivityForResult(takePictureFromCameraIntent, 4);
+		}
+	}
+
+	/** Register for the updates when Activity is in foreground */
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+	}
+
+	/** Stop the updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (!isPage && blog.isLocation() && locationActive) {
+			lm.removeUpdates(this);
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onPause();
+		if (!isPage && blog.isLocation() && locationActive) {
+			lm.removeUpdates(this);
+		}
+	}
+
+	public void onLocationChanged(Location location) {
+		curLocation = location;
+		new getAddressTask().execute(location.getLatitude(),
+				location.getLongitude());
+		lm.removeUpdates(this);
+	}
+
+	public void onProviderDisabled(String provider) {
+
+	}
+
+	public void onProviderEnabled(String provider) {
+
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+
+	}
+
+	private class getAddressTask extends AsyncTask<Double, Void, String> {
+
+		protected void onPostExecute(String result) {
+			TextView map = (TextView) findViewById(R.id.locationText);
+			map.setText(result);
+		}
+
+		@Override
+		protected String doInBackground(Double... args) {
+			Geocoder gcd = new Geocoder(EditPost.this, Locale.getDefault());
+			String finalText = "";
+			List<Address> addresses;
+			try {
+				addresses = gcd.getFromLocation(args[0], args[1], 1);
+				if (addresses.size() > 0) {
+					finalText = addresses.get(0).getLocality() + ", "
+							+ addresses.get(0).getAdminArea();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return finalText;
+		}
+
+	}
+
+	protected void setContent() {
+		Intent intent = getIntent();
+		String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+		String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+		if (text != null) {
+			EditText titleET = (EditText) findViewById(R.id.title);
+
+			if (title != null) {
+				titleET.setText(title);
+			}
+
+			EditText contentET = (EditText) findViewById(R.id.postContent);
+			// It's a youtube video link! need to strip some parameters so the
+			// embed will work
+			if (text.contains("youtube_gdata")) {
+				text = text.replace("feature=youtube_gdata", "");
+				text = text.replace("&", "");
+				text = text.replace("_player", "");
+				text = text.replace("watch?v=", "v/");
+				text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\""
+						+ text
+						+ "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\""
+						+ text
+						+ "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
+				contentET.setText(text);
+			} else {
+				// add link tag around URLs, trac #64
+				String[] parts = text.split("\\s");
+				String finalText = "";
+
+				// Attempt to convert each item into an URL.
+				for (String item : parts)
+					try {
+						URL url = new URL(item);
+						finalText += "<a href=\"" + url + "\">" + url + "</a> ";
+						contentET.setText(Html.fromHtml(finalText));
+						isUrl = true;
+					} catch (MalformedURLException e) {
+						finalText += item + " ";
+						contentET.setText(finalText);
+					}
+			}
+		} else {
+			String action = intent.getAction();
+			final String type = intent.getType();
+			final ArrayList<Uri> multi_stream;
+			if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+				multi_stream = intent
+						.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+			} else {
+				multi_stream = new ArrayList<Uri>();
+				multi_stream.add((Uri) intent
+						.getParcelableExtra(Intent.EXTRA_STREAM));
+			}
+
+			Vector<Serializable> params = new Vector<Serializable>();
+			params.add(multi_stream);
+			params.add(type);
+			new processAttachmentsTask().execute(params);
+		}
+
+	}
+
+	private class processAttachmentsTask extends
+			AsyncTask<Vector<?>, Void, Boolean> {
+
+		protected void onPreExecute() {
+
+			showDialog(ID_DIALOG_LOADING);
+		}
+
+		protected void onPostExecute(Boolean result) {
+			dismissDialog(ID_DIALOG_LOADING);
+			Gallery gallery = (Gallery) findViewById(R.id.gallery);
+			gallery.setVisibility(View.VISIBLE);
+			gallery.setAdapter(new ImageAdapter(EditPost.this));
+			Button clearMedia = (Button) findViewById(R.id.clearPicture);
+			clearMedia.setVisibility(View.VISIBLE);
+		}
+
+		@Override
+		protected Boolean doInBackground(Vector<?>... args) {
+			ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
+			String type = (String) args[0].get(1);
+			for (int i = 0; i < multi_stream.size(); i++) {
+				Uri curStream = (Uri) multi_stream.get(i);
+				if (curStream != null && type != null) {
+					String imgPath = curStream.getEncodedPath();
+
+					addMedia(imgPath, curStream, true);
+
+				}
+			}
+			return true;
+		}
+	}
+
+	private void addMedia(String imgPath, Uri curStream, boolean noUI) {
+		selectedImageIDs.add(selectedImageCtr, curStream);
+		imageUrl.add(selectedImageCtr, imgPath);
+		selectedImageCtr++;
+
+		if (!imgPath.contains("video")) {
+
+			String[] projection = new String[] { Images.Thumbnails._ID,
+					Images.Thumbnails.DATA, Images.Media.ORIENTATION };
+			String orientation = "", path = "";
+			Cursor cur = managedQuery(curStream, projection, null, null, null);
+			File jpeg = null;
+			if (cur != null) {
+				String thumbData = "";
+
+				if (cur.moveToFirst()) {
+
+					int dataColumn, orientationColumn;
+
+					dataColumn = cur.getColumnIndex(Images.Media.DATA);
+					orientationColumn = cur
+							.getColumnIndex(Images.Media.ORIENTATION);
+
+					thumbData = cur.getString(dataColumn);
+					orientation = cur.getString(orientationColumn);
+				}
+
+				jpeg = new File(thumbData);
+				path = thumbData;
+			} else {
+				path = curStream.toString().replace("file://", "");
+				jpeg = new File(curStream.toString().replace("file://", ""));
+
+			}
+
+			imageTitle = jpeg.getName();
+
+			byte[] finalBytes = null;
+
+			byte[] bytes = new byte[(int) jpeg.length()];
+
+			DataInputStream in = null;
+			try {
+				in = new DataInputStream(new FileInputStream(jpeg));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			try {
+				in.readFully(bytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			ImageHelper ih = new ImageHelper();
+
+			orientation = ih.getExifOrientation(path, orientation);
+
+			imageTitle = jpeg.getName();
+
+			finalBytes = ih.createThumbnail(bytes, "150", orientation, true);
+
+			Bitmap resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
+					finalBytes.length);
+			imgThumbs.add(resizedBitmap);
+
+		} else {
+			imgThumbs.add("video");
+		}
+		if (!noUI) {
+			Gallery gallery = (Gallery) findViewById(R.id.gallery);
+			gallery.setVisibility(View.VISIBLE);
+			gallery.setAdapter(new ImageAdapter(EditPost.this));
+			Button clearMedia = (Button) findViewById(R.id.clearPicture);
+			clearMedia.setVisibility(View.VISIBLE);
+		}
+
+	}
+
+	protected void lbsCheck() {
+		if (blog.isLocation()) {
+			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+			criteria = new Criteria();
+			criteria.setAccuracy(Criteria.ACCURACY_FINE);
+			criteria.setAltitudeRequired(false);
+			criteria.setBearingRequired(false);
+			criteria.setCostAllowed(true);
+			criteria.setPowerRequirement(Criteria.POWER_HIGH);
+
+			provider = lm.getBestProvider(criteria, true);
+			RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+			locationSection.setVisibility(View.VISIBLE);
+
+			if (isAction) {
+				enableLBSButtons();
+			}
+		}
+
+	}
+
+	private String getCategoriesCSV() {
+		String csv = "";
+		if (categories.length() > 0) {
+			for (int i = 0; i < categories.length(); i++) {
+				try {
+					csv += categories.getString(i) + ",";
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			csv = csv.substring(0, csv.length() - 1);
+		}
+		return csv;
+	}
+
+	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			mYear = year;
+			mMonth = monthOfYear;
+			mDay = dayOfMonth;
+
+			showDialog(ID_DIALOG_TIME);
+
+		}
+	};
+
+	private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+
+		public void onTimeSet(TimePicker view, int hour, int minute) {
+			mHour = hour;
+			mMinute = minute;
+			String AMPM = "AM";
+			if (mHour >= 12) {
+				AMPM = "PM";
+				if (mHour > 12) {
+					mHour -= 12;
+				}
+			}
+			TextView pubDate = (TextView) findViewById(R.id.pubDate);
+			String[] shortMonths = new DateFormatSymbols().getShortMonths();
+			pubDate.setText(shortMonths[mMonth] + " "
+					+ String.format("%02d", mDay) + ", " + mYear + " "
+					+ String.format("%02d", mHour) + ":"
+					+ String.format("%02d", mMinute) + " " + AMPM);
+
+			isCustomPubDate = true;
+		}
+
+	};
 
 }

@@ -373,7 +373,7 @@ public class WordPressDB {
 	public Vector<HashMap<String, Object>> getAccounts(Context ctx) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "username", "runService", "blogId", "url"}, null, null, null, null, null);
-		String id;
+		int id;
 		String blogName, username, url;
 		int blogId;
 		int runService;
@@ -382,16 +382,15 @@ public class WordPressDB {
 		Vector<HashMap<String, Object>> accounts = new Vector<HashMap<String, Object>>();
 		for (int i = 0; i < numRows; i++) {
 			
-			id = c.getString(0);
+			id = c.getInt(0);
 			blogName = c.getString(1);
 			username = c.getString(2);
 			runService = c.getInt(3);
 			blogId = c.getInt(4);
 			url = c.getString(5);
-			if (id != null)
+			if (id > 0)
 			{	
 				HashMap<String, Object> thisHash = new HashMap<String, Object>();
-				
 				thisHash.put("id", id);
 				thisHash.put("blogName", blogName);
 				thisHash.put("username", username);
