@@ -125,7 +125,7 @@ public class EditPost extends Activity implements LocationListener {
 	ProgressDialog postingDialog;
 	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
 	// date holders
-	private int mYear, mMonth, mDay, mHour, mMinute;
+	private int mYear, mMonth, mDay, mHour, mMinute, selectionStart, selectionEnd;
 	private Blog blog;
 	private Post post;
 	// post formats
@@ -669,11 +669,11 @@ public class EditPost extends Activity implements LocationListener {
 
 				TextView contentText = (TextView) findViewById(R.id.postContent);
 
-				int selectionStart = contentText.getSelectionStart();
+				selectionStart = contentText.getSelectionStart();
 
 				styleStart = selectionStart;
 
-				int selectionEnd = contentText.getSelectionEnd();
+				selectionEnd = contentText.getSelectionEnd();
 
 				if (selectionStart > selectionEnd) {
 					int temp = selectionEnd;
@@ -1155,10 +1155,6 @@ public class EditPost extends Activity implements LocationListener {
 					if (linkText.equals("CANCEL") != true) {
 
 						EditText contentText = (EditText) findViewById(R.id.postContent);
-
-						int selectionStart = contentText.getSelectionStart();
-
-						int selectionEnd = contentText.getSelectionEnd();
 
 						if (selectionStart > selectionEnd) {
 							int temp = selectionEnd;

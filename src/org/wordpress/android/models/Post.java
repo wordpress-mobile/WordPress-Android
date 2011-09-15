@@ -422,31 +422,17 @@ public class Post {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			String postOrPage = (String) (post.isPage() ? context
-					.getResources().getText(R.string.page_id) : context
-					.getResources().getText(R.string.post_id));
-
-			PendingIntent pendingIntent = PendingIntent.getActivity(
-					context,
-					0,
-					new Intent(context, ViewPosts.class).setFlags(
-							Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("id",
-							String.valueOf(post.blog.getId())),
-					PendingIntent.FLAG_UPDATE_CURRENT);
-
-			n.flags |= Notification.FLAG_AUTO_CANCEL;
+			
 
 			if (result) {
 
-				n.contentView.setTextViewText(
-						R.id.status_text,
-						postOrPage
-								+ " "
-								+ context.getResources().getText(
-										R.string.uploaded_successfully));
-				n.contentView
-						.setViewVisibility(R.id.status_progress, View.GONE);
+				nm.cancel(notificationID);
 			} else {
+				String postOrPage = (String) (post.isPage() ? context
+						.getResources().getText(R.string.page_id) : context
+						.getResources().getText(R.string.post_id));
+
+				n.flags |= Notification.FLAG_AUTO_CANCEL;
 				n.contentView.setTextViewText(
 						R.id.status_text,
 						postOrPage
@@ -455,9 +441,9 @@ public class Post {
 										R.string.upload_failed));
 				n.contentView
 						.setViewVisibility(R.id.status_progress, View.GONE);
+
+				nm.notify(notificationID, n); // needs a unique id
 			}
-			nm.notify(notificationID, n); // needs a unique id
-			nm.cancel(notificationID);
 		}
 
 		@Override
