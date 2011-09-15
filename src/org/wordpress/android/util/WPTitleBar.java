@@ -19,6 +19,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
@@ -255,8 +256,9 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void hideDashboardOverlay() {
+		dashboard.setBackgroundColor(Color.parseColor("#00000000"));
 		Animation fadeOutAnimation = AnimationUtils.loadAnimation(context,
-				R.anim.shrink_from_bottomleft_to_topright);
+				R.anim.dashboard_hide);
 		dashboard.startAnimation(fadeOutAnimation);
 		dashboard.setVisibility(View.GONE);
 		isShowingDashboard = false;
@@ -266,8 +268,9 @@ public class WPTitleBar extends RelativeLayout {
 	protected void showDashboardOverlay() {
 		dashboard.setVisibility(View.VISIBLE);
 		Animation fadeInAnimation = AnimationUtils.loadAnimation(context,
-				R.anim.grow_from_topright_to_bottomleft);
+				R.anim.dashboard_show);
 		dashboard.startAnimation(fadeInAnimation);
+		dashboard.setBackgroundColor(Color.parseColor("#88000000"));
 	}
 
 	public void showDashboard() {

@@ -211,11 +211,11 @@ libs/CWAC-Task.jar -text
 libs/android-support-v4.jar -text
 /local.properties -text
 res/anim/cycle_5.xml -text
+res/anim/dashboard_hide.xml -text
+res/anim/dashboard_show.xml -text
 res/anim/disappear.xml -text
-res/anim/grow_from_topright_to_bottomleft.xml -text
 res/anim/rail.xml -text
 res/anim/shake.xml -text
-res/anim/shrink_from_bottomleft_to_topright.xml -text
 res/drawable-hdpi/add.png -text
 res/drawable-hdpi/app_icon.png -text
 res/drawable-hdpi/btn_check_off_pressed.png -text
