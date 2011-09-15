@@ -456,8 +456,8 @@ public class Post {
 				n.contentView
 						.setViewVisibility(R.id.status_progress, View.GONE);
 			}
-
 			nm.notify(notificationID, n); // needs a unique id
+			nm.cancel(notificationID);
 		}
 
 		@Override

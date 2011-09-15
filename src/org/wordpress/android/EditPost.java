@@ -212,6 +212,21 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 		} else {
+			
+			if (extras != null) {
+				id = WordPress.currentBlog.getId();
+				blog = new Blog(id, this);
+				accountName = EscapeUtils.unescapeHtml(extras
+						.getString("accountName"));
+				postID = extras.getLong("postID");
+				localDraft = extras.getBoolean("localDraft", false);
+				isPage = extras.getBoolean("isPage", false);
+				isNew = extras.getBoolean("isNew", false);
+				option = extras.getString("option");
+				if (!isNew)
+					post = new Post(id, postID, isPage, this);
+			}
+			
 			// clear up some variables
 			selectedImageIDs.clear();
 			selectedImageCtr = 0;
@@ -221,20 +236,7 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 		}
-		if (extras != null && !isAction) {
-			id = WordPress.currentBlog.getId();
-			blog = new Blog(id, this);
-			accountName = EscapeUtils.unescapeHtml(extras
-					.getString("accountName"));
-			postID = extras.getLong("postID");
-			localDraft = extras.getBoolean("localDraft", false);
-			isPage = extras.getBoolean("isPage", false);
-			isNew = extras.getBoolean("isNew", false);
-			option = extras.getString("option");
-			if (!isNew)
-				post = new Post(id, postID, isPage, this);
-		}
-
+		
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
 				.getDefaultDisplay();
 		int width = display.getWidth();

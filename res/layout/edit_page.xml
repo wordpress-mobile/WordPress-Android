@@ -118,16 +118,6 @@
         android:typeface="serif"
         android:textStyle="bold"
         android:textColor="#464646" />
-
-      <Button
-        android:id="@+id/fullscreen"
-        android:background="@drawable/wp_button_toggle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="17dip"
-        android:text="@string/fullscreen"
-        android:layout_below="@id/bold"
-        android:textColor="#464646" />
     </RelativeLayout>
     <RelativeLayout
       android:layout_width="fill_parent"
