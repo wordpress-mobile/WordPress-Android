@@ -125,7 +125,8 @@ public class EditPost extends Activity implements LocationListener {
 	ProgressDialog postingDialog;
 	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
 	// date holders
-	private int mYear, mMonth, mDay, mHour, mMinute, selectionStart, selectionEnd;
+	private int mYear, mMonth, mDay, mHour, mMinute, selectionStart,
+			selectionEnd;
 	private Blog blog;
 	private Post post;
 	// post formats
@@ -212,7 +213,7 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 		} else {
-			
+
 			if (extras != null) {
 				id = WordPress.currentBlog.getId();
 				blog = new Blog(id, this);
@@ -226,7 +227,7 @@ public class EditPost extends Activity implements LocationListener {
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
 			}
-			
+
 			// clear up some variables
 			selectedImageIDs.clear();
 			selectedImageCtr = 0;
@@ -236,7 +237,7 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 		}
-		
+
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
 				.getDefaultDisplay();
 		int width = display.getWidth();
@@ -1764,10 +1765,16 @@ public class EditPost extends Activity implements LocationListener {
 				// Attempt to convert each item into an URL.
 				for (String item : parts)
 					try {
-						URL url = new URL(item);
-						finalText += "<a href=\"" + url + "\">" + url + "</a> ";
-						contentET.setText(Html.fromHtml(finalText));
-						isUrl = true;
+						if (item.equals(":")) {
+							finalText += item + " ";
+							contentET.setText(finalText);
+						} else {
+							URL url = new URL(item);
+							finalText += "<a href=\"" + url + "\">" + url
+									+ "</a> ";
+							contentET.setText(Html.fromHtml(finalText));
+							isUrl = true;
+						}
 					} catch (MalformedURLException e) {
 						finalText += item + " ";
 						contentET.setText(finalText);
