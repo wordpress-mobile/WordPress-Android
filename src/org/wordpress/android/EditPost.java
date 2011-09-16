@@ -1759,26 +1759,9 @@ public class EditPost extends Activity implements LocationListener {
 				contentET.setText(text);
 			} else {
 				// add link tag around URLs, trac #64
-				String[] parts = text.split("\\s");
-				String finalText = "";
-
-				// Attempt to convert each item into an URL.
-				for (String item : parts)
-					try {
-						if (item.equals(":")) {
-							finalText += item + " ";
-							contentET.setText(finalText);
-						} else {
-							URL url = new URL(item);
-							finalText += "<a href=\"" + url + "\">" + url
-									+ "</a> ";
-							contentET.setText(Html.fromHtml(finalText));
-							isUrl = true;
-						}
-					} catch (MalformedURLException e) {
-						finalText += item + " ";
-						contentET.setText(finalText);
-					}
+				text = text.replaceAll("((http|https|ftp|mailto):\\S+)",
+				        "<a href=\"$1\">$1</a>");
+				contentET.setText(Html.fromHtml(text));
 			}
 		} else {
 			String action = intent.getAction();
