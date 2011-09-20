@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionCode="33" android:versionName="1.5 Alpha">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionCode="35" android:versionName="2.0 Alpha">
 	<uses-sdk android:targetSdkVersion="11" android:minSdkVersion="7"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true" android:debuggable="true">
@@ -11,7 +11,7 @@
 		<activity android:name="ViewPosts" android:theme="@style/Theme.TabView"/>
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:configChanges="orientation|keyboardHidden" android:name=".AddAccount"/>
-		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden">
+		<activity android:name="EditPost" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
