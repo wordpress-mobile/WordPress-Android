@@ -265,8 +265,8 @@ res/drawable-hdpi/wp_small_down.9.png -text
 res/drawable-hdpi/wp_small_over.9.png -text
 res/drawable-hdpi/wp_small_toggle.9.png -text
 res/drawable-hdpi/wp_statusbar_icon.png -text
-res/drawable-v11/dashboard_btn_bottom_left.xml -text
-res/drawable-v11/dashboard_btn_bottom_right.xml -text
+res/drawable-v12/dashboard_btn_bottom_left.xml -text
+res/drawable-v12/dashboard_btn_bottom_right.xml -text
 res/drawable/action_bar_btn_selector.xml -text
 res/drawable/action_bar_shadow.9.png -text
 res/drawable/action_item_btn.xml -text
