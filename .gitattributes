@@ -265,6 +265,8 @@ res/drawable-hdpi/wp_small_down.9.png -text
 res/drawable-hdpi/wp_small_over.9.png -text
 res/drawable-hdpi/wp_small_toggle.9.png -text
 res/drawable-hdpi/wp_statusbar_icon.png -text
+res/drawable-v11/dashboard_btn_bottom_left.xml -text
+res/drawable-v11/dashboard_btn_bottom_right.xml -text
 res/drawable/action_bar_btn_selector.xml -text
 res/drawable/action_bar_shadow.9.png -text
 res/drawable/action_item_btn.xml -text
@@ -309,8 +311,6 @@ res/drawable/dashboard_icon_stats.png -text
 res/drawable/dashboard_icon_subs.png -text
 res/drawable/dashboard_icon_video.png -text
 res/drawable/drafts_icon.png -text
-res/drawable/drawable-v11/dashboard_btn_bottom_left.xml -text
-res/drawable/drawable-v11/dashboard_btn_bottom_right.xml -text
 res/drawable/drop_down_arrow.png -text
 res/drawable/gallery_selected_default.9.png -text
 res/drawable/grey_wp_button.9.png -text
