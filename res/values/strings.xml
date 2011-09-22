@@ -369,6 +369,7 @@
   <string name="load_settings">Load settings now?</string>
   <string name="immediately">Immediately</string>
   <string name="uploading">uploading</string>
+  <string name="gallery_error">Sorry, the media item could not be retrieved from the Gallery.</string>
 
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>

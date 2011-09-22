@@ -39,6 +39,23 @@ public class AlertUtil {
         
         dlg.show();
     }
+    
+    /**
+     * Show Alert Dialog
+     * @param context
+     * @param titleId
+     * @param messageId
+     */
+    public static void showAlert(Context context, int titleId, String message) {
+        Dialog dlg = new AlertDialog.Builder(context)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(titleId)
+            .setPositiveButton(android.R.string.ok, null)
+            .setMessage(message)
+            .create();
+        
+        dlg.show();
+    }
 
     /**
      * Show Alert Dialog

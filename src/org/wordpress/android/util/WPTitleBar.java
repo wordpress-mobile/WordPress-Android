@@ -102,7 +102,7 @@ public class WPTitleBar extends RelativeLayout {
 
 		if (WordPress.currentBlog != null) {
 			updateBlavatarImage();
-
+			updateCommentBadge();
 			refreshButton = (Button) findViewById(R.id.action_refresh);
 
 			blogTitle.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog

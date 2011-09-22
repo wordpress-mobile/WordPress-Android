@@ -1,8 +1,14 @@
 package org.wordpress.android;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -16,6 +22,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,11 +36,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -357,23 +369,101 @@ public class Dashboard extends Activity {
 			// no account, load new account view
 			Intent i = new Intent(Dashboard.this, NewAccount.class);
 			startActivityForResult(i, 0);
-		}
-		else {
+		} else {
 			id = WordPress.currentBlog.getId();
 			titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 			titleBar.showDashboard();
-			
+
 			titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-				//user selected new blog in the title bar
+				// user selected new blog in the title bar
 				@Override
 				public void OnBlogChanged() {
-					
+
 					id = WordPress.currentBlog.getId();
 					blog = new Blog(id, Dashboard.this);
 
 				}
 			});
-			
+
+			titleBar.refreshButton
+					.setOnClickListener(new ImageButton.OnClickListener() {
+						public void onClick(View v) {
+
+							titleBar.startRotatingRefreshIcon();
+							new refreshBlogContentTask().execute();
+						}
+					});
+
 		}
+	}
+
+	private class refreshBlogContentTask extends AsyncTask<Void, Void, Boolean> {
+
+		// refreshes blog level info (WP version number) and stuff related to
+		// theme (available post types, recent comments etc)
+		@Override
+		protected void onPostExecute(Boolean result) {
+			titleBar.stopRotatingRefreshIcon();
+			titleBar.updateCommentBadge();
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			Blog blog = WordPress.currentBlog;
+			XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
+					blog.getHttpuser(), blog.getHttppassword());
+
+			// check the WP number if self-hosted
+			if (!blog.isDotcomFlag()) {
+				HashMap<String, String> hPost = new HashMap<String, String>();
+				hPost.put("software_version", "software_version");
+				Object[] vParams = { blog.getBlogId(), blog.getUsername(),
+						blog.getPassword(), hPost };
+				Object versionResult = new Object();
+				try {
+					versionResult = (Object) client.call("wp.getOptions",
+							vParams);
+				} catch (XMLRPCException e) {
+				}
+
+				if (versionResult != null) {
+					try {
+						HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
+						HashMap<?, ?> sv = (HashMap<?, ?>) contentHash
+								.get("software_version");
+						String wpVersion = sv.get("value").toString();
+						if (wpVersion.length() > 0) {
+							blog.setWpVersion(wpVersion);
+						}
+					} catch (Exception e) {
+					}
+				}
+			}
+
+			// get theme post formats
+			Vector<Object> args = new Vector<Object>();
+			args.add(blog);
+			args.add(Dashboard.this);
+			new ApiHelper.getPostFormatsTask().execute(args);
+
+			// refresh the comments
+			HashMap<String, Object> hPost = new HashMap<String, Object>();
+			hPost.put("status", "");
+			hPost.put("post_id", "");
+			hPost.put("number", 30);
+			Object[] commentParams = { blog.getBlogId(), blog.getUsername(),
+					blog.getPassword(), hPost };
+			args.add(commentParams);
+
+			try {
+				ApiHelper.refreshComments(Dashboard.this, commentParams, false);
+			} catch (XMLRPCException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return true;
+		}
+
 	}
 }

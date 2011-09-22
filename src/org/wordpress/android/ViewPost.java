@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -394,6 +395,27 @@ public class ViewPost extends Activity {
 
 		}
 
+	}
+	
+	@Override
+	public boolean onKeyDown(int i, KeyEvent event) {
+
+		if (i == KeyEvent.KEYCODE_BACK) {
+			if (loadReader) {
+				if (wv.canGoBack()
+						&& !wv.getUrl()
+								.equals("http://en.wordpress.com/reader/mobile/?preload=false")) {
+					wv.goBack();
+				} else {
+					finish();
+				}
+			}
+			else {
+				finish();
+			}
+		}
+
+		return false;
 	}
 
 }

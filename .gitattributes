@@ -209,6 +209,7 @@ libs/CWAC-AdapterWrapper.jar -text
 libs/CWAC-Bus.jar -text
 libs/CWAC-Task.jar -text
 libs/android-support-v4.jar -text
+libs/httpmime-4.1.2.jar -text
 /local.properties -text
 res/anim/cycle_5.xml -text
 res/anim/dashboard_hide.xml -text

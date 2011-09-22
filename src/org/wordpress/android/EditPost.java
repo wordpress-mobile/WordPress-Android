@@ -1844,6 +1844,12 @@ public class EditPost extends Activity implements LocationListener {
 					thumbData = cur.getString(dataColumn);
 					orientation = cur.getString(orientationColumn);
 				}
+				
+				if (thumbData == null) {
+					//data stream not returned
+					Toast.makeText(EditPost.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 
 				jpeg = new File(thumbData);
 				path = thumbData;
