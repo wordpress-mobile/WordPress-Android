@@ -1577,6 +1577,16 @@ public class ViewComments extends ListActivity {
 		protected void onPostExecute(
 				HashMap<String, HashMap<?, ?>> commentsResult) {
 
+			if (commentsResult == null) {
+				titleBar.stopRotatingRefreshIcon();
+				if (!moderateErrorMsg.equals("")) {
+					AlertUtil.showAlert(ViewComments.this, R.string.error,
+							moderateErrorMsg);
+					moderateErrorMsg = "";
+				}
+				return;
+			}
+			
 			if (commentsResult.size() == 0) {
 				// no comments found
 				if (pd.isShowing()) {
@@ -1628,8 +1638,7 @@ public class ViewComments extends ListActivity {
 						commentParams, loadMore);
 			} catch (XMLRPCException e) {
 				if (!isFinishing())
-					AlertUtil.showAlert(ViewComments.this, R.string.error,
-							e.getLocalizedMessage());
+					moderateErrorMsg = e.getLocalizedMessage();
 				return null;
 			}
 

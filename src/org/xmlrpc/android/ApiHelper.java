@@ -1,7 +1,6 @@
 package org.xmlrpc.android;
 
 import org.json.JSONObject;
-import org.wordpress.android.ViewComments;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
