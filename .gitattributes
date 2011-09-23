@@ -248,6 +248,7 @@ res/drawable-hdpi/grey_wp_button_active.9.png -text
 res/drawable-hdpi/grey_wp_button_down.9.png -text
 res/drawable-hdpi/ic_menu_add.png -text
 res/drawable-hdpi/ic_menu_close_clear_cancel.png -text
+res/drawable-hdpi/ic_menu_home.png -text
 res/drawable-hdpi/ic_menu_prefs.png -text
 res/drawable-hdpi/pages_tab.png -text
 res/drawable-hdpi/pages_tab_active.png -text
@@ -323,7 +324,7 @@ res/drawable/ic_menu_back.png -text
 res/drawable/ic_menu_close_clear_cancel.png -text
 res/drawable/ic_menu_delete.png -text
 res/drawable/ic_menu_edit.png -text
-res/drawable/ic_menu_forward.png -text
+res/drawable/ic_menu_home.png -text
 res/drawable/ic_menu_more.png -text
 res/drawable/ic_menu_notifications.png -text
 res/drawable/ic_menu_preferences.png -text

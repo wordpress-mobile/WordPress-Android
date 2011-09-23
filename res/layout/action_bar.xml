@@ -143,7 +143,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/DashboardButtonText"
-            android:text="New Post" />
+            android:text="@string/new_post" />
         </LinearLayout>
         <LinearLayout
           android:id="@+id/dashboard_newpage_btn"
@@ -166,7 +166,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/DashboardButtonText"
-            android:text="New Page" />
+            android:text="@string/new_page" />
         </LinearLayout>
       </LinearLayout>
       <LinearLayout
@@ -196,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/DashboardButtonText"
-            android:text="Quick Photo" />
+            android:text="@string/quick_photo" />
         </LinearLayout>
         <LinearLayout
           android:id="@+id/dashboard_quickvideo_btn"
@@ -220,7 +220,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/DashboardButtonText"
-            android:text="Quick Video" />
+            android:text="@string/quick_video" />
         </LinearLayout>
       </LinearLayout>
       <LinearLayout
@@ -255,7 +255,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               style="@style/DashboardButtonText"
-              android:text="Posts" />
+              android:text="@string/tab_posts" />
           </LinearLayout>
           <LinearLayout
             android:id="@+id/dashboard_pages_btn"
@@ -278,7 +278,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               style="@style/DashboardButtonText"
-              android:text="Pages" />
+              android:text="@string/tab_pages" />
           </LinearLayout>
           <FrameLayout
             android:layout_width="fill_parent"
@@ -305,7 +305,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/DashboardButtonText"
-                android:text="Comments" />
+                android:text="@string/tab_comments" />
             </LinearLayout>
             <org.wordpress.android.util.CommentBadgeTextView
               android:id="@+id/comment_badge"
@@ -350,7 +350,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               style="@style/DashboardButtonText"
-              android:text="Settings" />
+              android:text="@string/settings" />
           </LinearLayout>
           <LinearLayout
             android:id="@+id/dashboard_subs_btn"
@@ -373,7 +373,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               style="@style/DashboardButtonText"
-              android:text="Following" />
+              android:text="@string/reader" />
           </LinearLayout>
           <LinearLayout
             android:id="@+id/dashboard_stats_btn"
@@ -396,7 +396,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               style="@style/DashboardButtonText"
-              android:text="Stats" />
+              android:text="@string/tab_stats" />
           </LinearLayout>
         </LinearLayout>
       </LinearLayout>

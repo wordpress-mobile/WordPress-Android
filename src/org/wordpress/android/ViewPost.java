@@ -82,49 +82,9 @@ public class ViewPost extends Activity {
 			this.setTitle(getResources().getText(R.string.reader));
 			wv = (WebView) findViewById(R.id.webView);
 			wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-			backButton = (ImageButton) findViewById(R.id.browserBack);
-			backButton.setVisibility(View.VISIBLE);
-			backButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					wv.goBack();
-				}
-			});
-			forwardButton = (ImageButton) findViewById(R.id.browserForward);
-			forwardButton.setVisibility(View.VISIBLE);
-			forwardButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					wv.goForward();
-				}
-			});
-			refreshButton = (ImageButton) findViewById(R.id.browserRefresh);
-			refreshButton.setVisibility(View.VISIBLE);
-			refreshButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					wv.reload();
-					new Thread(new Runnable() {
-						public void run() {
-							// refresh stat
-							try {
-								HttpClient httpclient = new DefaultHttpClient();
-								HttpProtocolParams.setUserAgent(
-										httpclient.getParams(), "wp-android");
-								HttpResponse response = httpclient
-										.execute(new HttpGet(
-												"http://wordpress.com/reader/mobile/?template=stats&stats_name=home_page_refresh"));
-								InputStream content = response.getEntity()
-										.getContent();
-							} catch (Exception e) {
-								// oh well
-							}
-						}
-					}).start();
-				}
-			});
 			new loadReaderTask().execute(null, null, null, null);
 
 		} else {
-			RelativeLayout navBar = (RelativeLayout) findViewById(R.id.navBar);
-			navBar.setVisibility(View.GONE);
 			if (isPage) {
 				this.setTitle(EscapeUtils.unescapeHtml(accountName) + " - "
 						+ getResources().getText(R.string.preview_page));
@@ -145,19 +105,52 @@ public class ViewPost extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, 0, 0, getResources().getText(R.string.view_in_browser));
-		MenuItem menuItem = menu.findItem(0);
-		menuItem.setIcon(R.drawable.ic_menu_view);
+		if (loadReader) {
+			menu.add(0, 0, 0, getResources().getText(R.string.home));
+			MenuItem menuItem = menu.findItem(0);
+			menuItem.setIcon(R.drawable.ic_menu_home);
+
+			menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
+			menuItem = menu.findItem(1);
+			menuItem.setIcon(R.drawable.ic_menu_view);
+
+			menu.add(0, 2, 0, getResources().getText(R.string.refresh));
+			menuItem = menu.findItem(2);
+			menuItem.setIcon(R.drawable.browser_reload);
+		}
 		return true;
 	}
 
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case 0:
+			finish();
+			break;
+		case 1:
 
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(wv.getUrl()));
 			startActivity(i);
+			break;
+		case 2:
+			wv.reload();
+			new Thread(new Runnable() {
+				public void run() {
+					// refresh stat
+					try {
+						HttpClient httpclient = new DefaultHttpClient();
+						HttpProtocolParams.setUserAgent(httpclient.getParams(),
+								"wp-android");
+						HttpResponse response = httpclient
+								.execute(new HttpGet(
+										"http://wordpress.com/reader/mobile/?template=stats&stats_name=home_page_refresh"));
+						InputStream content = response.getEntity().getContent();
+					} catch (Exception e) {
+						// oh well
+					}
+				}
+			}).start();
+			break;
 		}
 
 		return false;
@@ -363,10 +356,16 @@ public class ViewPost extends Activity {
 						+ "\" />" + "</form>" + "</body>";
 
 				wv.setWebViewClient(new WebViewClient() {
+					@Override
 					public boolean shouldOverrideUrlLoading(WebView view,
 							String url) {
 						view.loadUrl(url);
 						return false;
+					}
+
+					@Override
+					public void onPageFinished(WebView view, String url) {
+						view.clearCache(true);
 					}
 				});
 
@@ -387,6 +386,7 @@ public class ViewPost extends Activity {
 				wv.getSettings().setSavePassword(false);
 				wv.getSettings().setBuiltInZoomControls(true);
 				wv.getSettings().setJavaScriptEnabled(true);
+				wv.getSettings().setPluginsEnabled(true);
 				wv.loadData(responseContent, "text/html", HTTP.UTF_8);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -396,7 +396,7 @@ public class ViewPost extends Activity {
 		}
 
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int i, KeyEvent event) {
 
@@ -409,8 +409,7 @@ public class ViewPost extends Activity {
 				} else {
 					finish();
 				}
-			}
-			else {
+			} else {
 				finish();
 			}
 		}
