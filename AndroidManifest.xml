@@ -11,7 +11,7 @@
 		<activity android:name="ViewPosts" android:theme="@style/Theme.TabView"/>
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:configChanges="orientation|keyboardHidden" android:name=".AddAccount"/>
-		<activity android:name="EditPost" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|keyboardHidden">
+		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -51,6 +51,7 @@
 <activity android:name="ViewDrafts"></activity>
 <activity android:name="Write"></activity>
 <activity android:name="About"></activity>
+<activity android:name="EditContent" android:windowSoftInputMode="adjustResize"></activity>
 </application>
 
 	<supports-screens android:smallScreens="true"

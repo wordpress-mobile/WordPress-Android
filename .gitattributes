@@ -210,6 +210,7 @@ libs/CWAC-Bus.jar -text
 libs/CWAC-Task.jar -text
 libs/android-support-v4.jar -text
 libs/httpmime-4.1.2.jar -text
+libs/tagsoup-1.2.1.jar -text
 /local.properties -text
 res/anim/cycle_5.xml -text
 res/anim/dashboard_hide.xml -text
@@ -217,6 +218,7 @@ res/anim/dashboard_show.xml -text
 res/anim/disappear.xml -text
 res/anim/rail.xml -text
 res/anim/shake.xml -text
+res/anim/show.xml -text
 res/drawable-hdpi/add.png -text
 res/drawable-hdpi/app_icon.png -text
 res/drawable-hdpi/btn_check_off_pressed.png -text
@@ -313,6 +315,8 @@ res/drawable/dashboard_icon_subs.png -text
 res/drawable/dashboard_icon_video.png -text
 res/drawable/drafts_icon.png -text
 res/drawable/drop_down_arrow.png -text
+res/drawable/format_bar_btn.xml -text
+res/drawable/format_bar_btn_toggled.xml -text
 res/drawable/gallery_selected_default.9.png -text
 res/drawable/grey_wp_button.9.png -text
 res/drawable/grey_wp_button_active.9.png -text
@@ -418,12 +422,14 @@ res/layout/add_account.xml -text
 res/layout/add_account_settings.xml -text
 res/layout/add_category.xml -text
 res/layout/add_quickpress_shortcut.xml -text
+res/layout/alert_image_options.xml -text
 res/layout/blogs_row.xml -text
 res/layout/blogs_row_actionbar.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/dashboard.xml -text
 res/layout/edit.xml -text
+res/layout/edit_content.xml -text
 res/layout/edit_page.xml -text
 res/layout/global_settings.xml -text
 res/layout/home.xml -text
@@ -498,6 +504,7 @@ src/org/wordpress/android/AddQuickPressShortcut.java -text
 src/org/wordpress/android/CommentBroadcastReceiver.java -text
 src/org/wordpress/android/CommentService.java -text
 src/org/wordpress/android/Dashboard.java -text
+src/org/wordpress/android/EditContent.java -text
 src/org/wordpress/android/EditPost.java -text
 src/org/wordpress/android/Link.java -text
 src/org/wordpress/android/NewAccount.java -text
@@ -527,12 +534,18 @@ src/org/wordpress/android/util/DashboardLayout.java -text
 src/org/wordpress/android/util/DrawableManager.java -text
 src/org/wordpress/android/util/Entities.java -text
 src/org/wordpress/android/util/EscapeUtils.java -text
+src/org/wordpress/android/util/FastXmlSerializer.java -text
 src/org/wordpress/android/util/ImageHelper.java -text
 src/org/wordpress/android/util/IntHashMap.java -text
 src/org/wordpress/android/util/StringHelper.java -text
 src/org/wordpress/android/util/TrustAllManager.java -text
 src/org/wordpress/android/util/TrustAllSSLSocketFactory.java -text
+src/org/wordpress/android/util/WPEditText.java -text
+src/org/wordpress/android/util/WPHtml.java -text
+src/org/wordpress/android/util/WPImageSpan.java -text
+src/org/wordpress/android/util/WPTagHandler.java -text
 src/org/wordpress/android/util/WPTitleBar.java -text
+src/org/wordpress/android/util/XmlUtils.java -text
 src/org/xmlrpc/android/ApiHelper.java -text
 src/org/xmlrpc/android/Base64.java -text
 src/org/xmlrpc/android/Base64Coder.java -text

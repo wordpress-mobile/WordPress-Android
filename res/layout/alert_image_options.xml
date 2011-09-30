@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal">
+    <EditText
+      android:id="@+id/title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Title"
+      android:singleLine="true" />
+    <EditText
+      android:id="@+id/description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Description (optional)"
+      android:singleLine="true" />
+    <EditText
+      android:id="@+id/caption"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Caption (optional)"
+      android:singleLine="true" />
+    <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Horizontal Alignment:"
+      android:textStyle="bold"
+      android:textColor="#FFFFFF" />
+    <RadioGroup
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:id="@+id/imageAlignmentGroup">
+      <RadioButton
+        android:checked="true"
+        android:text="Left"
+        android:id="@+id/alignLeft"
+        android:textColor="#FFFFFF" />
+      <RadioButton
+        android:checked="false"
+        android:text="Center"
+        android:id="@+id/alignCenter"
+        android:textColor="#FFFFFF" />
+      <RadioButton
+        android:checked="false"
+        android:text="Right"
+        android:id="@+id/alignRight"
+        android:textColor="#FFFFFF" />
+    </RadioGroup>
+    <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:text="Width:"
+      android:textStyle="bold" />
+    <SeekBar
+      android:layout_height="wrap_content"
+      android:id="@+id/imageWidth"
+      android:layout_width="match_parent" />
+    <TextView
+      android:layout_height="wrap_content"
+      android:id="@+id/imageWidthText"
+      android:layout_width="match_parent"
+      android:textColor="#FFFFFF" />
+    <CheckBox
+      android:text="Featured Image"
+      android:id="@+id/featuredImage"
+      android:textColor="#FFFFFF"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+  </LinearLayout>
+</ScrollView>

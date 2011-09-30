@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="libs/CWAC-Bus.jar"/>
 	<classpathentry kind="lib" path="libs/CWAC-Task.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.1.2.jar"/>
+	<classpathentry kind="lib" path="libs/tagsoup-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

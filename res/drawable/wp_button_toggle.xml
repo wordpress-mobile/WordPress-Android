@@ -3,8 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
   <item
     android:state_checked="false"
-    android:drawable="@drawable/wp_small" />
+    android:drawable="@drawable/format_bar_btn" />
   <item
     android:state_checked="true"
-    android:drawable="@drawable/wp_small_toggle" />
+    android:drawable="@drawable/format_bar_btn_toggled" />
 </selector>

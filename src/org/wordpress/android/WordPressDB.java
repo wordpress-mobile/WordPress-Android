@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.Base64;
 
@@ -30,8 +31,11 @@ public class WordPressDB {
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
 	private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
 		+ "read integer not null, interval text, statsdate integer);";
+	private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
+			+ "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false);";
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
+	private static final String MEDIA_TABLE = "media";
 	
 	private static final String CREATE_TABLE_POSTS = "create table if not exists posts (id integer primary key autoincrement, blogID text, " +
 			"postid text, title text default '', dateCreated date, date_created_gmt date, categories text default '', custom_fields text default '', " +
@@ -109,12 +113,12 @@ public class WordPressDB {
 		db.execSQL(CREATE_TABLE_SETTINGS);
 		//added eula to this class to fix trac #49
 		db.execSQL(CREATE_TABLE_EULA);
-		//int test = db.getVersion();
 		
 		db.execSQL(CREATE_TABLE_POSTS);
 		db.execSQL(CREATE_TABLE_COMMENTS);
 		db.execSQL(CREATE_TABLE_CATEGORIES);
 		db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
+		db.execSQL(CREATE_TABLE_MEDIA);
 		
 		try {
 			if (db.getVersion() < 1){ //user is new install
@@ -1487,7 +1491,6 @@ public class WordPressDB {
 		c.close();
 	}
 
-
     public int getUnmoderatedCommentCount(Context ctx, int blogID) {
             int commentCount = 0;
             db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
@@ -1503,4 +1506,100 @@ public class WordPressDB {
             db.close();
         return commentCount;
     }
+    
+    public boolean saveMediaFile(Context ctx, MediaFile mf) {
+    	boolean returnValue = false;
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		ContentValues values = new ContentValues();
+		values.put("postID",mf.getPostID());
+		values.put("filePath", mf.getFileName());
+		values.put("fileName", mf.getFileName());
+		values.put("title", mf.getTitle());
+		values.put("description", mf.getDescription());
+		values.put("caption", mf.getCaption());
+		values.put("horizontalAlignment", mf.getHorizontalAlignment());
+		values.put("width", mf.getWidth());
+		values.put("height", mf.getHeight());
+		values.put("mimeType", mf.getMIMEType());
+		values.put("featured", mf.isFeatured());
+		
+		int result = db.update(MEDIA_TABLE, values, "postID=" + mf.getPostID() + " AND filePath='" + mf.getFileName() + "'", null);
+		if (result == 0)
+			returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
+		
+		db.close();
+		return (returnValue);
+	}
+    
+    public MediaFile[] getMediaFilesForPost(Context ctx, Post p) {
+    	Cursor c = db.query(MEDIA_TABLE, null, "postID=" + p.getId(), null, null, null, null);
+		int numRows = c.getCount();
+		c.moveToFirst();
+		MediaFile[] mediaFiles = new MediaFile[numRows];
+		for (int i = 0; i < numRows; i++) {
+			
+			MediaFile mf = new MediaFile();
+			mf.setPostID(c.getInt(1));
+			mf.setFilePath(c.getString(2));
+			mf.setFileName(c.getString(3));
+			mf.setTitle(c.getString(4));
+			mf.setDescription(c.getString(5));
+			mf.setCaption(c.getString(6));
+			mf.setHorizontalAlignment(c.getInt(7));
+			mf.setWidth(c.getInt(8));
+			mf.setHeight(c.getInt(9));
+			mf.setMIMEType(c.getString(10));
+			mf.setFeatured(c.getInt(11) > 0);
+			mediaFiles[i] = mf;
+			c.moveToNext();
+		}
+		c.close();
+        db.close();
+        
+		return mediaFiles;
+    }
+    
+    public boolean deleteMediaFile(Context ctx, MediaFile mf) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
+		boolean returnValue = false;
+
+		int result = 0;
+		result = db.delete(MEDIA_TABLE, "id=" + mf.getId(), null);
+		db.close();
+		
+		if (result == 1){
+			returnValue = true;
+		}
+		
+		return returnValue;
+	}
+
+
+	public MediaFile getMediaFile(Context ctx, String src, Post post) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);		
+		Cursor c = db.query(MEDIA_TABLE, null, "postID=" + post.getId() + " AND filePath='" + src + "'", null, null, null, null);
+		int numRows = c.getCount();
+		c.moveToFirst();
+		MediaFile mf = new MediaFile();
+		if (numRows == 1){
+			mf.setPostID(c.getInt(1));
+			mf.setFilePath(c.getString(2));
+			mf.setFileName(c.getString(3));
+			mf.setTitle(c.getString(4));
+			mf.setDescription(c.getString(5));
+			mf.setCaption(c.getString(6));
+			mf.setHorizontalAlignment(c.getInt(7));
+			mf.setWidth(c.getInt(8));
+			mf.setHeight(c.getInt(9));
+			mf.setMIMEType(c.getString(10));
+			mf.setFeatured(c.getInt(11) > 0);
+		}
+		c.close();
+		db.close();
+
+		return mf;
+	}
+    
+    
 }
