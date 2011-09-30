@@ -756,6 +756,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 				is.setFeatured(mf.isFeatured());
 				is.setHorizontalAlignment(mf.getHorizontalAlignment());
 				is.setImageSource(curStream);
+				is.setWidth(mf.getWidth());
 			}
 			
 			text.setSpan(is, len, text.length(),

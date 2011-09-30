@@ -166,6 +166,7 @@ public class EditContent extends Activity {
 							.findViewById(R.id.imageAlignmentGroup);
 
 					imageWidthText.setText(String.valueOf(span.getWidth()));
+					seekBar.setProgress(span.getWidth());
 					titleText.setText(span.getTitle());
 					descText.setText(span.getDescription());
 					caption.setText(span.getCaption());

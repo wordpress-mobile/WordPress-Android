@@ -1532,6 +1532,7 @@ public class WordPressDB {
 	}
     
     public MediaFile[] getMediaFilesForPost(Context ctx, Post p) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
     	Cursor c = db.query(MEDIA_TABLE, null, "postID=" + p.getId(), null, null, null, null);
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -1599,6 +1600,13 @@ public class WordPressDB {
 		db.close();
 
 		return mf;
+	}
+
+
+	public void deleteMediaFilesForPost(Context ctx, Post post) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		db.delete(MEDIA_TABLE, "postID=" + post.getId(), null);
+	    db.close();
 	}
     
     

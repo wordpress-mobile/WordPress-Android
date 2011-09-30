@@ -720,6 +720,7 @@ public class EditPost extends Activity implements LocationListener {
 
 			if (!isNew) {
 			// update the images
+			post.deleteMediaFiles();
 			Spannable s = contentET.getText();
 			WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 					WPImageSpan.class);
@@ -737,6 +738,7 @@ public class EditPost extends Activity implements LocationListener {
 					mf.setFeatured(wpIS.isFeatured());
 					mf.setFileName(wpIS.getImageSource().toString());
 					mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+					mf.setWidth(wpIS.getWidth());
 					mf.save(EditPost.this);
 				}
 			}
@@ -786,6 +788,8 @@ public class EditPost extends Activity implements LocationListener {
 				post.setLocalDraft(true);
 				success = post.save();
 				
+				post.deleteMediaFiles();
+				
 				Spannable s = contentET.getText();
 				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 						WPImageSpan.class);
@@ -803,6 +807,7 @@ public class EditPost extends Activity implements LocationListener {
 						mf.setFeatured(wpIS.isFeatured());
 						mf.setFilePath(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+						mf.setWidth(wpIS.getWidth());
 						mf.save(EditPost.this);
 					}
 				}
@@ -822,7 +827,7 @@ public class EditPost extends Activity implements LocationListener {
 				success = post.update();
 			}
 
-		}// if/then for valid settings
+		}
 
 		return success;
 	}

@@ -16,7 +16,7 @@ public class MediaFile {
 	protected String fileURL = null;
 	protected int horizontalAlignment; //0 = left, 1 = center, 2 = right 
 	protected boolean verticalAligment = false; //false = bottom, true = top
-	protected int width, height;
+	protected int width = 500, height;
 	protected String MIMEType = ""; //do not store this value
 	protected String videoPressShortCode = null;
 	protected boolean featured = false;

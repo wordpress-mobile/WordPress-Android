@@ -186,7 +186,6 @@ public class Post {
 		try {
 			jArray = new JSONArray(categories);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return jArray;
@@ -486,7 +485,7 @@ public class Post {
 			nm.notify(notificationID, n); // needs a unique id
 
 			// upload a post object to the blog
-			if (!post.getMediaPaths().equals("")) {
+			/*if (!post.getMediaPaths().equals("")) {
 				String[] pPaths = post.mediaPaths.split(",");
 
 				for (int i = 0; i < pPaths.length; i++) {
@@ -496,7 +495,8 @@ public class Post {
 					post.selectedImageCtr++;
 				}
 
-			}
+			}*/
+			
 
 			if (!post.categories.equals("")) {
 
@@ -515,14 +515,17 @@ public class Post {
 
 			String imageContent = "";
 			boolean mediaError = false;
-			if (post.selectedImageCtr > 0) { // did user add media to post?
-				// upload the images and return the HTML
+			
+			WordPressDB db = new WordPressDB(context);
+			MediaFile[] mediaFiles = db.getMediaFilesForPost(context, post);
+			
+			if (mediaFiles.length > 0) {
 				String state = android.os.Environment.getExternalStorageState();
 				if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
 					// we need an SD card to submit media, stop this train!
 					mediaError = true;
 				} else {
-					imageContent = uploadImages();
+					imageContent = uploadImages(mediaFiles);
 				}
 			}
 			if (!mediaError) {
@@ -555,7 +558,6 @@ public class Post {
 
 				if (!post.isPage) {
 					// add the tagline
-					WordPressDB db = new WordPressDB(post.context);
 					HashMap<?, ?> globalSettings = db
 							.getNotificationOptions(post.context);
 					boolean taglineValue = false;
@@ -633,7 +635,7 @@ public class Post {
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 						post.blog.getHttpuser(), post.blog.getHttppassword());
 
-				client.setUploadProgressListener(new XMLRPCClient.UploadProgressListener() {
+				/*client.setUploadProgressListener(new XMLRPCClient.UploadProgressListener() {
 					// user selected new blog in the title bar
 					@Override
 					public void OnUploadProgress(int progress) {
@@ -644,7 +646,7 @@ public class Post {
 						nm.notify(notificationID, n);
 
 					}
-				});
+				});*/
 				n.contentView.setTextViewText(R.id.status_text,
 						"Uploading Post");
 				nm.notify(notificationID, n);
@@ -669,7 +671,7 @@ public class Post {
 							.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
 									: "metaWeblog.editPost", params);
 					success = true;
-					post.setUploaded(true);
+					//post.setUploaded(true);
 					post.update();
 					return true;
 				} catch (final XMLRPCException e) {
@@ -680,7 +682,7 @@ public class Post {
 			return false;
 		}
 
-		public String uploadImages() {
+		public String uploadImages(MediaFile[] mediaFiles) {
 			String content = "";
 
 			// images variables
@@ -689,7 +691,8 @@ public class Post {
 
 			// loop for multiple images
 
-			for (int it = 0; it < post.selectedImageCtr; it++) {
+			for (int it = 0; it < mediaFiles.length; it++) {
+				MediaFile mf = mediaFiles[it];
 				final int printCtr = it;
 				/*
 				 * Thread prompt = new Thread() { public void run() {
@@ -701,12 +704,12 @@ public class Post {
 						+ String.valueOf(printCtr + 1);
 				n.contentView.setTextViewText(R.id.status_text, statusText);
 				// check for image, and upload it
-				if (post.imageUrl.get(it) != null) {
+				if (mf.getFilePath() != "") {
 					XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 							post.blog.getHttpuser(),
 							post.blog.getHttppassword());
 
-					client.setUploadProgressListener(new XMLRPCClient.UploadProgressListener() {
+					/*client.setUploadProgressListener(new XMLRPCClient.UploadProgressListener() {
 						@Override
 						public void OnUploadProgress(int progress) {
 
@@ -717,11 +720,11 @@ public class Post {
 							nm.notify(notificationID, n);
 
 						}
-					});
+					});*/
 
 					String curImagePath = "";
 
-					curImagePath = post.imageUrl.get(it).toString();
+					curImagePath = mf.getFilePath();
 					boolean video = false;
 					if (curImagePath.contains("video")) {
 						video = true;
@@ -732,7 +735,6 @@ public class Post {
 						Uri videoUri = Uri.parse(curImagePath);
 						File fVideo = null;
 						String mimeType = "", xRes = "", yRes = "";
-						MediaFile mf = null;
 
 						if (videoUri.toString().contains("content:")) {
 							String[] projection;
@@ -846,14 +848,13 @@ public class Post {
 					else {
 						for (int i = 0; i < 2; i++) {
 
-							curImagePath = post.imageUrl.get(it).toString();
+							curImagePath = mf.getFilePath();
 
 							if (i == 0 || post.blog.isFullSizeImage()) {
 
 								Uri imageUri = Uri.parse(curImagePath);
 								File jpeg = null;
 								String mimeType = "", orientation = "", path = "";
-								MediaFile mf = null;
 
 								if (imageUri.toString().contains("content:")) {
 									String[] projection;
@@ -883,7 +884,6 @@ public class Post {
 										orientationColumn = cur
 												.getColumnIndex(Images.Media.ORIENTATION);
 
-										mf = new MediaFile();
 										orientation = cur
 												.getString(orientationColumn);
 										thumbData = cur.getString(dataColumn);
@@ -895,7 +895,6 @@ public class Post {
 
 									}
 								} else { // file is not in media library
-									mf = new MediaFile();
 									path = imageUri.toString().replace(
 											"file://", "");
 									jpeg = new File(path);
@@ -941,7 +940,7 @@ public class Post {
 
 									ImageHelper ih2 = new ImageHelper();
 									finalBytes = ih2.createThumbnail(bytes,
-											post.blog.getMaxImageWidth(),
+											String.valueOf(mf.getWidth()),
 											orientation, false);
 								}
 
@@ -1048,5 +1047,14 @@ public class Post {
 			}// end new for loop
 			return content;
 		}
+	}
+
+	public void deleteMediaFiles() {
+		db.deleteMediaFilesForPost(context, this);
+		
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }
