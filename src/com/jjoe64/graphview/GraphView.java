@@ -176,8 +176,8 @@ abstract public class GraphView extends LinearLayout {
 	 * one data set for a graph series
 	 */
 	static public class GraphViewData {
-		final double valueX;
-		final double valueY;
+		public final double valueX;
+		public final double valueY;
 		public GraphViewData(double valueX, double valueY) {
 			super();
 			this.valueX = valueX;
