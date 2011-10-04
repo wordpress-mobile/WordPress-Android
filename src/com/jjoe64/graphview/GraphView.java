@@ -263,6 +263,9 @@ abstract public class GraphView extends LinearLayout {
 	private boolean showLegend = false;
 	private float legendWidth = 120;
 	private LegendAlign legendAlign = LegendAlign.MIDDLE;
+	private boolean manualYAxis;
+	private double manualMaxYValue;
+	private double manualMinYValue;
 
 	/**
 	 *
@@ -427,12 +430,17 @@ abstract public class GraphView extends LinearLayout {
 	}
 
 	private double getMaxY() {
-		double largest = Integer.MIN_VALUE;
-		for (int i=0; i<graphSeries.size(); i++) {
-			GraphViewData[] values = _values(i);
-			for (int ii=0; ii<values.length; ii++)
-				if (values[ii].valueY > largest)
-					largest = values[ii].valueY;
+		double largest;
+		if (manualYAxis) {
+			largest = manualMaxYValue;
+		} else {
+			largest = Integer.MIN_VALUE;
+			for (int i=0; i<graphSeries.size(); i++) {
+				GraphViewData[] values = _values(i);
+				for (int ii=0; ii<values.length; ii++)
+					if (values[ii].valueY > largest)
+						largest = values[ii].valueY;
+			}
 		}
 		return largest;
 	}
@@ -455,12 +463,17 @@ abstract public class GraphView extends LinearLayout {
 	}
 
 	private double getMinY() {
-		double smallest = Integer.MAX_VALUE;
-		for (int i=0; i<graphSeries.size(); i++) {
-			GraphViewData[] values = _values(i);
-			for (int ii=0; ii<values.length; ii++)
-				if (values[ii].valueY < smallest)
-					smallest = values[ii].valueY;
+		double smallest;
+		if (manualYAxis) {
+			smallest = manualMinYValue;
+		} else {
+			smallest = Integer.MAX_VALUE;
+			for (int i=0; i<graphSeries.size(); i++) {
+				GraphViewData[] values = _values(i);
+				for (int ii=0; ii<values.length; ii++)
+					if (values[ii].valueY < smallest)
+						smallest = values[ii].valueY;
+			}
 		}
 		return smallest;
 	}
@@ -487,6 +500,26 @@ abstract public class GraphView extends LinearLayout {
 
 	public void setLegendWidth(float legendWidth) {
 		this.legendWidth = legendWidth;
+	}
+
+	/**
+	 * you have to set the bounds {@link #setManualYAxisBounds(double, double)}. That automatically enables manualYAxis-flag.
+	 * if you want to disable the menual y axis, call this method with false.
+	 * @param manualYAxis
+	 */
+	public void setManualYAxis(boolean manualYAxis) {
+		this.manualYAxis = manualYAxis;
+	}
+
+	/**
+	 * set manual Y axis limit
+	 * @param max
+	 * @param min
+	 */
+	public void setManualYAxisBounds(double max, double min) {
+		manualMaxYValue = max;
+		manualMinYValue = min;
+		manualYAxis = true;
 	}
 
 	/**

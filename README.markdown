@@ -35,6 +35,7 @@ You can scroll with a finger touch move gesture.
 Since Android 2.3! With two-fingers touch scale gesture (Multi-touch), the viewport can be changed.
 * Background (line graph)
 Optionally draws a light background under the diagram stroke.
+* Manual Y axis limits
 
 <h2>How to use</h2>
 <a href="http://www.jjoe64.com/p/graphview-library.html">View GraphView page http://www.jjoe64.com/p/graphview-library.html</a>
