@@ -401,13 +401,13 @@ public class WPHtml {
 		for (int i = start; i < end; i++) {
 			char c = text.charAt(i);
 
-			if (c == '<') {
+			/*if (c == '<') {
 				out.append("&lt;");
 			} else if (c == '>') {
 				out.append("&gt;");
 			} else if (c == '&') {
-				out.append("&amp;");
-			} else if (c > 0x7E || c < ' ') {
+				out.append("&amp;");*/
+			if (c > 0x7E || c < ' ') {
 				out.append("&#" + ((int) c) + ";");
 			} else if (c == ' ') {
 				while (i + 1 < end && text.charAt(i + 1) == ' ') {
