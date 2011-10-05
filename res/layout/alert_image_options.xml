@@ -34,27 +34,11 @@
       android:text="Horizontal Alignment:"
       android:textStyle="bold"
       android:textColor="#FFFFFF" />
-    <RadioGroup
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:id="@+id/imageAlignmentGroup">
-      <RadioButton
-        android:checked="true"
-        android:text="Left"
-        android:id="@+id/alignLeft"
-        android:textColor="#FFFFFF" />
-      <RadioButton
-        android:checked="false"
-        android:text="Center"
-        android:id="@+id/alignCenter"
-        android:textColor="#FFFFFF" />
-      <RadioButton
-        android:checked="false"
-        android:text="Right"
-        android:id="@+id/alignRight"
-        android:textColor="#FFFFFF" />
-    </RadioGroup>
+    <Spinner 
+        android:id="@+id/alignment_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/image_alignment" />
     <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"

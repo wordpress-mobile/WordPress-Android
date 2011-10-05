@@ -896,8 +896,6 @@ public class ViewPosts extends ListActivity {
 				startActivityForResult(i2, 0);
 				return true;
 			case 1:
-				showDialog(ID_DIALOG_POSTING);
-
 				new Thread() {
 					public void run() {
 

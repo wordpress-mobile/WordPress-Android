@@ -458,6 +458,15 @@
   <string name="quick_photo">Quick Photo</string>
   <string name="quick_video">Quick Video</string>
   
+  <!-- Image Alignment -->
+  <string name="image_alignment">Alignment</string>
+    <string-array name="alignment_array">
+        <item>None</item>
+        <item>Left</item>
+        <item>Center</item>
+        <item>Right</item>
+    </string-array>
+  
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991
     Free Software

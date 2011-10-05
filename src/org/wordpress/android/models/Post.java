@@ -3,11 +3,14 @@ package org.wordpress.android.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.Dashboard;
+import org.wordpress.android.EditPost;
 import org.wordpress.android.R;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -23,6 +26,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -516,18 +521,39 @@ public class Post {
 			String imageContent = "";
 			boolean mediaError = false;
 			
-			WordPressDB db = new WordPressDB(context);
-			MediaFile[] mediaFiles = db.getMediaFilesForPost(context, post);
-			
-			if (mediaFiles.length > 0) {
-				String state = android.os.Environment.getExternalStorageState();
-				if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-					// we need an SD card to submit media, stop this train!
-					mediaError = true;
-				} else {
-					imageContent = uploadImages(mediaFiles);
+			Spannable s = (Spannable) WPHtml.fromHtml(post.getDescription() + post.getMt_text_more(), context, post);
+			WPImageSpan[] click_spans = s.getSpans(0, s.length(),
+					WPImageSpan.class);
+
+			if (click_spans.length != 0) {
+
+				for (int i = 0; i < click_spans.length; i++) {
+					WPImageSpan wpIS = click_spans[i];
+					int start = s.getSpanStart(wpIS);
+					int end = s.getSpanEnd(wpIS);
+					MediaFile mf = new MediaFile();
+					mf.setPostID(post.getId());
+					mf.setTitle(wpIS.getTitle());
+					mf.setDescription(wpIS.getDescription());
+					mf.setFeatured(wpIS.isFeatured());
+					mf.setFileName(wpIS.getImageSource().toString());
+					mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+					mf.setWidth(wpIS.getWidth());
+					
+					String imgHTML = uploadImage(mf);
+					if (imgHTML != null) {
+						SpannableString ss = new SpannableString(imgHTML);
+						s.setSpan(ss, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						s.removeSpan(wpIS);
+					}
+					else {
+						mediaError = true;
+					}
 				}
 			}
+			
+			
+			WordPressDB db = new WordPressDB(context);
 			if (!mediaError) {
 
 				String[] theCategories = new String[post.selectedCategories
@@ -541,25 +567,12 @@ public class Post {
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
 
 				String content = "";
-				if (imageContent != "") {
-					if (post.blog.getImagePlacement().equals("Above Text")) {
-						content = imageContent + post.description
-								+ post.mt_text_more;
-					} else {
-						content = post.description + post.mt_text_more
-								+ imageContent;
-					}
-				} else {
-					if (post.mt_text_more != null)
-						content = post.description + post.mt_text_more;
-					else
-						content = post.description;
-				}
+				
+				content = WPHtml.toHtml(s);
 
 				if (!post.isPage) {
 					// add the tagline
-					HashMap<?, ?> globalSettings = db
-							.getNotificationOptions(post.context);
+					HashMap<?, ?> globalSettings = db.getNotificationOptions(post.context);
 					boolean taglineValue = false;
 					String tagline = "";
 
@@ -571,7 +584,7 @@ public class Post {
 
 						if (taglineValue) {
 							tagline = globalSettings.get("tagline").toString();
-							if (!tagline.equals("")) {
+							if (tagline != null) {
 								content += "\n\n<span class=\"post_sig\">"
 										+ tagline + "</span>\n\n";
 							}
@@ -682,7 +695,7 @@ public class Post {
 			return false;
 		}
 
-		public String uploadImages(MediaFile[] mediaFiles) {
+		public String uploadImage(MediaFile mf) {
 			String content = "";
 
 			// images variables
@@ -691,9 +704,7 @@ public class Post {
 
 			// loop for multiple images
 
-			for (int it = 0; it < mediaFiles.length; it++) {
-				MediaFile mf = mediaFiles[it];
-				final int printCtr = it;
+				final int printCtr = 0;
 				/*
 				 * Thread prompt = new Thread() { public void run() {
 				 * loadingDialog.setMessage("Uploading Media File #" +
@@ -704,7 +715,7 @@ public class Post {
 						+ String.valueOf(printCtr + 1);
 				n.contentView.setTextViewText(R.id.status_text, statusText);
 				// check for image, and upload it
-				if (mf.getFilePath() != "") {
+				if (mf.getFileName() != null) {
 					XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 							post.blog.getHttpuser(),
 							post.blog.getHttppassword());
@@ -724,7 +735,7 @@ public class Post {
 
 					String curImagePath = "";
 
-					curImagePath = mf.getFilePath();
+					curImagePath = mf.getFileName();
 					boolean video = false;
 					if (curImagePath.contains("video")) {
 						video = true;
@@ -824,7 +835,7 @@ public class Post {
 								}
 							}
 							boolean xmlrpcError = true;
-							break;
+							return null;
 						}
 
 						HashMap<?, ?> contentHash = new HashMap<Object, Object>();
@@ -848,7 +859,7 @@ public class Post {
 					else {
 						for (int i = 0; i < 2; i++) {
 
-							curImagePath = mf.getFilePath();
+							curImagePath = mf.getFileName();
 
 							if (i == 0 || post.blog.isFullSizeImage()) {
 
@@ -988,12 +999,25 @@ public class Post {
 									}
 								}
 
-								// prepare the centering css if desired from
-								// user
-								String centerCSS = " ";
-								if (post.blog.isCenterThumbnail()) {
-									centerCSS = "style=\"display:block;margin-right:auto;margin-left:auto;\" ";
+								
+								String alignmentCSS = "";
+								switch (mf.getHorizontalAlignment()) {
+									case 0:
+										alignmentCSS = "alignnone";
+										break;
+									case 1:
+										alignmentCSS = "alignleft";
+										break;
+									case 2:
+										alignmentCSS = "aligncenter";
+										break;
+									case 3:
+										alignmentCSS = "alignright";
+										break;
 								}
+								
+								
+									alignmentCSS = "class=\"" + alignmentCSS + "\" ";
 
 								if (i != 0 && post.blog.isFullSizeImage()) {
 									if (resultURL != null) {
@@ -1003,7 +1027,7 @@ public class Post {
 											content = content
 													+ "<a alt=\"image\" href=\""
 													+ finalImageUrl
-													+ "\"><img " + centerCSS
+													+ "\"><img " + alignmentCSS
 													+ "alt=\"image\" src=\""
 													+ finalThumbnailUrl
 													+ "\" /></a>\n\n";
@@ -1011,7 +1035,7 @@ public class Post {
 											content = content
 													+ "\n<a alt=\"image\" href=\""
 													+ finalImageUrl
-													+ "\"><img " + centerCSS
+													+ "\"><img " + alignmentCSS
 													+ "alt=\"image\" src=\""
 													+ finalThumbnailUrl
 													+ "\" /></a>";
@@ -1027,13 +1051,13 @@ public class Post {
 												.equals("Above Text")) {
 
 											content = content + "<img "
-													+ centerCSS
+													+ alignmentCSS
 													+ "alt=\"image\" src=\""
 													+ finalThumbnailUrl
 													+ "\" />\n\n";
 										} else {
 											content = content + "\n<img "
-													+ centerCSS
+													+ alignmentCSS
 													+ "alt=\"image\" src=\""
 													+ finalThumbnailUrl
 													+ "\" />";
@@ -1044,7 +1068,6 @@ public class Post {
 						}// end image check
 					}
 				}// end image stuff
-			}// end new for loop
 			return content;
 		}
 	}

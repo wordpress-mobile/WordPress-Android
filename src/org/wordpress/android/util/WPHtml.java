@@ -43,6 +43,7 @@ import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -320,7 +321,7 @@ public class WPHtml {
 				}
 			}
 
-			withinStyle(out, text, i, next);
+			processWPImage(out, text, i, next);
 
 			for (int j = style.length - 1; j >= 0; j--) {
 				if (style[j] instanceof ForegroundColorSpan) {
@@ -376,6 +377,22 @@ public class WPHtml {
 			}
 
 			out.append(p);
+		}
+	}
+	
+	private static void processWPImage(StringBuilder out, Spanned text, int start,
+			int end) {
+		int next;
+		for (int i = start; i < end; i = next) {
+			next = text.nextSpanTransition(i, end, SpannableString.class);
+			SpannableString[] images = text.getSpans(i, next, SpannableString.class);
+
+			for (SpannableString image : images) {
+				out.append(image.toString());
+			}
+
+			withinStyle(out, text, i, next);
+
 		}
 	}
 

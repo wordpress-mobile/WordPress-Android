@@ -14,7 +14,7 @@ public class MediaFile {
 	protected String caption = null;
 	protected String description = null;
 	protected String fileURL = null;
-	protected int horizontalAlignment; //0 = left, 1 = center, 2 = right 
+	protected int horizontalAlignment; //0 = none, 1 = left, 2 = center, 3 = right
 	protected boolean verticalAligment = false; //false = bottom, true = top
 	protected int width = 500, height;
 	protected String MIMEType = ""; //do not store this value

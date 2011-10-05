@@ -45,6 +45,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -52,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -162,8 +164,11 @@ public class EditContent extends Activity {
 							.findViewById(R.id.featuredImage);
 					final SeekBar seekBar = (SeekBar) alertView
 							.findViewById(R.id.imageWidth);
-					final RadioGroup alignmentRG = (RadioGroup) alertView
-							.findViewById(R.id.imageAlignmentGroup);
+					final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
+				    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				            EditContent.this, R.array.alignment_array, android.R.layout.simple_spinner_item);
+				    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				    alignmentSpinner.setAdapter(adapter);
 
 					imageWidthText.setText(String.valueOf(span.getWidth()));
 					seekBar.setProgress(span.getWidth());
@@ -172,18 +177,7 @@ public class EditContent extends Activity {
 					caption.setText(span.getCaption());
 					featured.setChecked(span.isFeatured());
 
-					switch (span.getHorizontalAlignment()) {
-					case 0:
-						alignmentRG.check(R.id.alignLeft);
-						break;
-					case 1:
-						alignmentRG.check(R.id.alignCenter);
-						break;
-					case 2:
-						alignmentRG.check(R.id.alignRight);
-						break;
-
-					}
+					alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
 
 					seekBar.setMax(1000);
 					seekBar.setProgress(span.getWidth());
@@ -219,16 +213,7 @@ public class EditContent extends Activity {
 											span.setDescription(descText
 													.getText().toString());
 											
-											int checkedID = alignmentRG.getCheckedRadioButtonId();
-											if (checkedID == R.id.alignLeft) {
-												span.setHorizontalAlignment(0);
-											}
-											else if (checkedID == R.id.alignCenter) {
-												span.setHorizontalAlignment(1);
-											}
-											else if (checkedID == R.id.alignRight) {
-												span.setHorizontalAlignment(2);
-											}
+											span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
 											span.setWidth(seekBar.getProgress());
 											span.setCaption(caption.getText()
 													.toString());
@@ -683,7 +668,7 @@ public class EditContent extends Activity {
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		// ImageSpan[] is = str.getSpans(selectionStart, selectionEnd,
 		// ImageSpan.class);
-		builder.append("\r\n\r\n");
+		builder.append("\n");
 		content.setText(builder);
 
 	}
