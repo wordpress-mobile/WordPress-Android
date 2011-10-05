@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.wordpress.android.Comments;
 import org.wordpress.android.EditPost;
 import org.wordpress.android.R;
 import org.wordpress.android.Settings;
@@ -196,7 +197,7 @@ public class WPTitleBar extends RelativeLayout {
 			LinearLayout commentsButton = (LinearLayout) findViewById(R.id.dashboard_comments_btn);
 			commentsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent i = new Intent(context, ViewComments.class);
+					Intent i = new Intent(context, Comments.class);
 					i.putExtra("id", WordPress.currentBlog.getId());
 					i.putExtra("isNew", true);
 					context.startActivity(i);

@@ -6,7 +6,6 @@
   android:padding="0px"
   android:background="#e8e8e8"
   android:orientation="vertical">
-  <include layout="@layout/action_bar" /> 
   <ListView
     android:choiceMode="singleChoice"
     android:id="@android:id/list"

@@ -111,7 +111,7 @@ public class Dashboard extends Activity {
 			if (status.equals("CANCEL") && WordPress.currentBlog == null) {
 				finish();
 			} else {
-				WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.actionBar);
+				WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 				actionBar.reloadBlogs();
 			}
 		}
@@ -371,7 +371,7 @@ public class Dashboard extends Activity {
 			startActivityForResult(i, 0);
 		} else {
 			id = WordPress.currentBlog.getId();
-			titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+			titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 			titleBar.showDashboard();
 
 			titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {

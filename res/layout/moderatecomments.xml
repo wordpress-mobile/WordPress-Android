@@ -5,14 +5,6 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <RelativeLayout
-    android:id="@+id/mainRL"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="0px"
-    android:background="#F4F4F4"
-    android:layout_weight="1.0"
-    android:layout_marginTop="47dp">
     <ListView
       android:choiceMode="singleChoice"
       android:id="@android:id/list"
@@ -25,41 +17,7 @@
       android:scrollingCache="true">
     </ListView>
     <RelativeLayout
-      android:layout_above="@id/mainRL"
-      android:id="@+id/loading"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:visibility="invisible">
-      <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#AA111111"
-        android:padding="8dp"
-        android:gravity="center">
-        <ProgressBar
-          android:id="@+id/progress"
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_marginTop="6dp"
-          android:layout_marginBottom="6dp"
-          android:indeterminate="true" />
-        <TextView
-          android:textColor="#FFFFFF"
-          android:shadowColor="#000000"
-          android:shadowDx="0"
-          android:shadowDy=".5"
-          android:shadowRadius="1"
-          android:layout_toRightOf="@id/progress"
-          android:layout_marginLeft="8dp"
-          android:text="@string/loading"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentTop="true" />
-      </LinearLayout>
-    </RelativeLayout>
-    <RelativeLayout
       android:id="@+id/moderationBar"
-      android:layout_below="@id/mainRL"
       android:layout_alignParentBottom="true"
       android:layout_width="fill_parent"
       android:layout_height="52dp"
@@ -67,7 +25,7 @@
       android:paddingTop="4dp"
       android:visibility="invisible">
       <Button
-        android:id="@+id/deleteComment"
+        android:id="@+id/bulkDeleteComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14dp"
@@ -78,7 +36,7 @@
         android:layout_marginRight="2dp"
         android:layout_alignParentRight="true" />
       <Button
-        android:id="@+id/approveComment"
+        android:id="@+id/bulkApproveComment"
         android:textSize="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,7 +47,7 @@
         android:layout_marginRight="2dp"
         android:layout_alignParentLeft="true" />
       <Button
-        android:id="@+id/unapproveComment"
+        android:id="@+id/bulkUnapproveComment"
         android:textSize="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -98,9 +56,9 @@
         android:layout_marginLeft="2dp"
         android:textColor="#FFD98500"
         android:layout_marginRight="2dp"
-        android:layout_toRightOf="@id/approveComment" />
+        android:layout_toRightOf="@id/bulkApproveComment" />
       <Button
-        android:id="@+id/markSpam"
+        android:id="@+id/bulkMarkSpam"
         android:textSize="14dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -109,11 +67,6 @@
         android:textColor="#FFBC0B0B"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_toRightOf="@id/unapproveComment" />
+        android:layout_toRightOf="@id/bulkUnapproveComment" />
     </RelativeLayout>
-  </RelativeLayout>
-  <include
-    layout="@layout/action_bar"
-    android:id="@+id/actionBar"
-    android:layout_above="@id/moderatecomments" />
 </RelativeLayout>

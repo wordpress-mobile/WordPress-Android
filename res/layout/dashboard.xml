@@ -20,6 +20,6 @@
   </LinearLayout>
   <include
     layout="@layout/action_bar"
-    android:id="@+id/actionBar"
+    android:id="@+id/dashboardActionBar"
     android:layout_above="@id/dashboard" />
 </RelativeLayout>

@@ -37,7 +37,7 @@
           android:gravity="left"
           android:textSize="20dip"
           android:textStyle="bold"
-          android:id="@+id/name"
+          android:id="@+id/commentDetailName"
           android:singleLine="true"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"></TextView>
@@ -45,7 +45,7 @@
           android:gravity="left"
           android:textColorLink="#21759b"
           android:textSize="12dip"
-          android:id="@+id/email"
+          android:id="@+id/commentDetailEmail"
           android:singleLine="true"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"></TextView>
@@ -53,14 +53,14 @@
           android:gravity="left"
           android:textColorLink="#21759b"
           android:textSize="12dip"
-          android:id="@+id/url"
+          android:id="@+id/commentDetailUrl"
           android:singleLine="true"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"></TextView>
         <TextView
           android:gravity="left"
           android:textSize="12dip"
-          android:id="@+id/date"
+          android:id="@+id/commentDetailDate"
           android:singleLine="true"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
@@ -82,9 +82,9 @@
       android:paddingBottom="10dip">
       <TextView
         android:textColor="#464646"
-        android:textSize="16dip"
+        android:textSize="@dimen/comment_detail_font_size"
         android:gravity="left"
-        android:id="@+id/comment"
+        android:id="@+id/commentDetailComment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"></TextView>
     </ScrollView>

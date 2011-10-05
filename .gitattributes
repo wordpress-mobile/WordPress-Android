@@ -339,6 +339,7 @@ res/drawable/ic_popup_sync_1.png -text
 res/drawable/icon_titlebar_home.png -text
 res/drawable/icon_titlebar_refresh.png -text
 res/drawable/list_bg.xml -text
+res/drawable/list_bg_selected.xml -text
 res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
 res/drawable/list_header_bg.xml -text
@@ -415,6 +416,7 @@ res/layout-small/new_account.xml -text
 res/layout-v4/row.xml -text
 res/layout-xlarge-land/action_bar.xml -text
 res/layout-xlarge/action_bar.xml -text
+res/layout-xlarge/comments.xml -text
 res/layout/about.xml -text
 res/layout/action_bar.xml -text
 res/layout/action_item.xml -text
@@ -427,6 +429,7 @@ res/layout/blogs_row.xml -text
 res/layout/blogs_row_actionbar.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
+res/layout/comments.xml -text
 res/layout/dashboard.xml -text
 res/layout/edit.xml -text
 res/layout/edit_content.xml -text
@@ -483,8 +486,11 @@ res/values-ru/strings.xml -text
 res/values-sk/strings.xml -text
 res/values-sv/strings.xml -text
 res/values-tr/strings.xml -text
+res/values-xlarge/dimens.xml -text
+res/values-xlarge/styles.xml -text
 res/values-zh/strings.xml -text
 res/values/arrays.xml -text
+res/values/dimens.xml -text
 res/values/ids.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
@@ -503,6 +509,7 @@ src/org/wordpress/android/AddCategory.java -text
 src/org/wordpress/android/AddQuickPressShortcut.java -text
 src/org/wordpress/android/CommentBroadcastReceiver.java -text
 src/org/wordpress/android/CommentService.java -text
+src/org/wordpress/android/Comments.java -text
 src/org/wordpress/android/Dashboard.java -text
 src/org/wordpress/android/EditContent.java -text
 src/org/wordpress/android/EditPost.java -text
@@ -516,7 +523,8 @@ src/org/wordpress/android/ServiceUpdateUIListener.java -text
 src/org/wordpress/android/Settings.java -text
 src/org/wordpress/android/Signup.java -text
 src/org/wordpress/android/UploadDialog.java -text
-src/org/wordpress/android/ViewComment.java -text
+src/org/wordpress/android/ViewCommentActivity.java -text
+src/org/wordpress/android/ViewCommentFragment.java -text
 src/org/wordpress/android/ViewComments.java -text
 src/org/wordpress/android/ViewPost.java -text
 src/org/wordpress/android/ViewPostComments.java -text
@@ -525,6 +533,7 @@ src/org/wordpress/android/ViewStats.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
 src/org/wordpress/android/models/Blog.java -text
+src/org/wordpress/android/models/Comment.java -text
 src/org/wordpress/android/models/MediaFile.java -text
 src/org/wordpress/android/models/Post.java -text
 src/org/wordpress/android/util/AlertUtil.java -text

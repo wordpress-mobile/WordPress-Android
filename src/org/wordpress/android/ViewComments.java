@@ -5,16 +5,18 @@ import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
+import org.wordpress.android.ViewCommentFragment.OnCommentStatusChangeListener;
+import org.wordpress.android.ViewComments.OnCommentSelectedListener;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -27,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -63,10 +66,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class ViewComments extends ListActivity {
+public class ViewComments extends ListFragment {
 	private static final int[] IMAGE_IDS = { R.id.avatar };
-	private ThumbnailAdapter thumbs = null;
-	private ArrayList<CommentEntry> model = null;
+	public ThumbnailAdapter thumbs = null;
+	public ArrayList<Comment> model = null;
 	private XMLRPCClient client;
 	private String accountName = "", moderateErrorMsg = "",
 			selectedPostID = "";
@@ -83,60 +86,61 @@ public class ViewComments extends ListActivity {
 	boolean loadMore = false, doInBackground = false, refreshOnly = false;
 	private Vector<String> checkedComments;
 	private Blog blog;
-	private WPTitleBar titleBar;
 	Object[] commentParams;
+	boolean dualView;
+	private OnCommentSelectedListener onCommentSelectedListener;
+	private OnAnimateRefreshButtonListener onAnimateRefreshButton;
+	private OnContextCommentStatusChangeListener onCommentStatusChangeListener;
 
 	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.moderatecomments);
-		boolean fromNotification = false;
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			id = WordPress.currentBlog.getId();
-			blog = new Blog(id, this);
-			pd = new ProgressDialog(this);
-			fromNotification = extras.getBoolean("fromNotification", false);
+	public void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+
+		// getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// getActivity().setContentView(R.layout.moderatecomments);
+		Bundle extras = getActivity().getIntent().getExtras();
+
+		id = WordPress.currentBlog.getId();
+		blog = new Blog(id, getActivity().getApplicationContext());
+	}
+
+	@Override
+	public void onActivityCreated(Bundle bundle) {
+		super.onActivityCreated(bundle);
+
+		// query for comments and refresh view
+		boolean loadedComments = loadComments(false, false);
+
+		if (!loadedComments) {
+
+			refreshComments(false, false, false);
 		}
+	}
 
-		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
-		titleBar.refreshButton
-				.setOnClickListener(new ImageButton.OnClickListener() {
-					public void onClick(View v) {
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			// check that the containing activity implements our callback
+			onCommentSelectedListener = (OnCommentSelectedListener) activity;
+			onAnimateRefreshButton = (OnAnimateRefreshButtonListener) activity;
+			onCommentStatusChangeListener = (OnContextCommentStatusChangeListener) activity;
+		} catch (ClassCastException e) {
+			activity.finish();
+			throw new ClassCastException(activity.toString()
+					+ " must implement Callback");
+		}
+	}
 
-						titleBar.startRotatingRefreshIcon();
-						refreshComments(false, false, false);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-					}
-				});
-
-		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-			// user selected new blog in the title bar
-			@Override
-			public void OnBlogChanged() {
-				// remove footer 'load more' button
-				ListView listView = (ListView) findViewById(android.R.id.list);
-				listView.removeFooterView(switcher);
-				model.clear();
-				thumbs.notifyDataSetChanged();
-
-				id = WordPress.currentBlog.getId();
-				blog = new Blog(id, ViewComments.this);
-				// query for comments and refresh view
-				boolean loadedComments = loadComments(false, false);
-
-				if (!loadedComments) {
-
-					refreshComments(false, false, false);
-				}
-			}
-		});
+		View v = inflater.inflate(R.layout.moderatecomments, container, false);
 
 		// create the ViewSwitcher in the current context
-		switcher = new ViewSwitcher(this);
-		Button footer = (Button) View.inflate(this, R.layout.list_footer_btn,
-				null);
+		switcher = new ViewSwitcher(getActivity().getApplicationContext());
+		Button footer = (Button) View.inflate(getActivity()
+				.getApplicationContext(), R.layout.list_footer_btn, null);
 		footer.setText(getResources().getText(R.string.load_more) + " "
 				+ getResources().getText(R.string.tab_comments));
 
@@ -147,33 +151,26 @@ public class ViewComments extends ListActivity {
 			}
 		});
 
-		View progress = View.inflate(this, R.layout.list_footer_progress, null);
+		View progress = View.inflate(getActivity().getApplicationContext(),
+				R.layout.list_footer_progress, null);
 
 		switcher.addView(footer);
 		switcher.addView(progress);
 
-		if (fromNotification) // dismiss the notification
-		{
-			// NotificationManager nm = (NotificationManager)
-			// getSystemService(NOTIFICATION_SERVICE);
-			// nm.cancel(22 + Integer.valueOf(id));
-			// loadComments(false, false);
-		}
+		/*
+		 * if (fromNotification) // dismiss the notification { //
+		 * NotificationManager nm = (NotificationManager) //
+		 * getSystemService(NOTIFICATION_SERVICE); // nm.cancel(22 +
+		 * Integer.valueOf(id)); // loadComments(false, false); }
+		 */
 
-		this.setTitle(accountName + " - Moderate Comments");
+		getActivity().setTitle(accountName + " - Moderate Comments");
 
-		boolean loadedComments = loadComments(false, false);
-
-		if (!loadedComments) {
-
-			refreshComments(false, false, false);
-		}
-
-		Button deleteComments = (Button) findViewById(R.id.deleteComment);
+		Button deleteComments = (Button) v.findViewById(R.id.bulkDeleteComment);
 
 		deleteComments.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_DELETING);
+				getActivity().showDialog(ID_DIALOG_DELETING);
 				new Thread() {
 					public void run() {
 						Looper.prepare();
@@ -184,11 +181,12 @@ public class ViewComments extends ListActivity {
 			}
 		});
 
-		Button approveComments = (Button) findViewById(R.id.approveComment);
+		Button approveComments = (Button) v
+				.findViewById(R.id.bulkApproveComment);
 
 		approveComments.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_MODERATING);
+				getActivity().showDialog(ID_DIALOG_MODERATING);
 				new Thread() {
 					public void run() {
 						Looper.prepare();
@@ -198,11 +196,12 @@ public class ViewComments extends ListActivity {
 			}
 		});
 
-		Button unapproveComments = (Button) findViewById(R.id.unapproveComment);
+		Button unapproveComments = (Button) v
+				.findViewById(R.id.bulkUnapproveComment);
 
 		unapproveComments.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_MODERATING);
+				getActivity().showDialog(ID_DIALOG_MODERATING);
 				new Thread() {
 					public void run() {
 						Looper.prepare();
@@ -212,11 +211,11 @@ public class ViewComments extends ListActivity {
 			}
 		});
 
-		Button spamComments = (Button) findViewById(R.id.markSpam);
+		Button spamComments = (Button) v.findViewById(R.id.bulkMarkSpam);
 
 		spamComments.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(ID_DIALOG_MODERATING);
+				getActivity().showDialog(ID_DIALOG_MODERATING);
 				new Thread() {
 					public void run() {
 						Looper.prepare();
@@ -225,7 +224,7 @@ public class ViewComments extends ListActivity {
 				}.start();
 			}
 		});
-
+		return v;
 	}
 
 	protected void showOrHideBulkCheckBoxes() {
@@ -252,15 +251,14 @@ public class ViewComments extends ListActivity {
 	@SuppressWarnings("unchecked")
 	protected void moderateComments(String newStatus) {
 		// handles bulk moderation
-		WordPressDB db = new WordPressDB(this);
+		WordPressDB db = new WordPressDB(getActivity().getApplicationContext());
 		for (int i = 0; i < checkedComments.size(); i++) {
 			if (checkedComments.get(i).toString().equals("true")) {
 
 				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 						blog.getHttppassword());
 
-				CommentEntry listRow = (CommentEntry) getListView()
-						.getItemAtPosition(i);
+				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
 				HashMap contentHash, postHash = new HashMap();
@@ -282,7 +280,8 @@ public class ViewComments extends ListActivity {
 						checkedComments.set(i, "false");
 						listRow.status = newStatus;
 						model.set(i, listRow);
-						db.updateCommentStatus(ViewComments.this, id,
+						db.updateCommentStatus(getActivity()
+								.getApplicationContext(), id,
 								listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
@@ -290,18 +289,18 @@ public class ViewComments extends ListActivity {
 				}
 			}
 		}
-		dismissDialog(ID_DIALOG_MODERATING);
+		getActivity().dismissDialog(ID_DIALOG_MODERATING);
 		Thread action = new Thread() {
 			public void run() {
 				if (moderateErrorMsg == "") {
 					Toast.makeText(
-							ViewComments.this,
+							getActivity().getApplicationContext(),
 							getResources().getText(R.string.comments_moderated),
 							Toast.LENGTH_SHORT).show();
 				} else {
 					// there was an xmlrpc error
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewComments.this);
+							getActivity().getApplicationContext());
 					dialogBuilder.setTitle(getResources().getText(
 							R.string.connection_error));
 					dialogBuilder.setMessage(moderateErrorMsg);
@@ -314,26 +313,27 @@ public class ViewComments extends ListActivity {
 								}
 							});
 					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
+					if (!getActivity().isFinishing()) {
 						dialogBuilder.create().show();
 					}
 				}
 			}
 		};
-		this.runOnUiThread(action);
+		getActivity().runOnUiThread(action);
 		if (moderateErrorMsg == "") {
 			// no errors, refresh list
 			checkedCommentTotal = 0;
 			Thread action2 = new Thread() {
 				public void run() {
-					pd = new ProgressDialog(ViewComments.this); // to avoid
-																// crash
+					pd = new ProgressDialog(getActivity()
+							.getApplicationContext()); // to avoid
+					// crash
 					showOrHideBulkCheckBoxes();
 					hideModerationBar();
 					thumbs.notifyDataSetChanged();
 				}
 			};
-			this.runOnUiThread(action2);
+			getActivity().runOnUiThread(action2);
 		}
 	}
 
@@ -380,8 +380,7 @@ public class ViewComments extends ListActivity {
 				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 						blog.getHttppassword());
 
-				CommentEntry listRow = (CommentEntry) getListView()
-						.getItemAtPosition(i);
+				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
 				Object[] params = { blog.getBlogId(), blog.getUsername(),
@@ -394,17 +393,17 @@ public class ViewComments extends ListActivity {
 				}
 			}
 		}
-		dismissDialog(ID_DIALOG_DELETING);
+		getActivity().dismissDialog(ID_DIALOG_DELETING);
 		Thread action = new Thread() {
 			public void run() {
 				if (moderateErrorMsg == "") {
-					Toast.makeText(ViewComments.this,
+					Toast.makeText(getActivity().getApplicationContext(),
 							getResources().getText(R.string.comment_moderated),
 							Toast.LENGTH_SHORT).show();
 				} else {
 					// error occured during delete request
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewComments.this);
+							getActivity().getApplicationContext());
 					dialogBuilder.setTitle(getResources().getText(
 							R.string.connection_error));
 					dialogBuilder.setMessage(moderateErrorMsg);
@@ -417,23 +416,24 @@ public class ViewComments extends ListActivity {
 								}
 							});
 					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
+					if (!getActivity().isFinishing()) {
 						dialogBuilder.create().show();
 					}
 				}
 			}
 		};
-		this.runOnUiThread(action);
+		getActivity().runOnUiThread(action);
 		Thread action2 = new Thread() {
 			public void run() {
 				if (moderateErrorMsg == "") {
-					pd = new ProgressDialog(ViewComments.this); // to avoid
-																// crash
+					pd = new ProgressDialog(getActivity()
+							.getApplicationContext()); // to avoid
+					// crash
 					refreshComments(false, true, true);
 				}
 			}
 		};
-		this.runOnUiThread(action2);
+		getActivity().runOnUiThread(action2);
 		checkedCommentTotal = 0;
 
 	}
@@ -441,11 +441,12 @@ public class ViewComments extends ListActivity {
 	@SuppressWarnings("unchecked")
 	private boolean loadComments(boolean addMore, boolean refresh) {
 		refreshOnly = refresh;
-		WordPressDB postStoreDB = new WordPressDB(this);
+		WordPressDB postStoreDB = new WordPressDB(getActivity()
+				.getApplicationContext());
 		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore) {
-			Vector<?> loadedPosts = postStoreDB.loadComments(ViewComments.this,
-					WordPress.currentBlog.getId());
+			Vector<?> loadedPosts = postStoreDB.loadComments(getActivity()
+					.getApplicationContext(), WordPress.currentBlog.getId());
 			if (loadedPosts != null) {
 				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
 				countHash = (HashMap) loadedPosts.get(0);
@@ -456,7 +457,7 @@ public class ViewComments extends ListActivity {
 						model.clear();
 					}
 				} else {
-					model = new ArrayList<CommentEntry>();
+					model = new ArrayList<Comment>();
 				}
 
 				// fixes trac #72 (1.5 bug)
@@ -490,11 +491,11 @@ public class ViewComments extends ListActivity {
 							"postTitle").toString());
 
 					if (model == null) {
-						model = new ArrayList<CommentEntry>();
+						model = new ArrayList<Comment>();
 					}
 
 					// add to model
-					model.add(new CommentEntry(postID, commentID, author,
+					model.add(new Comment(postID, commentID, i-1, author,
 							dateCreatedFormatted, comment, status, postTitle,
 							authorURL, authorEmail, URI
 									.create("http://gravatar.com/avatar/"
@@ -506,7 +507,7 @@ public class ViewComments extends ListActivity {
 					try {
 						ThumbnailBus bus = new ThumbnailBus();
 						thumbs = new ThumbnailAdapter(
-								this,
+								getActivity(),
 								new CommentAdapter(),
 								new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(
 										null, null, 101, bus), IMAGE_IDS);
@@ -514,7 +515,7 @@ public class ViewComments extends ListActivity {
 						e1.printStackTrace();
 					}
 
-					ListView listView = (ListView) findViewById(android.R.id.list);
+					ListView listView = this.getListView();
 					listView.removeFooterView(switcher);
 					if (loadedPosts.size() >= 30) {
 						listView.addFooterView(switcher);
@@ -523,31 +524,12 @@ public class ViewComments extends ListActivity {
 
 					listView.setOnItemClickListener(new OnItemClickListener() {
 
-						public void onItemClick(AdapterView<?> arg0, View arg1,
-								int position, long arg3) {
-							Intent intent = new Intent(ViewComments.this,
-									ViewComment.class);
-							// intent.putExtra("pageID", pageIDs[(int) arg3]);
-							// intent.putExtra("postTitle", titles[(int) arg3]);
-							intent.putExtra("id", id);
-							intent.putExtra("accountName", accountName);
-							intent.putExtra("comment",
-									model.get((int) arg3).comment);
-							intent.putExtra("name", model.get((int) arg3).name);
-							intent.putExtra("email",
-									model.get((int) arg3).authorEmail);
-							intent.putExtra("url",
-									model.get((int) arg3).authorURL);
-							intent.putExtra("date",
-									model.get((int) arg3).dateCreatedFormatted);
-							intent.putExtra("status",
-									model.get((int) arg3).status);
-							intent.putExtra("comment_id",
-									model.get((int) arg3).commentID);
-							intent.putExtra("post_id",
-									model.get((int) arg3).postID);
-							intent.putExtra("position", position);
-							startActivityForResult(intent, 1);
+						public void onItemClick(AdapterView<?> arg0, View view,
+								int position, long id) {
+							view.setSelected(true);
+							Comment comment = model.get((int) id);
+							onCommentSelectedListener
+									.onCommentSelectedSelected(comment);
 						}
 					});
 
@@ -563,9 +545,7 @@ public class ViewComments extends ListActivity {
 								return;
 							}
 
-							selectedID = info.targetView.getId();
-							rowID = info.position;
-							selectedPostID = model.get(info.position).postID;
+							WordPress.currentComment = model.get(info.position);
 
 							menu.setHeaderTitle(getResources().getText(
 									R.string.comment_actions));
@@ -599,8 +579,8 @@ public class ViewComments extends ListActivity {
 				return false;
 			}
 		} else {
-			Vector latestComments = postStoreDB.loadMoreComments(
-					ViewComments.this, id, commentsToLoad);
+			Vector latestComments = postStoreDB.loadMoreComments(getActivity()
+					.getApplicationContext(), id, commentsToLoad);
 			if (latestComments != null) {
 				numRecords += latestComments.size();
 				for (int i = latestComments.size(); i > 0; i--) {
@@ -624,12 +604,12 @@ public class ViewComments extends ListActivity {
 							"postTitle").toString());
 
 					// add to model
-					model.add(new CommentEntry(postID, commentID, author,
+					model.add(new Comment(postID, commentID, i, author,
 							dateCreatedFormatted, comment, status, postTitle,
 							authorURL, authorEmail, URI
 									.create("http://gravatar.com/avatar/"
 											+ getMd5Hash(authorEmail.trim())
-											+ "?s=60&d=identicon")));
+											+ "?s=100&d=identicon")));
 				}
 				thumbs.notifyDataSetChanged();
 			}
@@ -645,7 +625,7 @@ public class ViewComments extends ListActivity {
 		doInBackground = background;
 
 		if (!loadMore && !doInBackground) {
-			titleBar.startRotatingRefreshIcon();
+			onAnimateRefreshButton.onAnimateRefreshButton(true);
 		}
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
@@ -677,54 +657,24 @@ public class ViewComments extends ListActivity {
 
 	}
 
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		return (model);
-	}
+	/*
+	 * @Override public Object onRetainNonConfigurationInstance() { return
+	 * (model); }
+	 */
 
 	private void goBlooey(Throwable t) {
 		Log.e("WordPress", "Exception!", t);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()
+				.getApplicationContext());
 
 		builder.setTitle("Error").setMessage(t.toString())
 				.setPositiveButton("OK", null).show();
 	}
 
-	class CommentEntry {
-		String postID = "";
-		String commentID = "";
-		String name = "";
-		String emailURL = "";
-		String status = "";
-		String comment = "";
-		String postTitle = "";
-		String authorURL = "";
-		String authorEmail = "";
-		String dateCreatedFormatted = "";
-		URI profileImageUrl = null;
-
-		CommentEntry(String postID, String commentID, String name,
-				String dateCreatedFormatted, String comment, String status,
-				String postTitle, String authorURL, String authorEmail,
-				URI profileImageUrl) {
-			this.postID = postID;
-			this.commentID = commentID;
-			this.name = name;
-			this.emailURL = authorEmail;
-			this.status = status;
-			this.comment = comment;
-			this.postTitle = postTitle;
-			this.authorURL = authorURL;
-			this.authorEmail = authorEmail;
-			this.profileImageUrl = profileImageUrl;
-			this.dateCreatedFormatted = dateCreatedFormatted;
-		}
-	}
-
-	class CommentAdapter extends ArrayAdapter<CommentEntry> {
+	class CommentAdapter extends ArrayAdapter<Comment> {
 		CommentAdapter() {
-			super(ViewComments.this, R.layout.row, model);
+			super(getActivity().getApplicationContext(), R.layout.row, model);
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -732,7 +682,7 @@ public class ViewComments extends ListActivity {
 			CommentEntryWrapper wrapper = null;
 
 			if (row == null) {
-				LayoutInflater inflater = getLayoutInflater();
+				LayoutInflater inflater = getActivity().getLayoutInflater();
 
 				row = inflater.inflate(R.layout.row, null);
 				wrapper = new CommentEntryWrapper(row);
@@ -740,13 +690,16 @@ public class ViewComments extends ListActivity {
 			} else {
 				wrapper = (CommentEntryWrapper) row.getTag();
 			}
-			CommentEntry commentEntry = getItem(position);
-			if ("hold".equals(commentEntry.status))
+			Comment commentEntry = getItem(position);
+			if ("hold".equals(commentEntry.status)) {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.comment_pending_bg_selector));
-			else
+			}
+			else {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.list_bg_selector));
+			}
+			
 			wrapper.populateFrom(commentEntry, position);
 
 			return (row);
@@ -769,7 +722,7 @@ public class ViewComments extends ListActivity {
 
 		}
 
-		void populateFrom(CommentEntry s, final int position) {
+		void populateFrom(Comment s, final int position) {
 			getName().setText(s.name);
 
 			String fEmailURL = s.authorURL;
@@ -944,7 +897,8 @@ public class ViewComments extends ListActivity {
 				0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
 		animation.setDuration(500);
 		set.addAnimation(animation);
-		RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.moderationBar);
+		RelativeLayout moderationBar = (RelativeLayout) getActivity()
+				.findViewById(R.id.moderationBar);
 		moderationBar.clearAnimation();
 		moderationBar.startAnimation(set);
 		moderationBar.setVisibility(View.INVISIBLE);
@@ -962,7 +916,8 @@ public class ViewComments extends ListActivity {
 				1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 		animation.setDuration(500);
 		set.addAnimation(animation);
-		RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.moderationBar);
+		RelativeLayout moderationBar = (RelativeLayout) getActivity()
+				.findViewById(R.id.moderationBar);
 		moderationBar.setVisibility(View.VISIBLE);
 		moderationBar.startAnimation(set);
 	}
@@ -1023,9 +978,9 @@ public class ViewComments extends ListActivity {
 						if (pd.isShowing()) {
 							pd.dismiss();
 						}
-						titleBar.stopRotatingRefreshIcon();
+						onAnimateRefreshButton.onAnimateRefreshButton(false);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								ViewComments.this);
+								getActivity().getApplicationContext());
 						dialogBuilder.setTitle(getResources().getText(
 								R.string.connection_error));
 						String msg = e.getLocalizedMessage();
@@ -1041,8 +996,8 @@ public class ViewComments extends ListActivity {
 										public void onClick(
 												DialogInterface dialog,
 												int whichButton) {
-											Intent i = new Intent(
-													ViewComments.this,
+											Intent i = new Intent(getActivity()
+													.getApplicationContext(),
 													Settings.class);
 											i.putExtra("id", id);
 											i.putExtra("accountName",
@@ -1074,7 +1029,7 @@ public class ViewComments extends ListActivity {
 									});
 						}
 						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
+						if (!getActivity().isFinishing()) {
 							dialogBuilder.create().show();
 						}
 					}
@@ -1085,9 +1040,9 @@ public class ViewComments extends ListActivity {
 						if (pd.isShowing()) {
 							pd.dismiss();
 						}
-						titleBar.stopRotatingRefreshIcon();
+						onAnimateRefreshButton.onAnimateRefreshButton(false);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								ViewComments.this);
+								getActivity().getApplicationContext());
 						dialogBuilder.setTitle(getResources().getText(
 								R.string.connection_error));
 						dialogBuilder.setMessage(e.getLocalizedMessage());
@@ -1100,7 +1055,7 @@ public class ViewComments extends ListActivity {
 									}
 								});
 						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
+						if (!getActivity().isFinishing()) {
 							dialogBuilder.create().show();
 						}
 					}
@@ -1147,9 +1102,9 @@ public class ViewComments extends ListActivity {
 			} catch (final XMLRPCFault e) {
 				handler.post(new Runnable() {
 					public void run() {
-						dismissDialog(ID_DIALOG_MODERATING);
+						getActivity().dismissDialog(ID_DIALOG_MODERATING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								ViewComments.this);
+								getActivity().getApplicationContext());
 						dialogBuilder.setTitle(getResources().getText(
 								R.string.connection_error));
 						dialogBuilder.setMessage(e.getFaultString());
@@ -1162,7 +1117,7 @@ public class ViewComments extends ListActivity {
 									}
 								});
 						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
+						if (!getActivity().isFinishing()) {
 							dialogBuilder.create().show();
 						}
 					}
@@ -1170,9 +1125,9 @@ public class ViewComments extends ListActivity {
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
-						dismissDialog(ID_DIALOG_MODERATING);
+						getActivity().dismissDialog(ID_DIALOG_MODERATING);
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								ViewComments.this);
+								getActivity().getApplicationContext());
 						dialogBuilder.setTitle(getResources().getText(
 								R.string.connection_error));
 						dialogBuilder.setMessage(e.getLocalizedMessage());
@@ -1184,51 +1139,13 @@ public class ViewComments extends ListActivity {
 									}
 								});
 						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
+						if (!getActivity().isFinishing()) {
 							dialogBuilder.create().show();
 						}
 					}
 				});
 			}
 		}
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (id == ID_DIALOG_MODERATING) {
-			ProgressDialog loadingDialog = new ProgressDialog(this);
-			if (checkedCommentTotal <= 1) {
-				loadingDialog.setMessage(getResources().getText(
-						R.string.moderating_comment));
-			} else {
-				loadingDialog.setMessage(getResources().getText(
-						R.string.moderating_comments));
-			}
-			loadingDialog.setIndeterminate(true);
-			loadingDialog.setCancelable(false);
-			return loadingDialog;
-		} else if (id == ID_DIALOG_REPLYING) {
-			ProgressDialog loadingDialog = new ProgressDialog(this);
-			loadingDialog.setMessage(getResources().getText(
-					R.string.replying_comment));
-			loadingDialog.setIndeterminate(true);
-			loadingDialog.setCancelable(false);
-			return loadingDialog;
-		} else if (id == ID_DIALOG_DELETING) {
-			ProgressDialog loadingDialog = new ProgressDialog(this);
-			if (checkedCommentTotal <= 1) {
-				loadingDialog.setMessage(getResources().getText(
-						R.string.deleting_comment));
-			} else {
-				loadingDialog.setMessage(getResources().getText(
-						R.string.deleting_comments));
-			}
-			loadingDialog.setIndeterminate(true);
-			loadingDialog.setCancelable(false);
-			return loadingDialog;
-		}
-
-		return super.onCreateDialog(id);
 	}
 
 	@Override
@@ -1243,332 +1160,22 @@ public class ViewComments extends ListActivity {
 		/* Switch on the ID of the item, to get what the user selected. */
 		switch (item.getItemId()) {
 		case 0:
-			showDialog(ID_DIALOG_MODERATING);
-			new Thread() {
-				public void run() {
-					Looper.prepare();
-					changeCommentStatus("approve", selectedID, rowID);
-				}
-			}.start();
+			onCommentStatusChangeListener.onCommentStatusChanged("approve");
 			return true;
 		case 1:
-			showDialog(ID_DIALOG_MODERATING);
-			new Thread() {
-				public void run() {
-					Looper.prepare();
-					changeCommentStatus("hold", selectedID, rowID);
-				}
-			}.start();
-
+			onCommentStatusChangeListener.onCommentStatusChanged("hold");
 			return true;
 		case 2:
-			showDialog(ID_DIALOG_MODERATING);
-			new Thread() {
-				public void run() {
-					Looper.prepare();
-					changeCommentStatus("spam", selectedID, rowID);
-				}
-			}.start();
+			onCommentStatusChangeListener.onCommentStatusChanged("spam");
 			return true;
 		case 3:
-			Intent i = new Intent(this, ReplyToComment.class);
-			i.putExtra("commentID", selectedID);
-			i.putExtra("accountName", accountName);
-			i.putExtra("postID", selectedPostID);
-			startActivityForResult(i, 0);
-
+			onCommentStatusChangeListener.onCommentStatusChanged("reply");
 			return true;
 		case 4:
-			showDialog(ID_DIALOG_DELETING);
-			new Thread() {
-				public void run() {
-					Looper.prepare();
-					deleteComment(selectedID);
-				}
-			}.start();
+			onCommentStatusChangeListener.onCommentStatusChanged("delete");
 			return true;
-
 		}
 		return false;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void changeCommentStatus(final String newStatus,
-			final int selCommentID, int position) {
-		// for individual comment moderation
-		String sSelCommentID = String.valueOf(selCommentID);
-		ListView lv = getListView();
-		CommentEntry ce = (CommentEntry) lv.getItemAtPosition(position);
-		WordPressDB db = new WordPressDB(this);
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
-
-		HashMap contentHash, postHash = new HashMap();
-		contentHash = (HashMap) allComments.get(sSelCommentID);
-		postHash.put("status", newStatus);
-		postHash.put("content", contentHash.get("comment"));
-		postHash.put("author", contentHash.get("author"));
-		postHash.put("author_url", contentHash.get("url"));
-		postHash.put("author_email", contentHash.get("email"));
-
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), sSelCommentID, postHash };
-
-		Object result = null;
-		try {
-			result = (Object) client.call("wp.editComment", params);
-			boolean bResult = Boolean.parseBoolean(result.toString());
-			if (bResult) {
-				ce.status = newStatus;
-				model.set(position, ce);
-				db.updateCommentStatus(ViewComments.this, id, ce.commentID,
-						newStatus);
-			}
-			dismissDialog(ID_DIALOG_MODERATING);
-			Thread action = new Thread() {
-				public void run() {
-					Toast.makeText(ViewComments.this,
-							getResources().getText(R.string.comment_moderated),
-							Toast.LENGTH_SHORT).show();
-				}
-			};
-			this.runOnUiThread(action);
-			Thread action2 = new Thread() {
-				public void run() {
-					thumbs.notifyDataSetChanged();
-				}
-			};
-			this.runOnUiThread(action2);
-
-		} catch (final XMLRPCException e) {
-			dismissDialog(ID_DIALOG_MODERATING);
-			Thread action3 = new Thread() {
-				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewComments.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				}
-			};
-			this.runOnUiThread(action3);
-		}
-	}
-
-	private void deleteComment(final int selCommentID) {
-		// delete individual comment
-
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
-
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), selCommentID };
-
-		try {
-			client.call("wp.deleteComment", params);
-			dismissDialog(ID_DIALOG_DELETING);
-			Thread action = new Thread() {
-				public void run() {
-					Toast.makeText(ViewComments.this,
-							getResources().getText(R.string.comment_moderated),
-							Toast.LENGTH_SHORT).show();
-				}
-			};
-			this.runOnUiThread(action);
-			Thread action2 = new Thread() {
-				public void run() {
-					pd = new ProgressDialog(ViewComments.this); // to avoid
-																// crash
-					refreshComments(false, true, false);
-				}
-			};
-			this.runOnUiThread(action2);
-
-		} catch (final XMLRPCException e) {
-			dismissDialog(ID_DIALOG_DELETING);
-			Thread action3 = new Thread() {
-				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewComments.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				}
-			};
-			this.runOnUiThread(action3);
-		}
-	}
-
-	private void replyToComment(final String postID, final int commentID,
-			final String comment) {
-		// reply to individual comment
-		Vector<Object> settings = new Vector<Object>();
-
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
-
-		HashMap<String, Object> replyHash = new HashMap<String, Object>();
-		replyHash.put("comment_parent", commentID);
-		replyHash.put("content", comment);
-		replyHash.put("author", "");
-		replyHash.put("author_url", "");
-		replyHash.put("author_email", "");
-
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), Integer.valueOf(postID), replyHash };
-
-		try {
-			client.call("wp.newComment", params);
-			dismissDialog(ID_DIALOG_REPLYING);
-			Thread action = new Thread() {
-				public void run() {
-					Toast.makeText(ViewComments.this,
-							getResources().getText(R.string.reply_added),
-							Toast.LENGTH_SHORT).show();
-				}
-			};
-			this.runOnUiThread(action);
-			Thread action2 = new Thread() {
-				public void run() {
-					pd = new ProgressDialog(ViewComments.this); // to avoid
-																// crash
-					refreshComments(false, true, false);
-				}
-			};
-			this.runOnUiThread(action2);
-
-		} catch (final XMLRPCException e) {
-			dismissDialog(ID_DIALOG_REPLYING);
-			Thread action3 = new Thread() {
-				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewComments.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				}
-			};
-			this.runOnUiThread(action3);
-
-		}
-
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null) {
-
-			Bundle extras = data.getExtras();
-
-			switch (requestCode) {
-			case 0:
-				final String returnText = extras.getString("replyText");
-
-				if (!returnText.equals("CANCEL")) {
-					final String postID = extras.getString("postID");
-					final int commentID = extras.getInt("commentID");
-					showDialog(ID_DIALOG_REPLYING);
-
-					new Thread(new Runnable() {
-						public void run() {
-							Looper.prepare();
-							pd = new ProgressDialog(ViewComments.this); // to
-																		// avoid
-																		// crash
-							replyToComment(postID, commentID, returnText);
-						}
-					}).start();
-				}
-
-				break;
-			case 1:
-				if (resultCode == RESULT_OK) {
-
-					String comment_id;
-					final String action;
-					comment_id = extras.getString("comment_id");
-					final int position = extras.getInt("position");
-
-					action = extras.getString("action");
-					if (action.equals("approve") || action.equals("hold")
-							|| action.equals("spam")) {
-						final int commentID = Integer.parseInt(comment_id);
-						showDialog(ID_DIALOG_MODERATING);
-						new Thread() {
-							public void run() {
-								Looper.prepare();
-								changeCommentStatus(action, commentID, position);
-							}
-						}.start();
-					} else if (action.equals("delete")) {
-						final int commentID_del = Integer.parseInt(comment_id);
-						showDialog(ID_DIALOG_DELETING);
-						new Thread() {
-							public void run() {
-								deleteComment(commentID_del);
-							}
-						}.start();
-					} else if (action.equals("reply")) {
-
-						Intent i = new Intent(this, ReplyToComment.class);
-						i.putExtra("commentID", Integer.parseInt(comment_id));
-						i.putExtra("accountName", accountName);
-						i.putExtra("postID", extras.getString("post_id"));
-						startActivityForResult(i, 0);
-					}
-
-				}
-				break;
-			}
-		}
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
-			titleBar.hideDashboardOverlay();
-
-			return false;
-		}
-
-		return super.onKeyDown(keyCode, event);
 	}
 
 	private class getRecentCommentsTask extends
@@ -1578,21 +1185,21 @@ public class ViewComments extends ListActivity {
 				HashMap<String, HashMap<?, ?>> commentsResult) {
 
 			if (commentsResult == null) {
-				titleBar.stopRotatingRefreshIcon();
+				onAnimateRefreshButton.onAnimateRefreshButton(false);
 				if (!moderateErrorMsg.equals("")) {
-					AlertUtil.showAlert(ViewComments.this, R.string.error,
-							moderateErrorMsg);
+					AlertUtil.showAlert(getActivity().getApplicationContext(),
+							R.string.error, moderateErrorMsg);
 					moderateErrorMsg = "";
 				}
 				return;
 			}
-			
+
 			if (commentsResult.size() == 0) {
 				// no comments found
 				if (pd.isShowing()) {
 					pd.dismiss();
 				}
-				titleBar.stopRotatingRefreshIcon();
+				onAnimateRefreshButton.onAnimateRefreshButton(false);
 			} else {
 
 				if (commentsResult.size() < 30) {
@@ -1613,16 +1220,12 @@ public class ViewComments extends ListActivity {
 					loadComments(loadMore, refreshOnly);
 				}
 
-				if (pd.isShowing()) {
-					pd.dismiss();
-				}
-
-				titleBar.stopRotatingRefreshIcon();
+				onAnimateRefreshButton.onAnimateRefreshButton(false);
 
 			}
 
 			if (!loadMore && !doInBackground) {
-				titleBar.stopRotatingRefreshIcon();
+				onAnimateRefreshButton.onAnimateRefreshButton(false);
 			} else if (loadMore) {
 				switcher.showPrevious();
 			}
@@ -1634,10 +1237,10 @@ public class ViewComments extends ListActivity {
 
 			HashMap<String, HashMap<?, ?>> commentsResult;
 			try {
-				commentsResult = ApiHelper.refreshComments(ViewComments.this,
-						commentParams, loadMore);
+				commentsResult = ApiHelper.refreshComments(getActivity()
+						.getApplicationContext(), commentParams, loadMore);
 			} catch (XMLRPCException e) {
-				if (!isFinishing())
+				if (!getActivity().isFinishing())
 					moderateErrorMsg = e.getLocalizedMessage();
 				return null;
 			}
@@ -1647,4 +1250,17 @@ public class ViewComments extends ListActivity {
 		}
 
 	}
+
+	public interface OnCommentSelectedListener {
+		public void onCommentSelectedSelected(Comment comment);
+	}
+
+	public interface OnAnimateRefreshButtonListener {
+		public void onAnimateRefreshButton(boolean start);
+	}
+
+	public interface OnContextCommentStatusChangeListener {
+		public void onCommentStatusChanged(String status);
+	}
+
 }

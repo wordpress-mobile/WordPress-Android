@@ -2,12 +2,12 @@
 <selector
   xmlns:android="http://schemas.android.com/apk/res/android">
   <item
-    android:state_selected="true"
-    android:drawable="@android:color/transparent" />
+    android:state_activated="true"
+    android:drawable="@drawable/list_bg_selected" />
   <item
     android:state_pressed="true"
     android:state_selected="false"
-    android:drawable="@android:color/transparent" />
+    android:drawable="@drawable/list_bg_selected" />
   <item
     android:state_selected="false"
     android:drawable="@drawable/list_bg" />

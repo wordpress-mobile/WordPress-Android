@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:id="@+id/comments"
+  android:padding="0px"
+  android:background="#F4F4F4"
+  android:orientation="vertical">
+  <LinearLayout
+    android:id="@+id/commentDetailFragmentContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="47dp">
+    <fragment
+      android:name="org.wordpress.android.ViewComments"
+      android:id="@+id/commentList"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:background="#00FF00" />
+  </LinearLayout>
+  <include
+    layout="@layout/action_bar"
+    android:id="@+id/commentsActionBar"
+    android:layout_above="@id/comments" />
+</RelativeLayout>
