@@ -16,6 +16,8 @@ public class WPImageSpan extends ImageSpan {
 		private String description = "";
 		private String caption = "";
 		private int horizontalAlignment = 0;
+		private boolean isVideo;
+
 		public String getTitle() {
 			return title;
 		}
@@ -82,6 +84,14 @@ public class WPImageSpan extends ImageSpan {
 
 		public void setFeatured(boolean featured) {
 			this.featured = featured;
+		}
+		
+		public boolean isVideo() {
+			return isVideo;
+		}
+
+		public void setVideo(boolean isVideo) {
+			this.isVideo = isVideo;
 		}
 
 }

@@ -1,6 +1,9 @@
 package org.wordpress.android;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
@@ -21,6 +24,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
@@ -36,7 +40,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -47,24 +53,19 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.Html;
-import android.text.Html.ImageGetter;
+import android.provider.MediaStore.Images;
+import android.text.Layout;
 import android.text.Spannable;
-import android.view.ContextMenu;
+import android.text.SpannableStringBuilder;
+import android.text.style.AlignmentSpan;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -73,35 +74,17 @@ import android.widget.Toast;
 
 public class EditPost extends Activity implements LocationListener {
 	/** Called when the activity is first created. */
-	public static long globalData = 0;
 	public ProgressDialog pd;
-	public boolean postStatus = false;
-	String[] mFiles = null;
-	public String thumbnailPath = null;
-	public String imagePath = null;
-	public String imageTitle = null;
-	public Vector<String> imageUrl = new Vector<String>();
-	public Vector<Object> thumbnailUrl = new Vector<Object>();
-	public String finalResult = null;
 	Vector<String> selectedCategories = new Vector<String>();
-	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
-	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "", accountName = "",
-			SD_CARD_TEMP_DIR = "", mediaErrorMsg = "";
+	public String categoryErrorMsg = "", accountName = "", option;
 	private JSONArray categories;
-	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
-	private int selectedImageCtr = 0, id;
+	private int id;
 	long postID;
-	private int ID_DIALOG_POSTING = 1, ID_DIALOG_LOADING = 2,
-			ID_DIALOG_DATE = 3, ID_DIALOG_TIME = 4;
-	public String newID, imgHTML, sMaxImageWidth, sImagePlacement, sSlug,
-			option;
-	public Boolean localDraft = false, centerThumbnail = false,
-			xmlrpcError = false, isPage = false, isNew = false,
+	private int ID_DIALOG_DATE = 0, ID_DIALOG_TIME = 1, ID_DIALOG_LOADING = 2;
+	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, locationActive = false,
 			isLargeScreen = false, isCustomPubDate = false;
-	public Vector<Object> imgThumbs = new Vector<Object>();
 	LocationManager lm;
 	Criteria criteria;
 	String provider;
@@ -212,10 +195,6 @@ public class EditPost extends Activity implements LocationListener {
 					post = new Post(id, postID, isPage, this);
 			}
 
-			// clear up some variables
-			selectedImageIDs.clear();
-			selectedImageCtr = 0;
-
 			if (!isPage) {
 				lbsCheck();
 			}
@@ -325,14 +304,14 @@ public class EditPost extends Activity implements LocationListener {
 			// handles selections from the quick action bar
 			if (option != null) {
 				if (option.equals("newphoto")) {
-					//launchCamera();
+					// launchCamera();
 				} else if (option.equals("photolibrary")) {
-					//launchPictureLibrary();
+					// launchPictureLibrary();
 				}
 				if (option.equals("newvideo")) {
-					//launchVideoCamera();
+					// launchVideoCamera();
 				} else if (option.equals("videolibrary")) {
-					//launchVideoLibrary();
+					// launchVideoLibrary();
 				}
 			}
 
@@ -383,17 +362,6 @@ public class EditPost extends Activity implements LocationListener {
 				} else if (status.equals("private")) {
 					spinner.setSelection(3, true);
 				}
-			}
-
-			String picturePaths = post.getMediaPaths();
-			if (!picturePaths.equals("")) {
-				String[] pPaths = picturePaths.split(",");
-
-				for (int i = 0; i < pPaths.length; i++) {
-					Uri imagePath = Uri.parse(pPaths[i]);
-					// addMedia(imagePath.getEncodedPath(), imagePath);
-				}
-
 			}
 
 			if (!isPage) {
@@ -623,7 +591,8 @@ public class EditPost extends Activity implements LocationListener {
 				}
 				TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
 				selectedCategoriesTV.setText(getResources().getText(
-				R.string.selected_categories) + " " + getCategoriesCSV());
+						R.string.selected_categories)
+						+ " " + getCategoriesCSV());
 
 				break;
 			}
@@ -632,23 +601,7 @@ public class EditPost extends Activity implements LocationListener {
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		if (id == ID_DIALOG_POSTING) {
-			postingDialog = new ProgressDialog(this);
-			postingDialog.setTitle(getResources().getText(
-					R.string.uploading_content));
-			postingDialog.setMessage(getResources().getText(
-					(isPage) ? R.string.attempting_edit_page
-							: R.string.attempting_edit_post));
-			postingDialog.setIndeterminate(true);
-			postingDialog.setCancelable(true);
-			return postingDialog;
-		} else if (id == ID_DIALOG_LOADING) {
-			ProgressDialog loadingDialog = new ProgressDialog(this);
-			loadingDialog.setMessage(getResources().getText(R.string.loading));
-			loadingDialog.setIndeterminate(true);
-			loadingDialog.setCancelable(true);
-			return loadingDialog;
-		} else if (id == ID_DIALOG_DATE) {
+		if (id == ID_DIALOG_DATE) {
 			DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener,
 					mYear, mMonth, mDay);
 			dpd.setTitle("");
@@ -658,6 +611,12 @@ public class EditPost extends Activity implements LocationListener {
 					mHour, mMinute, false);
 			tpd.setTitle("");
 			return tpd;
+		} else if (id == ID_DIALOG_LOADING) {
+			ProgressDialog loadingDialog = new ProgressDialog(this);
+			loadingDialog.setMessage(getResources().getText(R.string.loading));
+			loadingDialog.setIndeterminate(true);
+			loadingDialog.setCancelable(true);
+			return loadingDialog;
 		}
 
 		return super.onCreateDialog(id);
@@ -713,7 +672,7 @@ public class EditPost extends Activity implements LocationListener {
 		String images = "";
 		boolean success = false;
 
-		if (content.equals("") && selectedImageIDs.size() == 0) {
+		if (content.equals("")) {
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 					EditPost.this);
 			dialogBuilder.setTitle(getResources()
@@ -821,6 +780,7 @@ public class EditPost extends Activity implements LocationListener {
 						mf.setFilePath(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 						mf.setWidth(wpIS.getWidth());
+						mf.setVideo(wpIS.isVideo());
 						mf.save(EditPost.this);
 					}
 				}
@@ -1009,31 +969,36 @@ public class EditPost extends Activity implements LocationListener {
 	}
 
 	private class processAttachmentsTask extends
-			AsyncTask<Vector<?>, Void, Boolean> {
+			AsyncTask<Vector<?>, Void, SpannableStringBuilder> {
 
 		protected void onPreExecute() {
 
 			showDialog(ID_DIALOG_LOADING);
 		}
 
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(SpannableStringBuilder result) {
 			dismissDialog(ID_DIALOG_LOADING);
+			if (result.length() > 0) {
+				WPEditText postContent = (WPEditText) findViewById(R.id.postContent);
+				postContent.setText(result);
+			}
 		}
 
 		@Override
-		protected Boolean doInBackground(Vector<?>... args) {
+		protected SpannableStringBuilder doInBackground(Vector<?>... args) {
 			ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
 			String type = (String) args[0].get(1);
+			SpannableStringBuilder ssb = new SpannableStringBuilder();
 			for (int i = 0; i < multi_stream.size(); i++) {
 				Uri curStream = (Uri) multi_stream.get(i);
 				if (curStream != null && type != null) {
 					String imgPath = curStream.getEncodedPath();
 
-					// addMedia(imgPath, curStream, true);
+					ssb = addMedia(imgPath, curStream, ssb);
 
 				}
 			}
-			return true;
+			return ssb;
 		}
 	}
 
@@ -1055,6 +1020,46 @@ public class EditPost extends Activity implements LocationListener {
 				enableLBSButtons();
 			}
 		}
+
+	}
+
+	public SpannableStringBuilder addMedia(String imgPath, Uri curStream,
+			SpannableStringBuilder ssb) {
+		Bitmap resizedBitmap = null;
+		String imageTitle = "";
+
+		ImageHelper ih = new ImageHelper();
+
+		Display display = getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		
+		HashMap mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+		
+		if (mediaData == null) {
+			return null;
+		}
+
+		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf(width/2), (String)mediaData.get("orientation"), true);
+
+
+		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
+				finalBytes.length);
+
+		WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap,
+				curStream);
+		is.setTitle(imageTitle);
+		is.setImageSource(curStream);
+		is.setVideo(imgPath.contains("video"));
+		ssb.append(" ");
+		ssb.setSpan(is, ssb.length() - 1, ssb.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		AlignmentSpan.Standard as = new AlignmentSpan.Standard(
+				Layout.Alignment.ALIGN_CENTER);
+		ssb.setSpan(as, ssb.length() - 1, ssb.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssb.append("\n");
+
+		return ssb;
 
 	}
 

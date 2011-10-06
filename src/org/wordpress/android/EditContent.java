@@ -1,10 +1,12 @@
 package org.wordpress.android;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
@@ -13,6 +15,7 @@ import android.text.style.AlignmentSpan;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -24,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.provider.MediaStore.Video;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -49,8 +53,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -71,7 +75,7 @@ public class EditContent extends Activity {
 
 		setContentView(R.layout.edit_content);
 
-		final Button addPictureButton = (Button) findViewById(R.id.addPictureButton);
+		final ImageButton addPictureButton = (ImageButton) findViewById(R.id.addPictureButton);
 
 		registerForContextMenu(addPictureButton);
 
@@ -92,7 +96,7 @@ public class EditContent extends Activity {
 				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View view, boolean hasFocus) {
-						LinearLayout formatBar = (LinearLayout) findViewById(R.id.formatBar);
+						RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
 						if (hasFocus) {
 							formatBar.setVisibility(View.VISIBLE);
 							Animation fadeInAnimation = AnimationUtils
@@ -114,7 +118,7 @@ public class EditContent extends Activity {
 
 					@Override
 					public void onImeBack(WPEditText view, String text) {
-						LinearLayout formatBar = (LinearLayout) findViewById(R.id.formatBar);
+						RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
 						Animation fadeOutAnimation = AnimationUtils
 								.loadAnimation(EditContent.this,
 										R.anim.disappear);
@@ -128,7 +132,7 @@ public class EditContent extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				LinearLayout formatBar = (LinearLayout) findViewById(R.id.formatBar);
+				RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
 				if (!(formatBar.getVisibility() == View.VISIBLE)) {
 
 					formatBar.setVisibility(View.VISIBLE);
@@ -146,95 +150,103 @@ public class EditContent extends Activity {
 
 				if (click_spans.length != 0) {
 					final WPImageSpan span = click_spans[0];
+					if (!span.isVideo()) {
+						LayoutInflater factory = LayoutInflater
+								.from(EditContent.this);
+						final View alertView = factory.inflate(
+								R.layout.alert_image_options, null);
 
-					LayoutInflater factory = LayoutInflater
-							.from(EditContent.this);
-					final View alertView = factory.inflate(
-							R.layout.alert_image_options, null);
+						final TextView imageWidthText = (TextView) alertView
+								.findViewById(R.id.imageWidthText);
+						final EditText titleText = (EditText) alertView
+								.findViewById(R.id.title);
+						final EditText descText = (EditText) alertView
+								.findViewById(R.id.description);
+						final EditText caption = (EditText) alertView
+								.findViewById(R.id.caption);
+						final CheckBox featured = (CheckBox) alertView
+								.findViewById(R.id.featuredImage);
+						final SeekBar seekBar = (SeekBar) alertView
+								.findViewById(R.id.imageWidth);
+						final Spinner alignmentSpinner = (Spinner) alertView
+								.findViewById(R.id.alignment_spinner);
+						ArrayAdapter<CharSequence> adapter = ArrayAdapter
+								.createFromResource(EditContent.this,
+										R.array.alignment_array,
+										android.R.layout.simple_spinner_item);
+						adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						alignmentSpinner.setAdapter(adapter);
 
-					final TextView imageWidthText = (TextView) alertView
-							.findViewById(R.id.imageWidthText);
-					final EditText titleText = (EditText) alertView
-							.findViewById(R.id.title);
-					final EditText descText = (EditText) alertView
-							.findViewById(R.id.description);
-					final EditText caption = (EditText) alertView
-							.findViewById(R.id.caption);
-					final CheckBox featured = (CheckBox) alertView
-							.findViewById(R.id.featuredImage);
-					final SeekBar seekBar = (SeekBar) alertView
-							.findViewById(R.id.imageWidth);
-					final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
-				    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				            EditContent.this, R.array.alignment_array, android.R.layout.simple_spinner_item);
-				    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				    alignmentSpinner.setAdapter(adapter);
+						imageWidthText.setText(String.valueOf(span.getWidth()));
+						seekBar.setProgress(span.getWidth());
+						titleText.setText(span.getTitle());
+						descText.setText(span.getDescription());
+						caption.setText(span.getCaption());
+						featured.setChecked(span.isFeatured());
 
-					imageWidthText.setText(String.valueOf(span.getWidth()));
-					seekBar.setProgress(span.getWidth());
-					titleText.setText(span.getTitle());
-					descText.setText(span.getDescription());
-					caption.setText(span.getCaption());
-					featured.setChecked(span.isFeatured());
+						alignmentSpinner.setSelection(
+								span.getHorizontalAlignment(), true);
 
-					alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
+						seekBar.setMax(1000);
+						seekBar.setProgress(span.getWidth());
+						seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-					seekBar.setMax(1000);
-					seekBar.setProgress(span.getWidth());
-					seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+							@Override
+							public void onStopTrackingTouch(SeekBar seekBar) {
+							}
 
-						@Override
-						public void onStopTrackingTouch(SeekBar seekBar) {
-						}
+							@Override
+							public void onStartTrackingTouch(SeekBar seekBar) {
+								// TODO Auto-generated method stub
+							}
 
-						@Override
-						public void onStartTrackingTouch(SeekBar seekBar) {
-							// TODO Auto-generated method stub
-						}
+							@Override
+							public void onProgressChanged(SeekBar seekBar,
+									int progress, boolean fromUser) {
+								imageWidthText.setText(progress + "px");
+							}
+						});
 
-						@Override
-						public void onProgressChanged(SeekBar seekBar,
-								int progress, boolean fromUser) {
-							imageWidthText.setText(progress + "px");
-						}
-					});
+						AlertDialog ad = new AlertDialog.Builder(
+								EditContent.this)
+								.setTitle("Image Settings")
+								.setView(alertView)
+								.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int whichButton) {
 
-					AlertDialog ad = new AlertDialog.Builder(EditContent.this)
-							.setTitle("Image Settings")
-							.setView(alertView)
-							.setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
+												span.setTitle(titleText
+														.getText().toString());
+												span.setDescription(descText
+														.getText().toString());
 
-											span.setTitle(titleText.getText()
-													.toString());
-											span.setDescription(descText
-													.getText().toString());
-											
-											span.setHorizontalAlignment(alignmentSpinner.getSelectedItemPosition());
-											span.setWidth(seekBar.getProgress());
-											span.setCaption(caption.getText()
-													.toString());
-											span.setFeatured(featured
-													.isChecked());
+												span.setHorizontalAlignment(alignmentSpinner
+														.getSelectedItemPosition());
+												span.setWidth(seekBar
+														.getProgress());
+												span.setCaption(caption
+														.getText().toString());
+												span.setFeatured(featured
+														.isChecked());
 
-										}
-									})
-							.setNegativeButton("Cancel",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
+											}
+										})
+								.setNegativeButton("Cancel",
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int whichButton) {
 
-											/*
-											 * User clicked cancel so do some
-											 * stuff
-											 */
-										}
-									}).create();
-					ad.show();
+												/*
+												 * User clicked cancel so do
+												 * some stuff
+												 */
+											}
+										}).create();
+						ad.show();
+					}
 
 				} else {
 					contentEditor.setMovementMethod(ArrowKeyMovementMethod
@@ -560,80 +572,21 @@ public class EditContent extends Activity {
 	private void addMedia(String imgPath, Uri curStream) {
 
 		Bitmap resizedBitmap = null;
-		String imageTitle = "";
+		ImageHelper ih = new ImageHelper();
+		Display display = getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
 
-		if (!imgPath.contains("video")) {
+		HashMap<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditContent.this);
 
-			String[] projection = new String[] { Images.Thumbnails._ID,
-					Images.Thumbnails.DATA, Images.Media.ORIENTATION };
-			String orientation = "", path = "";
-			Cursor cur = managedQuery(curStream, projection, null, null, null);
-			File jpeg = null;
-			if (cur != null) {
-				String thumbData = "";
-
-				if (cur.moveToFirst()) {
-
-					int dataColumn, orientationColumn;
-
-					dataColumn = cur.getColumnIndex(Images.Media.DATA);
-					orientationColumn = cur
-							.getColumnIndex(Images.Media.ORIENTATION);
-
-					thumbData = cur.getString(dataColumn);
-					orientation = cur.getString(orientationColumn);
-				}
-
-				jpeg = new File(thumbData);
-				path = thumbData;
-			} else {
-				path = curStream.toString().replace("file://", "");
-				jpeg = new File(curStream.toString().replace("file://", ""));
-
-			}
-
-			imageTitle = jpeg.getName();
-
-			byte[] finalBytes = null;
-
-			byte[] bytes = new byte[(int) jpeg.length()];
-
-			DataInputStream in = null;
-			try {
-				in = new DataInputStream(new FileInputStream(jpeg));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			try {
-				in.readFully(bytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			ImageHelper ih = new ImageHelper();
-
-			if (orientation == "") {
-				orientation = ih.getExifOrientation(path, orientation);
-			}
-
-			Display display = getWindowManager().getDefaultDisplay(); 
-			int width = display.getWidth();
-			
-			imageTitle = jpeg.getName();
-			finalBytes = ih.createThumbnail(bytes, String.valueOf(width/2), orientation, true);
-
-			resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
-					finalBytes.length);
-
-		} else {
-			// imgThumbs.add("video");
+		if (mediaData == null) {
+			return;
 		}
+		
+		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf(width / 2),
+				(String) mediaData.get("orientation"), true);
 
+		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
+				finalBytes.length);
 
 		WPEditText content = (WPEditText) findViewById(R.id.postContent);
 		int selectionStart = content.getSelectionStart();
@@ -659,15 +612,17 @@ public class EditContent extends Activity {
 		builder.append(afterText);
 		WPImageSpan is = new WPImageSpan(EditContent.this, resizedBitmap,
 				curStream);
-		is.setTitle(imageTitle);
+		is.setTitle((String) mediaData.get("title"));
 		is.setImageSource(curStream);
+		if (imgPath.contains("video")) {
+			is.setVideo(true);
+		}
 		builder.setSpan(is, selectionStart, selectionEnd + 1,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+		AlignmentSpan.Standard as = new AlignmentSpan.Standard(
+				Layout.Alignment.ALIGN_CENTER);
 		builder.setSpan(as, selectionStart, selectionEnd + 1,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		// ImageSpan[] is = str.getSpans(selectionStart, selectionEnd,
-		// ImageSpan.class);
 		builder.append("\n");
 		content.setText(builder);
 

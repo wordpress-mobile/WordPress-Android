@@ -32,7 +32,7 @@ public class WordPressDB {
 	private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
 		+ "read integer not null, interval text, statsdate integer);";
 	private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
-			+ "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false);";
+			+ "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
 	private static final String SETTINGS_TABLE = "accounts";
 	private static final String DATABASE_NAME = "wordpress";
 	private static final String MEDIA_TABLE = "media";
@@ -1522,6 +1522,7 @@ public class WordPressDB {
 		values.put("height", mf.getHeight());
 		values.put("mimeType", mf.getMIMEType());
 		values.put("featured", mf.isFeatured());
+		values.put("isVideo", mf.isVideo());
 		
 		int result = db.update(MEDIA_TABLE, values, "postID=" + mf.getPostID() + " AND filePath='" + mf.getFileName() + "'", null);
 		if (result == 0)
@@ -1551,6 +1552,7 @@ public class WordPressDB {
 			mf.setHeight(c.getInt(9));
 			mf.setMIMEType(c.getString(10));
 			mf.setFeatured(c.getInt(11) > 0);
+			mf.setVideo(c.getInt(12) > 0);
 			mediaFiles[i] = mf;
 			c.moveToNext();
 		}
@@ -1595,6 +1597,7 @@ public class WordPressDB {
 			mf.setHeight(c.getInt(9));
 			mf.setMIMEType(c.getString(10));
 			mf.setFeatured(c.getInt(11) > 0);
+			mf.setVideo(c.getInt(12) > 0);
 		}
 		c.close();
 		db.close();

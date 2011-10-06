@@ -20,6 +20,7 @@ public class MediaFile {
 	protected String MIMEType = ""; //do not store this value
 	protected String videoPressShortCode = null;
 	protected boolean featured = false;
+	protected boolean isVideo = false;
 
 	public int getId() {
 		return id;
@@ -139,6 +140,14 @@ public class MediaFile {
 
 	public void setHorizontalAlignment(int horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
+	}
+	
+	public boolean isVideo() {
+		return isVideo;
+	}
+
+	public void setVideo(boolean isVideo) {
+		this.isVideo = isVideo;
 	}
 	
 	public void save(Context ctx) {

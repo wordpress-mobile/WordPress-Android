@@ -116,35 +116,11 @@
         android:text="@string/media"
         style="@style/WordPressSectionHeader" />
       <TextView
-        android:id="@+id/l_imagePlacement"
-        android:textColor="#444444"
-        android:layout_marginTop="10dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/l_section2"
-        android:text="@string/place_image" />
-
-      <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:checkedButton="@+id/aboveText"
-        android:id="@+id/imagePlacement"
-        android:layout_below="@id/l_imagePlacement">
-        <RadioButton
-          android:id="@+id/aboveText"
-          android:text="@string/above_text" />
-        <RadioButton
-          android:id="@+id/belowText"
-          android:text="@string/below_text" />
-      </RadioGroup>
-
-      <TextView
         android:id="@+id/l_maxImageWidth"
         android:textColor="#444444"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imagePlacement"
+        android:layout_below="@id/l_section2"
         android:text="@string/max_thumbnail_px_width" />
 
       <Spinner

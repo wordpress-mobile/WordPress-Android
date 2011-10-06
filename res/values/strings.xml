@@ -15,11 +15,7 @@
   <string name="post_content">Post Content</string>
   <string name="post_title">Post Title</string>
   <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
-  <string name="align_thumb_to_center">Align thumbnail to center</string>
-  <string name="max_thumbnail_px_width">Maximum thumbnail pixel width</string>
-  <string name="below_text">Below Text</string>
-  <string name="above_text">Above Text</string>
-  <string name="place_image">Place image:</string>
+  <string name="max_thumbnail_px_width">Default image width</string>
   <string name="password">Password:</string>
   <string name="get_free_blog">Get a free blog at WordPress.com</string>
   <string name="tagline">Start blogging from your mobile in seconds.</string>

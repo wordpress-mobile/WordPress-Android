@@ -6,12 +6,7 @@
     android:right="4dp"
     android:top="4dp"
     android:bottom="4dp"/>
-      <gradient
-        android:startColor="#F0F0F0"
-        android:centerColor="#F0F0F0"
-        android:endColor="#FFFFFF"
-        android:height="1dp"
-        android:angle="90" />
+      <solid android:color="@android:color/transparent" />
         <corners android:radius="1dp" android:bottomRightRadius="4dp" android:bottomLeftRadius="4dp" 
      android:topLeftRadius="4dp" android:topRightRadius="4dp"/> 
     </shape>

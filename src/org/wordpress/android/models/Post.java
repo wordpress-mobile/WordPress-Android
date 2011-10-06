@@ -427,7 +427,6 @@ public class Post {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			
 
 			if (result) {
 
@@ -496,8 +495,9 @@ public class Post {
 
 			String imageContent = "";
 			boolean mediaError = false;
-			
-			Spannable s = (Spannable) WPHtml.fromHtml(post.getDescription() + post.getMt_text_more(), context, post);
+
+			Spannable s = (Spannable) WPHtml.fromHtml(post.getDescription()
+					+ post.getMt_text_more(), context, post);
 			WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 					WPImageSpan.class);
 
@@ -515,25 +515,22 @@ public class Post {
 					mf.setFileName(wpIS.getImageSource().toString());
 					mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 					mf.setWidth(wpIS.getWidth());
-					
+
 					String imgHTML = uploadImage(mf);
 					if (imgHTML != null) {
 						SpannableString ss = new SpannableString(imgHTML);
-						s.setSpan(ss, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						s.setSpan(ss, start, end,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 						s.removeSpan(wpIS);
-					}
-					else {
+					} else {
 						mediaError = true;
 					}
 				}
 			}
-			
-			
+
 			WordPressDB db = new WordPressDB(context);
 			if (!mediaError) {
 
-				
-				
 				JSONArray categories = post.getCategories();
 				String[] theCategories = new String[categories.length()];
 				if (categories != null) {
@@ -550,12 +547,13 @@ public class Post {
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
 
 				String content = "";
-				
+
 				content = WPHtml.toHtml(s);
 
 				if (!post.isPage) {
 					// add the tagline
-					HashMap<?, ?> globalSettings = db.getNotificationOptions(post.context);
+					HashMap<?, ?> globalSettings = db
+							.getNotificationOptions(post.context);
 					boolean taglineValue = false;
 					String tagline = "";
 
@@ -631,18 +629,19 @@ public class Post {
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 						post.blog.getHttpuser(), post.blog.getHttppassword());
 
-				/*client.setUploadProgressListener(new XMLRPCClient.UploadProgressListener() {
-					// user selected new blog in the title bar
-					@Override
-					public void OnUploadProgress(int progress) {
-
-						n.contentView.setProgressBar(R.id.status_progress, 100,
-								progress, false);
-						// inform the progress bar of updates in progress
-						nm.notify(notificationID, n);
-
-					}
-				});*/
+				/*
+				 * client.setUploadProgressListener(new
+				 * XMLRPCClient.UploadProgressListener() { // user selected new
+				 * blog in the title bar
+				 * 
+				 * @Override public void OnUploadProgress(int progress) {
+				 * 
+				 * n.contentView.setProgressBar(R.id.status_progress, 100,
+				 * progress, false); // inform the progress bar of updates in
+				 * progress nm.notify(notificationID, n);
+				 * 
+				 * } });
+				 */
 				n.contentView.setTextViewText(R.id.status_text,
 						"Uploading Post");
 				nm.notify(notificationID, n);
@@ -667,7 +666,7 @@ public class Post {
 							.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
 									: "metaWeblog.editPost", params);
 					success = true;
-					//post.setUploaded(true);
+					// post.setUploaded(true);
 					post.update();
 					return true;
 				} catch (final XMLRPCException e) {
@@ -687,377 +686,368 @@ public class Post {
 
 			// loop for multiple images
 
-				final int printCtr = 0;
+			final int printCtr = 0;
+			/*
+			 * Thread prompt = new Thread() { public void run() {
+			 * loadingDialog.setMessage("Uploading Media File #" +
+			 * String.valueOf(printCtr + 1)); } }; this.runOnUiThread(prompt);
+			 */
+			final String statusText = "Uploading Media File #"
+					+ String.valueOf(printCtr + 1);
+			n.contentView.setTextViewText(R.id.status_text, statusText);
+			// check for image, and upload it
+			if (mf.getFileName() != null) {
+				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
+						post.blog.getHttpuser(), post.blog.getHttppassword());
+
 				/*
-				 * Thread prompt = new Thread() { public void run() {
-				 * loadingDialog.setMessage("Uploading Media File #" +
-				 * String.valueOf(printCtr + 1)); } };
-				 * this.runOnUiThread(prompt);
+				 * client.setUploadProgressListener(new
+				 * XMLRPCClient.UploadProgressListener() {
+				 * 
+				 * @Override public void OnUploadProgress(int progress) {
+				 * 
+				 * n.contentView.setProgressBar(R.id.status_progress, 100,
+				 * progress, false);
+				 * n.contentView.setTextViewText(R.id.status_text, statusText +
+				 * " (" + progress + "%)"); // inform the progress bar of
+				 * updates in progress nm.notify(notificationID, n);
+				 * 
+				 * } });
 				 */
-				final String statusText = "Uploading Media File #"
-						+ String.valueOf(printCtr + 1);
-				n.contentView.setTextViewText(R.id.status_text, statusText);
-				// check for image, and upload it
-				if (mf.getFileName() != null) {
-					XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-							post.blog.getHttpuser(),
-							post.blog.getHttppassword());
 
-					/*client.setUploadProgressListener(new XMLRPCClient.UploadProgressListener() {
-						@Override
-						public void OnUploadProgress(int progress) {
+				String curImagePath = "";
 
-							n.contentView.setProgressBar(R.id.status_progress,
-									100, progress, false);
-							n.contentView.setTextViewText(R.id.status_text, statusText + " (" + progress + "%)");
-							// inform the progress bar of updates in progress
-							nm.notify(notificationID, n);
+				curImagePath = mf.getFileName();
+				boolean video = false;
+				if (curImagePath.contains("video")) {
+					video = true;
+				}
+
+				if (video) { // upload the video
+
+					Uri videoUri = Uri.parse(curImagePath);
+					File fVideo = null;
+					String mimeType = "", xRes = "", yRes = "";
+
+					if (videoUri.toString().contains("content:")) {
+						String[] projection;
+						Uri imgPath;
+
+						projection = new String[] { Video.Media._ID,
+								Video.Media.DATA, Video.Media.MIME_TYPE,
+								Video.Media.RESOLUTION };
+						imgPath = videoUri;
+
+						Cursor cur = ((Activity) post.context).managedQuery(
+								imgPath, projection, null, null, null);
+						String thumbData = "";
+
+						if (cur.moveToFirst()) {
+
+							int mimeTypeColumn, resolutionColumn, dataColumn;
+
+							dataColumn = cur.getColumnIndex(Video.Media.DATA);
+							mimeTypeColumn = cur
+									.getColumnIndex(Video.Media.MIME_TYPE);
+							resolutionColumn = cur
+									.getColumnIndex(Video.Media.RESOLUTION);
+
+							mf = new MediaFile();
+
+							thumbData = cur.getString(dataColumn);
+							mimeType = cur.getString(mimeTypeColumn);
+							fVideo = new File(thumbData);
+							mf.setFilePath(fVideo.getPath());
+							String resolution = cur.getString(resolutionColumn);
+							if (resolution != null) {
+								String[] resx = resolution.split("x");
+								xRes = resx[0];
+								yRes = resx[1];
+							} else {
+								// set the width of the video to the
+								// thumbnail
+								// width, else 640x480
+								if (!post.blog.getMaxImageWidth().equals(
+										"Original Size")) {
+									xRes = post.blog.getMaxImageWidth();
+									yRes = String
+											.valueOf(Math.round(Integer.valueOf(post.blog
+													.getMaxImageWidth()) * 0.75));
+								} else {
+									xRes = "640";
+									yRes = "480";
+								}
+
+							}
 
 						}
-					});*/
-
-					String curImagePath = "";
-
-					curImagePath = mf.getFileName();
-					boolean video = false;
-					if (curImagePath.contains("video")) {
-						video = true;
+					} else { // file is not in media library
+						fVideo = new File(videoUri.toString().replace(
+								"file://", ""));
 					}
 
-					if (video) { // upload the video
+					String imageTitle = fVideo.getName();
 
-						Uri videoUri = Uri.parse(curImagePath);
-						File fVideo = null;
-						String mimeType = "", xRes = "", yRes = "";
+					// try to upload the video
+					HashMap<String, Object> m = new HashMap<String, Object>();
 
-						if (videoUri.toString().contains("content:")) {
-							String[] projection;
-							Uri imgPath;
+					m.put("name", imageTitle);
+					m.put("type", mimeType);
+					m.put("bits", mf);
+					m.put("overwrite", true);
 
-							projection = new String[] { Video.Media._ID,
-									Video.Media.DATA, Video.Media.MIME_TYPE,
-									Video.Media.RESOLUTION };
-							imgPath = videoUri;
+					Object[] params = { 1, post.blog.getUsername(),
+							post.blog.getPassword(), m };
 
-							Cursor cur = ((Activity) post.context)
-									.managedQuery(imgPath, projection, null,
-											null, null);
-							String thumbData = "";
+					Object result = null;
 
-							if (cur.moveToFirst()) {
-
-								int mimeTypeColumn, resolutionColumn, dataColumn;
-
-								dataColumn = cur
-										.getColumnIndex(Video.Media.DATA);
-								mimeTypeColumn = cur
-										.getColumnIndex(Video.Media.MIME_TYPE);
-								resolutionColumn = cur
-										.getColumnIndex(Video.Media.RESOLUTION);
-
-								mf = new MediaFile();
-
-								thumbData = cur.getString(dataColumn);
-								mimeType = cur.getString(mimeTypeColumn);
-								fVideo = new File(thumbData);
-								mf.setFilePath(fVideo.getPath());
-								String resolution = cur
-										.getString(resolutionColumn);
-								if (resolution != null) {
-									String[] resx = resolution.split("x");
-									xRes = resx[0];
-									yRes = resx[1];
-								} else {
-									// set the width of the video to the
-									// thumbnail
-									// width, else 640x480
-									if (!post.blog.getMaxImageWidth().equals(
-											"Original Size")) {
-										xRes = post.blog.getMaxImageWidth();
-										yRes = String
-												.valueOf(Math.round(Integer.valueOf(post.blog
-														.getMaxImageWidth()) * 0.75));
-									} else {
-										xRes = "640";
-										yRes = "480";
-									}
-
-								}
-
+					try {
+						result = (Object) client.call("wp.uploadFile", params);
+					} catch (XMLRPCException e) {
+						String mediaErrorMsg = e.getLocalizedMessage();
+						if (video) {
+							if (mediaErrorMsg.contains("Invalid file type")) {
+								mediaErrorMsg = post.context.getResources()
+										.getString(R.string.vp_upgrade);
+								boolean vpUpgrade = true;
 							}
-						} else { // file is not in media library
-							fVideo = new File(videoUri.toString().replace(
-									"file://", ""));
 						}
+						boolean xmlrpcError = true;
+						return null;
+					}
 
-						String imageTitle = fVideo.getName();
+					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 
-						// try to upload the video
-						HashMap<String, Object> m = new HashMap<String, Object>();
+					contentHash = (HashMap<?, ?>) result;
 
-						m.put("name", imageTitle);
-						m.put("type", mimeType);
-						m.put("bits", mf);
-						m.put("overwrite", true);
+					String resultURL = contentHash.get("url").toString();
+					if (contentHash.containsKey("videopress_shortcode")) {
+						resultURL = contentHash.get("videopress_shortcode")
+								.toString() + "\n";
+					} else {
+						resultURL = String
+								.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+										xRes, yRes, resultURL, mimeType,
+										resultURL);
+					}
 
-						Object[] params = { 1, post.blog.getUsername(),
-								post.blog.getPassword(), m };
+					content = content + resultURL;
 
-						Object result = null;
+				} // end video
+				else {
+					for (int i = 0; i < 2; i++) {
 
-						try {
-							result = (Object) client.call("wp.uploadFile",
-									params);
-						} catch (XMLRPCException e) {
-							String mediaErrorMsg = e.getLocalizedMessage();
-							if (video) {
-								if (mediaErrorMsg.contains("Invalid file type")) {
-									mediaErrorMsg = post.context.getResources()
-											.getString(R.string.vp_upgrade);
-									boolean vpUpgrade = true;
+						curImagePath = mf.getFileName();
+
+						if (i == 0 || post.blog.isFullSizeImage()) {
+
+							Uri imageUri = Uri.parse(curImagePath);
+							File jpeg = null;
+							String mimeType = "", orientation = "", path = "";
+
+							if (imageUri.toString().contains("content:")) {
+								String[] projection;
+								Uri imgPath;
+
+								projection = new String[] { Images.Media._ID,
+										Images.Media.DATA,
+										Images.Media.MIME_TYPE,
+										Images.Media.ORIENTATION };
+
+								imgPath = imageUri;
+
+								Cursor cur = ((Activity) post.context)
+										.managedQuery(imgPath, projection,
+												null, null, null);
+								String thumbData = "";
+
+								if (cur.moveToFirst()) {
+
+									int dataColumn, mimeTypeColumn, orientationColumn;
+
+									dataColumn = cur
+											.getColumnIndex(Images.Media.DATA);
+									mimeTypeColumn = cur
+											.getColumnIndex(Images.Media.MIME_TYPE);
+									orientationColumn = cur
+											.getColumnIndex(Images.Media.ORIENTATION);
+
+									orientation = cur
+											.getString(orientationColumn);
+									thumbData = cur.getString(dataColumn);
+									mimeType = cur.getString(mimeTypeColumn);
+									jpeg = new File(thumbData);
+									path = thumbData;
+									mf.setFilePath(jpeg.getPath());
+
 								}
+							} else { // file is not in media library
+								path = imageUri.toString().replace("file://",
+										"");
+								jpeg = new File(path);
+								mf.setFilePath(path);
 							}
-							boolean xmlrpcError = true;
-							return null;
-						}
 
-						HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+							// check if the file is now gone! (removed SD
+							// card, etc)
+							if (jpeg == null) {
+								boolean xmlrpcError = true;
+								String mediaErrorMsg = "Media file not found.";
+								break;
+							}
 
-						contentHash = (HashMap<?, ?>) result;
+							ImageHelper ih = new ImageHelper();
+							orientation = ih.getExifOrientation(path,
+									orientation);
 
-						String resultURL = contentHash.get("url").toString();
-						if (contentHash.containsKey("videopress_shortcode")) {
-							resultURL = contentHash.get("videopress_shortcode")
-									.toString() + "\n";
-						} else {
-							resultURL = String
-									.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-											xRes, yRes, resultURL, mimeType,
-											resultURL);
-						}
+							String imageTitle = jpeg.getName();
 
-						content = content + resultURL;
+							byte[] finalBytes = null;
 
-					} // end video
-					else {
-						for (int i = 0; i < 2; i++) {
+							if (i == 0) {
+								byte[] bytes = new byte[(int) jpeg.length()];
 
-							curImagePath = mf.getFileName();
-
-							if (i == 0 || post.blog.isFullSizeImage()) {
-
-								Uri imageUri = Uri.parse(curImagePath);
-								File jpeg = null;
-								String mimeType = "", orientation = "", path = "";
-
-								if (imageUri.toString().contains("content:")) {
-									String[] projection;
-									Uri imgPath;
-
-									projection = new String[] {
-											Images.Media._ID,
-											Images.Media.DATA,
-											Images.Media.MIME_TYPE,
-											Images.Media.ORIENTATION };
-
-									imgPath = imageUri;
-
-									Cursor cur = ((Activity) post.context)
-											.managedQuery(imgPath, projection,
-													null, null, null);
-									String thumbData = "";
-
-									if (cur.moveToFirst()) {
-
-										int dataColumn, mimeTypeColumn, orientationColumn;
-
-										dataColumn = cur
-												.getColumnIndex(Images.Media.DATA);
-										mimeTypeColumn = cur
-												.getColumnIndex(Images.Media.MIME_TYPE);
-										orientationColumn = cur
-												.getColumnIndex(Images.Media.ORIENTATION);
-
-										orientation = cur
-												.getString(orientationColumn);
-										thumbData = cur.getString(dataColumn);
-										mimeType = cur
-												.getString(mimeTypeColumn);
-										jpeg = new File(thumbData);
-										path = thumbData;
-										mf.setFilePath(jpeg.getPath());
-
-									}
-								} else { // file is not in media library
-									path = imageUri.toString().replace(
-											"file://", "");
-									jpeg = new File(path);
-									mf.setFilePath(path);
-								}
-
-								// check if the file is now gone! (removed SD
-								// card, etc)
-								if (jpeg == null) {
-									boolean xmlrpcError = true;
-									String mediaErrorMsg = "Media file not found.";
-									break;
-								}
-
-								ImageHelper ih = new ImageHelper();
-								orientation = ih.getExifOrientation(path,
-										orientation);
-
-								String imageTitle = jpeg.getName();
-
-								byte[] finalBytes = null;
-
-								if (i == 0) {
-									byte[] bytes = new byte[(int) jpeg.length()];
-
-									DataInputStream in = null;
-									try {
-										in = new DataInputStream(
-												new FileInputStream(jpeg));
-									} catch (FileNotFoundException e) {
-										e.printStackTrace();
-									}
-									try {
-										in.readFully(bytes);
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-									try {
-										in.close();
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-
-									ImageHelper ih2 = new ImageHelper();
-									finalBytes = ih2.createThumbnail(bytes,
-											String.valueOf(mf.getWidth()),
-											orientation, false);
-								}
-
-								// try to upload the image
-								Map<String, Object> m = new HashMap<String, Object>();
-
-								m.put("name", imageTitle);
-								m.put("type", mimeType);
-								if (i == 0) {
-									m.put("bits", finalBytes);
-								} else {
-									m.put("bits", mf);
-								}
-								m.put("overwrite", true);
-
-								Object[] params = { 1, post.blog.getUsername(),
-										post.blog.getPassword(), m };
-
-								Object result = null;
-
+								DataInputStream in = null;
 								try {
-									result = (Object) client.call(
-											"wp.uploadFile", params);
-								} catch (XMLRPCException e) {
+									in = new DataInputStream(
+											new FileInputStream(jpeg));
+								} catch (FileNotFoundException e) {
 									e.printStackTrace();
-									e.getLocalizedMessage();
-									boolean xmlrpcError = true;
-									break;
+								}
+								try {
+									in.readFully(bytes);
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+								try {
+									in.close();
+								} catch (IOException e) {
+									e.printStackTrace();
 								}
 
-								HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+								ImageHelper ih2 = new ImageHelper();
+								finalBytes = ih2.createThumbnail(bytes,
+										String.valueOf(mf.getWidth()),
+										orientation, false);
+							}
 
-								contentHash = (HashMap<?, ?>) result;
+							// try to upload the image
+							Map<String, Object> m = new HashMap<String, Object>();
 
-								String resultURL = contentHash.get("url")
-										.toString();
+							m.put("name", imageTitle);
+							m.put("type", mimeType);
+							if (i == 0) {
+								m.put("bits", finalBytes);
+							} else {
+								m.put("bits", mf);
+							}
+							m.put("overwrite", true);
 
-								if (i == 0) {
-									finalThumbnailUrl = resultURL;
+							Object[] params = { 1, post.blog.getUsername(),
+									post.blog.getPassword(), m };
+
+							Object result = null;
+
+							try {
+								result = (Object) client.call("wp.uploadFile",
+										params);
+							} catch (XMLRPCException e) {
+								e.printStackTrace();
+								e.getLocalizedMessage();
+								boolean xmlrpcError = true;
+								break;
+							}
+
+							HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+
+							contentHash = (HashMap<?, ?>) result;
+
+							String resultURL = contentHash.get("url")
+									.toString();
+
+							if (i == 0) {
+								finalThumbnailUrl = resultURL;
+							} else {
+								if (post.blog.isFullSizeImage()) {
+									finalImageUrl = resultURL;
 								} else {
-									if (post.blog.isFullSizeImage()) {
-										finalImageUrl = resultURL;
+									finalImageUrl = "";
+								}
+							}
+
+							String alignmentCSS = "";
+							switch (mf.getHorizontalAlignment()) {
+							case 0:
+								alignmentCSS = "alignnone";
+								break;
+							case 1:
+								alignmentCSS = "alignleft";
+								break;
+							case 2:
+								alignmentCSS = "aligncenter";
+								break;
+							case 3:
+								alignmentCSS = "alignright";
+								break;
+							}
+
+							alignmentCSS = "class=\"" + alignmentCSS + "\" ";
+
+							if (i != 0 && post.blog.isFullSizeImage()) {
+								if (resultURL != null) {
+
+									if (post.blog.getImagePlacement().equals(
+											"Above Text")) {
+										content = content
+												+ "<a alt=\"image\" href=\""
+												+ finalImageUrl + "\"><img "
+												+ alignmentCSS
+												+ "alt=\"image\" src=\""
+												+ finalThumbnailUrl
+												+ "\" /></a>\n\n";
 									} else {
-										finalImageUrl = "";
+										content = content
+												+ "\n<a alt=\"image\" href=\""
+												+ finalImageUrl + "\"><img "
+												+ alignmentCSS
+												+ "alt=\"image\" src=\""
+												+ finalThumbnailUrl
+												+ "\" /></a>";
+									}
+
+								}
+							} else {
+								if (i == 0
+										&& post.blog.isFullSizeImage() == false
+										&& resultURL != null) {
+
+									if (post.blog.getImagePlacement().equals(
+											"Above Text")) {
+
+										content = content + "<img "
+												+ alignmentCSS
+												+ "alt=\"image\" src=\""
+												+ finalThumbnailUrl
+												+ "\" />\n\n";
+									} else {
+										content = content + "\n<img "
+												+ alignmentCSS
+												+ "alt=\"image\" src=\""
+												+ finalThumbnailUrl + "\" />";
 									}
 								}
-
-								
-								String alignmentCSS = "";
-								switch (mf.getHorizontalAlignment()) {
-									case 0:
-										alignmentCSS = "alignnone";
-										break;
-									case 1:
-										alignmentCSS = "alignleft";
-										break;
-									case 2:
-										alignmentCSS = "aligncenter";
-										break;
-									case 3:
-										alignmentCSS = "alignright";
-										break;
-								}
-								
-								
-									alignmentCSS = "class=\"" + alignmentCSS + "\" ";
-
-								if (i != 0 && post.blog.isFullSizeImage()) {
-									if (resultURL != null) {
-
-										if (post.blog.getImagePlacement()
-												.equals("Above Text")) {
-											content = content
-													+ "<a alt=\"image\" href=\""
-													+ finalImageUrl
-													+ "\"><img " + alignmentCSS
-													+ "alt=\"image\" src=\""
-													+ finalThumbnailUrl
-													+ "\" /></a>\n\n";
-										} else {
-											content = content
-													+ "\n<a alt=\"image\" href=\""
-													+ finalImageUrl
-													+ "\"><img " + alignmentCSS
-													+ "alt=\"image\" src=\""
-													+ finalThumbnailUrl
-													+ "\" /></a>";
-										}
-
-									}
-								} else {
-									if (i == 0
-											&& post.blog.isFullSizeImage() == false
-											&& resultURL != null) {
-
-										if (post.blog.getImagePlacement()
-												.equals("Above Text")) {
-
-											content = content + "<img "
-													+ alignmentCSS
-													+ "alt=\"image\" src=\""
-													+ finalThumbnailUrl
-													+ "\" />\n\n";
-										} else {
-											content = content + "\n<img "
-													+ alignmentCSS
-													+ "alt=\"image\" src=\""
-													+ finalThumbnailUrl
-													+ "\" />";
-										}
-									}
-								}
-							} // end if statement
-						}// end image check
-					}
-				}// end image stuff
+							}
+						} // end if statement
+					}// end image check
+				}
+			}// end image stuff
 			return content;
 		}
 	}
 
 	public void deleteMediaFiles() {
 		db.deleteMediaFilesForPost(context, this);
-		
+
 	}
 
 	public void setId(long id) {

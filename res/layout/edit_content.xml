@@ -23,13 +23,13 @@
       android:textColorLink="#21759b"
       android:hint="@string/content" />
       </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
       android:id="@+id/formatBar"
-      android:layout_width="match_parent"
+      android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:background="#272727"
-      android:padding="8dp">
-      "
+      android:background="@drawable/format_bar_bg"
+      android:padding="8dp"
+      android:orientation="horizontal">
       <ToggleButton
         android:id="@+id/bold"
         android:background="@drawable/wp_button_toggle"
@@ -51,7 +51,8 @@
         android:textOn="I "
         android:textOff="I "
         android:textColor="#464646"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/bold" />
       <ToggleButton
         android:id="@+id/underline"
         android:background="@drawable/wp_button_toggle"
@@ -61,7 +62,8 @@
         android:textOn="@string/underline"
         android:textOff="@string/underline"
         android:textColor="#464646"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/em" />
 
       <ToggleButton
         android:id="@+id/strike"
@@ -72,7 +74,8 @@
         android:textOn="@string/strike"
         android:textOff="@string/strike"
         android:textColor="#464646"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/underline" />
 
       <Button
         android:id="@+id/link"
@@ -82,7 +85,8 @@
         android:textSize="17dip"
         android:textColor="#21759b"
         android:text="@string/link"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/strike" />
 
       <ToggleButton
         android:id="@+id/bquote"
@@ -95,15 +99,16 @@
         android:typeface="serif"
         android:textStyle="bold"
         android:textColor="#464646"
-        android:layout_marginLeft="6dp" />
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/link" />
 
-      <Button
+      <ImageButton
         android:id="@+id/addPictureButton"
         android:background="@drawable/wp_button_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17dip"
-        android:text="@string/add"
-        android:layout_marginLeft="6dp" />
-  </LinearLayout>
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/attachment"
+        android:layout_alignParentRight="true" />"
+  </RelativeLayout>
 </LinearLayout>

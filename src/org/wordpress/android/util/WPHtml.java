@@ -691,75 +691,26 @@ class HtmlToSpannedConverter implements ContentHandler {
 			Attributes attributes, WPHtml.ImageGetter img) {
 		String src = attributes.getValue("android-uri");
 		Bitmap resizedBitmap = null;
-		Uri curStream = null;
-		if (src != null) {
-			curStream = Uri.parse(src);
-		}
-		if (curStream != null) {
-			String[] projection = new String[] { Images.Thumbnails._ID,
-					Images.Thumbnails.DATA, Images.Media.ORIENTATION };
-			String orientation = "", path = "";
-			Cursor cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
-			File jpeg = null;
-			if (cur != null) {
-				String thumbData = "";
-
-				if (cur.moveToFirst()) {
-
-					int dataColumn, orientationColumn;
-
-					dataColumn = cur.getColumnIndex(Images.Media.DATA);
-					orientationColumn = cur
-							.getColumnIndex(Images.Media.ORIENTATION);
-
-					thumbData = cur.getString(dataColumn);
-					orientation = cur.getString(orientationColumn);
-				}
-
-				jpeg = new File(thumbData);
-				path = thumbData;
-			} else {
-				path = curStream.toString().replace("file://", "");
-				jpeg = new File(curStream.toString().replace("file://", ""));
-
-			}
-
-			byte[] finalBytes = null;
-
-			byte[] bytes = new byte[(int) jpeg.length()];
-
-			DataInputStream in = null;
-			try {
-				in = new DataInputStream(new FileInputStream(jpeg));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			try {
-				in.readFully(bytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			try {
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			ImageHelper ih = new ImageHelper();
-
-			if (orientation == "") {
-				orientation = ih.getExifOrientation(path, orientation);
-			}
-
-			Display display = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-			int width = display.getWidth();
+		Display display = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		int width = display.getWidth();
+		ImageHelper ih = new ImageHelper();
 			
-			finalBytes = ih.createThumbnail(bytes, String.valueOf(width/2), orientation, true);
+		HashMap<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
+		
+		if (mediaData != null){
+		
+			byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf(width/2), (String)mediaData.get("orientation"), true);
 
 			resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
 					finalBytes.length);
 			int len = text.length();
 			text.append("\uFFFC");
+			
+			Uri curStream = Uri.parse(src);
+			
+			if (curStream == null) {
+				return;
+			}
 
 			WPImageSpan is = new WPImageSpan(ctx, resizedBitmap, curStream);
 			
@@ -774,6 +725,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 				is.setHorizontalAlignment(mf.getHorizontalAlignment());
 				is.setImageSource(curStream);
 				is.setWidth(mf.getWidth());
+				is.setVideo(mf.isVideo());
 			}
 			
 			text.setSpan(is, len, text.length(),

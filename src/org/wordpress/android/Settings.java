@@ -67,13 +67,6 @@ public class Settings extends Activity {
     		httpUserET.setVisibility(View.GONE);
     	}
 
-    	//radio buttons for image placement
-
-    	RadioButton aboveTextRB = (RadioButton)findViewById(R.id.aboveText);
-    	RadioButton belowTextRB = (RadioButton)findViewById(R.id.belowText);
-    	aboveTextRB.setTag(0);
-    	belowTextRB.setTag(1);
-
     	CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
     	centerThumbnail.setChecked(blog.isCenterThumbnail());
 
@@ -86,16 +79,6 @@ public class Settings extends Activity {
 
     	spinner.setSelection(blog.getMaxImageWidthId());
 
-
-    	if (blog.getImagePlacement() != null){
-    		if (blog.getImagePlacement().equals("Above Text")){
-    			aboveTextRB.setChecked(true);
-    		}
-    		else
-    		{
-    			belowTextRB.setChecked(true);
-    		}
-    	}
 
         final Button cancelButton = (Button) findViewById(R.id.cancel);
         final Button saveButton = (Button) findViewById(R.id.save);
@@ -112,18 +95,6 @@ public class Settings extends Activity {
                 blog.setHttpuser(httpuserET.getText().toString());
                 EditText httppasswordET = (EditText)findViewById(R.id.httppassword);
                 blog.setHttppassword(httppasswordET.getText().toString());
-                
-                // trac #55
-                String buttonValue = ""; 
-                RadioButton aboveTextRB = (RadioButton)findViewById(R.id.aboveText);
-                if (aboveTextRB.isChecked()){
-                	buttonValue = "Above Text"; 
-                }
-                else{
-                	buttonValue = "Below Text";
-                }
-                
-                blog.setImagePlacement(buttonValue);
                 
                 CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
                 blog.setFullSizeImage(fullSize.isChecked());

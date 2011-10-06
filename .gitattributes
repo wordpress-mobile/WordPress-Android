@@ -279,6 +279,7 @@ res/drawable/add_small.png -text
 res/drawable/app_icon.png -text
 res/drawable/arrow_down.png -text
 res/drawable/arrow_up.png -text
+res/drawable/attachment.png -text
 res/drawable/browser_reload.png -text
 res/drawable/btn_check_off_pressed.png -text
 res/drawable/btn_check_off_selected.png -text
@@ -315,6 +316,7 @@ res/drawable/dashboard_icon_subs.png -text
 res/drawable/dashboard_icon_video.png -text
 res/drawable/drafts_icon.png -text
 res/drawable/drop_down_arrow.png -text
+res/drawable/format_bar_bg.xml -text
 res/drawable/format_bar_btn.xml -text
 res/drawable/format_bar_btn_toggled.xml -text
 res/drawable/gallery_selected_default.9.png -text
