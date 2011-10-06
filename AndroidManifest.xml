@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.0 Alpha" android:versionCode="36">
-	<uses-sdk android:targetSdkVersion="11" android:minSdkVersion="7"></uses-sdk>
+	<uses-sdk android:targetSdkVersion="10" android:minSdkVersion="7"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true" android:debuggable="true">
 		<activity android:name="wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
@@ -30,7 +30,7 @@
 <activity android:name="SelectCategories" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Signup" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="NewAccount" android:screenOrientation="portrait"></activity>
+<activity android:name="NewAccount"></activity>
 <activity android:name="ViewStats"></activity>
 		<activity android:name=".AddQuickPressShortcut" android:label="QuickPress">
 			<intent-filter>

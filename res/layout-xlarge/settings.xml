@@ -9,7 +9,7 @@
   android:layout_gravity="center">
   <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="450dp"
     android:layout_height="wrap_content"
     android:padding="10dip"
     android:background="#FFF5F5F5"

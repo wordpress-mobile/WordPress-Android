@@ -325,14 +325,14 @@ public class EditPost extends Activity implements LocationListener {
 			// handles selections from the quick action bar
 			if (option != null) {
 				if (option.equals("newphoto")) {
-					launchCamera();
+					//launchCamera();
 				} else if (option.equals("photolibrary")) {
-					launchPictureLibrary();
+					//launchPictureLibrary();
 				}
 				if (option.equals("newvideo")) {
-					launchVideoCamera();
+					//launchVideoCamera();
 				} else if (option.equals("videolibrary")) {
-					launchVideoLibrary();
+					//launchVideoLibrary();
 				}
 			}
 
@@ -348,9 +348,10 @@ public class EditPost extends Activity implements LocationListener {
 			EditText passwordET = (EditText) findViewById(R.id.post_password);
 
 			titleET.setText(post.getTitle());
-			
-			contentET.setText(WPHtml.fromHtml(post.getDescription()
-					+ post.getMt_text_more(), EditPost.this, post));
+
+			contentET.setText(WPHtml.fromHtml(
+					post.getDescription() + post.getMt_text_more(),
+					EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
@@ -480,7 +481,7 @@ public class EditPost extends Activity implements LocationListener {
 					}
 					Intent i = new Intent(EditPost.this, SelectCategories.class);
 					i.putExtras(bundle);
-					startActivityForResult(i, 5);
+					startActivityForResult(i, 1);
 				}
 			});
 		}
@@ -612,8 +613,20 @@ public class EditPost extends Activity implements LocationListener {
 				title.requestFocus();
 
 				break;
-			}
+			case 1:
+				Bundle extras = data.getExtras();
+				String cats = extras.getString("selectedCategories");
+				String[] splitCats = cats.split(",");
+				categories = new JSONArray();
+				for (int i = 0; i < splitCats.length; i++) {
+					categories.put(splitCats[i]);
+				}
+				TextView selectedCategoriesTV = (TextView) findViewById(R.id.selectedCategories);
+				selectedCategoriesTV.setText(getResources().getText(
+				R.string.selected_categories) + " " + getCategoriesCSV());
 
+				break;
+			}
 		}// end null check
 	}
 
@@ -719,29 +732,29 @@ public class EditPost extends Activity implements LocationListener {
 		} else {
 
 			if (!isNew) {
-			// update the images
-			post.deleteMediaFiles();
-			Spannable s = contentET.getText();
-			WPImageSpan[] click_spans = s.getSpans(0, s.length(),
-					WPImageSpan.class);
+				// update the images
+				post.deleteMediaFiles();
+				Spannable s = contentET.getText();
+				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
+						WPImageSpan.class);
 
-			if (click_spans.length != 0) {
+				if (click_spans.length != 0) {
 
-				for (int i = 0; i < click_spans.length; i++) {
-					WPImageSpan wpIS = click_spans[i];
-					images += wpIS.getImageSource().toString() + ",";
-					
-					MediaFile mf = new MediaFile();
-					mf.setPostID(post.getId());
-					mf.setTitle(wpIS.getTitle());
-					mf.setDescription(wpIS.getDescription());
-					mf.setFeatured(wpIS.isFeatured());
-					mf.setFileName(wpIS.getImageSource().toString());
-					mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-					mf.setWidth(wpIS.getWidth());
-					mf.save(EditPost.this);
+					for (int i = 0; i < click_spans.length; i++) {
+						WPImageSpan wpIS = click_spans[i];
+						images += wpIS.getImageSource().toString() + ",";
+
+						MediaFile mf = new MediaFile();
+						mf.setPostID(post.getId());
+						mf.setTitle(wpIS.getTitle());
+						mf.setDescription(wpIS.getDescription());
+						mf.setFeatured(wpIS.isFeatured());
+						mf.setFileName(wpIS.getImageSource().toString());
+						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+						mf.setWidth(wpIS.getWidth());
+						mf.save(EditPost.this);
+					}
 				}
-			}
 			}
 
 			Spinner spinner = (Spinner) findViewById(R.id.status);
@@ -787,9 +800,9 @@ public class EditPost extends Activity implements LocationListener {
 						latitude, longitude, isPage, postFormat, EditPost.this);
 				post.setLocalDraft(true);
 				success = post.save();
-				
+
 				post.deleteMediaFiles();
-				
+
 				Spannable s = contentET.getText();
 				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 						WPImageSpan.class);
@@ -799,7 +812,7 @@ public class EditPost extends Activity implements LocationListener {
 					for (int i = 0; i < click_spans.length; i++) {
 						WPImageSpan wpIS = click_spans[i];
 						images += wpIS.getImageSource().toString() + ",";
-						
+
 						MediaFile mf = new MediaFile();
 						mf.setPostID(post.getId());
 						mf.setTitle(wpIS.getTitle());
@@ -811,7 +824,7 @@ public class EditPost extends Activity implements LocationListener {
 						mf.save(EditPost.this);
 					}
 				}
-				
+
 			} else {
 				post.setTitle(title);
 				post.setDescription(content);
@@ -872,92 +885,6 @@ public class EditPost extends Activity implements LocationListener {
 		}
 
 		return false;
-	}
-
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenu.ContextMenuInfo menuInfo) {
-		menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-		menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
-		menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-		menu.add(0, 3, 0, getResources().getText(R.string.take_video));
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case 0:
-			launchPictureLibrary();
-			return true;
-		case 1:
-			launchCamera();
-			return true;
-		case 2:
-			launchVideoLibrary();
-			return true;
-		case 3:
-			launchVideoCamera();
-			return true;
-		}
-		return false;
-	}
-
-	private void launchVideoLibrary() {
-		Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
-		videoPickerIntent.setType("video/*");
-		startActivityForResult(videoPickerIntent, 6);
-	}
-
-	private void launchPictureLibrary() {
-		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-		photoPickerIntent.setType("image/*");
-		startActivityForResult(photoPickerIntent, 3);
-	}
-
-	private void launchVideoCamera() {
-		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-		startActivityForResult(takeVideoIntent, 7);
-	}
-
-	private void launchCamera() {
-		String state = android.os.Environment.getExternalStorageState();
-		if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-					EditPost.this);
-			dialogBuilder.setTitle(getResources()
-					.getText(R.string.sdcard_title));
-			dialogBuilder.setMessage(getResources().getText(
-					R.string.sdcard_message));
-			dialogBuilder.setPositiveButton("OK",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							// just close the dialog
-
-						}
-					});
-			dialogBuilder.setCancelable(true);
-			dialogBuilder.create().show();
-		} else {
-			SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory()
-					+ File.separator + "wordpress" + File.separator + "wp-"
-					+ System.currentTimeMillis() + ".jpg";
-			Intent takePictureFromCameraIntent = new Intent(
-					MediaStore.ACTION_IMAGE_CAPTURE);
-			takePictureFromCameraIntent.putExtra(
-					android.provider.MediaStore.EXTRA_OUTPUT,
-					Uri.fromFile(new File(SD_CARD_TEMP_DIR)));
-
-			// make sure the directory we plan to store the recording in exists
-			File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
-			if (!directory.exists() && !directory.mkdirs()) {
-				try {
-					throw new IOException("Path to file could not be created.");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			startActivityForResult(takePictureFromCameraIntent, 4);
-		}
 	}
 
 	/** Register for the updates when Activity is in foreground */

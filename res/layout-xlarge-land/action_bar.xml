@@ -42,7 +42,7 @@
         android:textSize="16dp"
         android:layout_toRightOf="@id/blavatar_img"
         android:layout_marginLeft="8dp"
-        android:maxWidth="160dp" />
+        android:layout_marginRight="34dp" />
       <ImageView
         android:layout_width="14dp"
         android:layout_height="8dp"

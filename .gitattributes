@@ -416,7 +416,11 @@ res/layout-small/new_account.xml -text
 res/layout-v4/row.xml -text
 res/layout-xlarge-land/action_bar.xml -text
 res/layout-xlarge/action_bar.xml -text
+res/layout-xlarge/add_account.xml -text
 res/layout-xlarge/comments.xml -text
+res/layout-xlarge/global_settings.xml -text
+res/layout-xlarge/new_account.xml -text
+res/layout-xlarge/settings.xml -text
 res/layout/about.xml -text
 res/layout/action_bar.xml -text
 res/layout/action_item.xml -text
@@ -487,7 +491,6 @@ res/values-sk/strings.xml -text
 res/values-sv/strings.xml -text
 res/values-tr/strings.xml -text
 res/values-xlarge/dimens.xml -text
-res/values-xlarge/styles.xml -text
 res/values-zh/strings.xml -text
 res/values/arrays.xml -text
 res/values/dimens.xml -text
