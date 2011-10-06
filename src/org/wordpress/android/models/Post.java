@@ -489,30 +489,6 @@ public class Post {
 			notificationID = 22 + Integer.valueOf(post.blogID);
 			nm.notify(notificationID, n); // needs a unique id
 
-			// upload a post object to the blog
-			/*if (!post.getMediaPaths().equals("")) {
-				String[] pPaths = post.mediaPaths.split(",");
-
-				for (int i = 0; i < pPaths.length; i++) {
-					Uri imagePath = Uri.parse(pPaths[i]);
-					post.selectedImageIDs.add(post.selectedImageCtr, imagePath);
-					post.imageUrl.add(post.selectedImageCtr, pPaths[i]);
-					post.selectedImageCtr++;
-				}
-
-			}*/
-			
-
-			if (!post.categories.equals("")) {
-
-				String[] aCategories = post.categories.split(",");
-
-				for (int i = 0; i < aCategories.length; i++) {
-					post.selectedCategories.add(aCategories[i]);
-				}
-
-			}
-
 			if (post.post_status == null) {
 				post.post_status = "publish";
 			}
@@ -556,12 +532,19 @@ public class Post {
 			WordPressDB db = new WordPressDB(context);
 			if (!mediaError) {
 
-				String[] theCategories = new String[post.selectedCategories
-						.size()];
+				
+				
+				JSONArray categories = post.getCategories();
+				String[] theCategories = new String[categories.length()];
+				if (categories != null) {
+					for (int i = 0; i < categories.length(); i++) {
+						try {
+							theCategories[i] = categories.getString(i);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
 
-				for (int i = 0; i < post.selectedCategories.size(); i++) {
-					theCategories[i] = post.selectedCategories.get(i)
-							.toString();
 				}
 
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
