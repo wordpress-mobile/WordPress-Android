@@ -406,10 +406,11 @@ public class WPHtml {
 			} else if (c == '>') {
 				out.append("&gt;");
 			} else if (c == '&') {
-				out.append("&amp;");*/
+				out.append("&amp;");
 			if (c > 0x7E || c < ' ') {
 				out.append("&#" + ((int) c) + ";");
-			} else if (c == ' ') {
+			} else */
+			if (c == ' ') {
 				while (i + 1 < end && text.charAt(i + 1) == ' ') {
 					out.append("&nbsp;");
 					i++;

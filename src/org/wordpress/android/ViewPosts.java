@@ -173,6 +173,15 @@ public class ViewPosts extends ListActivity {
 			largeScreen = true;
 		}
 	}
+	
+	public void onResume() {
+		super.onResume();
+		boolean loadedPosts = loadPosts(false);
+		if (!loadedPosts) {
+			titleBar.startRotatingRefreshIcon();
+			refreshPosts(false);
+		}
+	}
 
 	private void createSwitcher() {
 		// add footer view

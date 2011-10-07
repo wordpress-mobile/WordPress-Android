@@ -16,12 +16,12 @@
       android:layout_height="wrap_content"
       android:hint="Title"
       android:singleLine="true" />
-    <EditText
+    <!--  <EditText
       android:id="@+id/description"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Description (optional)"
-      android:singleLine="true" />
+      android:singleLine="true" />-->
     <EditText
       android:id="@+id/caption"
       android:layout_width="match_parent"
@@ -53,11 +53,11 @@
       android:id="@+id/imageWidthText"
       android:layout_width="match_parent"
       android:textColor="#FFFFFF" />
-    <CheckBox
+    <!--  <CheckBox
       android:text="Featured Image"
       android:id="@+id/featuredImage"
       android:textColor="#FFFFFF"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
+      android:layout_height="wrap_content" />-->
   </LinearLayout>
 </ScrollView>

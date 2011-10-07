@@ -160,12 +160,12 @@ public class EditContent extends Activity {
 								.findViewById(R.id.imageWidthText);
 						final EditText titleText = (EditText) alertView
 								.findViewById(R.id.title);
-						final EditText descText = (EditText) alertView
-								.findViewById(R.id.description);
+						//final EditText descText = (EditText) alertView
+						//		.findViewById(R.id.description);
 						final EditText caption = (EditText) alertView
 								.findViewById(R.id.caption);
-						final CheckBox featured = (CheckBox) alertView
-								.findViewById(R.id.featuredImage);
+						//final CheckBox featured = (CheckBox) alertView
+						//		.findViewById(R.id.featuredImage);
 						final SeekBar seekBar = (SeekBar) alertView
 								.findViewById(R.id.imageWidth);
 						final Spinner alignmentSpinner = (Spinner) alertView
@@ -180,9 +180,9 @@ public class EditContent extends Activity {
 						imageWidthText.setText(String.valueOf(span.getWidth()));
 						seekBar.setProgress(span.getWidth());
 						titleText.setText(span.getTitle());
-						descText.setText(span.getDescription());
+						//descText.setText(span.getDescription());
 						caption.setText(span.getCaption());
-						featured.setChecked(span.isFeatured());
+						//featured.setChecked(span.isFeatured());
 
 						alignmentSpinner.setSelection(
 								span.getHorizontalAlignment(), true);
@@ -219,8 +219,8 @@ public class EditContent extends Activity {
 
 												span.setTitle(titleText
 														.getText().toString());
-												span.setDescription(descText
-														.getText().toString());
+												//span.setDescription(descText
+												//		.getText().toString());
 
 												span.setHorizontalAlignment(alignmentSpinner
 														.getSelectedItemPosition());
@@ -228,8 +228,8 @@ public class EditContent extends Activity {
 														.getProgress());
 												span.setCaption(caption
 														.getText().toString());
-												span.setFeatured(featured
-														.isChecked());
+												//span.setFeatured(featured
+												//		.isChecked());
 
 											}
 										})

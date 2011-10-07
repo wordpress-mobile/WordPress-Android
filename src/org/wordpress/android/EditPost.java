@@ -706,6 +706,7 @@ public class EditPost extends Activity implements LocationListener {
 						MediaFile mf = new MediaFile();
 						mf.setPostID(post.getId());
 						mf.setTitle(wpIS.getTitle());
+						mf.setCaption(wpIS.getCaption());
 						mf.setDescription(wpIS.getDescription());
 						mf.setFeatured(wpIS.isFeatured());
 						mf.setFileName(wpIS.getImageSource().toString());
@@ -775,8 +776,10 @@ public class EditPost extends Activity implements LocationListener {
 						MediaFile mf = new MediaFile();
 						mf.setPostID(post.getId());
 						mf.setTitle(wpIS.getTitle());
-						mf.setDescription(wpIS.getDescription());
-						mf.setFeatured(wpIS.isFeatured());
+						mf.setCaption(wpIS.getCaption());
+						//mf.setDescription(wpIS.getDescription());
+						//mf.setFeatured(wpIS.isFeatured());
+						mf.setFileName(wpIS.getImageSource().toString());
 						mf.setFilePath(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 						mf.setWidth(wpIS.getWidth());

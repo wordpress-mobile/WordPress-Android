@@ -8,6 +8,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ViewPosts;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
@@ -510,6 +511,7 @@ public class Post {
 					MediaFile mf = new MediaFile();
 					mf.setPostID(post.getId());
 					mf.setTitle(wpIS.getTitle());
+					mf.setCaption(wpIS.getCaption());
 					mf.setDescription(wpIS.getDescription());
 					mf.setFeatured(wpIS.isFeatured());
 					mf.setFileName(wpIS.getImageSource().toString());
@@ -680,18 +682,11 @@ public class Post {
 		public String uploadImage(MediaFile mf) {
 			String content = "";
 
-			// images variables
+			// image variables
 			String finalThumbnailUrl = null;
 			String finalImageUrl = null;
 
-			// loop for multiple images
-
 			final int printCtr = 0;
-			/*
-			 * Thread prompt = new Thread() { public void run() {
-			 * loadingDialog.setMessage("Uploading Media File #" +
-			 * String.valueOf(printCtr + 1)); } }; this.runOnUiThread(prompt);
-			 */
 			final String statusText = "Uploading Media File #"
 					+ String.valueOf(printCtr + 1);
 			n.contentView.setTextViewText(R.id.status_text, statusText);
@@ -975,68 +970,57 @@ public class Post {
 								}
 							}
 
-							String alignmentCSS = "";
+							String alignment = "";
 							switch (mf.getHorizontalAlignment()) {
 							case 0:
-								alignmentCSS = "alignnone";
+								alignment = "alignnone";
 								break;
 							case 1:
-								alignmentCSS = "alignleft";
+								alignment = "alignleft";
 								break;
 							case 2:
-								alignmentCSS = "aligncenter";
+								alignment = "aligncenter";
 								break;
 							case 3:
-								alignmentCSS = "alignright";
+								alignment = "alignright";
 								break;
 							}
 
-							alignmentCSS = "class=\"" + alignmentCSS + "\" ";
-
-							if (i != 0 && post.blog.isFullSizeImage()) {
-								if (resultURL != null) {
-
-									if (post.blog.getImagePlacement().equals(
-											"Above Text")) {
-										content = content
-												+ "<a alt=\"image\" href=\""
-												+ finalImageUrl + "\"><img "
+							String alignmentCSS = "class=\"" + alignment + "\" ";
+							if (resultURL != null) {
+								if (i != 0 && post.blog.isFullSizeImage()) {
+									content = content
+											+ "<a alt=\"image\" href=\""
+											+ finalImageUrl
+											+ "\"><img title=\""
+											+ mf.getTitle() + "\" "
+											+ alignmentCSS
+											+ "alt=\"image\" src=\""
+											+ finalThumbnailUrl
+											+ "\" /></a>";
+								} else {
+									if (i == 0
+											&& post.blog.isFullSizeImage() == false) {
+										content = content + "<img title=\""
+												+ mf.getTitle() + "\" "
 												+ alignmentCSS
 												+ "alt=\"image\" src=\""
 												+ finalThumbnailUrl
-												+ "\" /></a>\n\n";
-									} else {
-										content = content
-												+ "\n<a alt=\"image\" href=\""
-												+ finalImageUrl + "\"><img "
-												+ alignmentCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl
-												+ "\" /></a>";
+												+ "\" />";
 									}
-
 								}
-							} else {
-								if (i == 0
-										&& post.blog.isFullSizeImage() == false
-										&& resultURL != null) {
-
-									if (post.blog.getImagePlacement().equals(
-											"Above Text")) {
-
-										content = content + "<img "
-												+ alignmentCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl
-												+ "\" />\n\n";
-									} else {
-										content = content + "\n<img "
-												+ alignmentCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl + "\" />";
-									}
+								
+								if (mf.getCaption() != "") {
+									content = String
+											.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+													alignment, mf.getWidth(),
+													EscapeUtils.escapeHtml(mf
+															.getCaption()), content);
 								}
 							}
+
+							
+
 						} // end if statement
 					}// end image check
 				}

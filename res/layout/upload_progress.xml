@@ -27,8 +27,8 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/status_text"
-      android:progressDrawable="@android:drawable/progress_horizontal"
-      android:indeterminate="false"
-      android:indeterminateOnly="false" />
+      android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+      android:indeterminate="true"
+      android:indeterminateOnly="true" />
   </RelativeLayout>
 </RelativeLayout>
