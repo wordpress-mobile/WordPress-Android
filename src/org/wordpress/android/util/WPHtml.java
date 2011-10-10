@@ -229,7 +229,7 @@ public class WPHtml {
 
 	private static void withinBlockquote(StringBuilder out, Spanned text,
 			int start, int end) {
-		out.append("<p>");
+		//out.append("<p>");
 
 		int next;
 		for (int i = start; i < end; i = next) {
@@ -248,7 +248,7 @@ public class WPHtml {
 			withinParagraph(out, text, i, next - nl, nl, next == end);
 		}
 
-		out.append("</p>\n");
+		//out.append("</p>\n");
 	}
 
 	private static void withinParagraph(StringBuilder out, Spanned text,
