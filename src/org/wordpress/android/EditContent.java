@@ -1,9 +1,6 @@
 package org.wordpress.android;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,11 +8,9 @@ import java.util.HashMap;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPImageSpan;
-import android.text.style.AlignmentSpan;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,7 +22,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
-import android.provider.MediaStore.Video;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -35,6 +29,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
+import android.text.style.AlignmentSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -51,7 +46,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -86,6 +80,23 @@ public class EditContent extends Activity {
 
 			}
 		});
+
+		Bundle extras = getIntent().getExtras();
+
+		if (extras != null) {
+			String option = extras.getString("option");
+			if (option != null) {
+				if (option.equals("newphoto")) {
+					launchCamera();
+				} else if (option.equals("photolibrary")) {
+					launchPictureLibrary();
+				} else if (option.equals("newvideo")) {
+					launchVideoCamera();
+				} else if (option.equals("videolibrary")) {
+					launchVideoLibrary();
+				}
+			}
+		}
 
 		final WPEditText contentEditor = (WPEditText) findViewById(R.id.postContent);
 		Spannable contentText = WordPress.richPostContent;
@@ -160,12 +171,12 @@ public class EditContent extends Activity {
 								.findViewById(R.id.imageWidthText);
 						final EditText titleText = (EditText) alertView
 								.findViewById(R.id.title);
-						//final EditText descText = (EditText) alertView
-						//		.findViewById(R.id.description);
+						// final EditText descText = (EditText) alertView
+						// .findViewById(R.id.description);
 						final EditText caption = (EditText) alertView
 								.findViewById(R.id.caption);
-						//final CheckBox featured = (CheckBox) alertView
-						//		.findViewById(R.id.featuredImage);
+						// final CheckBox featured = (CheckBox) alertView
+						// .findViewById(R.id.featuredImage);
 						final SeekBar seekBar = (SeekBar) alertView
 								.findViewById(R.id.imageWidth);
 						final Spinner alignmentSpinner = (Spinner) alertView
@@ -180,9 +191,9 @@ public class EditContent extends Activity {
 						imageWidthText.setText(String.valueOf(span.getWidth()));
 						seekBar.setProgress(span.getWidth());
 						titleText.setText(span.getTitle());
-						//descText.setText(span.getDescription());
+						// descText.setText(span.getDescription());
 						caption.setText(span.getCaption());
-						//featured.setChecked(span.isFeatured());
+						// featured.setChecked(span.isFeatured());
 
 						alignmentSpinner.setSelection(
 								span.getHorizontalAlignment(), true);
@@ -219,8 +230,8 @@ public class EditContent extends Activity {
 
 												span.setTitle(titleText
 														.getText().toString());
-												//span.setDescription(descText
-												//		.getText().toString());
+												// span.setDescription(descText
+												// .getText().toString());
 
 												span.setHorizontalAlignment(alignmentSpinner
 														.getSelectedItemPosition());
@@ -228,8 +239,8 @@ public class EditContent extends Activity {
 														.getProgress());
 												span.setCaption(caption
 														.getText().toString());
-												//span.setFeatured(featured
-												//		.isChecked());
+												// span.setFeatured(featured
+												// .isChecked());
 
 											}
 										})
@@ -576,13 +587,15 @@ public class EditContent extends Activity {
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
 
-		HashMap<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditContent.this);
+		HashMap<String, Object> mediaData = ih.getImageBytesForPath(imgPath,
+				EditContent.this);
 
 		if (mediaData == null) {
 			return;
 		}
-		
-		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf(width / 2),
+
+		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"),
+				String.valueOf(width / 2),
 				(String) mediaData.get("orientation"), true);
 
 		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
@@ -631,7 +644,7 @@ public class EditContent extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null || requestCode == 4) {
+		if (data != null || requestCode == 1) {
 			Bundle extras;
 			switch (requestCode) {
 			case 0:
@@ -644,62 +657,7 @@ public class EditContent extends Activity {
 			case 1:
 				if (resultCode == Activity.RESULT_OK) {
 
-					// http://code.google.com/p/android/issues/detail?id=1480
-					File f = null;
-					int sdk_int = 0;
-					try {
-						sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
-					} catch (Exception e1) {
-						sdk_int = 3; // assume they are on cupcake
-					}
-					if (data != null && (sdk_int <= 4)) { // Older HTC Sense
-						// Devices return
-						// different data
-						// for image
-						// capture
-						try {
-							String[] projection;
-							Uri imagePath = data.getData();
-							projection = new String[] { Images.Media._ID,
-									Images.Media.DATA, Images.Media.MIME_TYPE,
-									Images.Media.ORIENTATION };
-
-							Cursor cur = this.managedQuery(imagePath,
-									projection, null, null, null);
-							String thumbData = "";
-
-							if (cur.moveToFirst()) {
-
-								int dataColumn;
-
-								dataColumn = cur
-										.getColumnIndex(Images.Media.DATA);
-
-								thumbData = cur.getString(dataColumn);
-								f = new File(thumbData);
-							}
-						} catch (Exception e) {
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-									EditContent.this);
-							dialogBuilder.setTitle(getResources().getText(
-									R.string.error));
-							dialogBuilder.setMessage(e.getMessage());
-							dialogBuilder.setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-											// just close the dialog
-										}
-									});
-							dialogBuilder.setCancelable(true);
-							if (!isFinishing()) {
-								dialogBuilder.create().show();
-							}
-						}
-					} else {
-						f = new File(SD_CARD_TEMP_DIR);
-					}
+					File f = new File(SD_CARD_TEMP_DIR);
 					try {
 						Uri capturedImage = Uri
 								.parse(android.provider.MediaStore.Images.Media
@@ -932,5 +890,4 @@ public class EditContent extends Activity {
 		super.onResume();
 
 	}
-
 }

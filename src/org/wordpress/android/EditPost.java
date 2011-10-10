@@ -1,9 +1,5 @@
 package org.wordpress.android;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
@@ -40,7 +36,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -53,7 +48,6 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore.Images;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -77,7 +71,7 @@ public class EditPost extends Activity implements LocationListener {
 	public ProgressDialog pd;
 	Vector<String> selectedCategories = new Vector<String>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "", accountName = "", option;
+	public String categoryErrorMsg = "", accountName = "", option, provider;
 	private JSONArray categories;
 	private int id;
 	long postID;
@@ -87,7 +81,6 @@ public class EditPost extends Activity implements LocationListener {
 			isLargeScreen = false, isCustomPubDate = false;
 	LocationManager lm;
 	Criteria criteria;
-	String provider;
 	Location curLocation;
 	ProgressDialog postingDialog;
 	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
@@ -303,16 +296,10 @@ public class EditPost extends Activity implements LocationListener {
 
 			// handles selections from the quick action bar
 			if (option != null) {
-				if (option.equals("newphoto")) {
-					// launchCamera();
-				} else if (option.equals("photolibrary")) {
-					// launchPictureLibrary();
-				}
-				if (option.equals("newvideo")) {
-					// launchVideoCamera();
-				} else if (option.equals("videolibrary")) {
-					// launchVideoLibrary();
-				}
+				Intent i = new Intent(EditPost.this, EditContent.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				i.putExtra("option", option);
+				startActivityForResult(i, 0);
 			}
 
 		} else {

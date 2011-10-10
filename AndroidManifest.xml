@@ -49,7 +49,7 @@
 <activity android:name="ViewDrafts"></activity>
 <activity android:name="Write"></activity>
 <activity android:name="About"></activity>
-<activity android:name="EditContent" android:windowSoftInputMode="adjustResize"></activity>
+<activity android:name="EditContent" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Comments"></activity>
 <activity android:name="ViewCommentActivity"></activity>
 </application>
