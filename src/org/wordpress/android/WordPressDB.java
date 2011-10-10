@@ -1431,7 +1431,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 	
-	protected String encryptPassword(String clearText) {
+	public static String encryptPassword(String clearText) {
 		try {
 			DESKeySpec keySpec = new DESKeySpec(PASSWORD_SECRET.getBytes("UTF-8"));
 			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");

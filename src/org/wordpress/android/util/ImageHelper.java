@@ -359,16 +359,19 @@ public class ImageHelper {
 					in = new DataInputStream(new FileInputStream(jpeg));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
+					return null;
 				}
 				try {
 					in.readFully(bytes);
 				} catch (IOException e) {
 					e.printStackTrace();
+					return null;
 				}
 				try {
 					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();
+					return null;
 				}
 
 				title = jpeg.getName();

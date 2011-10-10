@@ -22,6 +22,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.wordpress.android.WordPressDB;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
@@ -305,14 +306,14 @@ public class XMLRPCClient {
 			// prepare POST body
 			File tempFile = null;
 			if (method.equals("wp.uploadFile")){
-				String tempFilePath = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".xml";
+				//String tempFilePath = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".xml";
+				String tempFileName = "wp-" + System.currentTimeMillis();
+				tempFile = File.createTempFile(tempFileName, null);
 				
-				File directory = new File(tempFilePath).getParentFile();
-	            if (!directory.exists() && !directory.mkdirs()) {
+	            if (!tempFile.exists() && !tempFile.mkdirs()) {
 	            	throw new XMLRPCException("Path to file could not be created.");
 	            }
 
-				tempFile = new File(tempFilePath);
 				FileWriter fileWriter = new FileWriter(tempFile);
 				serializer.setOutput(fileWriter);
 				

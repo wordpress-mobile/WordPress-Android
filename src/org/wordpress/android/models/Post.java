@@ -1010,7 +1010,7 @@ public class Post {
 									}
 								}
 								
-								if (mf.getCaption() != "") {
+								if (!mf.getCaption().equals("")) {
 									content = String
 											.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
 													alignment, mf.getWidth(),
