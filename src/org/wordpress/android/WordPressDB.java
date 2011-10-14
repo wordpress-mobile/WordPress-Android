@@ -1054,6 +1054,15 @@ public class WordPressDB {
 		return returnVector;
 	}
 	
+	public void deleteUploadedPosts(Context ctx, int blogID, boolean isPage) {
+		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		if (isPage) 
+			db.delete(POSTS_TABLE, "blogID=" + blogID + " AND localDraft != 1 AND isPage=1", null);
+		else
+			db.delete(POSTS_TABLE, "blogID=" + blogID + " AND localDraft != 1 AND isPage=0", null);
+	    db.close();	
+	}
+	
 	public Vector<Object> loadPost(Context ctx, int blogID, boolean isPage, long id) {
 		Vector<Object> values = null;
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);

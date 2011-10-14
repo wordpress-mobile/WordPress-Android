@@ -42,7 +42,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-public class ViewPost extends Activity {
+public class Read extends Activity {
 	/** Called when the activity is first created. */
 	private XMLRPCClient client;
 	public String[] authors;
@@ -64,7 +64,7 @@ public class ViewPost extends Activity {
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.viewpost);
+		setContentView(R.layout.reader);
 
 		// setProgressBarIndeterminateVisibility(true);
 
@@ -205,18 +205,18 @@ public class ViewPost extends Activity {
 
 					wv.setWebChromeClient(new WebChromeClient() {
 						public void onProgressChanged(WebView view, int progress) {
-							ViewPost.this.setTitle("Loading...");
-							ViewPost.this.setProgress(progress * 100);
+							Read.this.setTitle("Loading...");
+							Read.this.setProgress(progress * 100);
 
 							if (progress == 100) {
 								if (isPage) {
-									ViewPost.this.setTitle(EscapeUtils
+									Read.this.setTitle(EscapeUtils
 											.unescapeHtml(accountName)
 											+ " - "
 											+ getResources().getText(
 													R.string.preview_page));
 								} else {
-									ViewPost.this.setTitle(EscapeUtils
+									Read.this.setTitle(EscapeUtils
 											.unescapeHtml(accountName)
 											+ " - "
 											+ getResources().getText(
@@ -245,14 +245,14 @@ public class ViewPost extends Activity {
 
 					} else {
 						wv.loadData(html, "text/html", "utf-8");
-						Toast.makeText(ViewPost.this,
+						Toast.makeText(Read.this,
 								getResources().getText(R.string.basic_html),
 								Toast.LENGTH_SHORT).show();
 					}
 				} else {
 					setProgressBarIndeterminateVisibility(false);
 					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewPost.this);
+							Read.this);
 					dialogBuilder.setTitle(getResources().getText(
 							R.string.connection_error));
 					dialogBuilder.setMessage(getResources().getText(
@@ -332,8 +332,8 @@ public class ViewPost extends Activity {
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
-			WordPressDB settingsDB = new WordPressDB(ViewPost.this);
-			Vector<?> settings = settingsDB.loadSettings(ViewPost.this, id);
+			WordPressDB settingsDB = new WordPressDB(Read.this);
+			Vector<?> settings = settingsDB.loadSettings(Read.this, id);
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
@@ -371,11 +371,11 @@ public class ViewPost extends Activity {
 
 				wv.setWebChromeClient(new WebChromeClient() {
 					public void onProgressChanged(WebView view, int progress) {
-						ViewPost.this.setTitle("Loading...");
-						ViewPost.this.setProgress(progress * 100);
+						Read.this.setTitle("Loading...");
+						Read.this.setProgress(progress * 100);
 
 						if (progress == 100) {
-							ViewPost.this.setTitle(getResources().getText(
+							Read.this.setTitle(getResources().getText(
 									R.string.reader));
 						}
 					}

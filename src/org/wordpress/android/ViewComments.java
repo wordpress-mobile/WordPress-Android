@@ -1,14 +1,16 @@
 package org.wordpress.android;
 
-import com.commonsware.cwac.cache.SimpleWebImageCache;
-import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
-import com.commonsware.cwac.thumbnail.ThumbnailBus;
-import com.commonsware.cwac.thumbnail.ThumbnailMessage;
+import java.math.BigInteger;
+import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
 
-import org.wordpress.android.ViewCommentFragment.OnCommentStatusChangeListener;
-import org.wordpress.android.ViewComments.OnCommentSelectedListener;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlrpc.android.ApiHelper;
@@ -18,8 +20,6 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,55 +32,48 @@ import android.os.Looper;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-import android.widget.AdapterView.OnItemClickListener;
 
-import java.math.BigInteger;
-import java.net.URI;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Vector;
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
+import com.commonsware.cwac.thumbnail.ThumbnailBus;
+import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 public class ViewComments extends ListFragment {
 	private static final int[] IMAGE_IDS = { R.id.avatar };
 	public ThumbnailAdapter thumbs = null;
 	public ArrayList<Comment> model = null;
 	private XMLRPCClient client;
-	private String accountName = "", moderateErrorMsg = "",
-			selectedPostID = "";
+	private String accountName = "", moderateErrorMsg = "";
 	public int[] changedStatuses;
 	public HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
 	public int ID_DIALOG_MODERATING = 1;
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
-	public boolean initializing = true;
+	public boolean initializing = true, shouldSelectAfterLoad = false;
 	public int selectedID = 0, rowID = 0, numRecords = 0, id,
-			totalComments = 0, commentsToLoad = 30, checkedCommentTotal = 0;
+			totalComments = 0, commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition;
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
 	boolean loadMore = false, doInBackground = false, refreshOnly = false;
@@ -439,7 +432,7 @@ public class ViewComments extends ListFragment {
 	}
 
 	@SuppressWarnings("unchecked")
-	private boolean loadComments(boolean addMore, boolean refresh) {
+	public boolean loadComments(boolean addMore, boolean refresh) {
 		refreshOnly = refresh;
 		WordPressDB postStoreDB = new WordPressDB(getActivity()
 				.getApplicationContext());
@@ -526,10 +519,10 @@ public class ViewComments extends ListFragment {
 
 						public void onItemClick(AdapterView<?> arg0, View view,
 								int position, long id) {
-							view.setSelected(true);
+							selectedPosition = position;
 							Comment comment = model.get((int) id);
 							onCommentSelectedListener
-									.onCommentSelectedSelected(comment);
+									.onCommentSelected(comment);
 						}
 					});
 
@@ -574,6 +567,22 @@ public class ViewComments extends ListFragment {
 						thumbs.notifyDataSetChanged();
 					}
 				}
+				
+				if (this.shouldSelectAfterLoad) {
+					if (model != null) {
+						if (model.size() > 0) {
+							
+							selectedPosition = 0;
+							Comment aComment = model.get((int) 0);
+							onCommentSelectedListener
+									.onCommentSelected(aComment);
+							 thumbs.notifyDataSetChanged();
+							 
+						}
+					}
+					shouldSelectAfterLoad = false;
+				}
+				
 				return true;
 			} else {
 				return false;
@@ -691,11 +700,13 @@ public class ViewComments extends ListFragment {
 				wrapper = (CommentEntryWrapper) row.getTag();
 			}
 			Comment commentEntry = getItem(position);
-			if ("hold".equals(commentEntry.status)) {
+			
+			if (position == selectedPosition) {
+				row.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_highlight_bg));
+			} else if ("hold".equals(commentEntry.status)) {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.comment_pending_bg_selector));
-			}
-			else {
+			} else {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.list_bg_selector));
 			}
@@ -1252,7 +1263,7 @@ public class ViewComments extends ListFragment {
 	}
 
 	public interface OnCommentSelectedListener {
-		public void onCommentSelectedSelected(Comment comment);
+		public void onCommentSelected(Comment comment);
 	}
 
 	public interface OnAnimateRefreshButtonListener {

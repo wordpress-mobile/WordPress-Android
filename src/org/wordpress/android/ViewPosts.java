@@ -1,13 +1,8 @@
 package org.wordpress.android;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,46 +15,35 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringHelper;
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
+import android.support.v4.app.ListFragment;
 import android.text.format.DateUtils;
-import android.util.Log;
-import android.util.Xml;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class ViewPosts extends ListActivity {
+public class ViewPosts extends ListFragment {
 	/** Called when the activity is first created. */
 	private XMLRPCClient client;
 	private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
@@ -67,7 +51,6 @@ public class ViewPosts extends ListActivity {
 	private Integer[] uploaded;
 	int rowID = 0;
 	long selectedID;
-	private int ID_DIALOG_DELETING = 1, ID_DIALOG_POSTING = 2;
 	public boolean inDrafts = false;
 	public String imgHTML, sImagePlacement = "", sMaxImageWidth = "";
 	public boolean centerThumbnail = false;
@@ -75,110 +58,71 @@ public class ViewPosts extends ListActivity {
 	public String imageTitle = null, accountName;
 	public boolean thumbnailOnly, secondPass, xmlrpcError = false;
 	public String submitResult = "", mediaErrorMsg = "";
-	public ProgressDialog loadingDialog;
-	public int totalDrafts = 0, id;
+	public int totalDrafts = 0, selectedPosition;
 	public boolean isPage = false, vpUpgrade = false;
-	boolean largeScreen = false;
+	public boolean largeScreen = false, shouldSelectAfterLoad = false;
 	public int numRecords = 20;
 	public ViewSwitcher switcher;
 	private PostListAdapter pla;
-	private Blog blog;
-	private WPTitleBar titleBar;
+	private OnPostSelectedListener onPostSelectedListener;
+	private OnRefreshListener onRefreshListener;
+	private OnPostActionListener onPostActionListener;
 
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.viewposts);
+		// setContentView(R.layout.viewposts);
 
-		Bundle extras = getIntent().getExtras();
-		String action = null;
+		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
 			isPage = extras.getBoolean("viewPages");
-			action = extras.getString("action");
 		}
-		id = WordPress.currentBlog.getId();
-		blog = new Blog(id, this);
 
-		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
-		titleBar.refreshButton
-				.setOnClickListener(new ImageButton.OnClickListener() {
-					public void onClick(View v) {
+	}
 
-						titleBar.startRotatingRefreshIcon();
-						refreshPosts(false);
-
-					}
-				});
-
-		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-			//user selected new blog in the title bar
-			@Override
-			public void OnBlogChanged() {
-				//remove footer 'load more' button
-				ListView listView = (ListView) findViewById(android.R.id.list);
-				listView.removeFooterView(switcher);
-				postIDs = new String[0];
-				pla.notifyDataSetChanged();
-				
-				id = WordPress.currentBlog.getId();
-				blog = new Blog(id, ViewPosts.this);
-				// query for posts and refresh view
-				boolean loadedPosts = loadPosts(false);
-
-				if (!loadedPosts) {
-					titleBar.startRotatingRefreshIcon();
-					refreshPosts(false);
-				}
-			}
-		});
+	@Override
+	public void onActivityCreated(Bundle bundle) {
+		super.onActivityCreated(bundle);
 
 		createSwitcher();
 
-		// user came from action intent
-		if (action != null && !isPage) {
-			if (action.equals("upload")) {
-				selectedID = extras.getInt("uploadID");
-				showDialog(ID_DIALOG_POSTING);
+		// query for posts and refresh view
+		boolean loadedPosts = loadPosts(false);
 
-				try {
-					submitResult = submitPost();
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			} else {
-
-				boolean loadedPosts = loadPosts(false);
-				if (!loadedPosts) {
-					titleBar.startRotatingRefreshIcon();
-					refreshPosts(false);
-				}
-			}
-		} else {
-
-			// query for posts and refresh view
-			boolean loadedPosts = loadPosts(false);
-
-			if (!loadedPosts) {
-				titleBar.startRotatingRefreshIcon();
-				refreshPosts(false);
-			}
+		if (!loadedPosts) {
+			onRefreshListener.onRefresh(true);
+			refreshPosts(false);
 		}
 
-		Display display = getWindowManager().getDefaultDisplay();
+		Display display = ((WindowManager) getActivity()
+				.getApplicationContext().getSystemService(
+						Context.WINDOW_SERVICE)).getDefaultDisplay();
 		int width = display.getWidth();
 		int height = display.getHeight();
 		if (width > 480 || height > 480) {
 			largeScreen = true;
 		}
 	}
-	
+
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			// check that the containing activity implements our callback
+			onPostSelectedListener = (OnPostSelectedListener) activity;
+			onRefreshListener = (OnRefreshListener) activity;
+			onPostActionListener = (OnPostActionListener) activity;
+		} catch (ClassCastException e) {
+			activity.finish();
+			throw new ClassCastException(activity.toString()
+					+ " must implement Callback");
+		}
+	}
+
 	public void onResume() {
 		super.onResume();
 		boolean loadedPosts = loadPosts(false);
 		if (!loadedPosts) {
-			titleBar.startRotatingRefreshIcon();
+			onRefreshListener.onRefresh(true);
 			refreshPosts(false);
 		}
 	}
@@ -187,9 +131,9 @@ public class ViewPosts extends ListActivity {
 		// add footer view
 		if (!isPage) {
 			// create the ViewSwitcher in the current context
-			switcher = new ViewSwitcher(this);
-			Button footer = (Button) View.inflate(this,
-					R.layout.list_footer_btn, null);
+			switcher = new ViewSwitcher(getActivity().getApplicationContext());
+			Button footer = (Button) View.inflate(getActivity()
+					.getApplicationContext(), R.layout.list_footer_btn, null);
 			footer.setText(getResources().getText(R.string.load_more) + " "
 					+ getResources().getText(R.string.tab_posts));
 
@@ -203,8 +147,8 @@ public class ViewPosts extends ListActivity {
 				}
 			});
 
-			View progress = View.inflate(this, R.layout.list_footer_progress,
-					null);
+			View progress = View.inflate(getActivity().getApplicationContext(),
+					R.layout.list_footer_progress, null);
 
 			switcher.addView(footer);
 			switcher.addView(progress);
@@ -215,15 +159,14 @@ public class ViewPosts extends ListActivity {
 	public void refreshPosts(final boolean loadMore) {
 
 		if (!loadMore) {
-			titleBar.startRotatingRefreshIcon();
+			onRefreshListener.onRefresh(true);
 		}
 		Vector<Object> apiArgs = new Vector<Object>();
-		apiArgs.add(blog);
+		apiArgs.add(WordPress.currentBlog);
 		apiArgs.add(isPage);
-		apiArgs.add(ViewPosts.this);
 		apiArgs.add(numRecords);
 		apiArgs.add(loadMore);
-		new ApiHelper.getRecentPostsTask().execute(apiArgs);
+		new getRecentPostsTask().execute(apiArgs);
 	}
 
 	public Map<String, ?> createItem(String title, String caption) {
@@ -235,14 +178,15 @@ public class ViewPosts extends ListActivity {
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
 
-		WordPressDB postStoreDB = new WordPressDB(this);
+		WordPressDB postStoreDB = new WordPressDB(getActivity()
+				.getApplicationContext());
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = postStoreDB.loadUploadedPosts(ViewPosts.this, id,
-					true);
+			loadedPosts = postStoreDB.loadUploadedPosts(getActivity()
+					.getApplicationContext(), WordPress.currentBlog.getId(), true);
 		} else {
-			loadedPosts = postStoreDB.loadUploadedPosts(ViewPosts.this, id,
-					false);
+			loadedPosts = postStoreDB.loadUploadedPosts(getActivity()
+					.getApplicationContext(), WordPress.currentBlog.getId(), false);
 		}
 
 		if (loadedPosts != null) {
@@ -277,8 +221,9 @@ public class ViewPosts extends ListActivity {
 				long localTime = (Long) contentHash.get("date_created_gmt")
 						+ TimeZone.getDefault().getOffset(
 								(Long) contentHash.get("date_created_gmt"));
-				dateCreatedFormatted[i] = DateUtils.formatDateTime(this,
-						localTime, flags);
+				dateCreatedFormatted[i] = DateUtils
+						.formatDateTime(getActivity().getApplicationContext(),
+								localTime, flags);
 			}
 
 			// add the header
@@ -349,7 +294,7 @@ public class ViewPosts extends ListActivity {
 		}
 
 		if (loadedPosts != null || drafts == true) {
-			ListView listView = (ListView) findViewById(android.R.id.list);
+			ListView listView = getListView();
 
 			if (!isPage) {
 				listView.removeFooterView(switcher);
@@ -363,15 +308,22 @@ public class ViewPosts extends ListActivity {
 			if (loadMore) {
 				pla.notifyDataSetChanged();
 			} else {
-				pla = new PostListAdapter(ViewPosts.this);
+				pla = new PostListAdapter(getActivity().getApplicationContext());
 				listView.setAdapter(pla);
 
 				listView.setOnItemClickListener(new OnItemClickListener() {
 
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						if (arg1 != null) {
-							arg1.performLongClick();
+					public void onItemClick(AdapterView<?> arg0, View v,
+							int position, long id) {
+						if (v != null) {
+							selectedPosition = position;
+							selectedID = v.getId();
+							Post post = new Post(WordPress.currentBlog.getId(),
+									selectedID, isPage, getActivity()
+											.getApplicationContext());
+							WordPress.currentPost = post;
+							onPostSelectedListener.onPostSelected(post);
+							pla.notifyDataSetChanged();
 						}
 
 					}
@@ -436,28 +388,16 @@ public class ViewPosts extends ListActivity {
 										0,
 										0,
 										getResources().getText(
-												R.string.preview_page));
+												R.string.edit_page));
 								menu.add(
 										2,
 										1,
 										0,
 										getResources().getText(
-												R.string.view_comments));
-								menu.add(
-										2,
-										2,
-										0,
-										getResources().getText(
-												R.string.edit_page));
-								menu.add(
-										2,
-										3,
-										0,
-										getResources().getText(
 												R.string.delete_page));
 								menu.add(
 										2,
-										4,
+										2,
 										0,
 										getResources().getText(
 												R.string.share_url));
@@ -469,28 +409,16 @@ public class ViewPosts extends ListActivity {
 										0,
 										0,
 										getResources().getText(
-												R.string.preview_post));
+												R.string.edit_post));
 								menu.add(
 										0,
 										1,
 										0,
 										getResources().getText(
-												R.string.view_comments));
-								menu.add(
-										0,
-										2,
-										0,
-										getResources().getText(
-												R.string.edit_post));
-								menu.add(
-										0,
-										3,
-										0,
-										getResources().getText(
 												R.string.delete_post));
 								menu.add(
 										0,
-										4,
+										2,
 										0,
 										getResources().getText(
 												R.string.share_url));
@@ -499,6 +427,22 @@ public class ViewPosts extends ListActivity {
 					}
 				});
 			}
+
+			if (this.shouldSelectAfterLoad) {
+				if (postIDs != null) {
+					if (postIDs.length >= 1) {
+						
+						 Post post = new Post(WordPress.currentBlog.getId(),Integer.valueOf(postIDs[1]), isPage, getActivity().getApplicationContext()); 
+						 WordPress.currentPost =post; 
+						 onPostSelectedListener.onPostSelected(post);
+						 selectedPosition = 1;
+						 pla.notifyDataSetChanged();
+						 
+					}
+				}
+				shouldSelectAfterLoad = false;
+			}
+
 			return true;
 		} else {
 			return false;
@@ -532,12 +476,15 @@ public class ViewPosts extends ListActivity {
 
 	private boolean loadDrafts() { // loads drafts from the db
 
-		WordPressDB lDraftsDB = new WordPressDB(this);
+		WordPressDB lDraftsDB = new WordPressDB(getActivity()
+				.getApplicationContext());
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = lDraftsDB.loadDrafts(ViewPosts.this, id, true);
+			loadedPosts = lDraftsDB.loadDrafts(getActivity()
+					.getApplicationContext(), WordPress.currentBlog.getId(), true);
 		} else {
-			loadedPosts = lDraftsDB.loadDrafts(ViewPosts.this, id, false);
+			loadedPosts = lDraftsDB.loadDrafts(getActivity()
+					.getApplicationContext(), WordPress.currentBlog.getId(), false);
 		}
 		if (loadedPosts != null) {
 			draftIDs = new String[loadedPosts.size()];
@@ -587,7 +534,7 @@ public class ViewPosts extends ListActivity {
 			View pv = convertView;
 			ViewWrapper wrapper = null;
 			if (pv == null) {
-				LayoutInflater inflater = getLayoutInflater();
+				LayoutInflater inflater = getActivity().getLayoutInflater();
 				pv = inflater.inflate(R.layout.row_post_page, parent, false);
 				wrapper = new ViewWrapper(pv);
 				if (position == 0) {
@@ -626,8 +573,12 @@ public class ViewPosts extends ListActivity {
 					date = "";
 				}
 			} else {
-				pv.setBackgroundDrawable(getResources().getDrawable(
-						R.drawable.list_bg_selector));
+				if (position == selectedPosition) {
+					pv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_highlight_bg));
+				} else {
+					pv.setBackgroundDrawable(getResources().getDrawable(
+							R.drawable.list_bg_selector));
+				}
 				if (largeScreen) {
 					wrapper.getTitle().setPadding(12, 12, 12, 0);
 				} else {
@@ -695,208 +646,74 @@ public class ViewPosts extends ListActivity {
 
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			Bundle extras = data.getExtras();
-			String returnResult = extras.getString("returnStatus");
-
-			if (returnResult != null) {
-				switch (requestCode) {
-				case 0:
-					if (returnResult.equals("OK")) {
-						boolean uploadNow = false;
-						uploadNow = extras.getBoolean("upload");
-						if (uploadNow) {
-							selectedID = extras.getLong("newID");
-							showDialog(ID_DIALOG_POSTING);
-
-							try {
-								submitResult = submitPost();
-
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-
-						} else {
-							loadPosts(false);
-						}
-					}
-					break;
-				case 1:
-					if (returnResult.equals("OK")) {
-						refreshPosts(false);
-					}
-					break;
-				}
-			}
-		}
-	}
+	/*
+	 * @Override protected void onActivityResult(int requestCode, int
+	 * resultCode, Intent data) { super.onActivityResult(requestCode,
+	 * resultCode, data); if (resultCode == RESULT_OK) { Bundle extras =
+	 * data.getExtras(); String returnResult = extras.getString("returnStatus");
+	 * 
+	 * if (returnResult != null) { switch (requestCode) { case 0: if
+	 * (returnResult.equals("OK")) { boolean uploadNow = false; uploadNow =
+	 * extras.getBoolean("upload"); if (uploadNow) { selectedID =
+	 * extras.getLong("newID"); showDialog(ID_DIALOG_POSTING);
+	 * 
+	 * try { submitResult = submitPost();
+	 * 
+	 * } catch (IOException e) { e.printStackTrace(); }
+	 * 
+	 * } else { loadPosts(false); } } break; case 1: if
+	 * (returnResult.equals("OK")) { refreshPosts(false); } break; } } } }
+	 */
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-
+		Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage, getActivity()
+				.getApplicationContext());
 		/* Switch on the ID of the item, to get what the user selected. */
 		if (item.getGroupId() == 0) {
 			switch (item.getItemId()) {
 			case 0:
-				Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
-				Post post = new Post(id, selectedID, isPage, ViewPosts.this);
-				i0.putExtra("postID", post.getPostid());
-				i0.putExtra("id", id);
-				i0.putExtra("accountName", accountName);
-				startActivity(i0);
-				return true;
-			case 1:
-				Intent i = new Intent(ViewPosts.this, ViewPostComments.class);
-				i.putExtra("postID", selectedID);
-				i.putExtra("id", id);
-				i.putExtra("accountName", accountName);
-				startActivity(i);
-				return true;
-			case 2:
-				Intent i2 = new Intent(ViewPosts.this, EditPost.class);
+				Intent i2 = new Intent(getActivity().getApplicationContext(),
+						EditPost.class);
 				i2.putExtra("postID", selectedID);
-				i2.putExtra("id", id);
+				i2.putExtra("id", WordPress.currentBlog.getId());
 				i2.putExtra("accountName", accountName);
 				startActivityForResult(i2, 0);
 				return true;
-			case 3:
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-						ViewPosts.this);
-				dialogBuilder.setTitle(getResources().getText(
-						R.string.delete_post));
-				dialogBuilder.setMessage(getResources().getText(
-						R.string.delete_sure_post)
-						+ " '" + titles[rowID] + "'?");
-				dialogBuilder.setPositiveButton(
-						getResources().getText(R.string.yes),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								showDialog(ID_DIALOG_DELETING);
-								new Thread() {
-									public void run() {
-										deletePost();
-									}
-								}.start();
-
-							}
-						});
-				dialogBuilder.setNegativeButton(
-						getResources().getText(R.string.no),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								// Just close the window.
-
-							}
-						});
-				dialogBuilder.setCancelable(true);
-				if (!isFinishing()) {
-					dialogBuilder.create().show();
-				}
-
+			case 1:
+				onPostActionListener.onPostAction(Posts.POST_DELETE, post);
 				return true;
-			case 4:
-				loadingDialog = ProgressDialog.show(this, getResources()
-						.getText(R.string.share_url),
-						getResources().getText(R.string.attempting_fetch_url),
-						true, false);
-				Thread action = new Thread() {
-					public void run() {
-						Looper.prepare();
-						shareURL(id, String.valueOf(selectedID), false);
-						Looper.loop();
-					}
-				};
-				action.start();
+			case 2:
+				onPostActionListener.onPostAction(Posts.POST_SHARE, post);
 				return true;
 			}
 
 		} else if (item.getGroupId() == 2) {
 			switch (item.getItemId()) {
 			case 0:
-				Intent i0 = new Intent(ViewPosts.this, ViewPost.class);
-				i0.putExtra("postID", String.valueOf(selectedID));
-				i0.putExtra("id", id);
-				i0.putExtra("accountName", accountName);
-				i0.putExtra("isPage", true);
-				startActivity(i0);
-				return true;
-			case 1:
-				Intent i = new Intent(ViewPosts.this, ViewPostComments.class);
-				i.putExtra("postID", String.valueOf(selectedID));
-				i.putExtra("id", id);
-				i.putExtra("accountName", accountName);
-				startActivity(i);
-				return true;
-			case 2:
-				Intent i2 = new Intent(ViewPosts.this, EditPost.class);
+				Intent i2 = new Intent(getActivity().getApplicationContext(),
+						EditPost.class);
 				i2.putExtra("postID", selectedID);
-				i2.putExtra("id", id);
+				i2.putExtra("id", WordPress.currentBlog.getId());
 				i2.putExtra("accountName", accountName);
 				i2.putExtra("isPage", true);
 				startActivityForResult(i2, 0);
 				return true;
-			case 3:
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-						ViewPosts.this);
-				dialogBuilder.setTitle(getResources().getText(
-						R.string.delete_page));
-				dialogBuilder.setMessage(getResources().getText(
-						R.string.delete_sure_page)
-						+ " '" + titles[rowID] + "'?");
-				dialogBuilder.setPositiveButton(
-						getResources().getText(R.string.yes),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								showDialog(ID_DIALOG_DELETING);
-								new Thread() {
-									public void run() {
-										deletePost();
-									}
-								}.start();
-							}
-						});
-				dialogBuilder.setNegativeButton(
-						getResources().getText(R.string.no),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								// Just close the window.
-
-							}
-						});
-				dialogBuilder.setCancelable(true);
-				if (!isFinishing()) {
-					dialogBuilder.create().show();
-				}
+			case 1:
+				onPostActionListener.onPostAction(Posts.POST_DELETE, post);
 				return true;
-			case 4:
-				loadingDialog = ProgressDialog.show(this, getResources()
-						.getText(R.string.share_url),
-						getResources().getText(R.string.attempting_fetch_url),
-						true, false);
-				Thread action = new Thread() {
-					public void run() {
-						Looper.prepare();
-						shareURL(id, String.valueOf(selectedID), true);
-						Looper.loop();
-					}
-				};
-				action.start();
+			case 2:
+				onPostActionListener.onPostAction(Posts.POST_SHARE, post);
 				return true;
 			}
 
 		} else {
 			switch (item.getItemId()) {
 			case 0:
-				Intent i2 = new Intent(ViewPosts.this, EditPost.class);
+				Intent i2 = new Intent(getActivity().getApplicationContext(),
+						EditPost.class);
 				i2.putExtra("postID", selectedID);
-				i2.putExtra("id", id);
+				i2.putExtra("id", WordPress.currentBlog.getId());
 				if (isPage) {
 					i2.putExtra("isPage", true);
 				}
@@ -919,363 +736,104 @@ public class ViewPosts extends ListActivity {
 				}.start();
 				return true;
 			case 2:
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-						ViewPosts.this);
-				dialogBuilder.setTitle(getResources().getText(
-						R.string.delete_draft));
-				dialogBuilder.setMessage(getResources().getText(
-						R.string.delete_sure)
-						+ " '" + titles[rowID] + "'?");
-				dialogBuilder.setPositiveButton(
-						getResources().getText(R.string.yes),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
 
-								Post post = new Post(id, selectedID, isPage,
-										ViewPosts.this);
-								post.delete();
-
-								loadPosts(false);
-
-							}
-						});
-				dialogBuilder.setNegativeButton(
-						getResources().getText(R.string.no),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-								// Just close the window.
-
-							}
-						});
-				dialogBuilder.setCancelable(true);
-				if (!isFinishing()) {
-					dialogBuilder.create().show();
-				}
-
+				onPostActionListener.onPostAction(Posts.POST_DELETE, post);
+				return true;
 			}
 		}
 
 		return false;
 	}
 
-	private void deletePost() {
-
-		Post post = new Post(id, selectedID, isPage, ViewPosts.this);
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
-
-		Object[] postParams = { "", post.getPostid(), blog.getUsername(),
-				blog.getPassword() };
-		Object[] pageParams = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), post.getPostid() };
-
-		try {
-			client.call((isPage) ? "wp.deletePage" : "blogger.deletePost",
-					(isPage) ? pageParams : postParams);
-			dismissDialog(ID_DIALOG_DELETING);
-			Thread action = new Thread() {
-				public void run() {
-					Toast.makeText(
-							ViewPosts.this,
-							getResources().getText(
-									(isPage) ? R.string.page_deleted
-											: R.string.post_deleted),
-							Toast.LENGTH_SHORT).show();
-				}
-			};
-			this.runOnUiThread(action);
-			Thread action2 = new Thread() {
-				public void run() {
-					refreshPosts(false);
-				}
-			};
-			this.runOnUiThread(action2);
-
-		} catch (final XMLRPCException e) {
-			dismissDialog(ID_DIALOG_DELETING);
-			Thread action3 = new Thread() {
-				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewPosts.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				}
-			};
-			this.runOnUiThread(action3);
-		}
-
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (id == ID_DIALOG_POSTING) {
-			loadingDialog = new ProgressDialog(this);
-			loadingDialog.setTitle(getResources().getText(
-					R.string.uploading_content));
-			loadingDialog.setMessage(getResources().getText(
-					(isPage) ? R.string.page_attempt_upload
-							: R.string.post_attempt_upload));
-			loadingDialog.setCancelable(false);
-			return loadingDialog;
-		} else if (id == ID_DIALOG_DELETING) {
-			loadingDialog = new ProgressDialog(this);
-			loadingDialog.setTitle(getResources().getText(
-					(isPage) ? R.string.delete_page : R.string.delete_post));
-			loadingDialog.setMessage(getResources().getText(
-					(isPage) ? R.string.attempt_delete_page
-							: R.string.attempt_delete_post));
-			loadingDialog.setCancelable(false);
-			return loadingDialog;
-		}
-
-		return super.onCreateDialog(id);
-	}
-
 	public String submitPost() throws IOException {
 
-		Post post = new Post(id, selectedID, isPage, ViewPosts.this);
+		Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage, getActivity()
+				.getApplicationContext());
 
 		post.upload();
 
 		return "";
 	}
 
-	private void shareURL(int accountId, String postId, final boolean isPage) {
+	public class getRecentPostsTask extends
+			AsyncTask<Vector<?>, Void, Object[]> {
 
-		String errorStr = null;
+		Context ctx;
+		Blog blog;
+		boolean isPage, loadMore;
 
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
+		protected void onPostExecute(Object[] result) {
+			if (result != null) {
+				if (result.length > 0) {
+					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+					WordPressDB postStoreDB = new WordPressDB(getActivity()
+							.getApplicationContext());
 
-		Object versionResult = new Object();
-		try {
-			if (isPage) {
-				Object[] vParams = { blog.getBlogId(), postId,
-						blog.getUsername(), blog.getPassword() };
-				versionResult = (Object) client.call("wp.getPage", vParams);
+					if (!loadMore) {
+						postStoreDB.deleteUploadedPosts(getActivity()
+								.getApplicationContext(), blog.getId(), isPage);
+					}
+
+					for (int ctr = 0; ctr < result.length; ctr++) {
+						HashMap<String, Object> dbValues = new HashMap<String, Object>();
+						contentHash = (HashMap<?, ?>) result[ctr];
+						dbValues.put("blogID", blog.getBlogId());
+						dbVector.add(ctr, contentHash);
+					}
+
+					postStoreDB.savePosts(
+							getActivity().getApplicationContext(), dbVector,
+							blog.getId(), isPage);
+					numRecords += 20;
+					if (loadMore)
+						switcher.showPrevious();
+					loadPosts(loadMore);
+				}
+				onRefreshListener.onRefresh(false);
 			} else {
-				Object[] vParams = { postId, blog.getUsername(),
-						blog.getPassword() };
-				versionResult = (Object) client.call("metaWeblog.getPost",
-						vParams);
+				onRefreshListener.onRefresh(false);
 			}
-		} catch (XMLRPCException e) {
-			errorStr = e.getMessage();
-			Log.d("WP", "Error", e);
 		}
 
-		if (errorStr == null && versionResult != null) {
+		@Override
+		protected Object[] doInBackground(Vector<?>... args) {
+
+			Vector<?> arguments = args[0];
+			blog = (Blog) arguments.get(0);
+			isPage = (Boolean) arguments.get(1);
+			int numRecords = (Integer) arguments.get(2);
+			loadMore = (Boolean) arguments.get(3);
+			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
+					blog.getHttppassword());
+
+			Object[] result = null;
+			Object[] params = { blog.getBlogId(), blog.getUsername(),
+					blog.getPassword(), numRecords };
 			try {
-				HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
-
-				if ((isPage && !"publish".equals(contentHash.get("page_status")
-						.toString()))
-						|| (!isPage && !"publish".equals(contentHash.get(
-								"post_status").toString()))) {
-					Thread prompt = new Thread() {
-						public void run() {
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-									ViewPosts.this);
-							dialogBuilder.setTitle(getResources().getText(
-									R.string.share_url));
-							if (isPage) {
-								dialogBuilder.setMessage(ViewPosts.this
-										.getResources().getText(
-												R.string.page_not_published));
-							} else {
-								dialogBuilder.setMessage(ViewPosts.this
-										.getResources().getText(
-												R.string.post_not_published));
-							}
-							dialogBuilder.setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-										}
-									});
-							dialogBuilder.setCancelable(true);
-							dialogBuilder.create().show();
-						}
-					};
-					this.runOnUiThread(prompt);
-				} else {
-					String postURL = contentHash.get("permaLink").toString();
-					String shortlink = getShortlinkTagHref(postURL);
-					Intent share = new Intent(Intent.ACTION_SEND);
-					share.setType("text/plain");
-					if (shortlink == null) {
-						share.putExtra(Intent.EXTRA_TEXT, postURL);
-					} else {
-						share.putExtra(Intent.EXTRA_TEXT, shortlink);
-					}
-					share.putExtra(Intent.EXTRA_SUBJECT,
-							contentHash.get("title").toString());
-					startActivity(Intent.createChooser(share,
-							this.getText(R.string.share_url)));
-				}
-			} catch (Exception e) {
-				errorStr = e.getMessage();
-				Log.d("WP", "Error", e);
-			}
-		}
-
-		loadingDialog.dismiss();
-		if (errorStr != null) {
-			final String fErrorStr = errorStr;
-			Thread prompt = new Thread() {
-				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewPosts.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(fErrorStr);
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
-				}
-			};
-			this.runOnUiThread(prompt);
-		}
-	}
-
-	private String getShortlinkTagHref(String urlString) {
-		InputStream in = getResponse(urlString);
-
-		if (in != null) {
-			XmlPullParser parser = Xml.newPullParser();
-			try {
-				// auto-detect the encoding from the stream
-				parser.setInput(in, null);
-				int eventType = parser.getEventType();
-				while (eventType != XmlPullParser.END_DOCUMENT) {
-					String name = null;
-					String rel = "";
-					String href = "";
-					switch (eventType) {
-					case XmlPullParser.START_TAG:
-						name = parser.getName();
-						if (name.equalsIgnoreCase("link")) {
-							for (int i = 0; i < parser.getAttributeCount(); i++) {
-								String attrName = parser.getAttributeName(i);
-								String attrValue = parser.getAttributeValue(i);
-								if (attrName.equals("rel")) {
-									rel = attrValue;
-								} else if (attrName.equals("href")) {
-									href = attrValue;
-								}
-							}
-
-							if (rel.equals("shortlink")) {
-								return href;
-							}
-						}
-						break;
-					}
-					eventType = parser.next();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
+				result = (Object[]) client.call((isPage) ? "wp.getPages"
+						: "metaWeblog.getRecentPosts", params);
+			} catch (XMLRPCException e) {
+				if (loadMore)
+					switcher.showPrevious();
 			}
 
-		}
-		return null; // never found the shortlink tag
-	}
+			return result;
 
-	private InputStream getResponse(String urlString) {
-		InputStream in = null;
-		int response = -1;
-
-		URL url = null;
-		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-		URLConnection conn = null;
-		try {
-			conn = url.openConnection();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return null;
 		}
 
-		try {
-			HttpURLConnection httpConn = (HttpURLConnection) conn;
-			httpConn.setAllowUserInteraction(false);
-			httpConn.setInstanceFollowRedirects(true);
-			httpConn.setRequestMethod("GET");
-			httpConn.addRequestProperty("user-agent", "Mozilla/5.0");
-			httpConn.connect();
-
-			response = httpConn.getResponseCode();
-			if (response == HttpURLConnection.HTTP_OK) {
-				in = httpConn.getInputStream();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-		}
-		return in;
 	}
 
-	public void uploadCompleted() {
-		this.dismissDialog(ID_DIALOG_POSTING);
-		this.refreshPosts(false);
+	public interface OnPostSelectedListener {
+		public void onPostSelected(Post post);
 	}
 
-	public void uploadFailed(String error) {
-		this.dismissDialog(ID_DIALOG_POSTING);
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-				ViewPosts.this);
-		dialogBuilder.setTitle(getResources()
-				.getText(R.string.connection_error));
-		dialogBuilder.setMessage(error);
-		dialogBuilder.setPositiveButton("OK",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						loadPosts(false);
-					}
-				});
-		dialogBuilder.setCancelable(true);
-		dialogBuilder.create().show();
+	public interface OnRefreshListener {
+		public void onRefresh(boolean start);
 	}
 
-	public void stopRotating() {
-		titleBar.stopRotatingRefreshIcon();
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
-	        titleBar.hideDashboardOverlay();
-	    	
-	        return false;
-	    }
-
-	    return super.onKeyDown(keyCode, event);
+	public interface OnPostActionListener {
+		public void onPostAction(int action, Post post);
 	}
 
 }

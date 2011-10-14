@@ -5,11 +5,11 @@ import java.util.Vector;
 
 import org.wordpress.android.Comments;
 import org.wordpress.android.EditPost;
+import org.wordpress.android.Posts;
 import org.wordpress.android.R;
 import org.wordpress.android.Settings;
 import org.wordpress.android.ViewComments;
-import org.wordpress.android.ViewPost;
-import org.wordpress.android.ViewPosts;
+import org.wordpress.android.Read;
 import org.wordpress.android.ViewStats;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -158,7 +158,6 @@ public class WPTitleBar extends RelativeLayout {
 					Intent i = new Intent(context, EditPost.class);
 					i.putExtra("id", WordPress.currentBlog.getId());
 					i.putExtra("isNew", true);
-					i.putExtra("option", "");
 					context.startActivity(i);
 				}
 			});
@@ -170,7 +169,6 @@ public class WPTitleBar extends RelativeLayout {
 					i.putExtra("id", WordPress.currentBlog.getId());
 					i.putExtra("isNew", true);
 					i.putExtra("isPage", true);
-					i.putExtra("option", "");
 					context.startActivity(i);
 				}
 			});
@@ -178,7 +176,7 @@ public class WPTitleBar extends RelativeLayout {
 			LinearLayout postsButton = (LinearLayout) findViewById(R.id.dashboard_posts_btn);
 			postsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent i = new Intent(context, ViewPosts.class);
+					Intent i = new Intent(context, Posts.class);
 					context.startActivity(i);
 				}
 			});
@@ -186,7 +184,7 @@ public class WPTitleBar extends RelativeLayout {
 			LinearLayout pagesButton = (LinearLayout) findViewById(R.id.dashboard_pages_btn);
 			pagesButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent i = new Intent(context, ViewPosts.class);
+					Intent i = new Intent(context, Posts.class);
 					i.putExtra("id", WordPress.currentBlog.getId());
 					i.putExtra("isNew", true);
 					i.putExtra("viewPages", true);
@@ -227,7 +225,7 @@ public class WPTitleBar extends RelativeLayout {
 			LinearLayout subsButton = (LinearLayout) findViewById(R.id.dashboard_subs_btn);
 			subsButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent i = new Intent(context, ViewPost.class);
+					Intent i = new Intent(context, Read.class);
 					i.putExtra("id", WordPress.currentBlog.getId());
 					i.putExtra("loadReader", true);
 					context.startActivity(i);

@@ -1,0 +1,115 @@
+/* The Reset ---------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {line-height: 1;}
+/* -------------------------- */
+
+body {
+	font-family: 'DroidSans',Arial,sans-serif;
+	color: #464646;
+	font-size: 14pt;
+	width: 100%;
+	background: #fff;
+}
+
+strong {
+	font-weight: bold;
+}
+
+embed,object,img{display: block; max-width:100%; height: auto;}
+.frame {width: 100%}
+#templates{display:none}
+.subs-loading {width: 90%; margin: 2em auto; font-size: 1.5em; }
+#subscriptions {
+	position: relative;
+}
+
+#container {
+    padding: 10px;
+}
+
+p { 
+	margin: 1.12em 0;
+}
+
+h1 {
+	font-size: 2em;
+	line-height: 1.2em;
+	font-weight: bold;
+	color: #222;
+	margin: .1em 0 .2em;
+}
+
+ol,ul {
+	padding: 0 0 0 30px;
+}
+
+li {
+	margin: 0 0 .5em;
+}
+
+b, strong {
+	font-weight: bold;
+}
+
+em, i {
+	font-style: italic;
+}
+
+code {
+	font-family: Monaco, monospace;
+	background: #eee;
+	padding: 1px 2px;
+}
+
+a {
+	color: #21759B;
+}
+
+a:active {
+	color: #d54e21;
+}
+
+blockquote {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 1.1em;
+	line-height: 1.2em;
+	padding: 0 0 0 20px;
+}
+
+ul, ol, blockquote, p {
+	margin: 0 0 .8em;
+}
+
+/* Images */
+
+img {
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	background:#fff;
+	padding:5px;
+	border:1px solid #fff;
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+ * Copyright (C) 2007 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+
+<resources>
+    <!-- Base application theme is the default theme. -->
+    <style name="Theme" parent="android:Theme">
+    </style>
+    
+    <drawable name="screen_background_black">#ff000000</drawable>
+    <drawable name="translucent_background">#88000000</drawable>
+    <drawable name="transparent_background">#00000000</drawable>
+
+    <!-- Variation on our application theme that forces a plain
+        text style. -->
+    <style name="Theme.PlainText">
+        <item name="android:textAppearance">@style/TextAppearance.Theme.PlainText</item>
+    </style>
+
+    <!-- A theme that has a translucent background.  Here we explicitly specify
+         that this theme is to inherit from the system's translucent theme,
+         which sets up various attributes correctly.. -->
+    <style name="Theme.Translucent" parent="android:style/Theme.Translucent">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorForeground">#fff</item>
+        <item name="android:windowBackground">@drawable/translucent_background</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <!-- Variation on our application theme that has a transparent
+         background; this example completely removes the background,
+         allowing the activity to decide how to composite.  Also here we
+         force the translucency ourself rather than making use of the built-in
+         translucent theme. -->
+    <style name="Theme.Transparent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:windowBackground">@drawable/transparent_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorForeground">#fff</item>
+    </style>
+    
+    <style name="TextAppearance.Theme.PlainText" parent="android:TextAppearance.Theme">
+        <item name="android:textStyle">normal</item>
+    </style>
+    
+    <style name="WordPress" parent="@android:Theme.Holo.Light.NoActionBar">
+    </style>    
+    
+    <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#FF464646</item>
+    </style>
+    
+    <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
+        <item name="android:singleLine">true</item>
+        <item name="android:shadowColor">#BB000000</item>
+        <item name="android:shadowRadius">2.75</item>
+        <item name="android:textColor">#FFF6F6F6</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
+        <item name="android:textColor">#FF464646</item>
+    </style>
+    
+    <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
+        <item name="android:layout_marginBottom">6dip</item>
+              <item name="android:textStyle">bold</item>
+              <item name="android:shadowColor">#FFFFFFFF</item>
+              <item name="android:shadowDx">0</item>
+              <item name="android:shadowDy">2</item>
+              <item name="android:shadowRadius">1</item>
+              <item name="android:layout_marginTop">-4dip</item>
+    </style> 
+    
+    <style name="DashboardButtonText">
+        <item name="android:textSize">14dip</item>
+        <item name="android:textColor">#333333</item>
+    </style>
+
+</resources>
+

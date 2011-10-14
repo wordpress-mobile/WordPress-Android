@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="comment_detail_font_size">20dp</dimen>
+    <dimen name="action_bar_height">70dp</dimen>
+    <dimen name="dashboard_padding_large">200dp</dimen>
+    <dimen name="dashboard_padding_small">120dp</dimen>
+    <dimen name="action_bar_gravatar_size">42dp</dimen>
+    <dimen name="action_bar_title_text_size">22dp</dimen>
+    <dimen name="action_bar_right_margin">141dp</dimen>
+    <dimen name="action_bar_button_padding">16dp</dimen>
 </resources>

@@ -1,15 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:background="#e8e8e8"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:padding="0px"
   android:orientation="vertical">
+  <RelativeLayout
+    android:id="@+id/postBar"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:background="@drawable/format_bar_bg">
+    <TextView
+      android:id="@+id/postTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="20dp"
+      android:singleLine="true"
+      android:shadowColor="#FFFFFF"
+      android:shadowDx="0"
+      android:shadowDy="1"
+      android:shadowRadius="1"
+      android:gravity="center_vertical"
+      android:paddingLeft="10dp"
+      android:layout_marginRight="110dp" />
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <ImageButton
+        android:id="@+id/deletePost"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scaleType="fitCenter"
+        android:text="@string/delete_post"
+        android:background="@drawable/menu_button_selector"
+        android:src="@drawable/ic_menu_delete"
+        android:layout_alignParentRight="true" />
+      <ImageButton
+        android:id="@+id/sharePostLink"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scaleType="fitCenter"
+        android:text="@string/share_url"
+        android:background="@drawable/menu_button_selector"
+        android:layout_toLeftOf="@id/deletePost"
+        android:layout_marginRight="4dp"
+        android:layout_alignTop="@id/deletePost"
+        android:src="@drawable/ic_menu_share" />
+      <ImageButton
+        android:id="@+id/editPost"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scaleType="fitCenter"
+        android:text="@string/edit_post"
+        android:background="@drawable/menu_button_selector"
+        android:layout_toLeftOf="@id/sharePostLink"
+        android:layout_marginRight="4dp"
+        android:layout_alignTop="@id/sharePostLink"
+        android:src="@drawable/ic_menu_edit" />
+    </RelativeLayout>
+  </RelativeLayout>
   <WebView
-    android:id="@+id/webView"
-    android:layout_width="wrap_content"
+    android:id="@+id/viewPostWebView"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_weight="1">
+    android:layout_below="@id/postBar">
   </WebView>
-</LinearLayout>
+</RelativeLayout>

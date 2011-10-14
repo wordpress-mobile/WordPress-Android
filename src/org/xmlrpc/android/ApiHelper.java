@@ -113,69 +113,6 @@ public class ApiHelper extends Activity {
 		}
 	}
 
-	public static class getRecentPostsTask extends
-			AsyncTask<Vector, Void, Object[]> {
-
-		Context ctx;
-		Blog blog;
-		boolean isPage, loadMore;
-
-		protected void onPostExecute(Object[] result) {
-			if (result != null) {
-				if (result.length > 0) {
-					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
-					WordPressDB postStoreDB = new WordPressDB(ctx);
-
-					// loop this!
-					for (int ctr = 0; ctr < result.length; ctr++) {
-						HashMap<String, Object> dbValues = new HashMap<String, Object>();
-						contentHash = (HashMap) result[ctr];
-						dbValues.put("blogID", blog.getBlogId());
-						dbVector.add(ctr, contentHash);
-					}// end for loop
-
-					postStoreDB.savePosts(ctx, dbVector, blog.getId(), isPage);
-					((ViewPosts) ctx).numRecords += 20;
-					if (loadMore)
-						((ViewPosts) ctx).switcher.showPrevious();
-					((ViewPosts) ctx).loadPosts(loadMore);
-				}
-				((ViewPosts) ctx).stopRotating();
-			} else {
-				((ViewPosts) ctx).stopRotating();
-			}
-		}
-
-		@Override
-		protected Object[] doInBackground(Vector... args) {
-
-			Vector arguments = args[0];
-			blog = (Blog) arguments.get(0);
-			isPage = (Boolean) arguments.get(1);
-			ctx = (Context) arguments.get(2);
-			int numRecords = (Integer) arguments.get(3);
-			loadMore = (Boolean) arguments.get(4);
-			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-					blog.getHttppassword());
-
-			Object[] result = null;
-			Object[] params = { blog.getBlogId(), blog.getUsername(),
-					blog.getPassword(), numRecords };
-			try {
-				result = (Object[]) client.call((isPage) ? "wp.getPages"
-						: "metaWeblog.getRecentPosts", params);
-			} catch (XMLRPCException e) {
-				if (loadMore)
-					((ViewPosts) ctx).switcher.showPrevious();
-			}
-
-			return result;
-
-		}
-
-	}
-
 	public static class getPostFormatsTask extends
 			AsyncTask<Vector<?>, Void, Object> {
 

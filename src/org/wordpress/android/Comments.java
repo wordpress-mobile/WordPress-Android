@@ -10,6 +10,8 @@ import org.wordpress.android.ViewComments.OnContextCommentStatusChangeListener;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.WPTitleBar;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -18,6 +20,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
@@ -62,6 +65,19 @@ public class Comments extends FragmentActivity implements
 
 					}
 				});
+		
+		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
+			// user selected new blog in the title bar
+			@Override
+			public void OnBlogChanged() {
+
+				commentList.shouldSelectAfterLoad = true;
+				commentList.loadComments(false, false);
+
+			}
+		});
+		
+		attemptToSelectComment();
 
 		/*
 		 * titleBar.setOnBlogChangedListener(new OnBlogChangedListener() { //
@@ -84,7 +100,7 @@ public class Comments extends FragmentActivity implements
 	}
 
 	@Override
-	public void onCommentSelectedSelected(Comment comment) {
+	public void onCommentSelected(Comment comment) {
 
 		FragmentManager fm = getSupportFragmentManager();
 		ViewCommentFragment f = (ViewCommentFragment) fm
@@ -426,6 +442,24 @@ public class Comments extends FragmentActivity implements
 			titleBar.stopRotatingRefreshIcon();
 		}
 		
+	}
+	
+	private void attemptToSelectComment() {
+		
+		FragmentManager fm = getSupportFragmentManager();
+		ViewCommentFragment f = (ViewCommentFragment) fm
+				.findFragmentById(R.id.commentDetail);
+
+		if (f != null && f.isInLayout()) {
+			commentList.shouldSelectAfterLoad = true;
+		}
+		
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+
+		super.onConfigurationChanged(newConfig);
 	}
 
 }

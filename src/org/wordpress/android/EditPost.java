@@ -650,10 +650,14 @@ public class EditPost extends Activity implements LocationListener {
 
 		}
 
-		String tags = "";
+		String tags = "", postFormat = "";
 		if (!isPage) {
 			EditText tagsET = (EditText) findViewById(R.id.tags);
 			tags = tagsET.getText().toString();
+			// post format
+			Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
+			postFormat = postFormats[postFormatSpinner
+					.getSelectedItemPosition()];
 		}
 
 		String images = "";
@@ -736,11 +740,6 @@ public class EditPost extends Activity implements LocationListener {
 
 			}
 
-			// post format
-			Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
-			String postFormat = postFormats[postFormatSpinner
-					.getSelectedItemPosition()];
-
 			if (isNew) {
 				post = new Post(id, title, content, images, pubDateTimestamp,
 						categories.toString(), tags, status, password,
@@ -764,8 +763,8 @@ public class EditPost extends Activity implements LocationListener {
 						mf.setPostID(post.getId());
 						mf.setTitle(wpIS.getTitle());
 						mf.setCaption(wpIS.getCaption());
-						//mf.setDescription(wpIS.getDescription());
-						//mf.setFeatured(wpIS.isFeatured());
+						// mf.setDescription(wpIS.getDescription());
+						// mf.setFeatured(wpIS.isFeatured());
 						mf.setFileName(wpIS.getImageSource().toString());
 						mf.setFilePath(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
@@ -1022,15 +1021,16 @@ public class EditPost extends Activity implements LocationListener {
 
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
-		
+
 		HashMap mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
-		
+
 		if (mediaData == null) {
 			return null;
 		}
 
-		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf(width/2), (String)mediaData.get("orientation"), true);
-
+		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"),
+				String.valueOf(width / 2),
+				(String) mediaData.get("orientation"), true);
 
 		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
 				finalBytes.length);

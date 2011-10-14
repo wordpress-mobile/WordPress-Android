@@ -10,7 +10,7 @@
     android:layout_height="fill_parent"
     android:background="#FFFFFFFF"
     android:fillViewport="true"
-    android:layout_marginTop="47dp">
+    android:layout_marginTop="@dimen/action_bar_height">
     <RelativeLayout
         android:id="@+id/viewstats"
       android:layout_width="fill_parent"

@@ -11,7 +11,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
-    android:layout_marginTop="47dp"
+    android:layout_marginTop="@dimen/action_bar_height"
     android:background="#545454">
     <ImageView
     android:layout_width="160dp"
