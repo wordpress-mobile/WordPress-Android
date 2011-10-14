@@ -442,6 +442,10 @@ public class ViewPosts extends ListFragment {
 				}
 				shouldSelectAfterLoad = false;
 			}
+			
+			if (loadedPosts == null) {
+				refreshPosts(false);
+			}
 
 			return true;
 		} else {

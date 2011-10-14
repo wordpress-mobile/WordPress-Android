@@ -4,29 +4,6 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <TextView android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="WTF DUDE"/>
-    <Button
-      android:id="@+id/editPostButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/edit_post" />
-    <Button
-      android:id="@+id/sharePostButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/share_url" />
-    <Button
-      android:id="@+id/deletePostButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/delete_post" />
-  </LinearLayout>
   <WebView
     android:id="@+id/webView"
     android:layout_width="fill_parent"

@@ -143,7 +143,7 @@ public class Read extends Activity {
 								"wp-android");
 						HttpResponse response = httpclient
 								.execute(new HttpGet(
-										"http://wordpress.com/reader/mobile/?template=stats&stats_name=home_page_refresh"));
+										"http://wordpress.com/reader/mobile/v2"));
 						InputStream content = response.getEntity().getContent();
 					} catch (Exception e) {
 						// oh well
@@ -365,7 +365,6 @@ public class Read extends Activity {
 
 					@Override
 					public void onPageFinished(WebView view, String url) {
-						view.clearCache(true);
 					}
 				});
 
@@ -382,7 +381,7 @@ public class Read extends Activity {
 				});
 
 				wv.getSettings().setUserAgentString("wp-android");
-				wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+				wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 				wv.getSettings().setSavePassword(false);
 				wv.getSettings().setBuiltInZoomControls(true);
 				wv.getSettings().setJavaScriptEnabled(true);
