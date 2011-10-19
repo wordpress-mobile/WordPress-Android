@@ -54,51 +54,8 @@
       android:background="@drawable/content_bg"
       android:id="@+id/section2"
       android:layout_marginTop="10dip"
-      android:layout_below="@id/section1">
-      <TextView
-        android:id="@+id/l_media"
-        android:layout_marginBottom="6dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/media"
-        style="@style/WordPressSectionHeader" />
-      <Button
-        android:id="@+id/addPictureButton"
-        android:layout_marginTop="4dip"
-        android:background="@drawable/wp_button_small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/l_media"
-        android:textSize="20dip"
-        android:text="@string/add" />
-
-      <Button
-        android:id="@+id/clearPicture"
-        android:background="@drawable/wp_button_small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:textSize="20dip"
-        android:layout_alignBottom="@id/addPictureButton"
-        android:layout_toRightOf="@id/addPictureButton"
-        android:text="@string/clear" />
-      <Gallery
-        android:id="@+id/gallery"
-        android:spacing="5dip"
-        android:visibility="gone"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/addPictureButton">
-      </Gallery>
-    </RelativeLayout>
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section3"
-      android:layout_marginTop="10dip"
       android:layout_marginBottom="10dip"
-      android:layout_below="@id/section2">
+      android:layout_below="@id/section1">
       <TextView
         android:id="@+id/l_status"
         android:layout_marginBottom="6dip"
@@ -143,10 +100,10 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:background="@drawable/content_bg"
-      android:id="@+id/section4"
+      android:id="@+id/section3"
       android:layout_marginTop="10dip"
       android:layout_marginBottom="10dip"
-      android:layout_below="@id/section3">
+      android:layout_below="@id/section2">
 
       <TextView
         android:id="@+id/l_password"

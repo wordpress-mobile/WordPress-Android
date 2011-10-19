@@ -4,7 +4,6 @@
 .settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
 assets/webview.css -text
-bin/classes.dex -text
 bin/com/roundhill/androidWP/R$attr.class -text
 bin/com/roundhill/androidWP/R$drawable.class -text
 bin/com/roundhill/androidWP/R$id.class -text
@@ -202,8 +201,6 @@ bin/org/xmlrpc/android/XMLRPCClient.class -text
 bin/org/xmlrpc/android/XMLRPCException.class -text
 bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
-bin/resources.ap_ -text
-bin/wp-android.apk -text
 /default.properties -text
 gen/org/wordpress/android/R.java -text
 libs/CWAC-AdapterWrapper.jar -text
@@ -213,6 +210,7 @@ libs/android-support-v4.jar -text
 libs/httpmime-4.1.2.jar -text
 libs/tagsoup-1.2.1.jar -text
 /local.properties -text
+/project.properties -text
 res/anim/cycle_5.xml -text
 res/anim/dashboard_hide.xml -text
 res/anim/dashboard_show.xml -text
@@ -499,8 +497,8 @@ res/values-ru/strings.xml -text
 res/values-sk/strings.xml -text
 res/values-sv/strings.xml -text
 res/values-tr/strings.xml -text
-res/values-v11/styles.xml -text
 res/values-xlarge/dimens.xml -text
+res/values-xlarge/styles.xml -text
 res/values-zh/strings.xml -text
 res/values/arrays.xml -text
 res/values/dimens.xml -text

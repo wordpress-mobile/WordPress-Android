@@ -87,7 +87,10 @@ public class ViewPostFragment extends Fragment {
 	public void loadPost(Post post) {
 		
 		TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
-		title.setText(post.getTitle());
+		if (post.getTitle().equals(""))
+			title.setText("(" + getResources().getText(R.string.untitled) + ")");
+		else
+			title.setText(post.getTitle());
 		
 		WebView webView = (WebView) getActivity().findViewById(R.id.viewPostWebView);
 		String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">" + post.getDescription() + post.getMt_text_more() + "</div></body></html>";
