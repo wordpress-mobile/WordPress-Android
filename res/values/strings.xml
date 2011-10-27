@@ -121,6 +121,7 @@
     the Gallery.</string>
   <string name="refresh">Refresh</string>
   <string name="home">Home</string>
+  <string name="no_camera_found">Sorry, no camera was found on your device.</string>
 
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>

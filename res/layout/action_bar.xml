@@ -114,6 +114,7 @@
     android:layout_weight="1"
     android:visibility="gone"
     android:background="#00000000"
+    android:clickable="true"
     android:paddingLeft="@dimen/dashboard_padding_small"
     android:paddingRight="@dimen/dashboard_padding_small"
     android:paddingTop="@dimen/dashboard_padding_large"

@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WPTitleBar extends RelativeLayout {
 
@@ -235,20 +237,36 @@ public class WPTitleBar extends RelativeLayout {
 			LinearLayout picButton = (LinearLayout) findViewById(R.id.dashboard_quickphoto_btn);
 			picButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent i = new Intent(context, EditPost.class);
-					i.putExtra("option", "newphoto");
-					i.putExtra("isNew", true);
-					context.startActivity(i);
+					PackageManager pm = context.getPackageManager();
+					if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+						Intent i = new Intent(context, EditPost.class);
+						i.putExtra("option", "newphoto");
+						i.putExtra("isNew", true);
+						context.startActivity(i);
+					} else {
+						Toast.makeText(context,
+								getResources()
+										.getText(R.string.no_camera_found),
+								Toast.LENGTH_LONG);
+					}
 				}
 			});
 
 			LinearLayout videoButton = (LinearLayout) findViewById(R.id.dashboard_quickvideo_btn);
 			videoButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent i = new Intent(context, EditPost.class);
-					i.putExtra("option", "newvideo");
-					i.putExtra("isNew", true);
-					context.startActivity(i);
+					PackageManager pm = context.getPackageManager();
+					if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+						Intent i = new Intent(context, EditPost.class);
+						i.putExtra("option", "newvideo");
+						i.putExtra("isNew", true);
+						context.startActivity(i);
+					} else {
+						Toast.makeText(context,
+								getResources()
+										.getText(R.string.no_camera_found),
+								Toast.LENGTH_LONG);
+					}
 				}
 			});
 		}
@@ -269,7 +287,7 @@ public class WPTitleBar extends RelativeLayout {
 		Animation fadeInAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_show);
 		dashboard.startAnimation(fadeInAnimation);
-		dashboard.setBackgroundColor(Color.parseColor("#88000000"));
+		dashboard.setBackgroundColor(Color.parseColor("#AA000000"));
 	}
 
 	public void showDashboard() {

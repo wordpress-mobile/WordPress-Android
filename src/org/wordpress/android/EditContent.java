@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -801,9 +802,13 @@ public class EditContent extends Activity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-		menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+		if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+		}
 		menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-		menu.add(0, 3, 0, getResources().getText(R.string.take_video));
+		if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			menu.add(0, 3, 0, getResources().getText(R.string.take_video));
+		}
 	}
 
 	@Override
