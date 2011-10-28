@@ -27,7 +27,7 @@
         android:layout_height="fill_parent"
         android:scaleType="fitCenter"
         android:id="@+id/blavatar_img"
-        android:src="@drawable/wp_logo_home"
+        android:src="@drawable/wp_logo_actionbar"
         android:layout_marginLeft="6dp"
         android:layout_marginTop="-1dp" />
       <TextView

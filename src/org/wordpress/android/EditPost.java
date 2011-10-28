@@ -236,8 +236,6 @@ public class EditPost extends Activity implements LocationListener {
 						i++;
 					}
 
-					// note: submit patch to wp.org to sort post format server
-					// side?
 					java.util.Arrays.sort(postFormats);
 					java.util.Arrays.sort(postFormatTitles);
 
@@ -315,8 +313,16 @@ public class EditPost extends Activity implements LocationListener {
 
 			titleET.setText(post.getTitle());
 
+			String contentHTML;
+			if (post.getMt_text_more() != "") {
+				contentHTML = post.getDescription() + "<div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></div>" + post.getMt_text_more();
+			}
+			else {
+				contentHTML = post.getDescription();
+			}
+			
 			contentET.setText(WPHtml.fromHtml(
-					post.getDescription() + post.getMt_text_more(),
+					contentHTML,
 					EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
@@ -745,6 +751,14 @@ public class EditPost extends Activity implements LocationListener {
 						categories.toString(), tags, status, password,
 						latitude, longitude, isPage, postFormat, EditPost.this);
 				post.setLocalDraft(true);
+				
+				//split up the post content if there's a more tag
+				String needle = "<p><font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></p>";
+				if (content.indexOf(needle) >= 0) {
+					post.setDescription(content.substring(0, content.indexOf(needle)));
+					post.setMt_text_more(content.substring(content.indexOf(needle) + needle.length(), content.length()));
+				}
+				
 				success = post.save();
 
 				post.deleteMediaFiles();
@@ -776,6 +790,12 @@ public class EditPost extends Activity implements LocationListener {
 
 			} else {
 				post.setTitle(title);
+				//split up the post content if there's a more tag
+				String needle = "<p><font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></p>";
+				if (content.indexOf(needle) >= 0) {
+					post.setDescription(content.substring(0, content.indexOf(needle)));
+					post.setMt_text_more(content.substring(content.indexOf(needle) + needle.length(), content.length()));
+				}
 				post.setDescription(content);
 				post.setMediaPaths(images);
 				post.setDate_created_gmt(pubDateTimestamp);

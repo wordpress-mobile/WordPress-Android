@@ -561,6 +561,7 @@ res/drawable/wp_check_off.png -text
 res/drawable/wp_check_on.png -text
 res/drawable/wp_checkbox.xml -text
 res/drawable/wp_logo.png -text
+res/drawable/wp_logo_actionbar.png -text
 res/drawable/wp_logo_home.png -text
 res/drawable/wp_small.9.png -text
 res/drawable/wp_small_down.9.png -text

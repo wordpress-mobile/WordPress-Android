@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
+import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 
 import android.app.Activity;
@@ -464,6 +465,26 @@ public class EditContent extends Activity {
 
 				formatBtnClick(bquoteButton, "blockquote");
 
+			}
+		});
+		
+		final Button moreButton = (Button) findViewById(R.id.more);
+
+		moreButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+				selectionEnd = contentText.getSelectionEnd();
+				
+				SpannableStringBuilder ssb = new SpannableStringBuilder();
+				ssb.append(contentText.getText().subSequence(0, selectionEnd));
+				
+				Spannable more = (Spannable) WPHtml.fromHtml("<br><div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></div>", EditContent.this, WordPress.currentPost); 
+				ssb.append(more);
+				ssb.append(contentText.getText().subSequence(selectionEnd, contentText.getText().length()));
+				
+				contentText.setText(ssb);
+				contentText.setSelection(selectionEnd + more.length());
+				
 			}
 		});
 

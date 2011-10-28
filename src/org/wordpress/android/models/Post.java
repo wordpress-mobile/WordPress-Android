@@ -496,9 +496,14 @@ public class Post {
 
 			String imageContent = "";
 			boolean mediaError = false;
-
-			Spannable s = (Spannable) WPHtml.fromHtml(post.getDescription()
-					+ post.getMt_text_more(), context, post);
+			Spannable s;
+			String descriptionContent = "", moreContent = "";
+			
+			for (int x=0;x<2;x++) {
+				if (x == 0)
+					s = (Spannable) WPHtml.fromHtml(post.getDescription(), context, post);
+				else
+					s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(), context, post);
 			WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 					WPImageSpan.class);
 
@@ -529,6 +534,13 @@ public class Post {
 					}
 				}
 			}
+			
+				if (x == 0)
+					descriptionContent = WPHtml.toHtml(s);
+				else
+					moreContent = WPHtml.toHtml(s);
+			
+			}
 
 			WordPressDB db = new WordPressDB(context);
 			if (!mediaError) {
@@ -548,10 +560,6 @@ public class Post {
 
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
 
-				String content = "";
-
-				content = WPHtml.toHtml(s);
-
 				if (!post.isPage) {
 					// add the tagline
 					HashMap<?, ?> globalSettings = db
@@ -568,8 +576,12 @@ public class Post {
 						if (taglineValue) {
 							tagline = globalSettings.get("tagline").toString();
 							if (tagline != null) {
-								content += "\n\n<span class=\"post_sig\">"
+								String tag = "\n\n<span class=\"post_sig\">"
 										+ tagline + "</span>\n\n";
+								if (moreContent == "")
+									descriptionContent += tag;
+								else
+									moreContent += tag;
 							}
 						}
 					}
@@ -589,9 +601,10 @@ public class Post {
 					contentStruct.put("date_created_gmt", date);
 				}
 				// for trac #53, add <p> and <br /> tags
-				content = content.replace("/\n\n/g", "</p><p>");
-				content = content.replace("/\n/g", "<br />");
-				contentStruct.put("description", content);
+				//content = content.replace("/\n\n/g", "</p><p>");
+				//content = content.replace("/\n/g", "<br />");
+				contentStruct.put("description", descriptionContent);
+				contentStruct.put("mt_text_more", moreContent);
 				if (!post.isPage) {
 					if (post.mt_keywords != "") {
 						contentStruct.put("mt_keywords", post.mt_keywords);

@@ -122,6 +122,7 @@
   <string name="refresh">Refresh</string>
   <string name="home">Home</string>
   <string name="no_camera_found">Sorry, no camera was found on your device.</string>
+  <string name="more_tag">More</string>
 
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>

@@ -305,7 +305,7 @@ public class WPTitleBar extends RelativeLayout {
 
 	private void updateBlavatarImage() {
 		ImageView i = (ImageView) findViewById(R.id.blavatar_img);
-		i.setImageDrawable(getResources().getDrawable(R.drawable.wp_logo_home));
+		i.setImageDrawable(getResources().getDrawable(R.drawable.wp_logo_actionbar));
 
 		String url = WordPress.currentBlog.getUrl();
 		url = url.replace("http://", "");

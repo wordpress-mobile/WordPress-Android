@@ -948,8 +948,9 @@ public class WordPressDB {
 		ContentValues values = new ContentValues();
 		values.put("blogID", blogID);
 		values.put("title", post.getTitle());
-		values.put("date_created_gmt", post.getDate_created_gmt());
+		values.put("date_created_gmt", post.getDate_created_gmt());		
 		values.put("description", post.getDescription());
+		values.put("mt_text_more", post.getMt_text_more());
 
 		if (post.getCategories() != null) {
 			JSONArray jsonArray = null;
