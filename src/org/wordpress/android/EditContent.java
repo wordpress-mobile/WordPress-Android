@@ -132,12 +132,13 @@ public class EditContent extends Activity {
 
 					@Override
 					public void onImeBack(WPEditText view, String text) {
-						RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
+						/*RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
 						Animation fadeOutAnimation = AnimationUtils
 								.loadAnimation(EditContent.this,
 										R.anim.disappear);
 						formatBar.startAnimation(fadeOutAnimation);
-						formatBar.setVisibility(View.GONE);
+						formatBar.setVisibility(View.GONE);*/
+						finishEditing();
 					}
 
 				});
@@ -482,25 +483,6 @@ public class EditContent extends Activity {
 				
 			}
 		});
-		
-		final ToggleButton olButton = (ToggleButton) findViewById(R.id.ol);
-		olButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				formatBtnClick(olButton, "ol");
-
-			}
-		});
-		
-		final ToggleButton ulButton = (ToggleButton) findViewById(R.id.ul);
-		ulButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				formatBtnClick(ulButton, "ul");
-
-			}
-		});
-
 	}
 
 	protected void formatBtnClick(ToggleButton toggleButton, String tag) {
@@ -836,18 +818,20 @@ public class EditContent extends Activity {
 
 		// only intercept back button press
 		if (i == KeyEvent.KEYCODE_BACK) {
-
-			WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
-			Spannable content = contentET.getText();
-			WordPress.richPostContent = content;
-			Intent intent = new Intent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-			setResult(RESULT_OK, intent);
-			finish();
-
+			finishEditing();
 		}
 
 		return false;
+	}
+	
+	private void finishEditing() {
+		WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
+		Spannable content = contentET.getText();
+		WordPress.richPostContent = content;
+		Intent intent = new Intent();
+		intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,

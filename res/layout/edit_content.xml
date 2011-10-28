@@ -116,38 +116,12 @@
                     android:textStyle="bold"
                     android:typeface="serif" />
 
-                <ToggleButton
-                    android:id="@+id/ul"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_toRightOf="@id/bquote"
-                    android:background="@drawable/wp_button_toggle"
-                    android:textColor="#464646"
-                    android:textOff="ul"
-                    android:textOn="ul"
-                    android:textSize="17dip"
-                    android:typeface="serif" />
-                
-                <ToggleButton
-                    android:id="@+id/ol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_toRightOf="@id/ul"
-                    android:background="@drawable/wp_button_toggle"
-                    android:textColor="#464646"
-                    android:textOff="ol"
-                    android:textOn="ol"
-                    android:textSize="17dip"
-                    android:typeface="serif" />
-
                 <Button
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
-                    android:layout_toRightOf="@id/ol"
+                    android:layout_toRightOf="@id/bquote"
                     android:background="@drawable/wp_button_toggle"
                     android:text="@string/more_tag"
                     android:textColor="#464646"
