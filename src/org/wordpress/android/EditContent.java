@@ -32,6 +32,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
+import android.text.style.BulletSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -374,7 +375,6 @@ public class EditContent extends Activity {
 		});
 
 		final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
-
 		boldButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
@@ -432,7 +432,6 @@ public class EditContent extends Activity {
 		});
 
 		final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
-
 		emButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
@@ -441,7 +440,6 @@ public class EditContent extends Activity {
 		});
 
 		final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
-
 		underlineButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
@@ -450,7 +448,6 @@ public class EditContent extends Activity {
 		});
 
 		final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
-
 		strikeButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
@@ -459,7 +456,6 @@ public class EditContent extends Activity {
 		});
 
 		final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
-
 		bquoteButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
@@ -469,7 +465,6 @@ public class EditContent extends Activity {
 		});
 		
 		final Button moreButton = (Button) findViewById(R.id.more);
-
 		moreButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
@@ -485,6 +480,24 @@ public class EditContent extends Activity {
 				contentText.setText(ssb);
 				contentText.setSelection(selectionEnd + more.length());
 				
+			}
+		});
+		
+		final ToggleButton olButton = (ToggleButton) findViewById(R.id.ol);
+		olButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(olButton, "ol");
+
+			}
+		});
+		
+		final ToggleButton ulButton = (ToggleButton) findViewById(R.id.ul);
+		ulButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(ulButton, "ul");
+
 			}
 		});
 
@@ -593,6 +606,23 @@ public class EditContent extends Activity {
 
 				if (!exists) {
 					str.setSpan(new StrikethroughSpan(), selectionStart,
+							selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+
+				toggleButton.setChecked(false);
+			} else if (tag.equals("ul")) {
+
+				BulletSpan[] ss = str.getSpans(selectionStart,
+						selectionEnd, BulletSpan.class);
+
+				boolean exists = false;
+				for (int i = 0; i < ss.length; i++) {
+					str.removeSpan(ss[i]);
+					exists = true;
+				}
+
+				if (!exists) {
+					str.setSpan(new BulletSpan(), selectionStart,
 							selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 

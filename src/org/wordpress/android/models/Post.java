@@ -498,8 +498,11 @@ public class Post {
 			boolean mediaError = false;
 			Spannable s;
 			String descriptionContent = "", moreContent = "";
+			int moreCount = 1;
+			if (post.getMt_text_more() != null)
+				moreCount++;
 			
-			for (int x=0;x<2;x++) {
+			for (int x=0;x<moreCount;x++) {
 				if (x == 0)
 					s = (Spannable) WPHtml.fromHtml(post.getDescription(), context, post);
 				else
