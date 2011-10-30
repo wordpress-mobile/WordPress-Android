@@ -127,8 +127,8 @@ public class Dashboard extends Activity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
+		titleBar.switchDashboardLayout(newConfig.orientation);
 	}
 
 	// Add settings to menu

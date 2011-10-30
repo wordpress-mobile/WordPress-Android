@@ -296,6 +296,7 @@ public class WPTitleBar extends RelativeLayout {
 				R.anim.dashboard_show);
 		dashboard.startAnimation(fadeInAnimation);
 		dashboard.setBackgroundColor(Color.parseColor("#AA000000"));
+		isShowingDashboard = true;
 	}
 
 	public void showDashboard() {
