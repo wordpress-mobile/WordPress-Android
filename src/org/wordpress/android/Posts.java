@@ -501,8 +501,10 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-
 		super.onConfigurationChanged(newConfig);
+		
+		titleBar.switchDashboardLayout(newConfig.orientation);
+		
 	}
 
 }

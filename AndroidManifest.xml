@@ -30,7 +30,7 @@
 <activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Signup" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="NewAccount"></activity>
-<activity android:name="ViewStats"></activity>
+<activity android:name="ViewStats" android:configChanges="orientation|keyboardHidden"></activity>
 		<activity android:name=".AddQuickPressShortcut" android:label="QuickPress">
 			<intent-filter>
 				<action android:name="android.intent.action.CREATE_SHORTCUT" />

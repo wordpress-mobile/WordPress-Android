@@ -458,8 +458,10 @@ public class Comments extends FragmentActivity implements
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-
 		super.onConfigurationChanged(newConfig);
+		
+		titleBar.switchDashboardLayout(newConfig.orientation);
+		
 	}
 
 }

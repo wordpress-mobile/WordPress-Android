@@ -596,6 +596,8 @@ res/layout/categories_row.xml -text
 res/layout/comment_tab_selector.xml -text
 res/layout/comments.xml -text
 res/layout/dashboard.xml -text
+res/layout/dashboard_buttons_landscape.xml -text
+res/layout/dashboard_buttons_portrait.xml -text
 res/layout/edit.xml -text
 res/layout/edit_content.xml -text
 res/layout/edit_page.xml -text

@@ -49,6 +49,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -1139,6 +1140,14 @@ public class ViewStats extends Activity {
 	    }
 
 	    return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		
+		titleBar.switchDashboardLayout(newConfig.orientation);
+		
 	}
 
 }

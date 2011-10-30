@@ -21,9 +21,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -66,7 +69,7 @@ public class WPTitleBar extends RelativeLayout {
 		final WordPressDB settingsDB = new WordPressDB(context);
 		accounts = settingsDB.getAccounts(context);
 
-		dashboard = (LinearLayout) findViewById(R.id.dashboard);
+		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
 		commentBadge = (TextView) findViewById(R.id.comment_badge);
 		blogNames = new CharSequence[accounts.size()];
 		blogIDs = new int[accounts.size()];
@@ -153,123 +156,128 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			// dashboard button click handlers
-			LinearLayout writeButton = (LinearLayout) findViewById(R.id.dashboard_newpost_btn);
-			writeButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, EditPost.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout newPageButton = (LinearLayout) findViewById(R.id.dashboard_newpage_btn);
-			newPageButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, EditPost.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("isNew", true);
-					i.putExtra("isPage", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout postsButton = (LinearLayout) findViewById(R.id.dashboard_posts_btn);
-			postsButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, Posts.class);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout pagesButton = (LinearLayout) findViewById(R.id.dashboard_pages_btn);
-			pagesButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, Posts.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("isNew", true);
-					i.putExtra("viewPages", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout commentsButton = (LinearLayout) findViewById(R.id.dashboard_comments_btn);
-			commentsButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, Comments.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout statsButton = (LinearLayout) findViewById(R.id.dashboard_stats_btn);
-			statsButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, ViewStats.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout settingsButton = (LinearLayout) findViewById(R.id.dashboard_settings_btn);
-			settingsButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, Settings.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout subsButton = (LinearLayout) findViewById(R.id.dashboard_subs_btn);
-			subsButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent i = new Intent(context, Read.class);
-					i.putExtra("id", WordPress.currentBlog.getId());
-					i.putExtra("loadReader", true);
-					context.startActivity(i);
-				}
-			});
-
-			LinearLayout picButton = (LinearLayout) findViewById(R.id.dashboard_quickphoto_btn);
-			picButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					PackageManager pm = context.getPackageManager();
-					if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-						Intent i = new Intent(context, EditPost.class);
-						i.putExtra("option", "newphoto");
-						i.putExtra("isNew", true);
-						context.startActivity(i);
-					} else {
-						Toast.makeText(context,
-								getResources()
-										.getText(R.string.no_camera_found),
-								Toast.LENGTH_LONG);
-					}
-				}
-			});
-
-			LinearLayout videoButton = (LinearLayout) findViewById(R.id.dashboard_quickvideo_btn);
-			videoButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					PackageManager pm = context.getPackageManager();
-					if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-						Intent i = new Intent(context, EditPost.class);
-						i.putExtra("option", "newvideo");
-						i.putExtra("isNew", true);
-						context.startActivity(i);
-					} else {
-						Toast.makeText(context,
-								getResources()
-										.getText(R.string.no_camera_found),
-								Toast.LENGTH_LONG);
-					}
-				}
-			});
+			setupDashboardButtons();
 		}
+	}
+
+	private void setupDashboardButtons() {
+		// dashboard button click handlers
+					LinearLayout writeButton = (LinearLayout) findViewById(R.id.dashboard_newpost_btn);
+					writeButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, EditPost.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("isNew", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout newPageButton = (LinearLayout) findViewById(R.id.dashboard_newpage_btn);
+					newPageButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, EditPost.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("isNew", true);
+							i.putExtra("isPage", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout postsButton = (LinearLayout) findViewById(R.id.dashboard_posts_btn);
+					postsButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, Posts.class);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout pagesButton = (LinearLayout) findViewById(R.id.dashboard_pages_btn);
+					pagesButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, Posts.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("isNew", true);
+							i.putExtra("viewPages", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout commentsButton = (LinearLayout) findViewById(R.id.dashboard_comments_btn);
+					commentsButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, Comments.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("isNew", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout statsButton = (LinearLayout) findViewById(R.id.dashboard_stats_btn);
+					statsButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, ViewStats.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("isNew", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout settingsButton = (LinearLayout) findViewById(R.id.dashboard_settings_btn);
+					settingsButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, Settings.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("isNew", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout subsButton = (LinearLayout) findViewById(R.id.dashboard_subs_btn);
+					subsButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Intent i = new Intent(context, Read.class);
+							i.putExtra("id", WordPress.currentBlog.getId());
+							i.putExtra("loadReader", true);
+							context.startActivity(i);
+						}
+					});
+
+					LinearLayout picButton = (LinearLayout) findViewById(R.id.dashboard_quickphoto_btn);
+					picButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							PackageManager pm = context.getPackageManager();
+							if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+								Intent i = new Intent(context, EditPost.class);
+								i.putExtra("option", "newphoto");
+								i.putExtra("isNew", true);
+								context.startActivity(i);
+							} else {
+								Toast.makeText(context,
+										getResources()
+												.getText(R.string.no_camera_found),
+										Toast.LENGTH_LONG);
+							}
+						}
+					});
+
+					LinearLayout videoButton = (LinearLayout) findViewById(R.id.dashboard_quickvideo_btn);
+					videoButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							PackageManager pm = context.getPackageManager();
+							if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+								Intent i = new Intent(context, EditPost.class);
+								i.putExtra("option", "newvideo");
+								i.putExtra("isNew", true);
+								context.startActivity(i);
+							} else {
+								Toast.makeText(context,
+										getResources()
+												.getText(R.string.no_camera_found),
+										Toast.LENGTH_LONG);
+							}
+						}
+					});
+		
 	}
 
 	public void hideDashboardOverlay() {
@@ -354,5 +362,23 @@ public class WPTitleBar extends RelativeLayout {
 			commentBadge.setText(String.valueOf(WordPress.currentBlog
 					.getUnmoderatedCommentCount(context)));
 		}
+	}
+
+	public void switchDashboardLayout(int orientation) {
+		
+		LayoutInflater inflater = LayoutInflater.from(context);
+	    ViewGroup parent = (ViewGroup) dashboard.getParent();
+	    int index = parent.indexOfChild(dashboard);
+	    parent.removeView(dashboard);
+		if (orientation == Configuration.ORIENTATION_LANDSCAPE) 
+		    dashboard = (LinearLayout) inflater.inflate(R.layout.dashboard_buttons_landscape, parent, false);
+		else if (orientation == Configuration.ORIENTATION_PORTRAIT)
+		    dashboard = (LinearLayout) inflater.inflate(R.layout.dashboard_buttons_portrait, parent, false);
+
+	    parent.addView(dashboard, index);
+	    if (isShowingDashboard)
+	    	dashboard.setVisibility(View.VISIBLE);
+		setupDashboardButtons();
+		
 	}
 }
