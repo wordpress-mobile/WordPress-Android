@@ -4,6 +4,7 @@
 .settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
 assets/webview.css -text
+bin/classes.dex -text
 bin/com/roundhill/androidWP/R$attr.class -text
 bin/com/roundhill/androidWP/R$drawable.class -text
 bin/com/roundhill/androidWP/R$id.class -text
@@ -201,6 +202,8 @@ bin/org/xmlrpc/android/XMLRPCClient.class -text
 bin/org/xmlrpc/android/XMLRPCException.class -text
 bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
+bin/resources.ap_ -text
+bin/wp-android.apk -text
 /default.properties -text
 gen/org/wordpress/android/R.java -text
 libs/CWAC-AdapterWrapper.jar -text
