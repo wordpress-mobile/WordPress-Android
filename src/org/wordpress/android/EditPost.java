@@ -314,7 +314,7 @@ public class EditPost extends Activity implements LocationListener {
 			titleET.setText(post.getTitle());
 
 			String contentHTML;
-			if (post.getMt_text_more() != "") {
+			if (!post.getMt_text_more().equals("")) {
 				contentHTML = post.getDescription() + "<div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></div>" + post.getMt_text_more();
 			}
 			else {
