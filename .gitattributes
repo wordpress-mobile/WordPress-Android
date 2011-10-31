@@ -202,6 +202,7 @@ bin/org/xmlrpc/android/XMLRPCClient.class -text
 bin/org/xmlrpc/android/XMLRPCException.class -text
 bin/org/xmlrpc/android/XMLRPCFault.class -text
 bin/org/xmlrpc/android/XMLRPCSerializer.class -text
+bin/res/drawable/wp_logo_actionbar.png -text
 bin/resources.ap_ -text
 bin/wp-android.apk -text
 /default.properties -text
@@ -221,6 +222,7 @@ res/anim/disappear.xml -text
 res/anim/rail.xml -text
 res/anim/shake.xml -text
 res/anim/show.xml -text
+res/drawable-hdpi-v11/notification_icon.png -text
 res/drawable-hdpi/add.png -text
 res/drawable-hdpi/app_icon.png -text
 res/drawable-hdpi/btn_check_off_pressed.png -text
@@ -257,6 +259,7 @@ res/drawable-hdpi/ic_menu_edit.png -text
 res/drawable-hdpi/ic_menu_home.png -text
 res/drawable-hdpi/ic_menu_prefs.png -text
 res/drawable-hdpi/ic_menu_share.png -text
+res/drawable-hdpi/notification_icon.png -text
 res/drawable-hdpi/pages_tab.png -text
 res/drawable-hdpi/pages_tab_active.png -text
 res/drawable-hdpi/posts_tab.png -text
@@ -274,9 +277,15 @@ res/drawable-hdpi/wp_small_down.9.png -text
 res/drawable-hdpi/wp_small_over.9.png -text
 res/drawable-hdpi/wp_small_toggle.9.png -text
 res/drawable-hdpi/wp_statusbar_icon.png -text
+res/drawable-ldpi-v11/notification_icon.png -text
+res/drawable-ldpi/notification_icon.png -text
+res/drawable-mdpi-v11/notification_icon.png -text
+res/drawable-mdpi/notification_icon.png -text
 res/drawable-v11/list_highlight_bg.xml -text
 res/drawable-v12/dashboard_btn_bottom_left.xml -text
 res/drawable-v12/dashboard_btn_bottom_right.xml -text
+res/drawable-xhdpi-v11/notification_icon.png -text
+res/drawable-xhdpi/notification_icon.png -text
 res/drawable/action_bar_btn_selector.xml -text
 res/drawable/action_bar_shadow.9.png -text
 res/drawable/action_item_btn.xml -text

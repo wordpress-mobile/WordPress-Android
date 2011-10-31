@@ -51,16 +51,30 @@ public class Comments extends FragmentActivity implements
 
 		FragmentManager fm = getSupportFragmentManager();
 		commentList = (ViewComments) fm.findFragmentById(R.id.commentList);
+		
+		titleBar = (WPTitleBar) findViewById(R.id.commentsActionBar);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			boolean fromNotification = false;
+			fromNotification = extras.getBoolean("fromNotification");
+	  		if (fromNotification) {
+	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
+	  			titleBar.refreshBlog();
+	  			blog = WordPress.currentBlog;
+	  			commentList.refreshComments(false, false, false);
+	  		}
+		}
 
 		blog = WordPress.currentBlog;
 		
 		WordPress.currentComment = null;
 
-		titleBar = (WPTitleBar) findViewById(R.id.commentsActionBar);
 		titleBar.refreshButton
 				.setOnClickListener(new ImageButton.OnClickListener() {
 					public void onClick(View v) {
-
+						
+						attemptToSelectComment();
 						commentList.refreshComments(false, false, false);
 
 					}
@@ -70,8 +84,8 @@ public class Comments extends FragmentActivity implements
 			// user selected new blog in the title bar
 			@Override
 			public void OnBlogChanged() {
-
-				commentList.shouldSelectAfterLoad = true;
+				
+				attemptToSelectComment();
 				commentList.loadComments(false, false);
 
 			}
@@ -252,8 +266,7 @@ public class Comments extends FragmentActivity implements
 			runOnUiThread(action);
 			Thread action2 = new Thread() {
 				public void run() {
-					pd = new ProgressDialog(Comments.this); // to avoid
-					// crash
+					pd = new ProgressDialog(Comments.this); 
 					commentList.refreshComments(false, true, false);
 				}
 			};

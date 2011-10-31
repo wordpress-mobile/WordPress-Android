@@ -164,23 +164,18 @@ public class CommentService extends Service {
 					settingsDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
 					////Log.i("WordPressCommentService", "comment was zero");
 				}
-				else if (Integer.valueOf(commentID) > latestCommentID){
-					
-					//update the comments
-					//ApiHelper.refreshComments(accountID, commentService.this);
-					
+				else if (Integer.valueOf(commentID) > latestCommentID){	
 					final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-					Intent notificationIntent = new Intent(CommentService.this, ViewComments.class);
+					Intent notificationIntent = new Intent(CommentService.this, Comments.class);
     		  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+accountID)));
     		  		notificationIntent.putExtra("id", accountID);
-    		  		notificationIntent.putExtra("accountName", accountName);
     		  		notificationIntent.putExtra("fromNotification", true);
     		  		PendingIntent pendingIntent = PendingIntent.getActivity(CommentService.this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
  			  		
     		  		String comment = contentHash.get("content").toString();
     		  		String author = contentHash.get("author").toString();
     		  		
-    		  		Notification n = new Notification(R.drawable.wp_logo, author + ": " + comment, System.currentTimeMillis());
+    		  		Notification n = new Notification(R.drawable.notification_icon, author + ": " + comment, System.currentTimeMillis());
     		  		if (sound){
     		  		n.defaults |= Notification.DEFAULT_SOUND;
     		  		}

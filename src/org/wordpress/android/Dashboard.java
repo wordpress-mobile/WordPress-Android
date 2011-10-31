@@ -157,15 +157,11 @@ public class Dashboard extends Activity {
 		switch (item.getItemId()) {
 		case 0:
 			Intent i = new Intent(this, NewAccount.class);
-
 			startActivityForResult(i, 0);
-
 			return true;
 		case 1:
 			Intent i2 = new Intent(this, Preferences.class);
-
 			startActivity(i2);
-			finish();
 			return true;
 		case 2:
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(

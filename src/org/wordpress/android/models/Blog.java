@@ -70,6 +70,7 @@ public class Blog {
 			if (blogVals.get(19) != null)
 				this.wpVersion = blogVals.get(19).toString();
 			this.postFormats = blogVals.get(20).toString();
+			this.lastCommentId = (Integer)blogVals.get(21);
 		}		
 	}
 

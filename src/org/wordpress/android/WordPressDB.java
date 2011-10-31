@@ -517,7 +517,7 @@ public class WordPressDB {
 	public Vector<Object> loadSettings(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid", "wpVersion", "postFormats"}, "id=" + id, null, null, null, null);
+		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement", "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId", "runService", "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key", "api_blogid", "wpVersion", "postFormats", "lastCommentId"}, "id=" + id, null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -556,6 +556,7 @@ public class WordPressDB {
 			returnVector.add(c.getString(18));
 			returnVector.add(c.getString(19));
 			returnVector.add(c.getString(20));
+			returnVector.add(c.getInt(21));
 			}
 			else
 			{

@@ -382,4 +382,9 @@ public class WPTitleBar extends RelativeLayout {
 		setupDashboardButtons();
 		
 	}
+
+	public void refreshBlog() {
+		blogTitle.setText(WordPress.currentBlog.getBlogName());
+		updateBlavatarImage();
+	}
 }
