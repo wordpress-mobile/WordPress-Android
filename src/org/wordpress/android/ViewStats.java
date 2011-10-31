@@ -27,6 +27,24 @@ package org.wordpress.android;
  https://public-api.wordpress.com/getuserblogs.php?f=json
  */
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Vector;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -49,7 +67,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -66,37 +83,17 @@ import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Vector;
 
 public class ViewStats extends Activity {
 	public boolean success = false;
@@ -475,7 +472,7 @@ public class ViewStats extends Activity {
 					
 							reportTitle.setText(getResources().getText(
 									R.string.report_views));
-							String dataValues = "", dateStrings = "";
+							String dataValues = "", dateStrings = "", xLabels = "";
 							Object[] key = numDataSet.toArray();
 							Arrays.sort(key);
 
@@ -511,6 +508,12 @@ public class ViewStats extends Activity {
 								String value = numDataSet.get(i).toString();
 								dateStrings += date + ",";
 								dataValues += value + ",";
+								if (i == 0)
+									xLabels += date + "|";
+								else if (i == (dataSet.size() - 1))
+									xLabels += date;
+								else 
+									xLabels += "|";
 
 								// table display work
 
@@ -609,32 +612,17 @@ public class ViewStats extends Activity {
 									+ "&chbh=a"
 									+ "&chd=t:" + dataValues
 									+ "&chs=" + screenSize
-									+ "&chl=" + dateArray[0].toString() + "|" + dateArray[dateArray.length - 1].toString()
 									+ "&chxt=y,x"
+									+ "&chxl=1:|" + xLabels
 									+ "&chds=" + minBuffer + "," + maxBuffer
 									+ "&chxr=0," + minBuffer + "," + maxBuffer + "," + yInterval
 									+ "&chf=c,lg,90,FFFFFF,0,FFFFFF,0.5"
-									+ "&chm=o,14568A,0,-1,10.0"
 									+ "&chco=a3bcd3,cccccc77"
 									+ "&chls=4"
-									+ "&chg=" + xGrid + "," + yGrid;
+									+ "&chf=c,lg,90,FFFFFF,0,FFFFFF,0.5&chls=4&chxs=0,464646,19,0,t|1,464646,16,0,t,ffffff&chxtc=0,0"
+									+ "&chg=" + xGrid + "," + yGrid + ",1,0";
 
-							try {
-								URL url = new URL(chartViewURL);
-								URLConnection conn = url.openConnection();
-								conn.connect();
-								InputStream is = conn.getInputStream();
-								BufferedInputStream bis = new BufferedInputStream(
-										is);
-								Bitmap bm = BitmapFactory.decodeStream(bis);
-								bis.close();
-								is.close();
-								iv.setImageBitmap(bm);
-							} catch (MalformedURLException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+							new statsChartTask().execute(chartViewURL);
 
 						} else if (reportType.equals("postviews")) {
 							reportTitle.setText(getResources().getText(
@@ -1142,12 +1130,43 @@ public class ViewStats extends Activity {
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		
-		titleBar.switchDashboardLayout(newConfig.orientation);
-		
+	private class statsChartTask extends AsyncTask<String, Bitmap, Bitmap> {
+
+		protected void onPostExecute(Bitmap bm) {
+			
+			if (bm != null) {
+				ImageView iv = (ImageView) findViewById(R.id.chart);
+				iv.setImageBitmap(bm);
+			}
+			
+		}
+
+		@Override
+		protected Bitmap doInBackground(String... args) {
+
+			Bitmap bm = null;
+			try {
+				URL url = new URL(args[0]);
+				URLConnection conn = url.openConnection();
+				conn.connect();
+				InputStream is = conn.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(
+						is);
+				bm = BitmapFactory.decodeStream(bis);
+				bis.close();
+				is.close();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return bm;
+
+		}
+
 	}
 
 }

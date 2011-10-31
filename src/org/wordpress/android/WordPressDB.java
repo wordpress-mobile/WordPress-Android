@@ -568,7 +568,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public Vector<String> loadStatsLogin(Context ctx, String id) {
+	public Vector<String> loadStatsLogin(Context ctx, int id) {
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username", "dotcom_password"}, "id=" + id, null, null, null, null);
