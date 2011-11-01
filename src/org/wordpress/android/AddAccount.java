@@ -249,7 +249,7 @@ public class AddAccount extends Activity {
 		                boolean match = false;
 		                String matchBlogName = contentHash.get("blogName").toString();
 		                if (matchBlogName.length() == 0){
-		                	matchBlogName = "(No Blog Title)";
+		                	matchBlogName = contentHash.get("url").toString();
 		                } 
 		                match = settingsDB.checkMatch(AddAccount.this, matchBlogName, contentHash.get("xmlrpc").toString(), username);
 		            if (!match){

@@ -119,7 +119,7 @@ public class EditPost extends Activity implements LocationListener {
 						blogNames[i] = EscapeUtils.unescapeHtml(curHash.get(
 								"blogName").toString());
 					} catch (Exception e) {
-						blogNames[i] = "(No Blog Title)";
+						blogNames[i] =  curHash.get("url").toString();
 					}
 					accountIDs[i] = (Integer) curHash.get("id");
 					blog = new Blog(accountIDs[i], EditPost.this);
