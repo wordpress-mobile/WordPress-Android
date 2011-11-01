@@ -47,7 +47,7 @@ public class ViewPosts extends ListFragment {
 	/** Called when the activity is first created. */
 	private XMLRPCClient client;
 	private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
-			draftIDs, draftTitles, publish;
+			draftIDs, draftTitles, draftDateCreated;
 	private Integer[] uploaded;
 	int rowID = 0;
 	long selectedID;
@@ -276,16 +276,16 @@ public class ViewPosts extends ListFragment {
 			draftTitles = (String[]) newTitleList
 					.toArray(new String[newTitleList.size()]);
 
-			List<String> publishList = Arrays.asList(publish);
-			List<String> newPublishList = new ArrayList<String>();
-			newPublishList.add("draftsHeader");
-			newPublishList.addAll(publishList);
-			publish = (String[]) newPublishList
-					.toArray(new String[newPublishList.size()]);
+			List<String> draftDateList = Arrays.asList(draftDateCreated);
+			List<String> newDraftDateList = new ArrayList<String>();
+			newDraftDateList.add("draftsHeader");
+			newDraftDateList.addAll(draftDateList);
+			draftDateCreated = (String[]) newDraftDateList
+					.toArray(new String[newDraftDateList.size()]);
 
 			postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
 			titles = StringHelper.mergeStringArrays(draftTitles, titles);
-			dateCreatedFormatted = StringHelper.mergeStringArrays(publish,
+			dateCreatedFormatted = StringHelper.mergeStringArrays(draftDateCreated,
 					dateCreatedFormatted);
 		} else {
 			if (pla != null) {
@@ -493,7 +493,7 @@ public class ViewPosts extends ListFragment {
 		if (loadedPosts != null) {
 			draftIDs = new String[loadedPosts.size()];
 			draftTitles = new String[loadedPosts.size()];
-			publish = new String[loadedPosts.size()];
+			draftDateCreated = new String[loadedPosts.size()];
 			uploaded = new Integer[loadedPosts.size()];
 			totalDrafts = loadedPosts.size();
 
@@ -502,11 +502,8 @@ public class ViewPosts extends ListFragment {
 				draftIDs[i] = contentHash.get("id").toString();
 				draftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
 						"title").toString());
-				if (contentHash.get("status") != null) {
-					publish[i] = contentHash.get("status").toString();
-				} else {
-					publish[i] = "";
-				}
+				//drafts won't show the date in the list
+				draftDateCreated[i] = "";
 				uploaded[i] = (Integer) contentHash.get("uploaded");
 			}
 
@@ -595,47 +592,14 @@ public class ViewPosts extends ListFragment {
 				wrapper.getTitle().setTextSize(16);
 				wrapper.getDate().setTextColor(Color.parseColor("#888888"));
 
-				Object[] args = { R.id.row_post_id, postIDs[position] };
-
-				try {
-					Method m = android.view.View.class.getMethod("setTag");
-					m.invoke(pv, args);
-				} catch (NoSuchMethodException e) {
-					pv.setId(Integer.valueOf(postIDs[position]));
-				} catch (IllegalArgumentException e) {
-					pv.setId(Integer.valueOf(postIDs[position]));
-				} catch (IllegalAccessException e) {
-					pv.setId(Integer.valueOf(postIDs[position]));
-				} catch (InvocationTargetException e) {
-					pv.setId(Integer.valueOf(postIDs[position]));
-				}
-
-				// pv.setId(Integer.valueOf(postIDs[position]));
-				// pv.setTag(R.id.row_post_id, postIDs[position]);
+				pv.setTag(R.id.row_post_id, postIDs[position]);
+				pv.setId(Integer.valueOf(postIDs[position]));
 
 				if (wrapper.getDate().getHeight() == 0) {
 					wrapper.getDate().setHeight(
 							(int) wrapper.getTitle().getTextSize()
 									+ wrapper.getDate().getPaddingBottom());
 				}
-				String customDate = date;
-
-				if (customDate.equals("draft")) {
-					customDate = getResources().getText(R.string.draft)
-							.toString();
-				} else if (customDate.equals("pending")) {
-					customDate = getResources()
-							.getText(R.string.pending_review).toString();
-				} else if (customDate.equals("private")) {
-					customDate = getResources().getText(R.string.post_private)
-							.toString();
-				} else if (customDate.equals("publish")) {
-					customDate = getResources().getText(R.string.publish_post)
-							.toString();
-					wrapper.getDate().setTextColor(Color.parseColor("#006505"));
-				}
-				date = customDate;
-
 			}
 			String titleText = titles[position];
 			if (titleText == "")

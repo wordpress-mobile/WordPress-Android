@@ -266,7 +266,8 @@ public class EditPost extends Activity implements LocationListener {
 				getResources().getString(R.string.publish_post),
 				getResources().getString(R.string.draft),
 				getResources().getString(R.string.pending_review),
-				getResources().getString(R.string.post_private) };
+				getResources().getString(R.string.post_private),
+				getResources().getString(R.string.local_draft) };
 		Spinner spinner = (Spinner) findViewById(R.id.status);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, items);
@@ -301,12 +302,6 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 		} else {
-			// no upload now button for uploaded posts
-			if (post.isUploaded()) {
-				Button uploadNowButton = (Button) findViewById(R.id.cancel);
-				uploadNowButton.setVisibility(View.GONE);
-			}
-
 			EditText titleET = (EditText) findViewById(R.id.title);
 			WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
 			EditText passwordET = (EditText) findViewById(R.id.post_password);
@@ -315,15 +310,16 @@ public class EditPost extends Activity implements LocationListener {
 
 			String contentHTML;
 			if (!post.getMt_text_more().equals("")) {
-				contentHTML = post.getDescription() + "<div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></div>" + post.getMt_text_more();
-			}
-			else {
+				contentHTML = post.getDescription()
+						+ "<div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........"
+						+ getResources().getText(R.string.more_tag)
+						+ "</font></div>" + post.getMt_text_more();
+			} else {
 				contentHTML = post.getDescription();
 			}
-			
-			contentET.setText(WPHtml.fromHtml(
-					contentHTML,
-					EditPost.this, post));
+
+			contentET
+					.setText(WPHtml.fromHtml(contentHTML, EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
@@ -467,27 +463,8 @@ public class EditPost extends Activity implements LocationListener {
 
 				boolean result = savePost();
 				if (result) {
-					if (post.isUploaded())
+					if (post.isUploaded() || !post.getPost_status().equals("localdraft"))
 						post.upload();
-					finish();
-				}
-			}
-		});
-		final Button uploadNowButton = (Button) findViewById(R.id.cancel);
-
-		uploadNowButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				boolean result = savePost();
-				post.upload();
-				if (result) {
-					Bundle bundle = new Bundle();
-					if (isAction) {
-						Intent mIntent = new Intent(EditPost.this,
-								Dashboard.class);
-						mIntent.putExtras(bundle);
-						startActivity(mIntent);
-					}
-
 					finish();
 				}
 			}
@@ -730,6 +707,9 @@ public class EditPost extends Activity implements LocationListener {
 			case 3:
 				status = "private";
 				break;
+			case 4:
+				status = "localdraft";
+				break;
 			}
 
 			Double latitude = 0.0;
@@ -751,14 +731,19 @@ public class EditPost extends Activity implements LocationListener {
 						categories.toString(), tags, status, password,
 						latitude, longitude, isPage, postFormat, EditPost.this);
 				post.setLocalDraft(true);
-				
-				//split up the post content if there's a more tag
-				String needle = "<p><font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></p>";
+
+				// split up the post content if there's a more tag
+				String needle = "<p><font color =\"#777777\">........"
+						+ getResources().getText(R.string.more_tag)
+						+ "</font></p>";
 				if (content.indexOf(needle) >= 0) {
-					post.setDescription(content.substring(0, content.indexOf(needle)));
-					post.setMt_text_more(content.substring(content.indexOf(needle) + needle.length(), content.length()));
+					post.setDescription(content.substring(0,
+							content.indexOf(needle)));
+					post.setMt_text_more(content.substring(
+							content.indexOf(needle) + needle.length(),
+							content.length()));
 				}
-				
+
 				success = post.save();
 
 				post.deleteMediaFiles();
@@ -790,11 +775,16 @@ public class EditPost extends Activity implements LocationListener {
 
 			} else {
 				post.setTitle(title);
-				//split up the post content if there's a more tag
-				String needle = "<p><font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></p>";
+				// split up the post content if there's a more tag
+				String needle = "<p><font color =\"#777777\">........"
+						+ getResources().getText(R.string.more_tag)
+						+ "</font></p>";
 				if (content.indexOf(needle) >= 0) {
-					post.setDescription(content.substring(0, content.indexOf(needle)));
-					post.setMt_text_more(content.substring(content.indexOf(needle) + needle.length(), content.length()));
+					post.setDescription(content.substring(0,
+							content.indexOf(needle)));
+					post.setMt_text_more(content.substring(
+							content.indexOf(needle) + needle.length(),
+							content.length()));
 				}
 				post.setDescription(content);
 				post.setMediaPaths(images);

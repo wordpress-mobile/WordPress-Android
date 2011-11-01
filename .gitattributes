@@ -577,6 +577,7 @@ src/org/wordpress/android/util/IntHashMap.java -text
 src/org/wordpress/android/util/StringHelper.java -text
 src/org/wordpress/android/util/TrustAllManager.java -text
 src/org/wordpress/android/util/TrustAllSSLSocketFactory.java -text
+src/org/wordpress/android/util/WPAlertDialogFragment.java -text
 src/org/wordpress/android/util/WPEditText.java -text
 src/org/wordpress/android/util/WPHtml.java -text
 src/org/wordpress/android/util/WPImageSpan.java -text

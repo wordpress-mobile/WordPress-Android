@@ -10,25 +10,22 @@ import java.util.Vector;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -88,11 +85,6 @@ public class ViewComments extends ListFragment {
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-
-		// getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// getActivity().setContentView(R.layout.moderatecomments);
-		Bundle extras = getActivity().getIntent().getExtras();
-
 		id = WordPress.currentBlog.getId();
 		blog = new Blog(id, getActivity().getApplicationContext());
 	}
@@ -254,8 +246,8 @@ public class ViewComments extends ListFragment {
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
-				HashMap contentHash, postHash = new HashMap();
-				contentHash = (HashMap) allComments.get(curCommentID);
+				HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
+				contentHash = (HashMap<String, String>) allComments.get(curCommentID);
 				postHash.put("status", newStatus);
 				postHash.put("content", contentHash.get("comment"));
 				postHash.put("author", contentHash.get("author"));
@@ -292,23 +284,10 @@ public class ViewComments extends ListFragment {
 							Toast.LENGTH_SHORT).show();
 				} else {
 					// there was an xmlrpc error
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							getActivity().getApplicationContext());
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(moderateErrorMsg);
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!getActivity().isFinishing()) {
-						dialogBuilder.create().show();
-					}
+					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					WPAlertDialogFragment alert = WPAlertDialogFragment
+					        .newInstance(moderateErrorMsg);
+					    alert.show(ft, "alert");
 				}
 			}
 		};
@@ -395,23 +374,10 @@ public class ViewComments extends ListFragment {
 							Toast.LENGTH_SHORT).show();
 				} else {
 					// error occured during delete request
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							getActivity().getApplicationContext());
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(moderateErrorMsg);
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!getActivity().isFinishing()) {
-						dialogBuilder.create().show();
-					}
+					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					WPAlertDialogFragment alert = WPAlertDialogFragment
+					        .newInstance(moderateErrorMsg);
+					    alert.show(ft, "alert");
 				}
 			}
 		};
@@ -442,7 +408,7 @@ public class ViewComments extends ListFragment {
 					.getApplicationContext(), WordPress.currentBlog.getId());
 			if (loadedPosts != null) {
 				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
-				countHash = (HashMap) loadedPosts.get(0);
+				countHash = (HashMap<Object, Object>) loadedPosts.get(0);
 				numRecords = Integer.parseInt(countHash.get("numRecords")
 						.toString());
 				if (refreshOnly) {
@@ -453,18 +419,10 @@ public class ViewComments extends ListFragment {
 					model = new ArrayList<Comment>();
 				}
 
-				// fixes trac #72 (1.5 bug)
-				int sdk_int = 0;
-				try {
-					sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
-				} catch (Exception e1) {
-					sdk_int = 3; // assume they are on cupcake
-				}
-
-				checkedComments = new Vector();
+				checkedComments = new Vector<String>();
 				for (int i = 1; i < loadedPosts.size(); i++) {
 					checkedComments.add(i - 1, "false");
-					HashMap contentHash = (HashMap) loadedPosts.get(i);
+					HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
 					allComments.put(contentHash.get("commentID").toString(),
 							contentHash);
 					author = EscapeUtils.unescapeHtml(contentHash.get("author")
@@ -588,12 +546,12 @@ public class ViewComments extends ListFragment {
 				return false;
 			}
 		} else {
-			Vector latestComments = postStoreDB.loadMoreComments(getActivity()
+			Vector<?> latestComments = postStoreDB.loadMoreComments(getActivity()
 					.getApplicationContext(), id, commentsToLoad);
 			if (latestComments != null) {
 				numRecords += latestComments.size();
 				for (int i = latestComments.size(); i > 0; i--) {
-					HashMap contentHash = (HashMap) latestComments.get(i - 1);
+					HashMap<?, ?> contentHash = (HashMap<?, ?>) latestComments.get(i - 1);
 					allComments.put(contentHash.get("commentID").toString(),
 							contentHash);
 					author = EscapeUtils.unescapeHtml(contentHash.get("author")
@@ -639,7 +597,7 @@ public class ViewComments extends ListFragment {
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
 
-		HashMap hPost = new HashMap();
+		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		hPost.put("status", "");
 		hPost.put("post_id", "");
 		if (loadMore) {
@@ -674,11 +632,10 @@ public class ViewComments extends ListFragment {
 	private void goBlooey(Throwable t) {
 		Log.e("WordPress", "Exception!", t);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()
-				.getApplicationContext());
-
-		builder.setTitle("Error").setMessage(t.toString())
-				.setPositiveButton("OK", null).show();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		WPAlertDialogFragment alert = WPAlertDialogFragment
+		        .newInstance(t.toString());
+		    alert.show(ft, "alert");
 	}
 
 	class CommentAdapter extends ArrayAdapter<Comment> {
@@ -967,7 +924,7 @@ public class ViewComments extends ListFragment {
 				Object[] countParams = { blog.getBlogId(), blog.getUsername(),
 						blog.getPassword(), 0 };
 				try {
-					countResult = (HashMap) client.call("wp.getCommentCount",
+					countResult = (HashMap<Object, Object>) client.call("wp.getCommentCount",
 							countParams);
 					totalComments = Integer.valueOf(countResult.get(
 							"awaiting_moderation").toString())
@@ -990,59 +947,10 @@ public class ViewComments extends ListFragment {
 							pd.dismiss();
 						}
 						onAnimateRefreshButton.onAnimateRefreshButton(false);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								getActivity().getApplicationContext());
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.connection_error));
-						String msg = e.getLocalizedMessage();
-						dialogBuilder.setMessage(e.getFaultString());
-						if (msg.contains("403")) {
-							dialogBuilder.setMessage(e.getFaultString()
-									+ " "
-									+ getResources().getString(
-											R.string.load_settings));
-							dialogBuilder.setPositiveButton(getResources()
-									.getString(R.string.yes),
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-											Intent i = new Intent(getActivity()
-													.getApplicationContext(),
-													Settings.class);
-											i.putExtra("id", id);
-											i.putExtra("accountName",
-													accountName);
-											startActivity(i);
-
-										}
-									});
-
-							dialogBuilder.setNegativeButton(getResources()
-									.getString(R.string.no),
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-											// Just close the window.
-
-										}
-									});
-						} else {
-							dialogBuilder.setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-											// Just close the window.
-
-										}
-									});
-						}
-						dialogBuilder.setCancelable(true);
-						if (!getActivity().isFinishing()) {
-							dialogBuilder.create().show();
-						}
+						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						WPAlertDialogFragment alert = WPAlertDialogFragment
+						        .newInstance(e.getLocalizedMessage());
+						    alert.show(ft, "alert");
 					}
 				});
 			} catch (final XMLRPCException e) {
@@ -1052,23 +960,10 @@ public class ViewComments extends ListFragment {
 							pd.dismiss();
 						}
 						onAnimateRefreshButton.onAnimateRefreshButton(false);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								getActivity().getApplicationContext());
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.connection_error));
-						dialogBuilder.setMessage(e.getLocalizedMessage());
-						dialogBuilder.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										// Just close the window.
-
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!getActivity().isFinishing()) {
-							dialogBuilder.create().show();
-						}
+						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						WPAlertDialogFragment alert = WPAlertDialogFragment
+						        .newInstance(e.getLocalizedMessage());
+						    alert.show(ft, "alert");
 					}
 				});
 			}
@@ -1114,45 +1009,20 @@ public class ViewComments extends ListFragment {
 				handler.post(new Runnable() {
 					public void run() {
 						getActivity().dismissDialog(ID_DIALOG_MODERATING);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								getActivity().getApplicationContext());
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.connection_error));
-						dialogBuilder.setMessage(e.getFaultString());
-						dialogBuilder.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										// Just close the window.
-
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!getActivity().isFinishing()) {
-							dialogBuilder.create().show();
-						}
+						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						WPAlertDialogFragment alert = WPAlertDialogFragment
+						        .newInstance(e.getFaultString());
+						    alert.show(ft, "alert");
 					}
 				});
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
 						getActivity().dismissDialog(ID_DIALOG_MODERATING);
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								getActivity().getApplicationContext());
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.connection_error));
-						dialogBuilder.setMessage(e.getLocalizedMessage());
-						dialogBuilder.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										// Just close the window.
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!getActivity().isFinishing()) {
-							dialogBuilder.create().show();
-						}
+						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						WPAlertDialogFragment alert = WPAlertDialogFragment
+						        .newInstance(e.getLocalizedMessage());
+						    alert.show(ft, "alert");
 					}
 				});
 			}
@@ -1198,9 +1068,10 @@ public class ViewComments extends ListFragment {
 			if (commentsResult == null) {
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
 				if (!moderateErrorMsg.equals("")) {
-					AlertUtil.showAlert(getActivity().getApplicationContext(),
-							R.string.error, moderateErrorMsg);
-					moderateErrorMsg = "";
+				    FragmentTransaction ft = getFragmentManager().beginTransaction();
+					WPAlertDialogFragment alert = WPAlertDialogFragment
+					        .newInstance(moderateErrorMsg);
+					    alert.show(ft, "alert");
 				}
 				return;
 			}
@@ -1273,5 +1144,4 @@ public class ViewComments extends ListFragment {
 	public interface OnContextCommentStatusChangeListener {
 		public void onCommentStatusChanged(String status);
 	}
-
 }

@@ -134,15 +134,5 @@
       android:layout_alignParentRight="true"
       android:textSize="20dip"
       android:text="@string/save" />
-
-    <Button
-      android:id="@+id/cancel"
-      android:layout_alignTop="@id/post"
-      android:layout_toLeftOf="@id/post"
-      android:background="@drawable/wp_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="20dip"
-      android:text="@string/upload_now" />
   </RelativeLayout>
 </ScrollView>

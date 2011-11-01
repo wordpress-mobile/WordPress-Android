@@ -110,7 +110,8 @@ public class Post {
 			this.mt_allow_pings = (Integer) postVals.get(11) > 0;
 			this.mt_excerpt = postVals.get(12).toString();
 			this.mt_keywords = postVals.get(13).toString();
-			this.mt_text_more = postVals.get(14).toString();
+			if (postVals.get(14) != null)
+				this.mt_text_more = postVals.get(14).toString();
 			this.permaLink = postVals.get(15).toString();
 			this.post_status = postVals.get(16).toString();
 			this.userid = postVals.get(17).toString();

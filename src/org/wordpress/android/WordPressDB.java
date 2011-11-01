@@ -821,9 +821,9 @@ public class WordPressDB {
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
 		if (loadPages)
-			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded"}, "blogID=" + blogID + " AND localDraft=1 AND uploaded=0 AND isPage=1", null, null, null, null);
+			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded", "date_created_gmt"}, "blogID=" + blogID + " AND localDraft=1 AND uploaded=0 AND isPage=1", null, null, null, null);
 		else
-			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded"}, "blogID=" + blogID + " AND localDraft=1 AND uploaded=0 AND isPage=0", null, null, null, null);
+			c = db.query(POSTS_TABLE, new String[] { "id", "title", "post_status", "uploaded", "date_created_gmt"}, "blogID=" + blogID + " AND localDraft=1 AND uploaded=0 AND isPage=0", null, null, null, null);
 		
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -835,6 +835,7 @@ public class WordPressDB {
 		returnHash.put("title", c.getString(1));
 		returnHash.put("status", c.getString(2));
 		returnHash.put("uploaded", c.getInt(3));
+		returnHash.put("date_created_gmt", c.getLong(4));
 		returnVector.add(i, returnHash);
 		}
 		c.moveToNext();
