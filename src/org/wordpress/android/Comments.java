@@ -63,7 +63,6 @@ public class Comments extends FragmentActivity implements
 	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
 	  			titleBar.refreshBlog();
 	  			blog = WordPress.currentBlog;
-	  			commentList.refreshComments(false, false, false);
 	  		}
 		}
 
@@ -133,7 +132,6 @@ public class Comments extends FragmentActivity implements
 	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
 	  			titleBar.refreshBlog();
 	  			blog = WordPress.currentBlog;
-	  			commentList.refreshComments(false, false, false);
 	  		}
 		}
 		
