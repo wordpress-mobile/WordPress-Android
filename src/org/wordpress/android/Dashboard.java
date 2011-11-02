@@ -28,6 +28,9 @@ import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +39,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -100,6 +104,19 @@ public class Dashboard extends Activity {
 		} else {
 			displayAccounts();
 		}
+		
+		final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Intent notificationIntent = new Intent(this, Comments.class);
+  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+22)));
+  		notificationIntent.putExtra("id", WordPress.currentBlog.getId());
+  		notificationIntent.putExtra("fromNotification", true);
+  		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+  		
+  		Notification n = new Notification(R.drawable.notification_icon, "Steve" + ": " + "Wooooooo", System.currentTimeMillis());
+ 
+  		n.flags |= Notification.FLAG_AUTO_CANCEL;
+	  		n.setLatestEventInfo(this, "Bob", "Steve" + ": " + "wooooo", pendingIntent);
+	  		nm.notify(22 + Integer.valueOf(22), n); //needs a unique id
 	}
 
 	@Override

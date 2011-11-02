@@ -192,7 +192,7 @@ public class EditContent extends Activity {
 						adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 						alignmentSpinner.setAdapter(adapter);
 
-						imageWidthText.setText(String.valueOf(span.getWidth()));
+						imageWidthText.setText(String.valueOf(span.getWidth()) + "px");
 						seekBar.setProgress(span.getWidth());
 						titleText.setText(span.getTitle());
 						// descText.setText(span.getDescription());
@@ -202,8 +202,9 @@ public class EditContent extends Activity {
 						alignmentSpinner.setSelection(
 								span.getHorizontalAlignment(), true);
 
-						seekBar.setMax(1000);
-						seekBar.setProgress(span.getWidth());
+						seekBar.setMax(100);
+						if (span.getWidth() != 0)
+							seekBar.setProgress(span.getWidth() / 10);
 						seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 							@Override
@@ -218,7 +219,9 @@ public class EditContent extends Activity {
 							@Override
 							public void onProgressChanged(SeekBar seekBar,
 									int progress, boolean fromUser) {
-								imageWidthText.setText(progress + "px");
+								if (progress == 0)
+									progress = 1;
+								imageWidthText.setText(progress * 10 + "px");
 							}
 						});
 
@@ -240,7 +243,7 @@ public class EditContent extends Activity {
 												span.setHorizontalAlignment(alignmentSpinner
 														.getSelectedItemPosition());
 												span.setWidth(seekBar
-														.getProgress());
+														.getProgress() * 10);
 												span.setCaption(caption
 														.getText().toString());
 												// span.setFeatured(featured
@@ -659,6 +662,16 @@ public class EditContent extends Activity {
 		builder.append(afterText);
 		WPImageSpan is = new WPImageSpan(EditContent.this, resizedBitmap,
 				curStream);
+		
+		String imageWidth = WordPress.currentBlog.getMaxImageWidth();
+		if (!imageWidth.equals("Original Size")) {
+			try {
+				is.setWidth(Integer.valueOf(imageWidth));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		is.setTitle((String) mediaData.get("title"));
 		is.setImageSource(curStream);
 		if (imgPath.contains("video")) {

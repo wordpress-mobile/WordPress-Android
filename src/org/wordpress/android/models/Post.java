@@ -467,7 +467,7 @@ public class Post {
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 					notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-			n = new Notification(R.drawable.wp_logo, "Uploading Post",
+			n = new Notification(R.drawable.notification_icon, "Uploading Post",
 					System.currentTimeMillis());
 
 			/*

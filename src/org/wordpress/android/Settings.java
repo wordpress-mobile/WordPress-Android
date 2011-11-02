@@ -67,9 +67,6 @@ public class Settings extends Activity {
     		httpUserET.setVisibility(View.GONE);
     	}
 
-    	CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
-    	centerThumbnail.setChecked(blog.isCenterThumbnail());
-
     	CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
     	fullSize.setChecked(blog.isFullSizeImage());
 
@@ -106,9 +103,6 @@ public class Settings extends Activity {
                 int maxImageWidthIdInt = (int) maxImageWidthId;
                 
                 blog.setMaxImageWidthId(maxImageWidthIdInt);
-                
-                CheckBox centerThumbnail = (CheckBox)findViewById(R.id.centerThumbnail);
-                blog.setCenterThumbnail(centerThumbnail.isChecked());
                 
                 CheckBox locationCB = (CheckBox)findViewById(R.id.location);
                 blog.setLocation(locationCB.isChecked());

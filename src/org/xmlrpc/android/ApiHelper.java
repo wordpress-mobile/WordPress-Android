@@ -179,7 +179,9 @@ public class ApiHelper extends Activity {
 		} catch (XMLRPCException e) {
 			throw new XMLRPCException(e);
 		}
-
+		
+		if (result.length == 0)
+			return null;
 		// loop this!
 		for (int ctr = 0; ctr < result.length; ctr++) {
 			HashMap<String, String> dbValues = new HashMap();

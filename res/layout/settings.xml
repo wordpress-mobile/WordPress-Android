@@ -10,10 +10,13 @@
   <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dip"
+    android:layout_height="wrap_content" 
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="@dimen/settings_padding"
+    android:paddingRight="@dimen/settings_padding"
     android:background="#FFF5F5F5"
-    android:layout_gravity="center_horizontal">
+    android:layout_gravity="center">
     <RelativeLayout
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
@@ -131,20 +134,12 @@
         android:layout_below="@id/l_maxImageWidth" />
 
       <CheckBox
-        android:id="@+id/centerThumbnail"
-        android:text="@string/align_thumb_to_center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/maxImageWidth"
-        android:layout_marginRight="2dip" />
-
-      <CheckBox
         android:id="@+id/fullSizeImage"
         android:textColor="#444444"
         android:text="@string/upload_full_size_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/centerThumbnail"
+        android:layout_below="@id/maxImageWidth"
         android:layout_marginRight="2dip" />
     </RelativeLayout>
     <RelativeLayout

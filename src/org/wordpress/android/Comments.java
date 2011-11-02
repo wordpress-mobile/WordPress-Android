@@ -113,6 +113,31 @@ public class Comments extends FragmentActivity implements
 		 */
 
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		commentList.loadComments(false, false);
+		commentList.refreshComments(false, false, false);
+	}
+	
+	@Override
+	protected void onNewIntent (Intent intent){
+		super.onNewIntent(intent);
+		
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
+			boolean fromNotification = false;
+			fromNotification = extras.getBoolean("fromNotification");
+	  		if (fromNotification) {
+	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
+	  			titleBar.refreshBlog();
+	  			blog = WordPress.currentBlog;
+	  			commentList.refreshComments(false, false, false);
+	  		}
+		}
+		
+	}
 
 	@Override
 	public void onCommentSelected(Comment comment) {

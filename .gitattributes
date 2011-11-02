@@ -600,7 +600,6 @@ res/layout-xlarge/edit_page.xml -text
 res/layout-xlarge/global_settings.xml -text
 res/layout-xlarge/new_account.xml -text
 res/layout-xlarge/posts.xml -text
-res/layout-xlarge/settings.xml -text
 res/layout/about.xml -text
 res/layout/action_bar.xml -text
 res/layout/action_item.xml -text

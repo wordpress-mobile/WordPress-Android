@@ -10,4 +10,5 @@
     <dimen name="action_bar_button_padding">10dp</dimen>
     <dimen name="chart_width">320dp</dimen>
     <dimen name="chart_height">240dp</dimen>
+    <dimen name="settings_padding">10dp</dimen>
 </resources>

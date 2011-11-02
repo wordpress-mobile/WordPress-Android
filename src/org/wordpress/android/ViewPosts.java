@@ -87,12 +87,12 @@ public class ViewPosts extends ListFragment {
 		createSwitcher();
 
 		// query for posts and refresh view
-		boolean loadedPosts = loadPosts(false);
+		/*boolean loadedPosts = loadPosts(false);
 
 		if (!loadedPosts) {
 			onRefreshListener.onRefresh(true);
 			refreshPosts(false);
-		}
+		}*/
 
 		Display display = ((WindowManager) getActivity()
 				.getApplicationContext().getSystemService(
