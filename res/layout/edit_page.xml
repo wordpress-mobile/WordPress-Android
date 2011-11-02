@@ -1,138 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/main"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:scrollbars="none"
-  android:background="#FFF5F5F5">
-
-  <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_gravity="center_horizontal"
-    android:padding="10dip">
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section1">
-      <TextView
-        android:id="@+id/l_section1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/page_content"
-        style="@style/WordPressSectionHeader" />
-      <EditText
-        android:id="@+id/title"
-        android:minHeight="40dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:autoText="true"
-        android:capitalize="sentences"
-        android:hint="@string/title"
-        android:layout_below="@id/l_section1"
-        android:layout_marginBottom="10dip" />
-      <org.wordpress.android.util.WPEditText
-        android:id="@+id/postContent"
-        android:gravity="top"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:minLines="5"
-        android:autoText="true"
-        android:capitalize="sentences"
-        android:layout_below="@id/title"
-        android:textColorLink="#21759b"
-        android:hint="@string/content" />
-    </RelativeLayout>
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section2"
-      android:layout_marginTop="10dip"
-      android:layout_marginBottom="10dip"
-      android:layout_below="@id/section1">
-      <TextView
-        android:id="@+id/l_status"
-        android:layout_marginBottom="6dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/status"
-        style="@style/WordPressSectionHeader" />
-      <Spinner
-        android:id="@+id/status"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/wp_spinner_bg"
-        android:layout_below="@id/l_status" />
-      <TextView
-        android:id="@+id/pubDateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/status"
-        android:text="Publish:"
-        android:layout_marginLeft="4dip"
-        android:layout_marginTop="10dip" />
-      <TextView
-        android:id="@+id/pubDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/status"
-        android:layout_toRightOf="@id/pubDateLabel"
-        android:text="Immediately"
-        android:layout_marginLeft="4dip"
-        android:layout_marginTop="10dip" />
-      <Button
-        android:id="@+id/pubDateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/status"
-        android:background="@drawable/wp_button_small"
-        android:layout_toRightOf="@id/pubDate"
-        android:text="Edit"
-        android:layout_marginLeft="4dip" />
-    </RelativeLayout>
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section3"
-      android:layout_marginTop="10dip"
-      android:layout_marginBottom="10dip"
-      android:layout_below="@id/section2">
+    android:layout_height="wrap_content"
+    android:background="#FFF5F5F5"
+    android:scrollbars="none" >
 
-      <TextView
-        android:id="@+id/l_password"
-        android:layout_marginBottom="6dip"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/post_password"
-        style="@style/WordPressSectionHeader" />
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dip" >
 
-      <EditText
-        android:id="@+id/post_password"
-        android:minHeight="40dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:autoText="true"
-        android:hint="@string/post_password"
-        android:layout_below="@id/l_password"
-        android:layout_marginBottom="10dip"
-        android:password="true" />
-    </RelativeLayout>
-    <Button
-      android:id="@+id/post"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/section4"
-      android:background="@drawable/wp_button"
-      android:layout_alignParentRight="true"
-      android:textSize="20dip"
-      android:text="@string/save" />
-  </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/section1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/content_bg" >
+
+            <TextView
+                android:id="@+id/l_section1"
+                style="@style/WordPressSectionHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/page_content" />
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/l_section1"
+                android:layout_marginBottom="10dip"
+                android:autoText="true"
+                android:background="@android:drawable/editbox_background"
+                android:capitalize="sentences"
+                android:hint="@string/title"
+                android:minHeight="40dip" />
+
+            <org.wordpress.android.util.WPEditText
+                android:id="@+id/postContent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:autoText="true"
+                android:background="@android:drawable/editbox_background"
+                android:capitalize="sentences"
+                android:gravity="top"
+                android:hint="@string/content"
+                android:minLines="5"
+                android:textColorLink="#21759b" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/section2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/section1"
+            android:layout_marginBottom="10dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/content_bg" >
+
+            <TextView
+                android:id="@+id/l_status"
+                style="@style/WordPressSectionHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dip"
+                android:text="@string/status" />
+
+            <TextView
+                android:id="@+id/statusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/l_status"
+                android:layout_marginLeft="4dip"
+                android:text="@string/l_status" />
+
+            <Spinner
+                android:id="@+id/status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/statusLabel"
+                android:background="@drawable/wp_spinner_bg" />
+
+            <TextView
+                android:id="@+id/pubDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status"
+                android:layout_marginLeft="4dip"
+                android:layout_marginTop="10dip"
+                android:text="Publish:" />
+
+            <TextView
+                android:id="@+id/pubDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status"
+                android:layout_marginLeft="4dip"
+                android:layout_marginTop="10dip"
+                android:layout_toRightOf="@id/pubDateLabel"
+                android:text="Immediately" />
+
+            <Button
+                android:id="@+id/pubDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status"
+                android:layout_marginLeft="4dip"
+                android:layout_toRightOf="@id/pubDate"
+                android:background="@drawable/wp_button_small"
+                android:text="Edit" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/section3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/section2"
+            android:layout_marginBottom="10dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/content_bg" >
+
+            <TextView
+                android:id="@+id/l_password"
+                style="@style/WordPressSectionHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dip"
+                android:text="@string/post_password" />
+
+            <EditText
+                android:id="@+id/post_password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/l_password"
+                android:layout_marginBottom="10dip"
+                android:autoText="true"
+                android:background="@android:drawable/editbox_background"
+                android:hint="@string/post_password"
+                android:minHeight="40dip"
+                android:password="true" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/section4"
+            android:background="@drawable/wp_button"
+            android:text="@string/save"
+            android:textSize="20dip" />
+    </LinearLayout>
+
 </ScrollView>

@@ -10,7 +10,7 @@
 			android:label="Enter a URL" />
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:configChanges="orientation|keyboardHidden" android:name=".AddAccount"/>
-		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden">
+		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -21,7 +21,7 @@
   			</intent-filter>
 		</activity>
 		<activity android:name=".Read" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Light"/>
-		<activity android:label="WordPress - Preferences" android:name="Preferences"/>
+		<activity android:name="Preferences" android:windowSoftInputMode="stateHidden"/>
 		<service android:name="CommentService" android:label="Comment Service" />
 		<receiver android:name="CommentBroadcastReceiver" />
 		<activity android:name="TabView" android:theme="@style/Theme.TabView" android:configChanges="orientation|keyboardHidden" />

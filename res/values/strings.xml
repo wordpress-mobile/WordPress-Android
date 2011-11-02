@@ -11,6 +11,7 @@
   <!-- form labels -->
   <string name="categories">Categories</string>
   <string name="select_categories">Select Categories</string>
+  <string name="tags_and_categories">Tags &amp; Categories</string>
   <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
   <string name="post_content">Post Content</string>
   <string name="post_title">Post Title</string>
@@ -27,6 +28,7 @@
   <string name="upload_now">Upload Now</string>
   <string name="account_details">Account Details</string>
   <string name="status">Status</string>
+  <string name="l_status">Status:</string>
 
   <!-- general strings -->
   <string name="app_name">WordPress</string>

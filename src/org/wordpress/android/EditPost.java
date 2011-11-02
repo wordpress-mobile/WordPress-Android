@@ -187,11 +187,6 @@ public class EditPost extends Activity implements LocationListener {
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
 			}
-
-			if (!isPage) {
-				lbsCheck();
-			}
-
 		}
 
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
@@ -259,6 +254,8 @@ public class EditPost extends Activity implements LocationListener {
 				if (postFormats[i].equals(activePostFormat))
 					pfSpinner.setSelection(i);
 			}
+			
+			lbsCheck();
 
 		}
 
@@ -905,7 +902,7 @@ public class EditPost extends Activity implements LocationListener {
 				addresses = gcd.getFromLocation(args[0], args[1], 1);
 				if (addresses.size() > 0) {
 					finalText = addresses.get(0).getLocality() + ", "
-							+ addresses.get(0).getAdminArea();
+							+ addresses.get(0).getCountryName();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
