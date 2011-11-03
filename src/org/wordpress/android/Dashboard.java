@@ -76,8 +76,8 @@ public class Dashboard extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		final WordPressDB settingsDB = new WordPressDB(this);
-		accounts = settingsDB.getAccounts(this);
+		WordPress.wpDB = new WordPressDB(this);
+		accounts = WordPress.wpDB.getAccounts(this);
 		boolean eula = checkEULA();
 		if (eula == false) {
 
@@ -85,8 +85,7 @@ public class Dashboard extends Activity {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					// User clicked Accept so set that they've agreed to
 					// the eula.
-					WordPressDB eulaDB = new WordPressDB(Dashboard.this);
-					eulaDB.setEULA(Dashboard.this);
+					WordPress.wpDB.setEULA(Dashboard.this);
 					displayAccounts();
 				}
 			};
@@ -105,7 +104,7 @@ public class Dashboard extends Activity {
 			displayAccounts();
 		}
 		
-		final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		/*final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		Intent notificationIntent = new Intent(this, Comments.class);
   		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+22)));
   		notificationIntent.putExtra("id", WordPress.currentBlog.getId());
@@ -116,7 +115,7 @@ public class Dashboard extends Activity {
  
   		n.flags |= Notification.FLAG_AUTO_CANCEL;
 	  		n.setLatestEventInfo(this, "Bob", "Steve" + ": " + "wooooo", pendingIntent);
-	  		nm.notify(22 + Integer.valueOf(22), n); //needs a unique id
+	  		nm.notify(22 + Integer.valueOf(22), n); //needs a unique id*/
 	}
 
 	@Override
@@ -135,8 +134,7 @@ public class Dashboard extends Activity {
 	}
 
 	public boolean checkEULA() {
-		WordPressDB eulaDB = new WordPressDB(this);
-		boolean sEULA = eulaDB.checkEULA(this);
+		boolean sEULA = WordPress.wpDB.checkEULA(this);
 
 		return sEULA;
 
@@ -192,9 +190,7 @@ public class Dashboard extends Activity {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
-							WordPressDB settingsDB = new WordPressDB(
-									Dashboard.this);
-							boolean deleteSuccess = settingsDB.deleteAccount(
+							boolean deleteSuccess = WordPress.wpDB.deleteAccount(
 									Dashboard.this, id);
 							if (deleteSuccess) {
 								Toast.makeText(
@@ -247,8 +243,7 @@ public class Dashboard extends Activity {
 
 	private void checkStats(final int numBlogs) {
 
-		WordPressDB eulaDB = new WordPressDB(this);
-		long lastStatsDate = eulaDB.getStatsDate(this);
+		long lastStatsDate = WordPress.wpDB.getStatsDate(this);
 		long now = System.currentTimeMillis();
 
 		if ((now - lastStatsDate) > 604800000) { // works for first check too
@@ -257,7 +252,7 @@ public class Dashboard extends Activity {
 					uploadStats(numBlogs);
 				}
 			}.start();
-			eulaDB.setStatsDate(this);
+			WordPress.wpDB.setStatsDate(this);
 		}
 
 	}
@@ -265,11 +260,10 @@ public class Dashboard extends Activity {
 	private void uploadStats(int numBlogs) {
 
 		// gather all of the device info
-		WordPressDB eulaDB = new WordPressDB(this);
-		String uuid = eulaDB.getUUID(this);
+		String uuid = WordPress.wpDB.getUUID(this);
 		if (uuid == "") {
 			uuid = UUID.randomUUID().toString();
-			eulaDB.updateUUID(this, uuid);
+			WordPress.wpDB.updateUUID(this, uuid);
 		}
 		PackageManager pm = getPackageManager();
 		String app_version = "";
@@ -373,8 +367,7 @@ public class Dashboard extends Activity {
 
 	public void displayAccounts() {
 
-		final WordPressDB settingsDB = new WordPressDB(this);
-		accounts = settingsDB.getAccounts(this);
+		accounts = WordPress.wpDB.getAccounts(this);
 
 		checkStats(accounts.size());
 

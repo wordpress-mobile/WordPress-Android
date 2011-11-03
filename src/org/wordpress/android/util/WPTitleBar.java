@@ -66,8 +66,10 @@ public class WPTitleBar extends RelativeLayout {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
-		final WordPressDB settingsDB = new WordPressDB(context);
-		accounts = settingsDB.getAccounts(context);
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(context);
+		
+		accounts = WordPress.wpDB.getAccounts(context);
 
 		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
 		commentBadge = (TextView) findViewById(R.id.comment_badge);
@@ -85,7 +87,7 @@ public class WPTitleBar extends RelativeLayout {
 			blogTitle = (TextView) findViewById(R.id.blog_title);
 		}
 
-		int lastBlogID = settingsDB.getLastBlogID(context);
+		int lastBlogID = WordPress.wpDB.getLastBlogID(context);
 		if (lastBlogID != -1) {
 			try {
 				boolean matchedID = false;
@@ -128,7 +130,7 @@ public class WPTitleBar extends RelativeLayout {
 									blogTitle.setText(blogNames[pos]);
 									WordPress.currentBlog = new Blog(
 											blogIDs[pos], context);
-									settingsDB.updateLastBlogID(context,
+									WordPress.wpDB.updateLastBlogID(context,
 											blogIDs[pos]);
 									updateBlavatarImage();
 									updateCommentBadge();

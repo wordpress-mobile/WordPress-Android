@@ -96,6 +96,10 @@ public class EditPost extends Activity implements LocationListener {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		Bundle extras = getIntent().getExtras();
+		
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
+		
 		categories = new JSONArray();
 		String action = getIntent().getAction();
 
@@ -104,8 +108,7 @@ public class EditPost extends Activity implements LocationListener {
 			// we arrived here from a share action
 			isAction = true;
 			isNew = true;
-			WordPressDB settingsDB = new WordPressDB(this);
-			Vector<?> accounts = settingsDB.getAccounts(this);
+			Vector<?> accounts = WordPress.wpDB.getAccounts(this);
 
 			if (accounts.size() > 0) {
 

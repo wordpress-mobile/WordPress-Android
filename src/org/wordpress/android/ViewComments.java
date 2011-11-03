@@ -236,7 +236,6 @@ public class ViewComments extends ListFragment {
 	@SuppressWarnings("unchecked")
 	protected void moderateComments(String newStatus) {
 		// handles bulk moderation
-		WordPressDB db = new WordPressDB(getActivity().getApplicationContext());
 		for (int i = 0; i < checkedComments.size(); i++) {
 			if (checkedComments.get(i).toString().equals("true")) {
 
@@ -265,7 +264,7 @@ public class ViewComments extends ListFragment {
 						checkedComments.set(i, "false");
 						listRow.status = newStatus;
 						model.set(i, listRow);
-						db.updateCommentStatus(getActivity()
+						WordPress.wpDB.updateCommentStatus(getActivity()
 								.getApplicationContext(), id,
 								listRow.commentID, newStatus);
 					}
@@ -400,11 +399,9 @@ public class ViewComments extends ListFragment {
 	@SuppressWarnings("unchecked")
 	public boolean loadComments(boolean addMore, boolean refresh) {
 		refreshOnly = refresh;
-		WordPressDB postStoreDB = new WordPressDB(getActivity()
-				.getApplicationContext());
 		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore) {
-			Vector<?> loadedPosts = postStoreDB.loadComments(getActivity()
+			Vector<?> loadedPosts = WordPress.wpDB.loadComments(getActivity()
 					.getApplicationContext(), WordPress.currentBlog.getId());
 			if (loadedPosts != null) {
 				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
@@ -546,7 +543,7 @@ public class ViewComments extends ListFragment {
 				return false;
 			}
 		} else {
-			Vector<?> latestComments = postStoreDB.loadMoreComments(getActivity()
+			Vector<?> latestComments = WordPress.wpDB.loadMoreComments(getActivity()
 					.getApplicationContext(), id, commentsToLoad);
 			if (latestComments != null) {
 				numRecords += latestComments.size();

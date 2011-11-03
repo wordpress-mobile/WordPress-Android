@@ -22,12 +22,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.wordpress.android.WordPressDB;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 

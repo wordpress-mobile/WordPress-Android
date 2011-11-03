@@ -241,7 +241,6 @@ public class AddAccount extends Activity {
 				final String[] wpVersions = new String[result.length];
 				HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
 				
-				 WordPressDB settingsDB = new WordPressDB(AddAccount.this);
 				//loop this!
 				    for (int ctr = 0; ctr< result.length; ctr++){
 				        contentHash = (HashMap<Object, Object>) result[ctr];			        
@@ -251,7 +250,7 @@ public class AddAccount extends Activity {
 		                if (matchBlogName.length() == 0){
 		                	matchBlogName = contentHash.get("url").toString();
 		                } 
-		                match = settingsDB.checkMatch(AddAccount.this, matchBlogName, contentHash.get("xmlrpc").toString(), username);
+		                match = WordPress.wpDB.checkMatch(AddAccount.this, matchBlogName, contentHash.get("xmlrpc").toString(), username);
 		            if (!match){
 	                	blogNames[blogCtr] = matchBlogName;			        
 				        urls[blogCtr] = contentHash.get("xmlrpc").toString(); 					        
@@ -349,11 +348,10 @@ public class AddAccount extends Activity {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                        	  
 		                        	SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-		                          	WordPressDB settingsDB = new WordPressDB(AddAccount.this);
 		                          	for (int i=0; i<selectedItems.size();i++){
 		                          		if (selectedItems.get(selectedItems.keyAt(i)) == true){
 		                          			int rowID = selectedItems.keyAt(i);
-		                          			success = settingsDB.addAccount(AddAccount.this, urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
+		                          			success = WordPress.wpDB.addAccount(AddAccount.this, urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
 		                          		}
 		                          	}
 		                          	Bundle bundle = new Bundle();
@@ -368,9 +366,8 @@ public class AddAccount extends Activity {
 				              dialogBuilder.setPositiveButton("Add All",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
-		                        	  WordPressDB settingsDB = new WordPressDB(AddAccount.this);
 		                        	  for (int i=0;i<blogCtr;i++){
-		                        		  success = settingsDB.addAccount(AddAccount.this, urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+		                        		  success = WordPress.wpDB.addAccount(AddAccount.this, urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 		                        	  }
 		                        	  Bundle bundle = new Bundle();
 						                bundle.putString("returnStatus", "SAVE");
@@ -409,7 +406,7 @@ public class AddAccount extends Activity {
 				            
 				    	}
 				    	else {
-                  		  	success = settingsDB.addAccount(AddAccount.this, urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                  		  	success = WordPress.wpDB.addAccount(AddAccount.this, urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
 						    Bundle bundle = new Bundle();
 			                bundle.putString("returnStatus", "SAVE");
 			                Intent mIntent = new Intent();

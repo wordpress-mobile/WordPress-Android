@@ -40,8 +40,13 @@ public class CommentService extends Service {
 	@Override
 	public void onCreate() {
 	  super.onCreate();
+	  
+	  if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
+	  
 	  // init the service here
 	  _startService();
+	  
 
 	}
 	
@@ -75,10 +80,8 @@ public class CommentService extends Service {
 
 	/** dont forget to fire update to the ui listener */
 	private void _getUpdatedComments() {
-		
-		WordPressDB settingsDB = new WordPressDB(this);
     	
-    	Vector<?> notificationAccounts = settingsDB.getNotificationAccounts(this);
+    	Vector<?> notificationAccounts = WordPress.wpDB.getNotificationAccounts(this);
     	
     	
     	if (notificationAccounts != null){
@@ -130,8 +133,7 @@ public class CommentService extends Service {
         XMLRPCMethodCallback callBack = new XMLRPCMethodCallback() {
 			@SuppressWarnings("unchecked")
 			public void callFinished(Object[] result) {
-				WordPressDB settingsDB = new WordPressDB(CommentService.this);
-				HashMap<?, ?> notificationOptions = settingsDB.getNotificationOptions(CommentService.this);
+				HashMap<?, ?> notificationOptions = WordPress.wpDB.getNotificationOptions(CommentService.this);
 				boolean sound = false, vibrate = false, light = false;
 				
 				//there must be a less dorky way of pulling a boolean value from a db?
@@ -161,7 +163,7 @@ public class CommentService extends Service {
 
 				String commentID = contentHash.get("comment_id").toString();
 				if (latestCommentID == 0){
-					settingsDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
+					WordPress.wpDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
 					////Log.i("WordPressCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){	
@@ -192,7 +194,7 @@ public class CommentService extends Service {
  			  		n.setLatestEventInfo(CommentService.this, accountName, author + ": " + comment, pendingIntent);
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					
-					settingsDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
+ 			  		WordPress.wpDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
 					//Log.i("WordPressCommentService", "found a new comment!");
 				}
 				else{

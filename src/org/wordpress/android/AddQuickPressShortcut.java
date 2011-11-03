@@ -49,12 +49,14 @@ public class AddQuickPressShortcut extends ListActivity {
 		setContentView(R.layout.add_quickpress_shortcut);
 		setTitle(getResources().getText(R.string.quickpress_window_title));
 		
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
+		
 		displayAccounts();
 	}
 	
 	private void displayAccounts() {
-		WordPressDB settingsDB = new WordPressDB(this);
-		accounts = settingsDB.getAccounts(this);
+		accounts = WordPress.wpDB.getAccounts(this);
 		
 		ListView listView = (ListView) findViewById(android.R.id.list);
 		
@@ -98,7 +100,7 @@ public class AddQuickPressShortcut extends ListActivity {
 			}
 			
 			if (validBlogCtr < accounts.size()){
-				accounts = settingsDB.getAccounts(this);
+				accounts = WordPress.wpDB.getAccounts(this);
 			}
 
 			ThumbnailBus bus = new ThumbnailBus();
@@ -155,8 +157,7 @@ public class AddQuickPressShortcut extends ListActivity {
 	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
 	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcut.this, R.drawable.app_icon));
 	        		
-	        		WordPressDB wpDB = new WordPressDB(AddQuickPressShortcut.this);
-	        		wpDB.addQuickPressShortcut(AddQuickPressShortcut.this.getApplicationContext(), accountIDs[position], quickPressShortcutName.getText().toString());
+	        		WordPress.wpDB.addQuickPressShortcut(AddQuickPressShortcut.this.getApplicationContext(), accountIDs[position], quickPressShortcutName.getText().toString());
 	        		
 	        		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 	        		AddQuickPressShortcut.this.sendBroadcast(addIntent);

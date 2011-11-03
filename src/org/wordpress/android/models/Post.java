@@ -75,8 +75,6 @@ public class Post {
 	private boolean isPage;
 	private String mediaPaths;
 
-	private WordPressDB db;
-
 	private Blog blog;
 	static Context context;
 	private static NotificationManager nm;
@@ -90,9 +88,8 @@ public class Post {
 
 	public Post(int blog_id, long post_id, boolean isPage, Context ctx) {
 		// load an existing post
-		db = new WordPressDB(ctx);
 		context = ctx;
-		Vector<Object> postVals = db.loadPost(ctx, blog_id, isPage, post_id);
+		Vector<Object> postVals = WordPress.wpDB.loadPost(ctx, blog_id, isPage, post_id);
 		if (postVals != null) {
 			this.blog = new Blog(blog_id, ctx);
 			this.id = (Long) postVals.get(0);
@@ -135,7 +132,6 @@ public class Post {
 			String password, double latitude, double longitude, boolean isPage,
 			String postFormat, Context ctx) {
 		// create a new post
-		db = new WordPressDB(ctx);
 		context = ctx;
 
 		this.blog = new Blog(blog_id, ctx);
@@ -400,7 +396,7 @@ public class Post {
 	}
 
 	public boolean save() {
-		long newPostID = db.savePost(context, this, this.blogID);
+		long newPostID = WordPress.wpDB.savePost(context, this, this.blogID);
 
 		if (newPostID >= 0 && this.isLocalDraft() && !this.isUploaded()) {
 			this.id = newPostID;
@@ -411,14 +407,14 @@ public class Post {
 	}
 
 	public boolean update() {
-		int success = db.updatePost(context, this, this.blogID);
+		int success = WordPress.wpDB.updatePost(context, this, this.blogID);
 
 		return success > 0;
 	}
 
 	public void delete() {
 		// deletes a post/page draft
-		db.deletePost(context, this);
+		WordPress.wpDB.deletePost(context, this);
 	}
 
 	public static class uploadPostTask extends
@@ -546,7 +542,6 @@ public class Post {
 			
 			}
 
-			WordPressDB db = new WordPressDB(context);
 			if (!mediaError) {
 
 				JSONArray categories = post.getCategories();
@@ -566,7 +561,7 @@ public class Post {
 
 				if (!post.isPage) {
 					// add the tagline
-					HashMap<?, ?> globalSettings = db
+					HashMap<?, ?> globalSettings = WordPress.wpDB
 							.getNotificationOptions(post.context);
 					boolean taglineValue = false;
 					String tagline = "";
@@ -1047,8 +1042,7 @@ public class Post {
 	}
 
 	public void deleteMediaFiles() {
-		db.deleteMediaFilesForPost(context, this);
-
+		WordPress.wpDB.deleteMediaFilesForPost(context, this);
 	}
 
 	public void setId(long id) {

@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.text.StringCharacterIterator;
 import java.util.Date;
@@ -59,13 +58,7 @@ public class WordPressDB {
 
 	// for capturing blogID, trac ticket #
 	private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
-	private static final String UPDATE_BLOGID = "update accounts set blogId = 1;"; // set
-																					// them
-																					// all
-																					// to
-																					// 1
-																					// if
-																					// updating
+	private static final String UPDATE_BLOGID = "update accounts set blogId = 1;";
 
 	// add notification options
 	private static final String ADD_SOUND_OPTION = "alter table eula add sound boolean default false;";
@@ -115,14 +108,9 @@ public class WordPressDB {
 	public String defaultBlog = "";
 
 	public WordPressDB(Context ctx) {
-		// this seems janky
-		if (db != null) {
-			if (db.isDbLockedByCurrentThread() || db.isDbLockedByOtherThreads()) {
-				Log.i("WordPress", "Database is locked.");
-				return;
-			}
-		}
+	
 		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		// db.execSQL("DROP TABLE IF EXISTS "+ SETTINGS_TABLE);
 		db.execSQL(CREATE_TABLE_SETTINGS);
 		// added eula to this class to fix trac #49
@@ -305,7 +293,7 @@ public class WordPressDB {
 				try {
 					// migrate drafts
 					// posts
-					db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+					
 					Cursor c = db.query("localdrafts", new String[] { "blogID",
 							"title", "content", "picturePaths", "date",
 							"categories", "tags", "status", "password",
@@ -332,7 +320,7 @@ public class WordPressDB {
 					db.delete("localdrafts", null, null);
 
 					// pages
-					db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+					
 					c = db.query("localpagedrafts", new String[] { "blogID",
 							"title", "content", "picturePaths", "date",
 							"status", "password" }, null, null, null, null,
@@ -368,7 +356,6 @@ public class WordPressDB {
 			e.printStackTrace();
 		}
 
-		db.close();
 	}
 
 	public boolean addAccount(Context ctx, String url, String blogName,
@@ -377,7 +364,7 @@ public class WordPressDB {
 			boolean centerThumbnail, boolean fullSizeImage,
 			String maxImageWidth, int maxImageWidthId, boolean runService,
 			int blogId, boolean wpcom, String wpVersion) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("url", url);
 		values.put("blogName", blogName);
@@ -395,12 +382,12 @@ public class WordPressDB {
 		values.put("dotcomFlag", wpcom);
 		values.put("wpVersion", wpVersion);
 		boolean returnValue = db.insert(SETTINGS_TABLE, null, values) > 0;
-		db.close();
+		
 		return (returnValue);
 	}
 
 	public Vector<HashMap<String, Object>> getAccounts(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
 				"username", "runService", "blogId", "url" }, null, null, null,
 				null, null);
@@ -432,14 +419,14 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		return accounts;
 	}
 
 	public boolean checkMatch(Context ctx, String blogName, String blogURL,
 			String username) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName", "url" },
 				"blogName='" + addSlashes(blogName) + "' AND url='"
 						+ addSlashes(blogURL) + "'" + " AND username='"
@@ -453,7 +440,7 @@ public class WordPressDB {
 		}
 
 		c.close();
-		db.close();
+		
 
 		return result;
 	}
@@ -493,7 +480,7 @@ public class WordPressDB {
 			boolean centerThumbnail, boolean fullSizeImage,
 			String maxImageWidth, int maxImageWidthId, boolean location,
 			boolean isWPCom, String originalUsername, String postFormats) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("url", url);
 		values.put("username", username);
@@ -517,18 +504,18 @@ public class WordPressDB {
 			returnValue = db.update(SETTINGS_TABLE, userPass, "username=\""
 					+ originalUsername + "\" AND dotcomFlag=1", null) > 0;
 		}
-		db.close();
+		
 		return (returnValue);
 	}
 
 	public boolean deleteAccount(Context ctx, int id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		int rowsAffected = 0;
 		try {
 			rowsAffected = db.delete(SETTINGS_TABLE, "id=" + id, null);
 		} finally {
-			db.close();
+			
 		}
 
 		boolean returnValue = false;
@@ -565,7 +552,7 @@ public class WordPressDB {
 	}
 
 	public Vector<Object> loadSettings(Context ctx, int id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName",
 				"username", "password", "httpuser", "httppassword",
@@ -616,13 +603,13 @@ public class WordPressDB {
 			}
 		}
 		c.close();
-		db.close();
+		
 
 		return returnVector;
 	}
 
 	public Vector<String> loadStatsLogin(Context ctx, int id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username",
 				"dotcom_password" }, "id=" + id, null, null, null, null);
@@ -637,27 +624,27 @@ public class WordPressDB {
 			returnVector = null;
 		}
 		c.close();
-		db.close();
+		
 
 		return returnVector;
 	}
 
 	public boolean saveStatsLogin(Context ctx, int id, String statsUsername,
 			String statsPassword) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("dotcom_username", statsUsername);
 		values.put("dotcom_password", encryptPassword(statsPassword));
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
 				null) > 0;
-		db.close();
+		
 
 		return (returnValue);
 
 	}
 
 	public Vector<String> loadAPIData(Context ctx, int id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "api_key",
 				"api_blogid" }, "id=" + id, null, null, null, null);
@@ -672,54 +659,44 @@ public class WordPressDB {
 			returnVector = null;
 		}
 		c.close();
-		db.close();
+		
 
 		return returnVector;
 	}
 
 	public boolean saveAPIData(Context ctx, int id, String apiKey,
 			String apiBlogID) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("api_key", apiKey);
 		values.put("api_blogid", apiBlogID);
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
 				null) > 0;
-		db.close();
+		
 
 		return (returnValue);
 
 	}
 
-	public int getLatestCommentID(Context ctx, String id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		int returnInt = 0;
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "lastCommentId" },
-				"id=" + id, null, null, null, null);
-		c.moveToFirst();
-		if (c.getString(0) != null) {
-			returnInt = Integer.valueOf(c.getString(0));
-		}
-		c.close();
-		db.close();
-		return returnInt;
-	}
-
 	public boolean updateLatestCommentID(Context ctx, int id,
 			Integer newCommentID) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		ContentValues values = new ContentValues();
-		values.put("lastCommentId", newCommentID);
+		
 
-		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
-				null) > 0;
-		db.close();
+		boolean returnValue = false;
+
+		synchronized (this) {
+			ContentValues values = new ContentValues();
+			values.put("lastCommentId", newCommentID);
+
+			returnValue = db.update(SETTINGS_TABLE, values, "id=" + id, null) > 0;
+		}
+		
 		return (returnValue);
 
 	}
 
 	public Vector<Integer> getNotificationAccounts(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = null;
 		try {
@@ -740,12 +717,12 @@ public class WordPressDB {
 		}
 
 		c.close();
-		db.close();
+		
 		return returnVector;
 	}
 
 	public String getAccountName(Context ctx, String accountID) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		String accountName = "";
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName" }, "id="
 				+ accountID, null, null, null, null);
@@ -754,12 +731,12 @@ public class WordPressDB {
 			accountName = c.getString(0);
 		}
 		c.close();
-		db.close();
+		
 		return accountName;
 	}
 
 	public void updateNotificationFlag(Context ctx, int id, boolean flag) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		int iFlag = 0;
 		if (flag) {
@@ -771,14 +748,14 @@ public class WordPressDB {
 				"id=" + String.valueOf(id), null) > 0;
 		if (returnValue) {
 		}
-		db.close();
+		
 
 	}
 
 	public void updateNotificationSettings(Context ctx, String interval,
 			boolean sound, boolean vibrate, boolean light,
 			boolean tagline_flag, String tagline) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("interval", interval);
 		values.put("sound", sound);
@@ -791,12 +768,12 @@ public class WordPressDB {
 		if (returnValue) {
 		}
 		;
-		db.close();
+		
 
 	}
 
 	public String getInterval(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query("eula", new String[] { "interval" }, "id=0", null,
 				null, null, null);
@@ -809,14 +786,14 @@ public class WordPressDB {
 			}
 		}
 		c.close();
-		db.close();
+		
 
 		return returnValue;
 
 	}
 
 	public HashMap<String, Object> getNotificationOptions(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query("eula", new String[] { "id", "sound", "vibrate",
 				"light", "tagline_flag", "tagline" }, "id=0", null, null, null,
 				null);
@@ -844,24 +821,24 @@ public class WordPressDB {
 		}
 
 		c.close();
-		db.close();
+		
 
 		return thisHash;
 	}
 
 	public void updateLastBlogID(Context ctx, int blogID) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("last_blog_id", blogID);
 
 		db.update("eula", values, null, null);
 
-		db.close();
+		
 
 	}
 
 	public int getLastBlogID(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		int returnValue = -1;
 		Cursor c = db.query("eula", new String[] { "last_blog_id" }, "id=0",
 				null, null, null, null);
@@ -873,14 +850,14 @@ public class WordPressDB {
 			}
 		}
 		c.close();
-		db.close();
+		
 
 		return returnValue;
 	}
 
 	public Vector<HashMap<String, Object>> loadDrafts(Context ctx, int blogID,
 			boolean loadPages) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
 		if (loadPages)
@@ -910,7 +887,7 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		if (numRows == 0) {
 			returnVector = null;
@@ -920,14 +897,14 @@ public class WordPressDB {
 	}
 
 	public boolean deletePost(Context ctx, Post post) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		boolean returnValue = false;
 
 		int result = 0;
 		result = db.delete(POSTS_TABLE, "blogID=" + post.getBlogID()
 				+ " AND id=" + post.getId(), null);
-		db.close();
+		
 
 		if (result == 1) {
 			returnValue = true;
@@ -940,7 +917,7 @@ public class WordPressDB {
 			boolean isPage) {
 		boolean returnValue = false;
 		if (postValues.size() != 0) {
-			db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+			
 
 			for (int i = 0; i < postValues.size(); i++) {
 				ContentValues values = new ContentValues();
@@ -1022,7 +999,7 @@ public class WordPressDB {
 				else
 					returnValue = true;
 			}
-			db.close();
+			
 		}
 		return (returnValue);
 	}
@@ -1030,7 +1007,7 @@ public class WordPressDB {
 	public long savePost(Context ctx, Post post, int blogID) {
 		long returnValue = -1;
 		if (post != null) {
-			db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+			
 
 			ContentValues values = new ContentValues();
 			values.put("blogID", blogID);
@@ -1060,7 +1037,7 @@ public class WordPressDB {
 
 			returnValue = db.insert(POSTS_TABLE, null, values);
 
-			db.close();
+			
 		}
 		return (returnValue);
 	}
@@ -1068,7 +1045,7 @@ public class WordPressDB {
 	public int updatePost(Context ctx, Post post, int blogID) {
 		int success = 0;
 		if (post != null) {
-			db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+			
 
 			ContentValues values = new ContentValues();
 			values.put("blogID", blogID);
@@ -1103,14 +1080,14 @@ public class WordPressDB {
 					"blogID=" + post.getBlogID() + " AND id=" + post.getId()
 							+ " AND isPage=" + pageInt, null);
 
-			db.close();
+			
 		}
 		return (success);
 	}
 
 	public Vector<HashMap<String, Object>> loadUploadedPosts(Context ctx,
 			int blogID, boolean loadPages) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c;
 		if (loadPages)
@@ -1141,7 +1118,7 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		if (numRows == 0) {
 			returnVector = null;
@@ -1151,20 +1128,20 @@ public class WordPressDB {
 	}
 
 	public void deleteUploadedPosts(Context ctx, int blogID, boolean isPage) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		if (isPage)
 			db.delete(POSTS_TABLE, "blogID=" + blogID
 					+ " AND localDraft != 1 AND isPage=1", null);
 		else
 			db.delete(POSTS_TABLE, "blogID=" + blogID
 					+ " AND localDraft != 1 AND isPage=0", null);
-		db.close();
+		
 	}
 
 	public Vector<Object> loadPost(Context ctx, int blogID, boolean isPage,
 			long id) {
 		Vector<Object> values = null;
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		int pageInt = 0;
 		if (isPage)
 			pageInt = 1;
@@ -1206,13 +1183,13 @@ public class WordPressDB {
 			values.add(c.getInt(28));
 		}
 		c.close();
-		db.close();
+		
 
 		return values;
 	}
 
 	public Vector<HashMap<String, Object>> loadComments(Context ctx, int blogID) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE,
 				new String[] { "blogID", "postID", "iCommentID", "author",
@@ -1249,7 +1226,7 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		if (numRows == 0) {
 			returnVector = null;
@@ -1260,7 +1237,7 @@ public class WordPressDB {
 
 	public Vector<HashMap<String, Object>> loadMoreComments(Context ctx,
 			int blogID, int limit) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE,
 				new String[] { "blogID", "postID", "iCommentID", "author",
@@ -1296,7 +1273,7 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		if (numRows == 0) {
 			returnVector = null;
@@ -1308,7 +1285,7 @@ public class WordPressDB {
 	public boolean saveComments(Context ctx, Vector<?> commentValues,
 			boolean loadMore) {
 		boolean returnValue = false;
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		HashMap<?, ?> firstHash = (HashMap<?, ?>) commentValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
 		// delete existing values, if user hit refresh button
@@ -1316,7 +1293,7 @@ public class WordPressDB {
 			try {
 				db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
 			} catch (Exception e) {
-				db.close();
+				
 				return false;
 			}
 		}
@@ -1336,45 +1313,46 @@ public class WordPressDB {
 			values.put("url", thisHash.get("url").toString());
 			values.put("email", thisHash.get("email").toString());
 			values.put("postTitle", thisHash.get("postTitle").toString());
-			try {
-				returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
-			} catch (Exception e) {
-				db.close();
-				return false;
+			synchronized (this) {
+				try {
+					returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
+				} catch (Exception e) {
+					
+					return false;
+				}
 			}
 		}
-		db.close();
+		
 		return (returnValue);
 
 	}
 
 	public void updateCommentStatus(Context ctx, int blogID, String id,
 			String newStatus) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		ContentValues values = new ContentValues();
 		values.put("status", newStatus);
-		boolean returnValue = db.update(COMMENTS_TABLE, values, "blogID="
-				+ blogID + " AND iCommentID=" + id, null) > 0;
-		if (returnValue) {
+		synchronized (this) {
+			db.update(COMMENTS_TABLE, values, "blogID=" + blogID
+					+ " AND iCommentID=" + id, null);
 		}
-		;
 
-		db.close();
+		
 
 	}
 
 	public void clearPosts(Context ctx, String blogID) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		// delete existing values
 		db.delete(POSTS_TABLE, "blogID=" + blogID, null);
-		db.close();
+		
 
 	}
 
 	// eula table
 	public boolean checkEULA(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(EULA_TABLE, new String[] { "read" }, "id=0", null,
 				null, null, null);
@@ -1385,40 +1363,38 @@ public class WordPressDB {
 			returnValue = (c.getInt(0) != 0);
 		}
 		c.close();
-		db.close();
+		
 
 		return returnValue;
 	}
 
 	public void setEULA(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("id", 0);
 		values.put("read", 1); // set that they've read the EULA
-		boolean returnValue = db.insert(EULA_TABLE, null, values) > 0;
-		if (returnValue) {
+		synchronized (this) {
+			db.insert(EULA_TABLE, null, values);
 		}
-		;
-		db.close();
+
+		
 
 	}
 
 	public void setStatsDate(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("statsdate", System.currentTimeMillis()); // set to current
 																// time
-
-		boolean returnValue = db.update(EULA_TABLE, values, "id=0", null) > 0;
-		if (returnValue) {
+		synchronized (this) {
+			db.update(EULA_TABLE, values, "id=0", null);
 		}
-		;
 
-		db.close();
+		
 	}
 
 	public long getStatsDate(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(EULA_TABLE, new String[] { "statsdate" }, "id=0",
 				null, null, null, null);
@@ -1429,25 +1405,28 @@ public class WordPressDB {
 			returnValue = c.getLong(0);
 		}
 		c.close();
-		db.close();
+		
 		return returnValue;
 	}
 
 	// categories
 	public boolean insertCategory(Context ctx, int id, int wp_id,
 			String category_name) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("blog_id", id);
 		values.put("wp_id", wp_id);
 		values.put("category_name", category_name.toString());
-		boolean returnValue = db.insert(CATEGORIES_TABLE, null, values) > 0;
-		db.close();
+		boolean returnValue = false;
+		synchronized (this) {
+			returnValue = db.insert(CATEGORIES_TABLE, null, values) > 0;
+		}
+		
 		return (returnValue);
 	}
 
 	public Vector<String> loadCategories(Context ctx, int id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
 				"category_name" }, "blog_id=" + id, null, null, null, null);
@@ -1462,13 +1441,13 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		return returnVector;
 	}
 
 	public int getCategoryId(Context ctx, int id, String category) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
 				"category_name=\"" + category + "\" AND blog_id=" + id, null,
@@ -1476,31 +1455,31 @@ public class WordPressDB {
 		c.moveToFirst();
 		int categoryID = 0;
 		categoryID = c.getInt(0);
-		db.close();
+		
 		return categoryID;
 	}
 
 	public void clearCategories(Context ctx, int id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		// clear out the table since we are refreshing the whole enchilada
 		db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
-		db.close();
+		
 	}
 
 	// unique identifier queries
 	public void updateUUID(Context ctx, String uuid) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("uuid", uuid);
-		boolean returnValue = db.update("eula", values, null, null) > 0;
-		if (returnValue) {
+		synchronized (this) {
+			db.update("eula", values, null, null);
 		}
-		;
-		db.close();
+
+		
 	}
 
 	public String getUUID(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query("eula", new String[] { "uuid" }, "id=0", null,
 				null, null, null);
 		int numRows = c.getCount();
@@ -1512,7 +1491,7 @@ public class WordPressDB {
 			}
 		}
 		c.close();
-		db.close();
+		
 
 		return returnValue;
 
@@ -1520,19 +1499,21 @@ public class WordPressDB {
 
 	public boolean addQuickPressShortcut(Context ctx, String accountId,
 			String name) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("accountId", accountId);
 		values.put("name", name);
-		boolean returnValue = db.insert(QUICKPRESS_SHORTCUTS_TABLE, null,
-				values) > 0;
-		db.close();
+		boolean returnValue = false;
+		synchronized (this) {
+			returnValue = db.insert(QUICKPRESS_SHORTCUTS_TABLE, null, values) > 0;
+		}
+		
 		return (returnValue);
 	}
 
 	public Vector<HashMap<String, Object>> getQuickPressShortcuts(Context ctx,
 			int accountId) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
 				"accountId", "name" }, "accountId = " + accountId, null, null,
 				null, null);
@@ -1554,13 +1535,13 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		return accounts;
 	}
 
 	public boolean deleteQuickPressShortcut(Context ctx, String id) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		int rowsAffected = db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=" + id,
 				null);
 
@@ -1569,7 +1550,7 @@ public class WordPressDB {
 			returnValue = true;
 		}
 
-		db.close();
+		
 
 		return (returnValue);
 	}
@@ -1611,7 +1592,7 @@ public class WordPressDB {
 	}
 
 	private void migratePasswords(Context ctx) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "password",
 				"httppassword", "dotcom_password" }, null, null, null, null,
@@ -1641,7 +1622,7 @@ public class WordPressDB {
 
 	public int getUnmoderatedCommentCount(Context ctx, int blogID) {
 		int commentCount = 0;
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db
 				.rawQuery(
 						"select count(*) from comments where blogID=? AND status='hold'",
@@ -1654,13 +1635,13 @@ public class WordPressDB {
 		}
 
 		c.close();
-		db.close();
+		
 		return commentCount;
 	}
 
 	public boolean saveMediaFile(Context ctx, MediaFile mf) {
 		boolean returnValue = false;
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		ContentValues values = new ContentValues();
 		values.put("postID", mf.getPostID());
 		values.put("filePath", mf.getFileName());
@@ -1674,18 +1655,22 @@ public class WordPressDB {
 		values.put("mimeType", mf.getMIMEType());
 		values.put("featured", mf.isFeatured());
 		values.put("isVideo", mf.isVideo());
+		synchronized (this) {
+			int result = db.update(
+					MEDIA_TABLE,
+					values,
+					"postID=" + mf.getPostID() + " AND filePath='"
+							+ mf.getFileName() + "'", null);
+			if (result == 0)
+				returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
+		}
 
-		int result = db.update(MEDIA_TABLE, values, "postID=" + mf.getPostID()
-				+ " AND filePath='" + mf.getFileName() + "'", null);
-		if (result == 0)
-			returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
-
-		db.close();
+		
 		return (returnValue);
 	}
 
 	public MediaFile[] getMediaFilesForPost(Context ctx, Post p) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query(MEDIA_TABLE, null, "postID=" + p.getId(), null,
 				null, null, null);
 		int numRows = c.getCount();
@@ -1710,19 +1695,19 @@ public class WordPressDB {
 			c.moveToNext();
 		}
 		c.close();
-		db.close();
+		
 
 		return mediaFiles;
 	}
 
 	public boolean deleteMediaFile(Context ctx, MediaFile mf) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 
 		boolean returnValue = false;
 
 		int result = 0;
 		result = db.delete(MEDIA_TABLE, "id=" + mf.getId(), null);
-		db.close();
+		
 
 		if (result == 1) {
 			returnValue = true;
@@ -1732,7 +1717,7 @@ public class WordPressDB {
 	}
 
 	public MediaFile getMediaFile(Context ctx, String src, Post post) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		Cursor c = db.query(MEDIA_TABLE, null, "postID=" + post.getId()
 				+ " AND filePath='" + src + "'", null, null, null, null);
 		int numRows = c.getCount();
@@ -1753,15 +1738,15 @@ public class WordPressDB {
 			mf.setVideo(c.getInt(12) > 0);
 		}
 		c.close();
-		db.close();
+		
 
 		return mf;
 	}
 
 	public void deleteMediaFilesForPost(Context ctx, Post post) {
-		db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
 		db.delete(MEDIA_TABLE, "postID=" + post.getId(), null);
-		db.close();
+		
 	}
 
 }

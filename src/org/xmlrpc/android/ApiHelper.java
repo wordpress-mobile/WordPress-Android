@@ -1,9 +1,7 @@
 package org.xmlrpc.android;
 
 import org.json.JSONObject;
-import org.wordpress.android.ViewPosts;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 
 import android.app.Activity;
@@ -31,7 +29,6 @@ public class ApiHelper extends Activity {
 	@SuppressWarnings("unchecked")
 	static void refreshComments(final int id, final Context ctx) {
 
-		WordPressDB db = new WordPressDB(ctx);
 		Blog blog = new Blog(id, ctx);
 
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
@@ -108,7 +105,7 @@ public class ApiHelper extends Activity {
 					dbVector.add(ctr, dbValues);
 				}
 
-				db.saveComments(ctx, dbVector, false);
+				WordPress.wpDB.saveComments(ctx, dbVector, false);
 			}
 		}
 	}
@@ -225,8 +222,7 @@ public class ApiHelper extends Activity {
 			dbVector.add(ctr, dbValues);
 		}
 
-		WordPressDB postStoreDB = new WordPressDB(ctx);
-		postStoreDB.saveComments(ctx, dbVector, loadMore);
+		WordPress.wpDB.saveComments(ctx, dbVector, loadMore);
 
 		return allComments;
 

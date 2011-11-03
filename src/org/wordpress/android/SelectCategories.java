@@ -121,8 +121,7 @@ public class SelectCategories extends ListActivity {
     
     private void loadCategories() {
         loadTextArray.clear();
-        WordPressDB categoriesDB = new WordPressDB(this);
-    	Vector<?> categoriesVector = categoriesDB.loadCategories(this, id);
+    	Vector<?> categoriesVector = WordPress.wpDB.loadCategories(this, id);
     	if (categoriesVector.size() > 0)
     	{
 
@@ -270,10 +269,8 @@ public class SelectCategories extends ListActivity {
         if (success){
         	int size = result.length;
 
-        	//initialize database
-        	WordPressDB categoriesDB = new WordPressDB(this);
         	//wipe out the categories table
-        	categoriesDB.clearCategories(this, id);
+        	WordPress.wpDB.clearCategories(this, id);
 
         	for(int i=0; i<size; i++)
         	{
@@ -284,7 +281,7 @@ public class SelectCategories extends ListActivity {
 
         		int convertedCategoryID = Integer.parseInt(categoryID);
 
-        		categoriesDB.insertCategory(this, id, convertedCategoryID, categoryName);
+        		WordPress.wpDB.insertCategory(this, id, convertedCategoryID, categoryName);
 
         		//populate the spinner with the category names
 
@@ -341,11 +338,10 @@ public class SelectCategories extends ListActivity {
 		}
 		else {	//	Category successfully created. "result" is the ID of the new category.
 			//	Initialize the category database
-			WordPressDB categoriesDB = new WordPressDB(this);
             //	Convert "result" (= category_id) from type Object to int
             int category_id = Integer.parseInt(result.toString());
             //	Insert the new category into database
-            categoriesDB.insertCategory(this, id, category_id, category_name);
+            WordPress.wpDB.insertCategory(this, id, category_id, category_name);
 			
 			returnString = "addCategory_success";
 		}

@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 
 import android.content.Context;
@@ -151,8 +152,7 @@ public class MediaFile {
 	}
 	
 	public void save(Context ctx) {
-		WordPressDB wpDB = new WordPressDB(ctx);
-		wpDB.saveMediaFile(ctx, this);
+		WordPress.wpDB.saveMediaFile(ctx, this);
 	}
 	
 }

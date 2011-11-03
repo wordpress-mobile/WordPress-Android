@@ -44,9 +44,8 @@ public class Preferences extends Activity {
     
 public void displayAccounts(){
 	//settings time!
-    final WordPressDB settingsDB = new WordPressDB(this);
-	accounts = settingsDB.getAccounts(this);
-	HashMap<?, ?> notificationOptions = settingsDB.getNotificationOptions(this);
+	accounts = WordPress.wpDB.getAccounts(this);
+	HashMap<?, ?> notificationOptions = WordPress.wpDB.getNotificationOptions(this);
 	boolean sound = false, vibrate = false, light = false, taglineValue = false;
 	String tagline = "";
 	
@@ -152,7 +151,7 @@ public void displayAccounts(){
 	            new String[] { "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes" , "1 Hour", "3 Hours", "6 Hours", "12 Hours", "Daily"});
 	    sIntervalArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    sInterval.setAdapter(sIntervalArrayAdapter);
-	    String interval = settingsDB.getInterval(this);
+	    String interval = WordPress.wpDB.getInterval(this);
 	    
 	    if (interval != ""){
             sInterval.setSelection(sIntervalArrayAdapter.getPosition(interval));
@@ -263,11 +262,11 @@ public void displayAccounts(){
             	    	int id = cbox.getId();
                 	    if( cbox.isChecked() ) {   
                 	    	checkCtr++;
-                	        settingsDB.updateNotificationFlag(Preferences.this, id, true);
+                	    	WordPress.wpDB.updateNotificationFlag(Preferences.this, id, true);
                 	        Log.i("CommentService", "Service enabled for " + cbox.getText());
                 	    }
                 	    else{
-                	        settingsDB.updateNotificationFlag(Preferences.this, id, false);
+                	    	WordPress.wpDB.updateNotificationFlag(Preferences.this, id, false);
                 	    }
             	}
             	
@@ -291,7 +290,7 @@ public void displayAccounts(){
             	EditText taglineET = (EditText) ((View)section2.getChildAt(2));
             	String taglineText = taglineET.getText().toString();
 
-            	settingsDB.updateNotificationSettings(Preferences.this, sInterval.getSelectedItem().toString(), sound, vibrate, light, tagValue, taglineText);
+            	WordPress.wpDB.updateNotificationSettings(Preferences.this, sInterval.getSelectedItem().toString(), sound, vibrate, light, tagValue, taglineText);
             	
             	if (checkCtr > 0){
 

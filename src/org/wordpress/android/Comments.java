@@ -22,11 +22,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -49,9 +47,6 @@ public class Comments extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comments);
-
-		FragmentManager fm = getSupportFragmentManager();
-		commentList = (ViewComments) fm.findFragmentById(R.id.commentList);
 		
 		titleBar = (WPTitleBar) findViewById(R.id.commentsActionBar);
 		
@@ -66,6 +61,9 @@ public class Comments extends FragmentActivity implements
 	  		}
 		}
 
+		FragmentManager fm = getSupportFragmentManager();
+		commentList = (ViewComments) fm.findFragmentById(R.id.commentList);
+		
 		blog = WordPress.currentBlog;
 		
 		WordPress.currentComment = null;
@@ -116,6 +114,8 @@ public class Comments extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
 		commentList.loadComments(false, false);
 		commentList.refreshComments(false, false, false);
 	}
@@ -123,7 +123,6 @@ public class Comments extends FragmentActivity implements
 	@Override
 	protected void onNewIntent (Intent intent){
 		super.onNewIntent(intent);
-		
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			boolean fromNotification = false;

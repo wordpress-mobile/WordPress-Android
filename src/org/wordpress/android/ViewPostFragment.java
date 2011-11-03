@@ -1,20 +1,15 @@
 package org.wordpress.android;
 
-import org.wordpress.android.ViewPosts.OnPostActionListener;
-import org.wordpress.android.ViewPosts.OnPostSelectedListener;
-import org.wordpress.android.ViewPosts.OnRefreshListener;
 import org.wordpress.android.models.Post;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 

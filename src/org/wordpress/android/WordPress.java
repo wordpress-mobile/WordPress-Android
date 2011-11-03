@@ -12,4 +12,5 @@ public class WordPress extends Application {
 	public static Spannable richPostContent;
 	public static Comment currentComment;
 	public static Post currentPost;
+	public static WordPressDB wpDB;
 }

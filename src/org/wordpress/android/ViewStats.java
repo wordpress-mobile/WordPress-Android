@@ -157,9 +157,7 @@ public class ViewStats extends Activity {
 						dialogBuilder.create().show();
 					}
 				} else {
-					// store the login data
-					WordPressDB settingsDB = new WordPressDB(ViewStats.this);
-					settingsDB.saveStatsLogin(ViewStats.this, id, dcUsername,
+					WordPress.wpDB.saveStatsLogin(ViewStats.this, id, dcUsername,
 							dcPassword);
 					showOrHideLoginForm();
 					initStats(); // start over again now that we have the login
@@ -180,8 +178,7 @@ public class ViewStats extends Activity {
 				final int interval = parseInterval(reportInterval
 						.getSelectedItemPosition());
 
-				WordPressDB settingsDB = new WordPressDB(ViewStats.this);
-				Vector<?> apiData = settingsDB.loadAPIData(ViewStats.this, id);
+				Vector<?> apiData = WordPress.wpDB.loadAPIData(ViewStats.this, id);
 
 				final String apiKey = apiData.get(0).toString();
 				final String apiBlogID = apiData.get(1).toString();
@@ -1006,13 +1003,12 @@ public class ViewStats extends Activity {
 	private class statsUserDataTask extends AsyncTask<String, Void, Vector<?>> {
 
 		protected void onPostExecute(Vector<?> result) {
-			WordPressDB settingsDB = new WordPressDB(ViewStats.this);
 			if (result != null) {
 				// user's original login data worked
 				// store the api key and blog id
 				final String apiKey = result.get(0).toString();
 				final String apiBlogID = result.get(1).toString();
-				settingsDB.saveAPIData(ViewStats.this, id, apiKey, apiBlogID);
+				WordPress.wpDB.saveAPIData(ViewStats.this, id, apiKey, apiBlogID);
 				showDialog(ID_DIALOG_GET_STATS);
 				Thread action = new Thread() {
 					public void run() {

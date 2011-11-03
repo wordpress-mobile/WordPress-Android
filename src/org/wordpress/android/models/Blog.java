@@ -2,6 +2,7 @@
 
 package org.wordpress.android.models;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 
 import android.content.Context;
@@ -32,14 +33,12 @@ public class Blog {
 	private String wpVersion;
 	private String httpuser;
 	private String httppassword;
-	private WordPressDB db;
 	private String postFormats;
 	
 	public Blog(int blog_id, Context ctx){
 		//instantiate a new blog
-		db = new WordPressDB(ctx);
 		
-		Vector<Object> blogVals = db.loadSettings(ctx, blog_id);
+		Vector<Object> blogVals = WordPress.wpDB.loadSettings(ctx, blog_id);
 		
 		if (blogVals != null) {
 			this.id = blog_id;
@@ -71,7 +70,7 @@ public class Blog {
 				this.wpVersion = blogVals.get(19).toString();
 			this.postFormats = blogVals.get(20).toString();
 			this.lastCommentId = (Integer)blogVals.get(21);
-		}		
+		}	
 	}
 
 	public int getId() {
@@ -252,7 +251,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-        db.saveSettings(ctx, String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats);
+		WordPress.wpDB.saveSettings(ctx, String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats);
 	}
 
     public String getPostFormats() {
@@ -264,7 +263,6 @@ public class Blog {
     }
 	
 	public int getUnmoderatedCommentCount(Context ctx) {
-	    return db.getUnmoderatedCommentCount(ctx, this.id);
-	}
-	
+	    return WordPress.wpDB.getUnmoderatedCommentCount(ctx, this.id);
+	}	
 }

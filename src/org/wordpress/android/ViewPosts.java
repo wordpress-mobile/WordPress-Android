@@ -178,14 +178,12 @@ public class ViewPosts extends ListFragment {
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
 
-		WordPressDB postStoreDB = new WordPressDB(getActivity()
-				.getApplicationContext());
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = postStoreDB.loadUploadedPosts(getActivity()
+			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
 					.getApplicationContext(), WordPress.currentBlog.getId(), true);
 		} else {
-			loadedPosts = postStoreDB.loadUploadedPosts(getActivity()
+			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
 					.getApplicationContext(), WordPress.currentBlog.getId(), false);
 		}
 
@@ -480,14 +478,12 @@ public class ViewPosts extends ListFragment {
 
 	private boolean loadDrafts() { // loads drafts from the db
 
-		WordPressDB lDraftsDB = new WordPressDB(getActivity()
-				.getApplicationContext());
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = lDraftsDB.loadDrafts(getActivity()
+			loadedPosts = WordPress.wpDB.loadDrafts(getActivity()
 					.getApplicationContext(), WordPress.currentBlog.getId(), true);
 		} else {
-			loadedPosts = lDraftsDB.loadDrafts(getActivity()
+			loadedPosts = WordPress.wpDB.loadDrafts(getActivity()
 					.getApplicationContext(), WordPress.currentBlog.getId(), false);
 		}
 		if (loadedPosts != null) {
@@ -735,11 +731,9 @@ public class ViewPosts extends ListFragment {
 				if (result.length > 0) {
 					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
-					WordPressDB postStoreDB = new WordPressDB(getActivity()
-							.getApplicationContext());
 
 					if (!loadMore) {
-						postStoreDB.deleteUploadedPosts(getActivity()
+						WordPress.wpDB.deleteUploadedPosts(getActivity()
 								.getApplicationContext(), blog.getId(), isPage);
 					}
 
@@ -750,7 +744,7 @@ public class ViewPosts extends ListFragment {
 						dbVector.add(ctr, contentHash);
 					}
 
-					postStoreDB.savePosts(
+					WordPress.wpDB.savePosts(
 							getActivity().getApplicationContext(), dbVector,
 							blog.getId(), isPage);
 					numRecords += 20;

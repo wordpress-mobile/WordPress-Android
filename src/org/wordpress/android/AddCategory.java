@@ -48,8 +48,7 @@ public class AddCategory extends Activity {
             	String parent_category = sCategories.getSelectedItem().toString();
             	int parent_id = 0;
             	if (sCategories.getSelectedItemPosition() != 0){
-            		WordPressDB categoriesDB = new WordPressDB(AddCategory.this);
-                	parent_id = categoriesDB.getCategoryId(AddCategory.this, id, parent_category);
+                	parent_id = WordPress.wpDB.getCategoryId(AddCategory.this, id, parent_category);
             	}
             	
             	if (category_name.replaceAll(" ", "").equals("")) {
@@ -103,8 +102,7 @@ public class AddCategory extends Activity {
 	private void loadCategories() {
 		ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
         loadTextArray.clear();
-        WordPressDB categoriesDB = new WordPressDB(this);
-    	Vector<?> categoriesVector = categoriesDB.loadCategories(this, id);
+    	Vector<?> categoriesVector = WordPress.wpDB.loadCategories(this, id);
     	if (categoriesVector.size() > 0)
     	{
     		

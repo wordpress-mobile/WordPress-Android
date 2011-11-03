@@ -157,8 +157,7 @@ public class Read extends Activity {
 	}
 
 	protected void loadPostFromPermalink() {
-		WordPressDB settingsDB = new WordPressDB(this);
-		Vector<?> settings = settingsDB.loadSettings(this, id);
+		Vector<?> settings = WordPress.wpDB.loadSettings(this, id);
 
 		String username = settings.get(2).toString();
 		String password = settings.get(3).toString();
@@ -332,8 +331,7 @@ public class Read extends Activity {
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
-			WordPressDB settingsDB = new WordPressDB(Read.this);
-			Vector<?> settings = settingsDB.loadSettings(Read.this, id);
+			Vector<?> settings = WordPress.wpDB.loadSettings(Read.this, id);
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
