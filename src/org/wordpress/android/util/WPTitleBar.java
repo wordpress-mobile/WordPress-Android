@@ -130,8 +130,7 @@ public class WPTitleBar extends RelativeLayout {
 									blogTitle.setText(blogNames[pos]);
 									WordPress.currentBlog = new Blog(
 											blogIDs[pos], context);
-									WordPress.wpDB.updateLastBlogID(context,
-											blogIDs[pos]);
+									WordPress.wpDB.updateLastBlogID(blogIDs[pos]);
 									updateBlavatarImage();
 									updateCommentBadge();
 									if (onBlogChangedListener != null) {

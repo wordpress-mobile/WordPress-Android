@@ -358,7 +358,7 @@ public class WordPressDB {
 
 	}
 
-	public boolean addAccount(Context ctx, String url, String blogName,
+	public boolean addAccount(String url, String blogName,
 			String username, String password, String httpuser,
 			String httppassword, String imagePlacement,
 			boolean centerThumbnail, boolean fullSizeImage,
@@ -424,7 +424,7 @@ public class WordPressDB {
 		return accounts;
 	}
 
-	public boolean checkMatch(Context ctx, String blogName, String blogURL,
+	public boolean checkMatch(String blogName, String blogURL,
 			String username) {
 		
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName", "url" },
@@ -474,7 +474,7 @@ public class WordPressDB {
 		return sb.toString();
 	}
 
-	public boolean saveSettings(Context ctx, String id, String url,
+	public boolean saveSettings(String id, String url,
 			String username, String password, String httpuser,
 			String httppassword, String imagePlacement,
 			boolean centerThumbnail, boolean fullSizeImage,
@@ -551,7 +551,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public Vector<Object> loadSettings(Context ctx, int id) {
+	public Vector<Object> loadSettings(int id) {
 		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName",
@@ -608,7 +608,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public Vector<String> loadStatsLogin(Context ctx, int id) {
+	public Vector<String> loadStatsLogin(int id) {
 		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username",
@@ -629,7 +629,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public boolean saveStatsLogin(Context ctx, int id, String statsUsername,
+	public boolean saveStatsLogin(int id, String statsUsername,
 			String statsPassword) {
 		
 		ContentValues values = new ContentValues();
@@ -643,7 +643,7 @@ public class WordPressDB {
 
 	}
 
-	public Vector<String> loadAPIData(Context ctx, int id) {
+	public Vector<String> loadAPIData(int id) {
 		
 
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "api_key",
@@ -664,7 +664,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public boolean saveAPIData(Context ctx, int id, String apiKey,
+	public boolean saveAPIData(int id, String apiKey,
 			String apiBlogID) {
 		
 		ContentValues values = new ContentValues();
@@ -678,7 +678,7 @@ public class WordPressDB {
 
 	}
 
-	public boolean updateLatestCommentID(Context ctx, int id,
+	public boolean updateLatestCommentID(int id,
 			Integer newCommentID) {
 		
 
@@ -721,7 +721,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public String getAccountName(Context ctx, String accountID) {
+	public String getAccountName(String accountID) {
 		
 		String accountName = "";
 		Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName" }, "id="
@@ -735,7 +735,7 @@ public class WordPressDB {
 		return accountName;
 	}
 
-	public void updateNotificationFlag(Context ctx, int id, boolean flag) {
+	public void updateNotificationFlag(int id, boolean flag) {
 		
 		ContentValues values = new ContentValues();
 		int iFlag = 0;
@@ -752,7 +752,7 @@ public class WordPressDB {
 
 	}
 
-	public void updateNotificationSettings(Context ctx, String interval,
+	public void updateNotificationSettings(String interval,
 			boolean sound, boolean vibrate, boolean light,
 			boolean tagline_flag, String tagline) {
 		
@@ -826,7 +826,7 @@ public class WordPressDB {
 		return thisHash;
 	}
 
-	public void updateLastBlogID(Context ctx, int blogID) {
+	public void updateLastBlogID(int blogID) {
 		
 		ContentValues values = new ContentValues();
 		values.put("last_blog_id", blogID);
@@ -855,7 +855,7 @@ public class WordPressDB {
 		return returnValue;
 	}
 
-	public Vector<HashMap<String, Object>> loadDrafts(Context ctx, int blogID,
+	public Vector<HashMap<String, Object>> loadDrafts(int blogID,
 			boolean loadPages) {
 		
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
@@ -896,7 +896,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public boolean deletePost(Context ctx, Post post) {
+	public boolean deletePost(Post post) {
 		
 
 		boolean returnValue = false;
@@ -913,7 +913,7 @@ public class WordPressDB {
 		return returnValue;
 	}
 
-	public boolean savePosts(Context ctx, Vector<?> postValues, int blogID,
+	public boolean savePosts(Vector<?> postValues, int blogID,
 			boolean isPage) {
 		boolean returnValue = false;
 		if (postValues.size() != 0) {
@@ -1004,7 +1004,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public long savePost(Context ctx, Post post, int blogID) {
+	public long savePost(Post post, int blogID) {
 		long returnValue = -1;
 		if (post != null) {
 			
@@ -1042,7 +1042,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public int updatePost(Context ctx, Post post, int blogID) {
+	public int updatePost(Post post, int blogID) {
 		int success = 0;
 		if (post != null) {
 			
@@ -1127,7 +1127,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public void deleteUploadedPosts(Context ctx, int blogID, boolean isPage) {
+	public void deleteUploadedPosts(int blogID, boolean isPage) {
 		
 		if (isPage)
 			db.delete(POSTS_TABLE, "blogID=" + blogID
@@ -1138,7 +1138,7 @@ public class WordPressDB {
 		
 	}
 
-	public Vector<Object> loadPost(Context ctx, int blogID, boolean isPage,
+	public Vector<Object> loadPost(int blogID, boolean isPage,
 			long id) {
 		Vector<Object> values = null;
 		
@@ -1188,7 +1188,7 @@ public class WordPressDB {
 		return values;
 	}
 
-	public Vector<HashMap<String, Object>> loadComments(Context ctx, int blogID) {
+	public Vector<HashMap<String, Object>> loadComments(int blogID) {
 		
 		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
 		Cursor c = db.query(COMMENTS_TABLE,
@@ -1282,7 +1282,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public boolean saveComments(Context ctx, Vector<?> commentValues,
+	public boolean saveComments(Vector<?> commentValues,
 			boolean loadMore) {
 		boolean returnValue = false;
 		
@@ -1327,7 +1327,7 @@ public class WordPressDB {
 
 	}
 
-	public void updateCommentStatus(Context ctx, int blogID, String id,
+	public void updateCommentStatus(int blogID, String id,
 			String newStatus) {
 		
 
@@ -1342,7 +1342,7 @@ public class WordPressDB {
 
 	}
 
-	public void clearPosts(Context ctx, String blogID) {
+	public void clearPosts(String blogID) {
 		
 		// delete existing values
 		db.delete(POSTS_TABLE, "blogID=" + blogID, null);
@@ -1410,7 +1410,7 @@ public class WordPressDB {
 	}
 
 	// categories
-	public boolean insertCategory(Context ctx, int id, int wp_id,
+	public boolean insertCategory(int id, int wp_id,
 			String category_name) {
 		
 		ContentValues values = new ContentValues();
@@ -1425,7 +1425,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public Vector<String> loadCategories(Context ctx, int id) {
+	public Vector<String> loadCategories(int id) {
 		
 
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
@@ -1446,7 +1446,7 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public int getCategoryId(Context ctx, int id, String category) {
+	public int getCategoryId(int id, String category) {
 		
 
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
@@ -1459,7 +1459,7 @@ public class WordPressDB {
 		return categoryID;
 	}
 
-	public void clearCategories(Context ctx, int id) {
+	public void clearCategories(int id) {
 		
 		// clear out the table since we are refreshing the whole enchilada
 		db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
@@ -1467,7 +1467,7 @@ public class WordPressDB {
 	}
 
 	// unique identifier queries
-	public void updateUUID(Context ctx, String uuid) {
+	public void updateUUID(String uuid) {
 		
 		ContentValues values = new ContentValues();
 		values.put("uuid", uuid);
@@ -1497,7 +1497,7 @@ public class WordPressDB {
 
 	}
 
-	public boolean addQuickPressShortcut(Context ctx, String accountId,
+	public boolean addQuickPressShortcut(String accountId,
 			String name) {
 		
 		ContentValues values = new ContentValues();
@@ -1620,7 +1620,7 @@ public class WordPressDB {
 		c.close();
 	}
 
-	public int getUnmoderatedCommentCount(Context ctx, int blogID) {
+	public int getUnmoderatedCommentCount(int blogID) {
 		int commentCount = 0;
 		
 		Cursor c = db
@@ -1639,7 +1639,7 @@ public class WordPressDB {
 		return commentCount;
 	}
 
-	public boolean saveMediaFile(Context ctx, MediaFile mf) {
+	public boolean saveMediaFile(MediaFile mf) {
 		boolean returnValue = false;
 		
 		ContentValues values = new ContentValues();
@@ -1669,7 +1669,7 @@ public class WordPressDB {
 		return (returnValue);
 	}
 
-	public MediaFile[] getMediaFilesForPost(Context ctx, Post p) {
+	public MediaFile[] getMediaFilesForPost(Post p) {
 		
 		Cursor c = db.query(MEDIA_TABLE, null, "postID=" + p.getId(), null,
 				null, null, null);
@@ -1700,7 +1700,7 @@ public class WordPressDB {
 		return mediaFiles;
 	}
 
-	public boolean deleteMediaFile(Context ctx, MediaFile mf) {
+	public boolean deleteMediaFile(MediaFile mf) {
 		
 
 		boolean returnValue = false;
@@ -1716,7 +1716,7 @@ public class WordPressDB {
 		return returnValue;
 	}
 
-	public MediaFile getMediaFile(Context ctx, String src, Post post) {
+	public MediaFile getMediaFile(String src, Post post) {
 		
 		Cursor c = db.query(MEDIA_TABLE, null, "postID=" + post.getId()
 				+ " AND filePath='" + src + "'", null, null, null, null);
@@ -1743,7 +1743,7 @@ public class WordPressDB {
 		return mf;
 	}
 
-	public void deleteMediaFilesForPost(Context ctx, Post post) {
+	public void deleteMediaFilesForPost(Post post) {
 		
 		db.delete(MEDIA_TABLE, "postID=" + post.getId(), null);
 		

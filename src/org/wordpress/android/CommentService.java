@@ -163,7 +163,7 @@ public class CommentService extends Service {
 
 				String commentID = contentHash.get("comment_id").toString();
 				if (latestCommentID == 0){
-					WordPress.wpDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
+					WordPress.wpDB.updateLatestCommentID(accountID, Integer.valueOf(commentID));
 					////Log.i("WordPressCommentService", "comment was zero");
 				}
 				else if (Integer.valueOf(commentID) > latestCommentID){	
@@ -194,7 +194,7 @@ public class CommentService extends Service {
  			  		n.setLatestEventInfo(CommentService.this, accountName, author + ": " + comment, pendingIntent);
  			  		nm.notify(22 + Integer.valueOf(accountID), n); //needs a unique id
 					
- 			  		WordPress.wpDB.updateLatestCommentID(CommentService.this, accountID, Integer.valueOf(commentID));
+ 			  		WordPress.wpDB.updateLatestCommentID(accountID, Integer.valueOf(commentID));
 					//Log.i("WordPressCommentService", "found a new comment!");
 				}
 				else{

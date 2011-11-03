@@ -121,6 +121,12 @@ public class Comments extends FragmentActivity implements
 	}
 	
 	@Override
+	protected void onStop() {
+		super.onStop();
+		commentList.getCommentsTask.cancel(true);
+	}
+	
+	@Override
 	protected void onNewIntent (Intent intent){
 		super.onNewIntent(intent);
 		Bundle extras = intent.getExtras();
@@ -221,7 +227,7 @@ public class Comments extends FragmentActivity implements
 				WordPress.currentComment.status = newStatus;
 				commentList.model.set(WordPress.currentComment.position,
 						WordPress.currentComment);
-				db.updateCommentStatus(Comments.this, id,
+				db.updateCommentStatus(id,
 						WordPress.currentComment.commentID, newStatus);
 			}
 			dismissDialog(ID_DIALOG_MODERATING);

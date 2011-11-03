@@ -96,6 +96,12 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		
 		postList.refreshPosts(false);
 	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		postList.getPostsTask.cancel(true);
+	}
 
 	private void attemptToSelectPost() {
 		

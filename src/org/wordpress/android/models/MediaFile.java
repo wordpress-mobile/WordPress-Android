@@ -152,7 +152,7 @@ public class MediaFile {
 	}
 	
 	public void save(Context ctx) {
-		WordPress.wpDB.saveMediaFile(ctx, this);
+		WordPress.wpDB.saveMediaFile(this);
 	}
 	
 }

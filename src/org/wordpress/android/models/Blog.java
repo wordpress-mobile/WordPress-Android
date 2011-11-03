@@ -38,7 +38,7 @@ public class Blog {
 	public Blog(int blog_id, Context ctx){
 		//instantiate a new blog
 		
-		Vector<Object> blogVals = WordPress.wpDB.loadSettings(ctx, blog_id);
+		Vector<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
 		
 		if (blogVals != null) {
 			this.id = blog_id;
@@ -251,7 +251,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-		WordPress.wpDB.saveSettings(ctx, String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats);
+		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats);
 	}
 
     public String getPostFormats() {
@@ -263,6 +263,6 @@ public class Blog {
     }
 	
 	public int getUnmoderatedCommentCount(Context ctx) {
-	    return WordPress.wpDB.getUnmoderatedCommentCount(ctx, this.id);
+	    return WordPress.wpDB.getUnmoderatedCommentCount(this.id);
 	}	
 }

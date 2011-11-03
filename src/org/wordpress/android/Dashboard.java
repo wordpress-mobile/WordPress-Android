@@ -76,7 +76,8 @@ public class Dashboard extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		WordPress.wpDB = new WordPressDB(this);
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
 		accounts = WordPress.wpDB.getAccounts(this);
 		boolean eula = checkEULA();
 		if (eula == false) {
@@ -263,7 +264,7 @@ public class Dashboard extends Activity {
 		String uuid = WordPress.wpDB.getUUID(this);
 		if (uuid == "") {
 			uuid = UUID.randomUUID().toString();
-			WordPress.wpDB.updateUUID(this, uuid);
+			WordPress.wpDB.updateUUID(uuid);
 		}
 		PackageManager pm = getPackageManager();
 		String app_version = "";

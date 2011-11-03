@@ -89,7 +89,7 @@ public class Post {
 	public Post(int blog_id, long post_id, boolean isPage, Context ctx) {
 		// load an existing post
 		context = ctx;
-		Vector<Object> postVals = WordPress.wpDB.loadPost(ctx, blog_id, isPage, post_id);
+		Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
 		if (postVals != null) {
 			this.blog = new Blog(blog_id, ctx);
 			this.id = (Long) postVals.get(0);
@@ -396,7 +396,7 @@ public class Post {
 	}
 
 	public boolean save() {
-		long newPostID = WordPress.wpDB.savePost(context, this, this.blogID);
+		long newPostID = WordPress.wpDB.savePost(this, this.blogID);
 
 		if (newPostID >= 0 && this.isLocalDraft() && !this.isUploaded()) {
 			this.id = newPostID;
@@ -407,14 +407,14 @@ public class Post {
 	}
 
 	public boolean update() {
-		int success = WordPress.wpDB.updatePost(context, this, this.blogID);
+		int success = WordPress.wpDB.updatePost(this, this.blogID);
 
 		return success > 0;
 	}
 
 	public void delete() {
 		// deletes a post/page draft
-		WordPress.wpDB.deletePost(context, this);
+		WordPress.wpDB.deletePost(this);
 	}
 
 	public static class uploadPostTask extends
@@ -1042,7 +1042,7 @@ public class Post {
 	}
 
 	public void deleteMediaFiles() {
-		WordPress.wpDB.deleteMediaFilesForPost(context, this);
+		WordPress.wpDB.deleteMediaFilesForPost(this);
 	}
 
 	public void setId(long id) {

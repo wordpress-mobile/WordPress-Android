@@ -81,6 +81,7 @@ public class ViewComments extends ListFragment {
 	private OnCommentSelectedListener onCommentSelectedListener;
 	private OnAnimateRefreshButtonListener onAnimateRefreshButton;
 	private OnContextCommentStatusChangeListener onCommentStatusChangeListener;
+	public getRecentCommentsTask getCommentsTask;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -264,8 +265,7 @@ public class ViewComments extends ListFragment {
 						checkedComments.set(i, "false");
 						listRow.status = newStatus;
 						model.set(i, listRow);
-						WordPress.wpDB.updateCommentStatus(getActivity()
-								.getApplicationContext(), id,
+						WordPress.wpDB.updateCommentStatus(id,
 								listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
@@ -401,8 +401,9 @@ public class ViewComments extends ListFragment {
 		refreshOnly = refresh;
 		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore) {
-			Vector<?> loadedPosts = WordPress.wpDB.loadComments(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId());
+			WordPressDB test = WordPress.wpDB;
+			Blog test2 = WordPress.currentBlog;
+			Vector<?> loadedPosts = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
 			if (loadedPosts != null) {
 				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
 				countHash = (HashMap<Object, Object>) loadedPosts.get(0);
@@ -611,7 +612,8 @@ public class ViewComments extends ListFragment {
 				blog.getPassword(), hPost };
 
 		commentParams = params;
-		new getRecentCommentsTask().execute();
+		getCommentsTask = new getRecentCommentsTask();
+		getCommentsTask.execute();
 
 	}
 
@@ -1056,12 +1058,15 @@ public class ViewComments extends ListFragment {
 		return false;
 	}
 
-	private class getRecentCommentsTask extends
+	class getRecentCommentsTask extends
 			AsyncTask<Void, Void, HashMap<String, HashMap<?, ?>>> {
 
 		protected void onPostExecute(
 				HashMap<String, HashMap<?, ?>> commentsResult) {
 
+			if (isCancelled())
+				return;
+			
 			if (commentsResult == null) {
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
 				if (!moderateErrorMsg.equals("")) {

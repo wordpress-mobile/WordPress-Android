@@ -250,7 +250,7 @@ public class AddAccount extends Activity {
 		                if (matchBlogName.length() == 0){
 		                	matchBlogName = contentHash.get("url").toString();
 		                } 
-		                match = WordPress.wpDB.checkMatch(AddAccount.this, matchBlogName, contentHash.get("xmlrpc").toString(), username);
+		                match = WordPress.wpDB.checkMatch(matchBlogName, contentHash.get("xmlrpc").toString(), username);
 		            if (!match){
 	                	blogNames[blogCtr] = matchBlogName;			        
 				        urls[blogCtr] = contentHash.get("xmlrpc").toString(); 					        
@@ -351,7 +351,7 @@ public class AddAccount extends Activity {
 		                          	for (int i=0; i<selectedItems.size();i++){
 		                          		if (selectedItems.get(selectedItems.keyAt(i)) == true){
 		                          			int rowID = selectedItems.keyAt(i);
-		                          			success = WordPress.wpDB.addAccount(AddAccount.this, urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
+		                          			success = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
 		                          		}
 		                          	}
 		                          	Bundle bundle = new Bundle();
@@ -367,7 +367,7 @@ public class AddAccount extends Activity {
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                        	  for (int i=0;i<blogCtr;i++){
-		                        		  success = WordPress.wpDB.addAccount(AddAccount.this, urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+		                        		  success = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 		                        	  }
 		                        	  Bundle bundle = new Bundle();
 						                bundle.putString("returnStatus", "SAVE");
@@ -406,7 +406,7 @@ public class AddAccount extends Activity {
 				            
 				    	}
 				    	else {
-                  		  	success = WordPress.wpDB.addAccount(AddAccount.this, urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                  		  	success = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
 						    Bundle bundle = new Bundle();
 			                bundle.putString("returnStatus", "SAVE");
 			                Intent mIntent = new Intent();

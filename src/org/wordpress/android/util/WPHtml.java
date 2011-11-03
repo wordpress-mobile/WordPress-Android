@@ -717,7 +717,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 			
 			//get the MediaFile data from db
 			WordPressDB wpDB = new WordPressDB(ctx);
-			MediaFile mf = wpDB.getMediaFile(ctx, src, post);
+			MediaFile mf = wpDB.getMediaFile(src, post);
 			if (mf != null) {
 				is.setTitle(mf.getTitle());
 				is.setDescription(mf.getDescription());

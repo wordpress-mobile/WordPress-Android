@@ -67,7 +67,8 @@ public class ViewPosts extends ListFragment {
 	private OnPostSelectedListener onPostSelectedListener;
 	private OnRefreshListener onRefreshListener;
 	private OnPostActionListener onPostActionListener;
-
+	public getRecentPostsTask getPostsTask;
+	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -166,7 +167,8 @@ public class ViewPosts extends ListFragment {
 		apiArgs.add(isPage);
 		apiArgs.add(numRecords);
 		apiArgs.add(loadMore);
-		new getRecentPostsTask().execute(apiArgs);
+		getPostsTask = new getRecentPostsTask();
+		getPostsTask.execute(apiArgs);
 	}
 
 	public Map<String, ?> createItem(String title, String caption) {
@@ -480,11 +482,9 @@ public class ViewPosts extends ListFragment {
 
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = WordPress.wpDB.loadDrafts(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(), true);
+			loadedPosts = WordPress.wpDB.loadDrafts(WordPress.currentBlog.getId(), true);
 		} else {
-			loadedPosts = WordPress.wpDB.loadDrafts(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(), false);
+			loadedPosts = WordPress.wpDB.loadDrafts(WordPress.currentBlog.getId(), false);
 		}
 		if (loadedPosts != null) {
 			draftIDs = new String[loadedPosts.size()];
@@ -727,14 +727,16 @@ public class ViewPosts extends ListFragment {
 		boolean isPage, loadMore;
 
 		protected void onPostExecute(Object[] result) {
+			if (isCancelled())
+				return;
+			
 			if (result != null) {
 				if (result.length > 0) {
 					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
 					if (!loadMore) {
-						WordPress.wpDB.deleteUploadedPosts(getActivity()
-								.getApplicationContext(), blog.getId(), isPage);
+						WordPress.wpDB.deleteUploadedPosts(blog.getId(), isPage);
 					}
 
 					for (int ctr = 0; ctr < result.length; ctr++) {
@@ -744,8 +746,7 @@ public class ViewPosts extends ListFragment {
 						dbVector.add(ctr, contentHash);
 					}
 
-					WordPress.wpDB.savePosts(
-							getActivity().getApplicationContext(), dbVector,
+					WordPress.wpDB.savePosts(dbVector,
 							blog.getId(), isPage);
 					numRecords += 20;
 					if (loadMore)

@@ -262,11 +262,11 @@ public void displayAccounts(){
             	    	int id = cbox.getId();
                 	    if( cbox.isChecked() ) {   
                 	    	checkCtr++;
-                	    	WordPress.wpDB.updateNotificationFlag(Preferences.this, id, true);
+                	    	WordPress.wpDB.updateNotificationFlag(id, true);
                 	        Log.i("CommentService", "Service enabled for " + cbox.getText());
                 	    }
                 	    else{
-                	    	WordPress.wpDB.updateNotificationFlag(Preferences.this, id, false);
+                	    	WordPress.wpDB.updateNotificationFlag(id, false);
                 	    }
             	}
             	
@@ -290,7 +290,7 @@ public void displayAccounts(){
             	EditText taglineET = (EditText) ((View)section2.getChildAt(2));
             	String taglineText = taglineET.getText().toString();
 
-            	WordPress.wpDB.updateNotificationSettings(Preferences.this, sInterval.getSelectedItem().toString(), sound, vibrate, light, tagValue, taglineText);
+            	WordPress.wpDB.updateNotificationSettings(sInterval.getSelectedItem().toString(), sound, vibrate, light, tagValue, taglineText);
             	
             	if (checkCtr > 0){
 

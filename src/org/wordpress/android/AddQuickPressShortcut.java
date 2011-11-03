@@ -157,7 +157,7 @@ public class AddQuickPressShortcut extends ListActivity {
 	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
 	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcut.this, R.drawable.app_icon));
 	        		
-	        		WordPress.wpDB.addQuickPressShortcut(AddQuickPressShortcut.this.getApplicationContext(), accountIDs[position], quickPressShortcutName.getText().toString());
+	        		WordPress.wpDB.addQuickPressShortcut(accountIDs[position], quickPressShortcutName.getText().toString());
 	        		
 	        		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 	        		AddQuickPressShortcut.this.sendBroadcast(addIntent);

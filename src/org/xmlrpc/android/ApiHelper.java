@@ -105,7 +105,7 @@ public class ApiHelper extends Activity {
 					dbVector.add(ctr, dbValues);
 				}
 
-				WordPress.wpDB.saveComments(ctx, dbVector, false);
+				WordPress.wpDB.saveComments(dbVector, false);
 			}
 		}
 	}
@@ -222,7 +222,7 @@ public class ApiHelper extends Activity {
 			dbVector.add(ctr, dbValues);
 		}
 
-		WordPress.wpDB.saveComments(ctx, dbVector, loadMore);
+		WordPress.wpDB.saveComments(dbVector, loadMore);
 
 		return allComments;
 
