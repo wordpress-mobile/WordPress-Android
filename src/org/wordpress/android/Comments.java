@@ -117,13 +117,15 @@ public class Comments extends FragmentActivity implements
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 		commentList.loadComments(false, false);
+		attemptToSelectComment();
 		commentList.refreshComments(false, false, false);
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		commentList.getCommentsTask.cancel(true);
+		if (commentList.getCommentsTask != null)
+			commentList.getCommentsTask.cancel(true);
 	}
 	
 	@Override

@@ -100,7 +100,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	@Override
 	protected void onStop() {
 		super.onStop();
-		postList.getPostsTask.cancel(true);
+		if (postList.getPostsTask != null)
+			postList.getPostsTask.cancel(true);
 	}
 
 	private void attemptToSelectPost() {
