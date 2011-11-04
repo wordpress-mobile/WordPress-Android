@@ -7,7 +7,7 @@
     <dimen name="action_bar_gravatar_size">42dp</dimen>
     <dimen name="action_bar_title_text_size">22dp</dimen>
     <dimen name="action_bar_right_margin">113dp</dimen>
-    <dimen name="action_bar_button_padding">16dp</dimen>
+    <dimen name="action_bar_button_padding">8dp</dimen>
     <dimen name="chart_width">480dp</dimen>
     <dimen name="chart_height">320dp</dimen>
     <dimen name="settings_padding">260dp</dimen>

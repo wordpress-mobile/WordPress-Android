@@ -142,7 +142,7 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			});
 
-			ImageButton showDashboard = (ImageButton) findViewById(R.id.home_small);
+			final ImageButton showDashboard = (ImageButton) findViewById(R.id.home_small);
 
 			showDashboard.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -282,6 +282,11 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void hideDashboardOverlay() {
+		
+		ImageButton showDashboardButton = (ImageButton) findViewById(R.id.home_small);
+		showDashboardButton.setSelected(false);
+		showDashboardButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_home));
+		
 		dashboard.setBackgroundColor(Color.parseColor("#00000000"));
 		Animation fadeOutAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_hide);
@@ -292,6 +297,11 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	protected void showDashboardOverlay() {
+		
+		ImageButton showDashboardButton = (ImageButton) findViewById(R.id.home_small);
+		showDashboardButton.setSelected(true);
+		showDashboardButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_home_active));
+		
 		dashboard.setVisibility(View.VISIBLE);
 		Animation fadeInAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_show);
@@ -344,18 +354,25 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void startRotatingRefreshIcon() {
-		RotateAnimation anim = new RotateAnimation(0.0f, 180.0f,
+		
+		Button b = (Button) findViewById(R.id.action_refresh);
+		b.setSelected(true);
+		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
 		anim.setInterpolator(new LinearInterpolator());
 		anim.setRepeatCount(Animation.INFINITE);
-		anim.setDuration(800);
+		anim.setDuration(1400);
 		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
+		iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_refresh_active));
 		iv.startAnimation(anim);
 	}
 
 	public void stopRotatingRefreshIcon() {
+		Button b = (Button) findViewById(R.id.action_refresh);
+		b.setSelected(false);
 		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
+		iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_refresh));
 		iv.clearAnimation();
 	}
 
