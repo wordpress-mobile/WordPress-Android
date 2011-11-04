@@ -38,8 +38,8 @@
           android:gravity="center"
           android:padding="10dp">
           <ImageView
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/dashboard_icon_new_post"
             android:scaleType="centerInside" />
           <TextView
@@ -61,10 +61,9 @@
           android:layout_marginLeft="2px"
           android:padding="10dp">
           <ImageView
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="96dp"
             android:src="@drawable/dashboard_icon_new_page"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside" android:layout_height="96dp"/>
           <TextView
             android:id="@+id/button_text"
             android:layout_width="wrap_content"
@@ -91,10 +90,8 @@
           android:gravity="center"
           android:padding="10dp">
           <ImageView
-            android:layout_width="54dp"
-            android:layout_height="54dp"
             android:src="@drawable/dashboard_icon_photo"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside" android:layout_width="96dp" android:layout_height="96dp"></ImageView>
           <TextView
             android:id="@+id/button_text"
             android:layout_width="wrap_content"
@@ -115,8 +112,8 @@
           android:layout_marginTop="1px"
           android:padding="10dp">
           <ImageView
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/dashboard_icon_video"
             android:scaleType="centerInside" />
           <TextView
@@ -137,7 +134,7 @@
           android:layout_height="fill_parent"
           android:weightSum="3.0"
           android:layout_weight="1.0"
-          android:layout_marginTop="4px"
+          android:layout_marginTop="0px"
           android:orientation="horizontal">
           <LinearLayout
             android:id="@+id/dashboard_posts_btn"
@@ -146,12 +143,13 @@
             android:layout_weight="1.0"
             android:orientation="vertical"
             android:clickable="true"
+            android:layout_marginTop="4px"
             android:background="@drawable/wp_button_dashboard"
             android:gravity="center"
             android:padding="10dp">
             <ImageView
-              android:layout_width="48dp"
-              android:layout_height="48dp"
+              android:layout_width="96dp"
+              android:layout_height="96dp"
               android:src="@drawable/dashboard_icon_posts"
               android:scaleType="centerInside" />
             <TextView
@@ -168,13 +166,14 @@
             android:layout_weight="1.0"
             android:orientation="vertical"
             android:clickable="true"
+            android:layout_marginTop="4px"
             android:background="@drawable/wp_button_dashboard"
             android:gravity="center"
             android:layout_marginLeft="2px"
             android:padding="10dp">
             <ImageView
-              android:layout_width="48dp"
-              android:layout_height="48dp"
+              android:layout_width="96dp"
+              android:layout_height="96dp"
               android:src="@drawable/dashboard_icon_pages"
               android:scaleType="centerInside" />
             <TextView
@@ -189,7 +188,9 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="2px"
             android:layout_weight="1.0"
-            android:padding="0dp">
+            android:padding="0dp"
+            android:paddingTop="2dp"
+            android:layout_marginTop="0px">
             <LinearLayout
               android:id="@+id/dashboard_comments_btn"
               android:layout_width="fill_parent"
@@ -198,10 +199,11 @@
               android:clickable="true"
               android:background="@drawable/wp_button_dashboard"
               android:gravity="center"
+              android:layout_marginTop="4px"
               android:padding="10dp">
               <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:src="@drawable/dashboard_icon_comments"
                 android:scaleType="centerInside" />
               <TextView
@@ -213,13 +215,14 @@
             </LinearLayout>
             <org.wordpress.android.util.CommentBadgeTextView
               android:id="@+id/comment_badge"
-              android:layout_width="46dp"
-              android:layout_height="46dp"
-              android:gravity="center_horizontal"
+              android:layout_width="64dp"
+              android:layout_height="64dp"
               android:text="0"
+              android:gravity="center_horizontal"
               android:layout_gravity="right"
+              android:layout_marginRight="-4px"
               android:textStyle="bold"
-              android:textSize="12dp"
+              android:textSize="20dp"
               android:shadowDy="1"
               android:shadowRadius="1"
               android:shadowColor="#FF464646"
@@ -245,8 +248,8 @@
             android:padding="10dp"
             android:layout_weight="1.0">
             <ImageView
-              android:layout_width="48dp"
-              android:layout_height="48dp"
+              android:layout_width="96dp"
+              android:layout_height="96dp"
               android:src="@drawable/dashboard_icon_settings"
               android:scaleType="centerInside" />
             <TextView
@@ -268,8 +271,8 @@
             android:padding="10dp"
             android:layout_weight="1.0">
             <ImageView
-              android:layout_width="48dp"
-              android:layout_height="48dp"
+              android:layout_width="96dp"
+              android:layout_height="96dp"
               android:src="@drawable/dashboard_icon_subs"
               android:scaleType="centerInside" />
             <TextView
@@ -291,8 +294,8 @@
             android:padding="10dp"
             android:layout_weight="1.0">
             <ImageView
-              android:layout_width="48dp"
-              android:layout_height="48dp"
+              android:layout_width="96dp"
+              android:layout_height="96dp"
               android:src="@drawable/dashboard_icon_stats"
               android:scaleType="centerInside" />
             <TextView

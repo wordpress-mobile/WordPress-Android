@@ -101,8 +101,9 @@
     <style name="DashboardButtonText">
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">14dip</item>
+        <item name="android:textSize">18dip</item>
         <item name="android:textColor">#333333</item>
+        <item name="android:layout_marginTop">8dp</item>
     </style>
 
 </resources>

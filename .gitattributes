@@ -279,6 +279,7 @@ bin/res/drawable/btn_check_on_selected.png -text
 bin/res/drawable/btn_dropdown_normal.9.png -text
 bin/res/drawable/btn_dropdown_pressed.9.png -text
 bin/res/drawable/btn_dropdown_selected.9.png -text
+bin/res/drawable/comment_badge.png -text
 bin/res/drawable/comments_tab.png -text
 bin/res/drawable/comments_tab_active.png -text
 bin/res/drawable/comments_tab_icon.png -text
@@ -466,6 +467,7 @@ res/drawable/btn_check_on_selected.png -text
 res/drawable/btn_dropdown_normal.9.png -text
 res/drawable/btn_dropdown_pressed.9.png -text
 res/drawable/btn_dropdown_selected.9.png -text
+res/drawable/comment_badge.png -text
 res/drawable/comment_pending_bg_selector.xml -text
 res/drawable/comment_pending_gradient.xml -text
 res/drawable/comments_tab.png -text
