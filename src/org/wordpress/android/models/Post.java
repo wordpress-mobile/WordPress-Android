@@ -606,8 +606,12 @@ public class Post {
 				descriptionContent = descriptionContent.replace("<p>", "").replace("</p>", "\n");
 				moreContent = moreContent.replace("<p>", "").replace("</p>", "\n");
 				
+				if (!moreContent.equals("")) {
+					descriptionContent = descriptionContent + "\n\n<!--more-->\n\n" + moreContent;
+					post.mt_text_more = "";
+				}
+				
 				contentStruct.put("description", descriptionContent);
-				contentStruct.put("mt_text_more", moreContent);
 				if (!post.isPage) {
 					if (post.mt_keywords != "") {
 						contentStruct.put("mt_keywords", post.mt_keywords);

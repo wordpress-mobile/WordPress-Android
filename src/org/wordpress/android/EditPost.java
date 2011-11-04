@@ -306,14 +306,25 @@ public class EditPost extends Activity implements LocationListener {
 			EditText passwordET = (EditText) findViewById(R.id.post_password);
 
 			titleET.setText(post.getTitle());
+			
+			if (post.isUploaded()) {
+				items = new String[] {
+						getResources().getString(R.string.publish_post),
+						getResources().getString(R.string.draft),
+						getResources().getString(R.string.pending_review),
+						getResources().getString(R.string.post_private) };
+				adapter = new ArrayAdapter<String>(this,
+						android.R.layout.simple_spinner_item, items);
+				spinner.setAdapter(adapter);
+			}
 
 			String contentHTML;
 			
 			if (!post.getMt_text_more().equals("")) {
 				contentHTML = post.getDescription()
-						+ "<div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........"
+						+ "<p id=\"wp-android-more\"><font color=\"#777777\">........"
 						+ getResources().getText(R.string.more_tag)
-						+ "</font></div>" + post.getMt_text_more();
+						+ "</font></p>" + post.getMt_text_more();
 			} else {
 				contentHTML = post.getDescription();
 			}
@@ -351,6 +362,8 @@ public class EditPost extends Activity implements LocationListener {
 					spinner.setSelection(2, true);
 				} else if (status.equals("private")) {
 					spinner.setSelection(3, true);
+				} else if (status.equals("localdraft")) {
+					spinner.setSelection(4, true);
 				}
 			}
 
