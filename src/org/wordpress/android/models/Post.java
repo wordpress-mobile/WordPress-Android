@@ -601,9 +601,11 @@ public class Post {
 					Date date = new Date(pubDate);
 					contentStruct.put("date_created_gmt", date);
 				}
-				// for trac #53, add <p> and <br /> tags
-				//content = content.replace("/\n\n/g", "</p><p>");
-				//content = content.replace("/\n/g", "<br />");
+				
+				//get rid of the p tags that the editor adds.
+				descriptionContent = descriptionContent.replace("<p>", "").replace("</p>", "\n");
+				moreContent = moreContent.replace("<p>", "").replace("</p>", "\n");
+				
 				contentStruct.put("description", descriptionContent);
 				contentStruct.put("mt_text_more", moreContent);
 				if (!post.isPage) {
