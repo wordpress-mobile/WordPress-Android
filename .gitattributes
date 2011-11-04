@@ -515,7 +515,9 @@ res/drawable/ic_menu_rotate.png -text
 res/drawable/ic_menu_view.png -text
 res/drawable/ic_popup_sync_1.png -text
 res/drawable/icon_titlebar_home.png -text
+res/drawable/icon_titlebar_home_active.png -text
 res/drawable/icon_titlebar_refresh.png -text
+res/drawable/icon_titlebar_refresh_active.png -text
 res/drawable/list_bg.xml -text
 res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
