@@ -12,7 +12,8 @@
     android:paddingLeft="@dimen/dashboard_padding_large"
     android:paddingRight="@dimen/dashboard_padding_large"
     android:paddingTop="@dimen/dashboard_padding_small"
-    android:visibility="gone" >
+    android:visibility="gone"
+    android:clickable="true" >
 
     <LinearLayout
         android:layout_width="fill_parent"
