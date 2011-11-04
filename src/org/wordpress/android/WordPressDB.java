@@ -1149,7 +1149,7 @@ public class WordPressDB {
 				+ id + " AND isPage=" + pageInt, null, null, null, null);
 
 		c.moveToFirst();
-
+		
 		if (c.getString(0) != null) {
 			values = new Vector<Object>();
 			values.add(c.getLong(0));

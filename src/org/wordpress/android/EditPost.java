@@ -208,7 +208,7 @@ public class EditPost extends Activity implements LocationListener {
 		} else {
 			setContentView(R.layout.edit);
 			if (blog.getPostFormats().equals("")) {
-				Vector args = new Vector();
+				Vector<Object> args = new Vector<Object>();
 				args.add(blog);
 				args.add(this);
 				new ApiHelper.getPostFormatsTask().execute(args);
@@ -224,7 +224,7 @@ public class EditPost extends Activity implements LocationListener {
 							blog.getPostFormats());
 					postFormats = new String[jsonPostFormats.length()];
 					postFormatTitles = new String[jsonPostFormats.length()];
-					Iterator it = jsonPostFormats.keys();
+					Iterator<?> it = jsonPostFormats.keys();
 					int i = 0;
 					while (it.hasNext()) {
 						String key = (String) it.next();
@@ -238,7 +238,6 @@ public class EditPost extends Activity implements LocationListener {
 					java.util.Arrays.sort(postFormatTitles);
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

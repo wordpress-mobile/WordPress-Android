@@ -1,11 +1,14 @@
 package org.wordpress.android;
 
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.WPHtml;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,9 +90,21 @@ public class ViewPostFragment extends Fragment {
 		else
 			title.setText(post.getTitle());
 		
+
 		WebView webView = (WebView) getActivity().findViewById(R.id.viewPostWebView);
-		String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">" + post.getDescription() + post.getMt_text_more() + "</div></body></html>";
-		webView.loadDataWithBaseURL("file:///android_asset/", htmlText, "text/html", "utf-8", null); 
+		
+		if (!post.isUploaded()) {
+			TextView tv = (TextView) getActivity().findViewById(R.id.viewPostTextView);
+			tv.setVisibility(View.VISIBLE);
+			webView.setVisibility(View.GONE);
+			tv.setText(WPHtml.fromHtml(post.getDescription() + post.getMt_text_more(), getActivity().getApplicationContext(), post));
+		}
+		else {
+			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">" + post.getDescription() + post.getMt_text_more() + "</div></body></html>";
+			webView.loadDataWithBaseURL("file:///android_asset/", htmlText, "text/html", "utf-8", null);
+		}
+		
+		 
 	}
 	
 	public interface OnDetailPostActionListener {

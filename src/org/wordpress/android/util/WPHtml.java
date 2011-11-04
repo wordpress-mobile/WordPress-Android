@@ -28,18 +28,14 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import android.R;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.provider.MediaStore.Images;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
@@ -66,10 +62,6 @@ import android.text.style.UnderlineSpan;
 import android.view.Display;
 import android.view.WindowManager;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -229,7 +221,7 @@ public class WPHtml {
 
 	private static void withinBlockquote(StringBuilder out, Spanned text,
 			int start, int end) {
-		//out.append("<p>");
+		out.append("<p>");
 
 		int next;
 		for (int i = start; i < end; i = next) {
@@ -248,7 +240,7 @@ public class WPHtml {
 			withinParagraph(out, text, i, next - nl, nl, next == end);
 		}
 
-		//out.append("</p>\n");
+		out.append("</p>\n");
 	}
 
 	private static void withinParagraph(StringBuilder out, Spanned text,
@@ -438,6 +430,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 	private boolean mysteryTagFound;
 	private static Context ctx;
 	private static Post post;
+	private boolean imageTag;
 
 	private String mysteryTagName;
 
@@ -453,6 +446,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 		mysteryTagName = null;
 		ctx = context;
 		post = p;
+		imageTag = false;
 	}
 
 	public Spanned convert() {
@@ -545,6 +539,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 				start(mSpannableStringBuilder, new Header(tag.charAt(1) - '1'));
 			} else if (tag.equalsIgnoreCase("img")) {
 				startImg(mSpannableStringBuilder, attributes, mImageGetter);
+				imageTag = true;
 			} else {
 
 				if (tag.equalsIgnoreCase("html")
@@ -923,8 +918,11 @@ class HtmlToSpannedConverter implements ContentHandler {
 				if (pred != ' ' && pred != '\n') {
 					sb.append(' ');
 				}
-			} else {
+			} else if (!imageTag){
 				sb.append(c);
+			}
+			else {
+				imageTag = false;
 			}
 		}
 

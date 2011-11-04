@@ -682,7 +682,7 @@ public class Post {
 							.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
 									: "metaWeblog.editPost", params);
 					success = true;
-					// post.setUploaded(true);
+					post.setUploaded(true);
 					post.update();
 					return true;
 				} catch (final XMLRPCException e) {
