@@ -316,7 +316,9 @@ bin/res/drawable/ic_menu_rotate.png -text
 bin/res/drawable/ic_menu_view.png -text
 bin/res/drawable/ic_popup_sync_1.png -text
 bin/res/drawable/icon_titlebar_home.png -text
+bin/res/drawable/icon_titlebar_home_active.png -text
 bin/res/drawable/icon_titlebar_refresh.png -text
+bin/res/drawable/icon_titlebar_refresh_active.png -text
 bin/res/drawable/media.png -text
 bin/res/drawable/menu_button_bg.9.png -text
 bin/res/drawable/new_account_logo.png -text
