@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -39,7 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class WPTitleBar extends RelativeLayout {
+public class WPTitleBar extends RelativeLayout{
 
 	public CharSequence[] blogNames;
 	public int[] blogIDs;
@@ -287,7 +288,6 @@ public class WPTitleBar extends RelativeLayout {
 		showDashboardButton.setSelected(false);
 		showDashboardButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_home));
 		
-		dashboard.setBackgroundColor(Color.parseColor("#00000000"));
 		Animation fadeOutAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_hide);
 		dashboard.startAnimation(fadeOutAnimation);
@@ -301,12 +301,11 @@ public class WPTitleBar extends RelativeLayout {
 		ImageButton showDashboardButton = (ImageButton) findViewById(R.id.home_small);
 		showDashboardButton.setSelected(true);
 		showDashboardButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_home_active));
-		
+
 		dashboard.setVisibility(View.VISIBLE);
 		Animation fadeInAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_show);
 		dashboard.startAnimation(fadeInAnimation);
-		dashboard.setBackgroundColor(Color.parseColor("#AA000000"));
 		isShowingDashboard = true;
 	}
 
