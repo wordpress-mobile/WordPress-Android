@@ -33,6 +33,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,7 +55,7 @@ public class WPTitleBar extends RelativeLayout{
 	public RelativeLayout rl;
 	public LinearLayout dashboard;
 	public boolean isShowingDashboard;
-	TextView commentBadge;
+	TextView commentBadgeText;
 
 	public WPTitleBar(final Context ctx, AttributeSet attrs) {
 		super(ctx, attrs);
@@ -73,7 +74,8 @@ public class WPTitleBar extends RelativeLayout{
 		accounts = WordPress.wpDB.getAccounts(context);
 
 		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
-		commentBadge = (TextView) findViewById(R.id.comment_badge);
+		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
+		
 		blogNames = new CharSequence[accounts.size()];
 		blogIDs = new int[accounts.size()];
 
@@ -279,13 +281,15 @@ public class WPTitleBar extends RelativeLayout{
 							}
 						}
 					});
+
+					commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
+					updateCommentBadge();
 		
 	}
 
 	public void hideDashboardOverlay() {
 		
 		ImageButton showDashboardButton = (ImageButton) findViewById(R.id.home_small);
-		showDashboardButton.setSelected(false);
 		showDashboardButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_home));
 		
 		Animation fadeOutAnimation = AnimationUtils.loadAnimation(context,
@@ -299,7 +303,6 @@ public class WPTitleBar extends RelativeLayout{
 	protected void showDashboardOverlay() {
 		
 		ImageButton showDashboardButton = (ImageButton) findViewById(R.id.home_small);
-		showDashboardButton.setSelected(true);
 		showDashboardButton.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_home_active));
 
 		dashboard.setVisibility(View.VISIBLE);
@@ -354,8 +357,6 @@ public class WPTitleBar extends RelativeLayout{
 
 	public void startRotatingRefreshIcon() {
 		
-		Button b = (Button) findViewById(R.id.action_refresh);
-		b.setSelected(true);
 		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
@@ -368,8 +369,6 @@ public class WPTitleBar extends RelativeLayout{
 	}
 
 	public void stopRotatingRefreshIcon() {
-		Button b = (Button) findViewById(R.id.action_refresh);
-		b.setSelected(false);
 		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
 		iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_titlebar_refresh));
 		iv.clearAnimation();
@@ -377,8 +376,17 @@ public class WPTitleBar extends RelativeLayout{
 
 	public void updateCommentBadge() {
 		if (WordPress.currentBlog != null) {
-			commentBadge.setText(String.valueOf(WordPress.currentBlog
-					.getUnmoderatedCommentCount(context)));
+			int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount(context);
+			FrameLayout commentBadge = (FrameLayout) findViewById(R.id.comment_badge_frame);
+			if (commentCount > 0) {
+				commentBadge.setVisibility(View.VISIBLE);
+			}
+			else {
+				commentBadge.setVisibility(View.GONE);
+			}
+			
+			commentBadgeText.setText(String.valueOf(commentCount));
+			
 		}
 	}
 
