@@ -673,8 +673,9 @@ res/values-sv/strings.xml -text
 res/values-tr/strings.xml -text
 res/values-v7/dimens.xml -text
 res/values-v8/dimens.xml -text
-res/values-xlarge-mdpi/dimens.xml -text
+res/values-xlarge-v11/dimens.xml -text
 res/values-xlarge-v11/styles.xml -text
+res/values-xlarge-v7/dimens.xml -text
 res/values-xlarge/dimens.xml -text
 res/values-xlarge/styles.xml -text
 res/values-zh/strings.xml -text

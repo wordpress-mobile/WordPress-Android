@@ -34,6 +34,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.Xml;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -103,6 +105,38 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		if (postList.getPostsTask != null)
 			postList.getPostsTask.cancel(true);
 	}
+	
+	// Add settings to menu
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			super.onCreateOptionsMenu(menu);
+
+			if (isPage)
+				menu.add(0, 0, 0, getResources().getText(R.string.new_page));
+			else
+				menu.add(0, 0, 0, getResources().getText(R.string.new_post));
+			MenuItem menuItem1 = menu.findItem(0);
+			menuItem1.setIcon(R.drawable.ic_menu_add);
+
+			return true;
+		}
+		
+		@Override
+		public boolean onOptionsItemSelected(final MenuItem item) {
+			switch (item.getItemId()) {
+			case 0:
+				Intent i = new Intent(this, EditPost.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				if (isPage)
+					i.putExtra("isPage", true);
+				startActivity(i);
+				return true;
+			}
+			return false;
+
+		}
+
 
 	private void attemptToSelectPost() {
 		

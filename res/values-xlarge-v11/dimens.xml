@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dashboard_padding_large">200dp</dimen>
+    <dimen name="dashboard_padding_small">120dp</dimen>
+</resources>
