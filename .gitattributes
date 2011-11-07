@@ -701,6 +701,7 @@ src/org/wordpress/android/AddQuickPressShortcut.java -text
 src/org/wordpress/android/CommentBroadcastReceiver.java -text
 src/org/wordpress/android/CommentService.java -text
 src/org/wordpress/android/Comments.java -text
+src/org/wordpress/android/Constants.java -text
 src/org/wordpress/android/Dashboard.java -text
 src/org/wordpress/android/EditContent.java -text
 src/org/wordpress/android/EditPost.java -text

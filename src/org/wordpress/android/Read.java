@@ -141,7 +141,7 @@ public class Read extends Activity {
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
-						String readerURL = "http://en.wordpress.com/reader/mobile/v2";
+						String readerURL = Constants.readerURL;
 						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 							    readerURL += "/?per_page=20";
 							}
@@ -318,7 +318,7 @@ public class Read extends Activity {
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
-						String readerURL = "http://en.wordpress.com/reader/mobile/v2";
+						String readerURL = Constants.readerURL;
 						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 							    readerURL += "/?per_page=20";
 							}
@@ -335,7 +335,7 @@ public class Read extends Activity {
 		protected Vector<?> doInBackground(String... args) {
 
 			Vector<?> settings = WordPress.wpDB.loadSettings(id);
-			String readerURL = "http://en.wordpress.com/reader/mobile/v2";
+			String readerURL = Constants.readerURL;
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 				    readerURL += "/?per_page=20";
 				}
@@ -391,6 +391,7 @@ public class Read extends Activity {
 				wv.getSettings().setBuiltInZoomControls(true);
 				wv.getSettings().setJavaScriptEnabled(true);
 				wv.getSettings().setPluginsEnabled(true);
+				wv.getSettings().setDomStorageEnabled(true);
 				wv.loadData(responseContent, "text/html", HTTP.UTF_8);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -408,7 +409,7 @@ public class Read extends Activity {
 			if (loadReader) {
 				if (wv.canGoBack()
 						&& !wv.getUrl()
-								.equals("http://en.wordpress.com/reader/mobile/?preload=false")) {
+								.startsWith(Constants.readerURL)) {
 					wv.goBack();
 				} else {
 					finish();
