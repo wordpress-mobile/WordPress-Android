@@ -449,7 +449,7 @@ public class ViewComments extends ListFragment {
 							authorURL, authorEmail, URI
 									.create("http://gravatar.com/avatar/"
 											+ getMd5Hash(authorEmail.trim())
-											+ "?s=60&d=identicon")));
+											+ "?s=60&d=404")));
 				}
 
 				if (!refreshOnly) {

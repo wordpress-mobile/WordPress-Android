@@ -211,7 +211,7 @@ public class ViewCommentFragment extends Fragment {
 		WordPress.currentComment = comment;
 
 		final String gravatarURL = "http://gravatar.com/avatar/"
-				+ getMd5Hash(comment.authorEmail) + "?s=200&d=identicon";
+				+ getMd5Hash(comment.authorEmail) + "?s=200&d=mm";
 
 		getGravatar(gravatarURL);
 
