@@ -4,6 +4,7 @@
     <dimen name="action_bar_height">56dp</dimen>
     <dimen name="dashboard_padding_large">200dp</dimen>
     <dimen name="dashboard_padding_small">120dp</dimen>
+    <dimen name="dashboard_image_size">96dp</dimen>
     <dimen name="comment_badge_top_margin_landscape">16dp</dimen>
     <dimen name="comment_badge_right_margin_landscape">16dp</dimen>
     <dimen name="comment_badge_top_margin_portrait">385dp</dimen>
@@ -11,6 +12,7 @@
     <dimen name="comment_badge_right_margin">0dp</dimen>
     <dimen name="comment_badge_text_view_size">40dp</dimen>
     <dimen name="comment_badge_text_size">20dp</dimen>
+    <dimen name="comment_badge_size">64dp</dimen>
     <dimen name="action_bar_gravatar_size">42dp</dimen>
     <dimen name="action_bar_title_text_size">22dp</dimen>
     <dimen name="action_bar_right_margin">113dp</dimen>

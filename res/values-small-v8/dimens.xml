@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dashboard_image_size">38dp</dimen>
+    <dimen name="comment_badge_top_margin_landscape">17dp</dimen>
+    <dimen name="comment_badge_right_margin_landscape">17dp</dimen>
+    <dimen name="comment_badge_top_margin_portrait">178dp</dimen>
+    <dimen name="comment_badge_right_margin_portrait">17dp</dimen>
+</resources>

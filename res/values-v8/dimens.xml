@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dashboard_margin">20dp</dimen>
+    <dimen name="dashboard_padding">0dp</dimen>
+    <dimen name="comment_badge_top_margin_landscape">17dp</dimen>
+    <dimen name="comment_badge_right_margin_landscape">17dp</dimen>
+    <dimen name="comment_badge_top_margin_portrait">229dp</dimen>
+    <dimen name="comment_badge_right_margin_portrait">17dp</dimen>
+</resources>

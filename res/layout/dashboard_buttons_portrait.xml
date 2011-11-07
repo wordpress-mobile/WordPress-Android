@@ -17,13 +17,14 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:padding="@dimen/dashboard_padding" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="20dp"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/dashboard_margin"
             android:background="@drawable/dashboard_bg"
             android:orientation="vertical"
             android:weightSum="4.0" >
@@ -47,8 +48,8 @@
                     android:padding="10dp" >
 
                     <ImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="@dimen/dashboard_image_size"
+                        android:layout_height="@dimen/dashboard_image_size"
                         android:scaleType="centerInside"
                         android:src="@drawable/dashboard_icon_new_post" />
 
@@ -73,8 +74,8 @@
                     android:padding="10dp" >
 
                     <ImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="@dimen/dashboard_image_size"
+                        android:layout_height="@dimen/dashboard_image_size"
                         android:scaleType="centerInside"
                         android:src="@drawable/dashboard_icon_new_page" />
 
@@ -107,8 +108,8 @@
                     android:padding="10dp" >
 
                     <ImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="@dimen/dashboard_image_size"
+                        android:layout_height="@dimen/dashboard_image_size"
                         android:scaleType="centerInside"
                         android:src="@drawable/dashboard_icon_photo" >
                     </ImageView>
@@ -135,8 +136,8 @@
                     android:padding="10dp" >
 
                     <ImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="@dimen/dashboard_image_size"
+                        android:layout_height="@dimen/dashboard_image_size"
                         android:scaleType="centerInside"
                         android:src="@drawable/dashboard_icon_video" />
 
@@ -176,8 +177,8 @@
                         android:padding="10dp" >
 
                         <ImageView
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_posts" />
 
@@ -203,8 +204,8 @@
                         android:padding="10dp" >
 
                         <ImageView
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_pages" />
 
@@ -230,8 +231,8 @@
                         android:padding="10dp" >
 
                         <ImageView
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_comments" />
 
@@ -264,8 +265,8 @@
                         android:padding="10dp" >
 
                         <ImageView
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_settings" />
 
@@ -290,8 +291,8 @@
                         android:padding="10dp" >
 
                         <ImageView
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_subs" />
 
@@ -316,8 +317,8 @@
                         android:padding="10dp" >
 
                         <ImageView
-                            android:layout_width="96dp"
-                            android:layout_height="96dp"
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_stats" />
 
@@ -342,8 +343,8 @@
 
             <ImageView
                 android:id="@+id/comment_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/comment_badge_size"
+                android:layout_height="@dimen/comment_badge_size"
                 android:src="@drawable/comment_badge" />
 
             <org.wordpress.android.util.CommentBadgeTextView
@@ -362,5 +363,4 @@
                 android:textStyle="bold" />
         </FrameLayout>
     </FrameLayout>
-
 </LinearLayout>

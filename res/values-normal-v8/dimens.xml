@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="comment_badge_top_margin_portrait">204dp</dimen>
+</resources>
