@@ -141,10 +141,12 @@ public class Read extends Activity {
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
-						HttpResponse response = httpclient
-								.execute(new HttpGet(
-										"http://wordpress.com/reader/mobile/v2"));
-						InputStream content = response.getEntity().getContent();
+						String readerURL = "http://en.wordpress.com/reader/mobile/v2";
+						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
+							    readerURL += "/?per_page=20";
+							}
+						
+						httpclient.execute(new HttpGet(readerURL));
 					} catch (Exception e) {
 						// oh well
 					}
@@ -313,14 +315,15 @@ public class Read extends Activity {
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						// load stat
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
-						HttpResponse response = httpclient
-								.execute(new HttpGet(
-										"http://wordpress.com/reader/mobile/?template=stats&stats_name=home_page"));
-						InputStream content = response.getEntity().getContent();
+						String readerURL = "http://en.wordpress.com/reader/mobile/v2";
+						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
+							    readerURL += "/?per_page=20";
+							}
+						
+						httpclient.execute(new HttpGet(readerURL));
 					} catch (Exception e) {
 						// oh well
 					}
@@ -332,6 +335,10 @@ public class Read extends Activity {
 		protected Vector<?> doInBackground(String... args) {
 
 			Vector<?> settings = WordPress.wpDB.loadSettings(id);
+			String readerURL = "http://en.wordpress.com/reader/mobile/v2";
+			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
+				    readerURL += "/?per_page=20";
+				}
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
@@ -350,7 +357,7 @@ public class Read extends Activity {
 						+ "\" /></label>"
 						+ "<input type=\"submit\" name=\"wp-submit\" id=\"wp-submit\" value=\"Log In\" />"
 						+ "<input type=\"hidden\" name=\"redirect_to\" value=\""
-						+ "http://wordpress.com/reader/mobile?preload=false"
+						+ readerURL
 						+ "\" />" + "</form>" + "</body>";
 
 				wv.setWebViewClient(new WebViewClient() {
