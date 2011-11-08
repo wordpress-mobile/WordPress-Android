@@ -1,86 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/about"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:background="@drawable/dashboard_bg"
-	>
-	
-	<ImageView
-	android:id="@+id/about_wp_logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dip"
-    android:layout_gravity="center_horizontal"
-    android:src="@drawable/wp_logo_home" />
-       
-    <TextView
-    android:id="@+id/about_first_line"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/about_wp_logo"
-    android:layout_gravity="center_horizontal"
-	android:text="Wordpress for Android"
-	android:textSize="25dip"
-	/>
-	 
-    <TextView
-	android:id="@+id/about_version"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_below="@id/about_first_line"
-	android:layout_gravity="center_horizontal"
-	android:text="Version 1.5 alpha"
-	/>
-	
-	<TextView
-	android:id="@+id/about_second_line"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/about_version"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="40dip"
-	android:text="Publisher: Automattic, Inc"
-	android:textSize="18dip"
-	/>
-	
-	<TextView
-	android:id="@+id/about_third_line"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_below="@id/about_second_line"
-	android:layout_gravity="center_horizontal"
-	android:text="Copyright: Automattic, Inc"
-	android:textSize="18dip"
-	/>
-	
-	<Button 
-	android:id="@+id/about_tos"
-	android:layout_width="220dip"
-	android:layout_height="40dip"
-	android:layout_marginTop="60dip"
-	android:layout_below="@id/about_third_line"
-	android:layout_gravity="center_horizontal"
-	style="@style/DashboardButtonText"
-    android:background="@drawable/wp_button_dashboard"
-	android:text="Terms of Service"
-	android:textSize="18dip"
-	/>
-	
-	<Button 
-	android:id="@+id/about_privacy"
-	android:layout_width="220dip"
-	android:layout_height="40dip"
-	android:layout_below="@id/about_tos"
-	android:layout_gravity="center_horizontal"
-	android:layout_marginTop="20dip"
-	android:text="Privacy Policy"
-	style="@style/DashboardButtonText"
-    android:background="@drawable/wp_button_dashboard"
-    android:textSize="18dip"
-	/>	
-	
-	
-</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/about"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/dashboard_bg"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/about_wp_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dip"
+            android:src="@drawable/wp_logo_home" />
+
+        <TextView
+            android:id="@+id/about_first_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:shadowColor="#FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:text="@string/app_title"
+            android:textSize="25dip" />
+
+        <TextView
+            android:id="@+id/about_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/version"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/about_second_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dip"
+            android:text="@string/publisher"
+            android:textSize="18dip" />
+
+        <TextView
+            android:id="@+id/about_third_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/copyright"
+            android:textSize="18dip" />
+
+        <Button
+            android:id="@+id/about_tos"
+            android:layout_width="220dip"
+            android:layout_height="40dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dip"
+            android:background="@drawable/wp_button"
+            android:text="@string/tos"
+            android:textSize="18dip" />
+
+        <Button
+            android:id="@+id/about_privacy"
+            android:layout_width="220dip"
+            android:layout_height="40dip"
+            android:layout_below="@id/about_tos"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/wp_button"
+            android:text="@string/privacy_policy"
+            android:textSize="18dip" />
+
+        <TextView
+            android:id="@+id/about_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dip"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:text="@string/automattic_url"
+            android:textSize="18dip" />
+    </LinearLayout>
+
+</ScrollView>

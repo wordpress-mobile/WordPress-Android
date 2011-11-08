@@ -154,15 +154,19 @@ public class Dashboard extends Activity {
 
 		menu.add(0, 0, 0, getResources().getText(R.string.add_account));
 		MenuItem menuItem1 = menu.findItem(0);
-		menuItem1.setIcon(R.drawable.ic_menu_add);
+		menuItem1.setIcon(android.R.drawable.ic_menu_add);
 
 		menu.add(0, 1, 0, getResources().getText(R.string.preferences));
 		MenuItem menuItem2 = menu.findItem(1);
-		menuItem2.setIcon(R.drawable.ic_menu_prefs);
+		menuItem2.setIcon(android.R.drawable.ic_menu_preferences);
 
 		menu.add(0, 2, 0, getResources().getText(R.string.remove_account));
 		MenuItem menuItem3 = menu.findItem(2);
-		menuItem3.setIcon(R.drawable.ic_menu_close_clear_cancel);
+		menuItem3.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+		
+		menu.add(0, 3, 0, getResources().getText(R.string.about));
+		MenuItem menuItem4 = menu.findItem(3);
+		menuItem4.setIcon(android.R.drawable.ic_menu_info_details);
 
 		return true;
 	}
@@ -236,6 +240,10 @@ public class Dashboard extends Activity {
 					});
 			dialogBuilder.setCancelable(false);
 			dialogBuilder.create().show();
+			return true;
+		case 3:
+			Intent intent = new Intent(this, About.class);
+			startActivity(intent);
 			return true;
 		}
 		return false;

@@ -408,7 +408,7 @@ public class SelectCategories extends ListActivity {
 	    super.onCreateOptionsMenu(menu);
 	    menu.add(0, 0, 0, getResources().getText(R.string.refresh_categories));
 	    MenuItem menuItem1 = menu.findItem(0);
-	    menuItem1.setIcon(R.drawable.ic_menu_rotate);
+	    menuItem1.setIcon(android.R.drawable.ic_menu_rotate);
 	    
 	    return true;
 	}

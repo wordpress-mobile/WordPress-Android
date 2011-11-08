@@ -112,11 +112,11 @@ public class Read extends Activity {
 
 			menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
 			menuItem = menu.findItem(1);
-			menuItem.setIcon(R.drawable.ic_menu_view);
+			menuItem.setIcon(android.R.drawable.ic_menu_view);
 
 			menu.add(0, 2, 0, getResources().getText(R.string.refresh));
 			menuItem = menu.findItem(2);
-			menuItem.setIcon(R.drawable.browser_reload);
+			menuItem.setIcon(android.R.drawable.ic_menu_rotate);
 		}
 		return true;
 	}

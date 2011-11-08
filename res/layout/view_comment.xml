@@ -99,7 +99,7 @@
       android:layout_width="48dip"
       android:layout_height="48dip"
       android:background="@drawable/wp_button_small"
-      android:src="@drawable/ic_menu_delete"
+      android:src="@android:drawable/ic_menu_delete"
       android:layout_alignParentLeft="true" />
     <Button
       android:id="@+id/approveComment"

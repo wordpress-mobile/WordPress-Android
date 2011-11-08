@@ -116,7 +116,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			else
 				menu.add(0, 0, 0, getResources().getText(R.string.new_post));
 			MenuItem menuItem1 = menu.findItem(0);
-			menuItem1.setIcon(R.drawable.ic_menu_add);
+			menuItem1.setIcon(android.R.drawable.ic_menu_add);
 
 			return true;
 		}

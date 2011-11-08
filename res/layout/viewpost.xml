@@ -38,7 +38,7 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_menu_delete"
+                android:src="@android:drawable/ic_menu_delete"
                 android:text="@string/delete_post" />
 
             <ImageButton
@@ -50,7 +50,7 @@
                 android:layout_toLeftOf="@id/deletePost"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_menu_share"
+                android:src="@android:drawable/ic_menu_share"
                 android:text="@string/share_url" />
 
             <ImageButton
@@ -62,7 +62,7 @@
                 android:layout_toLeftOf="@id/sharePostLink"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_menu_edit"
+                android:src="@android:drawable/ic_menu_edit"
                 android:text="@string/edit_post" />
         </RelativeLayout>
     </RelativeLayout>

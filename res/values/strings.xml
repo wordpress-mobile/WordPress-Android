@@ -33,6 +33,7 @@
   <!-- general strings -->
   <string name="app_name">WordPress</string>
   <string name="eula">GNU GENERAL PUBLIC LICENSE</string>
+  <string name="about">About</string>
   <string name="username">Username:</string>
   <string name="cancel">Cancel</string>
   <string name="save">Save</string>
@@ -467,6 +468,15 @@
         <item>Center</item>
         <item>Right</item>
     </string-array>
+    
+  <!-- About View -->
+  <string name="app_title">WordPress for Android</string>
+  <string name="publisher">Publisher: Automattic, Inc</string>
+  <string name="copyright">©2011 Automattic, Inc</string>
+  <string name="version">Version</string>
+  <string name="tos">Terms of Service</string>
+  <string name="privacy_policy">Privacy Policy</string>
+  <string name="automattic_url"><u>www.automattic.com</u></string>
   
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991
