@@ -48,6 +48,7 @@ public class Read extends Activity {
 	private String accountName = "";
 	private String httpuser = "";
 	private String httppassword = "";
+	private String loginURL = "";
 	private boolean loadReader = false;
 	private boolean isPage = false;
 	ImageButton backButton, forwardButton, refreshButton;
@@ -331,6 +332,7 @@ public class Read extends Activity {
 		protected Vector<?> doInBackground(String... args) {
 
 			Vector<?> settings = WordPress.wpDB.loadSettings(id);
+			loginURL = settings.get(0).toString().replace("xmlrpc.php", "wp-login.php");
 			String readerURL = Constants.readerURL;
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 				    readerURL += "/?per_page=20";
@@ -342,8 +344,7 @@ public class Read extends Activity {
 						+ "</head>"
 						+ "<body onload=\"submitform()\">"
 						+ "<form style=\"visibility:hidden;\" name=\"loginform\" id=\"loginform\" action=\""
-						+ settings.get(0).toString()
-								.replace("xmlrpc.php", "wp-login.php")
+						+ loginURL
 						+ "\" method=\"post\">"
 						+ "<input type=\"text\" name=\"log\" id=\"user_login\" value=\""
 						+ settings.get(2).toString()
@@ -405,7 +406,7 @@ public class Read extends Activity {
 			if (loadReader) {
 				if (wv.canGoBack()
 						&& !wv.getUrl()
-								.startsWith(Constants.readerURL)) {
+								.startsWith(Constants.readerURL) && !wv.getUrl().equals(loginURL)) {
 					wv.goBack();
 				} else {
 					finish();
