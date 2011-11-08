@@ -2,8 +2,10 @@
 <resources>
     <dimen name="comment_detail_font_size">20dp</dimen>
     <dimen name="action_bar_height">56dp</dimen>
-    <dimen name="dashboard_padding_large">200dp</dimen>
-    <dimen name="dashboard_padding_small">120dp</dimen>
+    <dimen name="dashboard_padding_large_left">200dp</dimen>
+    <dimen name="dashboard_padding_small_left">120dp</dimen>
+    <dimen name="dashboard_padding_large_right">198dp</dimen>
+    <dimen name="dashboard_padding_small_right">118dp</dimen>
     <dimen name="dashboard_image_size">96dp</dimen>
     <dimen name="comment_badge_top_margin_landscape">16dp</dimen>
     <dimen name="comment_badge_right_margin_landscape">16dp</dimen>

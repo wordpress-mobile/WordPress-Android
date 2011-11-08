@@ -9,23 +9,26 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dashboard_padding_small"
-    android:paddingLeft="@dimen/dashboard_padding_large"
-    android:paddingRight="@dimen/dashboard_padding_large"
-    android:paddingTop="@dimen/dashboard_padding_small"
+    android:paddingBottom="@dimen/dashboard_padding_small_left"
+    android:paddingLeft="@dimen/dashboard_padding_large_left"
+    android:paddingRight="@dimen/dashboard_padding_large_right"
+    android:paddingTop="@dimen/dashboard_padding_small_right"
     android:visibility="gone" >
 
     <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="@dimen/dashboard_padding" >
+        android:layout_height="fill_parent" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/dashboard_margin"
-            android:background="@drawable/dashboard_bg"
+            android:background="@drawable/dashboard_bg_landscape" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
             android:orientation="horizontal"
             android:weightSum="4.0" >
 
@@ -40,24 +43,24 @@
                     android:id="@+id/dashboard_newpost_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:layout_marginTop="4px"
                     android:layout_weight="1.0"
                     android:background="@drawable/wp_button_dashboard_top_left"
                     android:clickable="true"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="10dp" >
+                        <ImageView
+                            android:layout_width="@dimen/dashboard_image_size"
+                            android:layout_height="@dimen/dashboard_image_size"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/dashboard_icon_new_post" />
 
-                    <ImageView
-                        android:layout_width="@dimen/dashboard_image_size"
-                        android:layout_height="@dimen/dashboard_image_size"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/dashboard_icon_new_post" />
-
-                    <TextView
-                        style="@style/DashboardButtonText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="New Post" />
+                        <TextView
+                            style="@style/DashboardButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New Post" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -98,6 +101,7 @@
                     android:id="@+id/dashboard_newpage_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:layout_marginTop="4px"
                     android:layout_weight="1.0"
                     android:background="@drawable/wp_button_dashboard"
                     android:clickable="true"
@@ -163,6 +167,8 @@
                         android:id="@+id/dashboard_posts_btn"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
+                        android:layout_marginTop="4px"
+                        android:layout_marginRight="3px"
                         android:layout_weight="1.0"
                         android:background="@drawable/wp_button_dashboard"
                         android:clickable="true"
@@ -188,7 +194,9 @@
                         android:id="@+id/dashboard_pages_btn"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="2px"
+                        android:layout_marginLeft="-2px"
+                        android:layout_marginRight="4px"
+                        android:layout_marginTop="4px"
                         android:layout_weight="1.0"
                         android:background="@drawable/wp_button_dashboard"
                         android:clickable="true"
@@ -210,31 +218,71 @@
                             android:text="Pages" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/dashboard_comments_btn"
+                    <FrameLayout
+                        android:id="@+id/comment_badge_frame"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="2px"
-                        android:layout_weight="1.0"
-                        android:background="@drawable/wp_button_dashboard_top_right"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="10dp" >
+                        android:layout_marginLeft="-3px"
+                        android:layout_weight="1.0" >
+
+                        <LinearLayout
+                            android:id="@+id/dashboard_comments_btn"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="top"
+                            android:layout_marginLeft="-4px"
+                            android:layout_marginRight="4px"
+                            android:layout_marginTop="4px"
+                            android:background="@drawable/wp_button_dashboard_top_right"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="10dp" >
+
+                            <ImageView
+                                android:layout_width="@dimen/dashboard_image_size"
+                                android:layout_height="@dimen/dashboard_image_size"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/dashboard_icon_comments" />
+
+                            <TextView
+                                android:id="@+id/button_text"
+                                style="@style/DashboardButtonText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tab_comments" />
+                        </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="top"
+                        android:layout_marginRight="@dimen/comment_badge_image_right_margin"
+                        android:layout_marginTop="@dimen/comment_badge_image_top_margin" >
 
                         <ImageView
-                            android:layout_width="@dimen/dashboard_image_size"
-                            android:layout_height="@dimen/dashboard_image_size"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/dashboard_icon_comments" />
+                            android:id="@+id/comment_badge"
+                            android:layout_width="@dimen/comment_badge_size"
+                            android:layout_height="@dimen/comment_badge_size"
+                            android:layout_gravity="right"
+                            android:src="@drawable/comment_badge" />
 
-                        <TextView
-                            android:id="@+id/button_text"
-                            style="@style/DashboardButtonText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Comments" />
-                    </LinearLayout>
+                        <org.wordpress.android.util.CommentBadgeTextView
+                            android:id="@+id/comment_badge_text"
+                            android:layout_width="@dimen/comment_badge_text_view_size"
+                            android:layout_height="@dimen/comment_badge_text_view_size"
+                            android:layout_gravity="right"
+                            android:layout_marginRight="@dimen/comment_badge_right_margin"
+                            android:gravity="center"
+                            android:shadowColor="#FF464646"
+                            android:shadowDy="1"
+                            android:shadowRadius="1"
+                            android:text="0"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="@dimen/comment_badge_text_size"
+                            android:textStyle="bold" />
+                        </FrameLayout>
+                    </FrameLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -250,6 +298,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="1.0"
+                        android:layout_marginRight="3px"
                         android:background="@drawable/wp_button_dashboard_bottom_center"
                         android:clickable="true"
                         android:gravity="center"
@@ -274,7 +323,8 @@
                         android:id="@+id/dashboard_subs_btn"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="2px"
+                        android:layout_marginLeft="-2px"
+                        android:layout_marginRight="4px"
                         android:layout_weight="1.0"
                         android:background="@drawable/wp_button_dashboard_bottom_center"
                         android:clickable="true"
@@ -300,7 +350,8 @@
                         android:id="@+id/dashboard_stats_btn"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="2px"
+                        android:layout_marginLeft="-3px"
+                        android:layout_marginRight="4px"
                         android:layout_weight="1.0"
                         android:background="@drawable/wp_button_dashboard_bottom_right"
                         android:clickable="true"
@@ -324,36 +375,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/comment_badge_frame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/comment_badge_right_margin_landscape"
-            android:layout_marginTop="@dimen/comment_badge_top_margin_landscape" >
-
-            <ImageView
-                android:id="@+id/comment_badge"
-                android:layout_width="@dimen/comment_badge_size"
-                android:layout_height="@dimen/comment_badge_size"
-                android:src="@drawable/comment_badge" />
-
-            <org.wordpress.android.util.CommentBadgeTextView
-                android:id="@+id/comment_badge_text"
-                android:layout_width="@dimen/comment_badge_text_view_size"
-                android:layout_height="@dimen/comment_badge_text_view_size"
-                android:layout_marginRight="@dimen/comment_badge_right_margin"
-                android:layout_gravity="right"
-                android:gravity="center"
-                android:shadowColor="#FF464646"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:text="0"
-                android:textColor="#FFFFFFFF"
-                android:textSize="@dimen/comment_badge_text_size"
-                android:textStyle="bold" />
-        </FrameLayout>
     </FrameLayout>
 
 </LinearLayout>
