@@ -257,10 +257,6 @@ public class EditContent extends Activity {
 													DialogInterface dialog,
 													int whichButton) {
 
-												/*
-												 * User clicked cancel so do
-												 * some stuff
-												 */
 											}
 										}).create();
 						ad.show();
@@ -719,43 +715,9 @@ public class EditContent extends Activity {
 						addMedia(capturedImage.toString(), capturedImage);
 
 					} catch (FileNotFoundException e) {
-						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-								EditContent.this);
-						dialogBuilder.setTitle(getResources().getText(
-								R.string.file_error));
-						dialogBuilder.setMessage(getResources().getText(
-								R.string.file_error_encountered));
-						dialogBuilder.setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-										// just close the dialog
-									}
-								});
-						dialogBuilder.setCancelable(true);
-						if (!isFinishing()) {
-							dialogBuilder.create().show();
-						}
+						//user canceled capture
 					}
 
-				} else {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							EditContent.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.file_error));
-					dialogBuilder.setMessage(getResources().getText(
-							R.string.file_error_encountered));
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// just close the dialog
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
 				}
 
 				break;

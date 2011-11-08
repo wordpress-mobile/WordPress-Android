@@ -1,7 +1,6 @@
 package org.wordpress.android.models;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 
 import android.content.Context;
 

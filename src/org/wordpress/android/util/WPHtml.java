@@ -18,7 +18,7 @@ package org.wordpress.android.util;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
-import org.wordpress.android.WordPressDB;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.xml.sax.Attributes;
@@ -711,8 +711,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 			WPImageSpan is = new WPImageSpan(ctx, resizedBitmap, curStream);
 			
 			//get the MediaFile data from db
-			WordPressDB wpDB = new WordPressDB(ctx);
-			MediaFile mf = wpDB.getMediaFile(src, post);
+			MediaFile mf = WordPress.wpDB.getMediaFile(src, post);
 			if (mf != null) {
 				is.setTitle(mf.getTitle());
 				is.setDescription(mf.getDescription());

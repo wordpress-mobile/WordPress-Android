@@ -85,7 +85,6 @@ public class ApiHelper extends Activity {
 								"MMMM dd, yyyy hh:mm a");
 						dateCreatedFormatted = sdfOut.format(d);
 					} catch (ParseException pe) {
-						pe.printStackTrace();
 						dateCreatedFormatted = dateCreated; // just make it the
 															// ugly date if it
 															// doesn't work
@@ -203,7 +202,6 @@ public class ApiHelper extends Activity {
 						"MMMM dd, yyyy hh:mm a");
 				dateCreatedFormatted = sdfOut.format(d);
 			} catch (ParseException pe) {
-				pe.printStackTrace();
 				dateCreatedFormatted = dateCreated; // just make it the ugly
 													// date if it doesn't work
 			}

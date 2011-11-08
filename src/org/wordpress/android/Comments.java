@@ -186,6 +186,13 @@ public class Comments extends FragmentActivity implements
 		} else if (status.equals("delete")) {
 			final int commentID_del = Integer.parseInt(comment_id);
 			showDialog(ID_DIALOG_DELETING);
+			//pop out of the detail view if on a smaller screen
+			FragmentManager fm = getSupportFragmentManager();
+			ViewPostFragment f = (ViewPostFragment) fm
+					.findFragmentById(R.id.commentDetail);
+			if (f == null) {
+				fm.popBackStack();
+			}
 			new Thread() {
 				public void run() {
 					deleteComment(commentID_del);
@@ -287,6 +294,7 @@ public class Comments extends FragmentActivity implements
 		try {
 			client.call("wp.deleteComment", params);
 			dismissDialog(ID_DIALOG_DELETING);
+			attemptToSelectComment();
 			Thread action = new Thread() {
 				public void run() {
 					Toast.makeText(Comments.this,

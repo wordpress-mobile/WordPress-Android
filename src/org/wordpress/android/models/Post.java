@@ -1,18 +1,24 @@
 package org.wordpress.android.models;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.Dashboard;
-import org.wordpress.android.EditPost;
+import org.wordpress.android.Posts;
 import org.wordpress.android.R;
-import org.wordpress.android.ViewPosts;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -31,17 +37,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.RemoteViews;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
 
 public class Post {
 
@@ -80,8 +75,6 @@ public class Post {
 	private static NotificationManager nm;
 	private static int notificationID;
 
-	private Vector<Uri> selectedImageIDs = new Vector<Uri>();
-	private int selectedImageCtr = 0;
 	public Vector<String> imageUrl = new Vector<String>();
 	Vector<String> selectedCategories = new Vector<String>();
 	private static Notification n;
@@ -457,7 +450,7 @@ public class Post {
 
 			// add the uploader to the notification bar
 			nm = (NotificationManager) context.getSystemService("notification");
-			Intent notificationIntent = new Intent(context, ViewPosts.class);
+			Intent notificationIntent = new Intent(context, Posts.class);
 			notificationIntent
 					.setData((Uri.parse("custom://wordpressNotificationIntent"
 							+ post.blogID)));
@@ -493,7 +486,6 @@ public class Post {
 			}
 			Boolean publishThis = false;
 
-			String imageContent = "";
 			boolean mediaError = false;
 			Spannable s;
 			String descriptionContent = "", moreContent = "";
@@ -564,7 +556,7 @@ public class Post {
 				if (!post.isPage) {
 					// add the tagline
 					HashMap<?, ?> globalSettings = WordPress.wpDB
-							.getNotificationOptions(post.context);
+							.getNotificationOptions(context);
 					boolean taglineValue = false;
 					String tagline = "";
 
@@ -681,13 +673,9 @@ public class Post {
 							post.blog.getUsername(), post.blog.getPassword(),
 							contentStruct, publishThis };
 
-				Object result = null;
-				boolean success = false;
 				try {
-					result = (Object) client
-							.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
+					client.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
 									: "metaWeblog.editPost", params);
-					success = true;
 					post.setUploaded(true);
 					post.update();
 					return true;
@@ -753,7 +741,7 @@ public class Post {
 								Video.Media.RESOLUTION };
 						imgPath = videoUri;
 
-						Cursor cur = ((Activity) post.context).managedQuery(
+						Cursor cur = ((Activity) context).managedQuery(
 								imgPath, projection, null, null, null);
 						String thumbData = "";
 
@@ -822,12 +810,10 @@ public class Post {
 						String mediaErrorMsg = e.getLocalizedMessage();
 						if (video) {
 							if (mediaErrorMsg.contains("Invalid file type")) {
-								mediaErrorMsg = post.context.getResources()
+								mediaErrorMsg = context.getResources()
 										.getString(R.string.vp_upgrade);
-								boolean vpUpgrade = true;
 							}
 						}
-						boolean xmlrpcError = true;
 						return null;
 					}
 
@@ -871,7 +857,7 @@ public class Post {
 
 								imgPath = imageUri;
 
-								Cursor cur = ((Activity) post.context)
+								Cursor cur = ((Activity) context)
 										.managedQuery(imgPath, projection,
 												null, null, null);
 								String thumbData = "";
@@ -906,8 +892,6 @@ public class Post {
 							// check if the file is now gone! (removed SD
 							// card, etc)
 							if (jpeg == null) {
-								boolean xmlrpcError = true;
-								String mediaErrorMsg = "Media file not found.";
 								break;
 							}
 
@@ -969,7 +953,6 @@ public class Post {
 							} catch (XMLRPCException e) {
 								e.printStackTrace();
 								e.getLocalizedMessage();
-								boolean xmlrpcError = true;
 								break;
 							}
 

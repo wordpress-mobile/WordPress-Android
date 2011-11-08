@@ -221,12 +221,20 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		@Override
 		protected void onPreExecute() {
+			//pop out of the detail view if on a smaller screen
+			FragmentManager fm = getSupportFragmentManager();
+			ViewPostFragment f = (ViewPostFragment) fm
+					.findFragmentById(R.id.postDetail);
+			if (f == null) {
+				fm.popBackStack();
+			}
 			showDialog(ID_DIALOG_DELETING);
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			dismissDialog(ID_DIALOG_DELETING);
+			attemptToSelectPost();
 			if (result) {
 				Toast.makeText(
 						Posts.this,
