@@ -219,7 +219,6 @@
                     </LinearLayout>
 
                     <FrameLayout
-                        android:id="@+id/comment_badge_frame"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_marginLeft="-3px"
@@ -254,6 +253,7 @@
                         </LinearLayout>
 
                     <FrameLayout
+                        android:id="@+id/comment_badge_frame"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_gravity="top"
