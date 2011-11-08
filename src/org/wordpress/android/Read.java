@@ -1,10 +1,8 @@
 package org.wordpress.android;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -37,9 +35,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class Read extends Activity {
@@ -70,7 +66,7 @@ public class Read extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			id = WordPress.currentBlog.getId();
+			id = extras.getInt("id");
 			postID = extras.getString("postID");
 			accountName = extras.getString("accountName");
 			isPage = extras.getBoolean("isPage");

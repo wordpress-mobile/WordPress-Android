@@ -1748,5 +1748,19 @@ public class WordPressDB {
 		db.delete(MEDIA_TABLE, "postID=" + post.getId(), null);
 		
 	}
+	
+	public int getWPCOMBlogID(){
+	    int id = -1;
+        Cursor c = db.query(SETTINGS_TABLE, new String[] {"id"}, "dotcomFlag=1", null, null, null, null);
+        int numRows = c.getCount();
+        c.moveToFirst();
+        if (numRows > 0){
+            id = c.getInt(0);
+        }
+        
+        c.close();
+        
+        return id;
+	}
 
 }
