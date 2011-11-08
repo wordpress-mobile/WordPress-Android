@@ -327,7 +327,6 @@ public class ViewStats extends Activity {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private void getStatsData(String apiKey, String blogID,
 			final String reportType, int interval) {
 		if (isFinishing()) {
@@ -389,7 +388,7 @@ public class ViewStats extends Activity {
 			int eventType = pullParser.getEventType();
 			boolean foundDataItem = false;
 			final Vector<HashMap<String, String>> dataSet = new Vector<HashMap<String, String>>();
-			final Vector numDataSet = new Vector();
+			final Vector<Integer> numDataSet = new Vector<Integer>();
 			int rowCount = 0;
 			// parse the xml response
 			// most replies follow the same xml structure, so the data is stored
@@ -498,9 +497,9 @@ public class ViewStats extends Activity {
 							// Add row to TableLayout.
 							tl.addView(table_row);
 
-							HashMap row;
+							HashMap<?, ?> row;
 							for (int i = 0; i < dataSet.size(); i++) {
-								row = (HashMap) dataSet.get(i);
+								row = (HashMap<?, ?>) dataSet.get(i);
 								String date = row.get("date").toString();
 								String value = numDataSet.get(i).toString();
 								dateStrings += date + ",";
@@ -547,8 +546,6 @@ public class ViewStats extends Activity {
 									.length() - 1);
 							dateStrings = dateStrings.substring(0, dateStrings
 									.length() - 1);
-
-							String[] dateArray = dateStrings.split(",");
 
 							long minBuffer = Math.round(minValue
 									- (maxValue * .10));
@@ -655,9 +652,9 @@ public class ViewStats extends Activity {
 							// Add row to TableLayout.
 							tl.addView(table_row);
 
-							HashMap row;
+							HashMap<?, ?> row;
 							for (int i = 0; i < dataSet.size(); i++) {
-								row = (HashMap) dataSet.get(i);
+								row = (HashMap<?, ?>) dataSet.get(i);
 								String date = row.get("title").toString();
 								String value = numDataSet.get(i).toString();
 
@@ -734,9 +731,9 @@ public class ViewStats extends Activity {
 							// Add row to TableLayout.
 							tl.addView(table_row);
 
-							HashMap row;
+							HashMap<?, ?> row;
 							for (int i = 0; i < dataSet.size(); i++) {
-								row = (HashMap) dataSet.get(i);
+								row = (HashMap<?, ?>) dataSet.get(i);
 								String date = row.get("value").toString();
 								String value = numDataSet.get(i).toString();
 
@@ -1152,10 +1149,8 @@ public class ViewStats extends Activity {
 				bis.close();
 				is.close();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

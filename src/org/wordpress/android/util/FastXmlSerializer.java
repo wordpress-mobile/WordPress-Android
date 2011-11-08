@@ -283,7 +283,8 @@ public class FastXmlSerializer implements XmlSerializer {
         throw new UnsupportedOperationException();
     }
 
-    public void setOutput(OutputStream os, String encoding) throws IOException,
+    @SuppressWarnings("unused")
+	public void setOutput(OutputStream os, String encoding) throws IOException,
             IllegalArgumentException, IllegalStateException {
         if (os == null)
             throw new IllegalArgumentException();

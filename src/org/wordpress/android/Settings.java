@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,7 +17,6 @@ import android.widget.TextView;
 public class Settings extends Activity {
 	protected static Intent svc = null;
 	private String originalUsername;
-	private String xmlrpcPath;
 	private Blog blog;
 	private int id;
 	@Override

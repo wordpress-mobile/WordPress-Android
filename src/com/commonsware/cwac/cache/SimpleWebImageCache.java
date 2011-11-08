@@ -30,6 +30,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 
+@SuppressWarnings("rawtypes")
 public class SimpleWebImageCache<B extends AbstractBus, M>
 	extends CacheBase<String, Drawable> {
 	//private static final String TAG="SimpleWebImageCache";
@@ -93,6 +94,7 @@ public class SimpleWebImageCache<B extends AbstractBus, M>
 		return(buildCachedImagePath(getCacheRoot(), url));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void notify(String key, M message)
 		throws Exception {
 		int status=getStatus(key);
@@ -116,6 +118,7 @@ public class SimpleWebImageCache<B extends AbstractBus, M>
 	
 	class FetchImageTask
 		extends AsyncTaskEx<Object, Void, Void> {
+		@SuppressWarnings("unchecked")
 		@Override
 		protected Void doInBackground(Object... params) {
 			String url=params[1].toString();
@@ -163,6 +166,7 @@ public class SimpleWebImageCache<B extends AbstractBus, M>
 	}
 	
 	class LoadImageTask extends AsyncTaskEx<Object, Void, Void> {
+		@SuppressWarnings("unchecked")
 		@Override
 		protected Void doInBackground(Object... params) {
 			String url=params[1].toString();

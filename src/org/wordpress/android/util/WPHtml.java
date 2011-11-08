@@ -76,7 +76,7 @@ public class WPHtml {
 	 */
 	public static interface ImageGetter {
 		/**
-		 * This methos is called when the HTML parser encounters an &lt;img&gt;
+		 * This method is called when the HTML parser encounters an &lt;img&gt;
 		 * tag. The <code>source</code> argument is the string from the "src"
 		 * attribute; the return value should be a Drawable representation of
 		 * the image or <code>null</code> for a generic replacement image. Make
@@ -200,6 +200,7 @@ public class WPHtml {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void withinDiv(StringBuilder out, Spanned text, int start,
 			int end) {
 		int next;
@@ -425,7 +426,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 	private XMLReader mReader;
 	private SpannableStringBuilder mSpannableStringBuilder;
 	private WPHtml.ImageGetter mImageGetter;
-	private WPHtml.TagHandler mTagHandler;
 	private String mysteryTagContent;
 	private boolean mysteryTagFound;
 	private static Context ctx;
@@ -440,7 +440,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 		mSource = source;
 		mSpannableStringBuilder = new SpannableStringBuilder();
 		mImageGetter = imageGetter;
-		mTagHandler = tagHandler;
 		mReader = parser;
 		mysteryTagContent = "";
 		mysteryTagName = null;
@@ -650,7 +649,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 		text.append("\n");
 	}
 
-	private static Object getLast(Spanned text, Class kind) {
+	private static Object getLast(Spanned text, Class<?> kind) {
 		/*
 		 * This knows that the last returned object from getSpans() will be the
 		 * most recently added.
@@ -669,7 +668,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 		text.setSpan(mark, len, len, Spannable.SPAN_MARK_MARK);
 	}
 
-	private static void end(SpannableStringBuilder text, Class kind, Object repl) {
+	private static void end(SpannableStringBuilder text, Class<?> kind, Object repl) {
 		int len = text.length();
 		Object obj = getLast(text, kind);
 		int where = text.getSpanStart(obj);
@@ -1032,11 +1031,56 @@ class HtmlToSpannedConverter implements ContentHandler {
 			return i;
 		} else {
 			try {
-				return XmlUtils.convertValueToInt(color, -1);
+				return convertValueToInt(color, -1);
 			} catch (NumberFormatException nfe) {
 				return -1;
 			}
 		}
 	}
+	
+	 public static final int
+	    convertValueToInt(CharSequence charSeq, int defaultValue)
+	    {
+	        if (null == charSeq)
+	            return defaultValue;
+
+	        String nm = charSeq.toString();
+
+	        // XXX This code is copied from Integer.decode() so we don't
+	        // have to instantiate an Integer!
+
+	        int sign = 1;
+	        int index = 0;
+	        int len = nm.length();
+	        int base = 10;
+
+	        if ('-' == nm.charAt(0)) {
+	            sign = -1;
+	            index++;
+	        }
+
+	        if ('0' == nm.charAt(index)) {
+	            //  Quick check for a zero by itself
+	            if (index == (len - 1))
+	                return 0;
+
+	            char    c = nm.charAt(index + 1);
+
+	            if ('x' == c || 'X' == c) {
+	                index += 2;
+	                base = 16;
+	            } else {
+	                index++;
+	                base = 8;
+	            }
+	        }
+	        else if ('#' == nm.charAt(index))
+	        {
+	            index++;
+	            base = 16;
+	        }
+
+	        return Integer.parseInt(nm.substring(index), base) * sign;
+	    }
 
 }

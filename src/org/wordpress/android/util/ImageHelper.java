@@ -218,7 +218,6 @@ public class ImageHelper {
 	// borrowed from
 	// http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html
 	class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
-		private String url;
 		private final WeakReference<ImageView> imageViewReference;
 
 		public BitmapDownloaderTask(ImageView imageView) {

@@ -401,8 +401,6 @@ public class ViewComments extends ListFragment {
 		refreshOnly = refresh;
 		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore) {
-			WordPressDB test = WordPress.wpDB;
-			Blog test2 = WordPress.currentBlog;
 			Vector<?> loadedPosts = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
 			if (loadedPosts != null) {
 				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
@@ -582,7 +580,6 @@ public class ViewComments extends ListFragment {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void refreshComments(final boolean more, final boolean refresh,
 			final boolean background) {
 		loadMore = more;

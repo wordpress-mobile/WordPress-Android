@@ -686,7 +686,6 @@ src/org/wordpress/android/EditContent.java -text
 src/org/wordpress/android/EditPost.java -text
 src/org/wordpress/android/Link.java -text
 src/org/wordpress/android/NewAccount.java -text
-src/org/wordpress/android/PopupWindows.java -text
 src/org/wordpress/android/Posts.java -text
 src/org/wordpress/android/Preferences.java -text
 src/org/wordpress/android/Read.java -text
@@ -726,9 +725,7 @@ src/org/wordpress/android/util/WPAlertDialogFragment.java -text
 src/org/wordpress/android/util/WPEditText.java -text
 src/org/wordpress/android/util/WPHtml.java -text
 src/org/wordpress/android/util/WPImageSpan.java -text
-src/org/wordpress/android/util/WPTagHandler.java -text
 src/org/wordpress/android/util/WPTitleBar.java -text
-src/org/wordpress/android/util/XmlUtils.java -text
 src/org/xmlrpc/android/ApiHelper.java -text
 src/org/xmlrpc/android/Base64.java -text
 src/org/xmlrpc/android/Base64Coder.java -text

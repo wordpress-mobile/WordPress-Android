@@ -4,7 +4,6 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.widget.TextView;
 
 public class CommentBadgeTextView extends TextView {

@@ -68,6 +68,7 @@ public class WebImageCache
 		this.placeholder=placeholder;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void handleImageView(final ImageView image,
 															final String url,
 															String tag) throws Exception {
