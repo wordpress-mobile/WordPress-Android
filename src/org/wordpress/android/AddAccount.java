@@ -269,7 +269,7 @@ public class AddAccount extends Activity {
 		                //attempt to get the software version
 		                String wpVersion = "";
 		                if (!wpcomFlag){
-			                HashMap hPost = new HashMap();
+			                HashMap<String, String> hPost = new HashMap<String, String>();
 			                hPost.put("software_version", "software_version");
 			                Object[] vParams = {
 			                		1,
@@ -287,8 +287,8 @@ public class AddAccount extends Activity {
 							
 							if (versionResult != null){
 								try {
-									contentHash = (HashMap) versionResult;
-									HashMap sv = (HashMap) contentHash.get("software_version");
+									contentHash = (HashMap<Object, Object>) versionResult;
+									HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
 									wpVersion = sv.get("value").toString();
 								} catch (Exception e) {
 									// TODO Auto-generated catch block

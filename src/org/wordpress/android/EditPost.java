@@ -1046,7 +1046,7 @@ public class EditPost extends Activity implements LocationListener {
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
 
-		HashMap mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+		HashMap<?, ?> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
 
 		if (mediaData == null) {
 			return null;

@@ -1,7 +1,6 @@
 package org.wordpress.android;
 
 import java.util.HashMap;
-import java.util.Vector;
 
 import org.wordpress.android.ViewCommentFragment.OnCommentStatusChangeListener;
 import org.wordpress.android.ViewComments.OnAnimateRefreshButtonListener;
@@ -217,8 +216,8 @@ public class Comments extends FragmentActivity implements
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
 
-		HashMap contentHash, postHash = new HashMap();
-		contentHash = (HashMap) commentList.allComments.get(sSelCommentID);
+		HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
+		contentHash = (HashMap<String, String>) commentList.allComments.get(sSelCommentID);
 		postHash.put("status", newStatus);
 		postHash.put("content", contentHash.get("comment"));
 		postHash.put("author", contentHash.get("author"));
@@ -341,8 +340,6 @@ public class Comments extends FragmentActivity implements
 	private void replyToComment(final String postID, final int commentID,
 			final String comment) {
 		// reply to individual comment
-		Vector<Object> settings = new Vector<Object>();
-
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
 

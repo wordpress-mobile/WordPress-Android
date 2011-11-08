@@ -28,7 +28,7 @@
 		<activity android:name="ReplyToComment" android:theme="@android:style/Theme.Dialog" />
 <activity android:name="SelectCategories" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="Signup" android:configChanges="orientation|keyboardHidden"></activity>
+<activity android:name="Signup" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Light"></activity>
 <activity android:name="NewAccount"></activity>
 <activity android:name="ViewStats" android:configChanges="orientation|keyboardHidden"></activity>
 		<activity android:name=".AddQuickPressShortcut" android:label="QuickPress">

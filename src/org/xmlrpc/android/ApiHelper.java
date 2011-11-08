@@ -64,7 +64,7 @@ public class ApiHelper extends Activity {
 				// loop this!
 				for (int ctr = 0; ctr < result.length; ctr++) {
 					HashMap<String, String> dbValues = new HashMap<String, String>();
-					contentHash = (HashMap) result[ctr];
+					contentHash = (HashMap<Object, Object>) result[ctr];
 					comment = contentHash.get("content").toString();
 					author = contentHash.get("author").toString();
 					status = contentHash.get("status").toString();
@@ -158,7 +158,7 @@ public class ApiHelper extends Activity {
 				blog.getHttppassword());
 		String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
-		HashMap contentHash = new HashMap();
+		HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 		Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
 		Date d = new Date();
@@ -180,8 +180,8 @@ public class ApiHelper extends Activity {
 			return null;
 		// loop this!
 		for (int ctr = 0; ctr < result.length; ctr++) {
-			HashMap<String, String> dbValues = new HashMap();
-			contentHash = (HashMap) result[ctr];
+			HashMap<Object, Object> dbValues = new HashMap<Object, Object>();
+			contentHash = (HashMap<?, ?>) result[ctr];
 			allComments.put(contentHash.get("comment_id").toString(),
 					contentHash);
 			comment = contentHash.get("content").toString();

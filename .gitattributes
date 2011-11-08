@@ -614,7 +614,6 @@ res/layout/row_post_page.xml -text
 res/layout/select_blogs_list.xml -text
 res/layout/select_categories.xml -text
 res/layout/settings.xml -text
-res/layout/signup.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/stats_tab_selector.xml -text
 res/layout/table_row.xml -text

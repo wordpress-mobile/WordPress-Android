@@ -39,7 +39,6 @@ abstract public class CacheBase<K, V> {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		@SuppressWarnings("unchecked")
 		protected boolean removeEldestEntry(Map.Entry eldest) {  
 			return(size()>maxSize);  
 		}  

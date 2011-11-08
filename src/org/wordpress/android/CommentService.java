@@ -157,7 +157,7 @@ public class CommentService extends Service {
 				
 				//loop this!
 				    for (int ctr = 0; ctr < result.length; ctr++){
-				        contentHash = (HashMap) result[ctr];
+				        contentHash = (HashMap<Object, Object>) result[ctr];
 				        ctr++;
 				    }
 
