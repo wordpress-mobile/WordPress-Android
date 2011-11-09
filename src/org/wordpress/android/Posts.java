@@ -73,7 +73,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 					}
 				});
-		
+
 		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
 			// user selected new blog in the title bar
 			@Override
@@ -85,7 +85,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 				if (f == null) {
 					fm.popBackStack();
 				}
-				
+
 				attemptToSelectPost();
 				boolean loadedPosts = postList.loadPosts(false);
 				if (!loadedPosts)
@@ -94,79 +94,95 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			}
 		});
 		
+	     WordPress.setOnPostUploadedListener(new WordPress.OnPostUploadedListener(){
+
+			@Override
+			public void OnPostUploaded() {
+				FragmentManager fm = getSupportFragmentManager();
+				ViewPostFragment f = (ViewPostFragment) fm
+						.findFragmentById(R.id.postDetail);
+				if (f == null) {
+					fm.popBackStack();
+				}
+
+				attemptToSelectPost();
+				postList.refreshPosts(false);
+			}
+	     
+	     });
+
 		attemptToSelectPost();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		attemptToSelectPost();
 		boolean loadedPosts = postList.loadPosts(false);
 		if (!loadedPosts)
 			postList.refreshPosts(false);
 	}
-	
+
 	@Override
-	protected void onNewIntent (Intent intent){
+	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		
+
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			isPage = extras.getBoolean("viewPages");
 			postList.isPage = isPage;
 		}
-		
+
 		titleBar.refreshBlog();
-		
+
 		attemptToSelectPost();
 		boolean loadedPosts = postList.loadPosts(false);
 		if (!loadedPosts)
 			postList.refreshPosts(false);
-		
+
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
 		if (postList.getPostsTask != null)
 			postList.getPostsTask.cancel(true);
 	}
-	
+
 	// Add settings to menu
-		@Override
-		public boolean onCreateOptionsMenu(Menu menu) {
-			super.onCreateOptionsMenu(menu);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 
+		if (isPage)
+			menu.add(0, 0, 0, getResources().getText(R.string.new_page));
+		else
+			menu.add(0, 0, 0, getResources().getText(R.string.new_post));
+		MenuItem menuItem1 = menu.findItem(0);
+		menuItem1.setIcon(android.R.drawable.ic_menu_add);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case 0:
+			Intent i = new Intent(this, EditPost.class);
+			i.putExtra("id", WordPress.currentBlog.getId());
+			i.putExtra("isNew", true);
 			if (isPage)
-				menu.add(0, 0, 0, getResources().getText(R.string.new_page));
-			else
-				menu.add(0, 0, 0, getResources().getText(R.string.new_post));
-			MenuItem menuItem1 = menu.findItem(0);
-			menuItem1.setIcon(android.R.drawable.ic_menu_add);
-
+				i.putExtra("isPage", true);
+			startActivity(i);
 			return true;
 		}
-		
-		@Override
-		public boolean onOptionsItemSelected(final MenuItem item) {
-			switch (item.getItemId()) {
-			case 0:
-				Intent i = new Intent(this, EditPost.class);
-				i.putExtra("id", WordPress.currentBlog.getId());
-				i.putExtra("isNew", true);
-				if (isPage)
-					i.putExtra("isPage", true);
-				startActivity(i);
-				return true;
-			}
-			return false;
+		return false;
 
-		}
-
+	}
 
 	private void attemptToSelectPost() {
-		
+
 		FragmentManager fm = getSupportFragmentManager();
 		ViewPostFragment f = (ViewPostFragment) fm
 				.findFragmentById(R.id.postDetail);
@@ -174,7 +190,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		if (f != null && f.isInLayout()) {
 			postList.shouldSelectAfterLoad = true;
 		}
-		
+
 	}
 
 	@Override
@@ -195,8 +211,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		if (post != null) {
 
+			WordPress.currentPost = post;
 			if (f == null || !f.isInLayout()) {
-				WordPress.currentPost = post;
 				FragmentTransaction ft = fm.beginTransaction();
 				ft.hide(postList);
 				f = new ViewPostFragment();
@@ -248,7 +264,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		@Override
 		protected void onPreExecute() {
-			//pop out of the detail view if on a smaller screen
+			// pop out of the detail view if on a smaller screen
 			FragmentManager fm = getSupportFragmentManager();
 			ViewPostFragment f = (ViewPostFragment) fm
 					.findFragmentById(R.id.postDetail);
@@ -295,12 +311,16 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		protected Boolean doInBackground(Post... params) {
 			boolean result = false;
 			post = params[0];
-			XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-					WordPress.currentBlog.getHttpuser(), WordPress.currentBlog.getHttppassword());
+			XMLRPCClient client = new XMLRPCClient(
+					WordPress.currentBlog.getUrl(),
+					WordPress.currentBlog.getHttpuser(),
+					WordPress.currentBlog.getHttppassword());
 
-			Object[] postParams = { "", post.getPostid(), WordPress.currentBlog.getUsername(),
+			Object[] postParams = { "", post.getPostid(),
+					WordPress.currentBlog.getUsername(),
 					WordPress.currentBlog.getPassword() };
-			Object[] pageParams = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+			Object[] pageParams = { WordPress.currentBlog.getBlogId(),
+					WordPress.currentBlog.getUsername(),
 					WordPress.currentBlog.getPassword(), post.getPostid() };
 
 			try {
@@ -362,17 +382,22 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		protected String doInBackground(Post... params) {
 			String result = null;
 			post = params[0];
-			XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-					WordPress.currentBlog.getHttpuser(), WordPress.currentBlog.getHttppassword());
+			XMLRPCClient client = new XMLRPCClient(
+					WordPress.currentBlog.getUrl(),
+					WordPress.currentBlog.getHttpuser(),
+					WordPress.currentBlog.getHttppassword());
 
 			Object versionResult = new Object();
 			try {
 				if (isPage) {
-					Object[] vParams = { WordPress.currentBlog.getBlogId(), post.getPostid(),
-							WordPress.currentBlog.getUsername(), WordPress.currentBlog.getPassword() };
+					Object[] vParams = { WordPress.currentBlog.getBlogId(),
+							post.getPostid(),
+							WordPress.currentBlog.getUsername(),
+							WordPress.currentBlog.getPassword() };
 					versionResult = (Object) client.call("wp.getPage", vParams);
 				} else {
-					Object[] vParams = { post.getPostid(), WordPress.currentBlog.getUsername(),
+					Object[] vParams = { post.getPostid(),
+							WordPress.currentBlog.getUsername(),
 							WordPress.currentBlog.getPassword() };
 					versionResult = (Object) client.call("metaWeblog.getPost",
 							vParams);
@@ -589,9 +614,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		
-		titleBar.switchDashboardLayout(newConfig.orientation);
-		
-	}
 
+		titleBar.switchDashboardLayout(newConfig.orientation);
+
+	}
 }

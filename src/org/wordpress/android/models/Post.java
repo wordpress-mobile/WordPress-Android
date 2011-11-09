@@ -19,6 +19,7 @@ import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -118,7 +119,7 @@ public class Post {
 			this.localDraft = (Integer) postVals.get(26) > 0;
 			this.uploaded = (Integer) postVals.get(27) > 0;
 			this.isPage = (Integer) postVals.get(28) > 0;
-
+			
 		}
 	}
 
@@ -422,7 +423,7 @@ public class Post {
 		protected void onPostExecute(Boolean result) {
 
 			if (result) {
-
+				WordPress.postUploaded();
 				nm.cancel(notificationID);
 			} else {
 				String postOrPage = (String) (post.isPage() ? context

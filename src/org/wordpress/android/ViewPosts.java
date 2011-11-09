@@ -122,9 +122,10 @@ public class ViewPosts extends ListFragment {
 	public void onResume() {
 		super.onResume();
 		boolean loadedPosts = loadPosts(false);
-		if (!loadedPosts) {
+		if (!loadedPosts || WordPress.postsShouldRefresh) {
 			onRefreshListener.onRefresh(true);
 			refreshPosts(false);
+			WordPress.postsShouldRefresh = false;
 		}
 	}
 
