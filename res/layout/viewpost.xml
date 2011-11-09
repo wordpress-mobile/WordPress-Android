@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#FFFFFF" >
 
     <RelativeLayout
         android:id="@+id/postBar"
@@ -46,7 +47,6 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_alignTop="@id/deletePost"
-                android:layout_marginRight="4dp"
                 android:layout_toLeftOf="@id/deletePost"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
@@ -58,7 +58,6 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_alignTop="@id/sharePostLink"
-                android:layout_marginRight="4dp"
                 android:layout_toLeftOf="@id/sharePostLink"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
