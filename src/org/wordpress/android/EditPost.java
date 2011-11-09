@@ -21,6 +21,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
@@ -331,7 +332,7 @@ public class EditPost extends Activity implements LocationListener {
 			
 
 			contentET
-					.setText(WPHtml.fromHtml(contentHTML, EditPost.this, post));
+					.setText(WPHtml.fromHtml(StringHelper.addPTags(contentHTML), EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
@@ -959,7 +960,7 @@ public class EditPost extends Activity implements LocationListener {
 				// add link tag around URLs, trac #64
 				text = text.replaceAll("((http|https|ftp|mailto):\\S+)",
 						"<a href=\"$1\">$1</a>");
-				contentET.setText(WPHtml.fromHtml(text, EditPost.this, post));
+				contentET.setText(WPHtml.fromHtml(StringHelper.addPTags(text), EditPost.this, post));
 			}
 		} else {
 			String action = intent.getAction();

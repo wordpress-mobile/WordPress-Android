@@ -113,9 +113,9 @@ public class Comments extends FragmentActivity implements
 		super.onResume();
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
-		commentList.loadComments(false, false);
-		attemptToSelectComment();
-		commentList.refreshComments(false, false, false);
+		boolean commentsLoaded = commentList.loadComments(false, false);
+		if (!commentsLoaded)
+			commentList.refreshComments(false, false, false);
 	}
 	
 	@Override

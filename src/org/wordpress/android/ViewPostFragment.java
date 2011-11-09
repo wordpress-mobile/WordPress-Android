@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPHtml;
 
 import android.app.Activity;
@@ -91,7 +92,7 @@ public class ViewPostFragment extends Fragment {
 
 		WebView webView = (WebView) getActivity().findViewById(R.id.viewPostWebView);
 		TextView tv = (TextView) getActivity().findViewById(R.id.viewPostTextView);
-		
+
 		if (post.isLocalDraft()) {
 			tv.setVisibility(View.VISIBLE);
 			webView.setVisibility(View.GONE);
@@ -100,7 +101,9 @@ public class ViewPostFragment extends Fragment {
 		else {
 			tv.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
-			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">" + post.getDescription() + post.getMt_text_more() + "</div></body></html>";
+			String html = StringHelper.addPTags(post.getDescription() + post.getMt_text_more());
+			
+			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">" + html + "</div></body></html>";
 			webView.loadDataWithBaseURL("file:///android_asset/", htmlText, "text/html", "utf-8", null);
 		}
 		

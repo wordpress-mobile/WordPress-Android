@@ -79,7 +79,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			@Override
 			public void OnBlogChanged() {
 
-				postList.shouldSelectAfterLoad = true;
+				attemptToSelectPost();
 				boolean loadedPosts = postList.loadPosts(false);
 				if (!loadedPosts)
 					postList.refreshPosts(false);
@@ -94,7 +94,10 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	protected void onResume() {
 		super.onResume();
 		
-		postList.refreshPosts(false);
+		attemptToSelectPost();
+		boolean loadedPosts = postList.loadPosts(false);
+		if (!loadedPosts)
+			postList.refreshPosts(false);
 	}
 	
 	@Override

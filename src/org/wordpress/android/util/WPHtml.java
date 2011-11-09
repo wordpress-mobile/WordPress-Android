@@ -257,10 +257,10 @@ public class WPHtml {
 					int s = ((StyleSpan) style[j]).getStyle();
 
 					if ((s & Typeface.BOLD) != 0) {
-						out.append("<b>");
+						out.append("<string>");
 					}
 					if ((s & Typeface.ITALIC) != 0) {
-						out.append("<i>");
+						out.append("<em>");
 					}
 				}
 				if (style[j] instanceof TypefaceSpan) {
@@ -349,10 +349,10 @@ public class WPHtml {
 					int s = ((StyleSpan) style[j]).getStyle();
 
 					if ((s & Typeface.BOLD) != 0) {
-						out.append("</b>");
+						out.append("</strong>");
 					}
 					if ((s & Typeface.ITALIC) != 0) {
-						out.append("</i>");
+						out.append("</em>");
 					}
 				}
 			}
