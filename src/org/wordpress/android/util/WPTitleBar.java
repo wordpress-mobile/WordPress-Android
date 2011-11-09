@@ -53,6 +53,7 @@ public class WPTitleBar extends RelativeLayout {
 	public RelativeLayout rl;
 	public LinearLayout dashboard;
 	public boolean isShowingDashboard;
+	public boolean isHome;
 	TextView commentBadgeText;
 
 	public WPTitleBar(final Context ctx, AttributeSet attrs) {
@@ -172,6 +173,7 @@ public class WPTitleBar extends RelativeLayout {
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -183,6 +185,7 @@ public class WPTitleBar extends RelativeLayout {
 				i.putExtra("isNew", true);
 				i.putExtra("isPage", true);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -191,6 +194,7 @@ public class WPTitleBar extends RelativeLayout {
 			public void onClick(View v) {
 				Intent i = new Intent(context, Posts.class);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -202,6 +206,7 @@ public class WPTitleBar extends RelativeLayout {
 				i.putExtra("isNew", true);
 				i.putExtra("viewPages", true);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -212,6 +217,7 @@ public class WPTitleBar extends RelativeLayout {
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -222,6 +228,7 @@ public class WPTitleBar extends RelativeLayout {
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -232,6 +239,7 @@ public class WPTitleBar extends RelativeLayout {
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
 				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -244,6 +252,7 @@ public class WPTitleBar extends RelativeLayout {
 					i.putExtra("id", readerBlogID);
 					i.putExtra("loadReader", true);
 					context.startActivity(i);
+					hideOverlay();
 				} else {
 					Toast.makeText(
 							context,
@@ -262,6 +271,7 @@ public class WPTitleBar extends RelativeLayout {
 					i.putExtra("option", "newphoto");
 					i.putExtra("isNew", true);
 					context.startActivity(i);
+					hideOverlay();
 				} else {
 					Toast.makeText(context,
 							getResources().getText(R.string.no_camera_found),
@@ -279,6 +289,7 @@ public class WPTitleBar extends RelativeLayout {
 					i.putExtra("option", "newvideo");
 					i.putExtra("isNew", true);
 					context.startActivity(i);
+					hideOverlay();
 				} else {
 					Toast.makeText(context,
 							getResources().getText(R.string.no_camera_found),
@@ -290,6 +301,13 @@ public class WPTitleBar extends RelativeLayout {
 		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
 		updateCommentBadge();
 
+	}
+
+	protected void hideOverlay() {
+		if (!isHome){
+			hideDashboardOverlay();
+		}
+		
 	}
 
 	public void hideDashboardOverlay() {
