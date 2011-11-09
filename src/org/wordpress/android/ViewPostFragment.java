@@ -41,6 +41,8 @@ public class ViewPostFragment extends Fragment {
 		editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 				if (WordPress.currentPost != null) {
+					onDetailPostActionListener.onDetailPostAction(Posts.POST_EDIT,
+							WordPress.currentPost);
 					Intent i = new Intent(
 							getActivity().getApplicationContext(),
 							EditPost.class);

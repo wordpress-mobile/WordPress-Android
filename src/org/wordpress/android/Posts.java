@@ -11,7 +11,6 @@ import org.wordpress.android.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostSelectedListener;
 import org.wordpress.android.ViewPosts.OnRefreshListener;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
@@ -45,7 +44,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	private WPTitleBar titleBar;
 	private ViewPosts postList;
 	private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
-	public static int POST_DELETE = 0, POST_SHARE = 1;
+	public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2;
 	public ProgressDialog loadingDialog;
 	public boolean isPage = false;
 	public String errorMsg = "";
@@ -504,6 +503,10 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 	@Override
 	public void onPostAction(int action, final Post post) {
+		if (postList.getPostsTask != null) {
+			postList.getPostsTask.cancel(true);
+			titleBar.stopRotatingRefreshIcon();
+		}
 		if (action == POST_DELETE) {
 			if (post.isLocalDraft()) {
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
