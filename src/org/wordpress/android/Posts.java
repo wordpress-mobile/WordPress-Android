@@ -11,7 +11,6 @@ import org.wordpress.android.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostSelectedListener;
 import org.wordpress.android.ViewPosts.OnRefreshListener;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
@@ -44,7 +43,6 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 	private WPTitleBar titleBar;
 	private ViewPosts postList;
-	Blog blog;
 	private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
 	public static int POST_DELETE = 0, POST_SHARE = 1;
 	public ProgressDialog loadingDialog;
@@ -63,7 +61,6 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		if (extras != null) {
 			isPage = extras.getBoolean("viewPages");
 		}
-		blog = WordPress.currentBlog;
 
 		WordPress.currentPost = null;
 
@@ -83,7 +80,9 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			public void OnBlogChanged() {
 
 				postList.shouldSelectAfterLoad = true;
-				postList.loadPosts(false);
+				boolean loadedPosts = postList.loadPosts(false);
+				if (!loadedPosts)
+					postList.refreshPosts(false);
 
 			}
 		});
@@ -267,13 +266,13 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		protected Boolean doInBackground(Post... params) {
 			boolean result = false;
 			post = params[0];
-			XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-					blog.getHttpuser(), blog.getHttppassword());
+			XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+					WordPress.currentBlog.getHttpuser(), WordPress.currentBlog.getHttppassword());
 
-			Object[] postParams = { "", post.getPostid(), blog.getUsername(),
-					blog.getPassword() };
-			Object[] pageParams = { blog.getBlogId(), blog.getUsername(),
-					blog.getPassword(), post.getPostid() };
+			Object[] postParams = { "", post.getPostid(), WordPress.currentBlog.getUsername(),
+					WordPress.currentBlog.getPassword() };
+			Object[] pageParams = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+					WordPress.currentBlog.getPassword(), post.getPostid() };
 
 			try {
 				client.call((isPage) ? "wp.deletePage" : "blogger.deletePost",
@@ -334,18 +333,18 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		protected String doInBackground(Post... params) {
 			String result = null;
 			post = params[0];
-			XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-					blog.getHttpuser(), blog.getHttppassword());
+			XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+					WordPress.currentBlog.getHttpuser(), WordPress.currentBlog.getHttppassword());
 
 			Object versionResult = new Object();
 			try {
 				if (isPage) {
-					Object[] vParams = { blog.getBlogId(), post.getPostid(),
-							blog.getUsername(), blog.getPassword() };
+					Object[] vParams = { WordPress.currentBlog.getBlogId(), post.getPostid(),
+							WordPress.currentBlog.getUsername(), WordPress.currentBlog.getPassword() };
 					versionResult = (Object) client.call("wp.getPage", vParams);
 				} else {
-					Object[] vParams = { post.getPostid(), blog.getUsername(),
-							blog.getPassword() };
+					Object[] vParams = { post.getPostid(), WordPress.currentBlog.getUsername(),
+							WordPress.currentBlog.getPassword() };
 					versionResult = (Object) client.call("metaWeblog.getPost",
 							vParams);
 				}

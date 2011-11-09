@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
@@ -69,13 +68,12 @@ public class ViewComments extends ListFragment {
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
 	public boolean initializing = true, shouldSelectAfterLoad = false;
-	public int selectedID = 0, rowID = 0, numRecords = 0, id,
+	public int selectedID = 0, rowID = 0, numRecords = 0,
 			totalComments = 0, commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition;
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
 	boolean loadMore = false, doInBackground = false, refreshOnly = false;
 	private Vector<String> checkedComments;
-	private Blog blog;
 	Object[] commentParams;
 	boolean dualView;
 	private OnCommentSelectedListener onCommentSelectedListener;
@@ -86,8 +84,6 @@ public class ViewComments extends ListFragment {
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		id = WordPress.currentBlog.getId();
-		blog = new Blog(id, getActivity().getApplicationContext());
 	}
 
 	@Override
@@ -240,8 +236,8 @@ public class ViewComments extends ListFragment {
 		for (int i = 0; i < checkedComments.size(); i++) {
 			if (checkedComments.get(i).toString().equals("true")) {
 
-				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-						blog.getHttppassword());
+				client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+						WordPress.currentBlog.getHttppassword());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
@@ -254,8 +250,8 @@ public class ViewComments extends ListFragment {
 				postHash.put("author_url", contentHash.get("url"));
 				postHash.put("author_email", contentHash.get("email"));
 
-				Object[] params = { blog.getBlogId(), blog.getUsername(),
-						blog.getPassword(), curCommentID, postHash };
+				Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+						WordPress.currentBlog.getPassword(), curCommentID, postHash };
 
 				Object result = null;
 				try {
@@ -265,7 +261,7 @@ public class ViewComments extends ListFragment {
 						checkedComments.set(i, "false");
 						listRow.status = newStatus;
 						model.set(i, listRow);
-						WordPress.wpDB.updateCommentStatus(id,
+						WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(),
 								listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
@@ -348,14 +344,14 @@ public class ViewComments extends ListFragment {
 		for (int i = 0; i < checkedComments.size(); i++) {
 			if (checkedComments.get(i).toString().equals("true")) {
 
-				client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-						blog.getHttppassword());
+				client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+						WordPress.currentBlog.getHttppassword());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
-				Object[] params = { blog.getBlogId(), blog.getUsername(),
-						blog.getPassword(), curCommentID };
+				Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+						WordPress.currentBlog.getPassword(), curCommentID };
 
 				try {
 					client.call("wp.deleteComment", params);
@@ -543,7 +539,7 @@ public class ViewComments extends ListFragment {
 			}
 		} else {
 			Vector<?> latestComments = WordPress.wpDB.loadMoreComments(getActivity()
-					.getApplicationContext(), id, commentsToLoad);
+					.getApplicationContext(), WordPress.currentBlog.getId(), commentsToLoad);
 			if (latestComments != null) {
 				numRecords += latestComments.size();
 				for (int i = latestComments.size(); i > 0; i--) {
@@ -589,8 +585,8 @@ public class ViewComments extends ListFragment {
 		if (!loadMore && !doInBackground) {
 			onAnimateRefreshButton.onAnimateRefreshButton(true);
 		}
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		hPost.put("status", "");
@@ -605,8 +601,8 @@ public class ViewComments extends ListFragment {
 			hPost.put("number", 30);
 		}
 
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), hPost };
+		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+				WordPress.currentBlog.getPassword(), hPost };
 
 		commentParams = params;
 		getCommentsTask = new getRecentCommentsTask();
@@ -917,8 +913,8 @@ public class ViewComments extends ListFragment {
 			try {
 				// get the total comments
 				HashMap<Object, Object> countResult = new HashMap<Object, Object>();
-				Object[] countParams = { blog.getBlogId(), blog.getUsername(),
-						blog.getPassword(), 0 };
+				Object[] countParams = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+						WordPress.currentBlog.getPassword(), 0 };
 				try {
 					countResult = (HashMap<Object, Object>) client.call("wp.getCommentCount",
 							countParams);

@@ -34,7 +34,6 @@ public class Comments extends FragmentActivity implements
 
 	private WPTitleBar titleBar;
 	protected int id;
-	protected Blog blog;
 	public int ID_DIALOG_MODERATING = 1;
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
@@ -56,14 +55,11 @@ public class Comments extends FragmentActivity implements
 	  		if (fromNotification) {
 	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
 	  			titleBar.refreshBlog();
-	  			blog = WordPress.currentBlog;
 	  		}
 		}
 
 		FragmentManager fm = getSupportFragmentManager();
 		commentList = (ViewComments) fm.findFragmentById(R.id.commentList);
-		
-		blog = WordPress.currentBlog;
 		
 		WordPress.currentComment = null;
 
@@ -83,7 +79,9 @@ public class Comments extends FragmentActivity implements
 			public void OnBlogChanged() {
 				
 				attemptToSelectComment();
-				commentList.loadComments(false, false);
+				boolean commentsLoaded = commentList.loadComments(false, false);
+				if (!commentsLoaded)
+					commentList.refreshComments(false, false, false);
 
 			}
 		});
@@ -137,7 +135,6 @@ public class Comments extends FragmentActivity implements
 	  		if (fromNotification) {
 	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
 	  			titleBar.refreshBlog();
-	  			blog = WordPress.currentBlog;
 	  		}
 		}
 		
@@ -213,8 +210,8 @@ public class Comments extends FragmentActivity implements
 		// for individual comment moderation
 		String sSelCommentID = String.valueOf(selCommentID);
 		WordPressDB db = new WordPressDB(Comments.this);
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
 		contentHash = (HashMap<String, String>) commentList.allComments.get(sSelCommentID);
@@ -224,8 +221,8 @@ public class Comments extends FragmentActivity implements
 		postHash.put("author_url", contentHash.get("url"));
 		postHash.put("author_email", contentHash.get("email"));
 
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), sSelCommentID, postHash };
+		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+				WordPress.currentBlog.getPassword(), sSelCommentID, postHash };
 
 		Object result = null;
 		try {
@@ -284,11 +281,11 @@ public class Comments extends FragmentActivity implements
 	private void deleteComment(final int selCommentID) {
 		// delete individual comment
 
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+				WordPress.currentBlog.getHttppassword());
 
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), selCommentID };
+		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+				WordPress.currentBlog.getPassword(), selCommentID };
 
 		try {
 			client.call("wp.deleteComment", params);
@@ -340,8 +337,8 @@ public class Comments extends FragmentActivity implements
 	private void replyToComment(final String postID, final int commentID,
 			final String comment) {
 		// reply to individual comment
-		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword());
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, Object> replyHash = new HashMap<String, Object>();
 		replyHash.put("comment_parent", commentID);
@@ -350,8 +347,8 @@ public class Comments extends FragmentActivity implements
 		replyHash.put("author_url", "");
 		replyHash.put("author_email", "");
 
-		Object[] params = { blog.getBlogId(), blog.getUsername(),
-				blog.getPassword(), Integer.valueOf(postID), replyHash };
+		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+				WordPress.currentBlog.getPassword(), Integer.valueOf(postID), replyHash };
 
 		try {
 			client.call("wp.newComment", params);
