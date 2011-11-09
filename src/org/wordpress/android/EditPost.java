@@ -343,7 +343,6 @@ public class EditPost extends Activity implements LocationListener {
 					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
 					tvPubDate.setText(sPubDate);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -551,7 +550,11 @@ public class EditPost extends Activity implements LocationListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null || requestCode == 4) {
+
+		if (resultCode == Activity.RESULT_CANCELED) {
+			finish();
+		}
+		else if (data != null || requestCode == 4) {
 			switch (requestCode) {
 			case 0:
 				Spannable content = (Spannable) WordPress.richPostContent;
@@ -580,7 +583,7 @@ public class EditPost extends Activity implements LocationListener {
 
 				break;
 			}
-		}// end null check
+		}
 	}
 
 	@Override
@@ -638,10 +641,8 @@ public class EditPost extends Activity implements LocationListener {
 				d = sdf.parse(pubDate);
 				pubDateTimestamp = d.getTime();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (java.text.ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

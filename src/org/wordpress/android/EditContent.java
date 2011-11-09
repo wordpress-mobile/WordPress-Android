@@ -63,6 +63,7 @@ public class EditContent extends Activity {
 	boolean localDraft = true;
 	boolean isNew = true;
 	public EditText contentET;
+	private String option;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -85,7 +86,7 @@ public class EditContent extends Activity {
 		Bundle extras = getIntent().getExtras();
 
 		if (extras != null) {
-			String option = extras.getString("option");
+			option = extras.getString("option");
 			if (option != null) {
 				if (option.equals("newphoto")) {
 					launchCamera();
@@ -685,7 +686,7 @@ public class EditContent extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null || requestCode == 1) {
+		if (data != null || requestCode == 1 || requestCode == 3) {
 			Bundle extras;
 			switch (requestCode) {
 			case 0:
@@ -713,9 +714,17 @@ public class EditContent extends Activity {
 						addMedia(capturedImage.toString(), capturedImage);
 
 					} catch (FileNotFoundException e) {
-						//user canceled capture
+						
 					}
 
+				} else {
+					//user canceled capture
+					if (option != null) {
+						Intent intent = new Intent();
+						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+						setResult(Activity.RESULT_CANCELED, intent);
+						finish();
+					}
 				}
 
 				break;
@@ -733,22 +742,12 @@ public class EditContent extends Activity {
 
 					addMedia(capturedVideo.toString(), capturedVideo);
 				} else {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							EditContent.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.file_error));
-					dialogBuilder.setMessage(getResources().getText(
-							R.string.file_error_encountered));
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// just close the dialog
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
+					//user canceled capture
+					if (option != null) {
+						Intent intent = new Intent();
+						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+						setResult(Activity.RESULT_CANCELED, intent);
+						finish();
 					}
 				}
 
