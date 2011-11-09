@@ -136,7 +136,7 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/wp_button_toggle"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_menu_attachment" />
+            android:src="@drawable/attachment" />
     </RelativeLayout>
 
 </LinearLayout>
