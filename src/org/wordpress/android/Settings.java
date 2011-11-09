@@ -37,8 +37,6 @@ public class Settings extends Activity {
 
 			}
 		});
-		
-		loadSettingsForBlog();
 		  
         Button cancelButton = (Button) findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new Button.OnClickListener() {
@@ -54,6 +52,15 @@ public class Settings extends Activity {
             }
         });
      
+	}
+	
+	@Override
+	protected void onNewIntent (Intent intent){
+		super.onNewIntent(intent);
+		
+		titleBar.refreshBlog();
+		loadSettingsForBlog();
+		
 	}
 	
 	private void loadSettingsForBlog() {

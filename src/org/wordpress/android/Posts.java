@@ -11,6 +11,7 @@ import org.wordpress.android.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostSelectedListener;
 import org.wordpress.android.ViewPosts.OnRefreshListener;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
@@ -105,6 +106,25 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		boolean loadedPosts = postList.loadPosts(false);
 		if (!loadedPosts)
 			postList.refreshPosts(false);
+	}
+	
+	@Override
+	protected void onNewIntent (Intent intent){
+		super.onNewIntent(intent);
+		
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
+			isPage = extras.getBoolean("viewPages");
+			postList.isPage = isPage;
+		}
+		
+		titleBar.refreshBlog();
+		
+		attemptToSelectPost();
+		boolean loadedPosts = postList.loadPosts(false);
+		if (!loadedPosts)
+			postList.refreshPosts(false);
+		
 	}
 	
 	@Override

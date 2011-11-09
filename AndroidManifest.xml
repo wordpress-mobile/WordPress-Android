@@ -4,7 +4,7 @@
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true" android:debuggable="true">
 		<activity android:name="wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
-		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"/>
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
 			android:label="Enter a URL" />
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
@@ -29,7 +29,7 @@
 <activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Signup" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Light"></activity>
 <activity android:name="NewAccount"></activity>
-<activity android:name="ViewStats" android:configChanges="orientation|keyboardHidden"></activity>
+<activity android:name="ViewStats" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
 		<activity android:name=".AddQuickPressShortcut" android:label="QuickPress">
 			<intent-filter>
 				<action android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -50,7 +50,7 @@
 <activity android:name="EditContent" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Comments" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
 <activity android:name="ViewCommentActivity"></activity>
-<activity android:name="Posts" android:configChanges="orientation|keyboardHidden"></activity>
+<activity android:name="Posts" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
 <activity android:name="ViewPostActivity"></activity>
 </application>
 

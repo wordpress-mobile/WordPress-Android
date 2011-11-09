@@ -53,7 +53,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlpull.v1.XmlPullParser;
@@ -101,12 +100,11 @@ public class ViewStats extends Activity {
 	private ConnectionClient client;
 	private HttpPost postMethod;
 	private HttpParams httpParams;
-	String accountName = "", errorMsg = "";
+	String errorMsg = "";
 	boolean loginShowing = false;
 	ProgressDialog loadingDialog;
 	private int ID_DIALOG_GET_STATS = 0;
-	private int firstRun = 0, id;
-	private Blog blog;
+	private int firstRun = 0;
 	private WPTitleBar titleBar;
 
 	@Override
@@ -115,13 +113,6 @@ public class ViewStats extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.view_stats);
-
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			id = extras.getInt("id");
-			blog = new Blog(id, this);
-			accountName = extras.getString("accountName");
-		}
 
 		// get the ball rolling...
 		initStats();
@@ -157,7 +148,7 @@ public class ViewStats extends Activity {
 						dialogBuilder.create().show();
 					}
 				} else {
-					WordPress.wpDB.saveStatsLogin(id, dcUsername,
+					WordPress.wpDB.saveStatsLogin(WordPress.currentBlog.getId(), dcUsername,
 							dcPassword);
 					showOrHideLoginForm();
 					initStats(); // start over again now that we have the login
@@ -178,7 +169,7 @@ public class ViewStats extends Activity {
 				final int interval = parseInterval(reportInterval
 						.getSelectedItemPosition());
 
-				Vector<?> apiData = WordPress.wpDB.loadAPIData(id);
+				Vector<?> apiData = WordPress.wpDB.loadAPIData(WordPress.currentBlog.getId());
 
 				final String apiKey = apiData.get(0).toString();
 				final String apiBlogID = apiData.get(1).toString();
@@ -205,9 +196,6 @@ public class ViewStats extends Activity {
 			//user selected new blog in the title bar
 			@Override
 			public void OnBlogChanged() {
-				
-				id = WordPress.currentBlog.getId();
-				blog = new Blog(id, ViewStats.this);
 				
 				//hide all of the report views
 				ImageView iv = (ImageView) findViewById(R.id.chart);
@@ -241,6 +229,16 @@ public class ViewStats extends Activity {
 		Spinner reportInterval = (Spinner) findViewById(R.id.reportInterval);
 		reportInterval.setSelection(1);
 
+	}
+	
+	@Override
+	protected void onNewIntent (Intent intent){
+		super.onNewIntent(intent);
+		
+		titleBar.refreshBlog();
+		
+		initStats();
+		
 	}
 
 	protected int parseInterval(int position) {
@@ -301,24 +299,24 @@ public class ViewStats extends Activity {
 
 	private void initStats() {
 		String sUsername, sPassword;
-		if (blog.getApi_key() == null) {
-			if (blog.getDotcom_username() != null) {
+		if (WordPress.currentBlog.getApi_key() == null) {
+			if (WordPress.currentBlog.getDotcom_username() != null) {
 				// we have an alternate login, use that instead
-				sUsername = blog.getDotcom_username();
-				sPassword = blog.getDotcom_password();
+				sUsername = WordPress.currentBlog.getDotcom_username();
+				sPassword = WordPress.currentBlog.getDotcom_password();
 			} else {
-				sUsername = blog.getUsername();
-				sPassword = blog.getPassword();
+				sUsername = WordPress.currentBlog.getUsername();
+				sPassword = WordPress.currentBlog.getPassword();
 			}
 
 			showProgressBar();
-			new statsUserDataTask().execute(sUsername, sPassword, blog.getUrl(), String.valueOf(blog.getBlogId()));
+			new statsUserDataTask().execute(sUsername, sPassword, WordPress.currentBlog.getUrl(), String.valueOf(WordPress.currentBlog.getBlogId()));
 		} else {
 			// apiKey found, load default views chart and table
 			showDialog(ID_DIALOG_GET_STATS);
 			Thread action = new Thread() {
 				public void run() {
-					getStatsData(blog.getApi_key(), blog.getApi_blogid(), "views", 7);
+					getStatsData(WordPress.currentBlog.getApi_key(), WordPress.currentBlog.getApi_blogid(), "views", 7);
 				}
 			};
 			action.start();
@@ -1010,7 +1008,7 @@ public class ViewStats extends Activity {
 				// store the api key and blog id
 				final String apiKey = result.get(0).toString();
 				final String apiBlogID = result.get(1).toString();
-				WordPress.wpDB.saveAPIData(id, apiKey, apiBlogID);
+				WordPress.wpDB.saveAPIData(WordPress.currentBlog.getBlogId(), apiKey, apiBlogID);
 				showDialog(ID_DIALOG_GET_STATS);
 				Thread action = new Thread() {
 					public void run() {

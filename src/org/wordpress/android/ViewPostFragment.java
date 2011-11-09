@@ -17,58 +17,66 @@ import android.widget.TextView;
 
 public class ViewPostFragment extends Fragment {
 	/** Called when the activity is first created. */
-	
+
 	private OnDetailPostActionListener onDetailPostActionListener;
-	
+
 	@Override
 	public void onActivityCreated(Bundle bundle) {
 		super.onActivityCreated(bundle);
 		if (WordPress.currentPost != null) {
 			loadPost(WordPress.currentPost);
 		}
-	
+
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		View v = inflater.inflate(R.layout.viewpost, container, false);
 
-		//button listeners here
-		ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
+		// button listeners here
+		ImageButton editPostButton = (ImageButton) v
+				.findViewById(R.id.editPost);
 		editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(getActivity().getApplicationContext(),
-						EditPost.class);
-				i.putExtra("postID", WordPress.currentPost.getId());
-				startActivityForResult(i, 0);
-				
+				if (WordPress.currentPost != null) {
+					Intent i = new Intent(
+							getActivity().getApplicationContext(),
+							EditPost.class);
+					i.putExtra("postID", WordPress.currentPost.getId());
+					startActivityForResult(i, 0);
+				}
+
 			}
 		});
-		
-		ImageButton shareURLButton = (ImageButton) v.findViewById(R.id.sharePostLink);
+
+		ImageButton shareURLButton = (ImageButton) v
+				.findViewById(R.id.sharePostLink);
 		shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
-				
-				onDetailPostActionListener.onDetailPostAction(Posts.POST_SHARE, WordPress.currentPost);
-				
+
+				onDetailPostActionListener.onDetailPostAction(Posts.POST_SHARE,
+						WordPress.currentPost);
+
 			}
 		});
-		
-		ImageButton deletePostButton = (ImageButton) v.findViewById(R.id.deletePost);
+
+		ImageButton deletePostButton = (ImageButton) v
+				.findViewById(R.id.deletePost);
 		deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
-				
-				onDetailPostActionListener.onDetailPostAction(Posts.POST_DELETE, WordPress.currentPost);
-				
+
+				onDetailPostActionListener.onDetailPostAction(
+						Posts.POST_DELETE, WordPress.currentPost);
+
 			}
 		});
-		
+
 		return v;
 
 	}
-	
+
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
@@ -80,36 +88,40 @@ public class ViewPostFragment extends Fragment {
 					+ " must implement Callback");
 		}
 	}
-	
+
 	public void loadPost(Post post) {
-		
+
 		TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
 		if (post.getTitle().equals(""))
 			title.setText("(" + getResources().getText(R.string.untitled) + ")");
 		else
 			title.setText(post.getTitle());
-		
 
-		WebView webView = (WebView) getActivity().findViewById(R.id.viewPostWebView);
-		TextView tv = (TextView) getActivity().findViewById(R.id.viewPostTextView);
+		WebView webView = (WebView) getActivity().findViewById(
+				R.id.viewPostWebView);
+		TextView tv = (TextView) getActivity().findViewById(
+				R.id.viewPostTextView);
 
 		if (post.isLocalDraft()) {
 			tv.setVisibility(View.VISIBLE);
 			webView.setVisibility(View.GONE);
-			tv.setText(WPHtml.fromHtml(post.getDescription() + post.getMt_text_more(), getActivity().getApplicationContext(), post));
-		}
-		else {
+			tv.setText(WPHtml.fromHtml(
+					post.getDescription() + post.getMt_text_more(),
+					getActivity().getApplicationContext(), post));
+		} else {
 			tv.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
-			String html = StringHelper.addPTags(post.getDescription() + post.getMt_text_more());
-			
-			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">" + html + "</div></body></html>";
-			webView.loadDataWithBaseURL("file:///android_asset/", htmlText, "text/html", "utf-8", null);
+			String html = StringHelper.addPTags(post.getDescription()
+					+ post.getMt_text_more());
+
+			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
+					+ html + "</div></body></html>";
+			webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
+					"text/html", "utf-8", null);
 		}
-		
-		 
+
 	}
-	
+
 	public interface OnDetailPostActionListener {
 		public void onDetailPostAction(int action, Post post);
 	}
