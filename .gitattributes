@@ -404,7 +404,13 @@ res/drawable-hdpi/gallery_selected_default.9.png -text
 res/drawable-hdpi/grey_wp_button.9.png -text
 res/drawable-hdpi/grey_wp_button_active.9.png -text
 res/drawable-hdpi/grey_wp_button_down.9.png -text
+res/drawable-hdpi/ic_menu_attachment.png -text
+res/drawable-hdpi/ic_menu_compose.png -text
+res/drawable-hdpi/ic_menu_delete.png -text
 res/drawable-hdpi/ic_menu_home.png -text
+res/drawable-hdpi/ic_menu_refresh.png -text
+res/drawable-hdpi/ic_menu_share.png -text
+res/drawable-hdpi/ic_menu_view.png -text
 res/drawable-hdpi/notification_icon.png -text
 res/drawable-hdpi/pages_tab.png -text
 res/drawable-hdpi/pages_tab_active.png -text
@@ -488,7 +494,13 @@ res/drawable/grey_wp_button_active.9.png -text
 res/drawable/grey_wp_button_down.9.png -text
 res/drawable/home_gradient.xml -text
 res/drawable/home_small.png -text
+res/drawable/ic_menu_attachment.png -text
+res/drawable/ic_menu_compose.png -text
+res/drawable/ic_menu_delete.png -text
 res/drawable/ic_menu_home.png -text
+res/drawable/ic_menu_refresh.png -text
+res/drawable/ic_menu_share.png -text
+res/drawable/ic_menu_view.png -text
 res/drawable/ic_popup_sync_1.png -text
 res/drawable/icon_titlebar_home.png -text
 res/drawable/icon_titlebar_home_active.png -text

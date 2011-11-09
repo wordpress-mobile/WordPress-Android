@@ -113,7 +113,7 @@ public class Read extends Activity {
 
 			menu.add(0, 2, 0, getResources().getText(R.string.refresh));
 			menuItem = menu.findItem(2);
-			menuItem.setIcon(android.R.drawable.ic_menu_rotate);
+			menuItem.setIcon(R.drawable.ic_menu_refresh);
 		}
 		return true;
 	}
