@@ -94,19 +94,25 @@ public class Dashboard extends Activity {
 		} else {
 			displayAccounts();
 		}
-		
-		/*final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Intent notificationIntent = new Intent(this, Comments.class);
-  		notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent"+22)));
-  		notificationIntent.putExtra("id", WordPress.currentBlog.getId());
-  		notificationIntent.putExtra("fromNotification", true);
-  		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-  		
-  		Notification n = new Notification(R.drawable.notification_icon, "Steve" + ": " + "Wooooooo", System.currentTimeMillis());
- 
-  		n.flags |= Notification.FLAG_AUTO_CANCEL;
-	  		n.setLatestEventInfo(this, "Bob", "Steve" + ": " + "wooooo", pendingIntent);
-	  		nm.notify(22 + Integer.valueOf(22), n); //needs a unique id*/
+
+		/*
+		 * final NotificationManager nm = (NotificationManager)
+		 * getSystemService(NOTIFICATION_SERVICE); Intent notificationIntent =
+		 * new Intent(this, Comments.class);
+		 * notificationIntent.setData((Uri.parse
+		 * ("custom://wordpressNotificationIntent"+22)));
+		 * notificationIntent.putExtra("id", WordPress.currentBlog.getId());
+		 * notificationIntent.putExtra("fromNotification", true); PendingIntent
+		 * pendingIntent = PendingIntent.getActivity(this, 0,
+		 * notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		 * 
+		 * Notification n = new Notification(R.drawable.notification_icon,
+		 * "Steve" + ": " + "Wooooooo", System.currentTimeMillis());
+		 * 
+		 * n.flags |= Notification.FLAG_AUTO_CANCEL; n.setLatestEventInfo(this,
+		 * "Bob", "Steve" + ": " + "wooooo", pendingIntent); nm.notify(22 +
+		 * Integer.valueOf(22), n); //needs a unique id
+		 */
 	}
 
 	@Override
@@ -153,7 +159,7 @@ public class Dashboard extends Activity {
 		menu.add(0, 2, 0, getResources().getText(R.string.remove_account));
 		MenuItem menuItem3 = menu.findItem(2);
 		menuItem3.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-		
+
 		menu.add(0, 3, 0, getResources().getText(R.string.about));
 		MenuItem menuItem4 = menu.findItem(3);
 		menuItem4.setIcon(android.R.drawable.ic_menu_info_details);
@@ -185,8 +191,8 @@ public class Dashboard extends Activity {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
-							boolean deleteSuccess = WordPress.wpDB.deleteAccount(
-									Dashboard.this, id);
+							boolean deleteSuccess = WordPress.wpDB
+									.deleteAccount(Dashboard.this, id);
 							if (deleteSuccess) {
 								Toast.makeText(
 										Dashboard.this,
@@ -386,7 +392,8 @@ public class Dashboard extends Activity {
 
 					id = WordPress.currentBlog.getId();
 					blog = new Blog(id, Dashboard.this);
-
+					titleBar.startRotatingRefreshIcon();
+					new refreshBlogContentTask().execute();
 				}
 			});
 
@@ -408,8 +415,10 @@ public class Dashboard extends Activity {
 		// theme (available post types, recent comments etc)
 		@Override
 		protected void onPostExecute(Boolean result) {
-			titleBar.stopRotatingRefreshIcon();
-			titleBar.updateCommentBadge();
+			if (!isFinishing()) {
+				titleBar.stopRotatingRefreshIcon();
+				titleBar.updateCommentBadge();
+			}
 		}
 
 		@Override
