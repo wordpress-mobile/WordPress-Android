@@ -500,7 +500,12 @@ public class ViewStats extends Activity {
 							HashMap<?, ?> row;
 							for (int i = 0; i < dataSet.size(); i++) {
 								row = (HashMap<?, ?>) dataSet.get(i);
-								String date = row.get("date").toString();
+								String date;
+								try {
+									date = row.get("date").toString();
+								} catch (Exception e) {
+									return;
+								}
 								String value = numDataSet.get(i).toString();
 								dateStrings += date + ",";
 								dataValues += value + ",";
