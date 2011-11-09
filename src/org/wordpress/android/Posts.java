@@ -79,6 +79,13 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			@Override
 			public void OnBlogChanged() {
 
+				FragmentManager fm = getSupportFragmentManager();
+				ViewPostFragment f = (ViewPostFragment) fm
+						.findFragmentById(R.id.postDetail);
+				if (f == null) {
+					fm.popBackStack();
+				}
+				
 				attemptToSelectPost();
 				boolean loadedPosts = postList.loadPosts(false);
 				if (!loadedPosts)

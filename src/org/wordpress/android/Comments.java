@@ -78,6 +78,12 @@ public class Comments extends FragmentActivity implements
 			@Override
 			public void OnBlogChanged() {
 				
+				FragmentManager fm = getSupportFragmentManager();
+				ViewPostFragment f = (ViewPostFragment) fm
+						.findFragmentById(R.id.commentDetail);
+				if (f == null) {
+					fm.popBackStack();
+				}
 				attemptToSelectComment();
 				boolean commentsLoaded = commentList.loadComments(false, false);
 				if (!commentsLoaded)
