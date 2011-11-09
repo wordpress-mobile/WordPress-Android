@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.0 Alpha" android:versionCode="36">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.0 Beta" android:versionCode="37">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true" android:debuggable="true">
