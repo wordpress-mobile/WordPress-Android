@@ -281,8 +281,6 @@ public class AddAccount extends Activity {
 			                try {
 								versionResult = (Object) client.call("wp.getOptions", vParams);
 							} catch (XMLRPCException e) {
-								// TODO Auto-generated catch block
-								//e.printStackTrace();
 							}
 							
 							if (versionResult != null){
@@ -291,13 +289,11 @@ public class AddAccount extends Activity {
 									HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
 									wpVersion = sv.get("value").toString();
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
 								}
 							}
 		                }
 		                else{
-		                	wpVersion = "3.0"; //wpcom is v3.0
+		                	wpVersion = "3.2";
 		                }
 						
 						wpVersions[blogCtr] = wpVersion;
@@ -346,7 +342,6 @@ public class AddAccount extends Activity {
 				              dialogBuilder.setNegativeButton("Add Selected",  new
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
-		                        	  
 		                        	SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
 		                          	for (int i=0; i<selectedItems.size();i++){
 		                          		if (selectedItems.get(selectedItems.keyAt(i)) == true){
@@ -682,7 +677,6 @@ public class AddAccount extends Activity {
 }
 
 	private InputStream getResponse(String urlString) {
-		// TODO Auto-generated method stub
 		InputStream in = null;
 		int response = -1;
         
@@ -690,7 +684,6 @@ public class AddAccount extends Activity {
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return null;
 		} 
@@ -698,7 +691,6 @@ public class AddAccount extends Activity {
 		try {
 			conn = url.openConnection();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return null;
 		}

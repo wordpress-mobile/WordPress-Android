@@ -1,188 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/settings"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:scrollbars="none"
-  android:background="#FFF5F5F5"
-  android:layout_gravity="center">
-  <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" 
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:paddingLeft="@dimen/settings_padding"
-    android:paddingRight="@dimen/settings_padding"
-    android:background="#FFF5F5F5"
-    android:layout_gravity="center">
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section1">
-      <TextView
-        android:id="@+id/l_section1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/account_details"
-        style="@style/WordPressSectionHeader" />
-      <TextView
-        android:id="@+id/l_username"
-        android:textColor="#444444"
-        android:layout_below="@id/l_section1"
-        android:layout_marginTop="10dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/username" />
-      <EditText
-        android:id="@+id/username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dip"
-        android:singleLine="true"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/l_username" />
-      <TextView
-        android:id="@+id/l_password"
-        android:textColor="#444444"
-        android:layout_marginTop="10dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/username"
-        android:text="@string/password" />
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-      <EditText
-        android:id="@+id/password"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dip"
-        android:singleLine="true"
-        android:password="true"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/l_password" />
-      <TextView
-        android:id="@+id/l_username"
-        android:textColor="#444444"
-        android:layout_below="@id/l_section1"
-        android:layout_marginTop="10dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/username" />
-      <TextView
-        android:id="@+id/l_httpuser"
-        android:textColor="#444444"
-        android:layout_below="@id/password"
-        android:layout_marginTop="10dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/httpuser" />
-      <EditText
-        android:id="@+id/httpuser"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dip"
-        android:singleLine="true"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/l_httpuser" />
-      <TextView
-        android:id="@+id/l_httppassword"
-        android:textColor="#444444"
-        android:layout_marginTop="10dip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/httpuser"
-        android:text="@string/httppassword" />
-      <EditText
-        android:id="@+id/httppassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dip"
-        android:singleLine="true"
-        android:password="true"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/l_httppassword" />
-    </RelativeLayout>
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section2"
-      android:layout_marginTop="10dip"
-      android:layout_marginBottom="10dip"
-      android:layout_below="@id/section1">
-      <TextView
-        android:id="@+id/l_section2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/media"
-        style="@style/WordPressSectionHeader" />
-      <TextView
-        android:id="@+id/l_maxImageWidth"
-        android:textColor="#444444"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/l_section2"
-        android:text="@string/max_thumbnail_px_width" />
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:background="#FFF5F5F5"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:scrollbars="none" >
 
-      <Spinner
-        android:id="@+id/maxImageWidth"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/wp_spinner_bg"
-        android:layout_below="@id/l_maxImageWidth" />
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#FFF5F5F5"
+            android:paddingLeft="@dimen/settings_padding"
+            android:paddingRight="@dimen/settings_padding"
+            android:paddingTop="@dimen/action_bar_height" >
 
-      <CheckBox
-        android:id="@+id/fullSizeImage"
-        android:textColor="#444444"
-        android:text="@string/upload_full_size_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/maxImageWidth"
-        android:layout_marginRight="2dip" />
-    </RelativeLayout>
-    <RelativeLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="@drawable/content_bg"
-      android:id="@+id/section3"
-      android:layout_marginTop="10dip"
-      android:layout_marginBottom="10dip"
-      android:layout_below="@id/section2">
-      <TextView
-        android:id="@+id/l_section3"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/location"
-        style="@style/WordPressSectionHeader" />
-      <CheckBox
-        android:id="@+id/location"
-        android:text="@string/geotag"
-        android:textColor="#444444"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/l_section3"
-        android:layout_marginRight="2dip" />
-    </RelativeLayout>
-    <Button
-      android:id="@+id/save"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/section3"
-      android:layout_alignParentRight="true"
-      android:background="@drawable/wp_button_small"
-      android:layout_marginLeft="10dip"
-      android:text="@string/save" />
+            <RelativeLayout
+                android:id="@+id/section1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/content_bg"
+                android:layout_marginTop="@dimen/action_bar_height" >
 
-    <Button
-      android:id="@+id/cancel"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignTop="@id/save"
-      android:background="@drawable/wp_button_small"
-      android:layout_toLeftOf="@id/save"
-      android:text="@string/cancel" />
+                <TextView
+                    android:id="@+id/l_section1"
+                    style="@style/WordPressSectionHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/account_details" />
 
-  </RelativeLayout>
-</ScrollView>
+                <TextView
+                    android:id="@+id/l_username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_section1"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/username"
+                    android:textColor="#444444" />
+
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_username"
+                    android:background="@android:drawable/editbox_background"
+                    android:minHeight="40dip"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/l_password"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/username"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/password"
+                    android:textColor="#444444" />
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_password"
+                    android:background="@android:drawable/editbox_background"
+                    android:minHeight="40dip"
+                    android:password="true"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/l_username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_section1"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/username"
+                    android:textColor="#444444" />
+
+                <TextView
+                    android:id="@+id/l_httpuser"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/password"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/httpuser"
+                    android:textColor="#444444" />
+
+                <EditText
+                    android:id="@+id/httpuser"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_httpuser"
+                    android:background="@android:drawable/editbox_background"
+                    android:minHeight="40dip"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/l_httppassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/httpuser"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/httppassword"
+                    android:textColor="#444444" />
+
+                <EditText
+                    android:id="@+id/httppassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_httppassword"
+                    android:background="@android:drawable/editbox_background"
+                    android:minHeight="40dip"
+                    android:password="true"
+                    android:singleLine="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/section2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/section1"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/content_bg" >
+
+                <TextView
+                    android:id="@+id/l_section2"
+                    style="@style/WordPressSectionHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/media" />
+
+                <TextView
+                    android:id="@+id/l_maxImageWidth"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_section2"
+                    android:text="@string/max_thumbnail_px_width"
+                    android:textColor="#444444" />
+
+                <Spinner
+                    android:id="@+id/maxImageWidth"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_maxImageWidth"
+                    android:background="@drawable/wp_spinner_bg" />
+
+                <CheckBox
+                    android:id="@+id/fullSizeImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/maxImageWidth"
+                    android:layout_marginRight="2dip"
+                    android:text="@string/upload_full_size_image"
+                    android:textColor="#444444" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/section3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/section2"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/content_bg" >
+
+                <TextView
+                    android:id="@+id/l_section3"
+                    style="@style/WordPressSectionHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location" />
+
+                <CheckBox
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_section3"
+                    android:layout_marginRight="2dip"
+                    android:text="@string/geotag"
+                    android:textColor="#444444" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/section3"
+                android:layout_marginLeft="10dip"
+                android:background="@drawable/wp_button_small"
+                android:text="@string/save" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/save"
+                android:layout_toLeftOf="@id/save"
+                android:background="@drawable/wp_button_small"
+                android:text="@string/cancel" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/settingsActionBar"
+        android:layout_above="@id/settings"
+        layout="@layout/action_bar" />
+
+</RelativeLayout>

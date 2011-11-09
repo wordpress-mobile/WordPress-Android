@@ -1,5 +1,6 @@
 package org.wordpress.android;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.WPTitleBar;
+import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,107 +18,29 @@ import android.widget.TextView;
 public class Settings extends Activity {
 	protected static Intent svc = null;
 	private String originalUsername;
-	private Blog blog;
-	private int id;
+	WPTitleBar titleBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.settings);
-		
-		
-        Bundle extras = getIntent().getExtras();
-        if(extras !=null)
-        {
-         id = extras.getInt("id");
-         blog = new Blog(id, this);
-        }
-		
-		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
-	    ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,
-	    		R.layout.spinner_textview,
-	            new String[] { "Original Size", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"});
-	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    spinner.setAdapter(spinnerArrayAdapter);
-
-    	EditText usernameET = (EditText)findViewById(R.id.username);
-    	usernameET.setText(blog.getUsername());
-    	originalUsername = blog.getUsername();
-
-    	EditText passwordET = (EditText)findViewById(R.id.password);
-    	passwordET.setText(blog.getPassword());
-
-
-
-    	EditText httpUserET = (EditText)findViewById(R.id.httpuser);
-    	httpUserET.setText(blog.getHttpuser());
-
-    	EditText httpPasswordET = (EditText)findViewById(R.id.httppassword);
-    	httpPasswordET.setText(blog.getHttppassword());
-    	if (blog.isDotcomFlag()){
-    		TextView httpPasswordLabel = (TextView) findViewById(R.id.l_httppassword);
-    		TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
-
-    		httpPasswordLabel.setVisibility(View.GONE);
-    		httpPasswordET.setVisibility(View.GONE);
-
-    		httpUserLabel.setVisibility(View.GONE);
-    		httpUserET.setVisibility(View.GONE);
-    	}
-
-    	CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
-    	fullSize.setChecked(blog.isFullSizeImage());
-
-    	CheckBox locationCB = (CheckBox)findViewById(R.id.location);
-    	locationCB.setChecked(blog.isLocation());
-
-
-    	spinner.setSelection(blog.getMaxImageWidthId());
-
-
-        final Button cancelButton = (Button) findViewById(R.id.cancel);
-        final Button saveButton = (Button) findViewById(R.id.save);
+	
         
-        saveButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                
-                //capture the entered fields *needs validation*
-                EditText usernameET = (EditText)findViewById(R.id.username);
-                blog.setUsername(usernameET.getText().toString());
-                EditText passwordET = (EditText)findViewById(R.id.password);
-                blog.setPassword(passwordET.getText().toString());
-                EditText httpuserET = (EditText)findViewById(R.id.httpuser);
-                blog.setHttpuser(httpuserET.getText().toString());
-                EditText httppasswordET = (EditText)findViewById(R.id.httppassword);
-                blog.setHttppassword(httppasswordET.getText().toString());
-                
-                CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
-                blog.setFullSizeImage(fullSize.isChecked());
-                
-                Spinner spinner = (Spinner)findViewById(R.id.maxImageWidth);
-                blog.setMaxImageWidth(spinner.getSelectedItem().toString());
-                
-                long maxImageWidthId = spinner.getSelectedItemId();
-                int maxImageWidthIdInt = (int) maxImageWidthId;
-                
-                blog.setMaxImageWidthId(maxImageWidthIdInt);
-                
-                CheckBox locationCB = (CheckBox)findViewById(R.id.location);
-                blog.setLocation(locationCB.isChecked());
+        titleBar = (WPTitleBar) findViewById(R.id.settingsActionBar);
+        titleBar.refreshButton.setEnabled(false);
+		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
+			// user selected new blog in the title bar
+			@Override
+			public void OnBlogChanged() {
+				
+				loadSettingsForBlog();
 
-                blog.save(Settings.this, originalUsername);
-        		//exit settings screen
-                Bundle bundle = new Bundle();
-                
-                bundle.putString("returnStatus", "SAVE");
-                Intent mIntent = new Intent();
-                mIntent.putExtras(bundle);
-                setResult(RESULT_OK, mIntent);
-                finish();
-                
-            }
-        });   
-        
+			}
+		});
+		
+		loadSettingsForBlog();
+		  
+        Button cancelButton = (Button) findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
             	
@@ -133,6 +56,98 @@ public class Settings extends Activity {
      
 	}
 	
+	private void loadSettingsForBlog() {
+		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
+	    ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,
+	    		R.layout.spinner_textview,
+	            new String[] { "Original Size", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"});
+	    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spinner.setAdapter(spinnerArrayAdapter);
+
+    	EditText usernameET = (EditText)findViewById(R.id.username);
+    	usernameET.setText(WordPress.currentBlog.getUsername());
+    	originalUsername = WordPress.currentBlog.getUsername();
+
+    	EditText passwordET = (EditText)findViewById(R.id.password);
+    	passwordET.setText(WordPress.currentBlog.getPassword());
+
+    	EditText httpUserET = (EditText)findViewById(R.id.httpuser);
+    	httpUserET.setText(WordPress.currentBlog.getHttpuser());
+
+    	EditText httpPasswordET = (EditText)findViewById(R.id.httppassword);
+    	httpPasswordET.setText(WordPress.currentBlog.getHttppassword());
+    	TextView httpPasswordLabel = (TextView) findViewById(R.id.l_httppassword);
+		TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
+    	if (WordPress.currentBlog.isDotcomFlag()) {
+    		httpPasswordLabel.setVisibility(View.GONE);
+    		httpPasswordET.setVisibility(View.GONE);
+
+    		httpUserLabel.setVisibility(View.GONE);
+    		httpUserET.setVisibility(View.GONE);
+    	}
+    	else {
+    		httpPasswordLabel.setVisibility(View.VISIBLE);
+    		httpPasswordET.setVisibility(View.VISIBLE);
+
+    		httpUserLabel.setVisibility(View.VISIBLE);
+    		httpUserET.setVisibility(View.VISIBLE);
+    	}
+
+    	CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
+    	fullSize.setChecked(WordPress.currentBlog.isFullSizeImage());
+
+    	CheckBox locationCB = (CheckBox)findViewById(R.id.location);
+    	locationCB.setChecked(WordPress.currentBlog.isLocation());
+
+
+    	spinner.setSelection(WordPress.currentBlog.getMaxImageWidthId());
+
+
+        
+        final Button saveButton = (Button) findViewById(R.id.save);
+        
+        saveButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                
+                //capture the entered fields *needs validation*
+                EditText usernameET = (EditText)findViewById(R.id.username);
+                WordPress.currentBlog.setUsername(usernameET.getText().toString());
+                EditText passwordET = (EditText)findViewById(R.id.password);
+                WordPress.currentBlog.setPassword(passwordET.getText().toString());
+                EditText httpuserET = (EditText)findViewById(R.id.httpuser);
+                WordPress.currentBlog.setHttpuser(httpuserET.getText().toString());
+                EditText httppasswordET = (EditText)findViewById(R.id.httppassword);
+                WordPress.currentBlog.setHttppassword(httppasswordET.getText().toString());
+                
+                CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
+                WordPress.currentBlog.setFullSizeImage(fullSize.isChecked());
+                
+                Spinner spinner = (Spinner)findViewById(R.id.maxImageWidth);
+                WordPress.currentBlog.setMaxImageWidth(spinner.getSelectedItem().toString());
+                
+                long maxImageWidthId = spinner.getSelectedItemId();
+                int maxImageWidthIdInt = (int) maxImageWidthId;
+                
+                WordPress.currentBlog.setMaxImageWidthId(maxImageWidthIdInt);
+                
+                CheckBox locationCB = (CheckBox)findViewById(R.id.location);
+                WordPress.currentBlog.setLocation(locationCB.isChecked());
+
+                WordPress.currentBlog.save(Settings.this, originalUsername);
+        		//exit settings screen
+                Bundle bundle = new Bundle();
+                
+                bundle.putString("returnStatus", "SAVE");
+                Intent mIntent = new Intent();
+                mIntent.putExtras(bundle);
+                setResult(RESULT_OK, mIntent);
+                finish();
+                
+            }
+        }); 
+		
+	}
+
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
       //ignore orientation change

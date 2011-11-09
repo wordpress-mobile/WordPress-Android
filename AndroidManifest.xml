@@ -4,12 +4,11 @@
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true" android:debuggable="true">
 		<activity android:name="wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
-		<activity android:name="Settings" android:label="Settings"
-			android:configChanges="orientation|keyboardHidden" />
+		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
 			android:label="Enter a URL" />
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
-		<activity android:configChanges="orientation|keyboardHidden" android:name=".AddAccount"/>
+		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
 		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
