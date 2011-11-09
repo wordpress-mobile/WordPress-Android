@@ -924,8 +924,12 @@ class HtmlToSpannedConverter implements ContentHandler {
 			}
 		}
 
-		if (mysteryTagFound)
-			mysteryTagContent += sb.toString().substring(start, length);
+		if (mysteryTagFound) {
+			if (sb.length() < length)
+				mysteryTagContent += sb.toString().substring(start, length - 1);
+			else
+				mysteryTagContent += sb.toString().substring(start, length);
+		}
 		else 
 			mSpannableStringBuilder.append(sb);
 	}
