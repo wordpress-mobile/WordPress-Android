@@ -85,7 +85,9 @@
                 android:id="@+id/viewPostTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:textSize="18dp"
                 android:padding="10dp"
+                android:background="#FFFFFF"
                 android:visibility="gone" />
         </FrameLayout>
     </ScrollView>
