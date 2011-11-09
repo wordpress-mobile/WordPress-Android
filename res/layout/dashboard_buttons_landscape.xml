@@ -60,7 +60,7 @@
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="New Post" />
+                            android:text="@string/new_post" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -85,7 +85,7 @@
                         style="@style/DashboardButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Quick Photo" />
+                        android:text="@string/quick_photo" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -119,7 +119,7 @@
                         style="@style/DashboardButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Page" />
+                        android:text="@string/new_page" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -144,7 +144,7 @@
                         style="@style/DashboardButtonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Quick Photo" />
+                        android:text="@string/quick_video" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -187,7 +187,7 @@
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Posts" />
+                            android:text="@string/tab_posts" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -215,7 +215,7 @@
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Pages" />
+                            android:text="@string/tab_pages" />
                     </LinearLayout>
 
                     <FrameLayout
@@ -316,7 +316,7 @@
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Settings" />
+                            android:text="@string/settings" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -343,7 +343,7 @@
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Following" />
+                            android:text="@string/reader" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -370,7 +370,7 @@
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Stats" />
+                            android:text="@string/tab_stats" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
