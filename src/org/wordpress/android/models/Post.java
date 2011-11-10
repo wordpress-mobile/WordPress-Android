@@ -82,7 +82,8 @@ public class Post {
 	public Post(int blog_id, long post_id, boolean isPage, Context ctx) {
 		// load an existing post
 		context = ctx;
-		Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
+		Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage,
+				post_id);
 		if (postVals != null) {
 			this.blog = new Blog(blog_id, ctx);
 			this.id = (Long) postVals.get(0);
@@ -102,7 +103,7 @@ public class Post {
 			this.mt_keywords = postVals.get(13).toString();
 			if (postVals.get(14) != null)
 				this.mt_text_more = postVals.get(14).toString();
-			else 
+			else
 				this.mt_text_more = "";
 			this.permaLink = postVals.get(15).toString();
 			this.post_status = postVals.get(16).toString();
@@ -118,7 +119,7 @@ public class Post {
 			this.localDraft = (Integer) postVals.get(26) > 0;
 			this.uploaded = (Integer) postVals.get(27) > 0;
 			this.isPage = (Integer) postVals.get(28) > 0;
-			
+
 		}
 	}
 
@@ -458,8 +459,8 @@ public class Post {
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 					notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-			n = new Notification(R.drawable.notification_icon, "Uploading Post",
-					System.currentTimeMillis());
+			n = new Notification(R.drawable.notification_icon,
+					"Uploading Post", System.currentTimeMillis());
 
 			/*
 			 * n.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -492,55 +493,58 @@ public class Post {
 			int moreCount = 1;
 			if (post.getMt_text_more() != null)
 				moreCount++;
-			
-			for (int x=0;x<moreCount;x++) {
+
+			for (int x = 0; x < moreCount; x++) {
 				if (x == 0)
-					s = (Spannable) WPHtml.fromHtml(post.getDescription(), context, post);
+					s = (Spannable) WPHtml.fromHtml(post.getDescription(),
+							context, post);
 				else
-					s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(), context, post);
-			WPImageSpan[] click_spans = s.getSpans(0, s.length(),
-					WPImageSpan.class);
+					s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(),
+							context, post);
+				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
+						WPImageSpan.class);
 
-			if (click_spans.length != 0) {
+				if (click_spans.length != 0) {
 
-				for (int i = 0; i < click_spans.length; i++) {
-					WPImageSpan wpIS = click_spans[i];
-					int start = s.getSpanStart(wpIS);
-					int end = s.getSpanEnd(wpIS);
-					MediaFile mf = new MediaFile();
-					mf.setPostID(post.getId());
-					mf.setTitle(wpIS.getTitle());
-					mf.setCaption(wpIS.getCaption());
-					mf.setDescription(wpIS.getDescription());
-					mf.setFeatured(wpIS.isFeatured());
-					mf.setFileName(wpIS.getImageSource().toString());
-					mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-					mf.setWidth(wpIS.getWidth());
+					for (int i = 0; i < click_spans.length; i++) {
+						WPImageSpan wpIS = click_spans[i];
+						int start = s.getSpanStart(wpIS);
+						int end = s.getSpanEnd(wpIS);
+						MediaFile mf = new MediaFile();
+						mf.setPostID(post.getId());
+						mf.setTitle(wpIS.getTitle());
+						mf.setCaption(wpIS.getCaption());
+						mf.setDescription(wpIS.getDescription());
+						mf.setFeatured(wpIS.isFeatured());
+						mf.setFileName(wpIS.getImageSource().toString());
+						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+						mf.setWidth(wpIS.getWidth());
 
-					String imgHTML = uploadImage(mf);
-					if (imgHTML != null) {
-						SpannableString ss = new SpannableString(imgHTML);
-						s.setSpan(ss, start, end,
-								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-						s.removeSpan(wpIS);
-					} else {
-						mediaError = true;
+						String imgHTML = uploadImage(mf);
+						if (imgHTML != null) {
+							SpannableString ss = new SpannableString(imgHTML);
+							s.setSpan(ss, start, end,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							s.removeSpan(wpIS);
+						} else {
+							mediaError = true;
+						}
 					}
 				}
-			}
-			
+
 				if (x == 0)
 					descriptionContent = WPHtml.toHtml(s);
 				else
 					moreContent = WPHtml.toHtml(s);
-			
+
 			}
 
 			if (!mediaError) {
 
 				JSONArray categories = post.getCategories();
-				String[] theCategories = new String[categories.length()];
+				String[] theCategories = null;
 				if (categories != null) {
+					theCategories = new String[categories.length()];
 					for (int i = 0; i < categories.length(); i++) {
 						try {
 							theCategories[i] = categories.getString(i);
@@ -593,23 +597,27 @@ public class Post {
 					Date date = new Date(pubDate);
 					contentStruct.put("date_created_gmt", date);
 				}
-				
-				//get rid of the p tags that the editor adds.
-				descriptionContent = descriptionContent.replace("<p>", "").replace("</p>", "\n");
-				moreContent = moreContent.replace("<p>", "").replace("</p>", "\n");
-				
+
+				// get rid of the p tags that the editor adds.
+				descriptionContent = descriptionContent.replace("<p>", "")
+						.replace("</p>", "\n");
+				moreContent = moreContent.replace("<p>", "").replace("</p>",
+						"\n");
+
 				if (!moreContent.equals("")) {
-					descriptionContent = descriptionContent + "\n\n<!--more-->\n\n" + moreContent;
+					descriptionContent = descriptionContent
+							+ "\n\n<!--more-->\n\n" + moreContent;
 					post.mt_text_more = "";
 				}
-				
+
 				contentStruct.put("description", descriptionContent);
 				if (!post.isPage) {
 					if (post.mt_keywords != "") {
 						contentStruct.put("mt_keywords", post.mt_keywords);
 					}
-					if (theCategories.length > 0) {
-						contentStruct.put("categories", theCategories);
+					if (theCategories != null) {
+						if (theCategories.length > 0)
+							contentStruct.put("categories", theCategories);
 					}
 				}
 				contentStruct.put(
@@ -674,7 +682,8 @@ public class Post {
 							contentStruct, publishThis };
 
 				try {
-					client.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
+					client.call(
+							(post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
 									: "metaWeblog.editPost", params);
 					post.setUploaded(true);
 					post.update();
@@ -741,8 +750,8 @@ public class Post {
 								Video.Media.RESOLUTION };
 						imgPath = videoUri;
 
-						Cursor cur = ((Activity) context).managedQuery(
-								imgPath, projection, null, null, null);
+						Cursor cur = ((Activity) context).managedQuery(imgPath,
+								projection, null, null, null);
 						String thumbData = "";
 
 						if (cur.moveToFirst()) {
@@ -857,9 +866,8 @@ public class Post {
 
 								imgPath = imageUri;
 
-								Cursor cur = ((Activity) context)
-										.managedQuery(imgPath, projection,
-												null, null, null);
+								Cursor cur = ((Activity) context).managedQuery(
+										imgPath, projection, null, null, null);
 								String thumbData = "";
 
 								if (cur.moveToFirst()) {
@@ -989,7 +997,8 @@ public class Post {
 								break;
 							}
 
-							String alignmentCSS = "class=\"" + alignment + "\" ";
+							String alignmentCSS = "class=\"" + alignment
+									+ "\" ";
 							if (resultURL != null) {
 								if (i != 0 && post.blog.isFullSizeImage()) {
 									content = content
@@ -999,8 +1008,7 @@ public class Post {
 											+ mf.getTitle() + "\" "
 											+ alignmentCSS
 											+ "alt=\"image\" src=\""
-											+ finalThumbnailUrl
-											+ "\" /></a>";
+											+ finalThumbnailUrl + "\" /></a>";
 								} else {
 									if (i == 0
 											&& post.blog.isFullSizeImage() == false) {
@@ -1008,21 +1016,19 @@ public class Post {
 												+ mf.getTitle() + "\" "
 												+ alignmentCSS
 												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl
-												+ "\" />";
+												+ finalThumbnailUrl + "\" />";
 									}
 								}
-								
+
 								if (!mf.getCaption().equals("")) {
 									content = String
 											.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
 													alignment, mf.getWidth(),
 													EscapeUtils.escapeHtml(mf
-															.getCaption()), content);
+															.getCaption()),
+													content);
 								}
 							}
-
-							
 
 						} // end if statement
 					}// end image check

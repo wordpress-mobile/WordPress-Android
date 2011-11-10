@@ -70,7 +70,7 @@ public class ViewPosts extends ListFragment {
 	private OnRefreshListener onRefreshListener;
 	private OnPostActionListener onPostActionListener;
 	public getRecentPostsTask getPostsTask;
-	
+
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -90,12 +90,12 @@ public class ViewPosts extends ListFragment {
 		createSwitcher();
 
 		// query for posts and refresh view
-		/*boolean loadedPosts = loadPosts(false);
-
-		if (!loadedPosts) {
-			onRefreshListener.onRefresh(true);
-			refreshPosts(false);
-		}*/
+		/*
+		 * boolean loadedPosts = loadPosts(false);
+		 * 
+		 * if (!loadedPosts) { onRefreshListener.onRefresh(true);
+		 * refreshPosts(false); }
+		 */
 
 		Display display = ((WindowManager) getActivity()
 				.getApplicationContext().getSystemService(
@@ -186,10 +186,12 @@ public class ViewPosts extends ListFragment {
 		Vector<?> loadedPosts;
 		if (isPage) {
 			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(), true);
+					.getApplicationContext(), WordPress.currentBlog.getId(),
+					true);
 		} else {
 			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(), false);
+					.getApplicationContext(), WordPress.currentBlog.getId(),
+					false);
 		}
 
 		if (loadedPosts != null) {
@@ -288,8 +290,8 @@ public class ViewPosts extends ListFragment {
 
 			postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
 			titles = StringHelper.mergeStringArrays(draftTitles, titles);
-			dateCreatedFormatted = StringHelper.mergeStringArrays(draftDateCreated,
-					dateCreatedFormatted);
+			dateCreatedFormatted = StringHelper.mergeStringArrays(
+					draftDateCreated, dateCreatedFormatted);
 		} else {
 			if (pla != null) {
 				pla.notifyDataSetChanged();
@@ -371,11 +373,9 @@ public class ViewPosts extends ListFragment {
 									R.string.draft_actions));
 							menu.add(1, 0, 0,
 									getResources().getText(R.string.edit_draft));
-							menu.add(1, 1, 0,
-									getResources().getText(R.string.upload));
 							menu.add(
 									1,
-									2,
+									1,
 									0,
 									getResources().getText(
 											R.string.delete_draft));
@@ -434,18 +434,20 @@ public class ViewPosts extends ListFragment {
 			if (this.shouldSelectAfterLoad) {
 				if (postIDs != null) {
 					if (postIDs.length >= 1) {
-						
-						 Post post = new Post(WordPress.currentBlog.getId(),Integer.valueOf(postIDs[1]), isPage, getActivity().getApplicationContext()); 
-						 WordPress.currentPost =post; 
-						 onPostSelectedListener.onPostSelected(post);
-						 selectedPosition = 1;
-						 pla.notifyDataSetChanged();
-						 
+
+						Post post = new Post(WordPress.currentBlog.getId(),
+								Integer.valueOf(postIDs[1]), isPage,
+								getActivity().getApplicationContext());
+						WordPress.currentPost = post;
+						onPostSelectedListener.onPostSelected(post);
+						selectedPosition = 1;
+						pla.notifyDataSetChanged();
+
 					}
 				}
 				shouldSelectAfterLoad = false;
 			}
-			
+
 			if (loadedPosts == null) {
 				refreshPosts(false);
 			}
@@ -485,9 +487,11 @@ public class ViewPosts extends ListFragment {
 
 		Vector<?> loadedPosts;
 		if (isPage) {
-			loadedPosts = WordPress.wpDB.loadDrafts(WordPress.currentBlog.getId(), true);
+			loadedPosts = WordPress.wpDB.loadDrafts(
+					WordPress.currentBlog.getId(), true);
 		} else {
-			loadedPosts = WordPress.wpDB.loadDrafts(WordPress.currentBlog.getId(), false);
+			loadedPosts = WordPress.wpDB.loadDrafts(
+					WordPress.currentBlog.getId(), false);
 		}
 		if (loadedPosts != null) {
 			draftIDs = new String[loadedPosts.size()];
@@ -501,7 +505,7 @@ public class ViewPosts extends ListFragment {
 				draftIDs[i] = contentHash.get("id").toString();
 				draftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
 						"title").toString());
-				//drafts won't show the date in the list
+				// drafts won't show the date in the list
 				draftDateCreated[i] = "";
 				uploaded[i] = (Integer) contentHash.get("uploaded");
 			}
@@ -574,7 +578,8 @@ public class ViewPosts extends ListFragment {
 				}
 			} else {
 				if (position == selectedPosition) {
-					pv.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_highlight_bg));
+					pv.setBackgroundDrawable(getResources().getDrawable(
+							R.drawable.list_highlight_bg));
 				} else {
 					pv.setBackgroundDrawable(getResources().getDrawable(
 							R.drawable.list_bg_selector));
@@ -613,29 +618,10 @@ public class ViewPosts extends ListFragment {
 
 	}
 
-	/*
-	 * @Override protected void onActivityResult(int requestCode, int
-	 * resultCode, Intent data) { super.onActivityResult(requestCode,
-	 * resultCode, data); if (resultCode == RESULT_OK) { Bundle extras =
-	 * data.getExtras(); String returnResult = extras.getString("returnStatus");
-	 * 
-	 * if (returnResult != null) { switch (requestCode) { case 0: if
-	 * (returnResult.equals("OK")) { boolean uploadNow = false; uploadNow =
-	 * extras.getBoolean("upload"); if (uploadNow) { selectedID =
-	 * extras.getLong("newID"); showDialog(ID_DIALOG_POSTING);
-	 * 
-	 * try { submitResult = submitPost();
-	 * 
-	 * } catch (IOException e) { e.printStackTrace(); }
-	 * 
-	 * } else { loadPosts(false); } } break; case 1: if
-	 * (returnResult.equals("OK")) { refreshPosts(false); } break; } } } }
-	 */
-
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage, getActivity()
-				.getApplicationContext());
+		Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage,
+				getActivity().getApplicationContext());
 		/* Switch on the ID of the item, to get what the user selected. */
 		if (item.getGroupId() == 0) {
 			switch (item.getItemId()) {
@@ -689,20 +675,6 @@ public class ViewPosts extends ListFragment {
 				startActivityForResult(i2, 0);
 				return true;
 			case 1:
-				new Thread() {
-					public void run() {
-
-						try {
-							submitResult = submitPost();
-
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-					}
-				}.start();
-				return true;
-			case 2:
 
 				onPostActionListener.onPostAction(Posts.POST_DELETE, post);
 				return true;
@@ -710,16 +682,6 @@ public class ViewPosts extends ListFragment {
 		}
 
 		return false;
-	}
-
-	public String submitPost() throws IOException {
-
-		Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage, getActivity()
-				.getApplicationContext());
-
-		post.upload();
-
-		return "";
 	}
 
 	public class getRecentPostsTask extends
@@ -732,14 +694,15 @@ public class ViewPosts extends ListFragment {
 		protected void onPostExecute(Object[] result) {
 			if (isCancelled())
 				return;
-			
+
 			if (result != null) {
 				if (result.length > 0) {
 					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
 					if (!loadMore) {
-						WordPress.wpDB.deleteUploadedPosts(blog.getId(), isPage);
+						WordPress.wpDB
+								.deleteUploadedPosts(blog.getId(), isPage);
 					}
 
 					for (int ctr = 0; ctr < result.length; ctr++) {
@@ -749,8 +712,7 @@ public class ViewPosts extends ListFragment {
 						dbVector.add(ctr, contentHash);
 					}
 
-					WordPress.wpDB.savePosts(dbVector,
-							blog.getId(), isPage);
+					WordPress.wpDB.savePosts(dbVector, blog.getId(), isPage);
 					numRecords += 20;
 					if (loadMore)
 						switcher.showPrevious();
@@ -759,12 +721,13 @@ public class ViewPosts extends ListFragment {
 				onRefreshListener.onRefresh(false);
 			} else {
 				onRefreshListener.onRefresh(false);
-				
-				if (errorMsg != ""){
-					FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+				if (errorMsg != "") {
+					FragmentTransaction ft = getFragmentManager()
+							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
-					        .newInstance(errorMsg);
-					    alert.show(ft, "alert");
+							.newInstance(errorMsg);
+					alert.show(ft, "alert");
 					errorMsg = "";
 				}
 			}
