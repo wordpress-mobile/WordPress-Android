@@ -46,6 +46,7 @@ public class ViewPostFragment extends Fragment {
 					Intent i = new Intent(
 							getActivity().getApplicationContext(),
 							EditPost.class);
+					i.putExtra("isPage", WordPress.currentPost.isPage());
 					i.putExtra("postID", WordPress.currentPost.getId());
 					startActivityForResult(i, 0);
 				}
