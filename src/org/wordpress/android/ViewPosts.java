@@ -15,6 +15,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.WPAlertDialogFragment;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
@@ -57,7 +59,7 @@ public class ViewPosts extends ListFragment {
 	public Vector<String> imageUrl = new Vector<String>();
 	public String imageTitle = null, accountName;
 	public boolean thumbnailOnly, secondPass, xmlrpcError = false;
-	public String submitResult = "", mediaErrorMsg = "";
+	public String submitResult = "", errorMsg = "";
 	public int totalDrafts = 0, selectedPosition;
 	public boolean isPage = false, vpUpgrade = false;
 	public boolean largeScreen = false, shouldSelectAfterLoad = false;
@@ -757,6 +759,14 @@ public class ViewPosts extends ListFragment {
 				onRefreshListener.onRefresh(false);
 			} else {
 				onRefreshListener.onRefresh(false);
+				
+				if (errorMsg != ""){
+					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					WPAlertDialogFragment alert = WPAlertDialogFragment
+					        .newInstance(errorMsg);
+					    alert.show(ft, "alert");
+					errorMsg = "";
+				}
 			}
 		}
 
@@ -778,6 +788,7 @@ public class ViewPosts extends ListFragment {
 				result = (Object[]) client.call((isPage) ? "wp.getPages"
 						: "metaWeblog.getRecentPosts", params);
 			} catch (XMLRPCException e) {
+				errorMsg = e.getMessage();
 				if (loadMore)
 					switcher.showPrevious();
 			}

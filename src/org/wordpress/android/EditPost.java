@@ -745,7 +745,7 @@ public class EditPost extends Activity implements LocationListener {
 			if (isNew) {
 				post = new Post(id, title, content, images, pubDateTimestamp,
 						categories.toString(), tags, status, password,
-						latitude, longitude, isPage, postFormat, EditPost.this);
+						latitude, longitude, isPage, postFormat, EditPost.this, true);
 				post.setLocalDraft(true);
 
 				// split up the post content if there's a more tag

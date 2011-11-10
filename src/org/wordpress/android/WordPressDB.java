@@ -146,6 +146,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 1) { // v1.0 or v1.0.1
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_BLOGID);
 				db.execSQL(UPDATE_BLOGID);
 				db.execSQL(ADD_SOUND_OPTION);
@@ -170,6 +172,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 2) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_SOUND_OPTION);
 				db.execSQL(ADD_VIBRATE_OPTION);
 				db.execSQL(ADD_LIGHT_OPTION);
@@ -192,6 +196,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 3) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_LOCATION_FLAG);
 				db.execSQL(ADD_TAGLINE);
 				db.execSQL(ADD_TAGLINE_FLAG);
@@ -211,6 +217,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 4) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_LOCATION_FLAG);
 				db.execSQL(ADD_TAGLINE);
 				db.execSQL(ADD_TAGLINE_FLAG);
@@ -230,6 +238,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 5) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_TAGLINE);
 				db.execSQL(ADD_TAGLINE_FLAG);
 				db.execSQL(ADD_NEW_COMMENT_ID);
@@ -248,6 +258,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 6) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_NEW_COMMENT_ID);
 				db.execSQL(COPY_COMMENT_IDS);
 				db.execSQL(ADD_DOTCOM_USERNAME);
@@ -264,6 +276,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 7) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_UNIQUE_ID);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
@@ -272,6 +286,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 8) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
@@ -279,6 +295,8 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 9) {
+				db.delete(POSTS_TABLE, null, null);
+				db.execSQL(CREATE_TABLE_POSTS);
 				db.execSQL(ADD_HTTPUSER);
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
@@ -286,13 +304,11 @@ public class WordPressDB {
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 10) {
-
 				db.delete(POSTS_TABLE, null, null);
 				db.execSQL(CREATE_TABLE_POSTS);
 
 				try {
 					// migrate drafts
-					// posts
 					
 					Cursor c = db.query("localdrafts", new String[] { "blogID",
 							"title", "content", "picturePaths", "date",
@@ -309,9 +325,10 @@ public class WordPressDB {
 									c.getLong(4), c.getString(5),
 									c.getString(6), c.getString(7),
 									c.getString(8), c.getDouble(9),
-									c.getDouble(10), false, "", ctx);
+									c.getDouble(10), false, "", ctx, false);
 							post.setLocalDraft(true);
-							post.save();
+							post.setPost_status("localdraft");
+							savePost(post, c.getInt(0));
 						}
 						c.moveToNext();
 					}
@@ -334,10 +351,10 @@ public class WordPressDB {
 									c.getString(2), c.getString(3),
 									c.getLong(4), c.getString(5),
 									c.getString(6), null, null, 0, 0, true, "",
-									ctx);
+									ctx, false);
 							post.setLocalDraft(true);
 							post.setPage(true);
-							post.save();
+							savePost(post, c.getInt(0));
 						}
 						c.moveToNext();
 					}
@@ -345,7 +362,6 @@ public class WordPressDB {
 					db.delete("localpagedrafts", null, null);
 				} catch (Exception e) {
 					e.printStackTrace();
-					// didn't work, that's ok.
 				}
 
 				db.execSQL(ADD_LAST_BLOG_ID);

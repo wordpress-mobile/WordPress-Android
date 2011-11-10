@@ -36,7 +36,6 @@ public class Blog {
 	
 	public Blog(int blog_id, Context ctx){
 		//instantiate a new blog
-		
 		Vector<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
 		
 		if (blogVals != null) {

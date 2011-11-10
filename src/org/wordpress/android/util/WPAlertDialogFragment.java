@@ -31,7 +31,7 @@ public class WPAlertDialogFragment extends DialogFragment implements
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
     b.setTitle(R.string.error);
-    b.setPositiveButton("Ok", this);
+    b.setPositiveButton("OK", this);
     //b.setNegativeButton("Cancel", this);
     b.setMessage(this.getArguments().getString("alert-message"));
     return b.create();

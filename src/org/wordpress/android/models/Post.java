@@ -19,7 +19,6 @@ import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -126,11 +125,11 @@ public class Post {
 	public Post(int blog_id, String title, String content, String picturePaths,
 			long date, String categories, String tags, String status,
 			String password, double latitude, double longitude, boolean isPage,
-			String postFormat, Context ctx) {
+			String postFormat, Context ctx, boolean createBlogReference) {
 		// create a new post
 		context = ctx;
-
-		this.blog = new Blog(blog_id, ctx);
+		if (createBlogReference)
+			this.blog = new Blog(blog_id, ctx);
 		this.blogID = blog_id;
 		this.title = title;
 		this.description = content;

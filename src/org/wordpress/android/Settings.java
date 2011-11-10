@@ -51,6 +51,8 @@ public class Settings extends Activity {
                  finish();
             }
         });
+        
+        loadSettingsForBlog();
      
 	}
 	

@@ -87,9 +87,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 				}
 
 				attemptToSelectPost();
-				boolean loadedPosts = postList.loadPosts(false);
-				if (!loadedPosts)
-					postList.refreshPosts(false);
+				postList.loadPosts(false);
 
 			}
 		});
@@ -119,9 +117,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		super.onResume();
 
 		attemptToSelectPost();
-		boolean loadedPosts = postList.loadPosts(false);
-		if (!loadedPosts)
-			postList.refreshPosts(false);
+		postList.loadPosts(false);
+		
 	}
 
 	@Override
@@ -137,9 +134,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		titleBar.refreshBlog();
 
 		attemptToSelectPost();
-		boolean loadedPosts = postList.loadPosts(false);
-		if (!loadedPosts)
-			postList.refreshPosts(false);
+		postList.loadPosts(false);
 
 	}
 
