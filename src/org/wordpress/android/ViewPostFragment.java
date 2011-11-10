@@ -103,6 +103,7 @@ public class ViewPostFragment extends Fragment {
 				R.id.viewPostWebView);
 		TextView tv = (TextView) getActivity().findViewById(
 				R.id.viewPostTextView);
+		ImageButton shareURLButton = (ImageButton) getActivity().findViewById(R.id.sharePostLink);
 
 		if (post.isLocalDraft()) {
 			tv.setVisibility(View.VISIBLE);
@@ -110,6 +111,7 @@ public class ViewPostFragment extends Fragment {
 			tv.setText(WPHtml.fromHtml(
 					post.getDescription() + post.getMt_text_more(),
 					getActivity().getApplicationContext(), post));
+			shareURLButton.setVisibility(View.GONE);
 		} else {
 			tv.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
@@ -120,6 +122,7 @@ public class ViewPostFragment extends Fragment {
 					+ html + "</div></body></html>";
 			webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
 					"text/html", "utf-8", null);
+			shareURLButton.setVisibility(View.VISIBLE);
 		}
 
 	}

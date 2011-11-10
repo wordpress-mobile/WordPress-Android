@@ -73,7 +73,6 @@ public class ViewPosts extends ListFragment {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		// setContentView(R.layout.viewposts);
 
 		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
@@ -448,6 +447,11 @@ public class ViewPosts extends ListFragment {
 
 			return true;
 		} else {
+			
+			if (loadedPosts == null) {
+				refreshPosts(false);
+			}
+			
 			return false;
 		}
 

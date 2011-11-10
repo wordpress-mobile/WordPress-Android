@@ -1,7 +1,9 @@
 package org.wordpress.android;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -444,85 +446,42 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	}
 
 	private String getShortlinkTagHref(String urlString) {
-		InputStream in = getResponse(urlString);
-
-		if (in != null) {
-			XmlPullParser parser = Xml.newPullParser();
+		String html = getHTML(urlString);
+		
+		if (html != "") {
 			try {
-				// auto-detect the encoding from the stream
-				parser.setInput(in, null);
-				int eventType = parser.getEventType();
-				while (eventType != XmlPullParser.END_DOCUMENT) {
-					String name = null;
-					String rel = "";
-					String href = "";
-					switch (eventType) {
-					case XmlPullParser.START_TAG:
-						name = parser.getName();
-						for (int i = 0; i < parser.getAttributeCount(); i++) {
-							String attrName = parser.getAttributeName(i);
-							String attrValue = parser.getAttributeValue(i);
-							Log.i("WORDPRESS", name + "|" + attrName + "|"
-									+ attrValue);
-							if (attrName.equals("rel")) {
-								rel = attrValue;
-							} else if (attrName.equals("href")) {
-								href = attrValue;
-							}
-						}
-
-						if (rel.equals("shortlink")) {
-							return href;
-						}
-						break;
-					}
-					eventType = parser.next();
-				}
+				int location = html.indexOf("http://wp.me");
+				String shortlink = html.substring(location, location + 30);
+				shortlink = shortlink.substring(0, shortlink.indexOf("'"));
+				return shortlink;
 			} catch (Exception e) {
 				e.printStackTrace();
-				return null;
 			}
-
 		}
+		
 		return null; // never found the shortlink tag
 	}
 
-	private InputStream getResponse(String urlString) {
-		InputStream in = null;
-		int response = -1;
-
-		URL url = null;
-		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-		HttpURLConnection httpConn = null;
-		try {
-			httpConn = (HttpURLConnection) url.openConnection();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-
-		try {
-			httpConn.setAllowUserInteraction(false);
-			httpConn.setInstanceFollowRedirects(true);
-			httpConn.setRequestMethod("GET");
-			httpConn.addRequestProperty("user-agent", "Mozilla/5.0");
-			httpConn.connect();
-
-			response = httpConn.getResponseCode();
-			if (response == HttpURLConnection.HTTP_OK) {
-				in = httpConn.getInputStream();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-		}
-		return in;
-	}
+	public String getHTML(String urlSource) {
+	      URL url;
+	      HttpURLConnection conn;
+	      BufferedReader rd;
+	      String line;
+	      String result = ""; 
+	      try {
+	         url = new URL(urlSource);
+	         conn = (HttpURLConnection) url.openConnection();
+	         conn.setRequestMethod("GET");
+	         rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	         while ((line = rd.readLine()) != null) {
+	            result += line;
+	         }
+	         rd.close();
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	      return result;
+	   }
 
 	@Override
 	public void onPostAction(int action, final Post post) {

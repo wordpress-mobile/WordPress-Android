@@ -28,15 +28,16 @@
             android:singleLine="true"
             android:textSize="20dp" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" >
 
             <ImageButton
                 android:id="@+id/deletePost"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_alignParentRight="true"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_delete"
@@ -46,8 +47,6 @@
                 android:id="@+id/sharePostLink"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_alignTop="@id/deletePost"
-                android:layout_toLeftOf="@id/deletePost"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_share"
@@ -57,13 +56,11 @@
                 android:id="@+id/editPost"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_alignTop="@id/sharePostLink"
-                android:layout_toLeftOf="@id/sharePostLink"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_compose"
                 android:text="@string/edit_post" />
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView
