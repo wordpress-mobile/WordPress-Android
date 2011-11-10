@@ -109,10 +109,7 @@ public class Post {
 			this.userid = postVals.get(17).toString();
 			this.wp_author_display_name = postVals.get(18).toString();
 			this.wp_author_id = postVals.get(19).toString();
-			if (postVals.get(20) != null)
-				this.wp_password = postVals.get(20).toString();
-			else
-				this.wp_password = "";
+			this.wp_password = postVals.get(20).toString();
 			this.wp_post_format = postVals.get(21).toString();
 			this.wp_slug = postVals.get(22).toString();
 			this.mediaPaths = postVals.get(23).toString();

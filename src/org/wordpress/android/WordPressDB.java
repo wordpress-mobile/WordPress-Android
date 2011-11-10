@@ -319,15 +319,12 @@ public class WordPressDB {
 					c.moveToFirst();
 
 					for (int i = 0; i < numRows; ++i) {
-						String password = "";
-						if (c.getString(8) != null)
-							password = c.getString(6);
 						if (c.getString(0) != null) {
 							Post post = new Post(c.getInt(0), c.getString(1),
 									c.getString(2), c.getString(3),
 									c.getLong(4), c.getString(5),
 									c.getString(6), c.getString(7),
-									password, c.getDouble(9),
+									c.getString(8), c.getDouble(9),
 									c.getDouble(10), false, "", ctx, false);
 							post.setLocalDraft(true);
 							post.setPost_status("localdraft");
@@ -349,14 +346,10 @@ public class WordPressDB {
 
 					for (int i = 0; i < numRows; ++i) {
 						if (c.getString(0) != null) {
-							String password = "";
-							if (c.getString(6) != null)
-								password = c.getString(6);
-								
 							Post post = new Post(c.getInt(0), c.getString(1),
 									c.getString(2), c.getString(3),
 									c.getLong(4), c.getString(5),
-									password, null, null, 0, 0, true, "",
+									"", "", c.getString(6), 0, 0, true, "",
 									ctx, false);
 							post.setLocalDraft(true);
 							post.setPost_status("localdraft");
