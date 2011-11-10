@@ -135,9 +135,12 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			isPage = extras.getBoolean("viewPages");
 			postList.isPage = isPage;
 		}
+		else {
+			isPage = false;
+			postList.isPage = isPage;
+		}
 
 		titleBar.refreshBlog();
-
 		attemptToSelectPost();
 		postList.loadPosts(false);
 

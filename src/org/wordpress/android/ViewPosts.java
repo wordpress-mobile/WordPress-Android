@@ -73,6 +73,7 @@ public class ViewPosts extends ListFragment {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		// setContentView(R.layout.viewposts);
 
 		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
@@ -121,35 +122,32 @@ public class ViewPosts extends ListFragment {
 
 	public void onResume() {
 		super.onResume();
-		
+
 	}
 
-	private void createSwitcher() {
-		// add footer view
-		if (!isPage) {
-			// create the ViewSwitcher in the current context
-			switcher = new ViewSwitcher(getActivity().getApplicationContext());
-			Button footer = (Button) View.inflate(getActivity()
-					.getApplicationContext(), R.layout.list_footer_btn, null);
-			footer.setText(getResources().getText(R.string.load_more) + " "
-					+ getResources().getText(R.string.tab_posts));
+	public void createSwitcher() {
+		// create the ViewSwitcher in the current context
+		switcher = new ViewSwitcher(getActivity().getApplicationContext());
+		Button footer = (Button) View.inflate(getActivity()
+				.getApplicationContext(), R.layout.list_footer_btn, null);
+		footer.setText(getResources().getText(R.string.load_more) + " "
+				+ getResources().getText(R.string.tab_posts));
 
-			footer.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					// first view is showing, show the second progress view
-					switcher.showNext();
-					// get 30 more posts
-					numRecords += 30;
-					refreshPosts(true);
-				}
-			});
+		footer.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				// first view is showing, show the second progress view
+				switcher.showNext();
+				// get 30 more posts
+				numRecords += 30;
+				refreshPosts(true);
+			}
+		});
 
-			View progress = View.inflate(getActivity().getApplicationContext(),
-					R.layout.list_footer_progress, null);
+		View progress = View.inflate(getActivity().getApplicationContext(),
+				R.layout.list_footer_progress, null);
 
-			switcher.addView(footer);
-			switcher.addView(progress);
-		}
+		switcher.addView(footer);
+		switcher.addView(progress);
 
 	}
 
@@ -293,9 +291,8 @@ public class ViewPosts extends ListFragment {
 
 		if (loadedPosts != null || drafts == true) {
 			ListView listView = getListView();
-
+			listView.removeFooterView(switcher);
 			if (!isPage) {
-				listView.removeFooterView(switcher);
 				if (loadedPosts != null) {
 					if (loadedPosts.size() >= 20) {
 						listView.addFooterView(switcher);
@@ -447,11 +444,11 @@ public class ViewPosts extends ListFragment {
 
 			return true;
 		} else {
-			
+
 			if (loadedPosts == null) {
 				refreshPosts(false);
 			}
-			
+
 			return false;
 		}
 
@@ -698,18 +695,20 @@ public class ViewPosts extends ListFragment {
 					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
 					if (!loadMore) {
-						WordPress.wpDB
-								.deleteUploadedPosts(WordPress.currentBlog.getId(), isPage);
+						WordPress.wpDB.deleteUploadedPosts(
+								WordPress.currentBlog.getId(), isPage);
 					}
 
 					for (int ctr = 0; ctr < result.length; ctr++) {
 						HashMap<String, Object> dbValues = new HashMap<String, Object>();
 						contentHash = (HashMap<?, ?>) result[ctr];
-						dbValues.put("blogID", WordPress.currentBlog.getBlogId());
+						dbValues.put("blogID",
+								WordPress.currentBlog.getBlogId());
 						dbVector.add(ctr, contentHash);
 					}
 
-					WordPress.wpDB.savePosts(dbVector, WordPress.currentBlog.getId(), isPage);
+					WordPress.wpDB.savePosts(dbVector,
+							WordPress.currentBlog.getId(), isPage);
 					numRecords += 20;
 					if (loadMore)
 						switcher.showPrevious();
@@ -738,11 +737,13 @@ public class ViewPosts extends ListFragment {
 			isPage = (Boolean) arguments.get(1);
 			int numRecords = (Integer) arguments.get(2);
 			loadMore = (Boolean) arguments.get(3);
-			client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+			client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+					WordPress.currentBlog.getHttpuser(),
 					WordPress.currentBlog.getHttppassword());
 
 			Object[] result = null;
-			Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+			Object[] params = { WordPress.currentBlog.getBlogId(),
+					WordPress.currentBlog.getUsername(),
 					WordPress.currentBlog.getPassword(), numRecords };
 			try {
 				result = (Object[]) client.call((isPage) ? "wp.getPages"
