@@ -25,7 +25,6 @@
   <string name="i_have_blog">Add self-hosted WordPress blog</string>
   <string name="new_to_wp">Start a new blog at WordPress.com</string>
   <string name="blogs">Blogs</string>
-  <string name="upload_now">Upload Now</string>
   <string name="account_details">Account Details</string>
   <string name="status">Status</string>
   <string name="l_status">Status:</string>
@@ -119,7 +118,8 @@
   <string name="load_more">Load More</string>
   <string name="load_settings">Load settings now?</string>
   <string name="immediately">Immediately</string>
-  <string name="uploading">uploading</string>
+  <string name="uploading">Uploading</string>
+  <string name="uploading_media_item">Uploading media item #</string>
   <string name="gallery_error">Sorry, the media item could not be retrieved from
     the Gallery.</string>
   <string name="refresh">Refresh</string>

@@ -22,7 +22,6 @@ import org.wordpress.android.util.WPImageSpan;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -185,7 +184,6 @@ public class Post {
 		try {
 			jArray = new JSONArray(categories);
 		} catch (JSONException e) {
-			e.printStackTrace();
 		}
 		return jArray;
 	}
@@ -417,7 +415,7 @@ public class Post {
 			AsyncTask<Post, Boolean, Boolean> {
 
 		private Post post;
-		String error;
+		String error = "";
 
 		@Override
 		protected void onPostExecute(Boolean result) {
@@ -426,20 +424,17 @@ public class Post {
 				WordPress.postUploaded();
 				nm.cancel(notificationID);
 			} else {
+				
+				
+				
 				String postOrPage = (String) (post.isPage() ? context
 						.getResources().getText(R.string.page_id) : context
 						.getResources().getText(R.string.post_id));
 
-				n.flags |= Notification.FLAG_AUTO_CANCEL;
-				n.contentView.setTextViewText(
-						R.id.status_text,
-						postOrPage
-								+ " "
-								+ context.getResources().getText(
-										R.string.upload_failed));
-				n.contentView
-						.setViewVisibility(R.id.status_progress, View.GONE);
-
+				n.flags |= Notification.FLAG_AUTO_CANCEL;	
+				n.setLatestEventInfo(context, context.getResources().getText(
+						R.string.upload_failed), postOrPage + " " + context.getResources().getText(
+								R.string.upload_failed) + ": " + error, n.contentIntent);
 				nm.notify(notificationID, n); // needs a unique id
 			}
 		}
@@ -451,6 +446,15 @@ public class Post {
 
 			// add the uploader to the notification bar
 			nm = (NotificationManager) context.getSystemService("notification");
+			
+			String postOrPage = (String) (post.isPage() ? context
+					.getResources().getText(R.string.page_id) : context
+					.getResources().getText(R.string.post_id));
+			String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
+			n = new Notification(R.drawable.notification_icon,
+					message, System.currentTimeMillis());
+			
+			
 			Intent notificationIntent = new Intent(context, Posts.class);
 			notificationIntent
 					.setData((Uri.parse("custom://wordpressNotificationIntent"
@@ -458,27 +462,9 @@ public class Post {
 			notificationIntent.putExtra("fromNotification", true);
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 					notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			
+			n.setLatestEventInfo(context, message, message, pendingIntent);
 
-			n = new Notification(R.drawable.notification_icon,
-					"Uploading Post", System.currentTimeMillis());
-
-			/*
-			 * n.flags |= Notification.FLAG_AUTO_CANCEL;
-			 * n.setLatestEventInfo(context, post.blog.getBlogName(),
-			 * "Uploading Post", pendingIntent); notificationID = 22 +
-			 * Integer.valueOf(post.blogID); nm.notify(notificationID, n); //
-			 * needs a unique id
-			 */
-
-			RemoteViews contentView = new RemoteViews(context.getPackageName(),
-					R.layout.upload_progress);
-			contentView.setImageViewResource(R.id.status_icon,
-					R.drawable.wp_logo_home);
-			contentView.setTextViewText(R.id.status_text, "Uploading Post");
-			contentView.setProgressBar(R.id.status_progress, 100, 0, false);
-			n.contentView = contentView;
-
-			n.contentIntent = pendingIntent;
 			notificationID = 22 + Integer.valueOf(post.blogID);
 			nm.notify(notificationID, n); // needs a unique id
 
@@ -664,8 +650,7 @@ public class Post {
 				 * 
 				 * } });
 				 */
-				n.contentView.setTextViewText(R.id.status_text,
-						"Uploading Post");
+				n.setLatestEventInfo(context, message, message, n.contentIntent);
 				nm.notify(notificationID, n);
 				if (post.wp_password != null && !"".equals(post.wp_password)) {
 					contentStruct.put("wp_password", post.wp_password);
@@ -704,9 +689,13 @@ public class Post {
 			String finalImageUrl = null;
 
 			final int printCtr = 0;
-			final String statusText = "Uploading Media File #"
-					+ String.valueOf(printCtr + 1);
-			n.contentView.setTextViewText(R.id.status_text, statusText);
+			
+			String postOrPage = (String) (post.isPage() ? context
+					.getResources().getText(R.string.page_id) : context
+					.getResources().getText(R.string.post_id));
+			String message = context.getResources().getText(R.string.uploading_media_item) + String.valueOf(printCtr + 1);
+			n.setLatestEventInfo(context, context.getResources().getText(R.string.uploading) + " " + postOrPage, message, n.contentIntent);
+			nm.notify(notificationID, n);
 			// check for image, and upload it
 			if (mf.getFileName() != null) {
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
@@ -750,7 +739,7 @@ public class Post {
 								Video.Media.RESOLUTION };
 						imgPath = videoUri;
 
-						Cursor cur = ((Activity) context).managedQuery(imgPath,
+						Cursor cur = context.getContentResolver().query(imgPath,
 								projection, null, null, null);
 						String thumbData = "";
 
@@ -866,7 +855,7 @@ public class Post {
 
 								imgPath = imageUri;
 
-								Cursor cur = ((Activity) context).managedQuery(
+								Cursor cur = context.getContentResolver().query(
 										imgPath, projection, null, null, null);
 								String thumbData = "";
 

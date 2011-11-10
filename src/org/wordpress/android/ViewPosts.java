@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -123,12 +122,7 @@ public class ViewPosts extends ListFragment {
 
 	public void onResume() {
 		super.onResume();
-		boolean loadedPosts = loadPosts(false);
-		if (!loadedPosts || WordPress.postsShouldRefresh) {
-			onRefreshListener.onRefresh(true);
-			refreshPosts(false);
-			WordPress.postsShouldRefresh = false;
-		}
+		
 	}
 
 	private void createSwitcher() {
@@ -688,7 +682,6 @@ public class ViewPosts extends ListFragment {
 			AsyncTask<Vector<?>, Void, Object[]> {
 
 		Context ctx;
-		Blog blog;
 		boolean isPage, loadMore;
 
 		protected void onPostExecute(Object[] result) {
@@ -702,17 +695,17 @@ public class ViewPosts extends ListFragment {
 
 					if (!loadMore) {
 						WordPress.wpDB
-								.deleteUploadedPosts(blog.getId(), isPage);
+								.deleteUploadedPosts(WordPress.currentBlog.getId(), isPage);
 					}
 
 					for (int ctr = 0; ctr < result.length; ctr++) {
 						HashMap<String, Object> dbValues = new HashMap<String, Object>();
 						contentHash = (HashMap<?, ?>) result[ctr];
-						dbValues.put("blogID", blog.getBlogId());
+						dbValues.put("blogID", WordPress.currentBlog.getBlogId());
 						dbVector.add(ctr, contentHash);
 					}
 
-					WordPress.wpDB.savePosts(dbVector, blog.getId(), isPage);
+					WordPress.wpDB.savePosts(dbVector, WordPress.currentBlog.getId(), isPage);
 					numRecords += 20;
 					if (loadMore)
 						switcher.showPrevious();
@@ -737,16 +730,16 @@ public class ViewPosts extends ListFragment {
 		protected Object[] doInBackground(Vector<?>... args) {
 
 			Vector<?> arguments = args[0];
-			blog = (Blog) arguments.get(0);
+			WordPress.currentBlog = (Blog) arguments.get(0);
 			isPage = (Boolean) arguments.get(1);
 			int numRecords = (Integer) arguments.get(2);
 			loadMore = (Boolean) arguments.get(3);
-			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-					blog.getHttppassword());
+			client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+					WordPress.currentBlog.getHttppassword());
 
 			Object[] result = null;
-			Object[] params = { blog.getBlogId(), blog.getUsername(),
-					blog.getPassword(), numRecords };
+			Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+					WordPress.currentBlog.getPassword(), numRecords };
 			try {
 				result = (Object[]) client.call((isPage) ? "wp.getPages"
 						: "metaWeblog.getRecentPosts", params);

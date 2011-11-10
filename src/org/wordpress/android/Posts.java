@@ -118,6 +118,9 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		attemptToSelectPost();
 		postList.loadPosts(false);
+		if (WordPress.postsShouldRefresh) {
+			postList.refreshPosts(false);
+		}
 		
 	}
 

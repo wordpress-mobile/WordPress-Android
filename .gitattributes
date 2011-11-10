@@ -629,7 +629,6 @@ res/layout/spinner_textview.xml -text
 res/layout/stats_tab_selector.xml -text
 res/layout/table_row.xml -text
 res/layout/table_row_header.xml -text
-res/layout/upload_progress.xml -text
 res/layout/view_comment.xml -text
 res/layout/view_stats.xml -text
 res/layout/viewcomments.xml -text
