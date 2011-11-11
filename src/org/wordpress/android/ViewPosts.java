@@ -310,7 +310,7 @@ public class ViewPosts extends ListFragment {
 
 					public void onItemClick(AdapterView<?> arg0, View v,
 							int position, long id) {
-						if (v != null) {
+						if (v != null && !postIDs[position].equals("draftsHeader") && !postIDs[position].equals("postsHeader")) {
 							selectedPosition = position;
 							selectedID = v.getId();
 							Post post = new Post(WordPress.currentBlog.getId(),
