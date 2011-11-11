@@ -124,10 +124,11 @@ public class Read extends Activity {
 			finish();
 			break;
 		case 1:
-
-			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(Uri.parse(wv.getUrl()));
-			startActivity(i);
+			if (!wv.getUrl().contains("wp-login.php")) {
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(wv.getUrl()));
+				startActivity(i);
+			}
 			break;
 		case 2:
 			wv.reload();
