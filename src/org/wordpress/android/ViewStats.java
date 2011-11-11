@@ -173,7 +173,8 @@ public class ViewStats extends Activity {
 
 				final String apiKey = apiData.get(0).toString();
 				final String apiBlogID = apiData.get(1).toString();
-				showDialog(ID_DIALOG_GET_STATS);
+				if (!isFinishing())
+					showDialog(ID_DIALOG_GET_STATS);
 				Thread action = new Thread() {
 					public void run() {
 						getStatsData(apiKey, apiBlogID, type, interval);
@@ -769,7 +770,8 @@ public class ViewStats extends Activity {
 							}
 
 						}
-						dismissDialog(ID_DIALOG_GET_STATS);
+						if (!isFinishing())
+							dismissDialog(ID_DIALOG_GET_STATS);
 					}
 				};
 				this.runOnUiThread(uiThread);
@@ -1009,7 +1011,8 @@ public class ViewStats extends Activity {
 				final String apiKey = result.get(0).toString();
 				final String apiBlogID = result.get(1).toString();
 				WordPress.wpDB.saveAPIData(WordPress.currentBlog.getBlogId(), apiKey, apiBlogID);
-				showDialog(ID_DIALOG_GET_STATS);
+				if (!isFinishing())
+					showDialog(ID_DIALOG_GET_STATS);
 				Thread action = new Thread() {
 					public void run() {
 						getStatsData(apiKey, apiBlogID, "views", 7);
