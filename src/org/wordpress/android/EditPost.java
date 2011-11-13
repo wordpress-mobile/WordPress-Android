@@ -387,49 +387,50 @@ public class EditPost extends Activity implements LocationListener {
 
 					}
 				}
-			}
+			
+				if (blog.isLocation()) {
+					enableLBSButtons();
+				}
 
-			if (blog.isLocation()) {
-				enableLBSButtons();
-			}
+				Double latitude = post.getLatitude();
+				Double longitude = post.getLongitude();
 
-			Double latitude = post.getLatitude();
-			Double longitude = post.getLongitude();
+				if (latitude != 0.0) {
+					new getAddressTask().execute(latitude, longitude);
+				}
 
-			if (latitude != 0.0) {
-				new getAddressTask().execute(latitude, longitude);
-			}
+				if (blog.isLocation() && latitude > 0) {
+					Button updateLocation = (Button) findViewById(R.id.updateLocation);
 
-			if (blog.isLocation() && latitude > 0) {
-				Button updateLocation = (Button) findViewById(R.id.updateLocation);
+					updateLocation.setOnClickListener(new Button.OnClickListener() {
+						public void onClick(View v) {
 
-				updateLocation.setOnClickListener(new Button.OnClickListener() {
-					public void onClick(View v) {
+							lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-						lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+							lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+									20000, 0, EditPost.this);
+							lm.requestLocationUpdates(
+									LocationManager.NETWORK_PROVIDER, 20000, 0,
+									EditPost.this);
+							locationActive = true;
+						}
+					});
 
-						lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-								20000, 0, EditPost.this);
-						lm.requestLocationUpdates(
-								LocationManager.NETWORK_PROVIDER, 20000, 0,
-								EditPost.this);
-						locationActive = true;
-					}
-				});
+					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+					locationSection.setVisibility(View.VISIBLE);
+				} else if (blog.isLocation()) {
+					lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-				RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-				locationSection.setVisibility(View.VISIBLE);
-			} else if (blog.isLocation()) {
-				lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+					lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000,
+							0, EditPost.this);
+					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+							20000, 0, EditPost.this);
+					locationActive = true;
 
-				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000,
-						0, EditPost.this);
-				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-						20000, 0, EditPost.this);
-				locationActive = true;
-
-				RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-				locationSection.setVisibility(View.VISIBLE);
+					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
+					locationSection.setVisibility(View.VISIBLE);
+				}
+			
 			}
 
 			String tags = post.getMt_keywords();
