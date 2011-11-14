@@ -337,7 +337,7 @@ public class ViewStats extends Activity {
 		} else if (interval == -1) {
 			period = "&period=month";
 		}
-		String uriString = "http://stats.wordpress.com/csv.php" + "?api_key="
+		String uriString = "https://ssl-stats.wordpress.com/csv.php" + "?api_key="
 				+ apiKey + "&blog_id=" + blogID + "&format=xml&table="
 				+ reportType + "&end=" + sdf.format(c1.getTime()) + "&days="
 				+ interval + "&limit=-1" + period;
