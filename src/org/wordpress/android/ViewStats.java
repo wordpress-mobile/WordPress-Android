@@ -62,8 +62,6 @@ import org.xmlrpc.android.ConnectionClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -102,8 +100,6 @@ public class ViewStats extends Activity {
 	private HttpParams httpParams;
 	String errorMsg = "";
 	boolean loginShowing = false;
-	ProgressDialog loadingDialog;
-	private int ID_DIALOG_GET_STATS = 0;
 	private int firstRun = 0;
 	private WPTitleBar titleBar;
 
@@ -169,12 +165,10 @@ public class ViewStats extends Activity {
 				final int interval = parseInterval(reportInterval
 						.getSelectedItemPosition());
 
-				Vector<?> apiData = WordPress.wpDB.loadAPIData(WordPress.currentBlog.getId());
-
-				final String apiKey = apiData.get(0).toString();
-				final String apiBlogID = apiData.get(1).toString();
+				final String apiKey = WordPress.currentBlog.getApi_key();
+				final String apiBlogID = WordPress.currentBlog.getApi_blogid();
 				if (!isFinishing())
-					showDialog(ID_DIALOG_GET_STATS);
+					titleBar.startRotatingRefreshIcon();
 				Thread action = new Thread() {
 					public void run() {
 						getStatsData(apiKey, apiBlogID, type, interval);
@@ -310,11 +304,10 @@ public class ViewStats extends Activity {
 				sPassword = WordPress.currentBlog.getPassword();
 			}
 
-			showProgressBar();
 			new statsUserDataTask().execute(sUsername, sPassword, WordPress.currentBlog.getUrl(), String.valueOf(WordPress.currentBlog.getBlogId()));
 		} else {
 			// apiKey found, load default views chart and table
-			showDialog(ID_DIALOG_GET_STATS);
+			titleBar.startRotatingRefreshIcon();
 			Thread action = new Thread() {
 				public void run() {
 					getStatsData(WordPress.currentBlog.getApi_key(), WordPress.currentBlog.getApi_blogid(), "views", 7);
@@ -771,7 +764,7 @@ public class ViewStats extends Activity {
 
 						}
 						if (!isFinishing())
-							dismissDialog(ID_DIALOG_GET_STATS);
+							titleBar.stopRotatingRefreshIcon();
 					}
 				};
 				this.runOnUiThread(uiThread);
@@ -779,7 +772,7 @@ public class ViewStats extends Activity {
 			} else {
 				Thread alert = new Thread() {
 					public void run() {
-						dismissDialog(ID_DIALOG_GET_STATS);
+						titleBar.stopRotatingRefreshIcon();
 						RelativeLayout filters = (RelativeLayout) findViewById(R.id.filters);
 						filters.setVisibility(View.VISIBLE);
 						Toast.makeText(ViewStats.this,
@@ -793,16 +786,16 @@ public class ViewStats extends Activity {
 			}
 
 		} catch (ClientProtocolException e) {
-			dismissDialog(ID_DIALOG_GET_STATS);
+			titleBar.stopRotatingRefreshIcon();
 			errorMsg = e.getMessage();
 		} catch (IllegalStateException e) {
-			dismissDialog(ID_DIALOG_GET_STATS);
+			titleBar.stopRotatingRefreshIcon();
 			errorMsg = e.getMessage();
 		} catch (IOException e) {
-			dismissDialog(ID_DIALOG_GET_STATS);
+			titleBar.stopRotatingRefreshIcon();
 			errorMsg = e.getMessage();
 		} catch (XmlPullParserException e) {
-			dismissDialog(ID_DIALOG_GET_STATS);
+			titleBar.stopRotatingRefreshIcon();
 			errorMsg = e.getMessage();
 		}
 
@@ -1010,9 +1003,11 @@ public class ViewStats extends Activity {
 				// store the api key and blog id
 				final String apiKey = result.get(0).toString();
 				final String apiBlogID = result.get(1).toString();
-				WordPress.wpDB.saveAPIData(WordPress.currentBlog.getBlogId(), apiKey, apiBlogID);
+				WordPress.currentBlog.setApi_blogid(apiBlogID);
+				WordPress.currentBlog.setApi_key(apiKey);
+				WordPress.currentBlog.save(ViewStats.this, "");
 				if (!isFinishing())
-					showDialog(ID_DIALOG_GET_STATS);
+					titleBar.startRotatingRefreshIcon();
 				Thread action = new Thread() {
 					public void run() {
 						getStatsData(apiKey, apiBlogID, "views", 7);
@@ -1086,36 +1081,6 @@ public class ViewStats extends Activity {
 			moderationBar.startAnimation(set);
 		}
 
-	}
-
-	public void showProgressBar() {
-		AnimationSet set = new AnimationSet(true);
-
-		Animation animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-
-		animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				-1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (id == ID_DIALOG_GET_STATS) {
-			loadingDialog = new ProgressDialog(this);
-			loadingDialog.setTitle(getResources().getText(
-					R.string.retrieving_stats));
-			loadingDialog.setMessage(getResources().getText(
-					R.string.attempt_retrieve));
-			loadingDialog.setCancelable(false);
-			loadingDialog.setIndeterminate(true);
-			return loadingDialog;
-		}
-
-		return super.onCreateDialog(id);
 	}
 	
 	@Override
