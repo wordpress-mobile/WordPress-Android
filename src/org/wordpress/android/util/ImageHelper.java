@@ -292,14 +292,18 @@ public class ImageHelper {
 		return null;
 	}
 
-	public HashMap<String, Object> getImageBytesForPath(String filePath, Context ctx) {
+	public HashMap<String, Object> getImageBytesForPath(String filePath,
+			Context ctx) {
 		Uri curStream = null;
 		String[] projection;
 		HashMap<String, Object> mediaData = new HashMap<String, Object>();
 		String title = "", orientation = "";
 		byte[] bytes;
 		if (filePath != null) {
-			curStream = Uri.parse(filePath);
+			if (!filePath.contains("content://"))
+				curStream = Uri.parse("content://media" + filePath);
+			else
+				curStream = Uri.parse(filePath);
 		}
 		if (curStream != null) {
 			if (filePath.contains("video")) {
@@ -316,7 +320,7 @@ public class ImageHelper {
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				videoBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 				bytes = stream.toByteArray();
-				title="Video";
+				title = "Video";
 				videoBitmap = null;
 
 			} else {
@@ -378,13 +382,13 @@ public class ImageHelper {
 					orientation = getExifOrientation(path, orientation);
 				}
 			}
-			
+
 			mediaData.put("bytes", bytes);
 			mediaData.put("title", title);
 			mediaData.put("orientation", orientation);
-			
+
 			return mediaData;
-			
+
 		} else {
 			return null;
 		}

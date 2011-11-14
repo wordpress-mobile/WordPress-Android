@@ -97,10 +97,10 @@ public class EditPost extends Activity implements LocationListener {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		Bundle extras = getIntent().getExtras();
-		
+
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
-		
+
 		categories = new JSONArray();
 		String action = getIntent().getAction();
 
@@ -123,7 +123,7 @@ public class EditPost extends Activity implements LocationListener {
 						blogNames[i] = EscapeUtils.unescapeHtml(curHash.get(
 								"blogName").toString());
 					} catch (Exception e) {
-						blogNames[i] =  curHash.get("url").toString();
+						blogNames[i] = curHash.get("url").toString();
 					}
 					accountIDs[i] = (Integer) curHash.get("id");
 					blog = new Blog(accountIDs[i], EditPost.this);
@@ -257,7 +257,7 @@ public class EditPost extends Activity implements LocationListener {
 				if (postFormats[i].equals(activePostFormat))
 					pfSpinner.setSelection(i);
 			}
-			
+
 			lbsCheck();
 
 		}
@@ -307,7 +307,7 @@ public class EditPost extends Activity implements LocationListener {
 			EditText passwordET = (EditText) findViewById(R.id.post_password);
 
 			titleET.setText(post.getTitle());
-			
+
 			if (post.isUploaded()) {
 				items = new String[] {
 						getResources().getString(R.string.publish_post),
@@ -320,7 +320,7 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 			String contentHTML;
-			
+
 			if (!post.getMt_text_more().equals("")) {
 				contentHTML = post.getDescription()
 						+ "<p id=\"wp-android-more\"><font color=\"#777777\">........"
@@ -329,10 +329,9 @@ public class EditPost extends Activity implements LocationListener {
 			} else {
 				contentHTML = post.getDescription();
 			}
-			
 
-			contentET
-					.setText(WPHtml.fromHtml(StringHelper.addPTags(contentHTML), EditPost.this, post));
+			contentET.setText(WPHtml.fromHtml(
+					StringHelper.addPTags(contentHTML), EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
@@ -387,7 +386,7 @@ public class EditPost extends Activity implements LocationListener {
 
 					}
 				}
-			
+
 				if (blog.isLocation()) {
 					enableLBSButtons();
 				}
@@ -402,27 +401,29 @@ public class EditPost extends Activity implements LocationListener {
 				if (blog.isLocation() && latitude > 0) {
 					Button updateLocation = (Button) findViewById(R.id.updateLocation);
 
-					updateLocation.setOnClickListener(new Button.OnClickListener() {
-						public void onClick(View v) {
+					updateLocation
+							.setOnClickListener(new Button.OnClickListener() {
+								public void onClick(View v) {
 
-							lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+									lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-							lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-									20000, 0, EditPost.this);
-							lm.requestLocationUpdates(
-									LocationManager.NETWORK_PROVIDER, 20000, 0,
-									EditPost.this);
-							locationActive = true;
-						}
-					});
+									lm.requestLocationUpdates(
+											LocationManager.GPS_PROVIDER,
+											20000, 0, EditPost.this);
+									lm.requestLocationUpdates(
+											LocationManager.NETWORK_PROVIDER,
+											20000, 0, EditPost.this);
+									locationActive = true;
+								}
+							});
 
 					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
 					locationSection.setVisibility(View.VISIBLE);
 				} else if (blog.isLocation()) {
 					lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-					lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000,
-							0, EditPost.this);
+					lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+							20000, 0, EditPost.this);
 					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
 							20000, 0, EditPost.this);
 					locationActive = true;
@@ -430,7 +431,7 @@ public class EditPost extends Activity implements LocationListener {
 					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
 					locationSection.setVisibility(View.VISIBLE);
 				}
-			
+
 			}
 
 			String tags = post.getMt_keywords();
@@ -478,7 +479,8 @@ public class EditPost extends Activity implements LocationListener {
 
 				boolean result = savePost();
 				if (result) {
-					if (post.isUploaded() || !post.getPost_status().equals("localdraft"))
+					if (post.isUploaded()
+							|| !post.getPost_status().equals("localdraft"))
 						post.upload();
 					finish();
 				}
@@ -555,8 +557,7 @@ public class EditPost extends Activity implements LocationListener {
 
 		if (resultCode == Activity.RESULT_CANCELED) {
 			finish();
-		}
-		else if (data != null || requestCode == 4) {
+		} else if (data != null || requestCode == 4) {
 			switch (requestCode) {
 			case 0:
 				Spannable content = (Spannable) WordPress.richPostContent;
@@ -746,7 +747,8 @@ public class EditPost extends Activity implements LocationListener {
 			if (isNew) {
 				post = new Post(id, title, content, images, pubDateTimestamp,
 						categories.toString(), tags, status, password,
-						latitude, longitude, isPage, postFormat, EditPost.this, true);
+						latitude, longitude, isPage, postFormat, EditPost.this,
+						true);
 				post.setLocalDraft(true);
 
 				// split up the post content if there's a more tag
@@ -961,7 +963,8 @@ public class EditPost extends Activity implements LocationListener {
 				// add link tag around URLs, trac #64
 				text = text.replaceAll("((http|https|ftp|mailto):\\S+)",
 						"<a href=\"$1\">$1</a>");
-				contentET.setText(WPHtml.fromHtml(StringHelper.addPTags(text), EditPost.this, post));
+				contentET.setText(WPHtml.fromHtml(StringHelper.addPTags(text),
+						EditPost.this, post));
 			}
 		} else {
 			String action = intent.getAction();
@@ -994,9 +997,11 @@ public class EditPost extends Activity implements LocationListener {
 
 		protected void onPostExecute(SpannableStringBuilder result) {
 			dismissDialog(ID_DIALOG_LOADING);
-			if (result.length() > 0) {
-				WPEditText postContent = (WPEditText) findViewById(R.id.postContent);
-				postContent.setText(result);
+			if (result != null) {
+				if (result.length() > 0) {
+					WPEditText postContent = (WPEditText) findViewById(R.id.postContent);
+					postContent.setText(result);
+				}
 			}
 		}
 
@@ -1049,7 +1054,8 @@ public class EditPost extends Activity implements LocationListener {
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
 
-		HashMap<?, ?> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+		HashMap<?, ?> mediaData = ih.getImageBytesForPath(imgPath,
+				EditPost.this);
 
 		if (mediaData == null) {
 			return null;
