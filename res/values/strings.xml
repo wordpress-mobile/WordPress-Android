@@ -265,7 +265,7 @@
   <string name="comment_actions">Comment Actions</string>
   <string name="mark_approved">Mark Approved</string>
   <string name="mark_unapproved">Mark Unapproved</string>
-  <string name="mark_spam">Mark Spam</string>
+  <string name="mark_spam">Spam</string>
   <string name="reply">Reply</string>
   <string name="delete">Delete</string>
   <string name="approve">Approve</string>

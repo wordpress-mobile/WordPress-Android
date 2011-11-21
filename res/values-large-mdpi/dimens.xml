@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="comment_detail_font_size">20dp</dimen>
+    <dimen name="action_bar_height">56dp</dimen>
+    <dimen name="dashboard_padding_large_left">100dp</dimen>
+    <dimen name="dashboard_padding_small_left">60dp</dimen>
+    <dimen name="dashboard_padding_large_right">98dp</dimen>
+    <dimen name="dashboard_padding_small_right">58dp</dimen>
+    <dimen name="dashboard_image_size">96dp</dimen>
+    <dimen name="comment_badge_top_margin_landscape">16dp</dimen>
+    <dimen name="comment_badge_right_margin_landscape">16dp</dimen>
+    <dimen name="comment_badge_top_margin_portrait">385dp</dimen>
+    <dimen name="comment_badge_right_margin_portrait">16dp</dimen>
+    <dimen name="comment_badge_right_margin">0dp</dimen>
+    <dimen name="comment_badge_text_view_size">40dp</dimen>
+    <dimen name="comment_badge_text_size">20dp</dimen>
+    <dimen name="comment_badge_size">64dp</dimen>
+    <dimen name="action_bar_gravatar_size">42dp</dimen>
+    <dimen name="action_bar_title_text_size">22dp</dimen>
+    <dimen name="action_bar_right_margin">113dp</dimen>
+    <dimen name="action_bar_button_padding">8dp</dimen>
+    <dimen name="chart_width">480dp</dimen>
+    <dimen name="chart_height">320dp</dimen>
+    <dimen name="settings_padding">60dp</dimen>
+</resources>
