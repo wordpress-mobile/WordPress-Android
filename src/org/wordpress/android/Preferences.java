@@ -242,13 +242,37 @@ public void displayAccounts(){
         
         layout.addView(section2);
 	    
+        final LinearLayout section3 = new LinearLayout(this);
+		section3.setOrientation(LinearLayout.HORIZONTAL);
+		section3.setGravity(Gravity.RIGHT);
+		LinearLayout.LayoutParams section3Params = new LinearLayout.LayoutParams 
+        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        section3Params.setMargins(0, 0, 0, 20);
+		section3.setLayoutParams(section3Params);
+		
+		final Button cancel = new Button(this);
+
+		LinearLayout.LayoutParams cancelParams = new LinearLayout.LayoutParams 
+		        (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				cancelParams.setMargins(0, 0, 10, 0);
+				cancel.setLayoutParams(cancelParams);
+		cancel.setBackgroundDrawable(getResources().getDrawable(R.drawable.wp_button_small));
+		cancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+		cancel.setText(getResources().getText(R.string.cancel));
+		cancel.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+            	finish();
+            }
+        });
+		section3.addView(cancel);
+        
 	    final Button save = new Button(this);
 
 	    save.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.FILL_PARENT));
-	    save.setBackgroundDrawable(getResources().getDrawable(R.drawable.wp_button));
+	    save.setBackgroundDrawable(getResources().getDrawable(R.drawable.wp_button_small));
         save.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-	    save.setText("Save");
+	    save.setText(getResources().getText(R.string.save));
 	    
 	    save.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -349,7 +373,8 @@ public void displayAccounts(){
         });
 	    
 	    
-	    layout.addView(save);
+	    section3.addView(save);
+	    layout.addView(section3);
         
         sv.addView(layout);
         
