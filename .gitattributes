@@ -581,7 +581,6 @@ res/layout-large-mdpi/add_account.xml -text
 res/layout-large-mdpi/comments.xml -text
 res/layout-large-mdpi/edit.xml -text
 res/layout-large-mdpi/edit_page.xml -text
-res/layout-large-mdpi/global_settings.xml -text
 res/layout-large-mdpi/new_account.xml -text
 res/layout-large-mdpi/posts.xml -text
 res/layout-large-port-mdpi/moderatecomments.xml -text
@@ -591,7 +590,6 @@ res/layout-xlarge/add_account.xml -text
 res/layout-xlarge/comments.xml -text
 res/layout-xlarge/edit.xml -text
 res/layout-xlarge/edit_page.xml -text
-res/layout-xlarge/global_settings.xml -text
 res/layout-xlarge/new_account.xml -text
 res/layout-xlarge/posts.xml -text
 res/layout/about.xml -text
@@ -613,7 +611,6 @@ res/layout/dashboard_buttons_portrait.xml -text
 res/layout/edit.xml -text
 res/layout/edit_content.xml -text
 res/layout/edit_page.xml -text
-res/layout/global_settings.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
 res/layout/image_view.xml -text

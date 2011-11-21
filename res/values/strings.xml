@@ -260,6 +260,9 @@
   <string name="post_not_published">Post status is not published</string>
   <string name="page_not_published">Page status is not published</string>
   <string name="view_in_browser">View in Browser</string>
+  <string name="post_signature">Post Signature</string>
+  <string name="add_tagline">Add a tagline to new posts</string>
+  <string name="posted_from">Posted from WordPress for Android</string>
 
   <!-- comment actions -->
   <string name="comment_actions">Comment Actions</string>
@@ -294,6 +297,7 @@
   <string name="notifications_select">Select which blogs to receive comment
     notifications:
   </string>
+  <string name="comment_notifications">Comment Notifications</string>
   <string name="notifications_interval">Update interval:</string>
   <string name="minutes">minutes</string>
   <string name="hour">hour</string>

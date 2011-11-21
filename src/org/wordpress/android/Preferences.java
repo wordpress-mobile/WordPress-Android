@@ -101,7 +101,7 @@ public void displayAccounts(){
         textView.setPadding(0, -2, 0, 0);
         textView.setTypeface(Typeface.DEFAULT_BOLD);
         textView.setShadowLayer(1, 0, 2, Color.parseColor("#FFFFFFFF"));
-        textView.setText("Comment Notifications");
+        textView.setText(getResources().getText(R.string.comment_notifications));
 
         section1.addView(textView);
         
@@ -213,7 +213,7 @@ public void displayAccounts(){
 		section2lbl.setPadding(0, -2, 0, 0);
 		section2lbl.setTypeface(Typeface.DEFAULT_BOLD);
 		section2lbl.setShadowLayer(1, 0, 2, Color.parseColor("#FFFFFFFF"));
-		section2lbl.setText("Post Signature");
+		section2lbl.setText(getResources().getText(R.string.post_signature));
 		
 		section2.addView(section2lbl);
         
@@ -221,7 +221,7 @@ public void displayAccounts(){
         taglineCB.setTag("taglineCB");
         taglineCB.setTextColor(Color.parseColor("#444444"));
         taglineCB.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        taglineCB.setText("Add a tag line to new posts:");
+        taglineCB.setText(getResources().getText(R.string.add_tagline));
         taglineCB.setLayoutParams(cbParams);
         taglineCB.setChecked(taglineValue);
         
@@ -230,7 +230,7 @@ public void displayAccounts(){
         EditText taglineET = new EditText(this);
         if (tagline != null){
         	if (tagline.equals("")){
-            	taglineET.setText("Posted from WordPress for Android");
+            	taglineET.setText(getResources().getText(R.string.posted_from));
             }
         	else{
         		taglineET.setText(tagline);
