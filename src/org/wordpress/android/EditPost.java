@@ -555,7 +555,7 @@ public class EditPost extends Activity implements LocationListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == Activity.RESULT_CANCELED) {
+		if (resultCode == Activity.RESULT_CANCELED && requestCode != 1) {
 			finish();
 		} else if (data != null || requestCode == 4) {
 			switch (requestCode) {
@@ -1091,7 +1091,7 @@ public class EditPost extends Activity implements LocationListener {
 		if (categories.length() > 0) {
 			for (int i = 0; i < categories.length(); i++) {
 				try {
-					csv += categories.getString(i) + ",";
+					csv += EscapeUtils.unescapeHtml(categories.getString(i)) + ",";
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
