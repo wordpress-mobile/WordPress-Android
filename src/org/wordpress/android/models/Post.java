@@ -571,7 +571,8 @@ public class Post {
 
 					// post format
 					if (!post.getWP_post_format().equals("")) {
-						contentStruct.put("wp_post_format",
+						if (!post.getWP_post_format().equals("standard"))
+							contentStruct.put("wp_post_format",
 								post.getWP_post_format());
 					}
 				}
