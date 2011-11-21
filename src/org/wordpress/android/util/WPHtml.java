@@ -257,7 +257,7 @@ public class WPHtml {
 					int s = ((StyleSpan) style[j]).getStyle();
 
 					if ((s & Typeface.BOLD) != 0) {
-						out.append("<string>");
+						out.append("<strong>");
 					}
 					if ((s & Typeface.ITALIC) != 0) {
 						out.append("<em>");
