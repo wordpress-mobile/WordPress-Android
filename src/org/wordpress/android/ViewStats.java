@@ -307,6 +307,8 @@ public class ViewStats extends Activity {
 			new statsUserDataTask().execute(sUsername, sPassword, WordPress.currentBlog.getUrl(), String.valueOf(WordPress.currentBlog.getBlogId()));
 		} else {
 			// apiKey found, load default views chart and table
+			if (titleBar == null) 
+				titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 			titleBar.startRotatingRefreshIcon();
 			Thread action = new Thread() {
 				public void run() {
