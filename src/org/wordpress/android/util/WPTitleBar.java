@@ -275,7 +275,7 @@ public class WPTitleBar extends RelativeLayout {
 				} else {
 					Toast.makeText(context,
 							getResources().getText(R.string.no_camera_found),
-							Toast.LENGTH_LONG);
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -293,7 +293,7 @@ public class WPTitleBar extends RelativeLayout {
 				} else {
 					Toast.makeText(context,
 							getResources().getText(R.string.no_camera_found),
-							Toast.LENGTH_LONG);
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		});
