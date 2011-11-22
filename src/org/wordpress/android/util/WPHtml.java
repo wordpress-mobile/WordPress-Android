@@ -920,6 +920,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 				sb.append(c);
 			}
 			else {
+				sb.append(c);
 				imageTag = false;
 			}
 		}
