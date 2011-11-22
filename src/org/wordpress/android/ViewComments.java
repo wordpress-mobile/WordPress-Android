@@ -1061,6 +1061,19 @@ public class ViewComments extends ListFragment {
 				return;
 			
 			if (commentsResult == null) {
+				
+				if (thumbs != null) {
+					if (model.size() == 1) {
+						WordPress.wpDB.clearComments(WordPress.currentBlog.getId());
+						model.clear();
+						allComments.clear();
+						thumbs.notifyDataSetChanged();
+						onCommentStatusChangeListener.onCommentStatusChanged("clear");
+						WordPress.currentComment = null;
+						loadComments(false, false);
+					}
+				}
+				
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
 				if (!moderateErrorMsg.equals("")) {
 				    FragmentTransaction ft = getFragmentManager().beginTransaction();

@@ -265,4 +265,33 @@ public class ViewCommentFragment extends Fragment {
 			OnCommentStatusChangeListener listener) {
 		onCommentStatusChangeListener = listener;
 	}
+
+	public void clearContent() {
+		TextView tvName = (TextView) getActivity().findViewById(
+				R.id.commentDetailName);
+
+		tvName.setText("");
+
+		TextView tvEmail = (TextView) getActivity().findViewById(
+				R.id.commentDetailEmail);
+		tvEmail.setText("");
+
+		TextView tvURL = (TextView) getActivity().findViewById(
+				R.id.commentDetailUrl);
+		tvURL.setText("");
+
+		TextView tvComment = (TextView) getActivity().findViewById(
+				R.id.commentDetailComment);
+		tvComment.setText("");
+
+		TextView tvDate = (TextView) getActivity().findViewById(
+				R.id.commentDetailDate);
+		tvDate.setText("");
+		
+		ImageView ivGravatar = (ImageView) getActivity()
+				.findViewById(R.id.gravatar);
+		ivGravatar.setImageDrawable(null);
+		
+		
+	}
 }
