@@ -713,9 +713,21 @@ public class ViewPosts extends ListFragment {
 					if (loadMore)
 						switcher.showPrevious();
 					loadPosts(loadMore);
+				} else {
+					if (pla != null) {
+						if (postIDs.length == 2) {
+							WordPress.wpDB.deleteUploadedPosts(WordPress.currentBlog.getId(), WordPress.currentPost.isPage());
+							onPostActionListener.onPostAction(Posts.POST_CLEAR, WordPress.currentPost);
+							WordPress.currentPost = null;
+							loadPosts(false);
+						}
+					}
 				}
 				onRefreshListener.onRefresh(false);
 			} else {
+				
+				
+				
 				onRefreshListener.onRefresh(false);
 
 				if (errorMsg != "") {

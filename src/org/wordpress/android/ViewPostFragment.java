@@ -132,4 +132,17 @@ public class ViewPostFragment extends Fragment {
 		public void onDetailPostAction(int action, Post post);
 	}
 
+	public void clearContent() {
+		TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
+		title.setText("");
+		WebView webView = (WebView) getActivity().findViewById(
+				R.id.viewPostWebView);
+		TextView tv = (TextView) getActivity().findViewById(
+				R.id.viewPostTextView);
+		tv.setText("");
+		String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\"></div></body></html>";
+		webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
+				"text/html", "utf-8", null);
+	}
+
 }

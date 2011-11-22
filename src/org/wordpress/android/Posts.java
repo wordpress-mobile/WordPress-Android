@@ -46,7 +46,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	private WPTitleBar titleBar;
 	private ViewPosts postList;
 	private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
-	public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2;
+	public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3;
 	public ProgressDialog loadingDialog;
 	public boolean isPage = false;
 	public String errorMsg = "";
@@ -560,6 +560,13 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			}
 		} else if (action == POST_SHARE) {
 			new Posts.shareURLTask().execute(post);
+		} else if (action == POST_CLEAR) {
+			FragmentManager fm = getSupportFragmentManager();
+			ViewPostFragment f = (ViewPostFragment) fm
+					.findFragmentById(R.id.postDetail);
+			if (f != null) {
+				f.clearContent();
+			}
 		}
 
 	}

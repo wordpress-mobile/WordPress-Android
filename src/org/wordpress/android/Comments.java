@@ -30,7 +30,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class Comments extends FragmentActivity implements
-		OnCommentSelectedListener, OnCommentStatusChangeListener, OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
+		OnCommentSelectedListener, OnCommentStatusChangeListener,
+		OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
 
 	private WPTitleBar titleBar;
 	protected int id;
@@ -45,39 +46,40 @@ public class Comments extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comments);
-		
+
 		titleBar = (WPTitleBar) findViewById(R.id.commentsActionBar);
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			boolean fromNotification = false;
 			fromNotification = extras.getBoolean("fromNotification");
-	  		if (fromNotification) {
-	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
-	  			titleBar.refreshBlog();
-	  		}
+			if (fromNotification) {
+				WordPress.currentBlog = new Blog(extras.getInt("id"),
+						Comments.this);
+				titleBar.refreshBlog();
+			}
 		}
 
 		FragmentManager fm = getSupportFragmentManager();
 		commentList = (ViewComments) fm.findFragmentById(R.id.commentList);
-		
+
 		WordPress.currentComment = null;
 
 		titleBar.refreshButton
 				.setOnClickListener(new ImageButton.OnClickListener() {
 					public void onClick(View v) {
-						
+
 						attemptToSelectComment();
 						commentList.refreshComments(false, false, false);
 
 					}
 				});
-		
+
 		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
 			// user selected new blog in the title bar
 			@Override
 			public void OnBlogChanged() {
-				
+
 				FragmentManager fm = getSupportFragmentManager();
 				ViewPostFragment f = (ViewPostFragment) fm
 						.findFragmentById(R.id.commentDetail);
@@ -91,7 +93,7 @@ public class Comments extends FragmentActivity implements
 
 			}
 		});
-		
+
 		attemptToSelectComment();
 
 		/*
@@ -113,7 +115,7 @@ public class Comments extends FragmentActivity implements
 		 */
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -123,27 +125,28 @@ public class Comments extends FragmentActivity implements
 		if (!commentsLoaded)
 			commentList.refreshComments(false, false, false);
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
 		if (commentList.getCommentsTask != null)
 			commentList.getCommentsTask.cancel(true);
 	}
-	
+
 	@Override
-	protected void onNewIntent (Intent intent){
+	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			boolean fromNotification = false;
 			fromNotification = extras.getBoolean("fromNotification");
-	  		if (fromNotification) {
-	  			WordPress.currentBlog = new Blog(extras.getInt("id"), Comments.this);
-	  			titleBar.refreshBlog();
-	  		}
+			if (fromNotification) {
+				WordPress.currentBlog = new Blog(extras.getInt("id"),
+						Comments.this);
+				titleBar.refreshBlog();
+			}
 		}
-		
+
 	}
 
 	@Override
@@ -173,41 +176,51 @@ public class Comments extends FragmentActivity implements
 	@Override
 	public void onCommentStatusChanged(final String status) {
 
-		String comment_id = WordPress.currentComment.commentID;
+		if (WordPress.currentComment != null) {
 
-		if (status.equals("approve") || status.equals("hold")
-				|| status.equals("spam")) {
-			final int commentID = Integer.parseInt(comment_id);
-			showDialog(ID_DIALOG_MODERATING);
-			new Thread() {
-				public void run() {
-					Looper.prepare();
-					changeCommentStatus(status, commentID);
+			String comment_id = WordPress.currentComment.commentID;
+
+			if (status.equals("approve") || status.equals("hold")
+					|| status.equals("spam")) {
+				final int commentID = Integer.parseInt(comment_id);
+				showDialog(ID_DIALOG_MODERATING);
+				new Thread() {
+					public void run() {
+						Looper.prepare();
+						changeCommentStatus(status, commentID);
+					}
+				}.start();
+			} else if (status.equals("delete")) {
+				final int commentID_del = Integer.parseInt(comment_id);
+				showDialog(ID_DIALOG_DELETING);
+				// pop out of the detail view if on a smaller screen
+				FragmentManager fm = getSupportFragmentManager();
+				ViewCommentFragment f = (ViewCommentFragment) fm
+						.findFragmentById(R.id.commentDetail);
+				if (f == null) {
+					fm.popBackStack();
 				}
-			}.start();
-		} else if (status.equals("delete")) {
-			final int commentID_del = Integer.parseInt(comment_id);
-			showDialog(ID_DIALOG_DELETING);
-			//pop out of the detail view if on a smaller screen
-			FragmentManager fm = getSupportFragmentManager();
-			ViewPostFragment f = (ViewPostFragment) fm
-					.findFragmentById(R.id.commentDetail);
-			if (f == null) {
-				fm.popBackStack();
+				new Thread() {
+					public void run() {
+						deleteComment(commentID_del);
+					}
+				}.start();
+			} else if (status.equals("reply")) {
+
+				Intent i = new Intent(Comments.this, ReplyToComment.class);
+				i.putExtra("commentID", Integer.parseInt(comment_id));
+				i.putExtra("postID", WordPress.currentComment.postID);
+				startActivityForResult(i, 0);
+			} else if (status.equals("clear")) {
+				FragmentManager fm = getSupportFragmentManager();
+				ViewCommentFragment f = (ViewCommentFragment) fm
+						.findFragmentById(R.id.commentDetail);
+				if (f != null) {
+					f.clearContent();
+				}
 			}
-			new Thread() {
-				public void run() {
-					deleteComment(commentID_del);
-				}
-			}.start();
-		} else if (status.equals("reply")) {
-
-			Intent i = new Intent(Comments.this, ReplyToComment.class);
-			i.putExtra("commentID", Integer.parseInt(comment_id));
-			i.putExtra("postID", WordPress.currentComment.postID);
-			startActivityForResult(i, 0);
+			
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -216,18 +229,21 @@ public class Comments extends FragmentActivity implements
 		// for individual comment moderation
 		String sSelCommentID = String.valueOf(selCommentID);
 		WordPressDB db = new WordPressDB(Comments.this);
-		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+				WordPress.currentBlog.getHttpuser(),
 				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
-		contentHash = (HashMap<String, String>) commentList.allComments.get(sSelCommentID);
+		contentHash = (HashMap<String, String>) commentList.allComments
+				.get(sSelCommentID);
 		postHash.put("status", newStatus);
 		postHash.put("content", contentHash.get("comment"));
 		postHash.put("author", contentHash.get("author"));
 		postHash.put("author_url", contentHash.get("url"));
 		postHash.put("author_email", contentHash.get("email"));
 
-		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+		Object[] params = { WordPress.currentBlog.getBlogId(),
+				WordPress.currentBlog.getUsername(),
 				WordPress.currentBlog.getPassword(), sSelCommentID, postHash };
 
 		Object result = null;
@@ -238,8 +254,8 @@ public class Comments extends FragmentActivity implements
 				WordPress.currentComment.status = newStatus;
 				commentList.model.set(WordPress.currentComment.position,
 						WordPress.currentComment);
-				db.updateCommentStatus(id,
-						WordPress.currentComment.commentID, newStatus);
+				db.updateCommentStatus(id, WordPress.currentComment.commentID,
+						newStatus);
 			}
 			dismissDialog(ID_DIALOG_MODERATING);
 			Thread action = new Thread() {
@@ -287,10 +303,12 @@ public class Comments extends FragmentActivity implements
 	private void deleteComment(final int selCommentID) {
 		// delete individual comment
 
-		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+				WordPress.currentBlog.getHttpuser(),
 				WordPress.currentBlog.getHttppassword());
 
-		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+		Object[] params = { WordPress.currentBlog.getBlogId(),
+				WordPress.currentBlog.getUsername(),
 				WordPress.currentBlog.getPassword(), selCommentID };
 
 		try {
@@ -307,7 +325,7 @@ public class Comments extends FragmentActivity implements
 			runOnUiThread(action);
 			Thread action2 = new Thread() {
 				public void run() {
-					pd = new ProgressDialog(Comments.this); 
+					pd = new ProgressDialog(Comments.this);
 					commentList.refreshComments(false, true, false);
 				}
 			};
@@ -343,7 +361,8 @@ public class Comments extends FragmentActivity implements
 	private void replyToComment(final String postID, final int commentID,
 			final String comment) {
 		// reply to individual comment
-		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+				WordPress.currentBlog.getHttpuser(),
 				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, Object> replyHash = new HashMap<String, Object>();
@@ -353,8 +372,10 @@ public class Comments extends FragmentActivity implements
 		replyHash.put("author_url", "");
 		replyHash.put("author_email", "");
 
-		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
-				WordPress.currentBlog.getPassword(), Integer.valueOf(postID), replyHash };
+		Object[] params = { WordPress.currentBlog.getBlogId(),
+				WordPress.currentBlog.getUsername(),
+				WordPress.currentBlog.getPassword(), Integer.valueOf(postID),
+				replyHash };
 
 		try {
 			client.call("wp.newComment", params);
@@ -486,18 +507,17 @@ public class Comments extends FragmentActivity implements
 
 	@Override
 	public void onAnimateRefreshButton(boolean start) {
-		
+
 		if (start) {
 			titleBar.startRotatingRefreshIcon();
-		}
-		else {
+		} else {
 			titleBar.stopRotatingRefreshIcon();
 		}
-		
+
 	}
-	
+
 	private void attemptToSelectComment() {
-		
+
 		FragmentManager fm = getSupportFragmentManager();
 		ViewCommentFragment f = (ViewCommentFragment) fm
 				.findFragmentById(R.id.commentDetail);
@@ -505,14 +525,14 @@ public class Comments extends FragmentActivity implements
 		if (f != null && f.isInLayout()) {
 			commentList.shouldSelectAfterLoad = true;
 		}
-		
+
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		
+
 		titleBar.switchDashboardLayout(newConfig.orientation);
-		
+
 	}
 }
