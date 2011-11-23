@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.EscapeUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -38,6 +39,7 @@ public class SelectCategories extends ListActivity {
 	public String categoryErrorMsg = "";
 	public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
 	public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
+	public ArrayList<CharSequence> formattedTextArray = new ArrayList<CharSequence>(); 
 	private final Handler mHandler = new Handler();
 	private Blog blog;
 	private int id;
@@ -121,6 +123,7 @@ public class SelectCategories extends ListActivity {
     
     private void loadCategories() {
         loadTextArray.clear();
+        formattedTextArray.clear(); 
     	Vector<?> categoriesVector = WordPress.wpDB.loadCategories(id);
     	if (categoriesVector.size() > 0)
     	{
@@ -128,11 +131,10 @@ public class SelectCategories extends ListActivity {
 	    	for(int i=0; i < categoriesVector.size(); i++)
 	        {
 	    		loadTextArray.add(categoriesVector.get(i).toString());
+	    		formattedTextArray.add(EscapeUtils.unescapeHtml(categoriesVector.get(i).toString()));
 	        }
 	    	
-	        ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this, R.layout.categories_row, loadTextArray);
-	        
-	          //categories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    	ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this, R.layout.categories_row, formattedTextArray); 
 	          
 	        this.setListAdapter(categories);
 	        
