@@ -101,6 +101,17 @@ public class EditPost extends Activity implements LocationListener {
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
+				.getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		if (height > width) {
+			width = height;
+		}
+		if (width > 480) {
+			isLargeScreen = true;
+		}
+
 		categories = new JSONArray();
 		String action = getIntent().getAction();
 
@@ -148,9 +159,6 @@ public class EditPost extends Activity implements LocationListener {
 													.getText(
 															(isPage) ? R.string.new_page
 																	: R.string.new_post));
-									setContent();
-									lbsCheck();
-
 								}
 							});
 					AlertDialog alert = builder.create();
@@ -164,7 +172,6 @@ public class EditPost extends Activity implements LocationListener {
 							+ getResources().getText(
 									(isPage) ? R.string.new_page
 											: R.string.new_post));
-					setContent();
 				}
 			} else {
 				// no account, load main view to load new account view
@@ -191,17 +198,6 @@ public class EditPost extends Activity implements LocationListener {
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
 			}
-		}
-
-		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-				.getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		if (height > width) {
-			width = height;
-		}
-		if (width > 480) {
-			isLargeScreen = true;
 		}
 
 		if (isPage) {
@@ -259,6 +255,9 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 			lbsCheck();
+			if (Intent.ACTION_SEND.equals(action)
+					|| Intent.ACTION_SEND_MULTIPLE.equals(action))
+				setContent();
 
 		}
 
@@ -1091,7 +1090,8 @@ public class EditPost extends Activity implements LocationListener {
 		if (categories.length() > 0) {
 			for (int i = 0; i < categories.length(); i++) {
 				try {
-					csv += EscapeUtils.unescapeHtml(categories.getString(i)) + ",";
+					csv += EscapeUtils.unescapeHtml(categories.getString(i))
+							+ ",";
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
