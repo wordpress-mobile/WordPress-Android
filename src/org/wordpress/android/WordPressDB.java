@@ -1779,4 +1779,10 @@ public class WordPressDB {
         return id;
 	}
 
+	public void clearComments(int blogID) {
+
+		db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
+		
+	}
+
 }
