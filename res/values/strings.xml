@@ -137,7 +137,9 @@
 
 
   <!-- link view -->
-  <string name="link_enter_url">Enter a URL:</string>
+  <string name="link_enter_url">URL</string>
+  <string name="link_enter_url_text">Link Text (optional)</string>
+  <string name="create_a_link">Create a Link</string>
 
   <!-- page view -->
   <string name="page_content">Page Content</string>

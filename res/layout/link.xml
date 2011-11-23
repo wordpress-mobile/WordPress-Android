@@ -6,21 +6,24 @@
   android:padding="10dip"
   android:layout_gravity="center_vertical">
 
-  <TextView
-    android:id="@+id/linkLabel"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/link_enter_url"
-    android:textStyle="bold" />
   <EditText
-    android:id="@+id/linkText"
+    android:id="@+id/linkURL"
     android:inputType="textUri"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:hint="@string/link_enter_url"
     android:minHeight="40px"
-    android:layout_below="@id/linkLabel"
-    android:background="@android:drawable/editbox_background"
-    android:text="http://" />
+    android:background="@android:drawable/editbox_background" />
+  
+  <EditText
+    android:id="@+id/linkText"
+    android:inputType="text"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/linkURL"
+    android:hint="@string/link_enter_url_text"
+    android:minHeight="40px"
+    android:background="@android:drawable/editbox_background" />
 
   <Button
     android:id="@+id/ok"

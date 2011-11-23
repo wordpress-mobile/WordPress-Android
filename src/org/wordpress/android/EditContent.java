@@ -131,12 +131,14 @@ public class EditContent extends Activity {
 
 					@Override
 					public void onImeBack(WPEditText view, String text) {
-						/*RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
-						Animation fadeOutAnimation = AnimationUtils
-								.loadAnimation(EditContent.this,
-										R.anim.disappear);
-						formatBar.startAnimation(fadeOutAnimation);
-						formatBar.setVisibility(View.GONE);*/
+						/*
+						 * RelativeLayout formatBar = (RelativeLayout)
+						 * findViewById(R.id.formatBar); Animation
+						 * fadeOutAnimation = AnimationUtils
+						 * .loadAnimation(EditContent.this, R.anim.disappear);
+						 * formatBar.startAnimation(fadeOutAnimation);
+						 * formatBar.setVisibility(View.GONE);
+						 */
 						finishEditing();
 					}
 
@@ -191,7 +193,8 @@ public class EditContent extends Activity {
 						adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 						alignmentSpinner.setAdapter(adapter);
 
-						imageWidthText.setText(String.valueOf(span.getWidth()) + "px");
+						imageWidthText.setText(String.valueOf(span.getWidth())
+								+ "px");
 						seekBar.setProgress(span.getWidth());
 						titleText.setText(span.getTitle());
 						// descText.setText(span.getDescription());
@@ -400,33 +403,14 @@ public class EditContent extends Activity {
 					selectionStart = temp;
 				}
 
-				if (selectionStart == -1
-						|| selectionStart == contentText.getText().toString()
-								.length() || (selectionStart == selectionEnd)) {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							EditContent.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.no_text_selected));
-					dialogBuilder.setMessage(getResources().getText(
-							R.string.select_text_to_link)
-							+ " "
-							+ getResources()
-									.getText(R.string.howto_select_text));
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// just close the dialog
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					dialogBuilder.create().show();
-				} else {
-					Intent i = new Intent(EditContent.this, Link.class);
-
-					startActivityForResult(i, 4);
+				Intent i = new Intent(EditContent.this, Link.class);
+				if (selectionEnd > selectionStart) {
+					String selectedText = contentText.getText()
+							.subSequence(selectionStart, selectionEnd)
+							.toString();
+					i.putExtra("selectedText", selectedText);
 				}
+				startActivityForResult(i, 4);
 			}
 		});
 
@@ -462,23 +446,30 @@ public class EditContent extends Activity {
 
 			}
 		});
-		
+
 		final Button moreButton = (Button) findViewById(R.id.more);
 		moreButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
 				selectionEnd = contentText.getSelectionEnd();
-				
+
 				SpannableStringBuilder ssb = new SpannableStringBuilder();
 				ssb.append(contentText.getText().subSequence(0, selectionEnd));
-				
-				Spannable more = (Spannable) WPHtml.fromHtml("<br><div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></div>", EditContent.this, WordPress.currentPost); 
+
+				Spannable more = (Spannable) WPHtml
+						.fromHtml(
+								"<br><div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........"
+										+ getResources().getText(
+												R.string.more_tag)
+										+ "</font></div>", EditContent.this,
+								WordPress.currentPost);
 				ssb.append(more);
-				ssb.append(contentText.getText().subSequence(selectionEnd, contentText.getText().length()));
-				
+				ssb.append(contentText.getText().subSequence(selectionEnd,
+						contentText.getText().length()));
+
 				contentText.setText(ssb);
 				contentText.setSelection(selectionEnd + more.length());
-				
+
 			}
 		});
 	}
@@ -592,8 +583,8 @@ public class EditContent extends Activity {
 				toggleButton.setChecked(false);
 			} else if (tag.equals("ul")) {
 
-				BulletSpan[] ss = str.getSpans(selectionStart,
-						selectionEnd, BulletSpan.class);
+				BulletSpan[] ss = str.getSpans(selectionStart, selectionEnd,
+						BulletSpan.class);
 
 				boolean exists = false;
 				for (int i = 0; i < ss.length; i++) {
@@ -602,8 +593,8 @@ public class EditContent extends Activity {
 				}
 
 				if (!exists) {
-					str.setSpan(new BulletSpan(), selectionStart,
-							selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					str.setSpan(new BulletSpan(), selectionStart, selectionEnd,
+							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 
 				toggleButton.setChecked(false);
@@ -657,7 +648,7 @@ public class EditContent extends Activity {
 		builder.append(afterText);
 		WPImageSpan is = new WPImageSpan(EditContent.this, resizedBitmap,
 				curStream);
-		
+
 		String imageWidth = WordPress.currentBlog.getMaxImageWidth();
 		if (!imageWidth.equals("Original Size")) {
 			try {
@@ -666,7 +657,7 @@ public class EditContent extends Activity {
 				e.printStackTrace();
 			}
 		}
-		
+
 		is.setTitle((String) mediaData.get("title"));
 		is.setImageSource(curStream);
 		if (imgPath.contains("video")) {
@@ -678,15 +669,17 @@ public class EditContent extends Activity {
 				Layout.Alignment.ALIGN_CENTER);
 		builder.setSpan(as, selectionStart, selectionEnd + 1,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		builder.append("\n");
+		builder.append("\n\n");
 		content.setText(builder);
+		content.setSelection(content.getText().length());
 
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null || requestCode == 1 || requestCode == 3) {
+		if (data != null
+				&& (resultCode != RESULT_CANCELED || (requestCode == 1 || requestCode == 3))) {
 			Bundle extras;
 			switch (requestCode) {
 			case 0:
@@ -714,11 +707,11 @@ public class EditContent extends Activity {
 						addMedia(capturedImage.toString(), capturedImage);
 
 					} catch (FileNotFoundException e) {
-						
+
 					}
 
 				} else {
-					//user canceled capture
+					// user canceled capture
 					if (option != null) {
 						Intent intent = new Intent();
 						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -742,7 +735,7 @@ public class EditContent extends Activity {
 
 					addMedia(capturedVideo.toString(), capturedVideo);
 				} else {
-					//user canceled capture
+					// user canceled capture
 					if (option != null) {
 						Intent intent = new Intent();
 						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -754,23 +747,37 @@ public class EditContent extends Activity {
 				break;
 			case 4:
 				extras = data.getExtras();
-				String linkText = extras.getString("linkText");
-				if (linkText.equals("http://") != true) {
+				String linkURL = extras.getString("linkURL");
+				if (!linkURL.equals("http://") && !linkURL.equals("")) {
+					WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
 
-					if (linkText.equals("CANCEL") != true) {
+					if (selectionStart > selectionEnd) {
+						int temp = selectionEnd;
+						selectionEnd = selectionStart;
+						selectionStart = temp;
+					}
 
-						WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
-
-						if (selectionStart > selectionEnd) {
-							int temp = selectionEnd;
-							selectionEnd = selectionStart;
-							selectionStart = temp;
-						}
-
-						Spannable str = contentText.getText();
-						str.setSpan(new URLSpan(linkText), selectionStart,
-								selectionEnd,
+					Editable str = contentText.getText();
+					if (extras.getString("linkText") == null) {
+						if (selectionStart < selectionEnd)
+							str.delete(selectionStart, selectionEnd);
+						str.insert(selectionStart, linkURL);
+						str.setSpan(new URLSpan(linkURL), selectionStart,
+								selectionStart + linkURL.length(),
 								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+						contentText.setSelection(selectionStart
+								+ linkURL.length());
+					} else {
+						String linkText = extras.getString("linkText");
+						if (selectionStart < selectionEnd)
+							str.delete(selectionStart, selectionEnd);
+						str.insert(selectionStart, linkText);
+						str.setSpan(new URLSpan(linkURL), selectionStart,
+								selectionStart + linkText.length(),
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						contentText.setSelection(selectionStart
+								+ linkText.length());
 					}
 				}
 				break;
@@ -795,7 +802,7 @@ public class EditContent extends Activity {
 
 		return false;
 	}
-	
+
 	private void finishEditing() {
 		WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
 		Spannable content = contentET.getText();

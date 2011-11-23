@@ -6,7 +6,7 @@
 		<activity android:name="wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"/>
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
-			android:label="Enter a URL" />
+			android:label="@string/create_a_link" />
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
 		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden">
