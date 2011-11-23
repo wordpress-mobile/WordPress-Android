@@ -339,7 +339,7 @@ public class EditContent extends Activity {
 
 				if (position > 0) {
 
-					if (styleStart > position || position > (cursorLoc + 1)) {
+					/*if (styleStart > position || position > (cursorLoc + 1)) {
 						// user changed cursor location, reset
 						if (position - cursorLoc > 1) {
 							// user pasted text
@@ -347,7 +347,7 @@ public class EditContent extends Activity {
 						} else {
 							styleStart = position - 1;
 						}
-					}
+					}*/
 
 					if (boldButton.isChecked()) {
 						StyleSpan[] ss = s.getSpans(styleStart, position,
