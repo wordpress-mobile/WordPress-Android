@@ -321,8 +321,9 @@ public class EditContent extends Activity {
 		final WPEditText contentEdit = (WPEditText) findViewById(R.id.postContent);
 		contentEdit.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
-				
-				if (isBackspace)
+				int position = Selection.getSelectionStart(contentEdit
+						.getText());
+				if (isBackspace && position != 1)
 					return;
 				
 				// add style as the user types if a toggle button is enabled
@@ -331,15 +332,14 @@ public class EditContent extends Activity {
 				ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
 				ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
 				ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
-				int position = Selection.getSelectionStart(contentEdit
-						.getText());
+				
 				if (position < 0) {
 					position = 0;
 				}
 
 				if (position > 0) {
 
-					/*if (styleStart > position || position > (cursorLoc + 1)) {
+					if (styleStart > position || position > (cursorLoc + 1)) {
 						// user changed cursor location, reset
 						if (position - cursorLoc > 1) {
 							// user pasted text
@@ -347,7 +347,7 @@ public class EditContent extends Activity {
 						} else {
 							styleStart = position - 1;
 						}
-					}*/
+					}
 
 					if (boldButton.isChecked()) {
 						StyleSpan[] ss = s.getSpans(styleStart, position,
