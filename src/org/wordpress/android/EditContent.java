@@ -414,7 +414,8 @@ public class EditContent extends Activity {
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				if (count - after == 1)
+
+				if ((count - after == 1) || (s.length() == 0))
 					isBackspace = true;
 				else
 					isBackspace = false;
@@ -422,7 +423,6 @@ public class EditContent extends Activity {
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// unused
 			}
 
 		});
