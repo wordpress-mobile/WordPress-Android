@@ -60,7 +60,7 @@ public class EditContent extends Activity {
 	/** Called when the activity is first created. */
 	int styleStart, cursorLoc, selectionStart, selectionEnd;
 	String SD_CARD_TEMP_DIR = "";
-	boolean localDraft = true;
+	boolean localDraft = true, isBackspace = false;
 	boolean isNew = true;
 	public EditText contentET;
 	private String option;
@@ -105,6 +105,50 @@ public class EditContent extends Activity {
 		if (contentText != null) {
 			contentEditor.setText(contentText);
 		}
+		
+		contentEditor.setOnSelectionChangedListener(new WPEditText.OnSelectionChangedListener() {
+
+			@Override
+			public void onSelectionChanged() {
+				final Spannable s = contentEditor.getText();
+				//set toggle buttons if cursor is inside of a matching span
+				Object[] spans = s.getSpans(
+						contentEditor.getSelectionStart(),
+						contentEditor.getSelectionStart(), Object.class);
+				ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+				ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+				ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+				ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+				ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+				boldButton.setChecked(false);
+				emButton.setChecked(false);
+				bquoteButton.setChecked(false);
+				underlineButton.setChecked(false);
+				strikeButton.setChecked(false);
+				for (Object span : spans) {
+					if (span instanceof StyleSpan) {
+						StyleSpan ss = (StyleSpan) span;
+						if (ss.getStyle() == android.graphics.Typeface.BOLD) {
+							boldButton.setChecked(true);
+						}
+						if (ss.getStyle() == android.graphics.Typeface.ITALIC) {
+							emButton.setChecked(true);
+						}
+					}
+					if (span instanceof QuoteSpan) {
+						bquoteButton.setChecked(true);
+					}
+					if (span instanceof UnderlineSpan) {
+						underlineButton.setChecked(true);
+					}
+					if (span instanceof StrikethroughSpan) {
+						strikeButton.setChecked(true);
+					}
+				}	
+			}
+		});
+		
+		
 		contentEditor
 				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 					@Override
@@ -158,8 +202,9 @@ public class EditContent extends Activity {
 
 				}
 
-				// check if image span was tapped
+				
 				final Spannable s = contentEditor.getText();
+				// check if image span was tapped
 				WPImageSpan[] click_spans = s.getSpans(
 						contentEditor.getSelectionStart(),
 						contentEditor.getSelectionStart(), WPImageSpan.class);
@@ -215,7 +260,6 @@ public class EditContent extends Activity {
 
 							@Override
 							public void onStartTrackingTouch(SeekBar seekBar) {
-								// TODO Auto-generated method stub
 							}
 
 							@Override
@@ -277,6 +321,10 @@ public class EditContent extends Activity {
 		final WPEditText contentEdit = (WPEditText) findViewById(R.id.postContent);
 		contentEdit.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
+				
+				if (isBackspace)
+					return;
+				
 				// add style as the user types if a toggle button is enabled
 				ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
 				ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
@@ -366,7 +414,10 @@ public class EditContent extends Activity {
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// unused
+				if (count - after == 1)
+					isBackspace = true;
+				else
+					isBackspace = false;
 			}
 
 			public void onTextChanged(CharSequence s, int start, int before,

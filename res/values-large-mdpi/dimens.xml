@@ -22,4 +22,6 @@
     <dimen name="chart_width">480dp</dimen>
     <dimen name="chart_height">320dp</dimen>
     <dimen name="settings_padding">60dp</dimen>
+    <dimen name="format_bar_font_size">22dp</dimen>
+    <dimen name="format_bar_button_padding">8dp</dimen>
 </resources>

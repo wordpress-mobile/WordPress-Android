@@ -8,6 +8,7 @@ import android.widget.EditText;
 public class WPEditText extends EditText {
 
 	private EditTextImeBackListener mOnImeBack;
+	private OnSelectionChangedListener onSelectionChangedListener;
 
 	public WPEditText(Context context) {
 		super(context);
@@ -19,6 +20,12 @@ public class WPEditText extends EditText {
 
 	public WPEditText(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+	}
+
+	@Override
+	protected void onSelectionChanged(int selStart, int selEnd) {
+		if (onSelectionChangedListener != null)
+			onSelectionChangedListener.onSelectionChanged();
 	}
 
 	@Override
@@ -35,11 +42,18 @@ public class WPEditText extends EditText {
 	public void setOnEditTextImeBackListener(EditTextImeBackListener listener) {
 		mOnImeBack = listener;
 	}
-	
+
 	public interface EditTextImeBackListener {
 
 		public abstract void onImeBack(WPEditText ctrl, String text);
 	}
+	
+	public void setOnSelectionChangedListener(OnSelectionChangedListener listener) {
+		onSelectionChangedListener = listener;
+	}
+	
+	public interface OnSelectionChangedListener {
+		public abstract void onSelectionChanged();
+	}
 
 }
-

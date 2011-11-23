@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
-        android:padding="8dp" >
+        android:padding="4dp" >
 
         <HorizontalScrollView
             android:layout_width="fill_parent"
@@ -46,73 +46,85 @@
                     android:id="@+id/bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_below="@id/postContent"
                     android:background="@drawable/wp_button_toggle"
                     android:textColor="#464646"
                     android:textOff="B"
                     android:textOn="B"
-                    android:textSize="17dip"
+                    android:textSize="@dimen/format_bar_font_size"
                     android:textStyle="bold" />
 
                 <ToggleButton
                     android:id="@+id/em"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/bold"
                     android:background="@drawable/wp_button_toggle"
                     android:textColor="#464646"
                     android:textOff="I "
                     android:textOn="I "
-                    android:textSize="17dip"
+                    android:textSize="@dimen/format_bar_font_size"
                     android:textStyle="italic" />
 
                 <ToggleButton
                     android:id="@+id/underline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/em"
                     android:background="@drawable/wp_button_toggle"
                     android:textColor="#464646"
                     android:textOff="@string/underline"
                     android:textOn="@string/underline"
-                    android:textSize="17dip" />
+                    android:textSize="@dimen/format_bar_font_size" />
 
                 <ToggleButton
                     android:id="@+id/strike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/underline"
                     android:background="@drawable/wp_button_toggle"
                     android:textColor="#464646"
                     android:textOff="@string/strike"
                     android:textOn="@string/strike"
-                    android:textSize="17dip" />
+                    android:textSize="@dimen/format_bar_font_size" />
 
                 <Button
                     android:id="@+id/link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/strike"
                     android:background="@drawable/wp_button_toggle"
                     android:text="@string/link"
                     android:textColor="#21759b"
-                    android:textSize="17dip" />
+                    android:textSize="@dimen/format_bar_font_size" />
 
                 <ToggleButton
                     android:id="@+id/bquote"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/link"
                     android:background="@drawable/wp_button_toggle"
                     android:textColor="#464646"
                     android:textOff="&quot;"
                     android:textOn="&quot;"
-                    android:textSize="17dip"
+                    android:textSize="@dimen/format_bar_font_size"
                     android:textStyle="bold"
                     android:typeface="serif" />
 
@@ -120,12 +132,14 @@
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/format_bar_button_padding"
+                    android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
                     android:layout_toRightOf="@id/bquote"
                     android:background="@drawable/wp_button_toggle"
                     android:text="@string/more_tag"
                     android:textColor="#464646"
-                    android:textSize="17dip" />
+                    android:textSize="@dimen/format_bar_font_size" />
             </RelativeLayout>
         </HorizontalScrollView>
 
