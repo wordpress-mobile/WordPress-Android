@@ -49,9 +49,6 @@
 	<string name="choose_blog">Odaberi blog:</string>
 	<string name="fullscreen">Piši na cijelom zaslonu</string>
 	<string name="post_format">Post Format:</string>
-	<string name="underline">\n    \n  </string>
-	<string name="strike">\n    \n  </string>
-	<string name="link">\n    \n  </string>
 	<string name="exit_without_saving">Izađi bez Snimanja</string>
 	<string name="save_and_exit">Snimi i izađi iz prikaza cijelog zaslona</string>
 	<string name="waiting_activation">E-mail aktivacija na čekanju</string>
