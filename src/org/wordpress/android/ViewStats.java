@@ -64,6 +64,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -106,10 +107,10 @@ public class ViewStats extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.view_stats);
-
+		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 		// get the ball rolling...
 		initStats();
 
@@ -144,7 +145,8 @@ public class ViewStats extends Activity {
 						dialogBuilder.create().show();
 					}
 				} else {
-					WordPress.wpDB.saveStatsLogin(WordPress.currentBlog.getId(), dcUsername,
+					WordPress.wpDB.saveStatsLogin(
+							WordPress.currentBlog.getId(), dcUsername,
 							dcPassword);
 					showOrHideLoginForm();
 					initStats(); // start over again now that we have the login
@@ -169,30 +171,26 @@ public class ViewStats extends Activity {
 				final String apiBlogID = WordPress.currentBlog.getApi_blogid();
 				if (!isFinishing())
 					titleBar.startRotatingRefreshIcon();
-				Thread action = new Thread() {
-					public void run() {
-						getStatsData(apiKey, apiBlogID, type, interval);
-					}
-				};
-				action.start();
+				new getStatsDataTask().execute(apiKey, apiBlogID, type,
+						interval);
 
 			}
 		});
-		
-		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
-		titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
 
-            	go.performClick();
-            }
-        });
-		
+		titleBar.refreshButton
+				.setOnClickListener(new ImageButton.OnClickListener() {
+					public void onClick(View v) {
+
+						go.performClick();
+					}
+				});
+
 		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-			//user selected new blog in the title bar
+			// user selected new blog in the title bar
 			@Override
 			public void OnBlogChanged() {
-				
-				//hide all of the report views
+
+				// hide all of the report views
 				ImageView iv = (ImageView) findViewById(R.id.chart);
 				iv.setVisibility(View.GONE);
 				RelativeLayout filters = (RelativeLayout) findViewById(R.id.filters);
@@ -203,8 +201,8 @@ public class ViewStats extends Activity {
 				moderationBar.setVisibility(View.GONE);
 				TextView reportTitle = (TextView) findViewById(R.id.chartTitle);
 				reportTitle.setVisibility(View.GONE);
-				
-				//load stats again for the new blog
+
+				// load stats again for the new blog
 				initStats();
 			}
 		});
@@ -220,20 +218,20 @@ public class ViewStats extends Activity {
 
 			}
 		});
-		
+
 		Spinner reportInterval = (Spinner) findViewById(R.id.reportInterval);
 		reportInterval.setSelection(1);
 
 	}
-	
+
 	@Override
-	protected void onNewIntent (Intent intent){
+	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		
+
 		titleBar.refreshBlog();
-		
+
 		initStats();
-		
+
 	}
 
 	protected int parseInterval(int position) {
@@ -303,148 +301,428 @@ public class ViewStats extends Activity {
 				sUsername = WordPress.currentBlog.getUsername();
 				sPassword = WordPress.currentBlog.getPassword();
 			}
-
-			new statsUserDataTask().execute(sUsername, sPassword, WordPress.currentBlog.getUrl(), String.valueOf(WordPress.currentBlog.getBlogId()));
+			titleBar.startRotatingRefreshIcon();
+			new statsUserDataTask().execute(sUsername, sPassword,
+					WordPress.currentBlog.getUrl(),
+					String.valueOf(WordPress.currentBlog.getBlogId()));
 		} else {
 			// apiKey found, load default views chart and table
-			if (titleBar == null) 
+			if (titleBar == null)
 				titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 			titleBar.startRotatingRefreshIcon();
-			Thread action = new Thread() {
-				public void run() {
-					getStatsData(WordPress.currentBlog.getApi_key(), WordPress.currentBlog.getApi_blogid(), "views", 7);
-				}
-			};
-			action.start();
+			new getStatsDataTask().execute(WordPress.currentBlog.getApi_key(),
+					WordPress.currentBlog.getApi_blogid(), "views", 7);
 
 		}
 
 	}
 
-	private void getStatsData(String apiKey, String blogID,
-			final String reportType, int interval) {
-		if (isFinishing()) {
-			finish();
-		}
-		String DATE_FORMAT = "yyyy-MM-dd";
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		Calendar c1 = Calendar.getInstance(); // today
-		String period = "";
-		if (interval == 90) {
-			period = "&period=week";
-			interval = 12;
-		} else if (interval == 365) {
-			period = "&period=month";
-			interval = 11;
-		} else if (interval == -1) {
-			period = "&period=month";
-		}
-		String uriString = "https://ssl-stats.wordpress.com/csv.php" + "?api_key="
-				+ apiKey + "&blog_id=" + blogID + "&format=xml&table="
-				+ reportType + "&end=" + sdf.format(c1.getTime()) + "&days="
-				+ interval + "&limit=-1" + period;
-		vsoURI = uriString;
-		if (!reportType.equals("views")) {
-			uriString += "&summarize";
-		}
-		URI uri = URI.create(uriString);
+	private Vector<String> getAPIInfo(String username, String password,
+			String url, String storedBlogID) {
 
-		configureClient(uri, null, null);
+		Vector<String> apiInfo = null;
+
+		URI uri = URI
+				.create("https://public-api.wordpress.com/getuserblogs.php");
+		configureClient(uri, username, password);
 
 		// execute HTTP POST request
+		HttpResponse response;
 		try {
-			HttpResponse response;
 			response = client.execute(postMethod);
+			/*
+			 * ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+			 * response.getEntity().writeTo(outstream); String text =
+			 * outstream.toString(); Log.i("WordPress", text);
+			 */
+			// check status code
+			int statusCode = response.getStatusLine().getStatusCode();
+
+			if (statusCode != HttpStatus.SC_OK) {
+				throw new IOException("HTTP status code: " + statusCode
+						+ " was returned. "
+						+ response.getStatusLine().getReasonPhrase());
+			}
 
 			// setup pull parser
+			try {
+				XmlPullParser pullParser = XmlPullParserFactory.newInstance()
+						.newPullParser();
+				HttpEntity entity = response.getEntity();
+				// change to pushbackinput stream 1/18/2010 to handle self
+				// installed wp sites that insert the BOM
+				PushbackInputStream is = new PushbackInputStream(
+						entity.getContent());
 
-			XmlPullParser pullParser = XmlPullParserFactory.newInstance()
-					.newPullParser();
-			HttpEntity entity = response.getEntity();
-			// change to pushbackinput stream 1/18/2010 to handle self installed
-			// wp sites that insert the BOM
-
-			PushbackInputStream is = new PushbackInputStream(entity
-					.getContent());
-
-			// get rid of junk characters before xml response. 60 = '<'. Added
-			// stopper to prevent infinite loop
-			int bomCheck = is.read();
-			int stopper = 0;
-			while (bomCheck != 60 && stopper < 20) {
-				bomCheck = is.read();
-				stopper++;
-			}
-			is.unread(bomCheck);
-
-			pullParser.setInput(is, "UTF-8");
-
-			int eventType = pullParser.getEventType();
-			boolean foundDataItem = false;
-			final Vector<HashMap<String, String>> dataSet = new Vector<HashMap<String, String>>();
-			final Vector<Integer> numDataSet = new Vector<Integer>();
-			int rowCount = 0;
-			// parse the xml response
-			// most replies follow the same xml structure, so the data is stored
-			// in a vector for display after parsing
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				if (eventType == XmlPullParser.START_DOCUMENT) {
-					// System.out.println("Start document");
-				} else if (eventType == XmlPullParser.END_DOCUMENT) {
-					// System.out.println("End document");
-				} else if (eventType == XmlPullParser.START_TAG) {
-					String name = pullParser.getName();
-					if (name.equals("views") || name.equals("postviews")
-							|| name.equals("referrers")
-							|| name.equals("clicks")
-							|| name.equals("searchterms")
-							|| name.equals("videoplays")) {
-					} else if (pullParser.getName().equals("total")) {
-						// that'll do, pig. that'll do.
-						break;
-					} else {
-						foundDataItem = true;
-						// loop through the attributes, add them to the hashmap
-						HashMap<String, String> dataRow = new HashMap<String, String>();
-						for (int i = 0; i < pullParser.getAttributeCount(); i++) {
-							dataRow.put(pullParser.getAttributeName(i)
-									.toString(), pullParser
-									.getAttributeValue(i).toString());
-						}
-						if (dataRow != null) {
-							dataSet.add(rowCount, dataRow);
-						}
-					}
-
-				} else if (eventType == XmlPullParser.END_TAG) {
-					// System.out.println("End tag "+pullParser.getName());
-				} else if (eventType == XmlPullParser.TEXT) {
-					if (foundDataItem) {
-						if (pullParser.getText().toString() == "") {
-							numDataSet.add(rowCount, 0);
-						} else {
-							int value = 0;
-							//sometimes we get an empty string from the stats api, adding a catch here.
-							try {
-								value = Integer.parseInt(pullParser.getText().toString());
-							} catch (NumberFormatException e) {
-							}
-							numDataSet.add(rowCount,value);
-						}
-						rowCount++;
-						foundDataItem = false;
-					}
+				// get rid of junk characters before xml response. 60 = '<'.
+				// Added stopper to prevent infinite loop
+				int bomCheck = is.read();
+				int stopper = 0;
+				while (bomCheck != 60 && stopper < 20) {
+					bomCheck = is.read();
+					stopper++;
 				}
-				eventType = pullParser.next();
+				is.unread(bomCheck);
+
+				pullParser.setInput(is, "UTF-8");
+
+				int eventType = pullParser.getEventType();
+				String apiKey = "";
+				String blogID = "";
+				boolean foundKey = false;
+				boolean foundID = false;
+				boolean foundURL = false;
+				String curBlogID = "";
+				String curBlogURL = "";
+				while (eventType != XmlPullParser.END_DOCUMENT) {
+					if (eventType == XmlPullParser.START_DOCUMENT) {
+						// System.out.println("Start document");
+					} else if (eventType == XmlPullParser.END_DOCUMENT) {
+						// System.out.println("End document");
+					} else if (eventType == XmlPullParser.START_TAG) {
+						if (pullParser.getName().equals("apikey")) {
+							foundKey = true;
+						} else if (pullParser.getName().equals("id")) {
+							foundID = true;
+						} else if (pullParser.getName().equals("url")) {
+							foundURL = true;
+						}
+					} else if (eventType == XmlPullParser.END_TAG) {
+						// System.out.println("End tag "+pullParser.getName());
+					} else if (eventType == XmlPullParser.TEXT) {
+						// System.out.println("Text "+pullParser.getText().toString());
+						if (foundKey) {
+							apiKey = pullParser.getText();
+							foundKey = false;
+						} else if (foundID) {
+							curBlogID = pullParser.getText();
+							foundID = false;
+						} else if (foundURL) {
+							curBlogURL = pullParser.getText();
+							foundURL = false;
+
+							// make sure we're matching with a '/' at the end of
+							// the string, the api returns both with and w/o
+							if (!curBlogURL.endsWith("/"))
+								curBlogURL += "/";
+
+							if ((curBlogURL.equals(url
+									.replace("xmlrpc.php", "")) || storedBlogID
+									.equals(curBlogID))
+									&& !curBlogID.equals("1")) {
+								// yay, found a match
+								blogID = curBlogID;
+								apiInfo = new Vector<String>();
+								apiInfo.add(apiKey);
+								apiInfo.add(blogID);
+								return apiInfo;
+							}
+
+						}
+					}
+					eventType = pullParser.next();
+				}
+
+			} catch (XmlPullParserException e) {
+				e.printStackTrace();
 			}
 
-			if (dataSet.size() > 0) {
-				// only continue if we received data from the api
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-				// ui thread
-				final int intervalT = interval;
-				Thread uiThread = new Thread() {
-					public void run() {
+		return apiInfo;
+	}
+
+	private void configureClient(URI uri, String username, String password) {
+		postMethod = new HttpPost(uri);
+
+		postMethod.addHeader("charset", "UTF-8");
+		// UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
+		postMethod.addHeader("User-Agent", "wp-android/2.0-beta");
+
+		httpParams = postMethod.getParams();
+		HttpProtocolParams.setUseExpectContinue(httpParams, false);
+		UsernamePasswordCredentials creds;
+		// username & password for basic http auth
+		if (username != null) {
+			creds = new UsernamePasswordCredentials(username, password);
+		} else {
+			creds = new UsernamePasswordCredentials("", "");
+		}
+
+		// this gets connections working over https
+		if (uri.getScheme() != null) {
+			if (uri.getScheme().equals("https")) {
+				if (uri.getPort() == -1)
+					try {
+						client = new ConnectionClient(creds, 443);
+					} catch (KeyManagementException e) {
+						client = new ConnectionClient(creds);
+					} catch (NoSuchAlgorithmException e) {
+						client = new ConnectionClient(creds);
+					} catch (KeyStoreException e) {
+						client = new ConnectionClient(creds);
+					} catch (UnrecoverableKeyException e) {
+						client = new ConnectionClient(creds);
+					}
+				else
+					try {
+						client = new ConnectionClient(creds, uri.getPort());
+					} catch (KeyManagementException e) {
+						client = new ConnectionClient(creds);
+					} catch (NoSuchAlgorithmException e) {
+						client = new ConnectionClient(creds);
+					} catch (KeyStoreException e) {
+						client = new ConnectionClient(creds);
+					} catch (UnrecoverableKeyException e) {
+						client = new ConnectionClient(creds);
+					}
+			} else {
+				client = new ConnectionClient(creds);
+			}
+		} else {
+			client = new ConnectionClient(creds);
+		}
+
+	}
+
+	private class statsUserDataTask extends AsyncTask<String, Void, Vector<?>> {
+
+		protected void onPostExecute(Vector<?> result) {
+			titleBar.stopRotatingRefreshIcon();
+			if (result != null) {
+				// user's original login data worked
+				// store the api key and blog id
+				final String apiKey = result.get(0).toString();
+				final String apiBlogID = result.get(1).toString();
+				WordPress.currentBlog.setApi_blogid(apiBlogID);
+				WordPress.currentBlog.setApi_key(apiKey);
+				WordPress.currentBlog.save(ViewStats.this, "");
+				if (!isFinishing())
+					titleBar.startRotatingRefreshIcon();
+				new getStatsDataTask().execute(apiKey, apiBlogID, "views", 7);
+
+			} else {
+				// prompt for the username and password
+				if (firstRun > 0) {
+					Toast.makeText(
+							ViewStats.this,
+							getResources().getText(R.string.invalid_login)
+									+ " "
+									+ getResources().getText(
+											R.string.site_not_found),
+							Toast.LENGTH_SHORT).show();
+				}
+				firstRun++;
+				showOrHideLoginForm();
+			}
+		}
+
+		@Override
+		protected Vector<?> doInBackground(String... args) {
+
+			Vector<?> apiInfo = getAPIInfo(args[0], args[1], args[2], args[3]);
+
+			return apiInfo;
+
+		}
+
+	}
+
+	public void showOrHideLoginForm() {
+		AnimationSet set = new AnimationSet(true);
+		if (loginShowing) {
+			loginShowing = !loginShowing;
+
+			Animation animation = new AlphaAnimation(1.0f, 0.0f);
+			animation.setDuration(500);
+			set.addAnimation(animation);
+
+			animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
+					0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+					Animation.RELATIVE_TO_SELF, 0.0f,
+					Animation.RELATIVE_TO_SELF, 1.0f);
+			animation.setDuration(500);
+			set.addAnimation(animation);
+			;
+			RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.dotcomLogin);
+			moderationBar.clearAnimation();
+			moderationBar.startAnimation(set);
+			moderationBar.setVisibility(View.INVISIBLE);
+		} else {
+			loginShowing = !loginShowing;
+
+			Animation animation = new AlphaAnimation(0.0f, 1.0f);
+			animation.setDuration(500);
+			set.addAnimation(animation);
+
+			animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
+					0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+					Animation.RELATIVE_TO_SELF, 1.0f,
+					Animation.RELATIVE_TO_SELF, 0.0f);
+			animation.setDuration(500);
+			set.addAnimation(animation);
+
+			RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.dotcomLogin);
+			moderationBar.setVisibility(View.VISIBLE);
+			moderationBar.startAnimation(set);
+		}
+
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
+			titleBar.hideDashboardOverlay();
+
+			return false;
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private class statsChartTask extends AsyncTask<String, Bitmap, Bitmap> {
+
+		protected void onPostExecute(Bitmap bm) {
+
+			if (bm != null) {
+				ImageView iv = (ImageView) findViewById(R.id.chart);
+				iv.setImageBitmap(bm);
+			}
+
+		}
+
+		@Override
+		protected Bitmap doInBackground(String... args) {
+
+			Bitmap bm = null;
+			try {
+				URL url = new URL(args[0]);
+				URLConnection conn = url.openConnection();
+				conn.connect();
+				InputStream is = conn.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(is);
+				bm = BitmapFactory.decodeStream(bis);
+				bis.close();
+				is.close();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return bm;
+
+		}
+
+	}
+
+	private class getStatsDataTask extends
+			AsyncTask<Object, HttpResponse, HttpResponse> {
+
+		String reportType;
+		int interval;
+
+		protected void onPostExecute(HttpResponse response) {
+
+			if (response != null) {
+				try {
+					XmlPullParser pullParser = XmlPullParserFactory
+							.newInstance().newPullParser();
+					HttpEntity entity = response.getEntity();
+					// change to pushbackinput stream 1/18/2010 to handle self
+					// installed
+					// wp sites that insert the BOM
+
+					PushbackInputStream is = new PushbackInputStream(
+							entity.getContent());
+
+					// get rid of junk characters before xml response. 60 = '<'.
+					// Added
+					// stopper to prevent infinite loop
+					int bomCheck = is.read();
+					int stopper = 0;
+					while (bomCheck != 60 && stopper < 20) {
+						bomCheck = is.read();
+						stopper++;
+					}
+					is.unread(bomCheck);
+
+					pullParser.setInput(is, "UTF-8");
+
+					int eventType = pullParser.getEventType();
+					boolean foundDataItem = false;
+					final Vector<HashMap<String, String>> dataSet = new Vector<HashMap<String, String>>();
+					final Vector<Integer> numDataSet = new Vector<Integer>();
+					int rowCount = 0;
+					// parse the xml response
+					// most replies follow the same xml structure, so the data
+					// is stored
+					// in a vector for display after parsing
+					while (eventType != XmlPullParser.END_DOCUMENT) {
+						if (eventType == XmlPullParser.START_DOCUMENT) {
+							// System.out.println("Start document");
+						} else if (eventType == XmlPullParser.END_DOCUMENT) {
+							// System.out.println("End document");
+						} else if (eventType == XmlPullParser.START_TAG) {
+							String name = pullParser.getName();
+							if (name.equals("views")
+									|| name.equals("postviews")
+									|| name.equals("referrers")
+									|| name.equals("clicks")
+									|| name.equals("searchterms")
+									|| name.equals("videoplays")) {
+							} else if (pullParser.getName().equals("total")) {
+								// that'll do, pig. that'll do.
+								break;
+							} else {
+								foundDataItem = true;
+								// loop through the attributes, add them to the
+								// hashmap
+								HashMap<String, String> dataRow = new HashMap<String, String>();
+								for (int i = 0; i < pullParser
+										.getAttributeCount(); i++) {
+									dataRow.put(pullParser.getAttributeName(i)
+											.toString(), pullParser
+											.getAttributeValue(i).toString());
+								}
+								if (dataRow != null) {
+									dataSet.add(rowCount, dataRow);
+								}
+							}
+
+						} else if (eventType == XmlPullParser.END_TAG) {
+							// System.out.println("End tag "+pullParser.getName());
+						} else if (eventType == XmlPullParser.TEXT) {
+							if (foundDataItem) {
+								if (pullParser.getText().toString() == "") {
+									numDataSet.add(rowCount, 0);
+								} else {
+									int value = 0;
+									// sometimes we get an empty string from the
+									// stats api, adding a catch here.
+									try {
+										value = Integer.parseInt(pullParser
+												.getText().toString());
+									} catch (NumberFormatException e) {
+									}
+									numDataSet.add(rowCount, value);
+								}
+								rowCount++;
+								foundDataItem = false;
+							}
+						}
+						eventType = pullParser.next();
+					}
+
+					if (dataSet.size() > 0) {
+						// only continue if we received data from the api
+
+						// ui thread
+						final int intervalT = interval;
 
 						RelativeLayout filters = (RelativeLayout) findViewById(R.id.filters);
 						filters.setVisibility(View.VISIBLE);
@@ -452,14 +730,14 @@ public class ViewStats extends Activity {
 						TextView reportTitle = (TextView) findViewById(R.id.chartTitle);
 						reportTitle.setVisibility(View.VISIBLE);
 						ImageView iv = (ImageView) findViewById(R.id.chart);
-						
+
 						if (reportType.equals("views")) {
 							if (intervalT != 1) {
 								iv.setVisibility(View.VISIBLE);
 							} else {
 								iv.setVisibility(View.GONE);
 							}
-					
+
 							reportTitle.setText(getResources().getText(
 									R.string.report_views));
 							String dataValues = "", dateStrings = "", xLabels = "";
@@ -478,9 +756,7 @@ public class ViewStats extends Activity {
 
 							TextView col_1 = (TextView) table_row
 									.findViewById(R.id.col1);
-							col_1
-									.setText(getResources().getText(
-											R.string.date));
+							col_1.setText(getResources().getText(R.string.date));
 							col_1.setTypeface(Typeface.DEFAULT_BOLD);
 
 							TextView col_2 = (TextView) table_row
@@ -507,7 +783,7 @@ public class ViewStats extends Activity {
 									xLabels += date + "|";
 								else if (i == (dataSet.size() - 1))
 									xLabels += date;
-								else 
+								else
 									xLabels += "|";
 
 								// table display work
@@ -541,10 +817,10 @@ public class ViewStats extends Activity {
 									.toString());
 							int minValue = Integer.parseInt(key[0].toString());
 
-							dataValues = dataValues.substring(0, dataValues
-									.length() - 1);
-							dateStrings = dateStrings.substring(0, dateStrings
-									.length() - 1);
+							dataValues = dataValues.substring(0,
+									dataValues.length() - 1);
+							dateStrings = dateStrings.substring(0,
+									dateStrings.length() - 1);
 
 							long minBuffer = Math.round(minValue
 									- (maxValue * .10));
@@ -601,14 +877,23 @@ public class ViewStats extends Activity {
 
 							// build the google chart api url
 							final String chartViewURL = "http://chart.apis.google.com/chart?chts=464646,20"
-									+ "&cht=bvs"
-									+ "&chbh=a"
-									+ "&chd=t:" + dataValues
-									+ "&chs=" + screenSize
+									+ "&cht=bvs" + "&chbh=a" + "&chd=t:"
+									+ dataValues
+									+ "&chs="
+									+ screenSize
 									+ "&chxt=y,x"
-									+ "&chxl=1:|" + xLabels
-									+ "&chds=" + minBuffer + "," + maxBuffer
-									+ "&chxr=0," + minBuffer + "," + maxBuffer + "," + yInterval
+									+ "&chxl=1:|"
+									+ xLabels
+									+ "&chds="
+									+ minBuffer
+									+ ","
+									+ maxBuffer
+									+ "&chxr=0,"
+									+ minBuffer
+									+ ","
+									+ maxBuffer
+									+ ","
+									+ yInterval
 									+ "&chf=c,lg,90,FFFFFF,0,FFFFFF,0.5"
 									+ "&chco=a3bcd3,cccccc77"
 									+ "&chls=4"
@@ -767,368 +1052,103 @@ public class ViewStats extends Activity {
 						}
 						if (!isFinishing())
 							titleBar.stopRotatingRefreshIcon();
-					}
-				};
-				this.runOnUiThread(uiThread);
 
-			} else {
-				Thread alert = new Thread() {
-					public void run() {
+					} else {
 						titleBar.stopRotatingRefreshIcon();
 						RelativeLayout filters = (RelativeLayout) findViewById(R.id.filters);
 						filters.setVisibility(View.VISIBLE);
 						Toast.makeText(ViewStats.this,
 								getResources().getText(R.string.no_data_found),
 								Toast.LENGTH_SHORT).show();
+
 					}
-				};
-				if (!isFinishing()) {
-					this.runOnUiThread(alert);
+				} catch (NumberFormatException e) {
+					errorMsg = e.getMessage();
+				} catch (IllegalStateException e) {
+					errorMsg = e.getMessage();
+				} catch (NotFoundException e) {
+					errorMsg = e.getMessage();
+				} catch (XmlPullParserException e) {
+					errorMsg = e.getMessage();
+				} catch (IOException e) {
+					errorMsg = e.getMessage();
 				}
 			}
+			if (!errorMsg.equals("")) {
+				titleBar.stopRotatingRefreshIcon();
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+						ViewStats.this);
+				dialogBuilder.setTitle(getResources().getText(
+						R.string.connection_error));
+				dialogBuilder.setMessage(errorMsg);
+				dialogBuilder.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								// Just close the window.
 
-		} catch (ClientProtocolException e) {
-			titleBar.stopRotatingRefreshIcon();
-			errorMsg = e.getMessage();
-		} catch (IllegalStateException e) {
-			titleBar.stopRotatingRefreshIcon();
-			errorMsg = e.getMessage();
-		} catch (IOException e) {
-			titleBar.stopRotatingRefreshIcon();
-			errorMsg = e.getMessage();
-		} catch (XmlPullParserException e) {
-			titleBar.stopRotatingRefreshIcon();
-			errorMsg = e.getMessage();
-		}
-
-		if (errorMsg != "") {
-			Thread error = new Thread() {
-				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							ViewStats.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(errorMsg);
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
-				}
-			};
-			this.runOnUiThread(error);
-		}
-
-	}
-
-	private Vector<String> getAPIInfo(String username, String password, String url,
-			String storedBlogID) {
-
-		Vector<String> apiInfo = null;
-
-		URI uri = URI
-				.create("https://public-api.wordpress.com/getuserblogs.php");
-		configureClient(uri, username, password);
-
-		// execute HTTP POST request
-		HttpResponse response;
-		try {
-			response = client.execute(postMethod);
-			/*
-			 * ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-			 * response.getEntity().writeTo(outstream); String text =
-			 * outstream.toString(); Log.i("WordPress", text);
-			 */
-			// check status code
-			int statusCode = response.getStatusLine().getStatusCode();
-
-			if (statusCode != HttpStatus.SC_OK) {
-				throw new IOException("HTTP status code: " + statusCode
-						+ " was returned. "
-						+ response.getStatusLine().getReasonPhrase());
-			}
-
-			// setup pull parser
-			try {
-				XmlPullParser pullParser = XmlPullParserFactory.newInstance()
-						.newPullParser();
-				HttpEntity entity = response.getEntity();
-				// change to pushbackinput stream 1/18/2010 to handle self
-				// installed wp sites that insert the BOM
-				PushbackInputStream is = new PushbackInputStream(entity
-						.getContent());
-
-				// get rid of junk characters before xml response. 60 = '<'.
-				// Added stopper to prevent infinite loop
-				int bomCheck = is.read();
-				int stopper = 0;
-				while (bomCheck != 60 && stopper < 20) {
-					bomCheck = is.read();
-					stopper++;
-				}
-				is.unread(bomCheck);
-
-				pullParser.setInput(is, "UTF-8");
-
-				int eventType = pullParser.getEventType();
-				String apiKey = "";
-				String blogID = "";
-				boolean foundKey = false;
-				boolean foundID = false;
-				boolean foundURL = false;
-				String curBlogID = "";
-				String curBlogURL = "";
-				while (eventType != XmlPullParser.END_DOCUMENT) {
-					if (eventType == XmlPullParser.START_DOCUMENT) {
-						// System.out.println("Start document");
-					} else if (eventType == XmlPullParser.END_DOCUMENT) {
-						// System.out.println("End document");
-					} else if (eventType == XmlPullParser.START_TAG) {
-						if (pullParser.getName().equals("apikey")) {
-							foundKey = true;
-						} else if (pullParser.getName().equals("id")) {
-							foundID = true;
-						} else if (pullParser.getName().equals("url")) {
-							foundURL = true;
-						}
-					} else if (eventType == XmlPullParser.END_TAG) {
-						// System.out.println("End tag "+pullParser.getName());
-					} else if (eventType == XmlPullParser.TEXT) {
-						// System.out.println("Text "+pullParser.getText().toString());
-						if (foundKey) {
-							apiKey = pullParser.getText();
-							foundKey = false;
-						} else if (foundID) {
-							curBlogID = pullParser.getText();
-							foundID = false;
-						} else if (foundURL) {
-							curBlogURL = pullParser.getText();
-							foundURL = false;
-							
-							//make sure we're matching with a '/' at the end of the string, the api returns both with and w/o
-							if (!curBlogURL.endsWith("/"))
-								curBlogURL += "/";
-							
-							if ((curBlogURL.equals(url.replace("xmlrpc.php", ""))
-									|| storedBlogID.equals(curBlogID)) && !curBlogID.equals("1")) {
-								// yay, found a match
-								blogID = curBlogID;
-								apiInfo = new Vector<String>();
-								apiInfo.add(apiKey);
-								apiInfo.add(blogID);
-								return apiInfo;
 							}
-
-						}
-					}
-					eventType = pullParser.next();
+						});
+				dialogBuilder.setCancelable(true);
+				if (!isFinishing()) {
+					dialogBuilder.create().show();
 				}
-
-			} catch (XmlPullParserException e) {
-				e.printStackTrace();
-			}
-
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return apiInfo;
-	}
-
-	private void configureClient(URI uri, String username, String password) {
-		postMethod = new HttpPost(uri);
-
-		postMethod.addHeader("charset", "UTF-8");
-		// UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/2.0-beta");
-
-		httpParams = postMethod.getParams();
-		HttpProtocolParams.setUseExpectContinue(httpParams, false);
-		UsernamePasswordCredentials creds;
-		// username & password for basic http auth
-		if (username != null) {
-			creds = new UsernamePasswordCredentials(username, password);
-		} else {
-			creds = new UsernamePasswordCredentials("", "");
-		}
-
-		// this gets connections working over https
-		if (uri.getScheme() != null) {
-			if (uri.getScheme().equals("https")) {
-				if (uri.getPort() == -1)
-					try {
-						client = new ConnectionClient(creds, 443);
-					} catch (KeyManagementException e) {
-						client = new ConnectionClient(creds);
-					} catch (NoSuchAlgorithmException e) {
-						client = new ConnectionClient(creds);
-					} catch (KeyStoreException e) {
-						client = new ConnectionClient(creds);
-					} catch (UnrecoverableKeyException e) {
-						client = new ConnectionClient(creds);
-					}
-				else
-					try {
-						client = new ConnectionClient(creds, uri.getPort());
-					} catch (KeyManagementException e) {
-						client = new ConnectionClient(creds);
-					} catch (NoSuchAlgorithmException e) {
-						client = new ConnectionClient(creds);
-					} catch (KeyStoreException e) {
-						client = new ConnectionClient(creds);
-					} catch (UnrecoverableKeyException e) {
-						client = new ConnectionClient(creds);
-					}
 			} else {
-				client = new ConnectionClient(creds);
+				titleBar.stopRotatingRefreshIcon();
 			}
-		} else {
-			client = new ConnectionClient(creds);
-		}
 
-	}
-
-	private class statsUserDataTask extends AsyncTask<String, Void, Vector<?>> {
-
-		protected void onPostExecute(Vector<?> result) {
-			if (result != null) {
-				// user's original login data worked
-				// store the api key and blog id
-				final String apiKey = result.get(0).toString();
-				final String apiBlogID = result.get(1).toString();
-				WordPress.currentBlog.setApi_blogid(apiBlogID);
-				WordPress.currentBlog.setApi_key(apiKey);
-				WordPress.currentBlog.save(ViewStats.this, "");
-				if (!isFinishing())
-					titleBar.startRotatingRefreshIcon();
-				Thread action = new Thread() {
-					public void run() {
-						getStatsData(apiKey, apiBlogID, "views", 7);
-					}
-				};
-				action.start();
-
-			} else {
-				// prompt for the username and password
-				if (firstRun > 0) {
-					Toast.makeText(
-							ViewStats.this,
-							getResources().getText(R.string.invalid_login)
-									+ " "
-									+ getResources().getText(
-											R.string.site_not_found),
-							Toast.LENGTH_SHORT).show();
-				}
-				firstRun++;
-				showOrHideLoginForm();
-			}
 		}
 
 		@Override
-		protected Vector<?> doInBackground(String... args) {
-
-			Vector<?> apiInfo = getAPIInfo(args[0], args[1], args[2], args[3]);
-
-			return apiInfo;
-
-		}
-
-	}
-
-	public void showOrHideLoginForm() {
-		AnimationSet set = new AnimationSet(true);
-		if (loginShowing) {
-			loginShowing = !loginShowing;
-
-			Animation animation = new AlphaAnimation(1.0f, 0.0f);
-			animation.setDuration(500);
-			set.addAnimation(animation);
-
-			animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
-					0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-					Animation.RELATIVE_TO_SELF, 0.0f,
-					Animation.RELATIVE_TO_SELF, 1.0f);
-			animation.setDuration(500);
-			set.addAnimation(animation);
-			;
-			RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.dotcomLogin);
-			moderationBar.clearAnimation();
-			moderationBar.startAnimation(set);
-			moderationBar.setVisibility(View.INVISIBLE);
-		} else {
-			loginShowing = !loginShowing;
-
-			Animation animation = new AlphaAnimation(0.0f, 1.0f);
-			animation.setDuration(500);
-			set.addAnimation(animation);
-
-			animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
-					0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-					Animation.RELATIVE_TO_SELF, 1.0f,
-					Animation.RELATIVE_TO_SELF, 0.0f);
-			animation.setDuration(500);
-			set.addAnimation(animation);
-
-			RelativeLayout moderationBar = (RelativeLayout) findViewById(R.id.dotcomLogin);
-			moderationBar.setVisibility(View.VISIBLE);
-			moderationBar.startAnimation(set);
-		}
-
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
-	        titleBar.hideDashboardOverlay();
-	    	
-	        return false;
-	    }
-
-	    return super.onKeyDown(keyCode, event);
-	}
-	
-	private class statsChartTask extends AsyncTask<String, Bitmap, Bitmap> {
-
-		protected void onPostExecute(Bitmap bm) {
-			
-			if (bm != null) {
-				ImageView iv = (ImageView) findViewById(R.id.chart);
-				iv.setImageBitmap(bm);
+		protected HttpResponse doInBackground(Object... args) {
+			if (isFinishing()) {
+				finish();
 			}
-			
-		}
 
-		@Override
-		protected Bitmap doInBackground(String... args) {
+			String apiKey = (String) args[0];
+			String blogID = (String) args[1];
+			reportType = (String) args[2];
+			interval = (Integer) args[3];
 
-			Bitmap bm = null;
+			String DATE_FORMAT = "yyyy-MM-dd";
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+			Calendar c1 = Calendar.getInstance(); // today
+			String period = "";
+			if (interval == 90) {
+				period = "&period=week";
+				interval = 12;
+			} else if (interval == 365) {
+				period = "&period=month";
+				interval = 11;
+			} else if (interval == -1) {
+				period = "&period=month";
+			}
+			String uriString = "https://ssl-stats.wordpress.com/csv.php"
+					+ "?api_key=" + apiKey + "&blog_id=" + blogID
+					+ "&format=xml&table=" + reportType + "&end="
+					+ sdf.format(c1.getTime()) + "&days=" + interval
+					+ "&limit=-1" + period;
+			vsoURI = uriString;
+			if (!reportType.equals("views")) {
+				uriString += "&summarize";
+			}
+			URI uri = URI.create(uriString);
+
+			configureClient(uri, null, null);
+
+			// execute HTTP POST request
+
+			HttpResponse response;
 			try {
-				URL url = new URL(args[0]);
-				URLConnection conn = url.openConnection();
-				conn.connect();
-				InputStream is = conn.getInputStream();
-				BufferedInputStream bis = new BufferedInputStream(
-						is);
-				bm = BitmapFactory.decodeStream(bis);
-				bis.close();
-				is.close();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				response = client.execute(postMethod);
+				return response;
+			} catch (ClientProtocolException e1) {
+				errorMsg = e1.getMessage();
+				return null;
+			} catch (IOException e1) {
+				errorMsg = e1.getMessage();
+				return null;
 			}
-
-			return bm;
-
 		}
 
 	}
