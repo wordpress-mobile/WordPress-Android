@@ -378,7 +378,7 @@
   <string name="all">All Time</string>
   <string name="username_password_required">Username and Password are required fields.
   </string>
-  <string name="help_stats">Need help with WordPress.com stats?</string>
+  <string name="help_stats">Need help?</string>
   <string name="stats_username">Username</string>
   <string name="stats_password">Password</string>
   <string name="date">Date</string>

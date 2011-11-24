@@ -655,6 +655,7 @@ res/values-id/strings.xml -text
 res/values-in/strings.xml -text
 res/values-it/strings.xml -text
 res/values-ja/strings.xml -text
+res/values-ka/strings.xml -text
 res/values-large-mdpi/dimens.xml -text
 res/values-large-mdpi/styles.xml -text
 res/values-mk/strings.xml -text
@@ -664,6 +665,7 @@ res/values-pt/strings.xml -text
 res/values-ru/strings.xml -text
 res/values-sk/strings.xml -text
 res/values-sv/strings.xml -text
+res/values-ta/strings.xml -text
 res/values-tr/strings.xml -text
 res/values-xlarge-v11/styles.xml -text
 res/values-xlarge/dimens.xml -text
