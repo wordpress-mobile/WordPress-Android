@@ -799,7 +799,9 @@ public class EditPost extends Activity implements LocationListener {
 							content.indexOf(needle) + needle.length(),
 							content.length()));
 				}
-				post.setDescription(content);
+				else {
+					post.setDescription(content);
+				}
 				post.setMediaPaths(images);
 				post.setDate_created_gmt(pubDateTimestamp);
 				post.setCategories(categories);
