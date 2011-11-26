@@ -749,18 +749,16 @@ public class EditPost extends Activity implements LocationListener {
 						latitude, longitude, isPage, postFormat, EditPost.this,
 						true);
 				post.setLocalDraft(true);
+			}
 
-				// split up the post content if there's a more tag
-				String needle = "<p><font color =\"#777777\">........"
-						+ getResources().getText(R.string.more_tag)
-						+ "</font></p>";
-				if (content.indexOf(needle) >= 0) {
-					post.setDescription(content.substring(0,
-							content.indexOf(needle)));
-					post.setMt_text_more(content.substring(
-							content.indexOf(needle) + needle.length(),
-							content.length()));
-				}
+			// split up the post content if there's a more tag
+			String needle = "<p><font color =\"#777777\">........"
+					+ getResources().getText(R.string.more_tag) + "</font></p>";
+			if (content.indexOf(needle) >= 0) {
+				post.setDescription(content.substring(0,
+						content.indexOf(needle)));
+				post.setMt_text_more(content.substring(content.indexOf(needle)
+						+ needle.length(), content.length()));
 
 				success = post.save();
 
@@ -794,9 +792,6 @@ public class EditPost extends Activity implements LocationListener {
 			} else {
 				post.setTitle(title);
 				// split up the post content if there's a more tag
-				String needle = "<p><font color =\"#777777\">........"
-						+ getResources().getText(R.string.more_tag)
-						+ "</font></p>";
 				if (content.indexOf(needle) >= 0) {
 					post.setDescription(content.substring(0,
 							content.indexOf(needle)));
