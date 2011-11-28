@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.http.client.HttpClient;
@@ -9,13 +8,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.wordpress.android.util.EscapeUtils;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
@@ -36,16 +31,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 public class Read extends Activity {
 	/** Called when the activity is first created. */
-	private XMLRPCClient client;
 	public String[] authors;
 	public String[] comments;
-	private int id;
-	private String postID = "";
-	private String accountName = "";
 	private String httpuser = "";
 	private String httppassword = "";
 	private String loginURL = "";
@@ -67,10 +57,6 @@ public class Read extends Activity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			id = extras.getInt("id");
-			postID = extras.getString("postID");
-			accountName = extras.getString("accountName");
-			isPage = extras.getBoolean("isPage");
 			loadReader = extras.getBoolean("loadReader");
 		}
 
@@ -83,10 +69,10 @@ public class Read extends Activity {
 
 		} else {
 			if (isPage) {
-				this.setTitle(EscapeUtils.unescapeHtml(accountName) + " - "
+				this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
 						+ getResources().getText(R.string.preview_page));
 			} else {
-				this.setTitle(EscapeUtils.unescapeHtml(accountName) + " - "
+				this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
 						+ getResources().getText(R.string.preview_post));
 			}
 
@@ -157,122 +143,52 @@ public class Read extends Activity {
 	}
 
 	protected void loadPostFromPermalink() {
-		Vector<?> settings = WordPress.wpDB.loadSettings(id);
+		
+		WebView wv = (WebView) findViewById(R.id.webView);
+		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		wv.getSettings().setBuiltInZoomControls(true);
+		wv.getSettings().setJavaScriptEnabled(true);
 
-		String username = settings.get(2).toString();
-		String password = settings.get(3).toString();
-		httpuser = settings.get(4).toString();
-		httppassword = settings.get(5).toString();
+		wv.setWebChromeClient(new WebChromeClient() {
+			public void onProgressChanged(WebView view, int progress) {
+				Read.this.setTitle("Loading...");
+				Read.this.setProgress(progress * 100);
 
-		String url = settings.get(0).toString();
-
-		client = new XMLRPCClient(url, httpuser, httppassword);
-
-		Object[] vParams = { postID, username, password };
-
-		Object versionResult = new Object();
-		try {
-			versionResult = (Object) client.call("metaWeblog.getPost", vParams);
-		} catch (XMLRPCException e) {
-			// e.printStackTrace();
-		}
-
-		String permaLink = null, status = "", html = "";
-
-		if (versionResult != null) {
-			try {
-				HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
-				permaLink = contentHash.get("permaLink").toString();
-				status = contentHash.get("post_status").toString();
-				html = contentHash.get("description").toString();
-			} catch (Exception e) {
-			}
-		}
-
-		displayResults(permaLink, html, status);
-	}
-
-	private void displayResults(final String permaLink, final String html,
-			final String status) {
-		Thread t = new Thread() {
-			public void run() {
-				if (permaLink != null) {
-					WebView wv = (WebView) findViewById(R.id.webView);
-					wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-					wv.getSettings().setBuiltInZoomControls(true);
-					wv.getSettings().setJavaScriptEnabled(true);
-
-					wv.setWebChromeClient(new WebChromeClient() {
-						public void onProgressChanged(WebView view, int progress) {
-							Read.this.setTitle("Loading...");
-							Read.this.setProgress(progress * 100);
-
-							if (progress == 100) {
-								if (isPage) {
-									Read.this.setTitle(EscapeUtils
-											.unescapeHtml(accountName)
-											+ " - "
-											+ getResources().getText(
-													R.string.preview_page));
-								} else {
-									Read.this.setTitle(EscapeUtils
-											.unescapeHtml(accountName)
-											+ " - "
-											+ getResources().getText(
-													R.string.preview_post));
-								}
-							}
-						}
-					});
-
-					wv.setWebViewClient(new WordPressWebViewClient());
-					if (status.equals("publish")) {
-						int sdk_int = 0;
-						try {
-							sdk_int = Integer
-									.valueOf(android.os.Build.VERSION.SDK);
-						} catch (Exception e1) {
-							sdk_int = 3; // assume they are on cupcake
-						}
-						if (sdk_int >= 8) {
-							// only 2.2 devices can load https correctly
-							wv.loadUrl(permaLink);
-						} else {
-							String url = permaLink.replace("https:", "http:");
-							wv.loadUrl(url);
-						}
-
+				if (progress == 100) {
+					if (isPage) {
+						Read.this.setTitle(EscapeUtils
+								.unescapeHtml(WordPress.currentBlog.getBlogName())
+								+ " - "
+								+ getResources().getText(
+										R.string.preview_page));
 					} else {
-						wv.loadData(html, "text/html", "utf-8");
-						Toast.makeText(Read.this,
-								getResources().getText(R.string.basic_html),
-								Toast.LENGTH_SHORT).show();
-					}
-				} else {
-					setProgressBarIndeterminateVisibility(false);
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							Read.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(getResources().getText(
-							R.string.permalink_not_found));
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
+						Read.this.setTitle(EscapeUtils
+								.unescapeHtml(WordPress.currentBlog.getBlogName())
+								+ " - "
+								+ getResources().getText(
+										R.string.preview_post));
 					}
 				}
 			}
-		};
-		this.runOnUiThread(t);
+		});
 
+		wv.setWebViewClient(new WordPressWebViewClient());
+			int sdk_int = 0;
+			try {
+				sdk_int = Integer
+						.valueOf(android.os.Build.VERSION.SDK);
+			} catch (Exception e1) {
+				sdk_int = 3; // assume they are on cupcake
+			}
+			if (sdk_int >= 8) {
+				// only 2.2 devices can load https correctly
+				wv.loadUrl(WordPress.currentPost.getPermaLink());
+			} else {
+				String url = WordPress.currentPost.getPermaLink().replace("https:", "http:");
+				wv.loadUrl(url);
+			}
+
+		
 	}
 
 	private class WordPressWebViewClient extends WebViewClient {
@@ -332,7 +248,7 @@ public class Read extends Activity {
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
-			Vector<?> settings = WordPress.wpDB.loadSettings(id);
+			Vector<?> settings = WordPress.wpDB.loadSettings(WordPress.currentBlog.getId());
 			loginURL = settings.get(0).toString().replace("xmlrpc.php", "wp-login.php");
 			String readerURL = Constants.readerURL;
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {

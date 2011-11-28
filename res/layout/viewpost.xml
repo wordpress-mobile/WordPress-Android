@@ -18,7 +18,7 @@
             android:id="@+id/postTitle"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginRight="110dp"
+            android:layout_marginRight="144dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:shadowColor="#FFFFFF"
@@ -42,6 +42,15 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_delete"
                 android:text="@string/delete_post" />
+            
+            <ImageButton
+                android:id="@+id/viewPost"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/menu_button_selector"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu_view"
+                android:text="@string/preview_post" />
 
             <ImageButton
                 android:id="@+id/sharePostLink"

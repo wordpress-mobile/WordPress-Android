@@ -75,9 +75,28 @@ public class ViewPostFragment extends Fragment {
 
 			}
 		});
+		
+		ImageButton viewPostButton = (ImageButton) v
+				.findViewById(R.id.viewPost);
+		viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
+			public void onClick(View v) {
+
+				loadPostPreview();
+
+			}
+		});
 
 		return v;
 
+	}
+
+	protected void loadPostPreview() {
+		
+		if (!WordPress.currentPost.getPermaLink().equals("")) {
+			Intent i = new Intent(getActivity(), Read.class);
+			startActivity(i);
+		}
+		
 	}
 
 	public void onAttach(Activity activity) {
@@ -105,6 +124,8 @@ public class ViewPostFragment extends Fragment {
 		TextView tv = (TextView) getActivity().findViewById(
 				R.id.viewPostTextView);
 		ImageButton shareURLButton = (ImageButton) getActivity().findViewById(R.id.sharePostLink);
+		ImageButton viewPostButton = (ImageButton) getActivity()
+				.findViewById(R.id.viewPost);
 
 		if (post.isLocalDraft()) {
 			tv.setVisibility(View.VISIBLE);
@@ -113,6 +134,7 @@ public class ViewPostFragment extends Fragment {
 					post.getDescription() + post.getMt_text_more(),
 					getActivity().getApplicationContext(), post));
 			shareURLButton.setVisibility(View.GONE);
+			viewPostButton.setVisibility(View.GONE);
 		} else {
 			tv.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
@@ -124,6 +146,7 @@ public class ViewPostFragment extends Fragment {
 			webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
 					"text/html", "utf-8", null);
 			shareURLButton.setVisibility(View.VISIBLE);
+			viewPostButton.setVisibility(View.VISIBLE);
 		}
 
 	}
