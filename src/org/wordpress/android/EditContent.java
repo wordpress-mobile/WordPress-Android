@@ -691,7 +691,7 @@ public class EditContent extends Activity {
 		CharSequence beforeText = content.getText().subSequence(0,
 				selectionStart);
 		CharSequence afterText = content.getText().subSequence(selectionStart,
-				selectionEnd);
+				content.getText().length());
 
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		builder.append(beforeText);
