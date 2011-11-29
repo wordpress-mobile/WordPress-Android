@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.json.JSONArray;
@@ -52,6 +53,7 @@ import android.os.Bundle;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.format.DateUtils;
 import android.text.style.AlignmentSpan;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -335,12 +337,17 @@ public class EditPost extends Activity implements LocationListener {
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
 				try {
-					Date date = new Date(pubDate);
-					SimpleDateFormat sdf = new SimpleDateFormat(
-							"MMM dd, yyyy 'at' hh:mm a");
-					String sPubDate = sdf.format(date);
+					int flags = 0;
+					flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+					flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+					flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+					flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+					long localTime = pubDate
+							+ TimeZone.getDefault().getOffset(pubDate);
+					String formattedDate = DateUtils.formatDateTime(
+							EditPost.this, localTime, flags);
 					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
-					tvPubDate.setText(sPubDate);
+					tvPubDate.setText(formattedDate);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -798,8 +805,7 @@ public class EditPost extends Activity implements LocationListener {
 					post.setMt_text_more(content.substring(
 							content.indexOf(needle) + needle.length(),
 							content.length()));
-				}
-				else {
+				} else {
 					post.setDescription(content);
 				}
 				post.setMediaPaths(images);
