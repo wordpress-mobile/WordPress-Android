@@ -16,6 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.text.StringCharacterIterator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -943,10 +944,21 @@ public class WordPressDB {
 						.toString();
 				values.put("postid", postID);
 				values.put("title", thisHash.get("title").toString());
-				Date d = (Date) thisHash.get("dateCreated");
-				values.put("dateCreated", d.getTime());
-				d = (Date) thisHash.get("date_created_gmt");
-				values.put("date_created_gmt", d.getTime());
+				Date d;
+				try {
+					d = (Date) thisHash.get("dateCreated");
+					values.put("dateCreated", d.getTime());
+				} catch (Exception e) {
+					Date now = new Date();
+					values.put("dateCreated", now.getTime());
+				}
+				try {
+					d = (Date) thisHash.get("date_created_gmt");
+					values.put("date_created_gmt", d.getTime()); 
+				} catch (Exception e) {
+					Date now = new Date();
+					values.put("date_created_gmt", now.getTime() + (now.getTimezoneOffset() * 60000));
+				}
 				values.put("description", thisHash.get("description")
 						.toString());
 				values.put("link", thisHash.get("link").toString());

@@ -679,7 +679,7 @@ public class ViewPosts extends ListFragment {
 		return false;
 	}
 
-	public class getRecentPostsTask extends
+	public class getRecentPostsTask extends 
 			AsyncTask<Vector<?>, Void, Object[]> {
 
 		Context ctx;
