@@ -656,6 +656,8 @@ res/values-in/strings.xml -text
 res/values-it/strings.xml -text
 res/values-ja/strings.xml -text
 res/values-ka/strings.xml -text
+res/values-large-hdpi/dimens.xml -text
+res/values-large-hdpi/styles.xml -text
 res/values-large-mdpi/dimens.xml -text
 res/values-large-mdpi/styles.xml -text
 res/values-mk/strings.xml -text
