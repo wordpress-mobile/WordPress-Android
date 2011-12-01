@@ -730,7 +730,7 @@ public class EditContent extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null
-				&& (resultCode != RESULT_CANCELED || (requestCode == 1 || requestCode == 3))) {
+				|| (resultCode != RESULT_CANCELED || (requestCode == 1 || requestCode == 3))) {
 			Bundle extras;
 			switch (requestCode) {
 			case 0:
