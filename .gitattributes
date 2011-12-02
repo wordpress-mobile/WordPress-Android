@@ -395,6 +395,7 @@ res/drawable-hdpi/btn_check_on_selected.png -text
 res/drawable-hdpi/btn_dropdown_normal.9.png -text
 res/drawable-hdpi/btn_dropdown_pressed.9.png -text
 res/drawable-hdpi/btn_dropdown_selected.9.png -text
+res/drawable-hdpi/camera.png -text
 res/drawable-hdpi/comment_badge.png -text
 res/drawable-hdpi/comments_tab.png -text
 res/drawable-hdpi/comments_tab_active.png -text
@@ -445,7 +446,6 @@ res/drawable/add_small.png -text
 res/drawable/app_icon.png -text
 res/drawable/arrow_down.png -text
 res/drawable/arrow_up.png -text
-res/drawable/attachment.png -text
 res/drawable/browser_reload.png -text
 res/drawable/btn_check_off_pressed.png -text
 res/drawable/btn_check_off_selected.png -text
@@ -454,6 +454,7 @@ res/drawable/btn_check_on_selected.png -text
 res/drawable/btn_dropdown_normal.9.png -text
 res/drawable/btn_dropdown_pressed.9.png -text
 res/drawable/btn_dropdown_selected.9.png -text
+res/drawable/camera.png -text
 res/drawable/comment_badge.png -text
 res/drawable/comment_pending_bg_selector.xml -text
 res/drawable/comment_pending_gradient.xml -text

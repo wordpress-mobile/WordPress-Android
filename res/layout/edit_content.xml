@@ -150,7 +150,7 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/wp_button_toggle"
             android:scaleType="centerInside"
-            android:src="@drawable/attachment" />
+            android:src="@drawable/camera" />
     </RelativeLayout>
 
 </LinearLayout>

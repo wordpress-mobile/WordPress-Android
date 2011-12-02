@@ -247,7 +247,7 @@ public class WPTitleBar extends RelativeLayout {
 		readButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
-				if (readerBlogID >= 0) {
+				if (readerBlogID >= 0 && WordPress.currentBlog.isDotcomFlag()) {
 					Intent i = new Intent(context, Read.class);
 					i.putExtra("id", readerBlogID);
 					i.putExtra("loadReader", true);

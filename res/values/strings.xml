@@ -126,7 +126,7 @@
   <string name="home">Home</string>
   <string name="no_camera_found">Sorry, no camera was found on your device.</string>
   <string name="more_tag">More</string>
-  <string name="wpcom_login_required">Please add a WordPress.com account to use this feature</string>
+  <string name="wpcom_login_required">A WordPress.com account is required to use this feature</string>
 
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
