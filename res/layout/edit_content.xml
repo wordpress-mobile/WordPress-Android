@@ -28,7 +28,7 @@
     <RelativeLayout
         android:id="@+id/formatBar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/format_bar_height"
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
         android:padding="4dp" >
@@ -45,7 +45,7 @@
                 <ToggleButton
                     android:id="@+id/bold"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_below="@id/postContent"
@@ -59,7 +59,7 @@
                 <ToggleButton
                     android:id="@+id/em"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
@@ -74,7 +74,7 @@
                 <ToggleButton
                     android:id="@+id/underline"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
@@ -88,7 +88,7 @@
                 <ToggleButton
                     android:id="@+id/strike"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
@@ -102,7 +102,7 @@
                 <Button
                     android:id="@+id/link"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
@@ -115,7 +115,7 @@
                 <ToggleButton
                     android:id="@+id/bquote"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
@@ -131,7 +131,7 @@
                 <Button
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:paddingLeft="@dimen/format_bar_button_padding"
                     android:paddingRight="@dimen/format_bar_button_padding"
                     android:layout_marginLeft="6dp"
@@ -146,7 +146,7 @@
         <ImageButton
             android:id="@+id/addPictureButton"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
             android:background="@drawable/wp_button_toggle"
             android:scaleType="centerInside"

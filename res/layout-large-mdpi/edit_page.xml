@@ -165,7 +165,6 @@
             android:id="@+id/post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:layout_below="@id/section4"
             android:background="@drawable/wp_button"
             android:text="@string/save"

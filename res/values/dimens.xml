@@ -22,4 +22,5 @@
     <dimen name="settings_padding">10dp</dimen>
     <dimen name="format_bar_font_size">17dp</dimen>
     <dimen name="format_bar_button_padding">4dp</dimen>
+    <dimen name="format_bar_height">40dp</dimen>
 </resources>
