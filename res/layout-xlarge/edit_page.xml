@@ -3,7 +3,6 @@
     android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#FFF5F5F5"
     android:scrollbars="none" >
 
     <LinearLayout
