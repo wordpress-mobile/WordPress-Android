@@ -70,7 +70,7 @@
                 <RelativeLayout
                     android:id="@+id/section2"
                     android:layout_width="fill_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="10dip"
@@ -164,7 +164,7 @@
                 <RelativeLayout
                     android:id="@+id/section3"
                     android:layout_width="fill_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:layout_marginLeft="5dip"
                     android:layout_marginTop="10dip"

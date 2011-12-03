@@ -212,9 +212,7 @@
                     android:id="@+id/pubDateButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/status"
-                    android:layout_marginLeft="2dip"
-                    android:layout_toRightOf="@id/pubDate"
+                    android:layout_below="@id/pubDate"
                     android:background="@drawable/wp_button_small"
                     android:text="@string/edit" />
 

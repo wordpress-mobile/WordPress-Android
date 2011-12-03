@@ -70,7 +70,7 @@
                 <RelativeLayout
                     android:id="@+id/section2"
                     android:layout_width="fill_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="10dip"
@@ -125,9 +125,8 @@
                         android:id="@+id/pubDateButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/status"
+                        android:layout_below="@id/pubDate"
                         android:layout_marginLeft="2dip"
-                        android:layout_toRightOf="@id/pubDate"
                         android:background="@drawable/wp_button_small"
                         android:text="@string/edit" />
 
@@ -164,7 +163,7 @@
                 <RelativeLayout
                     android:id="@+id/section3"
                     android:layout_width="fill_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="10dip"
                     android:layout_marginLeft="5dip"
                     android:layout_marginTop="10dip"
