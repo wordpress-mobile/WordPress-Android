@@ -77,7 +77,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/content_bg"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp" >
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" >
 
                     <TextView
                         android:id="@+id/l_status"
@@ -170,7 +171,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/content_bg"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp" >
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" >
 
                     <TextView
                         android:id="@+id/l_tags_categories"
@@ -197,8 +199,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tags"
                         android:background="@drawable/wp_button_small"
-                        android:text="@string/select_categories"
-                        android:textSize="20dip" />
+                        android:text="@string/select_categories" />
 
                     <TextView
                         android:id="@+id/selectedCategories"
@@ -227,6 +228,7 @@
                     android:background="@drawable/content_bg"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
                     android:visibility="gone" >
 
                     <TextView
@@ -270,7 +272,7 @@
                 android:id="@+id/post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
                 android:layout_below="@id/section5"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/wp_button"
