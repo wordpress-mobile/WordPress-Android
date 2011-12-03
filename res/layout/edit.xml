@@ -23,6 +23,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:paddingBottom="10dp"
                 android:background="@drawable/content_bg" >
 
                 <TextView
@@ -65,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="10dip"
+                android:paddingBottom="10dp"
                 android:background="@drawable/content_bg" >
 
                 <TextView
@@ -118,6 +120,7 @@
                     android:layout_below="@id/section3"
                     android:layout_marginBottom="10dip"
                     android:layout_marginTop="10dip"
+                    android:paddingBottom="10dp"
                     android:background="@drawable/content_bg"
                     android:visibility="gone" >
 
@@ -164,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="10dip"
+                android:paddingBottom="10dp"
                 android:background="@drawable/content_bg" >
 
                 <TextView
@@ -248,9 +252,9 @@
 
             <Button
                 android:id="@+id/post"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
                 android:layout_below="@id/section5"
                 android:background="@drawable/wp_button"
                 android:text="@string/save"
