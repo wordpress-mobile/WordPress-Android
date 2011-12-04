@@ -155,7 +155,7 @@ public class EditPost extends Activity implements LocationListener {
 									id = accountIDs[item];
 									blog = new Blog(id, EditPost.this);
 									accountName = blogNames[item];
-									setTitle(accountName
+									setTitle(WordPress.currentBlog.getBlogName()
 											+ " - "
 											+ getResources()
 													.getText(
@@ -169,7 +169,7 @@ public class EditPost extends Activity implements LocationListener {
 					id = accountIDs[0];
 					blog = new Blog(id, EditPost.this);
 					accountName = blogNames[0];
-					setTitle(accountName
+					setTitle(WordPress.currentBlog.getBlogName()
 							+ " - "
 							+ getResources().getText(
 									(isPage) ? R.string.new_page
@@ -276,12 +276,12 @@ public class EditPost extends Activity implements LocationListener {
 		spinner.setAdapter(adapter);
 
 		if (isNew) {
-			setTitle(accountName
+			setTitle(WordPress.currentBlog.getBlogName()
 					+ " - "
 					+ getResources().getText(
 							(isPage) ? R.string.new_page : R.string.new_post));
 		} else {
-			setTitle(accountName
+			setTitle(WordPress.currentBlog.getBlogName()
 					+ " - "
 					+ getResources().getText(
 							(isPage) ? R.string.edit_page : R.string.edit_post));

@@ -9,7 +9,7 @@
 			android:label="@string/create_a_link" />
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
-		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden">
+		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:theme="@android:style/Theme.Light">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
