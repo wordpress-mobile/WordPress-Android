@@ -423,6 +423,7 @@ res/drawable-hdpi/stats_tab_active.png -text
 res/drawable-hdpi/title_bar_shadow.9.png -text
 res/drawable-hdpi/wp_check_off.png -text
 res/drawable-hdpi/wp_check_on.png -text
+res/drawable-hdpi/wp_logo_actionbar.png -text
 res/drawable-hdpi/wp_small.9.png -text
 res/drawable-hdpi/wp_small_down.9.png -text
 res/drawable-hdpi/wp_small_over.9.png -text
