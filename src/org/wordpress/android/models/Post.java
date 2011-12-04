@@ -493,6 +493,9 @@ public class Post {
 				if (click_spans.length != 0) {
 
 					for (int i = 0; i < click_spans.length; i++) {
+						String prompt = context.getResources().getText(R.string.uploading_media_item) + String.valueOf(i + 1);
+						n.setLatestEventInfo(context, context.getResources().getText(R.string.uploading) + " " + postOrPage, prompt, n.contentIntent);
+						nm.notify(notificationID, n);
 						WPImageSpan wpIS = click_spans[i];
 						int start = s.getSpanStart(wpIS);
 						int end = s.getSpanEnd(wpIS);
@@ -689,14 +692,6 @@ public class Post {
 			String finalThumbnailUrl = null;
 			String finalImageUrl = null;
 
-			final int printCtr = 0;
-			
-			String postOrPage = (String) (post.isPage() ? context
-					.getResources().getText(R.string.page_id) : context
-					.getResources().getText(R.string.post_id));
-			String message = context.getResources().getText(R.string.uploading_media_item) + String.valueOf(printCtr + 1);
-			n.setLatestEventInfo(context, context.getResources().getText(R.string.uploading) + " " + postOrPage, message, n.contentIntent);
-			nm.notify(notificationID, n);
 			// check for image, and upload it
 			if (mf.getFileName() != null) {
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
