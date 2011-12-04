@@ -772,13 +772,13 @@ public class EditPost extends Activity implements LocationListener {
 				post.deleteMediaFiles();
 
 				Spannable s = contentET.getText();
-				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
+				WPImageSpan[] image_spans = s.getSpans(0, s.length(),
 						WPImageSpan.class);
 
-				if (click_spans.length != 0) {
+				if (image_spans.length != 0) {
 
-					for (int i = 0; i < click_spans.length; i++) {
-						WPImageSpan wpIS = click_spans[i];
+					for (int i = 0; i < image_spans.length; i++) {
+						WPImageSpan wpIS = image_spans[i];
 						images += wpIS.getImageSource().toString() + ",";
 
 						MediaFile mf = new MediaFile();

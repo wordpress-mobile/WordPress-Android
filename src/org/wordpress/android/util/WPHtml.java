@@ -720,10 +720,10 @@ class HtmlToSpannedConverter implements ContentHandler {
 				is.setImageSource(curStream);
 				is.setWidth(mf.getWidth());
 				is.setVideo(mf.isVideo());
+				
+				text.setSpan(is, len, text.length(),
+						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
-			
-			text.setSpan(is, len, text.length(),
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		else {
 			if (attributes != null) {
