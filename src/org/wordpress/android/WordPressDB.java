@@ -16,7 +16,6 @@ import android.database.sqlite.SQLiteDatabase;
 import java.text.StringCharacterIterator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -1764,6 +1763,9 @@ public class WordPressDB {
 			mf.setMIMEType(c.getString(10));
 			mf.setFeatured(c.getInt(11) > 0);
 			mf.setVideo(c.getInt(12) > 0);
+		}
+		else {
+			return null;
 		}
 		c.close();
 		
