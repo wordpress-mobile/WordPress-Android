@@ -344,7 +344,11 @@ public class ImageHelper {
 								.getColumnIndex(Images.Media.ORIENTATION);
 						orientation = cur.getString(orientationColumn);
 					}
-
+					
+					if (thumbData == null) { 
+					 	return null;
+					}
+					
 					jpeg = new File(thumbData);
 					path = thumbData;
 				} else {

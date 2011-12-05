@@ -54,6 +54,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class EditContent extends Activity {
@@ -665,6 +666,8 @@ public class EditContent extends Activity {
 				EditContent.this);
 
 		if (mediaData == null) {
+			//data stream not returned 
+		 	Toast.makeText(EditContent.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show(); 
 			return;
 		}
 
