@@ -76,12 +76,9 @@ public class Read extends Activity {
 						+ getResources().getText(R.string.preview_post));
 			}
 
-			Thread t = new Thread() {
-				public void run() {
-					loadPostFromPermalink();
-				}
-			};
-			t.start();
+			
+			loadPostFromPermalink();
+				
 		}
 	}
 
