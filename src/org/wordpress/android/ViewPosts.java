@@ -48,7 +48,7 @@ public class ViewPosts extends ListFragment {
 	/** Called when the activity is first created. */
 	private XMLRPCClient client;
 	private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
-			draftIDs, draftTitles, draftDateCreated;
+			draftIDs, draftTitles, draftDateCreated, statuses, draftStatuses;
 	private Integer[] uploaded;
 	int rowID = 0;
 	long selectedID;
@@ -190,11 +190,13 @@ public class ViewPosts extends ListFragment {
 			postIDs = new String[loadedPosts.size()];
 			dateCreated = new String[loadedPosts.size()];
 			dateCreatedFormatted = new String[loadedPosts.size()];
+			statuses = new String[loadedPosts.size()];
 		} else {
 			titles = new String[0];
 			postIDs = new String[0];
 			dateCreated = new String[0];
 			dateCreatedFormatted = new String[0];
+			statuses = new String[0];
 			if (pla != null) {
 				pla.notifyDataSetChanged();
 			}
@@ -207,6 +209,19 @@ public class ViewPosts extends ListFragment {
 
 				postIDs[i] = contentHash.get("id").toString();
 				dateCreated[i] = contentHash.get("date_created_gmt").toString();
+
+				if (contentHash.get("post_status") != null) {
+					String api_status = contentHash.get("post_status").toString();
+					if (api_status.equals("publish")) {
+						statuses[i] = getResources().getText(R.string.publish_post).toString();
+					} else if (api_status.equals("draft")) {
+						statuses[i] = getResources().getText(R.string.draft).toString();
+					} else if (api_status.equals("pending")) {
+						statuses[i] = getResources().getText(R.string.pending_review).toString();
+					} else if (api_status.equals("private")) {
+						statuses[i] = getResources().getText(R.string.post_private).toString();
+					}
+				}
 				// dateCreatedFormatted[i] =
 				// contentHash.get("postDateFormatted").toString();
 				int flags = 0;
@@ -252,6 +267,13 @@ public class ViewPosts extends ListFragment {
 			newDateFormattedList.addAll(dateFormattedList);
 			dateCreatedFormatted = (String[]) newDateFormattedList
 					.toArray(new String[newDateFormattedList.size()]);
+			
+			List<String> statusList = Arrays.asList(statuses);
+			List<String> newStatusList = new ArrayList<String>();
+			newStatusList.add("postsHeader");
+			newStatusList.addAll(statusList);
+			statuses = (String[]) newStatusList.toArray(new String[newStatusList
+					.size()]);
 		}
 		// load drafts
 		boolean drafts = loadDrafts();
@@ -278,11 +300,21 @@ public class ViewPosts extends ListFragment {
 			newDraftDateList.addAll(draftDateList);
 			draftDateCreated = (String[]) newDraftDateList
 					.toArray(new String[newDraftDateList.size()]);
+			
+			List<String> draftStatusList = Arrays.asList(draftStatuses);
+			List<String> newDraftStatusList = new ArrayList<String>();
+			newDraftStatusList.add("draftsHeader");
+			newDraftStatusList.addAll(draftStatusList);
+			draftStatuses = (String[]) newDraftStatusList
+					.toArray(new String[newDraftStatusList.size()]);
+
 
 			postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
 			titles = StringHelper.mergeStringArrays(draftTitles, titles);
 			dateCreatedFormatted = StringHelper.mergeStringArrays(
 					draftDateCreated, dateCreatedFormatted);
+			statuses = StringHelper.mergeStringArrays(
+					draftStatuses, statuses);
 		} else {
 			if (pla != null) {
 				pla.notifyDataSetChanged();
@@ -458,6 +490,7 @@ public class ViewPosts extends ListFragment {
 		View base;
 		TextView title = null;
 		TextView date = null;
+		TextView status = null;
 
 		ViewWrapper(View base) {
 			this.base = base;
@@ -475,6 +508,13 @@ public class ViewPosts extends ListFragment {
 				date = (TextView) base.findViewById(R.id.date);
 			}
 			return (date);
+		}
+		
+		TextView getStatus() {
+			if (status == null) {
+				status = (TextView) base.findViewById(R.id.status);
+			}
+			return (status);
 		}
 	}
 
@@ -494,6 +534,7 @@ public class ViewPosts extends ListFragment {
 			draftDateCreated = new String[loadedPosts.size()];
 			uploaded = new Integer[loadedPosts.size()];
 			totalDrafts = loadedPosts.size();
+			draftStatuses = new String[loadedPosts.size()];
 
 			for (int i = 0; i < loadedPosts.size(); i++) {
 				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
@@ -503,6 +544,8 @@ public class ViewPosts extends ListFragment {
 				// drafts won't show the date in the list
 				draftDateCreated[i] = "";
 				uploaded[i] = (Integer) contentHash.get("uploaded");
+				//leaving status blank for local drafts since it's pretty clear that they are already local drafts
+				draftStatuses[i] = "";
 			}
 
 			return true;
@@ -547,6 +590,7 @@ public class ViewPosts extends ListFragment {
 			}
 
 			String date = dateCreatedFormatted[position];
+			String status_text = statuses[position];
 			if (date.equals("postsHeader") || date.equals("draftsHeader")) {
 
 				pv.setBackgroundDrawable(getResources().getDrawable(
@@ -563,13 +607,16 @@ public class ViewPosts extends ListFragment {
 				wrapper.getTitle().setTextScaleX(1.2f);
 				wrapper.getTitle().setTextSize(17);
 				wrapper.getDate().setHeight(0);
+				wrapper.getStatus().setHeight(0);
 
 				if (date.equals("draftsHeader")) {
 					inDrafts = true;
 					date = "";
+					status_text = "";
 				} else if (date.equals("postsHeader")) {
 					inDrafts = false;
 					date = "";
+					status_text = "";
 				}
 			} else {
 				if (position == selectedPosition) {
@@ -598,6 +645,9 @@ public class ViewPosts extends ListFragment {
 					wrapper.getDate().setHeight(
 							(int) wrapper.getTitle().getTextSize()
 									+ wrapper.getDate().getPaddingBottom());
+					wrapper.getStatus().setHeight(
+							(int) wrapper.getTitle().getTextSize()
+									+ wrapper.getStatus().getPaddingBottom());
 				}
 			}
 			String titleText = titles[position];
@@ -606,6 +656,7 @@ public class ViewPosts extends ListFragment {
 						+ ")";
 			wrapper.getTitle().setText(titleText);
 			wrapper.getDate().setText(date);
+			wrapper.getStatus().setText(status_text);
 
 			return pv;
 

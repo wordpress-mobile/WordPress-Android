@@ -878,12 +878,12 @@ public class WordPressDB {
 		Cursor c;
 		if (loadPages)
 			c = db.query(POSTS_TABLE, new String[] { "id", "title",
-					"post_status", "uploaded", "date_created_gmt" }, "blogID="
+					"post_status", "uploaded", "date_created_gmt", "post_status" }, "blogID="
 					+ blogID + " AND localDraft=1 AND uploaded=0 AND isPage=1",
 					null, null, null, null);
 		else
 			c = db.query(POSTS_TABLE, new String[] { "id", "title",
-					"post_status", "uploaded", "date_created_gmt" }, "blogID="
+					"post_status", "uploaded", "date_created_gmt", "post_status" }, "blogID="
 					+ blogID + " AND localDraft=1 AND uploaded=0 AND isPage=0",
 					null, null, null, null);
 
@@ -898,6 +898,7 @@ public class WordPressDB {
 				returnHash.put("status", c.getString(2));
 				returnHash.put("uploaded", c.getInt(3));
 				returnHash.put("date_created_gmt", c.getLong(4));
+				returnHash.put("post_status", c.getString(5));
 				returnVector.add(i, returnHash);
 			}
 			c.moveToNext();
@@ -1119,12 +1120,12 @@ public class WordPressDB {
 		Cursor c;
 		if (loadPages)
 			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid",
-					"title", "date_created_gmt", "dateCreated" }, "blogID="
+					"title", "date_created_gmt", "dateCreated", "post_status" }, "blogID="
 					+ blogID + " AND localDraft != 1 AND isPage=1", null, null,
 					null, null);
 		else
 			c = db.query(POSTS_TABLE, new String[] { "id", "blogID", "postid",
-					"title", "date_created_gmt", "dateCreated" }, "blogID="
+					"title", "date_created_gmt", "dateCreated", "post_status" }, "blogID="
 					+ blogID + " AND localDraft != 1 AND isPage=0", null, null,
 					null, null);
 
@@ -1140,6 +1141,7 @@ public class WordPressDB {
 				returnHash.put("title", c.getString(3));
 				returnHash.put("date_created_gmt", c.getLong(4));
 				returnHash.put("dateCreated", c.getLong(5));
+				returnHash.put("post_status", c.getString(6));
 				returnVector.add(i, returnHash);
 			}
 			c.moveToNext();
@@ -1765,6 +1767,7 @@ public class WordPressDB {
 			mf.setVideo(c.getInt(12) > 0);
 		}
 		else {
+			c.close();
 			return null;
 		}
 		c.close();
