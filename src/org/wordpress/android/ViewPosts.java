@@ -213,7 +213,7 @@ public class ViewPosts extends ListFragment {
 				if (contentHash.get("post_status") != null) {
 					String api_status = contentHash.get("post_status").toString();
 					if (api_status.equals("publish")) {
-						statuses[i] = getResources().getText(R.string.publish_post).toString();
+						statuses[i] = getResources().getText(R.string.published).toString();
 					} else if (api_status.equals("draft")) {
 						statuses[i] = getResources().getText(R.string.draft).toString();
 					} else if (api_status.equals("pending")) {

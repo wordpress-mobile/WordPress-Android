@@ -411,6 +411,7 @@
   <string name="pending_review">Pending Review</string>
   <string name="draft">Draft</string>
   <string name="post_private">Private</string>
+  <string name="published">Published</string>
 
   <!-- QuickPress -->
   <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
