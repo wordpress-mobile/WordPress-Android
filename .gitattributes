@@ -429,6 +429,7 @@ res/drawable-hdpi/wp_small_down.9.png -text
 res/drawable-hdpi/wp_small_over.9.png -text
 res/drawable-hdpi/wp_small_toggle.9.png -text
 res/drawable-hdpi/wp_statusbar_icon.png -text
+res/drawable-large-mdpi/wp_logo_actionbar.png -text
 res/drawable-ldpi-v11/notification_icon.png -text
 res/drawable-ldpi/notification_icon.png -text
 res/drawable-mdpi-v11/notification_icon.png -text
