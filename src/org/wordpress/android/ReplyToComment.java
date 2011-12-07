@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 
 public class ReplyToComment extends Activity {
-	String accountName, postID = "";
+	String accountName, postID = "", comment;
 	int commentID = 0;
 	
 	@Override
@@ -29,7 +29,13 @@ public class ReplyToComment extends Activity {
          accountName = extras.getString("accountName");  
          commentID = extras.getInt("commentID");
          postID = extras.getString("postID");
+         comment = extras.getString("comment");
         } 
+        
+        if (comment != null) {
+        	EditText replyTextET = (EditText)findViewById(R.id.replyText);
+        	replyTextET.setText(comment);
+        }
 		
 		final Button cancelButton = (Button) findViewById(R.id.cancel);
         final Button okButton = (Button) findViewById(R.id.ok);

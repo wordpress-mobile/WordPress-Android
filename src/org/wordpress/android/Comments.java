@@ -401,23 +401,14 @@ public class Comments extends FragmentActivity implements
 			dismissDialog(ID_DIALOG_REPLYING);
 			Thread action3 = new Thread() {
 				public void run() {
-					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-							Comments.this);
-					dialogBuilder.setTitle(getResources().getText(
-							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
-					dialogBuilder.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									// Just close the window.
-
-								}
-							});
-					dialogBuilder.setCancelable(true);
-					if (!isFinishing()) {
-						dialogBuilder.create().show();
-					}
+					
+					Toast.makeText(Comments.this, getResources().getText(R.string.connection_error) + ": " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+					
+					Intent i = new Intent(Comments.this, ReplyToComment.class);
+					i.putExtra("commentID", commentID);
+					i.putExtra("postID", WordPress.currentComment.postID);
+					i.putExtra("comment", comment);
+					startActivityForResult(i, 0);
 				}
 			};
 			runOnUiThread(action3);
