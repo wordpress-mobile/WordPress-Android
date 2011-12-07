@@ -531,6 +531,8 @@ class HtmlToSpannedConverter implements ContentHandler {
 				start(mSpannableStringBuilder, new Super());
 			} else if (tag.equalsIgnoreCase("sub")) {
 				start(mSpannableStringBuilder, new Sub());
+			} else if (tag.equalsIgnoreCase("strike")) {
+				start(mSpannableStringBuilder, new Strike());
 			} else if (tag.length() == 2
 					&& Character.toLowerCase(tag.charAt(0)) == 'h'
 					&& tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
@@ -604,6 +606,8 @@ class HtmlToSpannedConverter implements ContentHandler {
 				end(mSpannableStringBuilder, Super.class, new SuperscriptSpan());
 			} else if (tag.equalsIgnoreCase("sub")) {
 				end(mSpannableStringBuilder, Sub.class, new SubscriptSpan());
+			} else if (tag.equalsIgnoreCase("strike")) {
+				end(mSpannableStringBuilder, Strike.class, new StrikethroughSpan());
 			} else if (tag.length() == 2
 					&& Character.toLowerCase(tag.charAt(0)) == 'h'
 					&& tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
@@ -971,6 +975,9 @@ class HtmlToSpannedConverter implements ContentHandler {
 	}
 
 	private static class Sub {
+	}
+	
+	private static class Strike {
 	}
 
 	private static class Font {
