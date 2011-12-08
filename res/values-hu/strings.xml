@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="published">Közzétéve</string>
+	<string name="wpcom_login_required">Ennek a funkciónak a használatához WordPress.com felhasználói fiók szükséges</string>
+	<string name="share_url">Bejegyzés megosztása</string>
+	<string name="help_stats">Segítség?</string>
+	<string name="create_a_link">Hivatkozás létrehozása</string>
+	<string name="link_enter_url">URL</string>
+	<string name="link_enter_url_text">Hivatkozás szövege(nem kötelező)</string>
+	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>
+	<string name="post_signature">Bejegyzés aláírás</string>
+	<string name="comment_notifications">Hozzászólás értesítés</string>
+	<string name="add_tagline">Adjunk címet az új bejegyzésnek</string>
+	<string name="mark_spam">Spam</string>
+	<string name="uploading">Feltöltés</string>
+	<string name="uploading_media_item">Média feltöltése #</string>
+	<string name="copyright">©2011 Automattic, Inc</string>
+	<string name="version">Verzió</string>
+	<string name="tos">Szolgáltatási feltételek</string>
+	<string name="privacy_policy">Adatvédelem</string>
+	<string name="app_title">WordPress Androidhoz</string>
+	<string name="publisher">Kiadó: Automattic, Inc</string>
+	<string name="about">Névjegy</string>
+	<string name="l_status">Állapot</string>
+	<string name="tags_and_categories">Címkék és kategóriák</string>
+	<string name="local_draft">Helyi vázlat</string>
+	<string name="more_tag">Tovább</string>
+	<string name="no_camera_found">Sajnos, nem található kamera az eszközön.</string>
 	<string name="max_thumbnail_px_width">Alapértelmezett kép szélesség</string>
 	<string name="tagline_tablet">Kezdj blogolni a táblagépedről másodperceken belül.</string>
 	<string name="image_alignment">Kép igazítás</string>
@@ -74,7 +100,6 @@
 	<string name="optional_settings">További beállítások</string>
 	<string name="view_map">Térkép megtekintése</string>
 	<string name="update_location">Helyszín frissítése</string>
-	<string name="share_url">URL megosztása</string>
 	<string name="post_not_published">A bejegyzés nincs közzétéve</string>
 	<string name="page_not_published">Az oldal nincs közzétéve</string>
 	<string name="attempting_fetch_url">Megpróbáljuk a címet betölteni</string>
@@ -104,7 +129,6 @@
 	<string name="date">Dátum</string>
 	<string name="stats_password">Jelszó</string>
 	<string name="stats_username">Felhasználónév</string>
-	<string name="help_stats">Szükség van segítségre a WordPress.com statisztikához?</string>
 	<string name="content">Tartalom</string>
 	<string name="title">Cím</string>
 	<string name="page_content">Oldal tartalma</string>

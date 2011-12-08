@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="published">Publicerat</string>
+	<string name="wpcom_login_required">Ett WordPress.com-konto krävs för att använda denna funktion</string>
+	<string name="share_url">Dela inlägg</string>
 	<string name="help_stats">Behöver du hjälp?</string>
 	<string name="create_a_link">Skapa en länk</string>
 	<string name="link_enter_url_text">Länktext (frivilligt)</string>
