@@ -18,12 +18,14 @@
 <resources>
     <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
     	<item name="android:layout_marginBottom">6dip</item>
+              <item name="android:textSize">16dp</item>
               <item name="android:textStyle">bold</item>
               <item name="android:shadowColor">#FFFFFFFF</item>
               <item name="android:shadowDx">0</item>
               <item name="android:shadowDy">2</item>
               <item name="android:shadowRadius">1</item>
               <item name="android:layout_marginTop">-1dip</item>
+              <item name="android:layout_marginLeft">4dp</item>
   	</style>
 
 </resources>
