@@ -155,7 +155,8 @@ public class EditPost extends Activity implements LocationListener {
 									id = accountIDs[item];
 									blog = new Blog(id, EditPost.this);
 									accountName = blogNames[item];
-									setTitle(WordPress.currentBlog.getBlogName()
+									setTitle(WordPress.currentBlog
+											.getBlogName()
 											+ " - "
 											+ getResources()
 													.getText(
@@ -183,6 +184,7 @@ public class EditPost extends Activity implements LocationListener {
 						Toast.LENGTH_LONG).show();
 				startActivity(i);
 				finish();
+				return;
 			}
 
 		} else {
@@ -886,8 +888,10 @@ public class EditPost extends Activity implements LocationListener {
 	@Override
 	protected void onDestroy() {
 		super.onPause();
-		if (!isPage && blog.isLocation() && locationActive) {
-			lm.removeUpdates(this);
+		if (blog != null) {
+			if (!isPage && blog.isLocation() && locationActive) {
+				lm.removeUpdates(this);
+			}
 		}
 	}
 
