@@ -292,7 +292,6 @@ public class WPHtml {
 					out.append(((WPImageSpan) style[j]).getSource());
 					out.append("\" android-uri=\"" + ((WPImageSpan) style[j]).getImageSource().toString() + "\"");
 					out.append(" />");
-
 					// Don't output the dummy character underlying the image.
 					i = next;
 				}
@@ -430,7 +429,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 	private boolean mysteryTagFound;
 	private static Context ctx;
 	private static Post post;
-	private boolean imageTag;
 
 	private String mysteryTagName;
 
@@ -445,7 +443,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 		mysteryTagName = null;
 		ctx = context;
 		post = p;
-		imageTag = false;
 	}
 
 	public Spanned convert() {
@@ -540,7 +537,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 				start(mSpannableStringBuilder, new Header(tag.charAt(1) - '1'));
 			} else if (tag.equalsIgnoreCase("img")) {
 				startImg(mSpannableStringBuilder, attributes, mImageGetter);
-				imageTag = true;
 			} else {
 
 				if (tag.equalsIgnoreCase("html")
@@ -900,6 +896,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 		for (int i = 0; i < length; i++) {
 			char c = ch[i + start];
+			int char_val = Character.getNumericValue(c);
 
 			if (c == ' ' || c == '\n') {
 				char pred;
@@ -920,12 +917,8 @@ class HtmlToSpannedConverter implements ContentHandler {
 				if (pred != ' ' && pred != '\n') {
 					sb.append(' ');
 				}
-			} else if (!imageTag){
+			} else if (char_val > -1){
 				sb.append(c);
-			}
-			else {
-				sb.append(c);
-				imageTag = false;
 			}
 		}
 
