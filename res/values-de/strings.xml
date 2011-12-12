@@ -180,7 +180,7 @@
 	<string name="local_drafts">Lokale Entwürfe</string>
 	<string name="new_post">Neuer Artikel</string>
 	<string name="post_added">Artikel hinzugefügt.</string>
-	<string name="post_id">Artikel Nummer #</string>
+	<string name="post_id">Artikel</string>
 	<string name="post_attempt_upload">Versuche, den Artikel hochzuladen.</string>
 	<string name="post_actions">Artikel-Aktionen</string>
 	<string name="page_attempt_upload">Versuche, die Seite hochzuladen.</string>
