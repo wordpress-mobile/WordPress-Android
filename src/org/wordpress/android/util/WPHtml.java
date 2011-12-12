@@ -922,14 +922,18 @@ class HtmlToSpannedConverter implements ContentHandler {
 			}
 		}
 
-		if (mysteryTagFound) {
-			if (sb.length() < length)
-				mysteryTagContent += sb.toString().substring(start, length - 1);
-			else
-				mysteryTagContent += sb.toString().substring(start, length);
+		try {
+			if (mysteryTagFound) {
+				if (sb.length() < length)
+					mysteryTagContent += sb.toString().substring(start, length - 1);
+				else
+					mysteryTagContent += sb.toString().substring(start, length);
+			}
+			else 
+				mSpannableStringBuilder.append(sb);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		else 
-			mSpannableStringBuilder.append(sb);
 	}
 
 	public void ignorableWhitespace(char ch[], int start, int length)
