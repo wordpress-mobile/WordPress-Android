@@ -334,7 +334,7 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 			contentET.setText(WPHtml.fromHtml(
-					StringHelper.addPTags(contentHTML), EditPost.this, post));
+					StringHelper.addPTags(contentHTML.replaceAll("\uFFFC", "")), EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {

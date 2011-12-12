@@ -896,7 +896,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 		for (int i = 0; i < length; i++) {
 			char c = ch[i + start];
-			int char_val = Character.getNumericValue(c);
 
 			if (c == ' ' || c == '\n') {
 				char pred;
@@ -917,7 +916,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 				if (pred != ' ' && pred != '\n') {
 					sb.append(' ');
 				}
-			} else if (char_val > -1){
+			} else {
 				sb.append(c);
 			}
 		}
