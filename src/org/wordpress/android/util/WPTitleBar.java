@@ -151,7 +151,7 @@ public class WPTitleBar extends RelativeLayout {
 				public void onClick(View v) {
 
 					if (dashboard.getVisibility() == View.GONE) {
-						showDashboardOverlay();
+						showDashboardOverlay(0);
 						isShowingDashboard = true;
 					} else {
 						hideDashboardOverlay();
@@ -324,7 +324,7 @@ public class WPTitleBar extends RelativeLayout {
 
 	}
 
-	protected void showDashboardOverlay() {
+	protected void showDashboardOverlay(long delay) {
 
 		ImageButton showDashboardButton = (ImageButton) findViewById(R.id.home_small);
 		showDashboardButton.setImageDrawable(getResources().getDrawable(
@@ -333,17 +333,18 @@ public class WPTitleBar extends RelativeLayout {
 		dashboard.setVisibility(View.VISIBLE);
 		Animation fadeInAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_show);
+		fadeInAnimation.setStartOffset(delay);
 		dashboard.startAnimation(fadeInAnimation);
 		isShowingDashboard = true;
 	}
 
-	public void showDashboard() {
+	public void showDashboard(final long delay) {
 		final ImageButton showDashboard = (ImageButton) findViewById(R.id.home_small);
 
 		showDashboard.postDelayed(new Runnable() {
 			public void run() {
 				if (dashboard.getVisibility() == View.GONE) {
-					showDashboardOverlay();
+					showDashboardOverlay(delay);
 				}
 			}
 		}, 0);

@@ -594,7 +594,7 @@ public class ViewPosts extends ListFragment {
 			if (date.equals("postsHeader") || date.equals("draftsHeader")) {
 
 				pv.setBackgroundDrawable(getResources().getDrawable(
-						R.drawable.list_header_bg));
+						R.drawable.title_text_bg));
 
 				wrapper.getTitle().setTextColor(Color.parseColor("#EEEEEE"));
 				wrapper.getTitle().setShadowLayer(1, 1, 1,

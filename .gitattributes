@@ -551,6 +551,7 @@ res/drawable/title_bar_gradient.xml -text
 res/drawable/title_bar_item_bg.xml -text
 res/drawable/title_bar_shadow.9.png -text
 res/drawable/title_bg.xml -text
+res/drawable/title_text_bg.xml -text
 res/drawable/video.png -text
 res/drawable/view_post_navbar_bg.xml -text
 res/drawable/wordpress_gallery_background.xml -text
