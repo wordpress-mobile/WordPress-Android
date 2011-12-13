@@ -385,7 +385,7 @@ public class Dashboard extends Activity {
 			id = WordPress.currentBlog.getId();
 			titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 			titleBar.isHome = true;
-			titleBar.showDashboard();
+			titleBar.showDashboard(600);
 
 			titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
 				// user selected new blog in the title bar
