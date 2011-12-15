@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.text.format.DateUtils;
@@ -557,7 +558,16 @@ public class ViewPosts extends ListFragment {
 
 	private class PostListAdapter extends BaseAdapter {
 
+		int sdk_version = 7;
+		boolean detailViewVisible = false;
+		
 		public PostListAdapter(Context context) {
+			sdk_version = android.os.Build.VERSION.SDK_INT;
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			ViewPostFragment f = (ViewPostFragment) fm
+					.findFragmentById(R.id.postDetail);
+			if (f != null && f.isInLayout())
+				detailViewVisible = true;
 		}
 
 		public int getCount() {
@@ -619,7 +629,7 @@ public class ViewPosts extends ListFragment {
 					status_text = "";
 				}
 			} else {
-				if (position == selectedPosition) {
+				if (position == selectedPosition && sdk_version >= 11 && detailViewVisible) {
 					pv.setBackgroundDrawable(getResources().getDrawable(
 							R.drawable.list_highlight_bg));
 				} else {

@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -68,8 +69,8 @@ public class ViewComments extends ListFragment {
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
 	public boolean initializing = true, shouldSelectAfterLoad = false;
-	public int selectedID = 0, rowID = 0, numRecords = 0,
-			totalComments = 0, commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition;
+	public int selectedID = 0, rowID = 0, numRecords = 0, totalComments = 0,
+			commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition;
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
 	boolean loadMore = false, doInBackground = false, refreshOnly = false;
@@ -91,12 +92,13 @@ public class ViewComments extends ListFragment {
 		super.onActivityCreated(bundle);
 
 		// query for comments and refresh view
-		/*boolean loadedComments = loadComments(false, false);
-
-		if (!loadedComments) {
-
-			refreshComments(false, false, false);
-		}*/
+		/*
+		 * boolean loadedComments = loadComments(false, false);
+		 * 
+		 * if (!loadedComments) {
+		 * 
+		 * refreshComments(false, false, false); }
+		 */
 	}
 
 	public void onAttach(Activity activity) {
@@ -236,22 +238,26 @@ public class ViewComments extends ListFragment {
 		for (int i = 0; i < checkedComments.size(); i++) {
 			if (checkedComments.get(i).toString().equals("true")) {
 
-				client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+				client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+						WordPress.currentBlog.getHttpuser(),
 						WordPress.currentBlog.getHttppassword());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
 				HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
-				contentHash = (HashMap<String, String>) allComments.get(curCommentID);
+				contentHash = (HashMap<String, String>) allComments
+						.get(curCommentID);
 				postHash.put("status", newStatus);
 				postHash.put("content", contentHash.get("comment"));
 				postHash.put("author", contentHash.get("author"));
 				postHash.put("author_url", contentHash.get("url"));
 				postHash.put("author_email", contentHash.get("email"));
 
-				Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
-						WordPress.currentBlog.getPassword(), curCommentID, postHash };
+				Object[] params = { WordPress.currentBlog.getBlogId(),
+						WordPress.currentBlog.getUsername(),
+						WordPress.currentBlog.getPassword(), curCommentID,
+						postHash };
 
 				Object result = null;
 				try {
@@ -261,7 +267,8 @@ public class ViewComments extends ListFragment {
 						checkedComments.set(i, "false");
 						listRow.status = newStatus;
 						model.set(i, listRow);
-						WordPress.wpDB.updateCommentStatus(WordPress.currentBlog.getId(),
+						WordPress.wpDB.updateCommentStatus(
+								WordPress.currentBlog.getId(),
 								listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
@@ -273,35 +280,27 @@ public class ViewComments extends ListFragment {
 		Thread action = new Thread() {
 			public void run() {
 				if (moderateErrorMsg == "") {
-					Toast.makeText(
-							getActivity().getApplicationContext(),
-							getResources().getText(R.string.comments_moderated),
+					String msg = getResources().getText(
+							R.string.comment_moderated).toString();
+					if (checkedCommentTotal > 1)
+						msg = getResources().getText(
+								R.string.comments_moderated).toString();
+					Toast.makeText(getActivity().getApplicationContext(), msg,
 							Toast.LENGTH_SHORT).show();
+
+					checkedCommentTotal = 0;
 				} else {
 					// there was an xmlrpc error
-					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					FragmentTransaction ft = getFragmentManager()
+							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
-					        .newInstance(moderateErrorMsg);
-					    alert.show(ft, "alert");
+							.newInstance(moderateErrorMsg);
+					alert.show(ft, "alert");
 				}
 			}
 		};
 		getActivity().runOnUiThread(action);
-		if (moderateErrorMsg == "") {
-			// no errors, refresh list
-			checkedCommentTotal = 0;
-			Thread action2 = new Thread() {
-				public void run() {
-					pd = new ProgressDialog(getActivity()
-							.getApplicationContext()); // to avoid
-					// crash
-					showOrHideBulkCheckBoxes();
-					hideModerationBar();
-					thumbs.notifyDataSetChanged();
-				}
-			};
-			getActivity().runOnUiThread(action2);
-		}
+		pd = new ProgressDialog(getActivity().getApplicationContext());
 	}
 
 	protected void hideBulkCheckBoxes(RelativeLayout rl) {
@@ -339,18 +338,20 @@ public class ViewComments extends ListFragment {
 	}
 
 	protected void deleteComments() {
-		// bulk detete comments
+		// bulk delete comments
 
 		for (int i = 0; i < checkedComments.size(); i++) {
 			if (checkedComments.get(i).toString().equals("true")) {
 
-				client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+				client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+						WordPress.currentBlog.getHttpuser(),
 						WordPress.currentBlog.getHttppassword());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
 
-				Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+				Object[] params = { WordPress.currentBlog.getBlogId(),
+						WordPress.currentBlog.getUsername(),
 						WordPress.currentBlog.getPassword(), curCommentID };
 
 				try {
@@ -364,31 +365,27 @@ public class ViewComments extends ListFragment {
 		Thread action = new Thread() {
 			public void run() {
 				if (moderateErrorMsg == "") {
-					Toast.makeText(getActivity().getApplicationContext(),
-							getResources().getText(R.string.comment_moderated),
+					String msg = getResources().getText(
+							R.string.comment_moderated).toString();
+					if (checkedCommentTotal > 1)
+						msg = getResources().getText(
+								R.string.comments_moderated).toString();
+					Toast.makeText(getActivity().getApplicationContext(), msg,
 							Toast.LENGTH_SHORT).show();
+					checkedCommentTotal = 0;
+					refreshComments(false, false, false);
 				} else {
-					// error occured during delete request
-					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					// error occurred during delete request
+					FragmentTransaction ft = getFragmentManager()
+							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
-					        .newInstance(moderateErrorMsg);
-					    alert.show(ft, "alert");
+							.newInstance(moderateErrorMsg);
+					alert.show(ft, "alert");
 				}
 			}
 		};
 		getActivity().runOnUiThread(action);
-		Thread action2 = new Thread() {
-			public void run() {
-				if (moderateErrorMsg == "") {
-					pd = new ProgressDialog(getActivity()
-							.getApplicationContext()); // to avoid
-					// crash
-					refreshComments(false, true, true);
-				}
-			}
-		};
-		getActivity().runOnUiThread(action2);
-		checkedCommentTotal = 0;
+		pd = new ProgressDialog(getActivity().getApplicationContext());
 
 	}
 
@@ -397,7 +394,8 @@ public class ViewComments extends ListFragment {
 		refreshOnly = refresh;
 		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
 		if (!addMore) {
-			Vector<?> loadedPosts = WordPress.wpDB.loadComments(WordPress.currentBlog.getId());
+			Vector<?> loadedPosts = WordPress.wpDB
+					.loadComments(WordPress.currentBlog.getId());
 			if (loadedPosts != null) {
 				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
 				countHash = (HashMap<Object, Object>) loadedPosts.get(0);
@@ -414,7 +412,8 @@ public class ViewComments extends ListFragment {
 				checkedComments = new Vector<String>();
 				for (int i = 1; i < loadedPosts.size(); i++) {
 					checkedComments.add(i - 1, "false");
-					HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
+					HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts
+							.get(i);
 					allComments.put(contentHash.get("commentID").toString(),
 							contentHash);
 					author = EscapeUtils.unescapeHtml(contentHash.get("author")
@@ -438,7 +437,7 @@ public class ViewComments extends ListFragment {
 					}
 
 					// add to model
-					model.add(new Comment(postID, commentID, i-1, author,
+					model.add(new Comment(postID, commentID, i - 1, author,
 							dateCreatedFormatted, comment, status, postTitle,
 							authorURL, authorEmail, URI
 									.create("http://gravatar.com/avatar/"
@@ -517,33 +516,35 @@ public class ViewComments extends ListFragment {
 						thumbs.notifyDataSetChanged();
 					}
 				}
-				
+
 				if (this.shouldSelectAfterLoad) {
 					if (model != null) {
 						if (model.size() > 0) {
-							
+
 							selectedPosition = 0;
 							Comment aComment = model.get((int) 0);
 							onCommentSelectedListener
 									.onCommentSelected(aComment);
-							 thumbs.notifyDataSetChanged();
-							 
+							thumbs.notifyDataSetChanged();
+
 						}
 					}
 					shouldSelectAfterLoad = false;
 				}
-				
+
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			Vector<?> latestComments = WordPress.wpDB.loadMoreComments(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(), commentsToLoad);
+			Vector<?> latestComments = WordPress.wpDB.loadMoreComments(
+					getActivity().getApplicationContext(),
+					WordPress.currentBlog.getId(), commentsToLoad);
 			if (latestComments != null) {
 				numRecords += latestComments.size();
 				for (int i = latestComments.size(); i > 0; i--) {
-					HashMap<?, ?> contentHash = (HashMap<?, ?>) latestComments.get(i - 1);
+					HashMap<?, ?> contentHash = (HashMap<?, ?>) latestComments
+							.get(i - 1);
 					allComments.put(contentHash.get("commentID").toString(),
 							contentHash);
 					author = EscapeUtils.unescapeHtml(contentHash.get("author")
@@ -585,7 +586,8 @@ public class ViewComments extends ListFragment {
 		if (!loadMore && !doInBackground) {
 			onAnimateRefreshButton.onAnimateRefreshButton(true);
 		}
-		client = new XMLRPCClient(WordPress.currentBlog.getUrl(), WordPress.currentBlog.getHttpuser(),
+		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+				WordPress.currentBlog.getHttpuser(),
 				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
@@ -601,7 +603,8 @@ public class ViewComments extends ListFragment {
 			hPost.put("number", 30);
 		}
 
-		Object[] params = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+		Object[] params = { WordPress.currentBlog.getBlogId(),
+				WordPress.currentBlog.getUsername(),
 				WordPress.currentBlog.getPassword(), hPost };
 
 		commentParams = params;
@@ -625,14 +628,25 @@ public class ViewComments extends ListFragment {
 		Log.e("WordPress", "Exception!", t);
 
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		WPAlertDialogFragment alert = WPAlertDialogFragment
-		        .newInstance(t.toString());
-		    alert.show(ft, "alert");
+		WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(t
+				.toString());
+		alert.show(ft, "alert");
 	}
 
 	class CommentAdapter extends ArrayAdapter<Comment> {
+		
+		int sdk_version = 7;
+		boolean detailViewVisible = false;
+		
 		CommentAdapter() {
 			super(getActivity().getApplicationContext(), R.layout.row, model);
+			
+			sdk_version = android.os.Build.VERSION.SDK_INT;
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			ViewCommentFragment f = (ViewCommentFragment) fm
+					.findFragmentById(R.id.commentDetail);
+			if (f != null && f.isInLayout())
+				detailViewVisible = true;
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -650,8 +664,9 @@ public class ViewComments extends ListFragment {
 			}
 			Comment commentEntry = getItem(position);
 			
-			if (position == selectedPosition) {
-				row.setBackgroundDrawable(getResources().getDrawable(R.drawable.list_highlight_bg));
+			if (position == selectedPosition && sdk_version >= 11 && detailViewVisible) {
+				row.setBackgroundDrawable(getResources().getDrawable(
+						R.drawable.list_highlight_bg));
 			} else if ("hold".equals(commentEntry.status)) {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.comment_pending_bg_selector));
@@ -659,7 +674,7 @@ public class ViewComments extends ListFragment {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.list_bg_selector));
 			}
-			
+
 			wrapper.populateFrom(commentEntry, position);
 
 			return (row);
@@ -913,11 +928,12 @@ public class ViewComments extends ListFragment {
 			try {
 				// get the total comments
 				HashMap<Object, Object> countResult = new HashMap<Object, Object>();
-				Object[] countParams = { WordPress.currentBlog.getBlogId(), WordPress.currentBlog.getUsername(),
+				Object[] countParams = { WordPress.currentBlog.getBlogId(),
+						WordPress.currentBlog.getUsername(),
 						WordPress.currentBlog.getPassword(), 0 };
 				try {
-					countResult = (HashMap<Object, Object>) client.call("wp.getCommentCount",
-							countParams);
+					countResult = (HashMap<Object, Object>) client.call(
+							"wp.getCommentCount", countParams);
 					totalComments = Integer.valueOf(countResult.get(
 							"awaiting_moderation").toString())
 							+ Integer.valueOf(countResult.get("approved")
@@ -939,10 +955,11 @@ public class ViewComments extends ListFragment {
 							pd.dismiss();
 						}
 						onAnimateRefreshButton.onAnimateRefreshButton(false);
-						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						FragmentTransaction ft = getFragmentManager()
+								.beginTransaction();
 						WPAlertDialogFragment alert = WPAlertDialogFragment
-						        .newInstance(e.getLocalizedMessage());
-						    alert.show(ft, "alert");
+								.newInstance(e.getLocalizedMessage());
+						alert.show(ft, "alert");
 					}
 				});
 			} catch (final XMLRPCException e) {
@@ -952,10 +969,11 @@ public class ViewComments extends ListFragment {
 							pd.dismiss();
 						}
 						onAnimateRefreshButton.onAnimateRefreshButton(false);
-						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						FragmentTransaction ft = getFragmentManager()
+								.beginTransaction();
 						WPAlertDialogFragment alert = WPAlertDialogFragment
-						        .newInstance(e.getLocalizedMessage());
-						    alert.show(ft, "alert");
+								.newInstance(e.getLocalizedMessage());
+						alert.show(ft, "alert");
 					}
 				});
 			}
@@ -1001,20 +1019,22 @@ public class ViewComments extends ListFragment {
 				handler.post(new Runnable() {
 					public void run() {
 						getActivity().dismissDialog(ID_DIALOG_MODERATING);
-						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						FragmentTransaction ft = getFragmentManager()
+								.beginTransaction();
 						WPAlertDialogFragment alert = WPAlertDialogFragment
-						        .newInstance(e.getFaultString());
-						    alert.show(ft, "alert");
+								.newInstance(e.getFaultString());
+						alert.show(ft, "alert");
 					}
 				});
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
 						getActivity().dismissDialog(ID_DIALOG_MODERATING);
-						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						FragmentTransaction ft = getFragmentManager()
+								.beginTransaction();
 						WPAlertDialogFragment alert = WPAlertDialogFragment
-						        .newInstance(e.getLocalizedMessage());
-						    alert.show(ft, "alert");
+								.newInstance(e.getLocalizedMessage());
+						alert.show(ft, "alert");
 					}
 				});
 			}
@@ -1059,27 +1079,30 @@ public class ViewComments extends ListFragment {
 
 			if (isCancelled())
 				return;
-			
+
 			if (commentsResult == null) {
-				
+
 				if (thumbs != null) {
 					if (model.size() == 1) {
-						WordPress.wpDB.clearComments(WordPress.currentBlog.getId());
+						WordPress.wpDB.clearComments(WordPress.currentBlog
+								.getId());
 						model.clear();
 						allComments.clear();
 						thumbs.notifyDataSetChanged();
-						onCommentStatusChangeListener.onCommentStatusChanged("clear");
+						onCommentStatusChangeListener
+								.onCommentStatusChanged("clear");
 						WordPress.currentComment = null;
 						loadComments(false, false);
 					}
 				}
-				
+
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
 				if (!moderateErrorMsg.equals("")) {
-				    FragmentTransaction ft = getFragmentManager().beginTransaction();
+					FragmentTransaction ft = getFragmentManager()
+							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
-					        .newInstance(moderateErrorMsg);
-					    alert.show(ft, "alert");
+							.newInstance(moderateErrorMsg);
+					alert.show(ft, "alert");
 				}
 				return;
 			}

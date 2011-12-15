@@ -9,7 +9,7 @@
 			android:label="@string/create_a_link" />
 		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
-		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:theme="@android:style/Theme.Light">
+		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:theme="@style/IncludeTitleBar">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -19,7 +19,7 @@
     				<data android:mimeType="video/*" />
   			</intent-filter>
 		</activity>
-		<activity android:name=".Read" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Light"/>
+		<activity android:name=".Read" android:configChanges="orientation|keyboardHidden" android:theme="@style/IncludeTitleBar"/>
 		<activity android:name="Preferences" android:windowSoftInputMode="stateHidden"/>
 		<service android:name="CommentService" android:label="Comment Service" />
 		<receiver android:name="CommentBroadcastReceiver" />

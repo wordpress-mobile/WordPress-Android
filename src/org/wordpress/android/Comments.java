@@ -449,10 +449,9 @@ public class Comments extends FragmentActivity implements
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		int checkedCommentTotal = 1;
 		if (id == ID_DIALOG_MODERATING) {
 			ProgressDialog loadingDialog = new ProgressDialog(Comments.this);
-			if (checkedCommentTotal <= 1) {
+			if (commentList.checkedCommentTotal <= 1) {
 				loadingDialog.setMessage(getResources().getText(
 						R.string.moderating_comment));
 			} else {
@@ -471,7 +470,7 @@ public class Comments extends FragmentActivity implements
 			return loadingDialog;
 		} else if (id == ID_DIALOG_DELETING) {
 			ProgressDialog loadingDialog = new ProgressDialog(Comments.this);
-			if (checkedCommentTotal <= 1) {
+			if (commentList.checkedCommentTotal <= 1) {
 				loadingDialog.setMessage(getResources().getText(
 						R.string.deleting_comment));
 			} else {

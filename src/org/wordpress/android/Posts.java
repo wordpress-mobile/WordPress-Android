@@ -507,8 +507,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								post.delete();
+								attemptToSelectPost();
 								postList.loadPosts(false);
-
 							}
 						});
 				dialogBuilder.setNegativeButton(
