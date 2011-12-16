@@ -156,9 +156,9 @@ public class EditPost extends Activity implements LocationListener {
 										int item) {
 									id = accountIDs[item];
 									blog = new Blog(id, EditPost.this);
+									WordPress.currentBlog = blog;
 									accountName = blogNames[item];
-									setTitle(WordPress.currentBlog
-											.getBlogName()
+									setTitle(accountName
 											+ " - "
 											+ getResources()
 													.getText(
@@ -171,8 +171,9 @@ public class EditPost extends Activity implements LocationListener {
 				} else {
 					id = accountIDs[0];
 					blog = new Blog(id, EditPost.this);
+					WordPress.currentBlog = blog;
 					accountName = blogNames[0];
-					setTitle(WordPress.currentBlog.getBlogName()
+					setTitle(accountName
 							+ " - "
 							+ getResources().getText(
 									(isPage) ? R.string.new_page
@@ -203,6 +204,18 @@ public class EditPost extends Activity implements LocationListener {
 				option = extras.getString("option");
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
+			}
+			
+			if (isNew) {
+				setTitle(WordPress.currentBlog.getBlogName()
+						+ " - "
+						+ getResources().getText(
+								(isPage) ? R.string.new_page : R.string.new_post));
+			} else {
+				setTitle(WordPress.currentBlog.getBlogName()
+						+ " - "
+						+ getResources().getText(
+								(isPage) ? R.string.edit_page : R.string.edit_post));
 			}
 		}
 
@@ -293,18 +306,6 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 		});
-
-		if (isNew) {
-			setTitle(WordPress.currentBlog.getBlogName()
-					+ " - "
-					+ getResources().getText(
-							(isPage) ? R.string.new_page : R.string.new_post));
-		} else {
-			setTitle(WordPress.currentBlog.getBlogName()
-					+ " - "
-					+ getResources().getText(
-							(isPage) ? R.string.edit_page : R.string.edit_post));
-		}
 
 		if (isNew) {
 			if (!isAction) {
