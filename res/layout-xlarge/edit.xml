@@ -293,7 +293,7 @@
                 android:layout_below="@id/section5"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/wp_button"
-                android:text="@string/save"
+                android:text="@string/publish_post"
                 android:textSize="20dip" />
         </LinearLayout>
     </ScrollView>

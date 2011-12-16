@@ -59,6 +59,8 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -277,6 +279,21 @@ public class EditPost extends Activity implements LocationListener {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				evaluateSaveButtonText();
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+
+		});
+
 		if (isNew) {
 			setTitle(WordPress.currentBlog.getBlogName()
 					+ " - "
@@ -333,8 +350,9 @@ public class EditPost extends Activity implements LocationListener {
 				contentHTML = post.getDescription();
 			}
 
-			contentET.setText(WPHtml.fromHtml(
-					StringHelper.addPTags(contentHTML.replaceAll("\uFFFC", "")), EditPost.this, post));
+			contentET
+					.setText(WPHtml.fromHtml(StringHelper.addPTags(contentHTML
+							.replaceAll("\uFFFC", "")), EditPost.this, post));
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
@@ -372,6 +390,8 @@ public class EditPost extends Activity implements LocationListener {
 				} else if (status.equals("localdraft")) {
 					spinner.setSelection(4, true);
 				}
+
+				evaluateSaveButtonText();
 			}
 
 			if (!isPage) {
@@ -511,6 +531,17 @@ public class EditPost extends Activity implements LocationListener {
 
 			}
 		});
+
+	}
+
+	private void evaluateSaveButtonText() {
+
+		Spinner spinner = (Spinner) findViewById(R.id.status);
+		Button saveButton = (Button) findViewById(R.id.post);
+		if (spinner.getSelectedItemPosition() == 0)
+			saveButton.setText(getResources().getText(R.string.publish_post));
+		else
+			saveButton.setText(getResources().getText(R.string.save));
 
 	}
 

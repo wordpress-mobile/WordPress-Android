@@ -163,7 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/section4"
             android:background="@drawable/wp_button"
-            android:text="@string/save"
+            android:text="@string/publish_post"
             android:textSize="20dip" />
     </LinearLayout>
 

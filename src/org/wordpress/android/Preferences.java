@@ -38,6 +38,7 @@ public class Preferences extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
       
+        setTitle(getResources().getText(R.string.preferences));
         displayAccounts();
 
     }
