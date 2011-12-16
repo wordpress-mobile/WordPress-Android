@@ -287,8 +287,8 @@ public class ViewComments extends ListFragment {
 								R.string.comments_moderated).toString();
 					Toast.makeText(getActivity().getApplicationContext(), msg,
 							Toast.LENGTH_SHORT).show();
-
 					checkedCommentTotal = 0;
+					thumbs.notifyDataSetChanged();
 				} else {
 					// there was an xmlrpc error
 					FragmentTransaction ft = getFragmentManager()
