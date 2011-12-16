@@ -118,6 +118,7 @@ public class EditPost extends Activity implements LocationListener {
 
 		categories = new JSONArray();
 		String action = getIntent().getAction();
+		WordPress.richPostContent = null;
 
 		if (Intent.ACTION_SEND.equals(action)
 				|| Intent.ACTION_SEND_MULTIPLE.equals(action)) {
