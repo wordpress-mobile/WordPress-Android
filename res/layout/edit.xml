@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
     android:orientation="vertical" >
 
     <ScrollView
@@ -23,14 +24,15 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:paddingBottom="10dp"
-                android:background="@drawable/content_bg" >
+                android:background="@drawable/content_bg"
+                android:paddingBottom="10dp" >
 
                 <TextView
                     android:id="@+id/l_section1"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/content_bg_header"
                     android:text="@string/post_content" />
 
                 <EditText
@@ -38,7 +40,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_section1"
-                    android:layout_marginBottom="10dip"
+                    android:layout_margin="4dp"
                     android:autoText="true"
                     android:background="@android:drawable/editbox_background"
                     android:capitalize="sentences"
@@ -50,6 +52,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="100dp"
                     android:layout_below="@id/title"
+                    android:layout_margin="4dp"
                     android:autoText="true"
                     android:background="@android:drawable/editbox_background"
                     android:capitalize="sentences"
@@ -66,15 +69,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="10dip"
-                android:paddingBottom="10dp"
-                android:background="@drawable/content_bg" >
+                android:background="@drawable/content_bg"
+                android:paddingBottom="10dp" >
 
                 <TextView
                     android:id="@+id/l_tags_categories"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dip"
+                    android:background="@drawable/content_bg_header"
                     android:text="Tags &amp; Categories" />
 
                 <EditText
@@ -82,7 +85,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_tags_categories"
-                    android:layout_marginBottom="10dip"
+                    android:layout_margin="4dp"
                     android:autoText="true"
                     android:background="@android:drawable/editbox_background"
                     android:hint="@string/tags_separate_with_commas"
@@ -93,6 +96,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tags"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="@drawable/wp_button_small"
                     android:text="@string/select_categories"
                     android:textSize="20dip" />
@@ -102,7 +108,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/selectCategories"
-                    android:layout_marginLeft="4dip"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="4dp"
                     android:text="@string/selected_categories"
                     android:textColor="#444444" />
             </RelativeLayout>
@@ -120,8 +128,8 @@
                     android:layout_below="@id/section3"
                     android:layout_marginBottom="10dip"
                     android:layout_marginTop="10dip"
-                    android:paddingBottom="10dp"
                     android:background="@drawable/content_bg"
+                    android:paddingBottom="10dp"
                     android:visibility="gone" >
 
                     <TextView
@@ -129,7 +137,7 @@
                         style="@style/WordPressSectionHeader"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dip"
+                        android:background="@drawable/content_bg_header"
                         android:text="@string/location" />
 
                     <TextView
@@ -137,7 +145,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/l_location"
-                        android:layout_marginBottom="6dip"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginTop="4dp"
                         android:text="@string/loading" />
 
                     <Button
@@ -145,6 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/locationText"
+                        android:layout_margin="4dp"
                         android:background="@drawable/wp_button_small"
                         android:text="@string/view_map"
                         android:textSize="18dip" />
@@ -154,6 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/viewMap"
+                        android:layout_margin="4dp"
                         android:layout_toRightOf="@id/viewMap"
                         android:background="@drawable/wp_button_small"
                         android:text="@string/update_location"
@@ -167,15 +180,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="10dip"
-                android:paddingBottom="10dp"
-                android:background="@drawable/content_bg" >
+                android:background="@drawable/content_bg"
+                android:paddingBottom="10dp" >
 
                 <TextView
                     android:id="@+id/l_status"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dip"
+                    android:background="@drawable/content_bg_header"
                     android:text="@string/settings" />
 
                 <TextView
@@ -183,7 +196,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_status"
-                    android:layout_marginLeft="4dip"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="8dp"
                     android:text="@string/l_status" />
 
                 <Spinner
@@ -191,6 +206,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/statusLabel"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="4dp"
                     android:background="@drawable/wp_spinner_bg" />
 
                 <TextView
@@ -198,8 +216,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/status"
-                    android:layout_marginLeft="4dip"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="8dp"
                     android:text="@string/publish_date" />
 
                 <TextView
@@ -207,8 +227,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/status"
-                    android:layout_marginLeft="4dip"
-                    android:layout_marginTop="10dip"
+                    android:layout_margin="4dp"
                     android:layout_toRightOf="@id/pubDateLabel"
                     android:text="@string/immediately" />
 
@@ -217,6 +236,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/pubDate"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="4dp"
                     android:background="@drawable/wp_button_small"
                     android:text="@string/edit" />
 
@@ -225,8 +247,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/pubDateButton"
-                    android:layout_marginLeft="4dip"
-                    android:layout_marginTop="6dip"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="8dp"
                     android:text="@string/post_format" />
 
                 <Spinner
@@ -234,6 +257,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/postFormatLabel"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="4dp"
                     android:background="@drawable/wp_spinner_bg"
                     android:prompt="@string/post_format" />
 
@@ -242,7 +268,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/postFormat"
-                    android:layout_marginBottom="10dip"
+                    android:layout_margin="4dp"
                     android:autoText="true"
                     android:background="@android:drawable/editbox_background"
                     android:hint="@string/post_password"

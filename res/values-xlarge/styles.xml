@@ -89,13 +89,19 @@
     </style>
 
     <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
-        <item name="android:layout_marginBottom">16dip</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#FFFFFFFF</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">1</item>
-        <item name="android:layout_marginTop">-2dip</item>
+        <item name="android:layout_marginTop">1px</item>
+        <item name="android:layout_marginRight">1px</item>
+        <item name="android:layout_marginLeft">1px</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingTop">2dp</item>
     </style>
 
     <style name="DashboardButtonText">

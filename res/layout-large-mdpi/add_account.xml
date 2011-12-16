@@ -29,13 +29,15 @@
       android:layout_below="@id/wpcomLogo"
       android:layout_height="fill_parent"
       android:background="@drawable/content_bg"
-      android:id="@+id/section1">
+      android:id="@+id/section1"
+      android:paddingBottom="10dp">
       <TextView
         android:id="@+id/l_section1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/account_details"
-        style="@style/WordPressSectionHeader" />
+        style="@style/WordPressSectionHeader"
+        android:background="@drawable/content_bg_header" />
       <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_below="@id/l_section1"
@@ -47,6 +49,8 @@
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:text="Blog URL:"
+          android:layout_marginTop="4dp"
+          android:layout_marginLeft="8dp"
           android:layout_below="@id/urlWrapper" />
         <EditText
           android:id="@+id/url"
@@ -54,6 +58,8 @@
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:minHeight="40dip"
+          android:layout_marginLeft="4dp"
+          android:layout_marginRight="4dp"
           android:background="@android:drawable/editbox_background"
           android:layout_below="@id/l_url" />
       </RelativeLayout>
@@ -61,6 +67,7 @@
         android:id="@+id/l_username"
         android:textColor="#444444"
         android:layout_marginTop="10dip"
+        android:layout_marginLeft="8dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/username"
@@ -69,6 +76,8 @@
         android:id="@+id/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:singleLine="true"
         android:minHeight="40dip"
         android:background="@android:drawable/editbox_background"
@@ -77,6 +86,7 @@
         android:id="@+id/l_password"
         android:textColor="#444444"
         android:layout_marginTop="10dip"
+        android:layout_marginLeft="8dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/password"
@@ -87,6 +97,8 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:minHeight="40dip"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:layout_marginBottom="10dip"
         android:password="true"
         android:background="@android:drawable/editbox_background"
@@ -95,6 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/settingsButton"
+        android:layout_margin="4dp"
         android:text="@string/optional_settings"
         android:layout_below="@id/password"
         android:background="@drawable/wp_button_small" />
@@ -105,6 +118,7 @@
         android:layout_below="@id/settingsButton"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="10dip"
+        android:layout_marginRight="4dp"
         android:text="@string/save"
         android:shadowColor="#FFFFFF"
         android:shadowDx="0"

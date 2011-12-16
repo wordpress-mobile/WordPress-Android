@@ -399,7 +399,6 @@ res/drawable-hdpi/camera.png -text
 res/drawable-hdpi/comment_badge.png -text
 res/drawable-hdpi/comments_tab.png -text
 res/drawable-hdpi/comments_tab_active.png -text
-res/drawable-hdpi/content_bg.9.png -text
 res/drawable-hdpi/dashboard_wp_logo.png -text
 res/drawable-hdpi/gallery_selected_default.9.png -text
 res/drawable-hdpi/grey_wp_button.9.png -text
@@ -463,7 +462,8 @@ res/drawable/comment_pending_gradient.xml -text
 res/drawable/comments_tab.png -text
 res/drawable/comments_tab_active.png -text
 res/drawable/comments_tab_icon.png -text
-res/drawable/content_bg.9.png -text
+res/drawable/content_bg.xml -text
+res/drawable/content_bg_header.xml -text
 res/drawable/dashboard_bg.xml -text
 res/drawable/dashboard_bg_landscape.xml -text
 res/drawable/dashboard_btn.xml -text
@@ -652,7 +652,6 @@ res/values-es/strings.xml -text
 res/values-fi/strings.xml -text
 res/values-fr/strings.xml -text
 res/values-hdpi/dimens.xml -text
-res/values-hdpi/styles.xml -text
 res/values-he/strings.xml -text
 res/values-hr/strings.xml -text
 res/values-hu/strings.xml -text

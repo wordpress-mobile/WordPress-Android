@@ -69,7 +69,7 @@ public void displayAccounts(){
 		ScrollView sv = new ScrollView(this);
 		sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.WRAP_CONTENT));
-		sv.setBackgroundColor(Color.parseColor("#FFF5F5F5"));
+		sv.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
 		LinearLayout layout = new LinearLayout(this);
 		
 		layout.setPadding(14, 14, 14, 14);
@@ -96,18 +96,23 @@ public void displayAccounts(){
 		section1.setLayoutParams(section1Params);
 		section1.setOrientation(LinearLayout.VERTICAL);
 		
+		LinearLayout.LayoutParams headerParams = new LinearLayout.LayoutParams 
+		        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		headerParams.setMargins(1, 1, 1, 0);
         TextView textView = new TextView(this);
+        textView.setLayoutParams(headerParams);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        textView.setPadding(0, -2, 0, 0);
         textView.setTypeface(Typeface.DEFAULT_BOLD);
+        textView.setPadding(0, 4, 0, 4);
         textView.setShadowLayer(1, 0, 2, Color.parseColor("#FFFFFFFF"));
-        textView.setText(getResources().getText(R.string.comment_notifications));
+		textView.setBackgroundDrawable(getResources().getDrawable(R.drawable.content_bg_header));
+        textView.setText("  " + getResources().getText(R.string.comment_notifications));
 
         section1.addView(textView);
         
         LinearLayout.LayoutParams cbParams = new LinearLayout.LayoutParams 
         (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        cbParams.setMargins(0, 0, 0, 6);
+        cbParams.setMargins(4, 0, 0, 6);
         
         for (int i = 0; i < accounts.size(); i++) {
             
@@ -137,6 +142,10 @@ public void displayAccounts(){
         
         //add spinner and buttons
         TextView textView2 = new TextView(this);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams 
+                (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);	
+        labelParams.setMargins(8, 0, 0, 0);
+        textView2.setLayoutParams(labelParams);
         textView2.setTextColor(Color.parseColor("#444444"));
         textView2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         textView2.setText(getResources().getText(R.string.notifications_interval));
@@ -144,8 +153,10 @@ public void displayAccounts(){
         section1.addView(textView2);
         
         final Spinner sInterval = new Spinner(this);
-        sInterval.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams 
+                (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);	
+        spinnerParams.setMargins(4, 0, 4, 10);
+        sInterval.setLayoutParams(spinnerParams);
 	    ArrayAdapter<Object> sIntervalArrayAdapter = new ArrayAdapter<Object>(this,
 	    		R.layout.spinner_textview,
 	            new String[] { "5 Minutes", "10 Minutes", "15 Minutes", "30 Minutes" , "1 Hour", "3 Hours", "6 Hours", "12 Hours", "Daily"});
@@ -207,13 +218,16 @@ public void displayAccounts(){
         (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         section2Params.setMargins(0, 0, 0, 20);
 		section2.setLayoutParams(section2Params);
+		section2.setPadding(0, 0, 0, 10);
 		
 		TextView section2lbl = new TextView(this);
+		section2lbl.setLayoutParams(headerParams);
 		section2lbl.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-		section2lbl.setPadding(0, -2, 0, 0);
 		section2lbl.setTypeface(Typeface.DEFAULT_BOLD);
 		section2lbl.setShadowLayer(1, 0, 2, Color.parseColor("#FFFFFFFF"));
-		section2lbl.setText(getResources().getText(R.string.post_signature));
+		section2lbl.setPadding(0, 4, 0, 4);
+		section2lbl.setText("  " + getResources().getText(R.string.post_signature));
+		section2lbl.setBackgroundDrawable(getResources().getDrawable(R.drawable.content_bg_header));
 		
 		section2.addView(section2lbl);
         
@@ -228,6 +242,10 @@ public void displayAccounts(){
         section2.addView(taglineCB);
         
         EditText taglineET = new EditText(this);
+        LinearLayout.LayoutParams taglineParams = new LinearLayout.LayoutParams 
+                (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);	
+        taglineParams.setMargins(4, 0, 4, 4);
+        taglineET.setLayoutParams(taglineParams);
         if (tagline != null){
         	if (tagline.equals("")){
             	taglineET.setText(getResources().getText(R.string.posted_from));
@@ -237,7 +255,6 @@ public void displayAccounts(){
         	}
         } 
         taglineET.setMinLines(2);
-        
         section2.addView(taglineET);
         
         layout.addView(section2);

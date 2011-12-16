@@ -96,16 +96,6 @@
         <item name="android:textColor">#FF464646</item>
     </style>
 
-    <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
-        <item name="android:layout_marginBottom">16dip</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#FFFFFFFF</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">2</item>
-        <item name="android:shadowRadius">1</item>
-        <item name="android:layout_marginTop">-2dip</item>
-    </style>
-
     <style name="WindowTitleBackground">
         <item name="android:background">@drawable/title_text_bg</item>
         <item name="android:paddingLeft">4dip</item>

@@ -22,13 +22,15 @@
                 android:id="@+id/section1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/content_bg" >
+                android:background="@drawable/content_bg"
+                android:paddingBottom="10dp" >
 
                 <TextView
                     android:id="@+id/l_section1"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/content_bg_header"
                     android:text="@string/account_details" />
 
                 <TextView
@@ -36,7 +38,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_section1"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/username"
                     android:textColor="#444444" />
 
@@ -45,6 +48,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_username"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:singleLine="true" />
@@ -54,7 +59,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/username"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/password"
                     android:textColor="#444444" />
 
@@ -63,6 +69,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_password"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:password="true"
@@ -73,7 +81,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_section1"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/username"
                     android:textColor="#444444" />
 
@@ -82,7 +91,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/password"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/httpuser"
                     android:textColor="#444444" />
 
@@ -91,6 +101,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_httpuser"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:singleLine="true" />
@@ -100,7 +112,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/httpuser"
-                    android:layout_marginTop="10dip"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/httppassword"
                     android:textColor="#444444" />
 
@@ -109,6 +122,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_httppassword"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:password="true"
@@ -122,13 +137,15 @@
                 android:layout_below="@id/section1"
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="10dip"
-                android:background="@drawable/content_bg" >
+                android:background="@drawable/content_bg"
+                android:paddingBottom="10dp" >
 
                 <TextView
                     android:id="@+id/l_section2"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/content_bg_header"
                     android:text="@string/media" />
 
                 <TextView
@@ -136,6 +153,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_section2"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/max_thumbnail_px_width"
                     android:textColor="#444444" />
 
@@ -144,6 +163,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_maxImageWidth"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:background="@drawable/wp_spinner_bg" />
 
                 <CheckBox
@@ -151,7 +172,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/maxImageWidth"
-                    android:layout_marginRight="2dip"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="8dp"
                     android:text="@string/upload_full_size_image"
                     android:textColor="#444444" />
             </RelativeLayout>
@@ -163,13 +186,15 @@
                 android:layout_below="@id/section2"
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="10dip"
-                android:background="@drawable/content_bg" >
+                android:background="@drawable/content_bg"
+                android:paddingBottom="10dp" >
 
                 <TextView
                     android:id="@+id/l_section3"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/content_bg_header"
                     android:text="@string/location" />
 
                 <CheckBox
@@ -177,7 +202,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_section3"
-                    android:layout_marginRight="2dip"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:text="@string/geotag"
                     android:textColor="#444444" />
             </RelativeLayout>
@@ -188,20 +214,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/section3"
-                android:layout_marginLeft="10dip"
-                android:textSize="18dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/wp_button_small"
-                android:text="@string/save" />
+                android:text="@string/save"
+                android:textSize="18dp" />
 
             <Button
                 android:id="@+id/cancel"
-                android:textSize="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/save"
                 android:layout_toLeftOf="@id/save"
                 android:background="@drawable/wp_button_small"
-                android:text="@string/cancel" />
+                android:text="@string/cancel"
+                android:textSize="18dp" />
         </RelativeLayout>
     </ScrollView>
 
