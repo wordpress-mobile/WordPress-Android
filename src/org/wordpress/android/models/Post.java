@@ -34,8 +34,6 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.view.View;
-import android.widget.RemoteViews;
 
 public class Post {
 
