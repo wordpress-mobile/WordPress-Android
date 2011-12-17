@@ -98,6 +98,9 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 			@Override
 			public void OnPostUploaded() {
+				if (isFinishing())
+					return;
+				
 				FragmentManager fm = getSupportFragmentManager();
 				ViewPostFragment f = (ViewPostFragment) fm
 						.findFragmentById(R.id.postDetail);
