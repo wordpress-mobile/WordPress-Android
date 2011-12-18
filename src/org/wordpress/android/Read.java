@@ -63,6 +63,9 @@ public class Read extends Activity {
 		
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
+		if (WordPress.currentBlog == null) {
+			WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+		}
 
 		if (loadReader) {
 
