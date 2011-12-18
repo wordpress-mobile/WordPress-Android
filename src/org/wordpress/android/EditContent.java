@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
@@ -71,6 +72,13 @@ public class EditContent extends Activity {
 		super.onCreate(icicle);
 
 		setContentView(R.layout.edit_content);
+
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
+		if (WordPress.currentBlog == null) {
+			WordPress.currentBlog = new Blog(
+					WordPress.wpDB.getLastBlogID(this), this);
+		}
 
 		final ImageButton addPictureButton = (ImageButton) findViewById(R.id.addPictureButton);
 

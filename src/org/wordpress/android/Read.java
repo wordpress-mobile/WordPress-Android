@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 
 import android.app.Activity;
@@ -59,6 +60,9 @@ public class Read extends Activity {
 		if (extras != null) {
 			loadReader = extras.getBoolean("loadReader");
 		}
+		
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
 
 		if (loadReader) {
 
@@ -246,6 +250,9 @@ public class Read extends Activity {
 		protected Vector<?> doInBackground(String... args) {
 
 			Vector<?> settings = WordPress.wpDB.loadSettings(WordPress.currentBlog.getId());
+			if (WordPress.currentBlog == null) {
+				WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(Read.this), Read.this);
+			}
 			loginURL = settings.get(0).toString().replace("xmlrpc.php", "wp-login.php");
 			String readerURL = Constants.readerURL;
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {

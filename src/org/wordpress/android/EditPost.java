@@ -102,8 +102,12 @@ public class EditPost extends Activity implements LocationListener {
 		super.onCreate(icicle);
 		Bundle extras = getIntent().getExtras();
 
+		//need to make sure we have db and currentBlog on views that don't use the Action Bar
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
+		if (WordPress.currentBlog == null) {
+			WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+		}
 
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
 				.getDefaultDisplay();
