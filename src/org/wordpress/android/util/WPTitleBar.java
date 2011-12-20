@@ -326,7 +326,8 @@ public class WPTitleBar extends RelativeLayout {
 		dashboard.setVisibility(View.VISIBLE);
 		Animation fadeInAnimation = AnimationUtils.loadAnimation(context,
 				R.anim.dashboard_show);
-		fadeInAnimation.setStartOffset(delay);
+		if (delay > 0)
+			fadeInAnimation.setStartOffset(delay);
 		dashboard.startAnimation(fadeInAnimation);
 		isShowingDashboard = true;
 	}
