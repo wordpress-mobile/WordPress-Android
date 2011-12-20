@@ -17,6 +17,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.Xml;
 import android.view.KeyEvent;
@@ -34,8 +35,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -43,6 +49,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddAccount extends Activity {
 	private XMLRPCClient client;
@@ -56,7 +64,6 @@ public class AddAccount extends Activity {
 	public ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_account);	
 		
@@ -196,16 +203,18 @@ public class AddAccount extends Activity {
         }
         else{
         
-        //add http  or http to the beginning of the URL if needed
+        //add http to the beginning of the URL if needed
         if (!(blogURL.toLowerCase().contains("http://")) && !(blogURL.toLowerCase().contains("https://"))){
         	blogURL = "http://" + blogURL;  //default to http
         }
         
         String fBlogURL = "";
+        
         //attempt to get the XMLRPC URL via RSD
-
-        String rsdUrl = getRSDMetaTagHref(blogURL);
-		  
+        String rsdUrl = getRSDMetaTagHrefRegEx(blogURL); 
+        if (rsdUrl == null) { 
+        	rsdUrl = getRSDMetaTagHref(blogURL); 
+        } 
    
 		if (rsdUrl != null){
         	xmlrpcURL = getXMLRPCUrl(rsdUrl);
@@ -565,6 +574,60 @@ public class AddAccount extends Activity {
       //ignore orientation change
       super.onConfigurationChanged(newConfig);
     } 
+	
+	private static final Pattern rsdLink = Pattern.compile("<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"\\s*?/>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	private String getRSDMetaTagHrefRegEx(String urlString) {
+		InputStream in = getResponse(urlString);
+		if (in!=null) {
+			try {
+				String html = convertStreamToString(in);
+				Matcher matcher = rsdLink.matcher(html);
+				if (matcher.find()) {
+					String href = matcher.group(1);
+					return href;
+				}
+			} catch (IOException e) {
+				Log.e("wp_android", "IOEX", e);
+				return null;
+			}
+		}
+		return null;
+	}
+	private String convertStreamToString(InputStream is) throws IOException {
+		/*
+		 * To convert the InputStream to String we use the Reader.read(char[]
+		 * buffer) method. We iterate until the Reader return -1 which means
+		 * there's no more data to read. We use the StringWriter class to
+		 * produce the string.
+		 */
+		int bufSize = 8 * 1024;
+		if (is != null) {
+			Writer writer = new StringWriter();
+
+			char[] buffer = new char[bufSize];
+			try {
+				InputStreamReader ireader = new InputStreamReader(is, "UTF-8");
+				Reader reader = new BufferedReader(ireader, bufSize);
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+				reader.close();
+				ireader.close();
+				return writer.toString();
+			} catch (OutOfMemoryError ex) {
+				Log.e("wp_android", "Convert Stream: (out of memory)");
+				writer.close();
+				writer=null;
+				System.gc();
+				return "";
+			} finally {
+				is.close();
+			}
+		} else {
+			return "";
+		}
+	}
 	
 	private String getRSDMetaTagHref(String urlString) {
 		//get the html code
