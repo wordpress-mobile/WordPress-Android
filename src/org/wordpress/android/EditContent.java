@@ -754,8 +754,10 @@ public class EditContent extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_CANCELED)
+			return;
 		if (data != null
-				|| (resultCode != RESULT_CANCELED || (requestCode == 1 || requestCode == 3))) {
+				|| ((requestCode == 1 || requestCode == 3))) {
 			Bundle extras;
 			switch (requestCode) {
 			case 0:
@@ -783,7 +785,7 @@ public class EditContent extends Activity {
 						addMedia(capturedImage.toString(), capturedImage);
 
 					} catch (FileNotFoundException e) {
-
+					} catch (Exception e) {
 					}
 
 				} else {

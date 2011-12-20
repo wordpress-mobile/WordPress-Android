@@ -67,16 +67,7 @@ public class WPTitleBar extends RelativeLayout {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(context);
-
-		accounts = WordPress.wpDB.getAccounts(context);
-
-		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
-		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
-
-		blogNames = new CharSequence[accounts.size()];
-		blogIDs = new int[accounts.size()];
+		initViews();
 
 		for (int i = 0; i < accounts.size(); i++) {
 			HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
@@ -111,6 +102,7 @@ public class WPTitleBar extends RelativeLayout {
 		}
 
 		if (WordPress.currentBlog != null) {
+			WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
 			updateBlavatarImage();
 			updateCommentBadge();
 			refreshButton = (Button) findViewById(R.id.action_refresh);
@@ -256,7 +248,8 @@ public class WPTitleBar extends RelativeLayout {
 				} else {
 					Toast.makeText(
 							context,
-							getResources().getText(R.string.wpcom_login_required),
+							getResources().getText(
+									R.string.wpcom_login_required),
 							Toast.LENGTH_LONG).show();
 				}
 			}
@@ -304,10 +297,10 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	protected void hideOverlay() {
-		if (!isHome){
+		if (!isHome) {
 			hideDashboardOverlay();
 		}
-		
+
 	}
 
 	public void hideDashboardOverlay() {
@@ -340,7 +333,8 @@ public class WPTitleBar extends RelativeLayout {
 
 	public void showDashboard(final long delay) {
 		final ImageButton showDashboard = (ImageButton) findViewById(R.id.home_small);
-
+		if (dashboard == null)
+			initViews();
 		showDashboard.postDelayed(new Runnable() {
 			public void run() {
 				if (dashboard.getVisibility() == View.GONE) {
@@ -348,6 +342,20 @@ public class WPTitleBar extends RelativeLayout {
 				}
 			}
 		}, 0);
+
+	}
+
+	private void initViews() {
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(context);
+
+		accounts = WordPress.wpDB.getAccounts(context);
+
+		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
+		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
+
+		blogNames = new CharSequence[accounts.size()];
+		blogIDs = new int[accounts.size()];
 
 	}
 

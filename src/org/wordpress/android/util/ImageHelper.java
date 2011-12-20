@@ -318,10 +318,14 @@ public class ImageHelper {
 						MediaStore.Video.Thumbnails.MINI_KIND, options);
 
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
-				videoBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-				bytes = stream.toByteArray();
-				title = "Video";
-				videoBitmap = null;
+				try {
+					videoBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+					bytes = stream.toByteArray();
+					title = "Video";
+					videoBitmap = null;
+				} catch (Exception e) {
+					return null;
+				}
 
 			} else {
 				projection = new String[] { Images.Thumbnails._ID,

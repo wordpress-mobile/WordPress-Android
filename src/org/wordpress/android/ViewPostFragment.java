@@ -41,8 +41,8 @@ public class ViewPostFragment extends Fragment {
 		editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 				if (WordPress.currentPost != null) {
-					onDetailPostActionListener.onDetailPostAction(Posts.POST_EDIT,
-							WordPress.currentPost);
+					onDetailPostActionListener.onDetailPostAction(
+							Posts.POST_EDIT, WordPress.currentPost);
 					Intent i = new Intent(
 							getActivity().getApplicationContext(),
 							EditPost.class);
@@ -75,7 +75,7 @@ public class ViewPostFragment extends Fragment {
 
 			}
 		});
-		
+
 		ImageButton viewPostButton = (ImageButton) v
 				.findViewById(R.id.viewPost);
 		viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
@@ -91,12 +91,14 @@ public class ViewPostFragment extends Fragment {
 	}
 
 	protected void loadPostPreview() {
-		
-		if (!WordPress.currentPost.getPermaLink().equals("")) {
-			Intent i = new Intent(getActivity(), Read.class);
-			startActivity(i);
+
+		if (WordPress.currentPost != null) {
+			if (!WordPress.currentPost.getPermaLink().equals("")) {
+				Intent i = new Intent(getActivity(), Read.class);
+				startActivity(i);
+			}
 		}
-		
+
 	}
 
 	public void onAttach(Activity activity) {
@@ -123,9 +125,10 @@ public class ViewPostFragment extends Fragment {
 				R.id.viewPostWebView);
 		TextView tv = (TextView) getActivity().findViewById(
 				R.id.viewPostTextView);
-		ImageButton shareURLButton = (ImageButton) getActivity().findViewById(R.id.sharePostLink);
-		ImageButton viewPostButton = (ImageButton) getActivity()
-				.findViewById(R.id.viewPost);
+		ImageButton shareURLButton = (ImageButton) getActivity().findViewById(
+				R.id.sharePostLink);
+		ImageButton viewPostButton = (ImageButton) getActivity().findViewById(
+				R.id.viewPost);
 
 		if (post.isLocalDraft()) {
 			tv.setVisibility(View.VISIBLE);
