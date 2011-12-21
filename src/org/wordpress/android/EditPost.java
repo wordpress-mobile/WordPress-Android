@@ -157,6 +157,7 @@ public class EditPost extends Activity implements LocationListener {
 				// Don't prompt if they have one blog only
 				if (accounts.size() != 1) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setCancelable(false);
 					builder.setTitle(getResources().getText(
 							R.string.select_a_blog));
 					builder.setItems(blogNames,
