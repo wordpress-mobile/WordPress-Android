@@ -106,7 +106,11 @@ public class EditPost extends Activity implements LocationListener {
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
-			WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+			try {
+				WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
