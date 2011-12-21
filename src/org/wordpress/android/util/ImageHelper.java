@@ -356,8 +356,8 @@ public class ImageHelper {
 					jpeg = new File(thumbData);
 					path = thumbData;
 				} else {
-					path = curStream.toString().replace("file://", "");
-					jpeg = new File(curStream.toString().replace("file://", ""));
+					path = filePath.toString().replace("file://", "");
+					jpeg = new File(path);
 
 				}
 
