@@ -20,6 +20,7 @@
             android:background="@android:drawable/editbox_background"
             android:capitalize="sentences"
             android:gravity="top"
+            android:imeOptions="flagNoExtractUi"
             android:hint="@string/content"
             android:padding="10dip"
             android:textColorLink="#21759b" />

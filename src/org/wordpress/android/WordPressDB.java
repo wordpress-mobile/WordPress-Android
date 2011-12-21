@@ -848,9 +848,14 @@ public class WordPressDB {
 		values.put("last_blog_id", blogID);
 
 		db.update("eula", values, null, null);
+	}
+	
+	public void deleteLastBlogID() {
+		ContentValues values = new ContentValues();
+		values.put("last_blog_id", "-1");
 
+		db.update("eula", values, null, null);
 		
-
 	}
 
 	public int getLastBlogID(Context ctx) {
@@ -1016,8 +1021,12 @@ public class WordPressDB {
 				} else {
 					values.put("mt_keywords", thisHash.get("mt_keywords")
 							.toString());
-					values.put("wp_post_format", thisHash.get("wp_post_format")
-							.toString());
+					try {
+						values.put("wp_post_format", thisHash.get("wp_post_format")
+								.toString());
+					} catch (Exception e) {
+						values.put("wp_post_format", "");
+					}
 				}
 
 				int result = db.update(POSTS_TABLE, values, "postID=" + postID
@@ -1062,7 +1071,9 @@ public class WordPressDB {
 			values.put("uploaded", post.isUploaded());
 			values.put("isPage", post.isPage());
 			values.put("wp_post_format", post.getWP_post_format());
-
+			values.put("latitude", post.getLatitude());
+			values.put("longitude", post.getLongitude());
+			
 			returnValue = db.insert(POSTS_TABLE, null, values);
 
 			

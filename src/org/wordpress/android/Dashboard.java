@@ -201,6 +201,8 @@ public class Dashboard extends Activity {
 												.getText(
 														R.string.blog_removed_successfully),
 										Toast.LENGTH_SHORT).show();
+								WordPress.wpDB.deleteLastBlogID();
+								WordPress.currentBlog = null;
 								titleBar.reloadBlogs();
 								displayAccounts();
 							} else {
