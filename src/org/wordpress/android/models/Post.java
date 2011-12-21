@@ -539,7 +539,6 @@ public class Post {
 							e.printStackTrace();
 						}
 					}
-
 				}
 
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
@@ -597,6 +596,9 @@ public class Post {
 							+ "\n\n<!--more-->\n\n" + moreContent;
 					post.mt_text_more = "";
 				}
+				
+				//gets rid of the weird character android inserts after images
+				descriptionContent = descriptionContent.replaceAll("\uFFFC", "");
 
 				contentStruct.put("description", descriptionContent);
 				if (!post.isPage) {

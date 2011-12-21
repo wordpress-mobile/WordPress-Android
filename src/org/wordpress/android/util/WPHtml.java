@@ -672,6 +672,8 @@ class HtmlToSpannedConverter implements ContentHandler {
 		int len = text.length();
 		Object obj = getLast(text, kind);
 		int where = text.getSpanStart(obj);
+		if (where < 0)
+			where = 0;
 
 		text.removeSpan(obj);
 
