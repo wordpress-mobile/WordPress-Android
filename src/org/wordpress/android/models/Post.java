@@ -139,6 +139,8 @@ public class Post {
 		this.wp_password = password;
 		this.isPage = isPage;
 		this.wp_post_format = postFormat;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	public long getId() {
@@ -616,8 +618,8 @@ public class Post {
 				Double latitude = 0.0;
 				Double longitude = 0.0;
 				if (!post.isPage) {
-					latitude = (Double) latitude;
-					longitude = (Double) longitude;
+					latitude = (Double) post.getLatitude();
+					longitude = (Double) post.getLongitude();
 
 					if (latitude > 0) {
 						HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();

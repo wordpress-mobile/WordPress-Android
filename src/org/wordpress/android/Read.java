@@ -41,6 +41,7 @@ public class Read extends Activity {
 	private String httppassword = "";
 	private String loginURL = "";
 	private boolean loadReader = false;
+	private boolean loadAdmin = false;
 	private boolean isPage = false;
 	ImageButton backButton, forwardButton, refreshButton;
 	public ProgressDialog pd;
@@ -59,15 +60,17 @@ public class Read extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			loadReader = extras.getBoolean("loadReader");
+			loadAdmin = extras.getBoolean("loadAdmin");
 		}
-		
+
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
-			WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+			WordPress.currentBlog = new Blog(
+					WordPress.wpDB.getLastBlogID(this), this);
 		}
 
-		if (loadReader) {
+		if (loadReader || loadAdmin) {
 
 			this.setTitle(getResources().getText(R.string.reader));
 			wv = (WebView) findViewById(R.id.webView);
@@ -76,16 +79,19 @@ public class Read extends Activity {
 
 		} else {
 			if (isPage) {
-				this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
+				this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog
+						.getBlogName())
+						+ " - "
 						+ getResources().getText(R.string.preview_page));
 			} else {
-				this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
+				this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog
+						.getBlogName())
+						+ " - "
 						+ getResources().getText(R.string.preview_post));
 			}
 
-			
 			loadPostFromPermalink();
-				
+
 		}
 	}
 
@@ -131,9 +137,9 @@ public class Read extends Activity {
 								"wp-android");
 						String readerURL = Constants.readerURL;
 						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-							    readerURL += "/?per_page=20";
-							}
-						
+							readerURL += "/?per_page=20";
+						}
+
 						httpclient.execute(new HttpGet(readerURL));
 					} catch (Exception e) {
 						// oh well
@@ -147,7 +153,7 @@ public class Read extends Activity {
 	}
 
 	protected void loadPostFromPermalink() {
-		
+
 		WebView wv = (WebView) findViewById(R.id.webView);
 		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		wv.getSettings().setBuiltInZoomControls(true);
@@ -161,26 +167,26 @@ public class Read extends Activity {
 				if (progress == 100) {
 					if (isPage) {
 						Read.this.setTitle(EscapeUtils
-								.unescapeHtml(WordPress.currentBlog.getBlogName())
+								.unescapeHtml(WordPress.currentBlog
+										.getBlogName())
 								+ " - "
-								+ getResources().getText(
-										R.string.preview_page));
+								+ getResources().getText(R.string.preview_page));
 					} else {
 						Read.this.setTitle(EscapeUtils
-								.unescapeHtml(WordPress.currentBlog.getBlogName())
+								.unescapeHtml(WordPress.currentBlog
+										.getBlogName())
 								+ " - "
-								+ getResources().getText(
-										R.string.preview_post));
+								+ getResources().getText(R.string.preview_post));
 					}
 				}
 			}
 		});
 
 		wv.setWebViewClient(new WordPressWebViewClient());
+		if (WordPress.currentPost != null) {
 			int sdk_int = 0;
 			try {
-				sdk_int = Integer
-						.valueOf(android.os.Build.VERSION.SDK);
+				sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
 			} catch (Exception e1) {
 				sdk_int = 3; // assume they are on cupcake
 			}
@@ -188,11 +194,12 @@ public class Read extends Activity {
 				// only 2.2 devices can load https correctly
 				wv.loadUrl(WordPress.currentPost.getPermaLink());
 			} else {
-				String url = WordPress.currentPost.getPermaLink().replace("https:", "http:");
+				String url = WordPress.currentPost.getPermaLink().replace(
+						"https:", "http:");
 				wv.loadUrl(url);
 			}
+		}
 
-		
 	}
 
 	private class WordPressWebViewClient extends WebViewClient {
@@ -238,9 +245,9 @@ public class Read extends Activity {
 								"wp-android");
 						String readerURL = Constants.readerURL;
 						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-							    readerURL += "/?per_page=20";
-							}
-						
+							readerURL += "/?per_page=20";
+						}
+
 						httpclient.execute(new HttpGet(readerURL));
 					} catch (Exception e) {
 						// oh well
@@ -252,15 +259,22 @@ public class Read extends Activity {
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
-			Vector<?> settings = WordPress.wpDB.loadSettings(WordPress.currentBlog.getId());
+			Vector<?> settings = WordPress.wpDB
+					.loadSettings(WordPress.currentBlog.getId());
 			if (WordPress.currentBlog == null) {
-				WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(Read.this), Read.this);
+				WordPress.currentBlog = new Blog(
+						WordPress.wpDB.getLastBlogID(Read.this), Read.this);
 			}
-			loginURL = settings.get(0).toString().replace("xmlrpc.php", "wp-login.php");
+
+			loginURL = settings.get(0).toString()
+					.replace("xmlrpc.php", "wp-login.php");
 			String readerURL = Constants.readerURL;
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-				    readerURL += "/?per_page=20";
-				}
+				readerURL += "/?per_page=20";
+			}
+			if (loadAdmin)
+				readerURL = WordPress.currentBlog.getUrl().replace(
+						"xmlrpc.php", "wp-admin");
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
@@ -278,8 +292,7 @@ public class Read extends Activity {
 						+ "\" /></label>"
 						+ "<input type=\"submit\" name=\"wp-submit\" id=\"wp-submit\" value=\"Log In\" />"
 						+ "<input type=\"hidden\" name=\"redirect_to\" value=\""
-						+ readerURL
-						+ "\" />" + "</form>" + "</body>";
+						+ readerURL + "\" />" + "</form>" + "</body>";
 
 				wv.setWebViewClient(new WebViewClient() {
 					@Override
@@ -300,14 +313,19 @@ public class Read extends Activity {
 						Read.this.setProgress(progress * 100);
 
 						if (progress == 100) {
-							Read.this.setTitle(getResources().getText(
-									R.string.reader));
+							if (loadReader)
+								Read.this.setTitle(getResources().getText(
+										R.string.reader));
+							else
+								Read.this.setTitle(getResources().getText(
+										R.string.wp_admin));
 						}
 					}
 				});
 
 				wv.getSettings().setUserAgentString("wp-android");
-				wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+				wv.getSettings().setCacheMode(
+						WebSettings.LOAD_CACHE_ELSE_NETWORK);
 				wv.getSettings().setSavePassword(false);
 				wv.getSettings().setBuiltInZoomControls(true);
 				wv.getSettings().setJavaScriptEnabled(true);
@@ -329,8 +347,8 @@ public class Read extends Activity {
 		if (i == KeyEvent.KEYCODE_BACK) {
 			if (loadReader) {
 				if (wv.canGoBack()
-						&& !wv.getUrl()
-								.startsWith(Constants.readerURL) && !wv.getUrl().equals(loginURL)) {
+						&& !wv.getUrl().startsWith(Constants.readerURL)
+						&& !wv.getUrl().equals(loginURL)) {
 					wv.goBack();
 				} else {
 					finish();

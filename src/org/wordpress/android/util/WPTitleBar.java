@@ -128,10 +128,12 @@ public class WPTitleBar extends RelativeLayout {
 											.updateLastBlogID(blogIDs[pos]);
 									updateBlavatarImage();
 									updateCommentBadge();
+									updateReadButton();
 									if (onBlogChangedListener != null) {
 										onBlogChangedListener.OnBlogChanged();
 									}
 								}
+
 							});
 					dialogBuilder.show();
 				}
@@ -239,18 +241,17 @@ public class WPTitleBar extends RelativeLayout {
 		readButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
-				if (readerBlogID >= 0 && WordPress.currentBlog.isDotcomFlag()) {
+				if (WordPress.currentBlog.isDotcomFlag()) {
 					Intent i = new Intent(context, Read.class);
 					i.putExtra("id", readerBlogID);
 					i.putExtra("loadReader", true);
 					context.startActivity(i);
 					hideOverlay();
 				} else {
-					Toast.makeText(
-							context,
-							getResources().getText(
-									R.string.wpcom_login_required),
-							Toast.LENGTH_LONG).show();
+					Intent i = new Intent(context, Read.class);
+					i.putExtra("loadAdmin", true);
+					context.startActivity(i);
+					hideOverlay();
 				}
 			}
 		});
@@ -293,7 +294,18 @@ public class WPTitleBar extends RelativeLayout {
 
 		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
 		updateCommentBadge();
+		updateReadButton();
 
+	}
+	
+	private void updateReadButton() {
+		TextView readButtonText = (TextView) findViewById(R.id.read_button_text);
+		if (WordPress.currentBlog.isDotcomFlag()){
+			readButtonText.setText(getResources().getText(R.string.reader));
+		}
+		else {
+			readButtonText.setText(getResources().getText(R.string.wp_admin));
+		}	
 	}
 
 	protected void hideOverlay() {
