@@ -341,13 +341,14 @@
                         android:padding="10dp" >
 
                         <ImageView
+                            android:id="@+id/read_button_image"
                             android:layout_width="@dimen/dashboard_image_size"
                             android:layout_height="@dimen/dashboard_image_size"
                             android:scaleType="centerInside"
                             android:src="@drawable/dashboard_icon_subs" />
 
                         <TextView
-                            android:id="@+id/button_text"
+                            android:id="@+id/read_button_text"
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

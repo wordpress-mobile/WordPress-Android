@@ -278,7 +278,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/viewMap"
-                        android:layout_margin="4dp"
                         android:layout_toRightOf="@id/viewMap"
                         android:background="@drawable/wp_button_small"
                         android:text="@string/update_location"
