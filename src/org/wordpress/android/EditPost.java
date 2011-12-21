@@ -166,6 +166,7 @@ public class EditPost extends Activity implements LocationListener {
 									id = accountIDs[item];
 									blog = new Blog(id, EditPost.this);
 									WordPress.currentBlog = blog;
+									WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
 									accountName = blogNames[item];
 									setTitle(EscapeUtils.unescapeHtml(accountName)
 											+ " - "
@@ -181,6 +182,7 @@ public class EditPost extends Activity implements LocationListener {
 					id = accountIDs[0];
 					blog = new Blog(id, EditPost.this);
 					WordPress.currentBlog = blog;
+					WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
 					accountName = blogNames[0];
 					setTitle(EscapeUtils.unescapeHtml(accountName)
 							+ " - "
