@@ -77,9 +77,6 @@
 	<string name="choose_blog">Scegli un blog:</string>
 	<string name="fullscreen">Scrivi a schermo intero</string>
 	<string name="post_format">Formato articolo:</string>
-	<string name="underline"></string>
-	<string name="strike"></string>
-	<string name="link"></string>
 	<string name="exit_without_saving">Esci senza salvare</string>
 	<string name="save_and_exit">Salva ed esci da schermo intero</string>
 	<string name="waiting_activation">In attesa dell\'attivazione via e-mail</string>

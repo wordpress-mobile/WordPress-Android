@@ -55,8 +55,6 @@
 	<string name="attempt_retrieve">Próba pobrania statystyk</string>
 	<string name="retrieving_stats">Pobieranie statystyk</string>
 	<string name="stats_login">Logowanie do statystyk</string>
-	<string name="link">link</string>
-	<string name="underline">podkreśl</string>
 	<string name="stats_username">Login</string>
 	<string name="username_password_required">Pola "login" i "hasło" są wymagane.</string>
 	<string name="report_postviews">Liczba wyświetleń</string>
