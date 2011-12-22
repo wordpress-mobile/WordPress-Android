@@ -320,6 +320,21 @@ abstract public class GraphView extends LinearLayout {
 		graphSeries.add(series);
 	}
 
+	public void removeSeries(int index)
+	{
+		if (index < 0 || index >= graphSeries.size())
+		{
+			throw new IndexOutOfBoundsException("No series at index " + index);
+		}
+		
+		graphSeries.remove(index);
+	}
+	
+	public void removeSeries(GraphViewSeries series)
+	{
+		graphSeries.remove(series);
+	}
+	
 	protected void drawLegend(Canvas canvas, float height, float width) {
 		int shapeSize = 15;
 
@@ -419,11 +434,15 @@ abstract public class GraphView extends LinearLayout {
 		} else {
 			// otherwise use the max x value
 			// values must be sorted by x, so the last value has the largest X value
-			GraphViewData[] values = graphSeries.get(0).values;
-			double highest = values[values.length-1].valueX;
-			for (int i=1; i<graphSeries.size(); i++) {
-				values = graphSeries.get(i).values;
-				highest = Math.max(highest, values[values.length-1].valueX);
+			double highest = 0;
+			if (graphSeries.size() > 0)
+			{
+				GraphViewData[] values = graphSeries.get(0).values;
+				highest = values[values.length-1].valueX;
+				for (int i=1; i<graphSeries.size(); i++) {
+					values = graphSeries.get(i).values;
+					highest = Math.max(highest, values[values.length-1].valueX);
+				}
 			}
 			return highest;
 		}
@@ -452,11 +471,15 @@ abstract public class GraphView extends LinearLayout {
 		} else {
 			// otherwise use the min x value
 			// values must be sorted by x, so the first value has the smallest X value
-			GraphViewData[] values = graphSeries.get(0).values;
-			double lowest = values[0].valueX;
-			for (int i=1; i<graphSeries.size(); i++) {
-				values = graphSeries.get(i).values;
-				lowest = Math.min(lowest, values[0].valueX);
+			double lowest = 0;
+			if (graphSeries.size() > 0)
+			{
+				GraphViewData[] values = graphSeries.get(0).values;
+				lowest = values[0].valueX;
+				for (int i=1; i<graphSeries.size(); i++) {
+					values = graphSeries.get(i).values;
+					lowest = Math.min(lowest, values[0].valueX);
+				}
 			}
 			return lowest;
 		}
