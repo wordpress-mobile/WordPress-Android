@@ -658,7 +658,7 @@ public class Post {
 				 */
 				n.setLatestEventInfo(context, message, message, n.contentIntent);
 				nm.notify(notificationID, n);
-				if (post.wp_password != null && !"".equals(post.wp_password)) {
+				if (post.wp_password != null) {
 					contentStruct.put("wp_password", post.wp_password);
 				}
 				Object[] params;
