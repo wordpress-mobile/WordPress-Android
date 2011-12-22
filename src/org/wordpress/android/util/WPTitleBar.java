@@ -300,11 +300,14 @@ public class WPTitleBar extends RelativeLayout {
 	
 	private void updateReadButton() {
 		TextView readButtonText = (TextView) findViewById(R.id.read_button_text);
+		ImageView readButtonImage = (ImageView) findViewById(R.id.read_button_image);
 		if (WordPress.currentBlog.isDotcomFlag()){
 			readButtonText.setText(getResources().getText(R.string.reader));
+			readButtonImage.setImageDrawable(getResources().getDrawable(R.drawable.dashboard_icon_subs));
 		}
 		else {
 			readButtonText.setText(getResources().getText(R.string.wp_admin));
+			readButtonImage.setImageDrawable(getResources().getDrawable(R.drawable.dashboard_icon_wp));
 		}	
 	}
 

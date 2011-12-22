@@ -467,7 +467,7 @@
   <string name="new_page">New Page</string>
   <string name="quick_photo">Quick Photo</string>
   <string name="quick_video">Quick Video</string>
-  <string name="wp_admin">wp-admin</string>
+  <string name="wp_admin">Dashboard</string>
   
   <!-- Image Alignment -->
   <string name="image_alignment">Alignment</string>
