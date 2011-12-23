@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -43,8 +44,13 @@ public class Preferences extends Activity {
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
-			WordPress.currentBlog = new Blog(
-					WordPress.wpDB.getLastBlogID(this), this);
+			try {
+				WordPress.currentBlog = new Blog(
+						WordPress.wpDB.getLastBlogID(this), this);
+			} catch (Exception e) {
+				Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+				finish();
+			}
 		}
 		displayAccounts();
 

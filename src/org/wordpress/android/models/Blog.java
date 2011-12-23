@@ -34,7 +34,7 @@ public class Blog {
 	private String httppassword;
 	private String postFormats;
 	
-	public Blog(int blog_id, Context ctx){
+	public Blog(int blog_id, Context ctx) throws Exception{
 		//instantiate a new blog
 		Vector<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
 		
@@ -68,7 +68,9 @@ public class Blog {
 				this.wpVersion = blogVals.get(19).toString();
 			this.postFormats = blogVals.get(20).toString();
 			this.lastCommentId = (Integer)blogVals.get(21);
-		}	
+		} else {
+			throw new Exception();
+		}
 	}
 
 	public int getId() {

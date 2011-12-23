@@ -98,7 +98,11 @@ public class WPTitleBar extends RelativeLayout {
 			}
 		} else {
 			if (blogIDs.length > 0)
-				WordPress.currentBlog = new Blog(blogIDs[0], context);
+				try {
+					WordPress.currentBlog = new Blog(blogIDs[0], context);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		}
 
 		if (WordPress.currentBlog != null) {
@@ -122,8 +126,12 @@ public class WPTitleBar extends RelativeLayout {
 								public void onClick(DialogInterface dialog,
 										int pos) {
 									blogTitle.setText(blogNames[pos]);
-									WordPress.currentBlog = new Blog(
-											blogIDs[pos], context);
+									try {
+										WordPress.currentBlog = new Blog(
+												blogIDs[pos], context);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
 									WordPress.wpDB
 											.updateLastBlogID(blogIDs[pos]);
 									updateBlavatarImage();

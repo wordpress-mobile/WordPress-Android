@@ -58,7 +58,12 @@ public class SelectCategories extends ListActivity {
         if(extras !=null)
         {
          id = extras.getInt("id");
-         blog = new Blog(id, this);
+         try {
+			blog = new Blog(id, this);
+		} catch (Exception e) {
+			Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+			finish();
+		}
          checkedCategories = extras.getLongArray("checkedCategories");
          categoriesCSV = extras.getString("categoriesCSV");
         }

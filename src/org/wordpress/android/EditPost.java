@@ -150,7 +150,12 @@ public class EditPost extends Activity implements LocationListener {
 						blogNames[i] = curHash.get("url").toString();
 					}
 					accountIDs[i] = (Integer) curHash.get("id");
-					blog = new Blog(accountIDs[i], EditPost.this);
+					try {
+						blog = new Blog(accountIDs[i], EditPost.this);
+					} catch (Exception e) {
+						Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						finish();
+					}
 
 				}
 
@@ -165,7 +170,12 @@ public class EditPost extends Activity implements LocationListener {
 								public void onClick(DialogInterface dialog,
 										int item) {
 									id = accountIDs[item];
-									blog = new Blog(id, EditPost.this);
+									try {
+										blog = new Blog(id, EditPost.this);
+									} catch (Exception e) {
+										Toast.makeText(EditPost.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+										finish();
+									}
 									WordPress.currentBlog = blog;
 									WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
 									accountName = blogNames[item];
@@ -181,7 +191,12 @@ public class EditPost extends Activity implements LocationListener {
 					alert.show();
 				} else {
 					id = accountIDs[0];
-					blog = new Blog(id, EditPost.this);
+					try {
+						blog = new Blog(id, EditPost.this);
+					} catch (Exception e) {
+						Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						finish();
+					}
 					WordPress.currentBlog = blog;
 					WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
 					accountName = blogNames[0];
@@ -206,7 +221,12 @@ public class EditPost extends Activity implements LocationListener {
 
 			if (extras != null) {
 				id = WordPress.currentBlog.getId();
-				blog = new Blog(id, this);
+				try {
+					blog = new Blog(id, this);
+				} catch (Exception e) {
+					Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+					finish();
+				}
 				accountName = EscapeUtils.unescapeHtml(extras
 						.getString("accountName"));
 				postID = extras.getLong("postID");
@@ -214,6 +234,18 @@ public class EditPost extends Activity implements LocationListener {
 				isPage = extras.getBoolean("isPage", false);
 				isNew = extras.getBoolean("isNew", false);
 				option = extras.getString("option");
+				
+				if (extras.getBoolean("isQuickPress")) {
+					id = extras.getInt("id");
+					try {
+						blog = new Blog(id, this);
+						WordPress.currentBlog = blog;
+					} catch (Exception e) {
+						Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						finish();
+					}
+				}
+				
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
 			}

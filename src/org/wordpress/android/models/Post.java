@@ -82,7 +82,10 @@ public class Post {
 		Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage,
 				post_id);
 		if (postVals != null) {
-			this.blog = new Blog(blog_id, ctx);
+			try {
+				this.blog = new Blog(blog_id, ctx);
+			} catch (Exception e) {
+			}
 			this.id = (Long) postVals.get(0);
 			this.blogID = blog_id;
 			if (postVals.get(2) != null)
@@ -126,8 +129,13 @@ public class Post {
 			String postFormat, Context ctx, boolean createBlogReference) {
 		// create a new post
 		context = ctx;
-		if (createBlogReference)
-			this.blog = new Blog(blog_id, ctx);
+		if (createBlogReference) {
+			try {
+				this.blog = new Blog(blog_id, ctx);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		this.blogID = blog_id;
 		this.title = title;
 		this.description = content;

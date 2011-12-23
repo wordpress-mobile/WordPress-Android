@@ -54,8 +54,13 @@ public class Comments extends FragmentActivity implements
 			boolean fromNotification = false;
 			fromNotification = extras.getBoolean("fromNotification");
 			if (fromNotification) {
-				WordPress.currentBlog = new Blog(extras.getInt("id"),
-						Comments.this);
+				try {
+					WordPress.currentBlog = new Blog(extras.getInt("id"),
+							Comments.this);
+				} catch (Exception e) {
+					Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+					finish();
+				}
 				titleBar.refreshBlog();
 			}
 		}
@@ -141,8 +146,13 @@ public class Comments extends FragmentActivity implements
 			boolean fromNotification = false;
 			fromNotification = extras.getBoolean("fromNotification");
 			if (fromNotification) {
-				WordPress.currentBlog = new Blog(extras.getInt("id"),
-						Comments.this);
+				try {
+					WordPress.currentBlog = new Blog(extras.getInt("id"),
+							Comments.this);
+				} catch (Exception e) {
+					Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+					finish();
+				}
 				titleBar.refreshBlog();
 			}
 		}

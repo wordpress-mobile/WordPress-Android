@@ -32,6 +32,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class Read extends Activity {
 	/** Called when the activity is first created. */
@@ -66,8 +67,13 @@ public class Read extends Activity {
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
-			WordPress.currentBlog = new Blog(
-					WordPress.wpDB.getLastBlogID(this), this);
+			try {
+				WordPress.currentBlog = new Blog(
+						WordPress.wpDB.getLastBlogID(this), this);
+			} catch (Exception e) {
+				Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+				finish();
+			}
 		}
 
 		if (loadReader || loadAdmin) {
@@ -262,8 +268,12 @@ public class Read extends Activity {
 			Vector<?> settings = WordPress.wpDB
 					.loadSettings(WordPress.currentBlog.getId());
 			if (WordPress.currentBlog == null) {
-				WordPress.currentBlog = new Blog(
-						WordPress.wpDB.getLastBlogID(Read.this), Read.this);
+				try {
+					WordPress.currentBlog = new Blog(
+							WordPress.wpDB.getLastBlogID(Read.this), Read.this);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 			loginURL = settings.get(0).toString()

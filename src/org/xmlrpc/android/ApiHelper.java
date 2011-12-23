@@ -29,7 +29,12 @@ public class ApiHelper extends Activity {
 	@SuppressWarnings("unchecked")
 	static void refreshComments(final int id, final Context ctx) {
 
-		Blog blog = new Blog(id, ctx);
+		Blog blog;
+		try {
+			blog = new Blog(id, ctx);
+		} catch (Exception e1) {
+			return;
+		}
 
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());

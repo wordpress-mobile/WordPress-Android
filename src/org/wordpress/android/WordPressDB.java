@@ -620,9 +620,10 @@ public class WordPressDB {
 			} else {
 				returnVector = null;
 			}
+		} else {
+			returnVector = null;
 		}
 		c.close();
-		
 
 		return returnVector;
 	}
@@ -1526,7 +1527,7 @@ public class WordPressDB {
 
 	}
 
-	public boolean addQuickPressShortcut(String accountId,
+	public boolean addQuickPressShortcut(int accountId,
 			String name) {
 		
 		ContentValues values = new ContentValues();

@@ -35,7 +35,7 @@ import java.util.Vector;
 public class AddQuickPressShortcut extends ListActivity {
 	public Vector<?> accounts;
 	public String[] blogNames;
-	public String[] accountIDs;
+	public int[] accountIDs;
 	public String[] accountUsers;
 	public String[] blavatars;
 	public Vector<String> accountNames = new Vector<String>();
@@ -76,7 +76,7 @@ public class AddQuickPressShortcut extends ListActivity {
 			layout.setOrientation(LinearLayout.VERTICAL);
 
 			blogNames = new String[accounts.size()];
-			accountIDs = new String[accounts.size()];
+			accountIDs = new int[accounts.size()];
 			accountUsers = new String[accounts.size()];
 			blavatars = new String[accounts.size()];
 			int validBlogCtr = 0;
@@ -85,7 +85,7 @@ public class AddQuickPressShortcut extends ListActivity {
 				HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);					
 				blogNames[validBlogCtr] = curHash.get("blogName").toString();
 				accountUsers[validBlogCtr] = curHash.get("username").toString();
-				accountIDs[validBlogCtr] = curHash.get("id").toString();
+				accountIDs[validBlogCtr] = (Integer)curHash.get("id");
 				String url = curHash.get("url").toString();
 				url = url.replace("http://", "");
 				url = url.replace("https://", "");
@@ -149,6 +149,7 @@ public class AddQuickPressShortcut extends ListActivity {
 	        		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	        		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        		shortcutIntent.putExtra("id", accountIDs[position]);
+	        		shortcutIntent.putExtra("isQuickPress", true);
 	        		shortcutIntent.putExtra("accountName", EscapeUtils.unescapeHtml(accountNames.get(position)));
 	        		shortcutIntent.putExtra("isNew", true);
 	        		

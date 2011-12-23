@@ -96,7 +96,12 @@ public class CommentService extends Service {
     		{
     			
     			accountID = (Integer)notificationAccounts.get(i);
-                Blog blog = new Blog(accountID, CommentService.this);
+                Blog blog;
+				try {
+					blog = new Blog(accountID, CommentService.this);
+				} catch (Exception e1) {
+					return;
+				}
     			accountName = blog.getBlogName();
     			//Log.i("WordPressCommentService", "Checking Comments for " + accountName);
 

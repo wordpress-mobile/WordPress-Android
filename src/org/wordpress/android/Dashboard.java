@@ -395,7 +395,12 @@ public class Dashboard extends Activity {
 				public void OnBlogChanged() {
 
 					id = WordPress.currentBlog.getId();
-					blog = new Blog(id, Dashboard.this);
+					try {
+						blog = new Blog(id, Dashboard.this);
+					} catch (Exception e) {
+						Toast.makeText(Dashboard.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						finish();
+					}
 					titleBar.startRotatingRefreshIcon();
 					new refreshBlogContentTask().execute();
 				}
