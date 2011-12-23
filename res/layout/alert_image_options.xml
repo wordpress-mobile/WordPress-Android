@@ -32,7 +32,8 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="Horizontal Alignment:"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      android:textColor="#CCCCCC" />
     <Spinner 
         android:id="@+id/alignment_spinner"
         android:layout_width="fill_parent"
@@ -42,7 +43,8 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="Width:"
-      android:textStyle="bold" />
+      android:textStyle="bold"
+      android:textColor="#CCCCCC" />
     <SeekBar
       android:layout_height="wrap_content"
       android:id="@+id/imageWidth"
@@ -50,7 +52,8 @@
     <TextView
       android:layout_height="wrap_content"
       android:id="@+id/imageWidthText"
-      android:layout_width="match_parent" />
+      android:layout_width="match_parent"
+      android:textColor="#CCCCCC" />
     <!--  <CheckBox
       android:text="Featured Image"
       android:id="@+id/featuredImage"
