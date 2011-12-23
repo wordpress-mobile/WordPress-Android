@@ -125,7 +125,7 @@ public class WPTitleBar extends RelativeLayout {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int pos) {
-									blogTitle.setText(blogNames[pos]);
+									blogTitle.setText(EscapeUtils.unescapeHtml(blogNames[pos]));
 									try {
 										WordPress.currentBlog = new Blog(
 												blogIDs[pos], context);
@@ -472,7 +472,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void refreshBlog() {
-		blogTitle.setText(WordPress.currentBlog.getBlogName());
+		blogTitle.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()));
 		updateBlavatarImage();
 	}
 }
