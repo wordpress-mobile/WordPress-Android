@@ -125,7 +125,7 @@ public class WPTitleBar extends RelativeLayout {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int pos) {
-									blogTitle.setText(EscapeUtils.unescapeHtml(blogNames[pos]));
+									blogTitle.setText(EscapeUtils.unescapeHtml(blogNames[pos].toString()));
 									try {
 										WordPress.currentBlog = new Blog(
 												blogIDs[pos], context);
