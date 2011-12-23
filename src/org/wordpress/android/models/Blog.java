@@ -249,7 +249,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats);
+		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password);
 	}
 
     public String getPostFormats() {

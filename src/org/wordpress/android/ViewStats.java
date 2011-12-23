@@ -145,9 +145,9 @@ public class ViewStats extends Activity {
 						dialogBuilder.create().show();
 					}
 				} else {
-					WordPress.wpDB.saveStatsLogin(
-							WordPress.currentBlog.getId(), dcUsername,
-							dcPassword);
+					WordPress.currentBlog.setDotcom_username(dcUsername);
+					WordPress.currentBlog.setDotcom_password(dcPassword);
+					WordPress.currentBlog.save(ViewStats.this, WordPress.currentBlog.getUsername());
 					showOrHideLoginForm();
 					initStats(); // start over again now that we have the login
 				}

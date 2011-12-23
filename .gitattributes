@@ -714,7 +714,6 @@ src/org/wordpress/android/SelectCategories.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
 src/org/wordpress/android/Settings.java -text
 src/org/wordpress/android/Signup.java -text
-src/org/wordpress/android/UploadDialog.java -text
 src/org/wordpress/android/ViewCommentActivity.java -text
 src/org/wordpress/android/ViewCommentFragment.java -text
 src/org/wordpress/android/ViewComments.java -text

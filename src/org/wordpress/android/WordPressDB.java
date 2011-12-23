@@ -495,7 +495,8 @@ public class WordPressDB {
 			String httppassword, String imagePlacement,
 			boolean centerThumbnail, boolean fullSizeImage,
 			String maxImageWidth, int maxImageWidthId, boolean location,
-			boolean isWPCom, String originalUsername, String postFormats) {
+			boolean isWPCom, String originalUsername, String postFormats,
+			String dotcomUsername, String dotcomPassword) {
 		
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -510,6 +511,8 @@ public class WordPressDB {
 		values.put("maxImageWidthId", maxImageWidthId);
 		values.put("location", location);
 		values.put("postFormats", postFormats);
+		values.put("dotcom_username", dotcomUsername);
+		values.put("dotcom_password", encryptPassword(dotcomPassword));
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
 				null) > 0;
 		if (isWPCom) {
@@ -643,20 +646,6 @@ public class WordPressDB {
 		
 
 		return returnVector;
-	}
-
-	public boolean saveStatsLogin(int id, String statsUsername,
-			String statsPassword) {
-		
-		ContentValues values = new ContentValues();
-		values.put("dotcom_username", statsUsername);
-		values.put("dotcom_password", encryptPassword(statsPassword));
-		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
-				null) > 0;
-		
-
-		return (returnValue);
-
 	}
 
 	public Vector<String> loadAPIData(int id) {
