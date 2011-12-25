@@ -621,103 +621,17 @@ public class ViewStats extends Activity {
 	}
 
 	private class getStatsDataTask extends
-			AsyncTask<Object, HttpResponse, HttpResponse> {
+			AsyncTask<Object, String, String> {
 
 		String reportType;
 		int interval;
+		Vector<HashMap<String, String>> dataSet = new Vector<HashMap<String, String>>();
+		Vector<Integer> numDataSet = new Vector<Integer>();
 
-		protected void onPostExecute(HttpResponse response) {
+		protected void onPostExecute(String result) {
 
-			if (response != null) {
+			if (result != null) {
 				try {
-					XmlPullParser pullParser = XmlPullParserFactory
-							.newInstance().newPullParser();
-					HttpEntity entity = response.getEntity();
-					// change to pushbackinput stream 1/18/2010 to handle self
-					// installed
-					// wp sites that insert the BOM
-
-					PushbackInputStream is = new PushbackInputStream(
-							entity.getContent());
-
-					// get rid of junk characters before xml response. 60 = '<'.
-					// Added
-					// stopper to prevent infinite loop
-					int bomCheck = is.read();
-					int stopper = 0;
-					while (bomCheck != 60 && stopper < 20) {
-						bomCheck = is.read();
-						stopper++;
-					}
-					is.unread(bomCheck);
-
-					pullParser.setInput(is, "UTF-8");
-
-					int eventType = pullParser.getEventType();
-					boolean foundDataItem = false;
-					final Vector<HashMap<String, String>> dataSet = new Vector<HashMap<String, String>>();
-					final Vector<Integer> numDataSet = new Vector<Integer>();
-					int rowCount = 0;
-					// parse the xml response
-					// most replies follow the same xml structure, so the data
-					// is stored
-					// in a vector for display after parsing
-					while (eventType != XmlPullParser.END_DOCUMENT) {
-						if (eventType == XmlPullParser.START_DOCUMENT) {
-							// System.out.println("Start document");
-						} else if (eventType == XmlPullParser.END_DOCUMENT) {
-							// System.out.println("End document");
-						} else if (eventType == XmlPullParser.START_TAG) {
-							String name = pullParser.getName();
-							if (name.equals("views")
-									|| name.equals("postviews")
-									|| name.equals("referrers")
-									|| name.equals("clicks")
-									|| name.equals("searchterms")
-									|| name.equals("videoplays")) {
-							} else if (pullParser.getName().equals("total")) {
-								// that'll do, pig. that'll do.
-								break;
-							} else {
-								foundDataItem = true;
-								// loop through the attributes, add them to the
-								// hashmap
-								HashMap<String, String> dataRow = new HashMap<String, String>();
-								for (int i = 0; i < pullParser
-										.getAttributeCount(); i++) {
-									dataRow.put(pullParser.getAttributeName(i)
-											.toString(), pullParser
-											.getAttributeValue(i).toString());
-								}
-								if (dataRow != null) {
-									dataSet.add(rowCount, dataRow);
-								}
-							}
-
-						} else if (eventType == XmlPullParser.END_TAG) {
-							// System.out.println("End tag "+pullParser.getName());
-						} else if (eventType == XmlPullParser.TEXT) {
-							if (foundDataItem) {
-								if (pullParser.getText().toString() == "") {
-									numDataSet.add(rowCount, 0);
-								} else {
-									int value = 0;
-									// sometimes we get an empty string from the
-									// stats api, adding a catch here.
-									try {
-										value = Integer.parseInt(pullParser
-												.getText().toString());
-									} catch (NumberFormatException e) {
-									}
-									numDataSet.add(rowCount, value);
-								}
-								rowCount++;
-								foundDataItem = false;
-							}
-						}
-						eventType = pullParser.next();
-					}
-
 					if (dataSet.size() > 0) {
 						// only continue if we received data from the api
 
@@ -1068,10 +982,6 @@ public class ViewStats extends Activity {
 					errorMsg = e.getMessage();
 				} catch (NotFoundException e) {
 					errorMsg = e.getMessage();
-				} catch (XmlPullParserException e) {
-					errorMsg = e.getMessage();
-				} catch (IOException e) {
-					errorMsg = e.getMessage();
 				}
 			}
 			if (!errorMsg.equals("")) {
@@ -1100,7 +1010,7 @@ public class ViewStats extends Activity {
 		}
 
 		@Override
-		protected HttpResponse doInBackground(Object... args) {
+		protected String doInBackground(Object... args) {
 			if (isFinishing()) {
 				finish();
 			}
@@ -1141,12 +1051,101 @@ public class ViewStats extends Activity {
 			HttpResponse response;
 			try {
 				response = client.execute(postMethod);
-				return response;
-			} catch (ClientProtocolException e1) {
-				errorMsg = e1.getMessage();
+				XmlPullParser pullParser = XmlPullParserFactory
+						.newInstance().newPullParser();
+				HttpEntity entity = response.getEntity();
+				// change to pushbackinput stream 1/18/2010 to handle self
+				// installed
+				// wp sites that insert the BOM
+
+				PushbackInputStream is = new PushbackInputStream(
+						entity.getContent());
+
+				// get rid of junk characters before xml response. 60 = '<'.
+				// Added
+				// stopper to prevent infinite loop
+				int bomCheck = is.read();
+				int stopper = 0;
+				while (bomCheck != 60 && stopper < 20) {
+					bomCheck = is.read();
+					stopper++;
+				}
+				is.unread(bomCheck);
+
+				pullParser.setInput(is, "UTF-8");
+
+				int eventType = pullParser.getEventType();
+				boolean foundDataItem = false;
+				
+				int rowCount = 0;
+				// parse the xml response
+				// most replies follow the same xml structure, so the data
+				// is stored
+				// in a vector for display after parsing
+				while (eventType != XmlPullParser.END_DOCUMENT) {
+					if (eventType == XmlPullParser.START_DOCUMENT) {
+						// System.out.println("Start document");
+					} else if (eventType == XmlPullParser.END_DOCUMENT) {
+						// System.out.println("End document");
+					} else if (eventType == XmlPullParser.START_TAG) {
+						String name = pullParser.getName();
+						if (name.equals("views")
+								|| name.equals("postviews")
+								|| name.equals("referrers")
+								|| name.equals("clicks")
+								|| name.equals("searchterms")
+								|| name.equals("videoplays")) {
+						} else if (pullParser.getName().equals("total")) {
+							// that'll do, pig. that'll do.
+							break;
+						} else {
+							foundDataItem = true;
+							// loop through the attributes, add them to the
+							// hashmap
+							HashMap<String, String> dataRow = new HashMap<String, String>();
+							for (int i = 0; i < pullParser
+									.getAttributeCount(); i++) {
+								dataRow.put(pullParser.getAttributeName(i)
+										.toString(), pullParser
+										.getAttributeValue(i).toString());
+							}
+							if (dataRow != null) {
+								dataSet.add(rowCount, dataRow);
+							}
+						}
+
+					} else if (eventType == XmlPullParser.END_TAG) {
+						// System.out.println("End tag "+pullParser.getName());
+					} else if (eventType == XmlPullParser.TEXT) {
+						if (foundDataItem) {
+							if (pullParser.getText().toString() == "") {
+								numDataSet.add(rowCount, 0);
+							} else {
+								int value = 0;
+								// sometimes we get an empty string from the
+								// stats api, adding a catch here.
+								try {
+									value = Integer.parseInt(pullParser
+											.getText().toString());
+								} catch (NumberFormatException e) {
+								}
+								numDataSet.add(rowCount, value);
+							}
+							rowCount++;
+							foundDataItem = false;
+						}
+					}
+					eventType = pullParser.next();
+				}
+				return "OK";
+			} catch (ClientProtocolException e) {
+				errorMsg = e.getMessage();
 				return null;
-			} catch (IOException e1) {
-				errorMsg = e1.getMessage();
+			} catch (IOException e) {
+				errorMsg = e.getMessage();
+				return null;
+			} catch (XmlPullParserException e) {
+				errorMsg = e.getMessage();
 				return null;
 			}
 		}
