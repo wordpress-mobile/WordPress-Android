@@ -49,7 +49,7 @@ public class StringHelper {
 	}
 
 	public static String addPTags(String source) {
-		String[] asploded = source.split("\n");
+		String[] asploded = source.split("\n\n");
 		String wrappedHTML = "";
 		if (asploded.length > 0) {
 			for (int i = 0; i < asploded.length; i++) {
