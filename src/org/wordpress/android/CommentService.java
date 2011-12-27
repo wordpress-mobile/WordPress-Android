@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.EscapeUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -102,7 +103,7 @@ public class CommentService extends Service {
 				} catch (Exception e1) {
 					return;
 				}
-    			accountName = blog.getBlogName();
+    			accountName = EscapeUtils.unescapeHtml(blog.getBlogName());
     			//Log.i("WordPressCommentService", "Checking Comments for " + accountName);
 
     	final int latestCommentID = blog.getLastCommentId();
