@@ -41,6 +41,7 @@ public class Comments extends FragmentActivity implements
 	private XMLRPCClient client;
 	public ProgressDialog pd;
 	private ViewComments commentList;
+	private boolean fromNotification = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class Comments extends FragmentActivity implements
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			boolean fromNotification = false;
 			fromNotification = extras.getBoolean("fromNotification");
 			if (fromNotification) {
 				try {
@@ -100,6 +100,8 @@ public class Comments extends FragmentActivity implements
 		});
 
 		attemptToSelectComment();
+		if (fromNotification)
+			commentList.refreshComments(false, false, false);
 
 		/*
 		 * titleBar.setOnBlogChangedListener(new OnBlogChangedListener() { //
