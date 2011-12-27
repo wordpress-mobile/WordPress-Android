@@ -36,7 +36,8 @@ public class WPEditText extends EditText {
 			if (mOnImeBack != null)
 				mOnImeBack.onImeBack(this, this.getText().toString());
 		}
-		return super.dispatchKeyEvent(event);
+		
+		return super.onKeyPreIme(keyCode, event);
 	}
 
 	public void setOnEditTextImeBackListener(EditTextImeBackListener listener) {
