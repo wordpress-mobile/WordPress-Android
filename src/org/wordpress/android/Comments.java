@@ -86,7 +86,7 @@ public class Comments extends FragmentActivity implements
 			public void OnBlogChanged() {
 
 				FragmentManager fm = getSupportFragmentManager();
-				ViewPostFragment f = (ViewPostFragment) fm
+				ViewCommentFragment f = (ViewCommentFragment) fm
 						.findFragmentById(R.id.commentDetail);
 				if (f == null) {
 					fm.popBackStack();
