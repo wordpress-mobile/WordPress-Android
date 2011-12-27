@@ -284,11 +284,12 @@ public class Read extends Activity {
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 				readerURL += "/?per_page=20";
 			}
-			if (loadAdmin)
+			if (loadAdmin) {
 				if (WordPress.currentBlog.getUrl().lastIndexOf("/") != -1)
 					readerURL = WordPress.currentBlog.getUrl().substring(0, WordPress.currentBlog.getUrl().lastIndexOf("/")) + "/wp-admin";
 				else
 					readerURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php", "wp-admin");
+			}
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
