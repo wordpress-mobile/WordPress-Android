@@ -951,8 +951,8 @@ public class WordPressDB {
 					d = (Date) thisHash.get("date_created_gmt");
 					values.put("date_created_gmt", d.getTime()); 
 				} catch (Exception e) {
-					Date now = new Date();
-					values.put("date_created_gmt", now.getTime() + (now.getTimezoneOffset() * 60000));
+					d = new Date((Long)values.get("dateCreated"));
+					values.put("date_created_gmt", d.getTime() + (d.getTimezoneOffset() * 60000));
 				}
 				values.put("description", thisHash.get("description")
 						.toString());
