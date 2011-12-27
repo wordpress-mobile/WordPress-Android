@@ -265,8 +265,6 @@ public class Read extends Activity {
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
-			Vector<?> settings = WordPress.wpDB
-					.loadSettings(WordPress.currentBlog.getId());
 			if (WordPress.currentBlog == null) {
 				try {
 					WordPress.currentBlog = new Blog(
@@ -276,15 +274,21 @@ public class Read extends Activity {
 				}
 			}
 
-			loginURL = settings.get(0).toString()
+			loginURL = WordPress.currentBlog.getUrl()
 					.replace("xmlrpc.php", "wp-login.php");
+			if (WordPress.currentBlog.getUrl().lastIndexOf("/") != -1)
+				loginURL = WordPress.currentBlog.getUrl().substring(0, WordPress.currentBlog.getUrl().lastIndexOf("/")) + "/wp-login.php";
+			else
+				loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php", "wp-login.php");
 			String readerURL = Constants.readerURL;
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 				readerURL += "/?per_page=20";
 			}
 			if (loadAdmin)
-				readerURL = WordPress.currentBlog.getUrl().replace(
-						"xmlrpc.php", "wp-admin");
+				if (WordPress.currentBlog.getUrl().lastIndexOf("/") != -1)
+					readerURL = WordPress.currentBlog.getUrl().substring(0, WordPress.currentBlog.getUrl().lastIndexOf("/")) + "/wp-admin";
+				else
+					readerURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php", "wp-admin");
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
@@ -295,10 +299,10 @@ public class Read extends Activity {
 						+ loginURL
 						+ "\" method=\"post\">"
 						+ "<input type=\"text\" name=\"log\" id=\"user_login\" value=\""
-						+ settings.get(2).toString()
+						+ WordPress.currentBlog.getUsername()
 						+ "\"/></label>"
 						+ "<input type=\"password\" name=\"pwd\" id=\"user_pass\" value=\""
-						+ settings.get(3).toString()
+						+ WordPress.currentBlog.getPassword()
 						+ "\" /></label>"
 						+ "<input type=\"submit\" name=\"wp-submit\" id=\"wp-submit\" value=\"Log In\" />"
 						+ "<input type=\"hidden\" name=\"redirect_to\" value=\""
