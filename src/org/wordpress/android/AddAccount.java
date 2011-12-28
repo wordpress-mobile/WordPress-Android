@@ -69,6 +69,9 @@ public class AddAccount extends Activity {
 		
 		this.setTitle("WordPress - " + getResources().getText(R.string.add_account));
 		
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
+		
 		Bundle extras = getIntent().getExtras();
 		
         if(extras !=null)
@@ -262,7 +265,7 @@ public class AddAccount extends Activity {
 		                match = WordPress.wpDB.checkMatch(matchBlogName, contentHash.get("xmlrpc").toString(), username);
 		            if (!match){
 	                	blogNames[blogCtr] = matchBlogName;			        
-				        urls[blogCtr] = contentHash.get("xmlrpc").toString(); 					        
+				        urls[blogCtr] = contentHash.get("xmlrpc").toString();
 				        blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
 					    String blogURL = urls[blogCtr];
 		                

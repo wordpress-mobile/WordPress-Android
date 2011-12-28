@@ -23,10 +23,15 @@ public class ViewPostFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle bundle) {
 		super.onActivityCreated(bundle);
-		if (WordPress.currentPost != null) {
-			loadPost(WordPress.currentPost);
-		}
 
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if (WordPress.currentPost != null)
+			loadPost(WordPress.currentPost);
 	}
 
 	@Override

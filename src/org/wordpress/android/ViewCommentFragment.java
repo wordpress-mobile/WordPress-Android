@@ -48,9 +48,13 @@ public class ViewCommentFragment extends Fragment {
 
 			super.handleMessage(msg);
 
-			final ImageView ivGravatar = (ImageView) getActivity()
-					.findViewById(R.id.gravatar);
-			ivGravatar.setImageDrawable(d);
+			try {
+				final ImageView ivGravatar = (ImageView) getActivity()
+						.findViewById(R.id.gravatar);
+				ivGravatar.setImageDrawable(d);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		}
 

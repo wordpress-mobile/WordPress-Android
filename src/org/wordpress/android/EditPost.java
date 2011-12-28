@@ -2,8 +2,6 @@ package org.wordpress.android;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +44,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,7 +76,7 @@ public class EditPost extends Activity implements LocationListener {
 	public String categoryErrorMsg = "", accountName = "", option, provider;
 	private JSONArray categories;
 	private int id;
-	long postID;
+	long postID, customPubDate = 0;
 	private int ID_DIALOG_DATE = 0, ID_DIALOG_TIME = 1, ID_DIALOG_LOADING = 2;
 	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, locationActive = false,
@@ -248,6 +245,7 @@ public class EditPost extends Activity implements LocationListener {
 				
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
+					WordPress.currentPost = post;
 			}
 			
 			if (isNew) {
@@ -722,17 +720,10 @@ public class EditPost extends Activity implements LocationListener {
 
 		long pubDateTimestamp = 0;
 		if (!pubDate.equals(getResources().getText(R.string.immediately))) {
-			SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-			Date d = new Date();
-			try {
-				d = sdf.parse(pubDate);
-				pubDateTimestamp = d.getTime();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (java.text.ParseException e) {
-				e.printStackTrace();
-			}
-
+			if (isCustomPubDate)
+				pubDateTimestamp = customPubDate;
+			else if (!isNew)
+				pubDateTimestamp = post.getDate_created_gmt();
 		}
 
 		String tags = "", postFormat = "";
@@ -873,6 +864,8 @@ public class EditPost extends Activity implements LocationListener {
 						mf.save(EditPost.this);
 					}
 				}
+				
+				WordPress.currentPost = post;
 
 			} else {
 				post.setTitle(title);
@@ -1202,21 +1195,28 @@ public class EditPost extends Activity implements LocationListener {
 		public void onTimeSet(TimePicker view, int hour, int minute) {
 			mHour = hour;
 			mMinute = minute;
-			String AMPM = "AM";
-			if (mHour >= 12) {
-				AMPM = "PM";
-				if (mHour > 12) {
-					mHour -= 12;
-				}
+			
+			Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+			long timestamp = d.getTime();
+			
+			try {
+				int flags = 0;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+				flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+				customPubDate = timestamp
+						+ TimeZone.getDefault().getOffset(timestamp);
+				String formattedDate = DateUtils.formatDateTime(
+						EditPost.this, customPubDate, flags);
+				TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
+				tvPubDate.setText(formattedDate);
+				isCustomPubDate = true;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			TextView pubDate = (TextView) findViewById(R.id.pubDate);
-			String[] shortMonths = new DateFormatSymbols().getShortMonths();
-			pubDate.setText(shortMonths[mMonth] + " "
-					+ String.format("%02d", mDay) + ", " + mYear + " "
-					+ String.format("%02d", mHour) + ":"
-					+ String.format("%02d", mMinute) + " " + AMPM);
-
-			isCustomPubDate = true;
+			
+			
 		}
 
 	};

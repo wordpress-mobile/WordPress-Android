@@ -288,6 +288,7 @@ public class ViewComments extends ListFragment {
 					Toast.makeText(getActivity().getApplicationContext(), msg,
 							Toast.LENGTH_SHORT).show();
 					checkedCommentTotal = 0;
+					hideModerationBar();
 					thumbs.notifyDataSetChanged();
 				} else {
 					// there was an xmlrpc error
@@ -373,6 +374,7 @@ public class ViewComments extends ListFragment {
 					Toast.makeText(getActivity().getApplicationContext(), msg,
 							Toast.LENGTH_SHORT).show();
 					checkedCommentTotal = 0;
+					hideModerationBar();
 					refreshComments(false, false, false);
 				} else {
 					// error occurred during delete request
