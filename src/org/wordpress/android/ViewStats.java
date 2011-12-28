@@ -59,6 +59,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlrpc.android.ConnectionClient;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -319,9 +321,45 @@ public class ViewStats extends Activity {
 
 	private Vector<String> getAPIInfo(String username, String password,
 			String url, String storedBlogID) {
-
 		Vector<String> apiInfo = null;
-
+		
+		if (!WordPress.currentBlog.isDotcomFlag()) {
+		//get the blog's url
+			XMLRPCClient xmlClient = new XMLRPCClient(url, WordPress.currentBlog.getHttpuser(), WordPress.currentBlog.getHttppassword());
+			Object[] params = {
+        		1,
+        		WordPress.currentBlog.getUsername(),
+        		WordPress.currentBlog.getPassword()
+			};
+			try {
+				HashMap<?, ?> options = (HashMap<?, ?>) xmlClient.call("wp.getOptions", params);
+				if (options != null) {
+					HashMap<?, ?> blog_url = (HashMap<?, ?>) options.get("blog_url");
+					if (blog_url != null)
+						if (blog_url.get("value") != null)
+							url = blog_url.get("value").toString();
+				}
+			} catch (XMLRPCException e) {
+				url = url.replace("xmlrpc.php", "");
+			}
+		} else {
+			url = url.replace("xmlrpc.php", "");
+		}
+		
+		String wwwURL = "";		
+		if (url.indexOf("http://www.") >= 0) {
+			wwwURL = url;
+			url = url.replace("http://www.", "http://");
+		}
+		else {
+			wwwURL = url.replace("http://", "http://wwww.");
+		}
+		
+		if (!url.endsWith("/")) {
+			url += "/";
+			wwwURL += "/";
+		}
+		
 		URI uri = URI
 				.create("https://public-api.wordpress.com/getuserblogs.php");
 		configureClient(uri, username, password);
@@ -406,8 +444,7 @@ public class ViewStats extends Activity {
 							if (!curBlogURL.endsWith("/"))
 								curBlogURL += "/";
 
-							if ((curBlogURL.equals(url
-									.replace("xmlrpc.php", "")) || storedBlogID
+							if ( ((curBlogURL.equals(url) || (curBlogURL.equals(wwwURL))) || storedBlogID
 									.equals(curBlogID))
 									&& !curBlogID.equals("1")) {
 								// yay, found a match
