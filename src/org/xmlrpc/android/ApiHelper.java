@@ -109,7 +109,7 @@ public class ApiHelper extends Activity {
 					dbVector.add(ctr, dbValues);
 				}
 
-				WordPress.wpDB.saveComments(dbVector, false);
+				WordPress.wpDB.saveComments(dbVector);
 			}
 		}
 	}
@@ -157,7 +157,7 @@ public class ApiHelper extends Activity {
 	}
 
 	public static HashMap<String, HashMap<?, ?>> refreshComments(Context ctx,
-			Object[] commentParams, boolean loadMore) throws XMLRPCException {
+			Object[] commentParams) throws XMLRPCException {
 		Blog blog = WordPress.currentBlog;
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
@@ -225,7 +225,7 @@ public class ApiHelper extends Activity {
 			dbVector.add(ctr, dbValues);
 		}
 
-		WordPress.wpDB.saveComments(dbVector, loadMore);
+		WordPress.wpDB.saveComments(dbVector);
 
 		return allComments;
 

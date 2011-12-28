@@ -906,110 +906,118 @@ public class WordPressDB {
 		if (postValues.size() != 0) {
 
 			for (int i = 0; i < postValues.size(); i++) {
-				ContentValues values = new ContentValues();
-				HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
-				values.put("blogID", blogID);
-				if (thisHash.get((isPage) ? "page_id" : "postid") == null)
-					return false;
-				String postID = thisHash.get((isPage) ? "page_id" : "postid")
-						.toString();
-				values.put("postid", postID);
-				values.put("title", thisHash.get("title").toString());
-				Date d;
 				try {
-					d = (Date) thisHash.get("dateCreated");
-					values.put("dateCreated", d.getTime());
-				} catch (Exception e) {
-					Date now = new Date();
-					values.put("dateCreated", now.getTime());
-				}
-				try {
-					d = (Date) thisHash.get("date_created_gmt");
-					values.put("date_created_gmt", d.getTime());
-				} catch (Exception e) {
-					d = new Date((Long) values.get("dateCreated"));
-					values.put("date_created_gmt",
-							d.getTime() + (d.getTimezoneOffset() * 60000));
-				}
-				values.put("description", thisHash.get("description")
-						.toString());
-				values.put("link", thisHash.get("link").toString());
-				values.put("permaLink", thisHash.get("permaLink").toString());
-
-				Object[] cats = (Object[]) thisHash.get("categories");
-				JSONArray jsonArray = new JSONArray();
-				if (cats != null) {
-					for (int x = 0; x < cats.length; x++) {
-						jsonArray.put(cats[x].toString());
+					ContentValues values = new ContentValues();
+					HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
+					values.put("blogID", blogID);
+					if (thisHash.get((isPage) ? "page_id" : "postid") == null)
+						return false;
+					String postID = thisHash.get((isPage) ? "page_id" : "postid")
+							.toString();
+					values.put("postid", postID);
+					values.put("title", thisHash.get("title").toString());
+					Date d;
+					try {
+						d = (Date) thisHash.get("dateCreated");
+						values.put("dateCreated", d.getTime());
+					} catch (Exception e) {
+						Date now = new Date();
+						values.put("dateCreated", now.getTime());
 					}
-				}
-				values.put("categories", jsonArray.toString());
+					try {
+						d = (Date) thisHash.get("date_created_gmt");
+						values.put("date_created_gmt", d.getTime());
+					} catch (Exception e) {
+						d = new Date((Long) values.get("dateCreated"));
+						values.put("date_created_gmt",
+								d.getTime() + (d.getTimezoneOffset() * 60000));
+					}
+					values.put("description", thisHash.get("description")
+							.toString());
+					values.put("link", thisHash.get("link").toString());
+					values.put("permaLink", thisHash.get("permaLink").toString());
 
-				Object[] custom_fields = (Object[]) thisHash
-						.get("custom_fields");
-				jsonArray = new JSONArray();
-				if (custom_fields != null) {
-					for (int x = 0; x < custom_fields.length; x++) {
-						jsonArray.put(custom_fields[x].toString());
-						// Update geo_long and geo_lat from custom fields, if found:
-						Map<?, ?> customField = (Map<?, ?>) custom_fields[x];
-						if (customField.get("key") != null && customField.get("value") != null) {
-							if (customField.get("key").equals("geo_longitude"))
-								values.put("longitude", customField.get("value").toString());
-							if (customField.get("key").equals("geo_latitude"))
-								values.put("latitude", customField.get("value").toString());
+					Object[] cats = (Object[]) thisHash.get("categories");
+					JSONArray jsonArray = new JSONArray();
+					if (cats != null) {
+						for (int x = 0; x < cats.length; x++) {
+							jsonArray.put(cats[x].toString());
 						}
 					}
-				}
-				values.put("custom_fields", jsonArray.toString());
+					values.put("categories", jsonArray.toString());
 
-				values.put("mt_excerpt",
-						thisHash.get((isPage) ? "excerpt" : "mt_excerpt")
-								.toString());
-				values.put("mt_text_more",
-						thisHash.get((isPage) ? "text_more" : "mt_text_more")
-								.toString());
-				values.put("mt_allow_comments",
-						(Integer) thisHash.get("mt_allow_comments"));
-				values.put("mt_allow_pings",
-						(Integer) thisHash.get("mt_allow_pings"));
-				values.put("wp_slug", thisHash.get("wp_slug").toString());
-				values.put("wp_password", thisHash.get("wp_password")
-						.toString());
-				values.put("wp_author_id", thisHash.get("wp_author_id")
-						.toString());
-				values.put("wp_author_display_name",
-						thisHash.get("wp_author_display_name").toString());
-				values.put("post_status",
-						thisHash.get((isPage) ? "page_status" : "post_status")
-								.toString());
-				values.put("userid", thisHash.get("userid").toString());
-
-				int isPageInt = 0;
-				if (isPage) {
-					isPageInt = 1;
-					values.put("isPage", true);
-					values.put("wp_page_parent_id",
-							thisHash.get("wp_page_parent_id").toString());
-					values.put("wp_page_parent_title",
-							thisHash.get("wp_page_parent_title").toString());
-				} else {
-					values.put("mt_keywords", thisHash.get("mt_keywords")
-							.toString());
-					try {
-						values.put("wp_post_format",
-								thisHash.get("wp_post_format").toString());
-					} catch (Exception e) {
-						values.put("wp_post_format", "");
+					Object[] custom_fields = (Object[]) thisHash
+							.get("custom_fields");
+					jsonArray = new JSONArray();
+					if (custom_fields != null) {
+						for (int x = 0; x < custom_fields.length; x++) {
+							jsonArray.put(custom_fields[x].toString());
+							// Update geo_long and geo_lat from custom fields, if
+							// found:
+							Map<?, ?> customField = (Map<?, ?>) custom_fields[x];
+							if (customField.get("key") != null
+									&& customField.get("value") != null) {
+								if (customField.get("key").equals("geo_longitude"))
+									values.put("longitude", customField
+											.get("value").toString());
+								if (customField.get("key").equals("geo_latitude"))
+									values.put("latitude", customField.get("value")
+											.toString());
+							}
+						}
 					}
-				}
+					values.put("custom_fields", jsonArray.toString());
 
-				int result = db.update(POSTS_TABLE, values, "postID=" + postID
-						+ " AND isPage=" + isPageInt, null);
-				if (result == 0)
-					returnValue = db.insert(POSTS_TABLE, null, values) > 0;
-				else
-					returnValue = true;
+					values.put("mt_excerpt",
+							thisHash.get((isPage) ? "excerpt" : "mt_excerpt")
+									.toString());
+					values.put("mt_text_more",
+							thisHash.get((isPage) ? "text_more" : "mt_text_more")
+									.toString());
+					values.put("mt_allow_comments",
+							(Integer) thisHash.get("mt_allow_comments"));
+					values.put("mt_allow_pings",
+							(Integer) thisHash.get("mt_allow_pings"));
+					values.put("wp_slug", thisHash.get("wp_slug").toString());
+					values.put("wp_password", thisHash.get("wp_password")
+							.toString());
+					values.put("wp_author_id", thisHash.get("wp_author_id")
+							.toString());
+					values.put("wp_author_display_name",
+							thisHash.get("wp_author_display_name").toString());
+					values.put("post_status",
+							thisHash.get((isPage) ? "page_status" : "post_status")
+									.toString());
+					values.put("userid", thisHash.get("userid").toString());
+
+					int isPageInt = 0;
+					if (isPage) {
+						isPageInt = 1;
+						values.put("isPage", true);
+						values.put("wp_page_parent_id",
+								thisHash.get("wp_page_parent_id").toString());
+						values.put("wp_page_parent_title",
+								thisHash.get("wp_page_parent_title").toString());
+					} else {
+						values.put("mt_keywords", thisHash.get("mt_keywords")
+								.toString());
+						try {
+							values.put("wp_post_format",
+									thisHash.get("wp_post_format").toString());
+						} catch (Exception e) {
+							values.put("wp_post_format", "");
+						}
+					}
+
+					int result = db.update(POSTS_TABLE, values, "postID=" + postID
+							+ " AND isPage=" + isPageInt, null);
+					if (result == 0)
+						returnValue = db.insert(POSTS_TABLE, null, values) > 0;
+					else
+						returnValue = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
@@ -1210,59 +1218,6 @@ public class WordPressDB {
 		int numRows = c.getCount();
 		c.moveToFirst();
 
-		HashMap<String, Object> numRecords = new HashMap<String, Object>();
-		// add the number of stored records so the offset can be computed
-		if (numRows > 0) {
-			numRecords.put("numRecords", numRows);
-			returnVector.add(0, numRecords);
-		}
-
-		for (int i = 1; i < (numRows + 1); ++i) {
-			if (c.getString(0) != null) {
-				HashMap<String, Object> returnHash = new HashMap<String, Object>();
-				returnHash.put("blogID", c.getString(0));
-				returnHash.put("postID", c.getInt(1));
-				returnHash.put("commentID", c.getInt(2));
-				returnHash.put("author", c.getString(3));
-				returnHash.put("comment", c.getString(4));
-				returnHash.put("commentDate", c.getString(5));
-				returnHash.put("commentDateFormatted", c.getString(6));
-				returnHash.put("status", c.getString(7));
-				returnHash.put("url", c.getString(8));
-				returnHash.put("email", c.getString(9));
-				returnHash.put("postTitle", c.getString(10));
-				returnVector.add(i, returnHash);
-			}
-			c.moveToNext();
-		}
-		c.close();
-
-		if (numRows == 0) {
-			returnVector = null;
-		}
-
-		return returnVector;
-	}
-
-	public Vector<HashMap<String, Object>> loadMoreComments(Context ctx,
-			int blogID, int limit) {
-
-		Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
-		Cursor c = db.query(COMMENTS_TABLE,
-				new String[] { "blogID", "postID", "iCommentID", "author",
-						"comment", "commentDate", "commentDateFormatted",
-						"status", "url", "email", "postTitle" }, "blogID="
-						+ blogID, null, null, null, "iCommentID ASC",
-				String.valueOf(limit));
-		int numRows = c.getCount();
-		c.moveToFirst();
-
-		// HashMap numRecords = new HashMap();
-		// add the number of stored records so the offset can be computed
-		/*
-		 * if (numRows > 0){ numRecords.put("numRecords", numRows);
-		 * returnVector.add(0, numRecords); }
-		 */
 		for (int i = 0; i < numRows; i++) {
 			if (c.getString(0) != null) {
 				HashMap<String, Object> returnHash = new HashMap<String, Object>();
@@ -1290,43 +1245,46 @@ public class WordPressDB {
 		return returnVector;
 	}
 
-	public boolean saveComments(Vector<?> commentValues, boolean loadMore) {
+	public boolean saveComments(Vector<?> commentValues) {
 		boolean returnValue = false;
 
 		HashMap<?, ?> firstHash = (HashMap<?, ?>) commentValues.get(0);
 		String blogID = firstHash.get("blogID").toString();
 		// delete existing values, if user hit refresh button
-		if (!loadMore) {
-			try {
-				db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
-			} catch (Exception e) {
 
-				return false;
-			}
+		try {
+			db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
+		} catch (Exception e) {
+
+			return false;
 		}
 
 		for (int i = 0; i < commentValues.size(); i++) {
-			ContentValues values = new ContentValues();
-			HashMap<?, ?> thisHash = (HashMap<?, ?>) commentValues.get(i);
-			values.put("blogID", thisHash.get("blogID").toString());
-			values.put("postID", thisHash.get("postID").toString());
-			values.put("iCommentID", thisHash.get("commentID").toString());
-			values.put("author", thisHash.get("author").toString());
-			values.put("comment", thisHash.get("comment").toString());
-			values.put("commentDate", thisHash.get("commentDate").toString());
-			values.put("commentDateFormatted",
-					thisHash.get("commentDateFormatted").toString());
-			values.put("status", thisHash.get("status").toString());
-			values.put("url", thisHash.get("url").toString());
-			values.put("email", thisHash.get("email").toString());
-			values.put("postTitle", thisHash.get("postTitle").toString());
-			synchronized (this) {
-				try {
-					returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
-				} catch (Exception e) {
+			try {
+				ContentValues values = new ContentValues();
+				HashMap<?, ?> thisHash = (HashMap<?, ?>) commentValues.get(i);
+				values.put("blogID", thisHash.get("blogID").toString());
+				values.put("postID", thisHash.get("postID").toString());
+				values.put("iCommentID", thisHash.get("commentID").toString());
+				values.put("author", thisHash.get("author").toString());
+				values.put("comment", thisHash.get("comment").toString());
+				values.put("commentDate", thisHash.get("commentDate").toString());
+				values.put("commentDateFormatted",
+						thisHash.get("commentDateFormatted").toString());
+				values.put("status", thisHash.get("status").toString());
+				values.put("url", thisHash.get("url").toString());
+				values.put("email", thisHash.get("email").toString());
+				values.put("postTitle", thisHash.get("postTitle").toString());
+				synchronized (this) {
+					try { 
+						returnValue = db.insert(COMMENTS_TABLE, null, values) > 0;
+					} catch (Exception e) {
 
-					return false;
+						return false;
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 

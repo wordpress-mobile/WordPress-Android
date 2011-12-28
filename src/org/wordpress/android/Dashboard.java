@@ -472,15 +472,13 @@ public class Dashboard extends Activity {
 
 			// refresh the comments
 			HashMap<String, Object> hPost = new HashMap<String, Object>();
-			hPost.put("status", "");
-			hPost.put("post_id", "");
 			hPost.put("number", 30);
 			Object[] commentParams = { blog.getBlogId(), blog.getUsername(),
 					blog.getPassword(), hPost };
 			args.add(commentParams);
 
 			try {
-				ApiHelper.refreshComments(Dashboard.this, commentParams, false);
+				ApiHelper.refreshComments(Dashboard.this, commentParams);
 			} catch (XMLRPCException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

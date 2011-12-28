@@ -70,7 +70,7 @@ public class ViewComments extends ListFragment {
 	public int ID_DIALOG_DELETING = 3;
 	public boolean initializing = true, shouldSelectAfterLoad = false;
 	public int selectedID = 0, rowID = 0, numRecords = 0, totalComments = 0,
-			commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition;
+			commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition, scrollPosition = 0, scrollPositionTop = 0;
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
 	boolean loadMore = false, doInBackground = false, refreshOnly = false;
@@ -391,191 +391,147 @@ public class ViewComments extends ListFragment {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public boolean loadComments(boolean addMore, boolean refresh) {
+	public boolean loadComments(boolean refresh, boolean loadMore) {
 		refreshOnly = refresh;
 		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
-		if (!addMore) {
-			Vector<?> loadedPosts = WordPress.wpDB
-					.loadComments(WordPress.currentBlog.getId());
-			if (loadedPosts != null) {
-				HashMap<Object, Object> countHash = new HashMap<Object, Object>();
-				countHash = (HashMap<Object, Object>) loadedPosts.get(0);
-				numRecords = Integer.parseInt(countHash.get("numRecords")
+
+		Vector<?> loadedPosts = WordPress.wpDB
+				.loadComments(WordPress.currentBlog.getId());
+		if (loadedPosts != null) {
+			numRecords = loadedPosts.size();
+			if (refreshOnly) {
+				if (model != null) {
+					model.clear();
+				}
+			} else {
+				model = new ArrayList<Comment>();
+			}
+
+			checkedComments = new Vector<String>();
+			for (int i = 0; i < loadedPosts.size(); i++) {
+				checkedComments.add(i, "false");
+				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
+				allComments.put(contentHash.get("commentID").toString(),
+						contentHash);
+				author = EscapeUtils.unescapeHtml(contentHash.get("author")
 						.toString());
-				if (refreshOnly) {
-					if (model != null) {
-						model.clear();
-					}
-				} else {
+				commentID = contentHash.get("commentID").toString();
+				postID = contentHash.get("postID").toString();
+				comment = EscapeUtils.unescapeHtml(contentHash.get("comment")
+						.toString());
+				dateCreatedFormatted = contentHash.get("commentDateFormatted")
+						.toString();
+				status = contentHash.get("status").toString();
+				authorEmail = EscapeUtils.unescapeHtml(contentHash.get("email")
+						.toString());
+				authorURL = EscapeUtils.unescapeHtml(contentHash.get("url")
+						.toString());
+				postTitle = EscapeUtils.unescapeHtml(contentHash.get(
+						"postTitle").toString());
+
+				if (model == null) {
 					model = new ArrayList<Comment>();
 				}
 
-				checkedComments = new Vector<String>();
-				for (int i = 1; i < loadedPosts.size(); i++) {
-					checkedComments.add(i - 1, "false");
-					HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts
-							.get(i);
-					allComments.put(contentHash.get("commentID").toString(),
-							contentHash);
-					author = EscapeUtils.unescapeHtml(contentHash.get("author")
-							.toString());
-					commentID = contentHash.get("commentID").toString();
-					postID = contentHash.get("postID").toString();
-					comment = EscapeUtils.unescapeHtml(contentHash.get(
-							"comment").toString());
-					dateCreatedFormatted = contentHash.get(
-							"commentDateFormatted").toString();
-					status = contentHash.get("status").toString();
-					authorEmail = EscapeUtils.unescapeHtml(contentHash.get(
-							"email").toString());
-					authorURL = EscapeUtils.unescapeHtml(contentHash.get("url")
-							.toString());
-					postTitle = EscapeUtils.unescapeHtml(contentHash.get(
-							"postTitle").toString());
+				// add to model
+				model.add(new Comment(postID, commentID, i, author,
+						dateCreatedFormatted, comment, status, postTitle,
+						authorURL, authorEmail, URI
+								.create("http://gravatar.com/avatar/"
+										+ getMd5Hash(authorEmail.trim())
+										+ "?s=60&d=404")));
+			}
 
-					if (model == null) {
-						model = new ArrayList<Comment>();
-					}
-
-					// add to model
-					model.add(new Comment(postID, commentID, i - 1, author,
-							dateCreatedFormatted, comment, status, postTitle,
-							authorURL, authorEmail, URI
-									.create("http://gravatar.com/avatar/"
-											+ getMd5Hash(authorEmail.trim())
-											+ "?s=60&d=404")));
+			if (!refreshOnly) {
+				try {
+					ThumbnailBus bus = new ThumbnailBus();
+					thumbs = new ThumbnailAdapter(
+							getActivity(),
+							new CommentAdapter(),
+							new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(
+									null, null, 101, bus), IMAGE_IDS);
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
 
-				if (!refreshOnly) {
-					try {
-						ThumbnailBus bus = new ThumbnailBus();
-						thumbs = new ThumbnailAdapter(
-								getActivity(),
-								new CommentAdapter(),
-								new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(
-										null, null, 101, bus), IMAGE_IDS);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-
-					ListView listView = this.getListView();
-					listView.removeFooterView(switcher);
-					if (loadedPosts.size() >= 30) {
-						listView.addFooterView(switcher);
-					}
-					setListAdapter(thumbs);
-
-					listView.setOnItemClickListener(new OnItemClickListener() {
-
-						public void onItemClick(AdapterView<?> arg0, View view,
-								int position, long id) {
-							selectedPosition = position;
-							Comment comment = model.get((int) id);
-							onCommentSelectedListener
-									.onCommentSelected(comment);
-						}
-					});
-
-					listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-						public void onCreateContextMenu(ContextMenu menu,
-								View v, ContextMenuInfo menuInfo) {
-							AdapterView.AdapterContextMenuInfo info;
-							try {
-								info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-							} catch (ClassCastException e) {
-								// Log.e(TAG, "bad menuInfo", e);
-								return;
-							}
-
-							WordPress.currentComment = model.get(info.position);
-
-							menu.setHeaderTitle(getResources().getText(
-									R.string.comment_actions));
-							menu.add(
-									0,
-									0,
-									0,
-									getResources().getText(
-											R.string.mark_approved));
-							menu.add(
-									0,
-									1,
-									0,
-									getResources().getText(
-											R.string.mark_unapproved));
-							menu.add(0, 2, 0,
-									getResources().getText(R.string.mark_spam));
-							menu.add(0, 3, 0,
-									getResources().getText(R.string.reply));
-							menu.add(0, 4, 0,
-									getResources().getText(R.string.delete));
-						}
-					});
-				} else {
-					if (thumbs != null) {
-						thumbs.notifyDataSetChanged();
-					}
+				ListView listView = this.getListView();
+				listView.removeFooterView(switcher);
+				if (loadedPosts.size() % 30 == 0) {
+					listView.addFooterView(switcher);
 				}
+				setListAdapter(thumbs);
 
-				if (this.shouldSelectAfterLoad) {
-					if (model != null) {
-						if (model.size() > 0) {
+				listView.setOnItemClickListener(new OnItemClickListener() {
 
-							selectedPosition = 0;
-							Comment aComment = model.get((int) 0);
-							onCommentSelectedListener
-									.onCommentSelected(aComment);
-							thumbs.notifyDataSetChanged();
-
-						}
+					public void onItemClick(AdapterView<?> arg0, View view,
+							int position, long id) {
+						selectedPosition = position;
+						Comment comment = model.get((int) id);
+						onCommentSelectedListener.onCommentSelected(comment);
 					}
-					shouldSelectAfterLoad = false;
-				}
+				});
 
-				return true;
+				listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+					public void onCreateContextMenu(ContextMenu menu, View v,
+							ContextMenuInfo menuInfo) {
+						AdapterView.AdapterContextMenuInfo info;
+						try {
+							info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+						} catch (ClassCastException e) {
+							// Log.e(TAG, "bad menuInfo", e);
+							return;
+						}
+
+						WordPress.currentComment = model.get(info.position);
+
+						menu.setHeaderTitle(getResources().getText(
+								R.string.comment_actions));
+						menu.add(0, 0, 0,
+								getResources().getText(R.string.mark_approved));
+						menu.add(0, 1, 0,
+								getResources()
+										.getText(R.string.mark_unapproved));
+						menu.add(0, 2, 0,
+								getResources().getText(R.string.mark_spam));
+						menu.add(0, 3, 0, getResources()
+								.getText(R.string.reply));
+						menu.add(0, 4, 0,
+								getResources().getText(R.string.delete));
+					}
+				});
 			} else {
-				return false;
-			}
-		} else {
-			Vector<?> latestComments = WordPress.wpDB.loadMoreComments(
-					getActivity().getApplicationContext(),
-					WordPress.currentBlog.getId(), commentsToLoad);
-			if (latestComments != null) {
-				numRecords += latestComments.size();
-				for (int i = latestComments.size(); i > 0; i--) {
-					HashMap<?, ?> contentHash = (HashMap<?, ?>) latestComments
-							.get(i - 1);
-					allComments.put(contentHash.get("commentID").toString(),
-							contentHash);
-					author = EscapeUtils.unescapeHtml(contentHash.get("author")
-							.toString());
-					commentID = contentHash.get("commentID").toString();
-					postID = contentHash.get("postID").toString();
-					comment = EscapeUtils.unescapeHtml(contentHash.get(
-							"comment").toString());
-					dateCreatedFormatted = contentHash.get(
-							"commentDateFormatted").toString();
-					status = contentHash.get("status").toString();
-					authorEmail = EscapeUtils.unescapeHtml(contentHash.get(
-							"email").toString());
-					authorURL = EscapeUtils.unescapeHtml(contentHash.get("url")
-							.toString());
-					postTitle = EscapeUtils.unescapeHtml(contentHash.get(
-							"postTitle").toString());
-
-					// add to model
-					model.add(new Comment(postID, commentID, i, author,
-							dateCreatedFormatted, comment, status, postTitle,
-							authorURL, authorEmail, URI
-									.create("http://gravatar.com/avatar/"
-											+ getMd5Hash(authorEmail.trim())
-											+ "?s=100&d=identicon")));
+				if (thumbs != null) {
+					thumbs.notifyDataSetChanged();
 				}
-				thumbs.notifyDataSetChanged();
 			}
+
+			if (this.shouldSelectAfterLoad) {
+				if (model != null) {
+					if (model.size() > 0) {
+
+						selectedPosition = 0;
+						Comment aComment = model.get((int) 0);
+						onCommentSelectedListener.onCommentSelected(aComment);
+						thumbs.notifyDataSetChanged();
+
+					}
+				}
+				shouldSelectAfterLoad = false;
+			}
+			
+			if (loadMore && scrollPosition > 0) {
+				ListView listView = this.getListView();
+				try {
+					listView.setSelectionFromTop(scrollPosition, scrollPositionTop);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}
+
 			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -593,14 +549,12 @@ public class ViewComments extends ListFragment {
 				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
-		hPost.put("status", "");
-		hPost.put("post_id", "");
 		if (loadMore) {
-			hPost.put("offset", numRecords);
-		}
-		if (totalComments != 0 && ((totalComments - numRecords) < 30)) {
-			commentsToLoad = totalComments - numRecords;
-			hPost.put("number", commentsToLoad);
+			ListView listView = this.getListView();
+			scrollPosition = listView.getFirstVisiblePosition();
+			View firstVisibleView = listView.getChildAt(0);
+			scrollPositionTop = (firstVisibleView == null) ? 0 : firstVisibleView.getTop();
+			hPost.put("number", numRecords + 30);
 		} else {
 			hPost.put("number", 30);
 		}
@@ -636,13 +590,13 @@ public class ViewComments extends ListFragment {
 	}
 
 	class CommentAdapter extends ArrayAdapter<Comment> {
-		
+
 		int sdk_version = 7;
 		boolean detailViewVisible = false;
-		
+
 		CommentAdapter() {
 			super(getActivity().getApplicationContext(), R.layout.row, model);
-			
+
 			sdk_version = android.os.Build.VERSION.SDK_INT;
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			ViewCommentFragment f = (ViewCommentFragment) fm
@@ -665,8 +619,9 @@ public class ViewComments extends ListFragment {
 				wrapper = (CommentEntryWrapper) row.getTag();
 			}
 			Comment commentEntry = getItem(position);
-			
-			if (position == selectedPosition && sdk_version >= 11 && detailViewVisible) {
+
+			if (position == selectedPosition && sdk_version >= 11
+					&& detailViewVisible) {
 				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.list_highlight_bg));
 			} else if ("hold".equals(commentEntry.status)) {
@@ -1117,22 +1072,10 @@ public class ViewComments extends ListFragment {
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
 			} else {
 
-				if (commentsResult.size() < 30) {
-					// end of list reached
-					getListView().removeFooterView(switcher);
-				}
-
 				allComments.putAll(commentsResult);
 
-				// loop this!
-				for (int ctr = 0; ctr < commentsResult.size(); ctr++) {
-					if (loadMore) {
-						checkedComments.add("false");
-					}
-				}
-
 				if (!doInBackground) {
-					loadComments(loadMore, refreshOnly);
+					loadComments(refreshOnly, loadMore);
 				}
 
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
@@ -1153,7 +1096,7 @@ public class ViewComments extends ListFragment {
 			HashMap<String, HashMap<?, ?>> commentsResult;
 			try {
 				commentsResult = ApiHelper.refreshComments(getActivity()
-						.getApplicationContext(), commentParams, loadMore);
+						.getApplicationContext(), commentParams);
 			} catch (XMLRPCException e) {
 				if (!getActivity().isFinishing())
 					moderateErrorMsg = e.getLocalizedMessage();
