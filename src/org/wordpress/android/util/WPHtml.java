@@ -806,10 +806,12 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 		if (where != len) {
 			Href h = (Href) obj;
-
-			if (h.mHref != null) {
-				text.setSpan(new URLSpan(h.mHref), where, len,
-						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			
+			if (h != null) {
+				if (h.mHref != null) {
+					text.setSpan(new URLSpan(h.mHref), where, len,
+							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
 			}
 		}
 	}
