@@ -340,7 +340,7 @@ public class Read extends Activity {
 
 				wv.getSettings().setUserAgentString("wp-android");
 				wv.getSettings().setCacheMode(
-						WebSettings.LOAD_CACHE_ELSE_NETWORK);
+						WebSettings.LOAD_NO_CACHE);
 				wv.getSettings().setSavePassword(false);
 				wv.getSettings().setBuiltInZoomControls(true);
 				wv.getSettings().setJavaScriptEnabled(true);
