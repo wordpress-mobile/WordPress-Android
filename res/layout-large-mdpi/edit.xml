@@ -58,7 +58,7 @@
                     android:capitalize="sentences"
                     android:gravity="top"
                     android:minLines="4"
-                    android:maxLines="8"
+                    android:maxLines="6"
                     android:hint="@string/content"
                     android:textColorLink="#21759b" />
             </RelativeLayout>
