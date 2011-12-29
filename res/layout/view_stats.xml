@@ -122,6 +122,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/dotcom"
+                    android:singleLine="true"
                     android:hint="@string/stats_username" />
 
                 <EditText
@@ -130,6 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/dotcomUsername"
                     android:hint="@string/stats_password"
+                    android:singleLine="true"
                     android:inputType="textPassword" />
 
                 <Button
