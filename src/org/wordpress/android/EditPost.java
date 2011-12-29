@@ -393,9 +393,12 @@ public class EditPost extends Activity implements LocationListener {
 				contentHTML = post.getDescription();
 			}
 
-			contentET
-					.setText(WPHtml.fromHtml(StringHelper.addPTags(contentHTML
-							.replaceAll("\uFFFC", "")), EditPost.this, post));
+			try {
+				contentET.setText(WPHtml.fromHtml(StringHelper.addPTags(contentHTML
+								.replaceAll("\uFFFC", "")), EditPost.this, post));
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 
 			long pubDate = post.getDate_created_gmt();
 			if (pubDate != 0) {
@@ -642,11 +645,15 @@ public class EditPost extends Activity implements LocationListener {
 		} else if (data != null || requestCode == 4) {
 			switch (requestCode) {
 			case 0:
-				Spannable content = (Spannable) WordPress.richPostContent;
+				
 
-				if (content != null) {
+				if (WordPress.richPostContent != null) {
 					WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
-					contentET.setText(content);
+					try {
+						contentET.setText(WordPress.richPostContent);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 
 				EditText title = (EditText) findViewById(R.id.title);

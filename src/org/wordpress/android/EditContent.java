@@ -115,9 +115,13 @@ public class EditContent extends Activity {
 		}
 
 		final WPEditText contentEditor = (WPEditText) findViewById(R.id.postContent);
-		Spannable contentText = WordPress.richPostContent;
-		if (contentText != null) {
-			contentEditor.setText(contentText);
+		
+		if (WordPress.richPostContent != null) {
+			try {
+				contentEditor.setText(WordPress.richPostContent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		contentEditor
@@ -535,8 +539,13 @@ public class EditContent extends Activity {
 				ssb.append(contentText.getText().subSequence(selectionEnd,
 						contentText.getText().length()));
 
-				contentText.setText(ssb);
-				contentText.setSelection(selectionEnd + more.length());
+				try {
+					contentText.setText(ssb);
+					contentText.setSelection(selectionEnd + more.length());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -751,8 +760,12 @@ public class EditContent extends Activity {
 		builder.setSpan(as, selectionStart, selectionEnd + 1,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		builder.append("\n\n");
-		content.setText(builder);
-		content.setSelection(content.getText().length());
+		try {
+			content.setText(builder);
+			content.setSelection(content.getText().length());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -829,39 +842,43 @@ public class EditContent extends Activity {
 
 				break;
 			case 4:
-				extras = data.getExtras();
-				String linkURL = extras.getString("linkURL");
-				if (!linkURL.equals("http://") && !linkURL.equals("")) {
-					WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+				try {
+					extras = data.getExtras();
+					String linkURL = extras.getString("linkURL");
+					if (!linkURL.equals("http://") && !linkURL.equals("")) {
+						WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
 
-					if (selectionStart > selectionEnd) {
-						int temp = selectionEnd;
-						selectionEnd = selectionStart;
-						selectionStart = temp;
+						if (selectionStart > selectionEnd) {
+							int temp = selectionEnd;
+							selectionEnd = selectionStart;
+							selectionStart = temp;
+						}
+
+						Editable str = contentText.getText();
+						if (extras.getString("linkText") == null) {
+							if (selectionStart < selectionEnd)
+								str.delete(selectionStart, selectionEnd);
+							str.insert(selectionStart, linkURL);
+							str.setSpan(new URLSpan(linkURL), selectionStart,
+									selectionStart + linkURL.length(),
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+							contentText.setSelection(selectionStart
+									+ linkURL.length());
+						} else {
+							String linkText = extras.getString("linkText");
+							if (selectionStart < selectionEnd)
+								str.delete(selectionStart, selectionEnd);
+							str.insert(selectionStart, linkText);
+							str.setSpan(new URLSpan(linkURL), selectionStart,
+									selectionStart + linkText.length(),
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							contentText.setSelection(selectionStart
+									+ linkText.length());
+						}
 					}
-
-					Editable str = contentText.getText();
-					if (extras.getString("linkText") == null) {
-						if (selectionStart < selectionEnd)
-							str.delete(selectionStart, selectionEnd);
-						str.insert(selectionStart, linkURL);
-						str.setSpan(new URLSpan(linkURL), selectionStart,
-								selectionStart + linkURL.length(),
-								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-						contentText.setSelection(selectionStart
-								+ linkURL.length());
-					} else {
-						String linkText = extras.getString("linkText");
-						if (selectionStart < selectionEnd)
-							str.delete(selectionStart, selectionEnd);
-						str.insert(selectionStart, linkText);
-						str.setSpan(new URLSpan(linkURL), selectionStart,
-								selectionStart + linkText.length(),
-								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-						contentText.setSelection(selectionStart
-								+ linkText.length());
-					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				break;
 			}
