@@ -352,7 +352,7 @@ public class ViewStats extends Activity {
 			url = url.replace("http://www.", "http://");
 		}
 		else {
-			wwwURL = url.replace("http://", "http://wwww.");
+			wwwURL = url.replace("http://", "http://www.");
 		}
 		
 		if (!url.endsWith("/")) {
