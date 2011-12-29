@@ -361,8 +361,12 @@ public class WPTitleBar extends RelativeLayout {
 			initViews();
 		showDashboard.postDelayed(new Runnable() {
 			public void run() {
-				if (dashboard.getVisibility() == View.GONE) {
-					showDashboardOverlay(delay);
+				try {
+					if (dashboard.getVisibility() == View.GONE) {
+						showDashboardOverlay(delay);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}, 0);
