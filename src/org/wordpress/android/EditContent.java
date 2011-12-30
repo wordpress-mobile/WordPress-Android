@@ -60,7 +60,7 @@ import android.widget.ToggleButton;
 
 public class EditContent extends Activity {
 	/** Called when the activity is first created. */
-	int styleStart, cursorLoc, selectionStart, selectionEnd;
+	int styleStart, selectionStart, selectionEnd, lastPosition = -1;
 	String SD_CARD_TEMP_DIR = "";
 	boolean localDraft = true, isBackspace = false;
 	boolean isNew = true;
@@ -80,7 +80,9 @@ public class EditContent extends Activity {
 				WordPress.currentBlog = new Blog(
 						WordPress.wpDB.getLastBlogID(this), this);
 			} catch (Exception e) {
-				Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this,
+						getResources().getText(R.string.blog_not_found),
+						Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		}
@@ -115,7 +117,7 @@ public class EditContent extends Activity {
 		}
 
 		final WPEditText contentEditor = (WPEditText) findViewById(R.id.postContent);
-		
+
 		if (WordPress.richPostContent != null) {
 			try {
 				contentEditor.setText(WordPress.richPostContent);
@@ -132,6 +134,7 @@ public class EditContent extends Activity {
 						final Spannable s = contentEditor.getText();
 						// set toggle buttons if cursor is inside of a matching
 						// span
+						styleStart = contentEditor.getSelectionStart();
 						Object[] spans = s.getSpans(
 								contentEditor.getSelectionStart(),
 								contentEditor.getSelectionStart(), Object.class);
@@ -194,14 +197,6 @@ public class EditContent extends Activity {
 
 					@Override
 					public void onImeBack(WPEditText view, String text) {
-						/*
-						 * RelativeLayout formatBar = (RelativeLayout)
-						 * findViewById(R.id.formatBar); Animation
-						 * fadeOutAnimation = AnimationUtils
-						 * .loadAnimation(EditContent.this, R.anim.disappear);
-						 * formatBar.startAnimation(fadeOutAnimation);
-						 * formatBar.setVisibility(View.GONE);
-						 */
 						finishEditing();
 					}
 
@@ -222,6 +217,7 @@ public class EditContent extends Activity {
 				}
 
 				final Spannable s = contentEditor.getText();
+				styleStart = contentEditor.getSelectionStart();
 				// check if image span was tapped
 				WPImageSpan[] click_spans = s.getSpans(
 						contentEditor.getSelectionStart(),
@@ -343,7 +339,8 @@ public class EditContent extends Activity {
 				try {
 					int position = Selection.getSelectionStart(contentEdit
 							.getText());
-					if (isBackspace && position != 1)
+					if ((isBackspace && position != 1)
+							|| lastPosition == position)
 						return;
 
 					// add style as the user types if a toggle button is enabled
@@ -356,78 +353,95 @@ public class EditContent extends Activity {
 					if (position < 0) {
 						position = 0;
 					}
-
+					lastPosition = position;
 					if (position > 0) {
 
 						if (styleStart > position) {
 							styleStart = position - 1;
 						}
-
+						boolean exists = false;
 						if (boldButton.isChecked()) {
 							StyleSpan[] ss = s.getSpans(styleStart, position,
 									StyleSpan.class);
-
+							exists = false;
 							for (int i = 0; i < ss.length; i++) {
 								if (ss[i].getStyle() == android.graphics.Typeface.BOLD) {
-									s.removeSpan(ss[i]);
+									exists = true;
 								}
 							}
-							s.setSpan(new StyleSpan(
-									android.graphics.Typeface.BOLD),
-									styleStart, position,
-									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							if (!exists)
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.BOLD),
+										styleStart, position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						}
 						if (emButton.isChecked()) {
 							StyleSpan[] ss = s.getSpans(styleStart, position,
 									StyleSpan.class);
-
+							exists = false;
 							for (int i = 0; i < ss.length; i++) {
 								if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
-									s.removeSpan(ss[i]);
+									exists = true;
 								}
 							}
-							s.setSpan(new StyleSpan(
+							if (!exists)
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.ITALIC),
+										styleStart, position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (emButton.isChecked()) {
+							StyleSpan[] ss = s.getSpans(styleStart, position,
+									StyleSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
+									exists = true;
+								}
+							}
+							if (!exists)
+								s.setSpan(new StyleSpan(
 									android.graphics.Typeface.ITALIC),
 									styleStart, position,
-									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+									Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (underlineButton.isChecked()) {
+							UnderlineSpan[] ss = s.getSpans(styleStart,
+									position, UnderlineSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								exists = true;
+							}
+							if (!exists)
+								s.setSpan(new UnderlineSpan(), styleStart,
+									position,
+									Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (strikeButton.isChecked()) {
+							StrikethroughSpan[] ss = s.getSpans(styleStart,
+									position, StrikethroughSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								exists = true;
+							}
+							if (!exists)
+								s.setSpan(new StrikethroughSpan(), styleStart,
+									position,
+									Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						}
 						if (bquoteButton.isChecked()) {
 
 							QuoteSpan[] ss = s.getSpans(styleStart, position,
 									QuoteSpan.class);
-
+							exists = false;
 							for (int i = 0; i < ss.length; i++) {
-								s.removeSpan(ss[i]);
+								exists = true;
 							}
-							s.setSpan(new QuoteSpan(), styleStart, position,
-									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-						}
-						if (underlineButton.isChecked()) {
-							UnderlineSpan[] ss = s.getSpans(styleStart,
-									position, UnderlineSpan.class);
-
-							for (int i = 0; i < ss.length; i++) {
-								s.removeSpan(ss[i]);
-							}
-							s.setSpan(new UnderlineSpan(), styleStart,
-									position,
-									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-						}
-						if (strikeButton.isChecked()) {
-							StrikethroughSpan[] ss = s.getSpans(styleStart,
-									position, StrikethroughSpan.class);
-
-							for (int i = 0; i < ss.length; i++) {
-								s.removeSpan(ss[i]);
-							}
-							s.setSpan(new StrikethroughSpan(), styleStart,
-									position,
-									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							if (!exists)
+								s.setSpan(new QuoteSpan(), styleStart, position,
+									Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						}
 					}
-
-					cursorLoc = Selection.getSelectionStart(contentEdit
-							.getText());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -545,7 +559,6 @@ public class EditContent extends Activity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
 
 			}
 		});
@@ -554,6 +567,7 @@ public class EditContent extends Activity {
 	protected void formatBtnClick(ToggleButton toggleButton, String tag) {
 		try {
 			WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+			Spannable s = contentText.getText();
 
 			int selectionStart = contentText.getSelectionStart();
 
@@ -569,25 +583,7 @@ public class EditContent extends Activity {
 
 			if (selectionEnd > selectionStart) {
 				Spannable str = contentText.getText();
-				if (tag.equals("blockquote")) {
-
-					QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd,
-							QuoteSpan.class);
-
-					boolean exists = false;
-					for (int i = 0; i < ss.length; i++) {
-						str.removeSpan(ss[i]);
-						exists = true;
-					}
-
-					if (!exists) {
-						str.setSpan(new QuoteSpan(), selectionStart,
-								selectionEnd,
-								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-					}
-
-					toggleButton.setChecked(false);
-				} else if (tag.equals("strong")) {
+				if (tag.equals("strong")) {
 					StyleSpan[] ss = str.getSpans(selectionStart, selectionEnd,
 							StyleSpan.class);
 
@@ -663,10 +659,10 @@ public class EditContent extends Activity {
 					}
 
 					toggleButton.setChecked(false);
-				} else if (tag.equals("ul")) {
+				} else if (tag.equals("blockquote")) {
 
-					BulletSpan[] ss = str.getSpans(selectionStart,
-							selectionEnd, BulletSpan.class);
+					QuoteSpan[] ss = str.getSpans(selectionStart, selectionEnd,
+							QuoteSpan.class);
 
 					boolean exists = false;
 					for (int i = 0; i < ss.length; i++) {
@@ -675,13 +671,76 @@ public class EditContent extends Activity {
 					}
 
 					if (!exists) {
-						str.setSpan(new BulletSpan(), selectionStart,
+						str.setSpan(new QuoteSpan(), selectionStart,
 								selectionEnd,
 								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 					}
 
 					toggleButton.setChecked(false);
 				}
+			} else if (!toggleButton.isChecked()) {
+
+				if (tag.equals("strong") || tag.equals("em")) {
+
+					StyleSpan[] ss = s.getSpans(styleStart - 1, styleStart,
+							StyleSpan.class);
+
+					for (int i = 0; i < ss.length; i++) {
+						int tagStart = s.getSpanStart(ss[i]);
+						int tagEnd = s.getSpanEnd(ss[i]);
+						if (ss[i].getStyle() == android.graphics.Typeface.BOLD
+								&& tag.equals("strong")) {
+							tagStart = s.getSpanStart(ss[i]);
+							tagEnd = s.getSpanEnd(ss[i]);
+							s.removeSpan(ss[i]);
+							s.setSpan(new StyleSpan(
+									android.graphics.Typeface.BOLD), tagStart,
+									tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						if (ss[i].getStyle() == android.graphics.Typeface.ITALIC
+								&& tag.equals("em")) {
+							tagStart = s.getSpanStart(ss[i]);
+							tagEnd = s.getSpanEnd(ss[i]);
+							s.removeSpan(ss[i]);
+							s.setSpan(new StyleSpan(
+									android.graphics.Typeface.ITALIC),
+									tagStart, tagEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+
+					}
+				} else if (tag.equals("u")) {
+					UnderlineSpan[] us = s.getSpans(styleStart - 1, styleStart, UnderlineSpan.class);
+					for (int i = 0; i < us.length; i++) {
+						int tagStart = s.getSpanStart(us[i]);
+						int tagEnd = s.getSpanEnd(us[i]);
+						s.removeSpan(us[i]);
+						s.setSpan(new UnderlineSpan(), tagStart,
+								tagEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+				} else if (tag.equals("strike")) {
+					StrikethroughSpan[] ss = s.getSpans(styleStart - 1, styleStart, StrikethroughSpan.class);
+					for (int i = 0; i < ss.length; i++) {
+						int tagStart = s.getSpanStart(ss[i]);
+						int tagEnd = s.getSpanEnd(ss[i]);
+						s.removeSpan(ss[i]);
+						s.setSpan(new StrikethroughSpan(), tagStart,
+								tagEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+				} else if (tag.equals("blockquote")) {
+					QuoteSpan[] ss = s.getSpans(styleStart - 1, styleStart, QuoteSpan.class);
+					for (int i = 0; i < ss.length; i++) {
+						int tagStart = s.getSpanStart(ss[i]);
+						int tagEnd = s.getSpanEnd(ss[i]);
+						s.removeSpan(ss[i]);
+						s.setSpan(new QuoteSpan(), tagStart,
+								tagEnd,
+								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -774,8 +833,7 @@ public class EditContent extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_CANCELED)
 			return;
-		if (data != null
-				|| ((requestCode == 1 || requestCode == 3))) {
+		if (data != null || ((requestCode == 1 || requestCode == 3))) {
 			Bundle extras;
 			switch (requestCode) {
 			case 0:

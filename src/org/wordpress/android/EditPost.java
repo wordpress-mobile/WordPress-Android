@@ -99,12 +99,14 @@ public class EditPost extends Activity implements LocationListener {
 		super.onCreate(icicle);
 		Bundle extras = getIntent().getExtras();
 
-		//need to make sure we have db and currentBlog on views that don't use the Action Bar
+		// need to make sure we have db and currentBlog on views that don't use
+		// the Action Bar
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
 			try {
-				WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+				WordPress.currentBlog = new Blog(
+						WordPress.wpDB.getLastBlogID(this), this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -150,7 +152,10 @@ public class EditPost extends Activity implements LocationListener {
 					try {
 						blog = new Blog(accountIDs[i], EditPost.this);
 					} catch (Exception e) {
-						Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						Toast.makeText(
+								this,
+								getResources().getText(R.string.blog_not_found),
+								Toast.LENGTH_SHORT).show();
 						finish();
 					}
 
@@ -170,13 +175,21 @@ public class EditPost extends Activity implements LocationListener {
 									try {
 										blog = new Blog(id, EditPost.this);
 									} catch (Exception e) {
-										Toast.makeText(EditPost.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+										Toast.makeText(
+												EditPost.this,
+												getResources()
+														.getText(
+																R.string.blog_not_found),
+												Toast.LENGTH_SHORT).show();
 										finish();
 									}
 									WordPress.currentBlog = blog;
-									WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
+									WordPress.wpDB
+											.updateLastBlogID(WordPress.currentBlog
+													.getId());
 									accountName = blogNames[item];
-									setTitle(EscapeUtils.unescapeHtml(accountName)
+									setTitle(EscapeUtils
+											.unescapeHtml(accountName)
 											+ " - "
 											+ getResources()
 													.getText(
@@ -191,11 +204,15 @@ public class EditPost extends Activity implements LocationListener {
 					try {
 						blog = new Blog(id, EditPost.this);
 					} catch (Exception e) {
-						Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						Toast.makeText(
+								this,
+								getResources().getText(R.string.blog_not_found),
+								Toast.LENGTH_SHORT).show();
 						finish();
 					}
 					WordPress.currentBlog = blog;
-					WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
+					WordPress.wpDB.updateLastBlogID(WordPress.currentBlog
+							.getId());
 					accountName = blogNames[0];
 					setTitle(EscapeUtils.unescapeHtml(accountName)
 							+ " - "
@@ -221,7 +238,9 @@ public class EditPost extends Activity implements LocationListener {
 				try {
 					blog = new Blog(id, this);
 				} catch (Exception e) {
-					Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+					Toast.makeText(this,
+							getResources().getText(R.string.blog_not_found),
+							Toast.LENGTH_SHORT).show();
 					finish();
 				}
 				accountName = EscapeUtils.unescapeHtml(extras
@@ -231,33 +250,40 @@ public class EditPost extends Activity implements LocationListener {
 				isPage = extras.getBoolean("isPage", false);
 				isNew = extras.getBoolean("isNew", false);
 				option = extras.getString("option");
-				
+
 				if (extras.getBoolean("isQuickPress")) {
 					id = extras.getInt("id");
 					try {
 						blog = new Blog(id, this);
 						WordPress.currentBlog = blog;
 					} catch (Exception e) {
-						Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						Toast.makeText(
+								this,
+								getResources().getText(R.string.blog_not_found),
+								Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				}
-				
+
 				if (!isNew)
 					post = new Post(id, postID, isPage, this);
-					WordPress.currentPost = post;
+				WordPress.currentPost = post;
 			}
-			
+
 			if (isNew) {
-				setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName())
+				setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog
+						.getBlogName())
 						+ " - "
 						+ getResources().getText(
-								(isPage) ? R.string.new_page : R.string.new_post));
+								(isPage) ? R.string.new_page
+										: R.string.new_post));
 			} else {
-				setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName())
+				setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog
+						.getBlogName())
 						+ " - "
 						+ getResources().getText(
-								(isPage) ? R.string.edit_page : R.string.edit_post));
+								(isPage) ? R.string.edit_page
+										: R.string.edit_post));
 			}
 		}
 
@@ -394,8 +420,9 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 			try {
-				contentET.setText(WPHtml.fromHtml(StringHelper.addPTags(contentHTML
-								.replaceAll("\uFFFC", "")), EditPost.this, post));
+				contentET.setText(WPHtml.fromHtml(StringHelper
+						.addPTags(contentHTML.replaceAll("\uFFFC", "")),
+						EditPost.this, post));
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -645,7 +672,6 @@ public class EditPost extends Activity implements LocationListener {
 		} else if (data != null || requestCode == 4) {
 			switch (requestCode) {
 			case 0:
-				
 
 				if (WordPress.richPostContent != null) {
 					WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
@@ -721,6 +747,11 @@ public class EditPost extends Activity implements LocationListener {
 		content = content.replace("<p><p>", "<p>");
 		content = content.replace("</p></p>", "</p>");
 		content = content.replace("<br><br>", "<br>");
+		// sometimes the editor creates extra tags
+		content = content.replace("</strong><strong>", "")
+				.replace("</em><em>", "").replace("</u><u>", "")
+				.replace("</strike><strike>", "")
+				.replace("</blockquote><blockquote>", "");
 
 		TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
 		String pubDate = tvPubDate.getText().toString();
@@ -871,7 +902,7 @@ public class EditPost extends Activity implements LocationListener {
 						mf.save(EditPost.this);
 					}
 				}
-				
+
 				WordPress.currentPost = post;
 
 			} else {
@@ -1202,10 +1233,10 @@ public class EditPost extends Activity implements LocationListener {
 		public void onTimeSet(TimePicker view, int hour, int minute) {
 			mHour = hour;
 			mMinute = minute;
-			
+
 			Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
 			long timestamp = d.getTime();
-			
+
 			try {
 				int flags = 0;
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
@@ -1214,16 +1245,15 @@ public class EditPost extends Activity implements LocationListener {
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
 				customPubDate = timestamp
 						+ TimeZone.getDefault().getOffset(timestamp);
-				String formattedDate = DateUtils.formatDateTime(
-						EditPost.this, customPubDate, flags);
+				String formattedDate = DateUtils.formatDateTime(EditPost.this,
+						customPubDate, flags);
 				TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
 				tvPubDate.setText(formattedDate);
 				isCustomPubDate = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			
+
 		}
 
 	};

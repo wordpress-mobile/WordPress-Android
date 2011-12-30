@@ -432,9 +432,6 @@ public class Post {
 				WordPress.postUploaded();
 				nm.cancel(notificationID);
 			} else {
-				
-				
-				
 				String postOrPage = (String) (post.isPage() ? context
 						.getResources().getText(R.string.page_id) : context
 						.getResources().getText(R.string.post_id));
