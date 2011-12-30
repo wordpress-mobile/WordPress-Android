@@ -31,7 +31,6 @@ import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
-import android.text.style.BulletSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
