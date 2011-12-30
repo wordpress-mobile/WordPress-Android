@@ -777,8 +777,12 @@ public class ViewPosts extends ListFragment {
 				} else {
 					if (pla != null) {
 						if (postIDs.length == 2) {
-							WordPress.wpDB.deleteUploadedPosts(WordPress.currentBlog.getId(), WordPress.currentPost.isPage());
-							onPostActionListener.onPostAction(Posts.POST_CLEAR, WordPress.currentPost);
+							try {
+								WordPress.wpDB.deleteUploadedPosts(WordPress.currentBlog.getId(), WordPress.currentPost.isPage());
+								onPostActionListener.onPostAction(Posts.POST_CLEAR, WordPress.currentPost);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 							WordPress.currentPost = null;
 							loadPosts(false);
 						}
