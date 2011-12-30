@@ -59,6 +59,7 @@ public class StringHelper {
 		} else {
 			wrappedHTML = source;
 		}
+		wrappedHTML = wrappedHTML.replace("<br />", "<br>").replace("<br/>", "<br>");
 		wrappedHTML = wrappedHTML.replace("<br>\n", "<br>").replace("\n", "<br>");
 		return wrappedHTML;
 	}
