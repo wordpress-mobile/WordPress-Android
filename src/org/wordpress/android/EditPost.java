@@ -420,9 +420,16 @@ public class EditPost extends Activity implements LocationListener {
 			}
 
 			try {
-				contentET.setText(WPHtml.fromHtml(StringHelper
-						.addPTags(contentHTML.replaceAll("\uFFFC", "")),
-						EditPost.this, post));
+				if (post.isLocalDraft()) {
+					contentET.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""),
+							EditPost.this, post));
+				}
+				else {
+					contentET.setText(WPHtml.fromHtml(StringHelper
+							.addPTags(contentHTML.replaceAll("\uFFFC", "")),
+							EditPost.this, post));
+				}
+				
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

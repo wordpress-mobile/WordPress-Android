@@ -286,6 +286,7 @@ public class WPHtml {
 					out.append("<a href=\"");
 					out.append(((URLSpan) style[j]).getURL());
 					out.append("\">");
+					next = end;
 				}
 				if (style[j] instanceof ImageSpan) {
 					out.append("<img src=\"");
@@ -375,6 +376,7 @@ public class WPHtml {
 	private static void processWPImage(StringBuilder out, Spanned text, int start,
 			int end) {
 		int next;
+		
 		for (int i = start; i < end; i = next) {
 			next = text.nextSpanTransition(i, end, SpannableString.class);
 			SpannableString[] images = text.getSpans(i, next, SpannableString.class);
