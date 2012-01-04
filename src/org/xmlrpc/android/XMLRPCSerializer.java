@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Map.Entry;
 
 class XMLRPCSerializer {
@@ -43,7 +42,7 @@ class XMLRPCSerializer {
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
 
 	@SuppressWarnings("unchecked")
-	static void serialize(XmlSerializer serializer, Object object, boolean convertToGMT ) throws IOException {
+	static void serialize(XmlSerializer serializer, Object object) throws IOException {
 		// check for scalar types:
 		if (object instanceof Integer || object instanceof Short || object instanceof Byte) {
 			serializer.startTag(null, TYPE_I4).text(object.toString()).endTag(null, TYPE_I4);
@@ -65,13 +64,6 @@ class XMLRPCSerializer {
 		if (object instanceof Date || object instanceof Calendar) {
 			Date date = (Date) object;
     		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
-    		if (convertToGMT){
-    			long pubDate = date.getTime();
-    			TimeZone tz = TimeZone.getDefault();
-    			long offset = tz.getOffset(pubDate);
-    			pubDate += offset * -1;
-    			date = new Date(pubDate);
-    		}
     		String sDate = dateFormat.format(date);
 			serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
 		} else
@@ -106,7 +98,7 @@ class XMLRPCSerializer {
 			while (iter.hasNext()) {
 				Object o = iter.next();
 				serializer.startTag(null, TAG_VALUE);
-				serialize(serializer, o, convertToGMT);
+				serialize(serializer, o);
 				serializer.endTag(null, TAG_VALUE);
 			}
 			serializer.endTag(null, TAG_DATA).endTag(null, TYPE_ARRAY);
@@ -117,7 +109,7 @@ class XMLRPCSerializer {
 			for (int i=0; i<objects.length; i++) {
 				Object o = objects[i];
 				serializer.startTag(null, TAG_VALUE);
-				serialize(serializer, o, convertToGMT);
+				serialize(serializer, o);
 				serializer.endTag(null, TAG_VALUE);
 			}
 			serializer.endTag(null, TAG_DATA).endTag(null, TYPE_ARRAY);
@@ -134,7 +126,7 @@ class XMLRPCSerializer {
 				serializer.startTag(null, TAG_MEMBER);
 				serializer.startTag(null, TAG_NAME).text(key).endTag(null, TAG_NAME);
 				serializer.startTag(null, TAG_VALUE);
-				serialize(serializer, value, convertToGMT);
+				serialize(serializer, value);
 				serializer.endTag(null, TAG_VALUE);
 				serializer.endTag(null, TAG_MEMBER);
 			}

@@ -442,10 +442,8 @@ public class EditPost extends Activity implements LocationListener {
 					flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 					flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
 					flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-					long localTime = pubDate
-							+ TimeZone.getDefault().getOffset(pubDate);
 					String formattedDate = DateUtils.formatDateTime(
-							EditPost.this, localTime, flags);
+							EditPost.this, pubDate, flags);
 					TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
 					tvPubDate.setText(formattedDate);
 				} catch (Exception e) {
@@ -1250,10 +1248,9 @@ public class EditPost extends Activity implements LocationListener {
 				flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-				customPubDate = timestamp
-						+ TimeZone.getDefault().getOffset(timestamp);
 				String formattedDate = DateUtils.formatDateTime(EditPost.this,
-						customPubDate, flags);
+						timestamp, flags);
+				customPubDate = timestamp;
 				TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
 				tvPubDate.setText(formattedDate);
 				isCustomPubDate = true;

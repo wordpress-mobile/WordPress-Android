@@ -230,9 +230,7 @@ public class ViewPosts extends ListFragment {
 				flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-				long localTime = (Long) contentHash.get("date_created_gmt")
-						+ TimeZone.getDefault().getOffset(
-								(Long) contentHash.get("date_created_gmt"));
+				long localTime = (Long) contentHash.get("date_created_gmt");
 				dateCreatedFormatted[i] = DateUtils
 						.formatDateTime(getActivity().getApplicationContext(),
 								localTime, flags);
