@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,6 +204,7 @@ public class ViewPosts extends ListFragment {
 			}
 		}
 		if (loadedPosts != null) {
+			Date d = new Date();
 			for (int i = 0; i < loadedPosts.size(); i++) {
 				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
 				titles[i] = EscapeUtils.unescapeHtml(contentHash.get("title")
@@ -223,6 +225,11 @@ public class ViewPosts extends ListFragment {
 						statuses[i] = getResources().getText(R.string.post_private).toString();
 					}
 				}
+				
+				if ((Long) contentHash.get("date_created_gmt") > d.getTime()){
+					statuses[i] = getResources().getText(R.string.scheduled).toString();
+				}
+				
 				// dateCreatedFormatted[i] =
 				// contentHash.get("postDateFormatted").toString();
 				int flags = 0;
