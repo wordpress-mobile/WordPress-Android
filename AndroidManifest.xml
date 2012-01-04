@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.0.2" android:versionCode="40">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.0.2" android:versionCode="41">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
 		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true"  android:debuggable="false">
-		<activity android:name="wpAndroid" android:icon="@drawable/app_icon" android:configChanges="orientation|keyboardHidden"/>
 		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"/>
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
 			android:label="@string/create_a_link" />
-		<activity android:name="ViewPostComments" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
 		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:theme="@style/IncludeTitleBar">
 			<intent-filter>
@@ -23,7 +21,6 @@
 		<activity android:name="Preferences" android:windowSoftInputMode="stateHidden" android:theme="@style/IncludeTitleBar"/>
 		<service android:name="CommentService" android:label="Comment Service" />
 		<receiver android:name="CommentBroadcastReceiver" />
-		<activity android:name="TabView" android:theme="@style/Theme.TabView" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name="ReplyToComment" android:theme="@android:style/Theme.Dialog" />
 <activity android:name="SelectCategories" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
@@ -44,8 +41,6 @@
 	<category android:name="android.intent.category.LAUNCHER" />
   </intent-filter>
 </activity>
-<activity android:name="ViewDrafts"></activity>
-<activity android:name="Write"></activity>
 <activity android:name="About"></activity>
 <activity android:name="EditContent" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Comments" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
