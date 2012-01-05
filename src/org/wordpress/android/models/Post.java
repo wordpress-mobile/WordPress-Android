@@ -588,11 +588,10 @@ public class Post {
 				contentStruct.put("title", post.title);
 				long pubDate = post.date_created_gmt;
 				if (pubDate != 0) {
-					Date dateCreated = new Date(pubDate);
-					contentStruct.put("dateCreated", dateCreated);
-					Date date_created_gmt = new Date(pubDate + (dateCreated.getTimezoneOffset() * 60000));
+					Date date_created_gmt = new Date(pubDate);
 					contentStruct.put("date_created_gmt", date_created_gmt);
-					
+					Date dateCreated = new Date(pubDate  + (date_created_gmt.getTimezoneOffset() * 60000));
+					contentStruct.put("dateCreated", dateCreated);
 				}
 
 				// get rid of the p tags that the editor adds.

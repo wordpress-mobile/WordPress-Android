@@ -1,6 +1,7 @@
 package org.xmlrpc.android;
 
 import org.json.JSONObject;
+import org.wordpress.android.EditPost;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
@@ -8,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,24 +77,21 @@ public class ApiHelper extends Activity {
 					status = contentHash.get("status").toString();
 					postID = contentHash.get("post_id").toString();
 					commentID = contentHash.get("comment_id").toString();
-					dateCreated = contentHash.get("date_created_gmt")
-							.toString();
+					d = (Date) contentHash.get("date_created_gmt");
 					authorURL = contentHash.get("author_url").toString();
 					authorEmail = contentHash.get("author_email").toString();
 					postTitle = contentHash.get("post_title").toString();
 
-					// make the date pretty
-					String cDate = dateCreated.replace(tz.getID(),
-							shortDisplayName);
+					String formattedDate = d.toString();
 					try {
-						d = sdf.parse(cDate);
-						SimpleDateFormat sdfOut = new SimpleDateFormat(
-								"MMMM dd, yyyy hh:mm a");
-						dateCreatedFormatted = sdfOut.format(d);
-					} catch (ParseException pe) {
-						dateCreatedFormatted = dateCreated; // just make it the
-															// ugly date if it
-															// doesn't work
+						int flags = 0;
+						flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+						flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+						flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+						flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+						formattedDate = DateUtils.formatDateTime(ctx,
+								d.getTime(), flags);
+					} catch (Exception e) {
 					}
 
 					dbValues.put("blogID", String.valueOf(id));
@@ -100,8 +99,8 @@ public class ApiHelper extends Activity {
 					dbValues.put("commentID", commentID);
 					dbValues.put("author", author);
 					dbValues.put("comment", comment);
-					dbValues.put("commentDate", dateCreated);
-					dbValues.put("commentDateFormatted", dateCreatedFormatted);
+					dbValues.put("commentDate", formattedDate);
+					dbValues.put("commentDateFormatted", formattedDate);
 					dbValues.put("status", status);
 					dbValues.put("url", authorURL);
 					dbValues.put("email", authorEmail);
@@ -194,21 +193,21 @@ public class ApiHelper extends Activity {
 			status = contentHash.get("status").toString();
 			postID = contentHash.get("post_id").toString();
 			commentID = contentHash.get("comment_id").toString();
-			dateCreated = contentHash.get("date_created_gmt").toString();
+			d = (Date) contentHash.get("date_created_gmt");
 			authorURL = contentHash.get("author_url").toString();
 			authorEmail = contentHash.get("author_email").toString();
 			postTitle = contentHash.get("post_title").toString();
 
-			// make the date pretty
-			String cDate = dateCreated.replace(tz.getID(), shortDisplayName);
+			String formattedDate = d.toString();
 			try {
-				d = sdf.parse(cDate);
-				SimpleDateFormat sdfOut = new SimpleDateFormat(
-						"MMMM dd, yyyy hh:mm a");
-				dateCreatedFormatted = sdfOut.format(d);
-			} catch (ParseException pe) {
-				dateCreatedFormatted = dateCreated; // just make it the ugly
-													// date if it doesn't work
+				int flags = 0;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+				flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+				formattedDate = DateUtils.formatDateTime(ctx,
+						d.getTime(), flags);
+			} catch (Exception e) {
 			}
 
 			dbValues.put("blogID", String.valueOf(blog.getId()));
@@ -216,8 +215,8 @@ public class ApiHelper extends Activity {
 			dbValues.put("commentID", commentID);
 			dbValues.put("author", author);
 			dbValues.put("comment", comment);
-			dbValues.put("commentDate", dateCreated);
-			dbValues.put("commentDateFormatted", dateCreatedFormatted);
+			dbValues.put("commentDate", formattedDate);
+			dbValues.put("commentDateFormatted", formattedDate);
 			dbValues.put("status", status);
 			dbValues.put("url", authorURL);
 			dbValues.put("email", authorEmail);

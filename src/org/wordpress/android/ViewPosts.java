@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.wordpress.android.models.Blog;
@@ -238,8 +239,7 @@ public class ViewPosts extends ListFragment {
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
 				long localTime = (Long) contentHash.get("date_created_gmt");
 				dateCreatedFormatted[i] = DateUtils
-						.formatDateTime(getActivity().getApplicationContext(),
-								localTime, flags);
+						.formatDateTime(getActivity().getApplicationContext(),localTime, flags);
 			}
 
 			// add the header

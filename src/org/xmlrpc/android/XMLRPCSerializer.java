@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SimpleTimeZone;
 
 class XMLRPCSerializer {
 	static final String TAG_NAME = "name";
@@ -40,6 +41,7 @@ class XMLRPCSerializer {
 	static final String TYPE_STRUCT = "struct";
 	
 	static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+	static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
 
 	@SuppressWarnings("unchecked")
 	static void serialize(XmlSerializer serializer, Object object) throws IOException {
@@ -64,6 +66,7 @@ class XMLRPCSerializer {
 		if (object instanceof Date || object instanceof Calendar) {
 			Date date = (Date) object;
     		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+    		dateFormat.setCalendar(cal);
     		String sDate = dateFormat.format(date);
 			serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
 		} else
@@ -163,6 +166,7 @@ class XMLRPCSerializer {
 			obj = parser.nextText();
 		} else
 		if (typeNodeName.equals(TYPE_DATE_TIME_ISO8601)) {
+			dateFormat.setCalendar(cal);
 			String value = parser.nextText();
 			try {
 				obj = dateFormat.parseObject(value);
