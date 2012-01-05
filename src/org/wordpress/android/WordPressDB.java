@@ -14,12 +14,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.text.StringCharacterIterator;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -907,7 +904,6 @@ public class WordPressDB {
 	public boolean savePosts(Vector<?> postValues, int blogID, boolean isPage) {
 		boolean returnValue = false;
 		if (postValues.size() != 0) {
-			Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 			for (int i = 0; i < postValues.size(); i++) {
 				try {
 					ContentValues values = new ContentValues();
@@ -929,9 +925,7 @@ public class WordPressDB {
 					}
 					try {
 						d = (Date) thisHash.get("date_created_gmt");
-						//set the date manually to make sure we get the gmt date. Sometimes the date would have the local time zone added. 
-						cal.set(d.getYear() + 1900, d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
-						values.put("date_created_gmt", cal.getTime().getTime());
+						values.put("date_created_gmt", d.getTime());
 					} catch (Exception e) {
 						d = new Date((Long) values.get("dateCreated"));
 						values.put("date_created_gmt",
