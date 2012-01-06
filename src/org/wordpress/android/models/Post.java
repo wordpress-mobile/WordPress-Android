@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -436,10 +438,15 @@ public class Post {
 						.getResources().getText(R.string.page_id) : context
 						.getResources().getText(R.string.post_id));
 
-				n.flags |= Notification.FLAG_AUTO_CANCEL;	
-				n.setLatestEventInfo(context, context.getResources().getText(
-						R.string.upload_failed), postOrPage + " " + context.getResources().getText(
-								R.string.upload_failed) + ": " + error, n.contentIntent);
+				n.flags |= Notification.FLAG_AUTO_CANCEL;
+				n.setLatestEventInfo(
+						context,
+						context.getResources().getText(R.string.upload_failed),
+						postOrPage
+								+ " "
+								+ context.getResources().getText(
+										R.string.upload_failed) + ": " + error,
+						n.contentIntent);
 				nm.notify(notificationID, n); // needs a unique id
 			}
 		}
@@ -451,15 +458,15 @@ public class Post {
 
 			// add the uploader to the notification bar
 			nm = (NotificationManager) context.getSystemService("notification");
-			
+
 			String postOrPage = (String) (post.isPage() ? context
 					.getResources().getText(R.string.page_id) : context
 					.getResources().getText(R.string.post_id));
-			String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
-			n = new Notification(R.drawable.notification_icon,
-					message, System.currentTimeMillis());
-			
-			
+			String message = context.getResources().getText(R.string.uploading)
+					+ " " + postOrPage;
+			n = new Notification(R.drawable.notification_icon, message,
+					System.currentTimeMillis());
+
 			Intent notificationIntent = new Intent(context, Posts.class);
 			notificationIntent
 					.setData((Uri.parse("custom://wordpressNotificationIntent"
@@ -467,7 +474,7 @@ public class Post {
 			notificationIntent.putExtra("fromNotification", true);
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 					notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			
+
 			n.setLatestEventInfo(context, message, message, pendingIntent);
 
 			notificationID = 22 + Integer.valueOf(post.blogID);
@@ -484,52 +491,101 @@ public class Post {
 			int moreCount = 1;
 			if (post.getMt_text_more() != null)
 				moreCount++;
+			String imgTags = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
+			Pattern pattern = Pattern.compile(imgTags);
 
 			for (int x = 0; x < moreCount; x++) {
-				if (x == 0)
-					s = (Spannable) WPHtml.fromHtml(post.getDescription(),
-							context, post);
-				else
-					s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(),
-							context, post);
-				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
-						WPImageSpan.class);
+				if (post.isLocalDraft()) {
+					if (x == 0)
+						s = (Spannable) WPHtml.fromHtml(post.getDescription(),
+								context, post);
+					else
+						s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(),
+								context, post);
+					WPImageSpan[] click_spans = s.getSpans(0, s.length(),
+							WPImageSpan.class);
 
-				if (click_spans.length != 0) {
+					if (click_spans.length != 0) {
 
-					for (int i = 0; i < click_spans.length; i++) {
-						String prompt = context.getResources().getText(R.string.uploading_media_item) + String.valueOf(i + 1);
-						n.setLatestEventInfo(context, context.getResources().getText(R.string.uploading) + " " + postOrPage, prompt, n.contentIntent);
-						nm.notify(notificationID, n);
-						WPImageSpan wpIS = click_spans[i];
-						int start = s.getSpanStart(wpIS);
-						int end = s.getSpanEnd(wpIS);
-						MediaFile mf = new MediaFile();
-						mf.setPostID(post.getId());
-						mf.setTitle(wpIS.getTitle());
-						mf.setCaption(wpIS.getCaption());
-						mf.setDescription(wpIS.getDescription());
-						mf.setFeatured(wpIS.isFeatured());
-						mf.setFileName(wpIS.getImageSource().toString());
-						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-						mf.setWidth(wpIS.getWidth());
+						for (int i = 0; i < click_spans.length; i++) {
+							String prompt = context.getResources().getText(
+									R.string.uploading_media_item)
+									+ String.valueOf(i + 1);
+							n.setLatestEventInfo(context, context
+									.getResources().getText(R.string.uploading)
+									+ " " + postOrPage, prompt, n.contentIntent);
+							nm.notify(notificationID, n);
+							WPImageSpan wpIS = click_spans[i];
+							int start = s.getSpanStart(wpIS);
+							int end = s.getSpanEnd(wpIS);
+							MediaFile mf = new MediaFile();
+							mf.setPostID(post.getId());
+							mf.setTitle(wpIS.getTitle());
+							mf.setCaption(wpIS.getCaption());
+							mf.setDescription(wpIS.getDescription());
+							mf.setFeatured(wpIS.isFeatured());
+							mf.setFileName(wpIS.getImageSource().toString());
+							mf.setHorizontalAlignment(wpIS
+									.getHorizontalAlignment());
+							mf.setWidth(wpIS.getWidth());
 
-						String imgHTML = uploadImage(mf);
-						if (imgHTML != null) {
-							SpannableString ss = new SpannableString(imgHTML);
-							s.setSpan(ss, start, end,
-									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-							s.removeSpan(wpIS);
-						} else {
-							mediaError = true;
+							String imgHTML = uploadImage(mf);
+							if (imgHTML != null) {
+								SpannableString ss = new SpannableString(
+										imgHTML);
+								s.setSpan(ss, start, end,
+										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+								s.removeSpan(wpIS);
+							} else {
+								mediaError = true;
+							}
+						}
+					}
+
+					if (x == 0)
+						descriptionContent = WPHtml.toHtml(s);
+					else
+						moreContent = WPHtml.toHtml(s);
+				} else {
+					Matcher matcher;
+					if (x == 0) {
+						descriptionContent = post.getDescription();
+						matcher = pattern.matcher(descriptionContent);
+					} else {
+						moreContent = post.getMt_text_more();
+						matcher = pattern.matcher(moreContent);
+					}
+
+					while (matcher.find()) {
+						String tag = descriptionContent.substring(
+								matcher.start(), matcher.end());
+
+						Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
+						Matcher m = p.matcher(tag);
+						String imgPath = "";
+						if (m.find()) {
+							imgPath = m.group(1);
+							if (!imgPath.equals("")) {
+								MediaFile mf = WordPress.wpDB.getMediaFile(
+										imgPath, post);
+
+								if (mf != null) {
+									String imgHTML = uploadImage(mf);
+									if (imgHTML != null) {
+										if (x == 0)
+											descriptionContent = descriptionContent
+													.replace(tag, imgHTML);
+										else
+											moreContent = moreContent.replace(
+													tag, imgHTML);
+									} else {
+										mediaError = true;
+									}
+								}
+							}
 						}
 					}
 				}
-
-				if (x == 0)
-					descriptionContent = WPHtml.toHtml(s);
-				else
-					moreContent = WPHtml.toHtml(s);
 
 			}
 
@@ -580,7 +636,7 @@ public class Post {
 					if (!post.getWP_post_format().equals("")) {
 						if (!post.getWP_post_format().equals("standard"))
 							contentStruct.put("wp_post_format",
-								post.getWP_post_format());
+									post.getWP_post_format());
 					}
 				}
 
@@ -590,24 +646,28 @@ public class Post {
 				if (pubDate != 0) {
 					Date date_created_gmt = new Date(pubDate);
 					contentStruct.put("date_created_gmt", date_created_gmt);
-					Date dateCreated = new Date(pubDate  + (date_created_gmt.getTimezoneOffset() * 60000));
+					Date dateCreated = new Date(pubDate
+							+ (date_created_gmt.getTimezoneOffset() * 60000));
 					contentStruct.put("dateCreated", dateCreated);
 				}
 
 				// get rid of the p tags that the editor adds.
-				descriptionContent = descriptionContent.replace("<p>", "")
-						.replace("</p>", "\n");
-				moreContent = moreContent.replace("<p>", "").replace("</p>",
-						"\n");
+				if (post.isLocalDraft()) {
+					descriptionContent = descriptionContent.replace("<p>", "")
+							.replace("</p>", "\n");
+					moreContent = moreContent.replace("<p>", "").replace(
+							"</p>", "\n");
+				}
 
 				if (!moreContent.equals("")) {
 					descriptionContent = descriptionContent
 							+ "\n\n<!--more-->\n\n" + moreContent;
 					post.mt_text_more = "";
 				}
-				
-				//gets rid of the weird character android inserts after images
-				descriptionContent = descriptionContent.replaceAll("\uFFFC", "");
+
+				// gets rid of the weird character android inserts after images
+				descriptionContent = descriptionContent
+						.replaceAll("\uFFFC", "");
 
 				contentStruct.put("description", descriptionContent);
 				if (!post.isPage) {
@@ -744,8 +804,8 @@ public class Post {
 								Video.Media.RESOLUTION };
 						imgPath = videoUri;
 
-						Cursor cur = context.getContentResolver().query(imgPath,
-								projection, null, null, null);
+						Cursor cur = context.getContentResolver().query(
+								imgPath, projection, null, null, null);
 						String thumbData = "";
 
 						if (cur.moveToFirst()) {
@@ -860,8 +920,9 @@ public class Post {
 
 								imgPath = imageUri;
 
-								Cursor cur = context.getContentResolver().query(
-										imgPath, projection, null, null, null);
+								Cursor cur = context.getContentResolver()
+										.query(imgPath, projection, null, null,
+												null);
 								String thumbData = "";
 
 								if (cur.moveToFirst()) {

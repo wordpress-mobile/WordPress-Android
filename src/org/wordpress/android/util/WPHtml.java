@@ -291,7 +291,9 @@ public class WPHtml {
 				if (style[j] instanceof ImageSpan) {
 					out.append("<img src=\"");
 					out.append(((WPImageSpan) style[j]).getSource());
-					out.append("\" android-uri=\"" + ((WPImageSpan) style[j]).getImageSource().toString() + "\"");
+					out.append("\" android-uri=\""
+							+ ((WPImageSpan) style[j]).getImageSource()
+									.toString() + "\"");
 					out.append(" />");
 					// Don't output the dummy character underlying the image.
 					i = next;
@@ -372,14 +374,15 @@ public class WPHtml {
 			out.append(p);
 		}
 	}
-	
-	private static void processWPImage(StringBuilder out, Spanned text, int start,
-			int end) {
+
+	private static void processWPImage(StringBuilder out, Spanned text,
+			int start, int end) {
 		int next;
-		
+
 		for (int i = start; i < end; i = next) {
 			next = text.nextSpanTransition(i, end, SpannableString.class);
-			SpannableString[] images = text.getSpans(i, next, SpannableString.class);
+			SpannableString[] images = text.getSpans(i, next,
+					SpannableString.class);
 
 			for (SpannableString image : images) {
 				out.append(image.toString());
@@ -395,15 +398,12 @@ public class WPHtml {
 		for (int i = start; i < end; i++) {
 			char c = text.charAt(i);
 
-			/*if (c == '<') {
-				out.append("&lt;");
-			} else if (c == '>') {
-				out.append("&gt;");
-			} else if (c == '&') {
-				out.append("&amp;");
-			if (c > 0x7E || c < ' ') {
-				out.append("&#" + ((int) c) + ";");
-			} else */
+			/*
+			 * if (c == '<') { out.append("&lt;"); } else if (c == '>') {
+			 * out.append("&gt;"); } else if (c == '&') { out.append("&amp;");
+			 * if (c > 0x7E || c < ' ') { out.append("&#" + ((int) c) + ";"); }
+			 * else
+			 */
 			if (c == ' ') {
 				while (i + 1 < end && text.charAt(i + 1) == ' ') {
 					out.append("&nbsp;");
@@ -488,6 +488,13 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 	private void handleStartTag(String tag, Attributes attributes) {
 		if (!mysteryTagFound) {
+			if (!post.isLocalDraft()) {
+				if (tag.equalsIgnoreCase("img"))
+					startImg(mSpannableStringBuilder, attributes, mImageGetter);
+
+				return;
+			}
+
 			if (tag.equalsIgnoreCase("br")) {
 				// We don't need to handle this. TagSoup will ensure that
 				// there's a
@@ -542,91 +549,94 @@ class HtmlToSpannedConverter implements ContentHandler {
 			} else {
 
 				if (tag.equalsIgnoreCase("html")
-						|| tag.equalsIgnoreCase("body"))
-				{
+						|| tag.equalsIgnoreCase("body")) {
 					return;
 				}
 
-					mysteryTagFound = true;
-					mysteryTagName = tag;
-				}
-				// mTagHandler.handleTag(true, tag, mSpannableStringBuilder,
-				// mReader, mysteryTagContent);
+				mysteryTagFound = true;
+				mysteryTagName = tag;
+			}
+			// mTagHandler.handleTag(true, tag, mSpannableStringBuilder,
+			// mReader, mysteryTagContent);
 		}
 	}
 
 	private void handleEndTag(String tag) {
-		if (!mysteryTagFound) {
-			if (tag.equalsIgnoreCase("br")) {
-				handleBr(mSpannableStringBuilder);
-			} else if (tag.equalsIgnoreCase("p")) {
-				handleP(mSpannableStringBuilder);
-			} else if (tag.equalsIgnoreCase("div")) {
-				handleP(mSpannableStringBuilder);
-			} else if (tag.equalsIgnoreCase("em")) {
-				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-						Typeface.ITALIC));
-			} else if (tag.equalsIgnoreCase("b")) {
-				end(mSpannableStringBuilder, Bold.class, new StyleSpan(
-						Typeface.BOLD));
-			} else if (tag.equalsIgnoreCase("strong")) {
-				end(mSpannableStringBuilder, Bold.class, new StyleSpan(
-						Typeface.BOLD));
-			} else if (tag.equalsIgnoreCase("cite")) {
-				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-						Typeface.ITALIC));
-			} else if (tag.equalsIgnoreCase("dfn")) {
-				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-						Typeface.ITALIC));
-			} else if (tag.equalsIgnoreCase("i")) {
-				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-						Typeface.ITALIC));
-			} else if (tag.equalsIgnoreCase("big")) {
-				end(mSpannableStringBuilder, Big.class, new RelativeSizeSpan(
-						1.25f));
-			} else if (tag.equalsIgnoreCase("small")) {
-				end(mSpannableStringBuilder, Small.class, new RelativeSizeSpan(
-						0.8f));
-			} else if (tag.equalsIgnoreCase("font")) {
-				endFont(mSpannableStringBuilder);
-			} else if (tag.equalsIgnoreCase("blockquote")) {
-				handleP(mSpannableStringBuilder);
-				end(mSpannableStringBuilder, Blockquote.class, new QuoteSpan());
-			} else if (tag.equalsIgnoreCase("tt")) {
-				end(mSpannableStringBuilder, Monospace.class, new TypefaceSpan(
-						"monospace"));
-			} else if (tag.equalsIgnoreCase("a")) {
-				endA(mSpannableStringBuilder);
-			} else if (tag.equalsIgnoreCase("u")) {
-				end(mSpannableStringBuilder, Underline.class,
-						new UnderlineSpan());
-			} else if (tag.equalsIgnoreCase("sup")) {
-				end(mSpannableStringBuilder, Super.class, new SuperscriptSpan());
-			} else if (tag.equalsIgnoreCase("sub")) {
-				end(mSpannableStringBuilder, Sub.class, new SubscriptSpan());
-			} else if (tag.equalsIgnoreCase("strike")) {
-				end(mSpannableStringBuilder, Strike.class, new StrikethroughSpan());
-			} else if (tag.length() == 2
-					&& Character.toLowerCase(tag.charAt(0)) == 'h'
-					&& tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
-				handleP(mSpannableStringBuilder);
-				endHeader(mSpannableStringBuilder);
-			}
-		} else {
+		if (post.isLocalDraft()) {
+			if (!mysteryTagFound) {
+				if (tag.equalsIgnoreCase("br")) {
+					handleBr(mSpannableStringBuilder);
+				} else if (tag.equalsIgnoreCase("p")) {
+					handleP(mSpannableStringBuilder);
+				} else if (tag.equalsIgnoreCase("div")) {
+					handleP(mSpannableStringBuilder);
+				} else if (tag.equalsIgnoreCase("em")) {
+					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+							Typeface.ITALIC));
+				} else if (tag.equalsIgnoreCase("b")) {
+					end(mSpannableStringBuilder, Bold.class, new StyleSpan(
+							Typeface.BOLD));
+				} else if (tag.equalsIgnoreCase("strong")) {
+					end(mSpannableStringBuilder, Bold.class, new StyleSpan(
+							Typeface.BOLD));
+				} else if (tag.equalsIgnoreCase("cite")) {
+					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+							Typeface.ITALIC));
+				} else if (tag.equalsIgnoreCase("dfn")) {
+					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+							Typeface.ITALIC));
+				} else if (tag.equalsIgnoreCase("i")) {
+					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+							Typeface.ITALIC));
+				} else if (tag.equalsIgnoreCase("big")) {
+					end(mSpannableStringBuilder, Big.class,
+							new RelativeSizeSpan(1.25f));
+				} else if (tag.equalsIgnoreCase("small")) {
+					end(mSpannableStringBuilder, Small.class,
+							new RelativeSizeSpan(0.8f));
+				} else if (tag.equalsIgnoreCase("font")) {
+					endFont(mSpannableStringBuilder);
+				} else if (tag.equalsIgnoreCase("blockquote")) {
+					handleP(mSpannableStringBuilder);
+					end(mSpannableStringBuilder, Blockquote.class,
+							new QuoteSpan());
+				} else if (tag.equalsIgnoreCase("tt")) {
+					end(mSpannableStringBuilder, Monospace.class,
+							new TypefaceSpan("monospace"));
+				} else if (tag.equalsIgnoreCase("a")) {
+					endA(mSpannableStringBuilder);
+				} else if (tag.equalsIgnoreCase("u")) {
+					end(mSpannableStringBuilder, Underline.class,
+							new UnderlineSpan());
+				} else if (tag.equalsIgnoreCase("sup")) {
+					end(mSpannableStringBuilder, Super.class,
+							new SuperscriptSpan());
+				} else if (tag.equalsIgnoreCase("sub")) {
+					end(mSpannableStringBuilder, Sub.class, new SubscriptSpan());
+				} else if (tag.equalsIgnoreCase("strike")) {
+					end(mSpannableStringBuilder, Strike.class,
+							new StrikethroughSpan());
+				} else if (tag.length() == 2
+						&& Character.toLowerCase(tag.charAt(0)) == 'h'
+						&& tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
+					handleP(mSpannableStringBuilder);
+					endHeader(mSpannableStringBuilder);
+				}
+			} else {
 
-			if (tag.equalsIgnoreCase("html")
-					|| tag.equalsIgnoreCase("body"))
-			{
-				return;
-			}
+				if (tag.equalsIgnoreCase("html")
+						|| tag.equalsIgnoreCase("body")) {
+					return;
+				}
 
 				if (mysteryTagName.equals(tag)) {
 					mysteryTagFound = false;
 					mSpannableStringBuilder.append(mysteryTagContent);
 				}
-			// mTagHandler.handleTag(false, tag, mSpannableStringBuilder,
-			// mReader,
-			// mysteryTagContent);
+				// mTagHandler.handleTag(false, tag, mSpannableStringBuilder,
+				// mReader,
+				// mysteryTagContent);
+			}
 		}
 	}
 
@@ -670,7 +680,8 @@ class HtmlToSpannedConverter implements ContentHandler {
 		text.setSpan(mark, len, len, Spannable.SPAN_MARK_MARK);
 	}
 
-	private static void end(SpannableStringBuilder text, Class<?> kind, Object repl) {
+	private static void end(SpannableStringBuilder text, Class<?> kind,
+			Object repl) {
 		int len = text.length();
 		Object obj = getLast(text, kind);
 		int where = text.getSpanStart(obj);
@@ -690,30 +701,33 @@ class HtmlToSpannedConverter implements ContentHandler {
 			Attributes attributes, WPHtml.ImageGetter img) {
 		String src = attributes.getValue("android-uri");
 		Bitmap resizedBitmap = null;
-		Display display = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		Display display = ((WindowManager) ctx
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		int width = display.getWidth();
 		ImageHelper ih = new ImageHelper();
-			
+
 		HashMap<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
-		
-		if (mediaData != null){
-		
-			byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf(width/2), (String)mediaData.get("orientation"), true);
+
+		if (mediaData != null) {
+
+			byte[] finalBytes = ih.createThumbnail(
+					(byte[]) mediaData.get("bytes"), String.valueOf(width / 2),
+					(String) mediaData.get("orientation"), true);
 
 			resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
 					finalBytes.length);
 			int len = text.length();
 			text.append("\uFFFC");
-			
+
 			Uri curStream = Uri.parse(src);
-			
+
 			if (curStream == null) {
 				return;
 			}
 
 			WPImageSpan is = new WPImageSpan(ctx, resizedBitmap, curStream);
-			
-			//get the MediaFile data from db
+
+			// get the MediaFile data from db
 			MediaFile mf = WordPress.wpDB.getMediaFile(src, post);
 			if (mf != null) {
 				is.setTitle(mf.getTitle());
@@ -724,12 +738,11 @@ class HtmlToSpannedConverter implements ContentHandler {
 				is.setImageSource(curStream);
 				is.setWidth(mf.getWidth());
 				is.setVideo(mf.isVideo());
-				
+
 				text.setSpan(is, len, text.length(),
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
-		}
-		else {
+		} else {
 			if (attributes != null) {
 				text.append("<img");
 				for (int i = 0; i < attributes.getLength(); i++) {
@@ -737,8 +750,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 					if ("".equals(aName))
 						aName = attributes.getQName(i);
 					text.append(" ");
-					text.append(aName + "=\"" + attributes.getValue(i)
-							+ "\"");
+					text.append(aName + "=\"" + attributes.getValue(i) + "\"");
 				}
 				text.append(" />\n");
 			}
@@ -808,7 +820,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 		if (where != len) {
 			Href h = (Href) obj;
-			
+
 			if (h != null) {
 				if (h.mHref != null) {
 					text.setSpan(new URLSpan(h.mHref), where, len,
@@ -930,11 +942,11 @@ class HtmlToSpannedConverter implements ContentHandler {
 		try {
 			if (mysteryTagFound) {
 				if (sb.length() < length)
-					mysteryTagContent += sb.toString().substring(start, length - 1);
+					mysteryTagContent += sb.toString().substring(start,
+							length - 1);
 				else
 					mysteryTagContent += sb.toString().substring(start, length);
-			}
-			else 
+			} else
 				mSpannableStringBuilder.append(sb);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -978,7 +990,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 	private static class Sub {
 	}
-	
+
 	private static class Strike {
 	}
 
@@ -1051,50 +1063,47 @@ class HtmlToSpannedConverter implements ContentHandler {
 			}
 		}
 	}
-	
-	 public static final int
-	    convertValueToInt(CharSequence charSeq, int defaultValue)
-	    {
-	        if (null == charSeq)
-	            return defaultValue;
 
-	        String nm = charSeq.toString();
+	public static final int convertValueToInt(CharSequence charSeq,
+			int defaultValue) {
+		if (null == charSeq)
+			return defaultValue;
 
-	        // XXX This code is copied from Integer.decode() so we don't
-	        // have to instantiate an Integer!
+		String nm = charSeq.toString();
 
-	        int sign = 1;
-	        int index = 0;
-	        int len = nm.length();
-	        int base = 10;
+		// XXX This code is copied from Integer.decode() so we don't
+		// have to instantiate an Integer!
 
-	        if ('-' == nm.charAt(0)) {
-	            sign = -1;
-	            index++;
-	        }
+		int sign = 1;
+		int index = 0;
+		int len = nm.length();
+		int base = 10;
 
-	        if ('0' == nm.charAt(index)) {
-	            //  Quick check for a zero by itself
-	            if (index == (len - 1))
-	                return 0;
+		if ('-' == nm.charAt(0)) {
+			sign = -1;
+			index++;
+		}
 
-	            char    c = nm.charAt(index + 1);
+		if ('0' == nm.charAt(index)) {
+			// Quick check for a zero by itself
+			if (index == (len - 1))
+				return 0;
 
-	            if ('x' == c || 'X' == c) {
-	                index += 2;
-	                base = 16;
-	            } else {
-	                index++;
-	                base = 8;
-	            }
-	        }
-	        else if ('#' == nm.charAt(index))
-	        {
-	            index++;
-	            base = 16;
-	        }
+			char c = nm.charAt(index + 1);
 
-	        return Integer.parseInt(nm.substring(index), base) * sign;
-	    }
+			if ('x' == c || 'X' == c) {
+				index += 2;
+				base = 16;
+			} else {
+				index++;
+				base = 8;
+			}
+		} else if ('#' == nm.charAt(index)) {
+			index++;
+			base = 16;
+		}
+
+		return Integer.parseInt(nm.substring(index), base) * sign;
+	}
 
 }

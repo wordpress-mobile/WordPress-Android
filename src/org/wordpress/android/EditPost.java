@@ -46,6 +46,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -424,9 +425,7 @@ public class EditPost extends Activity implements LocationListener {
 							EditPost.this, post));
 				}
 				else {
-					contentET.setText(WPHtml.fromHtml(StringHelper
-							.addPTags(contentHTML.replaceAll("\uFFFC", "")),
-							EditPost.this, post));
+					contentET.setText(contentHTML.replaceAll("\uFFFC", ""));
 				}
 				
 			} catch (Exception e1) {
@@ -570,6 +569,10 @@ public class EditPost extends Activity implements LocationListener {
 			public void onFocusChange(View view, boolean hasFocus) {
 				if (hasFocus) {
 					Intent i = new Intent(EditPost.this, EditContent.class);
+					if (isNew || localDraft)
+						i.putExtra("localDraft", true);
+					else
+						i.putExtra("localDraft", false);
 					WordPress.richPostContent = content.getText();
 					i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 					startActivityForResult(i, 0);
@@ -743,10 +746,14 @@ public class EditPost extends Activity implements LocationListener {
 		EditText titleET = (EditText) findViewById(R.id.title);
 		String title = titleET.getText().toString();
 		WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
-		String content = EscapeUtils.unescapeHtml(WPHtml.toHtml(contentET
-				.getText()));
+		
+		String content = "";
+		
 		EditText passwordET = (EditText) findViewById(R.id.post_password);
 		String password = passwordET.getText().toString();
+		if (localDraft || isNew) {
+		content = EscapeUtils.unescapeHtml(WPHtml.toHtml(contentET
+					.getText()));
 		// replace duplicate <p> tags so there's not duplicates, trac #86
 		content = content.replace("<p><p>", "<p>");
 		content = content.replace("</p></p>", "</p>");
@@ -756,6 +763,9 @@ public class EditPost extends Activity implements LocationListener {
 				.replace("</em><em>", "").replace("</u><u>", "")
 				.replace("</strike><strike>", "")
 				.replace("</blockquote><blockquote>", "");
+		} else {
+			content = contentET.getText().toString();
+		}
 
 		TextView tvPubDate = (TextView) findViewById(R.id.pubDate);
 		String pubDate = tvPubDate.getText().toString();
@@ -802,7 +812,7 @@ public class EditPost extends Activity implements LocationListener {
 			if (!isNew) {
 				// update the images
 				post.deleteMediaFiles();
-				Spannable s = contentET.getText();
+				Editable s = contentET.getText();
 				WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 						WPImageSpan.class);
 
@@ -822,6 +832,11 @@ public class EditPost extends Activity implements LocationListener {
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 						mf.setWidth(wpIS.getWidth());
 						mf.save(EditPost.this);
+						
+						int tagStart = s.getSpanStart(wpIS);
+						s.removeSpan(wpIS);
+						s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+						content = contentET.getText().toString();
 					}
 				}
 			}
