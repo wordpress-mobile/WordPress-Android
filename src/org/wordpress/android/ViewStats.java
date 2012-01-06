@@ -336,8 +336,9 @@ public class ViewStats extends Activity {
 				Object[] result = (Object[]) xmlClient.call("wp.getUsersBlogs",
 						params);
 				if (result != null) {
-					for (int i = 0; i < result.length; i++) {
-						HashMap<?, ?> blog_info = (HashMap<?, ?>) result[i];
+					if (result.length == 1) {
+						// with one result, let's just match on the host
+						HashMap<?, ?> blog_info = (HashMap<?, ?>) result[0];
 						if (blog_info != null) {
 							if (blog_info.get("url") != null) {
 								String apiURL = blog_info.get("url").toString();
@@ -350,7 +351,44 @@ public class ViewStats extends Activity {
 
 								if (localHost.equals(apiHost)) {
 									url = apiURL;
-									break;
+								}
+							}
+						}
+					} else {
+						// for multiple results, let's match on the host+path
+						for (int i = 0; i < result.length; i++) {
+							HashMap<?, ?> blog_info = (HashMap<?, ?>) result[i];
+							if (blog_info != null) {
+								if (blog_info.get("url") != null) {
+									String apiURL = blog_info.get("url")
+											.toString();
+									URI apiURI = new URI(apiURL);
+									String apiHost = apiURI.getHost().replace(
+											"www.", "");
+									URI localURI = new URI(url);
+									String localHost = localURI.getHost()
+											.replace("www.", "");
+
+									String apiURIPath = "", localURIPath = "";
+									if (apiURI.getPath() != null) {
+										apiURIPath = apiURI.getPath();
+									}
+									if (localURI.getPath() != null) {
+										if (localURI.getPath().lastIndexOf("/") > 0)
+											localURIPath = localURI
+													.getPath()
+													.substring(
+															0,
+															localURI.getPath()
+																	.lastIndexOf(
+																			"/") + 1);
+									}
+
+									if ((localHost + localURIPath)
+											.equals(apiHost + apiURIPath)) {
+										url = apiURL;
+										break;
+									}
 								}
 							}
 						}
