@@ -130,6 +130,9 @@ public class EditContent extends Activity {
 
 					@Override
 					public void onSelectionChanged() {
+						if (!localDraft)
+							return;
+						
 						final Spannable s = contentEditor.getText();
 						// set toggle buttons if cursor is inside of a matching
 						// span
@@ -773,14 +776,12 @@ public class EditContent extends Activity {
 							+ content.substring(selectionStart,
 									content.length()));
 					contentText.setSelection(selectionEnd + startTag.length());
-					toggleButton.setChecked(true);
 				} else if (!toggleButton.isChecked()) {
 					contentText.setText(content.substring(0, selectionStart)
 							+ endTag
 							+ content.substring(selectionStart,
 									content.length()));
 					contentText.setSelection(selectionEnd + endTag.length());
-					toggleButton.setChecked(false);
 				}
 			}
 		} catch (Exception e) {
