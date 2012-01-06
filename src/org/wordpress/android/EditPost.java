@@ -417,7 +417,7 @@ public class EditPost extends Activity implements LocationListener {
 							+ getResources().getText(R.string.more_tag)
 							+ "</font></p>" + post.getMt_text_more();
 				} else {
-					contentHTML = post.getDescription() + "\n\n<!--more-->\n\n"
+					contentHTML = post.getDescription() + "\n<!--more-->\n"
 							+ post.getMt_text_more();
 				}
 			} else {
