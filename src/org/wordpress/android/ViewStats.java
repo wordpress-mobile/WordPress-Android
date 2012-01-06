@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
@@ -149,7 +150,8 @@ public class ViewStats extends Activity {
 				} else {
 					WordPress.currentBlog.setDotcom_username(dcUsername);
 					WordPress.currentBlog.setDotcom_password(dcPassword);
-					WordPress.currentBlog.save(ViewStats.this, WordPress.currentBlog.getUsername());
+					WordPress.currentBlog.save(ViewStats.this,
+							WordPress.currentBlog.getUsername());
 					showOrHideLoginForm();
 					initStats(); // start over again now that we have the login
 				}
@@ -322,46 +324,62 @@ public class ViewStats extends Activity {
 	private Vector<String> getAPIInfo(String username, String password,
 			String url, String storedBlogID) {
 		Vector<String> apiInfo = null;
-		
+
 		if (!WordPress.currentBlog.isDotcomFlag()) {
-		//get the blog's url
-			XMLRPCClient xmlClient = new XMLRPCClient(url, WordPress.currentBlog.getHttpuser(), WordPress.currentBlog.getHttppassword());
-			Object[] params = {
-        		1,
-        		WordPress.currentBlog.getUsername(),
-        		WordPress.currentBlog.getPassword()
-			};
+			// get the blog's url
+			XMLRPCClient xmlClient = new XMLRPCClient(url,
+					WordPress.currentBlog.getHttpuser(),
+					WordPress.currentBlog.getHttppassword());
+			Object[] params = { WordPress.currentBlog.getUsername(),
+					WordPress.currentBlog.getPassword() };
 			try {
-				HashMap<?, ?> options = (HashMap<?, ?>) xmlClient.call("wp.getOptions", params);
-				if (options != null) {
-					HashMap<?, ?> blog_url = (HashMap<?, ?>) options.get("blog_url");
-					if (blog_url != null)
-						if (blog_url.get("value") != null)
-							url = blog_url.get("value").toString();
+				Object[] result = (Object[]) xmlClient.call("wp.getUsersBlogs",
+						params);
+				if (result != null) {
+					for (int i = 0; i < result.length; i++) {
+						HashMap<?, ?> blog_info = (HashMap<?, ?>) result[i];
+						if (blog_info != null) {
+							if (blog_info.get("url") != null) {
+								String apiURL = blog_info.get("url").toString();
+								URI apiURI = new URI(apiURL);
+								String apiHost = apiURI.getHost().replace(
+										"www.", "");
+								URI localURI = new URI(url);
+								String localHost = localURI.getHost().replace(
+										"www.", "");
+
+								if (localHost.equals(apiHost)) {
+									url = apiURL;
+									break;
+								}
+							}
+						}
+					}
 				}
 			} catch (XMLRPCException e) {
+				url = url.replace("xmlrpc.php", "");
+			} catch (URISyntaxException e) {
 				url = url.replace("xmlrpc.php", "");
 			}
 		} else {
 			url = url.replace("xmlrpc.php", "");
 		}
-		
-		String wwwURL = "";		
+
+		String wwwURL = "";
 		if (url.indexOf("http://www.") >= 0) {
 			wwwURL = url;
 			url = url.replace("http://www.", "http://");
-		}
-		else {
+		} else {
 			wwwURL = url.replace("http://", "http://www.");
 		}
-		
+
 		if (!url.endsWith("/")) {
 			url += "/";
 			wwwURL += "/";
 		}
-		
+
 		URI uri = URI
-				.create("https://public-api.wordpress.com/getuserblogs.php");
+				.create("http://public-api.wordpress.com/getuserblogs.php");
 		configureClient(uri, username, password);
 
 		// execute HTTP POST request
@@ -444,7 +462,8 @@ public class ViewStats extends Activity {
 							if (!curBlogURL.endsWith("/"))
 								curBlogURL += "/";
 
-							if ( ((curBlogURL.equals(url) || (curBlogURL.equals(wwwURL))) || storedBlogID
+							if (((curBlogURL.equals(url) || (curBlogURL
+									.equals(wwwURL))) || storedBlogID
 									.equals(curBlogID))
 									&& !curBlogID.equals("1")) {
 								// yay, found a match
@@ -657,8 +676,7 @@ public class ViewStats extends Activity {
 
 	}
 
-	private class getStatsDataTask extends
-			AsyncTask<Object, String, String> {
+	private class getStatsDataTask extends AsyncTask<Object, String, String> {
 
 		String reportType;
 		int interval;
@@ -1088,8 +1106,8 @@ public class ViewStats extends Activity {
 			HttpResponse response;
 			try {
 				response = client.execute(postMethod);
-				XmlPullParser pullParser = XmlPullParserFactory
-						.newInstance().newPullParser();
+				XmlPullParser pullParser = XmlPullParserFactory.newInstance()
+						.newPullParser();
 				HttpEntity entity = response.getEntity();
 				// change to pushbackinput stream 1/18/2010 to handle self
 				// installed
@@ -1113,7 +1131,7 @@ public class ViewStats extends Activity {
 
 				int eventType = pullParser.getEventType();
 				boolean foundDataItem = false;
-				
+
 				int rowCount = 0;
 				// parse the xml response
 				// most replies follow the same xml structure, so the data
@@ -1126,8 +1144,7 @@ public class ViewStats extends Activity {
 						// System.out.println("End document");
 					} else if (eventType == XmlPullParser.START_TAG) {
 						String name = pullParser.getName();
-						if (name.equals("views")
-								|| name.equals("postviews")
+						if (name.equals("views") || name.equals("postviews")
 								|| name.equals("referrers")
 								|| name.equals("clicks")
 								|| name.equals("searchterms")
@@ -1140,8 +1157,7 @@ public class ViewStats extends Activity {
 							// loop through the attributes, add them to the
 							// hashmap
 							HashMap<String, String> dataRow = new HashMap<String, String>();
-							for (int i = 0; i < pullParser
-									.getAttributeCount(); i++) {
+							for (int i = 0; i < pullParser.getAttributeCount(); i++) {
 								dataRow.put(pullParser.getAttributeName(i)
 										.toString(), pullParser
 										.getAttributeValue(i).toString());
