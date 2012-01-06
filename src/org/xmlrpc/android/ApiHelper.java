@@ -10,11 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 import java.util.Vector;
 
 public class ApiHelper extends Activity {
@@ -152,19 +149,12 @@ public class ApiHelper extends Activity {
 		Blog blog = WordPress.currentBlog;
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
-		String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+		String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
 		HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
 		HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 		Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
 		Date d = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat(
-				"EEE MMM dd HH:mm:ss z yyyy");
-		Calendar cal = Calendar.getInstance();
-		TimeZone tz = cal.getTimeZone();
-		String shortDisplayName = "";
-		shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
-
 		Object[] result;
 		try {
 			result = (Object[]) client.call("wp.getComments", commentParams);
