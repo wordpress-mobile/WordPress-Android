@@ -557,8 +557,13 @@ public class Post {
 					}
 
 					while (matcher.find()) {
-						String tag = descriptionContent.substring(
-								matcher.start(), matcher.end());
+						String tag = "";
+						if (x == 0)
+							tag = descriptionContent.substring(matcher.start(),
+									matcher.end());
+						else
+							tag = moreContent.substring(matcher.start(),
+									matcher.end());
 
 						Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
 						Matcher m = p.matcher(tag);
@@ -586,7 +591,6 @@ public class Post {
 						}
 					}
 				}
-
 			}
 
 			if (!mediaError) {

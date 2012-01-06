@@ -169,7 +169,7 @@ public class WPHtml {
 		int next;
 		for (int i = 0; i < text.length(); i = next) {
 			next = text.nextSpanTransition(i, len, ParagraphStyle.class);
-			ParagraphStyle[] style = text.getSpans(i, next,
+			/*ParagraphStyle[] style = text.getSpans(i, next,
 					ParagraphStyle.class);
 			String elements = " ";
 			boolean needDiv = false;
@@ -190,13 +190,13 @@ public class WPHtml {
 			}
 			if (needDiv) {
 				out.append("<div " + elements + ">");
-			}
+			}*/
 
 			withinDiv(out, text, i, next);
 
-			if (needDiv) {
+			/*if (needDiv) {
 				out.append("</div>");
-			}
+			}*/
 		}
 	}
 
@@ -478,8 +478,11 @@ class HtmlToSpannedConverter implements ContentHandler {
 			if (end == start) {
 				mSpannableStringBuilder.removeSpan(obj[i]);
 			} else {
-				mSpannableStringBuilder.setSpan(obj[i], start, end,
-						Spannable.SPAN_PARAGRAPH);
+				try {
+					mSpannableStringBuilder.setSpan(obj[i], start, end,
+							Spannable.SPAN_PARAGRAPH);
+				} catch (Exception e) {
+				}
 			}
 		}
 
@@ -488,11 +491,14 @@ class HtmlToSpannedConverter implements ContentHandler {
 
 	private void handleStartTag(String tag, Attributes attributes) {
 		if (!mysteryTagFound) {
-			if (!post.isLocalDraft()) {
-				if (tag.equalsIgnoreCase("img"))
-					startImg(mSpannableStringBuilder, attributes, mImageGetter);
+			if (post != null) {
+				if (!post.isLocalDraft()) {
+					if (tag.equalsIgnoreCase("img"))
+						startImg(mSpannableStringBuilder, attributes,
+								mImageGetter);
 
-				return;
+					return;
+				}
 			}
 
 			if (tag.equalsIgnoreCase("br")) {
@@ -562,81 +568,80 @@ class HtmlToSpannedConverter implements ContentHandler {
 	}
 
 	private void handleEndTag(String tag) {
-		if (post.isLocalDraft()) {
-			if (!mysteryTagFound) {
-				if (tag.equalsIgnoreCase("br")) {
-					handleBr(mSpannableStringBuilder);
-				} else if (tag.equalsIgnoreCase("p")) {
-					handleP(mSpannableStringBuilder);
-				} else if (tag.equalsIgnoreCase("div")) {
-					handleP(mSpannableStringBuilder);
-				} else if (tag.equalsIgnoreCase("em")) {
-					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-							Typeface.ITALIC));
-				} else if (tag.equalsIgnoreCase("b")) {
-					end(mSpannableStringBuilder, Bold.class, new StyleSpan(
-							Typeface.BOLD));
-				} else if (tag.equalsIgnoreCase("strong")) {
-					end(mSpannableStringBuilder, Bold.class, new StyleSpan(
-							Typeface.BOLD));
-				} else if (tag.equalsIgnoreCase("cite")) {
-					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-							Typeface.ITALIC));
-				} else if (tag.equalsIgnoreCase("dfn")) {
-					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-							Typeface.ITALIC));
-				} else if (tag.equalsIgnoreCase("i")) {
-					end(mSpannableStringBuilder, Italic.class, new StyleSpan(
-							Typeface.ITALIC));
-				} else if (tag.equalsIgnoreCase("big")) {
-					end(mSpannableStringBuilder, Big.class,
-							new RelativeSizeSpan(1.25f));
-				} else if (tag.equalsIgnoreCase("small")) {
-					end(mSpannableStringBuilder, Small.class,
-							new RelativeSizeSpan(0.8f));
-				} else if (tag.equalsIgnoreCase("font")) {
-					endFont(mSpannableStringBuilder);
-				} else if (tag.equalsIgnoreCase("blockquote")) {
-					handleP(mSpannableStringBuilder);
-					end(mSpannableStringBuilder, Blockquote.class,
-							new QuoteSpan());
-				} else if (tag.equalsIgnoreCase("tt")) {
-					end(mSpannableStringBuilder, Monospace.class,
-							new TypefaceSpan("monospace"));
-				} else if (tag.equalsIgnoreCase("a")) {
-					endA(mSpannableStringBuilder);
-				} else if (tag.equalsIgnoreCase("u")) {
-					end(mSpannableStringBuilder, Underline.class,
-							new UnderlineSpan());
-				} else if (tag.equalsIgnoreCase("sup")) {
-					end(mSpannableStringBuilder, Super.class,
-							new SuperscriptSpan());
-				} else if (tag.equalsIgnoreCase("sub")) {
-					end(mSpannableStringBuilder, Sub.class, new SubscriptSpan());
-				} else if (tag.equalsIgnoreCase("strike")) {
-					end(mSpannableStringBuilder, Strike.class,
-							new StrikethroughSpan());
-				} else if (tag.length() == 2
-						&& Character.toLowerCase(tag.charAt(0)) == 'h'
-						&& tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
-					handleP(mSpannableStringBuilder);
-					endHeader(mSpannableStringBuilder);
-				}
-			} else {
-
-				if (tag.equalsIgnoreCase("html")
-						|| tag.equalsIgnoreCase("body")) {
-					return;
-				}
-
-				if (mysteryTagName.equals(tag)) {
-					mysteryTagFound = false;
-					mSpannableStringBuilder.append(mysteryTagContent);
-				}
-				// mTagHandler.handleTag(false, tag, mSpannableStringBuilder,
-				// mReader,
-				// mysteryTagContent);
+		if (post != null) {
+			if (!post.isLocalDraft())
+				return;
+		}
+		if (!mysteryTagFound) {
+			if (tag.equalsIgnoreCase("br")) {
+				handleBr(mSpannableStringBuilder);
+			} else if (tag.equalsIgnoreCase("p")) {
+				handleP(mSpannableStringBuilder);
+			} else if (tag.equalsIgnoreCase("div")) {
+				handleP(mSpannableStringBuilder);
+			} else if (tag.equalsIgnoreCase("em")) {
+				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+						Typeface.ITALIC));
+			} else if (tag.equalsIgnoreCase("b")) {
+				end(mSpannableStringBuilder, Bold.class, new StyleSpan(
+						Typeface.BOLD));
+			} else if (tag.equalsIgnoreCase("strong")) {
+				end(mSpannableStringBuilder, Bold.class, new StyleSpan(
+						Typeface.BOLD));
+			} else if (tag.equalsIgnoreCase("cite")) {
+				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+						Typeface.ITALIC));
+			} else if (tag.equalsIgnoreCase("dfn")) {
+				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+						Typeface.ITALIC));
+			} else if (tag.equalsIgnoreCase("i")) {
+				end(mSpannableStringBuilder, Italic.class, new StyleSpan(
+						Typeface.ITALIC));
+			} else if (tag.equalsIgnoreCase("big")) {
+				end(mSpannableStringBuilder, Big.class, new RelativeSizeSpan(
+						1.25f));
+			} else if (tag.equalsIgnoreCase("small")) {
+				end(mSpannableStringBuilder, Small.class, new RelativeSizeSpan(
+						0.8f));
+			} else if (tag.equalsIgnoreCase("font")) {
+				endFont(mSpannableStringBuilder);
+			} else if (tag.equalsIgnoreCase("blockquote")) {
+				handleP(mSpannableStringBuilder);
+				end(mSpannableStringBuilder, Blockquote.class, new QuoteSpan());
+			} else if (tag.equalsIgnoreCase("tt")) {
+				end(mSpannableStringBuilder, Monospace.class, new TypefaceSpan(
+						"monospace"));
+			} else if (tag.equalsIgnoreCase("a")) {
+				endA(mSpannableStringBuilder);
+			} else if (tag.equalsIgnoreCase("u")) {
+				end(mSpannableStringBuilder, Underline.class,
+						new UnderlineSpan());
+			} else if (tag.equalsIgnoreCase("sup")) {
+				end(mSpannableStringBuilder, Super.class, new SuperscriptSpan());
+			} else if (tag.equalsIgnoreCase("sub")) {
+				end(mSpannableStringBuilder, Sub.class, new SubscriptSpan());
+			} else if (tag.equalsIgnoreCase("strike")) {
+				end(mSpannableStringBuilder, Strike.class,
+						new StrikethroughSpan());
+			} else if (tag.length() == 2
+					&& Character.toLowerCase(tag.charAt(0)) == 'h'
+					&& tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
+				handleP(mSpannableStringBuilder);
+				endHeader(mSpannableStringBuilder);
 			}
+		} else {
+
+			if (tag.equalsIgnoreCase("html") || tag.equalsIgnoreCase("body")) {
+				return;
+			}
+
+			if (mysteryTagName.equals(tag)) {
+				mysteryTagFound = false;
+				mSpannableStringBuilder.append(mysteryTagContent);
+			}
+			// mTagHandler.handleTag(false, tag, mSpannableStringBuilder,
+			// mReader,
+			// mysteryTagContent);
 		}
 	}
 
@@ -738,21 +743,29 @@ class HtmlToSpannedConverter implements ContentHandler {
 				is.setImageSource(curStream);
 				is.setWidth(mf.getWidth());
 				is.setVideo(mf.isVideo());
-
 				text.setSpan(is, len, text.length(),
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				text.insert(len, "\n\n");
+				AlignmentSpan.Standard as = new AlignmentSpan.Standard(
+						Layout.Alignment.ALIGN_CENTER);
+				text.setSpan(as, text.getSpanStart(is), text.getSpanEnd(is),
+						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				text.append("\n\n");
 			}
-		} else {
-			if (attributes != null) {
-				text.append("<img");
-				for (int i = 0; i < attributes.getLength(); i++) {
-					String aName = attributes.getLocalName(i); // Attr name
-					if ("".equals(aName))
-						aName = attributes.getQName(i);
-					text.append(" ");
-					text.append(aName + "=\"" + attributes.getValue(i) + "\"");
+		} else if (post != null) {
+			if (post.isLocalDraft()) {
+				if (attributes != null) {
+					text.append("<img");
+					for (int i = 0; i < attributes.getLength(); i++) {
+						String aName = attributes.getLocalName(i); // Attr name
+						if ("".equals(aName))
+							aName = attributes.getQName(i);
+						text.append(" ");
+						text.append(aName + "=\"" + attributes.getValue(i)
+								+ "\"");
+					}
+					text.append(" />\n");
 				}
-				text.append(" />\n");
 			}
 		}
 	}

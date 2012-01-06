@@ -339,7 +339,7 @@ public class EditContent extends Activity {
 					int position = Selection.getSelectionStart(contentEdit
 							.getText());
 					if ((isBackspace && position != 1)
-							|| lastPosition == position)
+							|| lastPosition == position || !localDraft)
 						return;
 
 					// add style as the user types if a toggle button is enabled

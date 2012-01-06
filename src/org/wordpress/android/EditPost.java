@@ -411,23 +411,28 @@ public class EditPost extends Activity implements LocationListener {
 			String contentHTML;
 
 			if (!post.getMt_text_more().equals("")) {
-				contentHTML = post.getDescription()
-						+ "<p id=\"wp-android-more\"><font color=\"#777777\">........"
-						+ getResources().getText(R.string.more_tag)
-						+ "</font></p>" + post.getMt_text_more();
+				if (localDraft || isNew) {
+					contentHTML = post.getDescription()
+							+ "<p id=\"wp-android-more\"><font color=\"#777777\">........"
+							+ getResources().getText(R.string.more_tag)
+							+ "</font></p>" + post.getMt_text_more();
+				} else {
+					contentHTML = post.getDescription() + "\n\n<!--more-->\n\n"
+							+ post.getMt_text_more();
+				}
 			} else {
 				contentHTML = post.getDescription();
 			}
 
 			try {
 				if (post.isLocalDraft()) {
-					contentET.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""),
+					contentET.setText(WPHtml.fromHtml(
+							contentHTML.replaceAll("\uFFFC", ""),
 							EditPost.this, post));
-				}
-				else {
+				} else {
 					contentET.setText(contentHTML.replaceAll("\uFFFC", ""));
 				}
-				
+
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -746,23 +751,23 @@ public class EditPost extends Activity implements LocationListener {
 		EditText titleET = (EditText) findViewById(R.id.title);
 		String title = titleET.getText().toString();
 		WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
-		
+
 		String content = "";
-		
+
 		EditText passwordET = (EditText) findViewById(R.id.post_password);
 		String password = passwordET.getText().toString();
 		if (localDraft || isNew) {
-		content = EscapeUtils.unescapeHtml(WPHtml.toHtml(contentET
+			content = EscapeUtils.unescapeHtml(WPHtml.toHtml(contentET
 					.getText()));
-		// replace duplicate <p> tags so there's not duplicates, trac #86
-		content = content.replace("<p><p>", "<p>");
-		content = content.replace("</p></p>", "</p>");
-		content = content.replace("<br><br>", "<br>");
-		// sometimes the editor creates extra tags
-		content = content.replace("</strong><strong>", "")
-				.replace("</em><em>", "").replace("</u><u>", "")
-				.replace("</strike><strike>", "")
-				.replace("</blockquote><blockquote>", "");
+			// replace duplicate <p> tags so there's not duplicates, trac #86
+			content = content.replace("<p><p>", "<p>");
+			content = content.replace("</p></p>", "</p>");
+			content = content.replace("<br><br>", "<br>");
+			// sometimes the editor creates extra tags
+			content = content.replace("</strong><strong>", "")
+					.replace("</em><em>", "").replace("</u><u>", "")
+					.replace("</strike><strike>", "")
+					.replace("</blockquote><blockquote>", "");
 		} else {
 			content = contentET.getText().toString();
 		}
@@ -832,10 +837,11 @@ public class EditPost extends Activity implements LocationListener {
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 						mf.setWidth(wpIS.getWidth());
 						mf.save(EditPost.this);
-						
+
 						int tagStart = s.getSpanStart(wpIS);
 						s.removeSpan(wpIS);
-						s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+						s.insert(tagStart, "<img android-uri=\""
+								+ wpIS.getImageSource().toString() + "\" />");
 						content = contentET.getText().toString();
 					}
 				}
@@ -875,8 +881,11 @@ public class EditPost extends Activity implements LocationListener {
 				}
 
 			}
-			String needle = "<p><font color =\"#777777\">........"
-					+ getResources().getText(R.string.more_tag) + "</font></p>";
+			String needle = "";
+			if (isNew || localDraft) 
+				needle = "<p><font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></p>";
+			else
+				needle = "<!--more-->";
 			if (isNew) {
 				post = new Post(id, title, content, images, pubDateTimestamp,
 						categories.toString(), tags, status, password,

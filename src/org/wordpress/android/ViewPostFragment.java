@@ -54,6 +54,7 @@ public class ViewPostFragment extends Fragment {
 							EditPost.class);
 					i.putExtra("isPage", WordPress.currentPost.isPage());
 					i.putExtra("postID", WordPress.currentPost.getId());
+					i.putExtra("localDraft", WordPress.currentPost.isLocalDraft());
 					startActivityForResult(i, 0);
 				}
 
@@ -140,7 +141,7 @@ public class ViewPostFragment extends Fragment {
 			tv.setVisibility(View.VISIBLE);
 			webView.setVisibility(View.GONE);
 			tv.setText(WPHtml.fromHtml(
-					post.getDescription() + post.getMt_text_more(),
+					(post.getDescription() + post.getMt_text_more()).replaceAll("\uFFFC", ""),
 					getActivity().getApplicationContext(), post));
 			shareURLButton.setVisibility(View.GONE);
 			viewPostButton.setVisibility(View.GONE);
@@ -148,7 +149,7 @@ public class ViewPostFragment extends Fragment {
 			tv.setVisibility(View.GONE);
 			webView.setVisibility(View.VISIBLE);
 			String html = StringHelper.addPTags(post.getDescription()
-					+ post.getMt_text_more());
+					+ "\n\n" + post.getMt_text_more());
 
 			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
 					+ html + "</div></body></html>";
