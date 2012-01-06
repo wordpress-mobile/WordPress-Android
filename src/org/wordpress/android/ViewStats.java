@@ -379,7 +379,7 @@ public class ViewStats extends Activity {
 		}
 
 		URI uri = URI
-				.create("http://public-api.wordpress.com/getuserblogs.php");
+				.create("https://public-api.wordpress.com/getuserblogs.php");
 		configureClient(uri, username, password);
 
 		// execute HTTP POST request
