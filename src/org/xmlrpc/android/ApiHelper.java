@@ -1,7 +1,6 @@
 package org.xmlrpc.android;
 
 import org.json.JSONObject;
-import org.wordpress.android.EditPost;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
@@ -11,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,18 +54,12 @@ public class ApiHelper extends Activity {
 
 		if (result != null) {
 			if (result.length > 0) {
-				String author, postID, commentID, comment, dateCreated, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+				String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
 
 				HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
 				Vector<HashMap<String, String>> dbVector = new Vector<HashMap<String, String>>();
 
 				Date d = new Date();
-				SimpleDateFormat sdf = new SimpleDateFormat(
-						"EEE MMM dd HH:mm:ss z yyyy");
-				Calendar cal = Calendar.getInstance();
-				TimeZone tz = cal.getTimeZone();
-				String shortDisplayName = "";
-				shortDisplayName = tz.getDisplayName(true, TimeZone.SHORT);
 				// loop this!
 				for (int ctr = 0; ctr < result.length; ctr++) {
 					HashMap<String, String> dbValues = new HashMap<String, String>();
