@@ -5,6 +5,7 @@ import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 
 import android.app.AlertDialog;
@@ -159,6 +160,14 @@ public class AddQuickPressShortcut extends ListActivity {
 	        		addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcut.this, R.drawable.app_icon));
 	        		
 	        		WordPress.wpDB.addQuickPressShortcut(accountIDs[position], quickPressShortcutName.getText().toString());
+	        		
+	        		if (WordPress.currentBlog == null) {
+	        			try {
+							WordPress.currentBlog = new Blog(accountIDs[position], AddQuickPressShortcut.this);
+							WordPress.wpDB.updateLastBlogID(accountIDs[position]);
+						} catch (Exception e) {
+						}
+	        		}
 	        		
 	        		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 	        		AddQuickPressShortcut.this.sendBroadcast(addIntent);
