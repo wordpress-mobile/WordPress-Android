@@ -265,9 +265,14 @@ public class EditPost extends Activity implements LocationListener {
 					}
 				}
 
-				if (!isNew)
-					post = new Post(id, postID, isPage, this);
-				WordPress.currentPost = post;
+				if (!isNew) {
+					try {
+						post = new Post(id, postID, isPage, this);
+						WordPress.currentPost = post;
+					} catch (Exception e) {
+						finish();
+					}
+				}
 			}
 
 			if (isNew) {
