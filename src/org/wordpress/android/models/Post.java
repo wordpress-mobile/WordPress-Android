@@ -655,18 +655,17 @@ public class Post {
 					contentStruct.put("dateCreated", dateCreated);
 				}
 
-				// get rid of the p tags that the editor adds.
-				if (post.isLocalDraft()) {
-					descriptionContent = descriptionContent.replace("<p>", "")
-							.replace("</p>", "\n");
-					moreContent = moreContent.replace("<p>", "").replace(
-							"</p>", "\n");
-				}
 
 				if (!moreContent.equals("")) {
 					descriptionContent = descriptionContent
 							+ "\n\n<!--more-->\n\n" + moreContent;
 					post.mt_text_more = "";
+				}
+				
+				// get rid of the p and br tags that the editor adds.
+				if (post.isLocalDraft()) {
+					descriptionContent = descriptionContent.replace("<p>", "")
+							.replace("</p>", "\n").replace("<br>", "");
 				}
 
 				// gets rid of the weird character android inserts after images
