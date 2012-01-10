@@ -417,15 +417,12 @@ public class EditPost extends Activity implements LocationListener {
 			String contentHTML;
 
 			if (!post.getMt_text_more().equals("")) {
-				if (localDraft || isNew) {
-					contentHTML = post.getDescription()
-							+ "<p><font color =\"#777777\">........"
-							+ getResources().getText(R.string.more_tag)
-							+ "</font></p>" + post.getMt_text_more();
-				} else {
+				if (post.isLocalDraft())
+					contentHTML = post.getDescription() + "\n&lt;!--more--&gt;\n"
+						+ post.getMt_text_more();
+				else
 					contentHTML = post.getDescription() + "\n<!--more-->\n"
 							+ post.getMt_text_more();
-				}
 			} else {
 				contentHTML = post.getDescription();
 			}
@@ -765,12 +762,13 @@ public class EditPost extends Activity implements LocationListener {
 		if (localDraft || isNew) {
 			Editable e = contentET.getText();
 			if (android.os.Build.VERSION.SDK_INT >= 14) {
-				//remove suggestion spans, they cause craziness in WPHtml.toHTML().
+				// remove suggestion spans, they cause craziness in
+				// WPHtml.toHTML().
 				CharacterStyle[] style = e.getSpans(0, e.length(),
 						CharacterStyle.class);
-				for (int i=0;i<style.length;i++)
-				{
-					if (style[i].getClass().getName().equals("android.text.style.SuggestionSpan"))
+				for (int i = 0; i < style.length; i++) {
+					if (style[i].getClass().getName()
+							.equals("android.text.style.SuggestionSpan"))
 						e.removeSpan(style[i]);
 				}
 			}
@@ -897,13 +895,7 @@ public class EditPost extends Activity implements LocationListener {
 				}
 
 			}
-			String needle = "", needle2 = "";
-			if (isNew || localDraft) {
-				needle = "<font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font>";
-				needle2 = "<p>" + needle + "</p>";
-			}
-			else
-				needle = "<!--more-->";
+			String needle = "<!--more-->";
 			if (isNew) {
 				post = new Post(id, title, content, images, pubDateTimestamp,
 						categories.toString(), tags, status, password,
@@ -912,13 +904,7 @@ public class EditPost extends Activity implements LocationListener {
 				post.setLocalDraft(true);
 
 				// split up the post content if there's a more tag
-				if (content.indexOf(needle2) >= 0) {
-					post.setDescription(content.substring(0,
-							content.indexOf(needle2)));
-					post.setMt_text_more(content.substring(
-							content.indexOf(needle2) + needle2.length(),
-							content.length()));
-				} else if (content.indexOf(needle) >= 0) {
+				if (content.indexOf(needle) >= 0) {
 					post.setDescription(content.substring(0,
 							content.indexOf(needle)));
 					post.setMt_text_more(content.substring(
@@ -960,13 +946,7 @@ public class EditPost extends Activity implements LocationListener {
 			} else {
 				post.setTitle(title);
 				// split up the post content if there's a more tag
-				if (content.indexOf(needle2) >= 0) {
-					post.setDescription(content.substring(0,
-							content.indexOf(needle2)));
-					post.setMt_text_more(content.substring(
-							content.indexOf(needle2) + needle2.length(),
-							content.length()));
-				} else if (localDraft && content.indexOf(needle) >= 0){
+				if (localDraft && content.indexOf(needle) >= 0) {
 					post.setDescription(content.substring(0,
 							content.indexOf(needle)));
 					post.setMt_text_more(content.substring(

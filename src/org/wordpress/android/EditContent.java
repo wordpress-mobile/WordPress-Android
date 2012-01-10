@@ -542,32 +542,8 @@ public class EditContent extends Activity {
 				WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
 				selectionEnd = contentText.getSelectionEnd();
 
-				if (localDraft) {
-					SpannableStringBuilder ssb = new SpannableStringBuilder();
-					ssb.append(contentText.getText().subSequence(0,
-							selectionEnd));
-
-					Spannable more = (Spannable) WPHtml
-							.fromHtml(
-									"<br><p><font color=\"#777777\">........"
-											+ getResources().getText(
-													R.string.more_tag)
-											+ "</font></p>",
-									EditContent.this, WordPress.currentPost);
-					ssb.append(more);
-					ssb.append(contentText.getText().subSequence(selectionEnd,
-							contentText.getText().length()));
-
-					try {
-						contentText.setText(ssb);
-						contentText.setSelection(selectionEnd + more.length());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					Editable str = contentText.getText();
-					str.insert(selectionEnd, "\n\n<!--more-->\n\n");
-				}
+				Editable str = contentText.getText();
+				str.insert(selectionEnd, "\n\n<!--more-->\n\n");
 			}
 		});
 	}
