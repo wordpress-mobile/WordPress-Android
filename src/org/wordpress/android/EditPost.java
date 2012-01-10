@@ -897,9 +897,11 @@ public class EditPost extends Activity implements LocationListener {
 				}
 
 			}
-			String needle = "";
-			if (isNew || localDraft) 
-				needle = "<p><font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font></p>";
+			String needle = "", needle2 = "";
+			if (isNew || localDraft) {
+				needle = "<font color =\"#777777\">........" + getResources().getText(R.string.more_tag) + "</font>";
+				needle2 = "<p>" + needle + "</p>";
+			}
 			else
 				needle = "<!--more-->";
 			if (isNew) {
@@ -915,6 +917,12 @@ public class EditPost extends Activity implements LocationListener {
 							content.indexOf(needle)));
 					post.setMt_text_more(content.substring(
 							content.indexOf(needle) + needle.length(),
+							content.length()));
+				} else if (content.indexOf(needle2) >= 0) {
+					post.setDescription(content.substring(0,
+							content.indexOf(needle2)));
+					post.setMt_text_more(content.substring(
+							content.indexOf(needle2) + needle2.length(),
 							content.length()));
 				}
 
@@ -957,6 +965,12 @@ public class EditPost extends Activity implements LocationListener {
 							content.indexOf(needle)));
 					post.setMt_text_more(content.substring(
 							content.indexOf(needle) + needle.length(),
+							content.length()));
+				} else if (localDraft && content.indexOf(needle2) >= 0){
+					post.setDescription(content.substring(0,
+							content.indexOf(needle2)));
+					post.setMt_text_more(content.substring(
+							content.indexOf(needle2) + needle2.length(),
 							content.length()));
 				} else {
 					post.setDescription(content);

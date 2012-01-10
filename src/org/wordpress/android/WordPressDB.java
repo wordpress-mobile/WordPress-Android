@@ -1070,6 +1070,8 @@ public class WordPressDB {
 			values.put("title", post.getTitle());
 			values.put("date_created_gmt", post.getDate_created_gmt());
 			values.put("description", post.getDescription());
+			if (post.getMt_text_more() != null)
+				values.put("mt_text_more", post.getMt_text_more());
 			values.put("uploaded", post.isUploaded());
 
 			if (post.getCategories() != null) {
