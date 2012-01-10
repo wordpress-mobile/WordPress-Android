@@ -549,10 +549,10 @@ public class EditContent extends Activity {
 
 					Spannable more = (Spannable) WPHtml
 							.fromHtml(
-									"<br><div style=\"display:block;\" id=\"wp-android-more\"><font color=\"#777777\">........"
+									"<br><p><font color=\"#777777\">........"
 											+ getResources().getText(
 													R.string.more_tag)
-											+ "</font></div>",
+											+ "</font></p>",
 									EditContent.this, WordPress.currentPost);
 					ssb.append(more);
 					ssb.append(contentText.getText().subSequence(selectionEnd,

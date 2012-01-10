@@ -419,7 +419,7 @@ public class EditPost extends Activity implements LocationListener {
 			if (!post.getMt_text_more().equals("")) {
 				if (localDraft || isNew) {
 					contentHTML = post.getDescription()
-							+ "<p id=\"wp-android-more\"><font color=\"#777777\">........"
+							+ "<p><font color =\"#777777\">........"
 							+ getResources().getText(R.string.more_tag)
 							+ "</font></p>" + post.getMt_text_more();
 				} else {
@@ -858,7 +858,7 @@ public class EditPost extends Activity implements LocationListener {
 						s.removeSpan(wpIS);
 						s.insert(tagStart, "<img android-uri=\""
 								+ wpIS.getImageSource().toString() + "\" />");
-						content = contentET.getText().toString();
+						content = EscapeUtils.unescapeHtml(WPHtml.toHtml(s));
 					}
 				}
 			}
@@ -912,17 +912,17 @@ public class EditPost extends Activity implements LocationListener {
 				post.setLocalDraft(true);
 
 				// split up the post content if there's a more tag
-				if (content.indexOf(needle) >= 0) {
-					post.setDescription(content.substring(0,
-							content.indexOf(needle)));
-					post.setMt_text_more(content.substring(
-							content.indexOf(needle) + needle.length(),
-							content.length()));
-				} else if (content.indexOf(needle2) >= 0) {
+				if (content.indexOf(needle2) >= 0) {
 					post.setDescription(content.substring(0,
 							content.indexOf(needle2)));
 					post.setMt_text_more(content.substring(
 							content.indexOf(needle2) + needle2.length(),
+							content.length()));
+				} else if (content.indexOf(needle) >= 0) {
+					post.setDescription(content.substring(0,
+							content.indexOf(needle)));
+					post.setMt_text_more(content.substring(
+							content.indexOf(needle) + needle.length(),
 							content.length()));
 				}
 
@@ -960,20 +960,21 @@ public class EditPost extends Activity implements LocationListener {
 			} else {
 				post.setTitle(title);
 				// split up the post content if there's a more tag
-				if (content.indexOf(needle) >= 0) {
-					post.setDescription(content.substring(0,
-							content.indexOf(needle)));
-					post.setMt_text_more(content.substring(
-							content.indexOf(needle) + needle.length(),
-							content.length()));
-				} else if (localDraft && content.indexOf(needle2) >= 0){
+				if (content.indexOf(needle2) >= 0) {
 					post.setDescription(content.substring(0,
 							content.indexOf(needle2)));
 					post.setMt_text_more(content.substring(
 							content.indexOf(needle2) + needle2.length(),
 							content.length()));
+				} else if (localDraft && content.indexOf(needle) >= 0){
+					post.setDescription(content.substring(0,
+							content.indexOf(needle)));
+					post.setMt_text_more(content.substring(
+							content.indexOf(needle) + needle.length(),
+							content.length()));
 				} else {
 					post.setDescription(content);
+					post.setMt_text_more("");
 				}
 				post.setMediaPaths(images);
 				post.setDate_created_gmt(pubDateTimestamp);
