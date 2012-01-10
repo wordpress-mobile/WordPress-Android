@@ -50,7 +50,7 @@
                 <org.wordpress.android.util.WPEditText
                     android:id="@+id/postContent"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="120dp"
                     android:layout_below="@id/title"
                     android:layout_margin="4dp"
                     android:autoText="true"
