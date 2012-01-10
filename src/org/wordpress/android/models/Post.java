@@ -711,7 +711,7 @@ public class Post {
 				}
 
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-						post.blog.getHttpuser(), post.blog.getHttppassword());
+						post.blog.getHttpuser(), post.blog.getHttppassword(), context);
 
 				/*
 				 * client.setUploadProgressListener(new
@@ -767,7 +767,7 @@ public class Post {
 			// check for image, and upload it
 			if (mf.getFileName() != null) {
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-						post.blog.getHttpuser(), post.blog.getHttppassword());
+						post.blog.getHttpuser(), post.blog.getHttppassword(), context);
 
 				/*
 				 * client.setUploadProgressListener(new

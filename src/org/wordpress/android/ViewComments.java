@@ -240,7 +240,7 @@ public class ViewComments extends ListFragment {
 
 				client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 						WordPress.currentBlog.getHttpuser(),
-						WordPress.currentBlog.getHttppassword());
+						WordPress.currentBlog.getHttppassword(), getActivity().getApplicationContext());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
@@ -346,7 +346,7 @@ public class ViewComments extends ListFragment {
 
 				client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 						WordPress.currentBlog.getHttpuser(),
-						WordPress.currentBlog.getHttppassword());
+						WordPress.currentBlog.getHttppassword(), getActivity().getApplicationContext());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
 				String curCommentID = listRow.commentID;
@@ -546,7 +546,7 @@ public class ViewComments extends ListFragment {
 		}
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 				WordPress.currentBlog.getHttpuser(),
-				WordPress.currentBlog.getHttppassword());
+				WordPress.currentBlog.getHttppassword(), getActivity().getApplicationContext());
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		if (loadMore) {

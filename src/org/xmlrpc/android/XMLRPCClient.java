@@ -1,6 +1,8 @@
 package org.xmlrpc.android;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PushbackInputStream;
 import java.io.StringWriter;
@@ -26,6 +28,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 
@@ -43,12 +46,14 @@ public class XMLRPCClient {
 	private HttpPost postMethod;
 	private XmlSerializer serializer;
 	private HttpParams httpParams;
+	private Context context;
 
 	/**
 	 * XMLRPCClient constructor. Creates new instance based on server URI
 	 * @param XMLRPC server URI
 	 */
-	public XMLRPCClient(URI uri, String httpuser, String httppasswd) {
+	public XMLRPCClient(URI uri, String httpuser, String httppasswd, Context ctx) {
+		context = ctx;
 		postMethod = new HttpPost(uri);
 		postMethod.addHeader("Content-Type", "text/xml");
 		
@@ -105,16 +110,16 @@ public class XMLRPCClient {
 	 * Convenience constructor. Creates new instance based on server String address
 	 * @param XMLRPC server address
 	 */
-	public XMLRPCClient(String url, String httpuser, String httppasswd) {
-		this(URI.create(url), httpuser, httppasswd);
+	public XMLRPCClient(String url, String httpuser, String httppasswd, Context ctx) {
+		this(URI.create(url), httpuser, httppasswd, ctx);
 	}
 	
 	/**
 	 * Convenience XMLRPCClient constructor. Creates new instance based on server URL
 	 * @param XMLRPC server URL
 	 */
-	public XMLRPCClient(URL url, String httpuser, String httppasswd) {
-		this(URI.create(url.toExternalForm()), httpuser, httppasswd);
+	public XMLRPCClient(URL url, String httpuser, String httppasswd, Context ctx) {
+		this(URI.create(url.toExternalForm()), httpuser, httppasswd, ctx);
 	}
 
 	/**
@@ -302,18 +307,21 @@ public class XMLRPCClient {
 	private Object callXMLRPC(String method, Object[] params) throws XMLRPCException {
 		try {
 			// prepare POST body
-			File tempFile = null;
+			String tempFileName = "wp-" + System.currentTimeMillis();
 			if (method.equals("wp.uploadFile")){
-				//String tempFilePath = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".xml";
-				String tempFileName = "wp-" + System.currentTimeMillis();
-				tempFile = File.createTempFile(tempFileName, null);
 				
-	            if (!tempFile.exists() && !tempFile.mkdirs()) {
-	            	throw new XMLRPCException("Path to file could not be created.");
-	            }
+				FileOutputStream fos;
+				
+				try {
+					fos = context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+				} catch (Exception e) {
+					throw new XMLRPCException("Path to file could not be created.");
+				}
 
-				FileWriter fileWriter = new FileWriter(tempFile);
-				serializer.setOutput(fileWriter);
+				if (fos == null)
+					throw new XMLRPCException("Path to file could not be created.");
+				
+				serializer.setOutput(fos, "utf-8");
 				
 				serializer.startDocument(null, null);
 				serializer.startTag(null, TAG_METHOD_CALL);
@@ -332,14 +340,13 @@ public class XMLRPCClient {
 				serializer.endTag(null, TAG_METHOD_CALL);
 				serializer.endDocument();
 				
-				fileWriter.flush();
-				fileWriter.close();
-				FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\""); 
+				fos.flush();
+				fos.close();
+				File tempFile = new File(context.getFilesDir() + "/" + tempFileName);
+				FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\""); 
 	            fEntity.setContentType("text/xml");
 	            //fEntity.setChunked(true);
-	            postMethod.setEntity(fEntity);
-	            
-	            
+	            postMethod.setEntity(fEntity); 
 			}
 			else{
 				StringWriter bodyWriter = new StringWriter();
@@ -387,7 +394,7 @@ public class XMLRPCClient {
 			int statusCode = response.getStatusLine().getStatusCode();
 			
 			if ((method.equals("wp.uploadFile"))){ //get rid of the temp file
-				tempFile.delete();
+				context.deleteFile(tempFileName);
 			}
 			
 			if (statusCode != HttpStatus.SC_OK) {

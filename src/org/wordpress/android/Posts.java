@@ -316,7 +316,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			XMLRPCClient client = new XMLRPCClient(
 					WordPress.currentBlog.getUrl(),
 					WordPress.currentBlog.getHttpuser(),
-					WordPress.currentBlog.getHttppassword());
+					WordPress.currentBlog.getHttppassword(), Posts.this);
 
 			Object[] postParams = { "", post.getPostid(),
 					WordPress.currentBlog.getUsername(),
@@ -387,7 +387,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			XMLRPCClient client = new XMLRPCClient(
 					WordPress.currentBlog.getUrl(),
 					WordPress.currentBlog.getHttpuser(),
-					WordPress.currentBlog.getHttppassword());
+					WordPress.currentBlog.getHttppassword(), Posts.this);
 
 			Object versionResult = new Object();
 			try {

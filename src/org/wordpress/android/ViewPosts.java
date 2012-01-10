@@ -819,7 +819,7 @@ public class ViewPosts extends ListFragment {
 			loadMore = (Boolean) arguments.get(3);
 			client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 					WordPress.currentBlog.getHttpuser(),
-					WordPress.currentBlog.getHttppassword());
+					WordPress.currentBlog.getHttppassword(), getActivity().getApplicationContext());
 
 			Object[] result = null;
 			Object[] params = { WordPress.currentBlog.getBlogId(),

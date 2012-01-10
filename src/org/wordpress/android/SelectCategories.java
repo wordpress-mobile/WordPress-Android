@@ -260,7 +260,7 @@ public class SelectCategories extends ListActivity {
         		blog.getPassword(),
         };
 
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword(), this);
 
         boolean success = false;
 
@@ -324,7 +324,7 @@ public class SelectCategories extends ListActivity {
 	    struct.put("description", category_desc);
 	    struct.put("parent_id", parent_id);
 
-	    client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+	    client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword(), this);
 	    
 	    Object[] params = {
 	    		blog.getBlogId(),
