@@ -10,6 +10,7 @@ import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,7 +36,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
@@ -163,7 +163,7 @@ public class EditContent extends Activity {
 							if (span instanceof QuoteSpan) {
 								bquoteButton.setChecked(true);
 							}
-							if (span instanceof UnderlineSpan) {
+							if (span instanceof WPUnderlineSpan) {
 								underlineButton.setChecked(true);
 							}
 							if (span instanceof StrikethroughSpan) {
@@ -408,14 +408,14 @@ public class EditContent extends Activity {
 										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						}
 						if (underlineButton.isChecked()) {
-							UnderlineSpan[] ss = s.getSpans(styleStart,
-									position, UnderlineSpan.class);
+							WPUnderlineSpan[] ss = s.getSpans(styleStart,
+									position, WPUnderlineSpan.class);
 							exists = false;
 							for (int i = 0; i < ss.length; i++) {
 								exists = true;
 							}
 							if (!exists)
-								s.setSpan(new UnderlineSpan(), styleStart,
+								s.setSpan(new WPUnderlineSpan(), styleStart,
 										position,
 										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						}
@@ -634,8 +634,8 @@ public class EditContent extends Activity {
 						toggleButton.setChecked(false);
 					} else if (tag.equals("u")) {
 
-						UnderlineSpan[] ss = str.getSpans(selectionStart,
-								selectionEnd, UnderlineSpan.class);
+						WPUnderlineSpan[] ss = str.getSpans(selectionStart,
+								selectionEnd, WPUnderlineSpan.class);
 
 						boolean exists = false;
 						for (int i = 0; i < ss.length; i++) {
@@ -644,7 +644,7 @@ public class EditContent extends Activity {
 						}
 
 						if (!exists) {
-							str.setSpan(new UnderlineSpan(), selectionStart,
+							str.setSpan(new WPUnderlineSpan(), selectionStart,
 									selectionEnd,
 									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 						}
@@ -720,13 +720,13 @@ public class EditContent extends Activity {
 
 						}
 					} else if (tag.equals("u")) {
-						UnderlineSpan[] us = s.getSpans(styleStart - 1,
-								styleStart, UnderlineSpan.class);
+						WPUnderlineSpan[] us = s.getSpans(styleStart - 1,
+								styleStart, WPUnderlineSpan.class);
 						for (int i = 0; i < us.length; i++) {
 							int tagStart = s.getSpanStart(us[i]);
 							int tagEnd = s.getSpanEnd(us[i]);
 							s.removeSpan(us[i]);
-							s.setSpan(new UnderlineSpan(), tagStart, tagEnd,
+							s.setSpan(new WPUnderlineSpan(), tagStart, tagEnd,
 									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 						}
 					} else if (tag.equals("strike")) {

@@ -58,7 +58,6 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -276,7 +275,7 @@ public class WPHtml {
 				if (style[j] instanceof SubscriptSpan) {
 					out.append("<sub>");
 				}
-				if (style[j] instanceof UnderlineSpan) {
+				if (style[j] instanceof WPUnderlineSpan) {
 					out.append("<u>");
 				}
 				if (style[j] instanceof StrikethroughSpan) {
@@ -330,7 +329,7 @@ public class WPHtml {
 				if (style[j] instanceof StrikethroughSpan) {
 					out.append("</strike>");
 				}
-				if (style[j] instanceof UnderlineSpan) {
+				if (style[j] instanceof WPUnderlineSpan) {
 					out.append("</u>");
 				}
 				if (style[j] instanceof SubscriptSpan) {
@@ -614,7 +613,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 				endA(mSpannableStringBuilder);
 			} else if (tag.equalsIgnoreCase("u")) {
 				end(mSpannableStringBuilder, Underline.class,
-						new UnderlineSpan());
+						new WPUnderlineSpan());
 			} else if (tag.equalsIgnoreCase("sup")) {
 				end(mSpannableStringBuilder, Super.class, new SuperscriptSpan());
 			} else if (tag.equalsIgnoreCase("sub")) {
