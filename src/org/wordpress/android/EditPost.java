@@ -52,6 +52,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.style.AlignmentSpan;
+import android.text.style.CharacterStyle;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -762,8 +763,18 @@ public class EditPost extends Activity implements LocationListener {
 		EditText passwordET = (EditText) findViewById(R.id.post_password);
 		String password = passwordET.getText().toString();
 		if (localDraft || isNew) {
-			content = EscapeUtils.unescapeHtml(WPHtml.toHtml(contentET
-					.getText()));
+			Editable e = contentET.getText();
+			if (android.os.Build.VERSION.SDK_INT >= 14) {
+				//remove suggestion spans, they cause craziness in WPHtml.toHTML().
+				CharacterStyle[] style = e.getSpans(0, e.length(),
+						CharacterStyle.class);
+				for (int i=0;i<style.length;i++)
+				{
+					if (style[i].getClass().getName().equals("android.text.style.SuggestionSpan"))
+						e.removeSpan(style[i]);
+				}
+			}
+			content = EscapeUtils.unescapeHtml(WPHtml.toHtml(e));
 			// replace duplicate <p> tags so there's not duplicates, trac #86
 			content = content.replace("<p><p>", "<p>");
 			content = content.replace("</p></p>", "</p>");

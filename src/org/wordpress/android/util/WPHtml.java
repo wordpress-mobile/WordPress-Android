@@ -286,7 +286,6 @@ public class WPHtml {
 					out.append("<a href=\"");
 					out.append(((URLSpan) style[j]).getURL());
 					out.append("\">");
-					next = end;
 				}
 				if (style[j] instanceof ImageSpan) {
 					out.append("<img src=\"");
