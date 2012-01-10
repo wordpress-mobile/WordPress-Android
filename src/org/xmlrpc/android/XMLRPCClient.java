@@ -1,9 +1,7 @@
 package org.xmlrpc.android;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.PushbackInputStream;
 import java.io.StringWriter;
 import java.net.URI;
