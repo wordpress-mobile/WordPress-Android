@@ -8,7 +8,6 @@ import java.util.HashMap;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.WPEditText;
-import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
 
