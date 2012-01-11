@@ -856,7 +856,10 @@ public class EditPost extends Activity implements LocationListener {
 						s.removeSpan(wpIS);
 						s.insert(tagStart, "<img android-uri=\""
 								+ wpIS.getImageSource().toString() + "\" />");
-						content = EscapeUtils.unescapeHtml(WPHtml.toHtml(s));
+						if (localDraft)
+							content = EscapeUtils.unescapeHtml(WPHtml.toHtml(s));
+						else
+							content = s.toString();
 					}
 				}
 			}
