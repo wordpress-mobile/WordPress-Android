@@ -144,13 +144,14 @@ public class ApiHelper extends Activity {
 
 	}
 
-	public static HashMap<String, HashMap<?, ?>> refreshComments(Context ctx,
+	public static HashMap<Integer, HashMap<?, ?>> refreshComments(Context ctx,
 			Object[] commentParams) throws XMLRPCException {
 		Blog blog = WordPress.currentBlog;
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
 				blog.getHttppassword());
-		String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
-		HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
+		String author, postID, comment, status, authorEmail, authorURL, postTitle;
+		int commentID;
+		HashMap<Integer, HashMap<?, ?>> allComments = new HashMap<Integer, HashMap<?, ?>>();
 		HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 		Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
@@ -168,13 +169,13 @@ public class ApiHelper extends Activity {
 		for (int ctr = 0; ctr < result.length; ctr++) {
 			HashMap<Object, Object> dbValues = new HashMap<Object, Object>();
 			contentHash = (HashMap<?, ?>) result[ctr];
-			allComments.put(contentHash.get("comment_id").toString(),
+			allComments.put(Integer.parseInt(contentHash.get("comment_id").toString()),
 					contentHash);
 			comment = contentHash.get("content").toString();
 			author = contentHash.get("author").toString();
 			status = contentHash.get("status").toString();
 			postID = contentHash.get("post_id").toString();
-			commentID = contentHash.get("comment_id").toString();
+			commentID = Integer.parseInt(contentHash.get("comment_id").toString());
 			d = (Date) contentHash.get("date_created_gmt");
 			authorURL = contentHash.get("author_url").toString();
 			authorEmail = contentHash.get("author_email").toString();

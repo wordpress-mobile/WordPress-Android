@@ -1293,7 +1293,7 @@ public class WordPressDB {
 
 	}
 
-	public void updateCommentStatus(int blogID, String id, String newStatus) {
+	public void updateCommentStatus(int blogID, int id, String newStatus) {
 
 		ContentValues values = new ContentValues();
 		values.put("status", newStatus);

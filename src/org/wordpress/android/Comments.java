@@ -190,11 +190,10 @@ public class Comments extends FragmentActivity implements
 
 		if (WordPress.currentComment != null) {
 
-			String comment_id = WordPress.currentComment.commentID;
+			final int commentID = WordPress.currentComment.commentID;
 
 			if (status.equals("approve") || status.equals("hold")
 					|| status.equals("spam")) {
-				final int commentID = Integer.parseInt(comment_id);
 				showDialog(ID_DIALOG_MODERATING);
 				new Thread() {
 					public void run() {
@@ -203,7 +202,6 @@ public class Comments extends FragmentActivity implements
 					}
 				}.start();
 			} else if (status.equals("delete")) {
-				final int commentID_del = Integer.parseInt(comment_id);
 				showDialog(ID_DIALOG_DELETING);
 				// pop out of the detail view if on a smaller screen
 				FragmentManager fm = getSupportFragmentManager();
@@ -214,13 +212,13 @@ public class Comments extends FragmentActivity implements
 				}
 				new Thread() {
 					public void run() {
-						deleteComment(commentID_del);
+						deleteComment(commentID);
 					}
 				}.start();
 			} else if (status.equals("reply")) {
 
 				Intent i = new Intent(Comments.this, ReplyToComment.class);
-				i.putExtra("commentID", Integer.parseInt(comment_id));
+				i.putExtra("commentID", commentID);
 				i.putExtra("postID", WordPress.currentComment.postID);
 				startActivityForResult(i, 0);
 			} else if (status.equals("clear")) {
@@ -239,7 +237,6 @@ public class Comments extends FragmentActivity implements
 	private void changeCommentStatus(final String newStatus,
 			final int selCommentID) {
 		// for individual comment moderation
-		String sSelCommentID = String.valueOf(selCommentID);
 		WordPressDB db = new WordPressDB(Comments.this);
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 				WordPress.currentBlog.getHttpuser(),
@@ -247,7 +244,7 @@ public class Comments extends FragmentActivity implements
 
 		HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
 		contentHash = (HashMap<String, String>) commentList.allComments
-				.get(sSelCommentID);
+				.get(selCommentID);
 		postHash.put("status", newStatus);
 		postHash.put("content", contentHash.get("comment"));
 		postHash.put("author", contentHash.get("author"));
@@ -256,7 +253,7 @@ public class Comments extends FragmentActivity implements
 
 		Object[] params = { WordPress.currentBlog.getBlogId(),
 				WordPress.currentBlog.getUsername(),
-				WordPress.currentBlog.getPassword(), sSelCommentID, postHash };
+				WordPress.currentBlog.getPassword(), selCommentID, postHash };
 
 		Object result = null;
 		try {
@@ -312,7 +309,7 @@ public class Comments extends FragmentActivity implements
 		}
 	}
 
-	private void deleteComment(final int selCommentID) {
+	private void deleteComment(int selCommentID) {
 		// delete individual comment
 
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),

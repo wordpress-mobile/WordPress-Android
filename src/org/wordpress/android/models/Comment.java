@@ -4,7 +4,7 @@ import java.net.URI;
 
 public class Comment {
 	public String postID = "";
-	public String commentID = "";
+	public int commentID;
 	public int position;
 	public String name = "";
 	public String emailURL = "";
@@ -16,7 +16,7 @@ public class Comment {
 	public String dateCreatedFormatted = "";
 	public URI profileImageUrl = null;
 
-	public Comment(String postID, String commentID, int position, String name,
+	public Comment(String postID, int commentID, int position, String name,
 			String dateCreatedFormatted, String comment, String status,
 			String postTitle, String authorURL, String authorEmail,
 			URI profileImageUrl) {

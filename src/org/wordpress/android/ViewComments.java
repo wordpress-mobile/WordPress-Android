@@ -64,13 +64,14 @@ public class ViewComments extends ListFragment {
 	private XMLRPCClient client;
 	private String accountName = "", moderateErrorMsg = "";
 	public int[] changedStatuses;
-	public HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
+	public HashMap<Integer, HashMap<?, ?>> allComments = new HashMap<Integer, HashMap<?, ?>>();
 	public int ID_DIALOG_MODERATING = 1;
 	public int ID_DIALOG_REPLYING = 2;
 	public int ID_DIALOG_DELETING = 3;
 	public boolean initializing = true, shouldSelectAfterLoad = false;
 	public int selectedID = 0, rowID = 0, numRecords = 0, totalComments = 0,
-			commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition, scrollPosition = 0, scrollPositionTop = 0;
+			commentsToLoad = 30, checkedCommentTotal = 0, selectedPosition,
+			scrollPosition = 0, scrollPositionTop = 0;
 	public ProgressDialog pd;
 	private ViewSwitcher switcher;
 	boolean loadMore = false, doInBackground = false, refreshOnly = false;
@@ -211,27 +212,6 @@ public class ViewComments extends ListFragment {
 		return v;
 	}
 
-	protected void showOrHideBulkCheckBoxes() {
-		ListView listView = getListView();
-		int loopMax = 0;
-		if (listView.getFooterViewsCount() >= 1) {
-			// we don't want a checkmark on the footer view
-			if (listView.getLastVisiblePosition() == thumbs.getCount()) {
-				loopMax = listView.getChildCount() - 1;
-			} else {
-				loopMax = listView.getChildCount();
-			}
-		} else {
-			loopMax = listView.getChildCount();
-		}
-		for (int i = 0; i < loopMax; i++) {
-			RelativeLayout rl = (RelativeLayout) (View) listView.getChildAt(i)
-					.findViewById(R.id.bulkEditGroup);
-			showBulkCheckBoxes(rl);
-		}
-
-	}
-
 	@SuppressWarnings("unchecked")
 	protected void moderateComments(String newStatus) {
 		// handles bulk moderation
@@ -243,7 +223,7 @@ public class ViewComments extends ListFragment {
 						WordPress.currentBlog.getHttppassword());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
-				String curCommentID = listRow.commentID;
+				int curCommentID = listRow.commentID;
 
 				HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
 				contentHash = (HashMap<String, String>) allComments
@@ -292,50 +272,20 @@ public class ViewComments extends ListFragment {
 					thumbs.notifyDataSetChanged();
 				} else {
 					// there was an xmlrpc error
+					checkedCommentTotal = 0;
+					hideModerationBar();
+					thumbs.notifyDataSetChanged();
 					FragmentTransaction ft = getFragmentManager()
 							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
 							.newInstance(moderateErrorMsg);
 					alert.show(ft, "alert");
+					moderateErrorMsg = "";
 				}
 			}
 		};
 		getActivity().runOnUiThread(action);
 		pd = new ProgressDialog(getActivity().getApplicationContext());
-	}
-
-	protected void hideBulkCheckBoxes(RelativeLayout rl) {
-		AnimationSet set = new AnimationSet(true);
-		Animation animation = new AlphaAnimation(1.0f, 0.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		rl.startAnimation(set);
-		rl.setVisibility(View.GONE);
-		if (checkedCommentTotal > 0) {
-			hideModerationBar();
-		}
-	}
-
-	protected void showBulkCheckBoxes(RelativeLayout rl) {
-		AnimationSet set = new AnimationSet(true);
-		Animation animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-		animation.setDuration(500);
-		set.addAnimation(animation);
-		rl.setVisibility(View.VISIBLE);
-		rl.startAnimation(set);
-		if (checkedCommentTotal > 0) {
-			showModerationBar();
-		}
 	}
 
 	protected void deleteComments() {
@@ -349,7 +299,7 @@ public class ViewComments extends ListFragment {
 						WordPress.currentBlog.getHttppassword());
 
 				Comment listRow = (Comment) getListView().getItemAtPosition(i);
-				String curCommentID = listRow.commentID;
+				int curCommentID = listRow.commentID;
 
 				Object[] params = { WordPress.currentBlog.getBlogId(),
 						WordPress.currentBlog.getUsername(),
@@ -393,7 +343,8 @@ public class ViewComments extends ListFragment {
 
 	public boolean loadComments(boolean refresh, boolean loadMore) {
 		refreshOnly = refresh;
-		String author, postID, commentID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+		String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
+		int commentID;
 
 		Vector<?> loadedPosts = WordPress.wpDB
 				.loadComments(WordPress.currentBlog.getId());
@@ -411,11 +362,11 @@ public class ViewComments extends ListFragment {
 			for (int i = 0; i < loadedPosts.size(); i++) {
 				checkedComments.add(i, "false");
 				HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
-				allComments.put(contentHash.get("commentID").toString(),
+				allComments.put((Integer)contentHash.get("commentID"),
 						contentHash);
 				author = EscapeUtils.unescapeHtml(contentHash.get("author")
 						.toString());
-				commentID = contentHash.get("commentID").toString();
+				commentID = (Integer)contentHash.get("commentID");
 				postID = contentHash.get("postID").toString();
 				comment = EscapeUtils.unescapeHtml(contentHash.get("comment")
 						.toString());
@@ -519,14 +470,15 @@ public class ViewComments extends ListFragment {
 				}
 				shouldSelectAfterLoad = false;
 			}
-			
+
 			if (loadMore && scrollPosition > 0) {
 				ListView listView = this.getListView();
 				try {
-					listView.setSelectionFromTop(scrollPosition, scrollPositionTop);
+					listView.setSelectionFromTop(scrollPosition,
+							scrollPositionTop);
 				} catch (Exception e) {
 					e.printStackTrace();
-				}	
+				}
 			}
 
 			return true;
@@ -553,7 +505,8 @@ public class ViewComments extends ListFragment {
 			ListView listView = this.getListView();
 			scrollPosition = listView.getFirstVisiblePosition();
 			View firstVisibleView = listView.getChildAt(0);
-			scrollPositionTop = (firstVisibleView == null) ? 0 : firstVisibleView.getTop();
+			scrollPositionTop = (firstVisibleView == null) ? 0
+					: firstVisibleView.getTop();
 			hPost.put("number", numRecords + 30);
 		} else {
 			hPost.put("number", 30);
@@ -1029,10 +982,10 @@ public class ViewComments extends ListFragment {
 	}
 
 	class getRecentCommentsTask extends
-			AsyncTask<Void, Void, HashMap<String, HashMap<?, ?>>> {
+			AsyncTask<Void, Void, HashMap<Integer, HashMap<?, ?>>> {
 
 		protected void onPostExecute(
-				HashMap<String, HashMap<?, ?>> commentsResult) {
+				HashMap<Integer, HashMap<?, ?>> commentsResult) {
 
 			if (isCancelled())
 				return;
@@ -1091,9 +1044,9 @@ public class ViewComments extends ListFragment {
 		}
 
 		@Override
-		protected HashMap<String, HashMap<?, ?>> doInBackground(Void... args) {
+		protected HashMap<Integer, HashMap<?, ?>> doInBackground(Void... args) {
 
-			HashMap<String, HashMap<?, ?>> commentsResult;
+			HashMap<Integer, HashMap<?, ?>> commentsResult;
 			try {
 				commentsResult = ApiHelper.refreshComments(getActivity()
 						.getApplicationContext(), commentParams);
