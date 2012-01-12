@@ -34,7 +34,7 @@ public class ApiHelper extends Activity {
 		}
 
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword(), ctx);
+				blog.getHttppassword());
 
 		HashMap<String, Object> hPost = new HashMap<String, Object>();
 		hPost.put("status", "");
@@ -127,7 +127,7 @@ public class ApiHelper extends Activity {
 			blog = (Blog) arguments.get(0);
 			ctx = (Context) arguments.get(1);
 			client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-					blog.getHttppassword(), ctx);
+					blog.getHttppassword());
 
 			Object result = null;
 			Object[] params = { blog.getBlogId(), blog.getUsername(),
@@ -148,7 +148,7 @@ public class ApiHelper extends Activity {
 			Object[] commentParams) throws XMLRPCException {
 		Blog blog = WordPress.currentBlog;
 		client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-				blog.getHttppassword(), ctx);
+				blog.getHttppassword());
 		String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
 		HashMap<String, HashMap<?, ?>> allComments = new HashMap<String, HashMap<?, ?>>();
 		HashMap<?, ?> contentHash = new HashMap<Object, Object>();

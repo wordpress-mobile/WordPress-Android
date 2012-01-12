@@ -122,7 +122,7 @@ public class CommentService extends Service {
 		String sHttpuser = blog.getHttpuser();
 		String sHttppassword = blog.getHttppassword();
 		
-		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword, this);
+		client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
     	
         HashMap<String, Object> hPost = new HashMap<String, Object>();
         hPost.put("status", "");

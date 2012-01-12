@@ -36,6 +36,7 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 
 public class Post {
 
@@ -711,7 +712,7 @@ public class Post {
 				}
 
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-						post.blog.getHttpuser(), post.blog.getHttppassword(), context);
+						post.blog.getHttpuser(), post.blog.getHttppassword());
 
 				/*
 				 * client.setUploadProgressListener(new
@@ -751,6 +752,7 @@ public class Post {
 					return true;
 				} catch (final XMLRPCException e) {
 					error = e.getLocalizedMessage();
+					Log.i("WP", error);
 				}
 			}
 
@@ -767,7 +769,7 @@ public class Post {
 			// check for image, and upload it
 			if (mf.getFileName() != null) {
 				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-						post.blog.getHttpuser(), post.blog.getHttppassword(), context);
+						post.blog.getHttpuser(), post.blog.getHttppassword());
 
 				/*
 				 * client.setUploadProgressListener(new

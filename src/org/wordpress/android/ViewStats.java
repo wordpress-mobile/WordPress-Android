@@ -329,7 +329,7 @@ public class ViewStats extends Activity {
 			// get the blog's url
 			XMLRPCClient xmlClient = new XMLRPCClient(url,
 					WordPress.currentBlog.getHttpuser(),
-					WordPress.currentBlog.getHttppassword(), this);
+					WordPress.currentBlog.getHttppassword());
 			Object[] params = { WordPress.currentBlog.getUsername(),
 					WordPress.currentBlog.getPassword() };
 			try {

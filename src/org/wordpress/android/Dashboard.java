@@ -435,7 +435,7 @@ public class Dashboard extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			Blog blog = WordPress.currentBlog;
 			XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-					blog.getHttpuser(), blog.getHttppassword(), Dashboard.this);
+					blog.getHttpuser(), blog.getHttppassword());
 
 			// check the WP number if self-hosted
 			if (!blog.isDotcomFlag()) {

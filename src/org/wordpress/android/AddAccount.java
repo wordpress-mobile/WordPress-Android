@@ -239,7 +239,7 @@ public class AddAccount extends Activity {
         }
         
         //verify settings
-        client = new XMLRPCClient(fBlogURL, httpuser, httppassword, this);
+        client = new XMLRPCClient(fBlogURL, httpuser, httppassword);
     	
     	XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 			@SuppressWarnings("unchecked")

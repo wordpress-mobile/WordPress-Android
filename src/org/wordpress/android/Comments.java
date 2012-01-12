@@ -243,7 +243,7 @@ public class Comments extends FragmentActivity implements
 		WordPressDB db = new WordPressDB(Comments.this);
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 				WordPress.currentBlog.getHttpuser(),
-				WordPress.currentBlog.getHttppassword(), this);
+				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
 		contentHash = (HashMap<String, String>) commentList.allComments
@@ -317,7 +317,7 @@ public class Comments extends FragmentActivity implements
 
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 				WordPress.currentBlog.getHttpuser(),
-				WordPress.currentBlog.getHttppassword(), this);
+				WordPress.currentBlog.getHttppassword());
 
 		Object[] params = { WordPress.currentBlog.getBlogId(),
 				WordPress.currentBlog.getUsername(),
@@ -375,7 +375,7 @@ public class Comments extends FragmentActivity implements
 		// reply to individual comment
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 				WordPress.currentBlog.getHttpuser(),
-				WordPress.currentBlog.getHttppassword(), this);
+				WordPress.currentBlog.getHttppassword());
 
 		HashMap<String, Object> replyHash = new HashMap<String, Object>();
 		replyHash.put("comment_parent", commentID);
