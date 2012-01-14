@@ -343,8 +343,12 @@ public class EditPost extends Activity implements LocationListener {
 					activePostFormat = post.getWP_post_format();
 			}
 			for (int i = 0; i < postFormats.length; i++) {
-				if (postFormats[i].equals(activePostFormat))
-					pfSpinner.setSelection(i);
+				try {
+					if (postFormats[i].equals(activePostFormat))
+						pfSpinner.setSelection(i);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 			lbsCheck();
