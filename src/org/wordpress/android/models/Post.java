@@ -611,7 +611,7 @@ public class Post {
 
 				Map<String, Object> contentStruct = new HashMap<String, Object>();
 
-				if (!post.isPage) {
+				if (!post.isPage && post.isLocalDraft()) {
 					// add the tagline
 					HashMap<?, ?> globalSettings = WordPress.wpDB
 							.getNotificationOptions(context);
