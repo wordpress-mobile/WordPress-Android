@@ -56,5 +56,13 @@ public class WPEditText extends EditText {
 	public interface OnSelectionChangedListener {
 		public abstract void onSelectionChanged();
 	}
-
+	
+	@Override
+	protected void onScrollChanged(int l, int t, int oldl, int oldt)
+	{	
+		if (this.hasFocus())
+			clearFocus();
+		
+	    super.onScrollChanged(l, t, oldl, oldt);
+	}
 }
