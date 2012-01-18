@@ -141,9 +141,9 @@ public class Read extends Activity {
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
-						String readerURL = Constants.readerURL;
+						String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page_refresh";
 						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-							readerURL += "/?per_page=20";
+							readerURL += "&per_page=20";
 						}
 
 						httpclient.execute(new HttpGet(readerURL));
@@ -249,9 +249,9 @@ public class Read extends Activity {
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
-						String readerURL = Constants.readerURL;
+						String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page";
 						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-							readerURL += "/?per_page=20";
+							readerURL += "&per_page=20";
 						}
 
 						httpclient.execute(new HttpGet(readerURL));
