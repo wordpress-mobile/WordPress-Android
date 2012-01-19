@@ -226,6 +226,12 @@ res/layout-large-mdpi/posts.xml -text
 res/layout-large-port-mdpi/moderatecomments.xml -text
 res/layout-small/new_account.xml -text
 res/layout-v4/row.xml -text
+res/layout-xlarge-mdpi/add_account.xml -text
+res/layout-xlarge-mdpi/comments.xml -text
+res/layout-xlarge-mdpi/edit.xml -text
+res/layout-xlarge-mdpi/edit_page.xml -text
+res/layout-xlarge-mdpi/new_account.xml -text
+res/layout-xlarge-mdpi/posts.xml -text
 res/layout-xlarge/add_account.xml -text
 res/layout-xlarge/comments.xml -text
 res/layout-xlarge/edit.xml -text
@@ -310,6 +316,8 @@ res/values-small/dimens.xml -text
 res/values-sv/strings.xml -text
 res/values-ta/strings.xml -text
 res/values-tr/strings.xml -text
+res/values-xlarge-mdpi/dimens.xml -text
+res/values-xlarge-mdpi/styles.xml -text
 res/values-xlarge-v11/styles.xml -text
 res/values-xlarge/dimens.xml -text
 res/values-xlarge/styles.xml -text
