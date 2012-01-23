@@ -223,10 +223,10 @@ public class ViewPosts extends ListFragment {
 					} else if (api_status.equals("private")) {
 						statuses[i] = getResources().getText(R.string.post_private).toString();
 					}
-				}
-				
-				if ((Long) contentHash.get("date_created_gmt") > d.getTime()){
-					statuses[i] = getResources().getText(R.string.scheduled).toString();
+					
+					if ((Long) contentHash.get("date_created_gmt") > d.getTime() && api_status.equals("publish")){
+						statuses[i] = getResources().getText(R.string.scheduled).toString();
+					}
 				}
 				
 				// dateCreatedFormatted[i] =
