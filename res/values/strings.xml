@@ -128,6 +128,7 @@
   <string name="more_tag">More</string>
   <string name="wpcom_login_required">A WordPress.com account is required to use this feature</string>
   <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
+  <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
 
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
@@ -357,10 +358,11 @@
   <!-- location -->
   <string name="location">Location</string>
   <string name="geotag">Geotag Posts</string>
-  <string name="location_toast">Location data not yet available, please wait.
-  </string>
+  <string name="location_toast">Location data not yet available, please wait.</string>
   <string name="view_map">View Map</string>
-  <string name="update_location">Update Location</string>
+  <string name="update_location">Update</string>
+  <string name="location_not_found">Unknown Location</string>
+  <string name="remove_location">Remove</string>
 
   <!-- preferences -->
   <string name="preferences">Preferences</string>

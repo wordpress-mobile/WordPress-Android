@@ -100,8 +100,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:background="@drawable/wp_button_small"
-                    android:text="@string/select_categories"
-                    android:textSize="20dip" />
+                    android:text="@string/select_categories" />
 
                 <TextView
                     android:id="@+id/selectedCategories"
@@ -156,10 +155,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/locationText"
-                        android:layout_margin="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="4dp"
                         android:background="@drawable/wp_button_small"
-                        android:text="@string/view_map"
-                        android:textSize="18dip" />
+                        android:text="@string/view_map" />
 
                     <Button
                         android:id="@+id/updateLocation"
@@ -168,8 +167,16 @@
                         android:layout_alignTop="@id/viewMap"
                         android:layout_toRightOf="@id/viewMap"
                         android:background="@drawable/wp_button_small"
-                        android:text="@string/update_location"
-                        android:textSize="18dip" />
+                        android:text="@string/update_location" />
+                        
+                   <Button
+                        android:id="@+id/removeLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/updateLocation"
+                        android:layout_toRightOf="@id/updateLocation"
+                        android:background="@drawable/wp_button_small"
+                        android:text="@string/remove_location" />
                 </RelativeLayout>
             </RelativeLayout>
 

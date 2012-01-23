@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/CWAC-AdapterWrapper.jar"/>
 	<classpathentry kind="lib" path="libs/CWAC-Bus.jar"/>
 	<classpathentry kind="lib" path="libs/CWAC-Task.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.1.2.jar"/>
 	<classpathentry kind="lib" path="libs/tagsoup-1.2.1.jar"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

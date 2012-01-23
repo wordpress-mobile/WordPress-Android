@@ -50,7 +50,7 @@
                 <org.wordpress.android.util.WPEditText
                     android:id="@+id/postContent"
                     android:layout_width="fill_parent"
-                    android:layout_height="160dp"
+                    android:layout_height="200dp"
                     android:layout_below="@id/title"
                     android:layout_margin="4dp"
                     android:autoText="true"
@@ -67,7 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2" >
+                android:weightSum="2"
+                android:layout_marginTop="10dp" >
 
                 <RelativeLayout
                     android:id="@+id/section2"
@@ -173,14 +174,16 @@
                         android:password="true" />
                 </RelativeLayout>
 
+                <LinearLayout android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
                 <RelativeLayout
                     android:id="@+id/section3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dip"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginTop="10dip"
-                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/content_bg"
                     android:paddingBottom="10dp" >
 
@@ -212,8 +215,7 @@
                         android:layout_marginRight="4dp"
                         android:layout_marginTop="4dp"
                         android:background="@drawable/wp_button_small"
-                        android:text="@string/select_categories"
-                        android:textSize="20dip" />
+                        android:text="@string/select_categories" />
 
                     <TextView
                         android:id="@+id/selectedCategories"
@@ -226,25 +228,22 @@
                         android:text="@string/selected_categories"
                         android:textColor="#444444" />
                 </RelativeLayout>
-            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/location_wrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="-10dip"
-                android:paddingBottom="10dp" >
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/section3" >
 
                 <RelativeLayout
                     android:id="@+id/section4"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_below="@id/section2"
-                    android:layout_marginBottom="10dip"
-                    android:layout_marginTop="10dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingBottom="10dp"
+                    android:layout_marginLeft="5dp"
                     android:background="@drawable/content_bg"
-                    android:visibility="gone" >
+                    android:visibility="gone">"
 
                     <TextView
                         android:id="@+id/l_location"
@@ -270,10 +269,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/locationText"
-                        android:layout_margin="4dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="4dp"
                         android:background="@drawable/wp_button_small"
-                        android:text="@string/view_map"
-                        android:textSize="18dip" />
+                        android:text="@string/view_map" />
 
                     <Button
                         android:id="@+id/updateLocation"
@@ -282,17 +281,28 @@
                         android:layout_alignTop="@id/viewMap"
                         android:layout_toRightOf="@id/viewMap"
                         android:background="@drawable/wp_button_small"
-                        android:text="@string/update_location"
-                        android:textSize="18dip" />
+                        android:text="@string/update_location" />
+                    
+                    <Button
+                        android:id="@+id/removeLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/updateLocation"
+                        android:layout_toRightOf="@id/updateLocation"
+                        android:background="@drawable/wp_button_small"
+                        android:text="@string/remove_location" />
                 </RelativeLayout>
             </RelativeLayout>
+            </LinearLayout>
+            
+            </LinearLayout>
 
             <Button
                 android:id="@+id/post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/section5"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/wp_button"
                 android:text="@string/publish_post"
                 android:textSize="20dip" />

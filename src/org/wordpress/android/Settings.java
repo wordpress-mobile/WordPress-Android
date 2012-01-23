@@ -1,16 +1,20 @@
 package org.wordpress.android;
+import java.util.List;
+
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -105,14 +109,29 @@ public class Settings extends Activity {
     	CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
     	fullSize.setChecked(WordPress.currentBlog.isFullSizeImage());
 
+    	//don't show location option for devices that have no location support.
+    	boolean hasLocationProvider = false;
+    	LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+    	List<String> providers = locationManager.getProviders(true);
+    	for (String providerName:providers) {
+    	  if (providerName.equals(LocationManager.GPS_PROVIDER) 
+    	      || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+    	    hasLocationProvider = true;
+    	  }
+    	}
+    	
     	CheckBox locationCB = (CheckBox)findViewById(R.id.location);
-    	locationCB.setChecked(WordPress.currentBlog.isLocation());
-
+    	if (hasLocationProvider) {
+    		locationCB.setChecked(WordPress.currentBlog.isLocation());
+    	} else {
+    		locationCB.setChecked(false);
+    		RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.section3);
+    		locationLayout.setVisibility(View.GONE);
+    	}
 
     	spinner.setSelection(WordPress.currentBlog.getMaxImageWidthId());
 
 
-        
         final Button saveButton = (Button) findViewById(R.id.save);
         
         saveButton.setOnClickListener(new Button.OnClickListener() {

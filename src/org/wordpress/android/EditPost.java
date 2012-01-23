@@ -19,6 +19,8 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.LocationHelper.LocationResult;
 import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
@@ -41,7 +43,6 @@ import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -69,7 +70,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class EditPost extends Activity implements LocationListener {
+public class EditPost extends Activity {
 	/** Called when the activity is first created. */
 	public ProgressDialog pd;
 	Vector<String> selectedCategories = new Vector<String>();
@@ -80,9 +81,8 @@ public class EditPost extends Activity implements LocationListener {
 	long postID, customPubDate = 0;
 	private int ID_DIALOG_DATE = 0, ID_DIALOG_TIME = 1, ID_DIALOG_LOADING = 2;
 	public Boolean localDraft = false, isPage = false, isNew = false,
-			isAction = false, isUrl = false, locationActive = false,
-			isLargeScreen = false, isCustomPubDate = false;
-	LocationManager lm;
+			isAction = false, isUrl = false, isLargeScreen = false,
+			isCustomPubDate = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
@@ -94,6 +94,7 @@ public class EditPost extends Activity implements LocationListener {
 	// post formats
 	String[] postFormats;
 	String[] postFormatTitles = null;
+	LocationHelper locationHelper;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -261,15 +262,27 @@ public class EditPost extends Activity implements LocationListener {
 						Toast.makeText(
 								this,
 								getResources().getText(R.string.blog_not_found),
-								Toast.LENGTH_SHORT).show();
+								Toast.LENGTH_LONG).show();
 						finish();
+						return;
 					}
 				}
 
 				if (!isNew) {
 					try {
 						post = new Post(id, postID, isPage, this);
-						WordPress.currentPost = post;
+						if (post == null) {
+							// big oopsie
+							Toast.makeText(
+									this,
+									getResources().getText(
+											R.string.post_not_found),
+									Toast.LENGTH_LONG).show();
+							finish();
+							return;
+						} else {
+							WordPress.currentPost = post;
+						}
 					} catch (Exception e) {
 						finish();
 					}
@@ -343,15 +356,10 @@ public class EditPost extends Activity implements LocationListener {
 					activePostFormat = post.getWP_post_format();
 			}
 			for (int i = 0; i < postFormats.length; i++) {
-				try {
-					if (postFormats[i].equals(activePostFormat))
-						pfSpinner.setSelection(i);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				if (postFormats[i].equals(activePostFormat))
+					pfSpinner.setSelection(i);
 			}
 
-			lbsCheck();
 			if (Intent.ACTION_SEND.equals(action)
 					|| Intent.ACTION_SEND_MULTIPLE.equals(action))
 				setContent();
@@ -385,12 +393,21 @@ public class EditPost extends Activity implements LocationListener {
 
 		});
 
-		if (isNew) {
-			if (!isAction) {
-				if (!isPage) {
-					enableLBSButtons();
-				}
+		boolean hasLocationProvider = false;
+		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		List<String> providers = locationManager.getProviders(true);
+		for (String providerName : providers) {
+			if (providerName.equals(LocationManager.GPS_PROVIDER)
+					|| providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+				hasLocationProvider = true;
 			}
+		}
+
+		if (hasLocationProvider && blog.isLocation() && !isPage) {
+			enableLBSButtons();
+		}
+
+		if (isNew) {
 
 			// handles selections from the quick action bar
 			if (option != null) {
@@ -422,8 +439,8 @@ public class EditPost extends Activity implements LocationListener {
 
 			if (!post.getMt_text_more().equals("")) {
 				if (post.isLocalDraft())
-					contentHTML = post.getDescription() + "\n&lt;!--more--&gt;\n"
-						+ post.getMt_text_more();
+					contentHTML = post.getDescription()
+							+ "\n&lt;!--more--&gt;\n" + post.getMt_text_more();
 				else
 					contentHTML = post.getDescription() + "\n<!--more-->\n"
 							+ post.getMt_text_more();
@@ -503,49 +520,11 @@ public class EditPost extends Activity implements LocationListener {
 					}
 				}
 
-				if (blog.isLocation()) {
-					enableLBSButtons();
-				}
-
 				Double latitude = post.getLatitude();
 				Double longitude = post.getLongitude();
 
 				if (latitude != 0.0) {
 					new getAddressTask().execute(latitude, longitude);
-				}
-
-				if (blog.isLocation() && latitude > 0) {
-					Button updateLocation = (Button) findViewById(R.id.updateLocation);
-
-					updateLocation
-							.setOnClickListener(new Button.OnClickListener() {
-								public void onClick(View v) {
-
-									lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-									lm.requestLocationUpdates(
-											LocationManager.GPS_PROVIDER,
-											20000, 0, EditPost.this);
-									lm.requestLocationUpdates(
-											LocationManager.NETWORK_PROVIDER,
-											20000, 0, EditPost.this);
-									locationActive = true;
-								}
-							});
-
-					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-					locationSection.setVisibility(View.VISIBLE);
-				} else if (blog.isLocation()) {
-					lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-					lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-							20000, 0, EditPost.this);
-					lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-							20000, 0, EditPost.this);
-					locationActive = true;
-
-					RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-					locationSection.setVisibility(View.VISIBLE);
 				}
 
 			}
@@ -623,7 +602,6 @@ public class EditPost extends Activity implements LocationListener {
 
 			}
 		});
-
 	}
 
 	private void evaluateSaveButtonText() {
@@ -637,10 +615,28 @@ public class EditPost extends Activity implements LocationListener {
 
 	}
 
+	public LocationResult locationResult = new LocationResult() {
+		@Override
+		public void gotLocation(Location location) {
+			if (location != null) {
+				curLocation = location;
+				new getAddressTask().execute(curLocation.getLatitude(),
+						curLocation.getLongitude());
+			} else {
+				TextView locationText = (TextView) findViewById(R.id.locationText);
+				locationText.setText(getResources().getText(
+						R.string.location_not_found));
+			}
+		}
+	};
+
 	private void enableLBSButtons() {
+		locationHelper = new LocationHelper();
+
+		RelativeLayout section4 = (RelativeLayout) findViewById(R.id.section4);
+		section4.setVisibility(View.VISIBLE);
 
 		final Button viewMap = (Button) findViewById(R.id.viewMap);
-
 		viewMap.setOnClickListener(new TextView.OnClickListener() {
 			public void onClick(View v) {
 
@@ -664,21 +660,36 @@ public class EditPost extends Activity implements LocationListener {
 			}
 		});
 
-		if (isNew && blog.isLocation()) {
+		Button updateLocation = (Button) findViewById(R.id.updateLocation);
 
-			Button updateLocation = (Button) findViewById(R.id.updateLocation);
-			updateLocation.setVisibility(View.GONE);
+		updateLocation.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
 
-			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+				locationHelper.getLocation(EditPost.this, locationResult);
+			}
+		});
 
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 0,
-					EditPost.this);
-			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 20000,
-					0, EditPost.this);
-			locationActive = true;
+		Button removeLocation = (Button) findViewById(R.id.removeLocation);
 
-			RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-			locationSection.setVisibility(View.VISIBLE);
+		removeLocation.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				if (curLocation != null) {
+					curLocation.setLatitude(0.0);
+					curLocation.setLongitude(0.0);
+				}
+				if (post != null) {
+					post.setLatitude(0.0);
+					post.setLongitude(0.0);
+				}
+
+				TextView locationText = (TextView) findViewById(R.id.locationText);
+				locationText.setText("");
+			}
+		});
+
+		if (isNew) {
+			locationHelper.getLocation(EditPost.this, locationResult);
 		}
 	}
 
@@ -691,7 +702,6 @@ public class EditPost extends Activity implements LocationListener {
 		} else if (data != null || requestCode == 4) {
 			switch (requestCode) {
 			case 0:
-
 				if (WordPress.richPostContent != null) {
 					WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
 					try {
@@ -861,7 +871,8 @@ public class EditPost extends Activity implements LocationListener {
 						s.insert(tagStart, "<img android-uri=\""
 								+ wpIS.getImageSource().toString() + "\" />");
 						if (localDraft)
-							content = EscapeUtils.unescapeHtml(WPHtml.toHtml(s));
+							content = EscapeUtils
+									.unescapeHtml(WPHtml.toHtml(s));
 						else
 							content = s.toString();
 					}
@@ -951,6 +962,12 @@ public class EditPost extends Activity implements LocationListener {
 				WordPress.currentPost = post;
 
 			} else {
+
+				if (curLocation == null) {
+					latitude = post.getLatitude();
+					longitude = post.getLongitude();
+				}
+
 				post.setTitle(title);
 				// split up the post content if there's a more tag
 				if (localDraft && content.indexOf(needle) >= 0) {
@@ -1033,38 +1050,17 @@ public class EditPost extends Activity implements LocationListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (!isPage && blog.isLocation() && locationActive) {
-			lm.removeUpdates(this);
+		if (locationHelper != null) {
+			locationHelper.cancelTimer();
 		}
 	}
 
 	@Override
 	protected void onDestroy() {
-		super.onPause();
-		if (blog != null) {
-			if (!isPage && blog.isLocation() && locationActive) {
-				lm.removeUpdates(this);
-			}
+		super.onDestroy();
+		if (locationHelper != null) {
+			locationHelper.cancelTimer();
 		}
-	}
-
-	public void onLocationChanged(Location location) {
-		curLocation = location;
-		new getAddressTask().execute(location.getLatitude(),
-				location.getLongitude());
-		lm.removeUpdates(this);
-	}
-
-	public void onProviderDisabled(String provider) {
-
-	}
-
-	public void onProviderEnabled(String provider) {
-
-	}
-
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-
 	}
 
 	private class getAddressTask extends AsyncTask<Double, Void, String> {
@@ -1081,16 +1077,28 @@ public class EditPost extends Activity implements LocationListener {
 			List<Address> addresses;
 			try {
 				addresses = gcd.getFromLocation(args[0], args[1], 1);
+				String locality = "", adminArea = "", country = "";
+				if (addresses.get(0).getLocality() != null)
+					locality = addresses.get(0).getLocality();
+				if (addresses.get(0).getAdminArea() != null)
+					adminArea = addresses.get(0).getAdminArea();
+				if (addresses.get(0).getCountryName() != null)
+					country = addresses.get(0).getCountryName();
+
 				if (addresses.size() > 0) {
-					finalText = addresses.get(0).getLocality() + ", "
-							+ addresses.get(0).getCountryName();
+					finalText = ((locality.equals("")) ? locality : locality
+							+ ", ")
+							+ ((adminArea.equals("")) ? adminArea : adminArea
+									+ " ") + country;
+					if (finalText.equals(""))
+						finalText = getResources().getText(
+								R.string.location_not_found).toString();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			return finalText;
 		}
-
 	}
 
 	protected void setContent() {
@@ -1180,27 +1188,6 @@ public class EditPost extends Activity implements LocationListener {
 			}
 			return ssb;
 		}
-	}
-
-	protected void lbsCheck() {
-		if (blog.isLocation()) {
-			lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-			criteria = new Criteria();
-			criteria.setAccuracy(Criteria.ACCURACY_FINE);
-			criteria.setAltitudeRequired(false);
-			criteria.setBearingRequired(false);
-			criteria.setCostAllowed(true);
-			criteria.setPowerRequirement(Criteria.POWER_HIGH);
-
-			provider = lm.getBestProvider(criteria, true);
-			RelativeLayout locationSection = (RelativeLayout) findViewById(R.id.section4);
-			locationSection.setVisibility(View.VISIBLE);
-
-			if (isAction) {
-				enableLBSButtons();
-			}
-		}
-
 	}
 
 	public SpannableStringBuilder addMedia(String imgPath, Uri curStream,
