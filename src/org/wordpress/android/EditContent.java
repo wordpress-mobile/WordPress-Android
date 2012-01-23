@@ -173,27 +173,6 @@ public class EditContent extends Activity {
 				});
 
 		contentEditor
-				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View view, boolean hasFocus) {
-						RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
-						if (hasFocus) {
-							formatBar.setVisibility(View.VISIBLE);
-							Animation fadeInAnimation = AnimationUtils
-									.loadAnimation(EditContent.this,
-											R.anim.show);
-							formatBar.startAnimation(fadeInAnimation);
-						} else {
-							Animation fadeOutAnimation = AnimationUtils
-									.loadAnimation(EditContent.this,
-											R.anim.disappear);
-							formatBar.startAnimation(fadeOutAnimation);
-							formatBar.setVisibility(View.GONE);
-						}
-					}
-				});
-
-		contentEditor
 				.setOnEditTextImeBackListener(new WPEditText.EditTextImeBackListener() {
 
 					@Override

@@ -57,6 +57,25 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			isPage = extras.getBoolean("viewPages");
+			String errorMessage = extras.getString("errorMessage");
+			if (errorMessage != null) {
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+						Posts.this);
+				dialogBuilder.setTitle(getResources().getText(
+						R.string.error));
+				dialogBuilder.setMessage(errorMessage);
+				dialogBuilder.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								// Just close the window.
+							}
+						});
+				dialogBuilder.setCancelable(true);
+				if (!isFinishing()) {
+					dialogBuilder.create().show();
+				}
+			}
 		}
 
 		WordPress.currentPost = null;
@@ -115,7 +134,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
 		attemptToSelectPost();
 		postList.loadPosts(false);
 		if (WordPress.postsShouldRefresh) {
@@ -133,6 +153,25 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		if (extras != null) {
 			isPage = extras.getBoolean("viewPages");
 			postList.isPage = isPage;
+			String errorMessage = extras.getString("errorMessage");
+			if (errorMessage != null) {
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+						Posts.this);
+				dialogBuilder.setTitle(getResources().getText(
+						R.string.error));
+				dialogBuilder.setMessage(errorMessage);
+				dialogBuilder.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								// Just close the window.
+							}
+						});
+				dialogBuilder.setCancelable(true);
+				if (!isFinishing()) {
+					dialogBuilder.create().show();
+				}
+			}
 		}
 		else {
 			isPage = false;

@@ -114,8 +114,13 @@ public class ImageHelper {
 				opts.inSampleSize = sample;
 				opts.inJustDecodeBounds = false;
 
-				bm = BitmapFactory
-						.decodeByteArray(bytes, 0, bytes.length, opts);
+				try {
+					bm = BitmapFactory
+							.decodeByteArray(bytes, 0, bytes.length, opts);
+				} catch (Exception e) {
+					// out of memory
+					return null;
+				}
 
 				float percentage = (float) finalWidth / bm.getWidth();
 				float proportionateHeight = bm.getHeight() * percentage;

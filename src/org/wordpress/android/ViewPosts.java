@@ -793,9 +793,6 @@ public class ViewPosts extends ListFragment {
 				}
 				onRefreshListener.onRefresh(false);
 			} else {
-				
-				
-				
 				onRefreshListener.onRefresh(false);
 
 				if (errorMsg != "") {

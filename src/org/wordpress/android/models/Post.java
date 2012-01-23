@@ -208,7 +208,6 @@ public class Post {
 		try {
 			jArray = new JSONArray(custom_fields);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return jArray;
@@ -427,27 +426,42 @@ public class Post {
 
 		private Post post;
 		String error = "";
+		boolean mediaError = false;
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 
-			if (result) {
+			if (result && !mediaError) {
 				WordPress.postUploaded();
 				nm.cancel(notificationID);
 			} else {
+				if (mediaError)
+					WordPress.postUploaded();
+
 				String postOrPage = (String) (post.isPage() ? context
 						.getResources().getText(R.string.page_id) : context
 						.getResources().getText(R.string.post_id));
-
+				Intent notificationIntent = new Intent(context, Posts.class);
+				notificationIntent.setData((Uri
+						.parse("custom://wordpressNotificationIntent"
+								+ post.blogID)));
+				notificationIntent.putExtra("fromNotification", true);
+				notificationIntent.putExtra("errorMessage", error);
+				PendingIntent pendingIntent = PendingIntent.getActivity(
+						context, 0, notificationIntent,
+						PendingIntent.FLAG_UPDATE_CURRENT);
 				n.flags |= Notification.FLAG_AUTO_CANCEL;
+				String errorText = context.getResources().getText(R.string.upload_failed).toString();
+				if (mediaError)
+					errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
 				n.setLatestEventInfo(
 						context,
-						context.getResources().getText(R.string.upload_failed),
+						(mediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
 						postOrPage
 								+ " "
-								+ context.getResources().getText(
-										R.string.upload_failed) + ": " + error,
-						n.contentIntent);
+								+ errorText + ": " + error,
+						pendingIntent);
+
 				nm.notify(notificationID, n); // needs a unique id
 			}
 		}
@@ -486,7 +500,6 @@ public class Post {
 			}
 			Boolean publishThis = false;
 
-			boolean mediaError = false;
 			Spannable s;
 			String descriptionContent = "", moreContent = "";
 			int moreCount = 1;
@@ -594,166 +607,161 @@ public class Post {
 				}
 			}
 
-			if (!mediaError) {
+			JSONArray categories = post.getCategories();
+			String[] theCategories = null;
+			if (categories != null) {
+				theCategories = new String[categories.length()];
+				for (int i = 0; i < categories.length(); i++) {
+					try {
+						theCategories[i] = categories.getString(i);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 
-				JSONArray categories = post.getCategories();
-				String[] theCategories = null;
-				if (categories != null) {
-					theCategories = new String[categories.length()];
-					for (int i = 0; i < categories.length(); i++) {
-						try {
-							theCategories[i] = categories.getString(i);
-						} catch (JSONException e) {
-							e.printStackTrace();
+			Map<String, Object> contentStruct = new HashMap<String, Object>();
+
+			if (!post.isPage && post.isLocalDraft()) {
+				// add the tagline
+				HashMap<?, ?> globalSettings = WordPress.wpDB
+						.getNotificationOptions(context);
+				boolean taglineValue = false;
+				String tagline = "";
+
+				if (globalSettings != null) {
+					if (globalSettings.get("tagline_flag").toString()
+							.equals("1")) {
+						taglineValue = true;
+					}
+
+					if (taglineValue) {
+						tagline = globalSettings.get("tagline").toString();
+						if (tagline != null) {
+							String tag = "\n\n<span class=\"post_sig\">"
+									+ tagline + "</span>\n\n";
+							if (moreContent == "")
+								descriptionContent += tag;
+							else
+								moreContent += tag;
 						}
 					}
 				}
 
-				Map<String, Object> contentStruct = new HashMap<String, Object>();
-
-				if (!post.isPage && post.isLocalDraft()) {
-					// add the tagline
-					HashMap<?, ?> globalSettings = WordPress.wpDB
-							.getNotificationOptions(context);
-					boolean taglineValue = false;
-					String tagline = "";
-
-					if (globalSettings != null) {
-						if (globalSettings.get("tagline_flag").toString()
-								.equals("1")) {
-							taglineValue = true;
-						}
-
-						if (taglineValue) {
-							tagline = globalSettings.get("tagline").toString();
-							if (tagline != null) {
-								String tag = "\n\n<span class=\"post_sig\">"
-										+ tagline + "</span>\n\n";
-								if (moreContent == "")
-									descriptionContent += tag;
-								else
-									moreContent += tag;
-							}
-						}
-					}
-
-					// post format
-					if (!post.getWP_post_format().equals("")) {
-						if (!post.getWP_post_format().equals("standard"))
-							contentStruct.put("wp_post_format",
-									post.getWP_post_format());
-					}
+				// post format
+				if (!post.getWP_post_format().equals("")) {
+					if (!post.getWP_post_format().equals("standard"))
+						contentStruct.put("wp_post_format",
+								post.getWP_post_format());
 				}
+			}
 
-				contentStruct.put("post_type", (post.isPage) ? "page" : "post");
-				contentStruct.put("title", post.title);
-				long pubDate = post.date_created_gmt;
-				if (pubDate != 0) {
-					Date date_created_gmt = new Date(pubDate);
-					contentStruct.put("date_created_gmt", date_created_gmt);
-					Date dateCreated = new Date(pubDate
-							+ (date_created_gmt.getTimezoneOffset() * 60000));
-					contentStruct.put("dateCreated", dateCreated);
+			contentStruct.put("post_type", (post.isPage) ? "page" : "post");
+			contentStruct.put("title", post.title);
+			long pubDate = post.date_created_gmt;
+			if (pubDate != 0) {
+				Date date_created_gmt = new Date(pubDate);
+				contentStruct.put("date_created_gmt", date_created_gmt);
+				Date dateCreated = new Date(pubDate
+						+ (date_created_gmt.getTimezoneOffset() * 60000));
+				contentStruct.put("dateCreated", dateCreated);
+			}
+
+			if (!moreContent.equals("")) {
+				descriptionContent = descriptionContent + "\n\n<!--more-->\n\n"
+						+ moreContent;
+				post.mt_text_more = "";
+			}
+
+			// get rid of the p and br tags that the editor adds.
+			if (post.isLocalDraft()) {
+				descriptionContent = descriptionContent.replace("<p>", "")
+						.replace("</p>", "\n").replace("<br>", "");
+			}
+
+			// gets rid of the weird character android inserts after images
+			descriptionContent = descriptionContent.replaceAll("\uFFFC", "");
+
+			contentStruct.put("description", descriptionContent);
+			if (!post.isPage) {
+				if (post.mt_keywords != "") {
+					contentStruct.put("mt_keywords", post.mt_keywords);
 				}
-
-
-				if (!moreContent.equals("")) {
-					descriptionContent = descriptionContent
-							+ "\n\n<!--more-->\n\n" + moreContent;
-					post.mt_text_more = "";
+				if (theCategories != null) {
+					if (theCategories.length > 0)
+						contentStruct.put("categories", theCategories);
 				}
-				
-				// get rid of the p and br tags that the editor adds.
-				if (post.isLocalDraft()) {
-					descriptionContent = descriptionContent.replace("<p>", "")
-							.replace("</p>", "\n").replace("<br>", "");
+			}
+			contentStruct.put((post.isPage) ? "page_status" : "post_status",
+					post.post_status);
+			Double latitude = 0.0;
+			Double longitude = 0.0;
+			if (!post.isPage) {
+				latitude = (Double) post.getLatitude();
+				longitude = (Double) post.getLongitude();
+
+				if (latitude > 0) {
+					HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
+					hLatitude.put("key", "geo_latitude");
+					hLatitude.put("value", latitude);
+
+					HashMap<Object, Object> hLongitude = new HashMap<Object, Object>();
+					hLongitude.put("key", "geo_longitude");
+					hLongitude.put("value", longitude);
+
+					HashMap<Object, Object> hPublic = new HashMap<Object, Object>();
+					hPublic.put("key", "geo_public");
+					hPublic.put("value", 1);
+
+					Object[] geo = { hLatitude, hLongitude, hPublic };
+
+					contentStruct.put("custom_fields", geo);
 				}
+			}
 
-				// gets rid of the weird character android inserts after images
-				descriptionContent = descriptionContent
-						.replaceAll("\uFFFC", "");
+			XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
+					post.blog.getHttpuser(), post.blog.getHttppassword());
 
-				contentStruct.put("description", descriptionContent);
-				if (!post.isPage) {
-					if (post.mt_keywords != "") {
-						contentStruct.put("mt_keywords", post.mt_keywords);
-					}
-					if (theCategories != null) {
-						if (theCategories.length > 0)
-							contentStruct.put("categories", theCategories);
-					}
-				}
-				contentStruct.put(
-						(post.isPage) ? "page_status" : "post_status",
-						post.post_status);
-				Double latitude = 0.0;
-				Double longitude = 0.0;
-				if (!post.isPage) {
-					latitude = (Double) post.getLatitude();
-					longitude = (Double) post.getLongitude();
+			/*
+			 * client.setUploadProgressListener(new
+			 * XMLRPCClient.UploadProgressListener() { // user selected new blog
+			 * in the title bar
+			 * 
+			 * @Override public void OnUploadProgress(int progress) {
+			 * 
+			 * n.contentView.setProgressBar(R.id.status_progress, 100, progress,
+			 * false); // inform the progress bar of updates in progress
+			 * nm.notify(notificationID, n);
+			 * 
+			 * } });
+			 */
+			n.setLatestEventInfo(context, message, message, n.contentIntent);
+			nm.notify(notificationID, n);
+			if (post.wp_password != null) {
+				contentStruct.put("wp_password", post.wp_password);
+			}
+			Object[] params;
 
-					if (latitude > 0) {
-						HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
-						hLatitude.put("key", "geo_latitude");
-						hLatitude.put("value", latitude);
+			if (post.isLocalDraft() && !post.uploaded)
+				params = new Object[] { post.blog.getBlogId(),
+						post.blog.getUsername(), post.blog.getPassword(),
+						contentStruct, publishThis };
+			else
+				params = new Object[] { post.getPostid(),
+						post.blog.getUsername(), post.blog.getPassword(),
+						contentStruct, publishThis };
 
-						HashMap<Object, Object> hLongitude = new HashMap<Object, Object>();
-						hLongitude.put("key", "geo_longitude");
-						hLongitude.put("value", longitude);
-
-						HashMap<Object, Object> hPublic = new HashMap<Object, Object>();
-						hPublic.put("key", "geo_public");
-						hPublic.put("value", 1);
-
-						Object[] geo = { hLatitude, hLongitude, hPublic };
-
-						contentStruct.put("custom_fields", geo);
-					}
-				}
-
-				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-						post.blog.getHttpuser(), post.blog.getHttppassword());
-
-				/*
-				 * client.setUploadProgressListener(new
-				 * XMLRPCClient.UploadProgressListener() { // user selected new
-				 * blog in the title bar
-				 * 
-				 * @Override public void OnUploadProgress(int progress) {
-				 * 
-				 * n.contentView.setProgressBar(R.id.status_progress, 100,
-				 * progress, false); // inform the progress bar of updates in
-				 * progress nm.notify(notificationID, n);
-				 * 
-				 * } });
-				 */
-				n.setLatestEventInfo(context, message, message, n.contentIntent);
-				nm.notify(notificationID, n);
-				if (post.wp_password != null) {
-					contentStruct.put("wp_password", post.wp_password);
-				}
-				Object[] params;
-
-				if (post.isLocalDraft() && !post.uploaded)
-					params = new Object[] { post.blog.getBlogId(),
-							post.blog.getUsername(), post.blog.getPassword(),
-							contentStruct, publishThis };
-				else
-					params = new Object[] { post.getPostid(),
-							post.blog.getUsername(), post.blog.getPassword(),
-							contentStruct, publishThis };
-
-				try {
-					client.call(
-							(post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
-									: "metaWeblog.editPost", params);
-					post.setUploaded(true);
-					post.update();
-					return true;
-				} catch (final XMLRPCException e) {
-					error = e.getLocalizedMessage();
-					Log.i("WP", error);
-				}
+			try {
+				client.call(
+						(post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
+								: "metaWeblog.editPost", params);
+				post.setUploaded(true);
+				post.update();
+				return true;
+			} catch (final XMLRPCException e) {
+				error = e.getLocalizedMessage();
+				mediaError = false;
+				Log.i("WP", error);
 			}
 
 			return false;
@@ -997,6 +1005,11 @@ public class Post {
 										String.valueOf(mf.getWidth()),
 										orientation, false);
 							}
+							
+							if (finalBytes == null) {
+								error = "Could not upload media: Device out of memory.";
+								return null;
+							}
 
 							// try to upload the image
 							Map<String, Object> m = new HashMap<String, Object>();
@@ -1019,9 +1032,8 @@ public class Post {
 								result = (Object) client.call("wp.uploadFile",
 										params);
 							} catch (XMLRPCException e) {
-								e.printStackTrace();
-								e.getLocalizedMessage();
-								break;
+								error = e.getMessage();
+								return null;
 							}
 
 							HashMap<?, ?> contentHash = new HashMap<Object, Object>();
