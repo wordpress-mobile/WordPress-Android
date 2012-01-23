@@ -112,9 +112,11 @@ public class ApiHelper extends Activity {
 		protected void onPostExecute(Object result) {
 			try {
 				HashMap<?, ?> postFormats = (HashMap<?, ?>) result;
-				JSONObject jsonPostFormats = new JSONObject(postFormats);
-				blog.setPostFormats(jsonPostFormats.toString());
-				blog.save(ctx, null);
+				if (postFormats.size() > 0) {
+					JSONObject jsonPostFormats = new JSONObject(postFormats);
+					blog.setPostFormats(jsonPostFormats.toString());
+					blog.save(ctx, null);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
