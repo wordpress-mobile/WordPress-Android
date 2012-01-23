@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.BlackBerryUtils;
 import org.wordpress.android.util.EscapeUtils;
 
 import android.app.Activity;
@@ -282,8 +283,12 @@ public class Preferences extends Activity {
 			taglineET.setLayoutParams(taglineParams);
 			if (tagline != null) {
 				if (tagline.equals("")) {
-					taglineET.setText(getResources().getText(
-							R.string.posted_from));
+					if( BlackBerryUtils.getInstance().isPlayBook() ) 
+						taglineET.setText(getResources().getText(
+								R.string.posted_from_playbook));
+					else
+						taglineET.setText(getResources().getText(
+								R.string.posted_from));
 				} else {
 					taglineET.setText(tagline);
 				}

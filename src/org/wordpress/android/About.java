@@ -1,5 +1,7 @@
 package org.wordpress.android;
 
+import org.wordpress.android.util.BlackBerryUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -20,6 +22,11 @@ public class About extends Activity {
 		super.onCreate(icicle);
 		setContentView(R.layout.about);
 
+		TextView appTitle = (TextView) findViewById(R.id.about_first_line);
+		if ( BlackBerryUtils.getInstance().isPlayBook() ) {
+			appTitle.setText(getResources().getText(R.string.app_title_playbook));
+		}
+		
 		TextView version = (TextView) findViewById(R.id.about_version);
 		PackageManager pm = getPackageManager();
 		try {

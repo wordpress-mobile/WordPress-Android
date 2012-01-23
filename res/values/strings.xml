@@ -266,6 +266,7 @@
   <string name="post_signature">Post Signature</string>
   <string name="add_tagline">Add a tagline to new posts</string>
   <string name="posted_from">Posted from WordPress for Android</string>
+  <string name="posted_from_playbook">Posted from WordPress for PlayBook</string>
 
   <!-- comment actions -->
   <string name="comment_actions">Comment Actions</string>
@@ -482,6 +483,7 @@
     
   <!-- About View -->
   <string name="app_title">WordPress for Android</string>
+  <string name="app_title_playbook">WordPress for PlayBook</string>
   <string name="publisher">Publisher: Automattic, Inc</string>
   <string name="copyright">©2011 Automattic, Inc</string>
   <string name="version">Version</string>
