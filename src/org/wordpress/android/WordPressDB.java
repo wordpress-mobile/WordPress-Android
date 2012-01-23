@@ -374,7 +374,7 @@ public class WordPressDB {
 
 	}
 
-	public boolean addAccount(String url, String blogName, String username,
+	public long addAccount(String url, String blogName, String username,
 			String password, String httpuser, String httppassword,
 			String imagePlacement, boolean centerThumbnail,
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
@@ -396,9 +396,7 @@ public class WordPressDB {
 		values.put("blogId", blogId);
 		values.put("dotcomFlag", wpcom);
 		values.put("wpVersion", wpVersion);
-		boolean returnValue = db.insert(SETTINGS_TABLE, null, values) > 0;
-
-		return (returnValue);
+		return db.insert(SETTINGS_TABLE, null, values);
 	}
 
 	public Vector<HashMap<String, Object>> getAccounts(Context ctx) {

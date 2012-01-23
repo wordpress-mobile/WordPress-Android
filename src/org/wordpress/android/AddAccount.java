@@ -1,8 +1,10 @@
 package org.wordpress.android;
 
 import org.apache.http.conn.HttpHostConnectException;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -49,6 +51,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -358,7 +361,19 @@ public class AddAccount extends Activity {
 		                          	for (int i=0; i<selectedItems.size();i++){
 		                          		if (selectedItems.get(selectedItems.keyAt(i)) == true){
 		                          			int rowID = selectedItems.keyAt(i);
-		                          			success = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
+		                          			long blogID = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
+		                          			success = blogID > 0;
+		                          			if (success) {
+		        				    			Vector<Object> args = new Vector<Object>();
+		        								try {
+		        									Blog blog = new Blog((int)blogID, AddAccount.this);
+		        									args.add(blog);
+		        					    			args.add(AddAccount.this);
+		        					    			new ApiHelper.getPostFormatsTask().execute(args);
+		        								} catch (Exception e) {
+		        									e.printStackTrace();
+		        								}
+		        				    		}
 		                          		}
 		                          	}
 		                          	Bundle bundle = new Bundle();
@@ -374,7 +389,19 @@ public class AddAccount extends Activity {
 				            		  DialogInterface.OnClickListener() {
 		                          public void onClick(DialogInterface dialog, int whichButton) {
 		                        	  for (int i=0;i<blogCtr;i++){
-		                        		  success = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+		                        		  long blogID = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+		                        		  success = blogID > 0;
+		                        		  if (success) {
+		      				    			Vector<Object> args = new Vector<Object>();
+		      								try {
+		      									Blog blog = new Blog((int)blogID, AddAccount.this);
+		      									args.add(blog);
+		      					    			args.add(AddAccount.this);
+		      					    			new ApiHelper.getPostFormatsTask().execute(args);
+		      								} catch (Exception e) {
+		      									e.printStackTrace();
+		      								}
+		      				    		}
 		                        	  }
 		                        	  Bundle bundle = new Bundle();
 						                bundle.putString("returnStatus", "SAVE");
@@ -413,7 +440,20 @@ public class AddAccount extends Activity {
 				            
 				    	}
 				    	else {
-                  		  	success = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                  		  	long blogID = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+				    		success = blogID > 0;
+				    		if (success) {
+				    			Vector<Object> args = new Vector<Object>();
+								try {
+									Blog blog = new Blog((int)blogID, AddAccount.this);
+									args.add(blog);
+					    			args.add(AddAccount.this);
+					    			new ApiHelper.getPostFormatsTask().execute(args);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+				    		}
+				    			
 						    Bundle bundle = new Bundle();
 			                bundle.putString("returnStatus", "SAVE");
 			                Intent mIntent = new Intent();

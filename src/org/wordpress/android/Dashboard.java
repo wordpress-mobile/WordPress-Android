@@ -49,7 +49,6 @@ public class Dashboard extends Activity {
 	int uploadID = 0;
 	public Integer default_blog;
 	public LinearLayout mainDashboard;
-	Vector<?> loadedPosts, loadedPages, loadedComments;
 	public Blog blog;
 	WPTitleBar titleBar;
 
@@ -94,25 +93,6 @@ public class Dashboard extends Activity {
 		} else {
 			displayAccounts();
 		}
-
-		/*
-		 * final NotificationManager nm = (NotificationManager)
-		 * getSystemService(NOTIFICATION_SERVICE); Intent notificationIntent =
-		 * new Intent(this, Comments.class);
-		 * notificationIntent.setData((Uri.parse
-		 * ("custom://wordpressNotificationIntent"+22)));
-		 * notificationIntent.putExtra("id", WordPress.currentBlog.getId());
-		 * notificationIntent.putExtra("fromNotification", true); PendingIntent
-		 * pendingIntent = PendingIntent.getActivity(this, 0,
-		 * notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		 * 
-		 * Notification n = new Notification(R.drawable.notification_icon,
-		 * "Steve" + ": " + "Wooooooo", System.currentTimeMillis());
-		 * 
-		 * n.flags |= Notification.FLAG_AUTO_CANCEL; n.setLatestEventInfo(this,
-		 * "Bob", "Steve" + ": " + "wooooo", pendingIntent); nm.notify(22 +
-		 * Integer.valueOf(22), n); //needs a unique id
-		 */
 	}
 
 	@Override
@@ -126,6 +106,8 @@ public class Dashboard extends Activity {
 			} else {
 				WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 				actionBar.reloadBlogs();
+				titleBar.startRotatingRefreshIcon();
+				new refreshBlogContentTask().execute(true);
 			}
 		}
 	}
@@ -399,11 +381,14 @@ public class Dashboard extends Activity {
 					try {
 						blog = new Blog(id, Dashboard.this);
 					} catch (Exception e) {
-						Toast.makeText(Dashboard.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+						Toast.makeText(
+								Dashboard.this,
+								getResources().getText(R.string.blog_not_found),
+								Toast.LENGTH_SHORT).show();
 						finish();
 					}
 					titleBar.startRotatingRefreshIcon();
-					new refreshBlogContentTask().execute();
+					new refreshBlogContentTask().execute(false);
 				}
 			});
 
@@ -412,14 +397,15 @@ public class Dashboard extends Activity {
 						public void onClick(View v) {
 
 							titleBar.startRotatingRefreshIcon();
-							new refreshBlogContentTask().execute();
+							new refreshBlogContentTask().execute(false);
 						}
 					});
 
 		}
 	}
 
-	private class refreshBlogContentTask extends AsyncTask<Void, Void, Boolean> {
+	private class refreshBlogContentTask extends
+			AsyncTask<Boolean, Void, Boolean> {
 
 		// refreshes blog level info (WP version number) and stuff related to
 		// theme (available post types, recent comments etc)
@@ -432,50 +418,52 @@ public class Dashboard extends Activity {
 		}
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected Boolean doInBackground(Boolean... params) {
+			boolean commentsOnly = params[0];
 			Blog blog = WordPress.currentBlog;
 			XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
 					blog.getHttpuser(), blog.getHttppassword());
 
-			// check the WP number if self-hosted
-			if (!blog.isDotcomFlag()) {
-				HashMap<String, String> hPost = new HashMap<String, String>();
-				hPost.put("software_version", "software_version");
-				Object[] vParams = { blog.getBlogId(), blog.getUsername(),
-						blog.getPassword(), hPost };
-				Object versionResult = new Object();
-				try {
-					versionResult = (Object) client.call("wp.getOptions",
-							vParams);
-				} catch (XMLRPCException e) {
-				}
-
-				if (versionResult != null) {
+			if (!commentsOnly) {
+				// check the WP number if self-hosted
+				if (!blog.isDotcomFlag()) {
+					HashMap<String, String> hPost = new HashMap<String, String>();
+					hPost.put("software_version", "software_version");
+					Object[] vParams = { blog.getBlogId(), blog.getUsername(),
+							blog.getPassword(), hPost };
+					Object versionResult = new Object();
 					try {
-						HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
-						HashMap<?, ?> sv = (HashMap<?, ?>) contentHash
-								.get("software_version");
-						String wpVersion = sv.get("value").toString();
-						if (wpVersion.length() > 0) {
-							blog.setWpVersion(wpVersion);
+						versionResult = (Object) client.call("wp.getOptions",
+								vParams);
+					} catch (XMLRPCException e) {
+					}
+
+					if (versionResult != null) {
+						try {
+							HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
+							HashMap<?, ?> sv = (HashMap<?, ?>) contentHash
+									.get("software_version");
+							String wpVersion = sv.get("value").toString();
+							if (wpVersion.length() > 0) {
+								blog.setWpVersion(wpVersion);
+							}
+						} catch (Exception e) {
 						}
-					} catch (Exception e) {
 					}
 				}
+
+				// get theme post formats
+				Vector<Object> args = new Vector<Object>();
+				args.add(blog);
+				args.add(Dashboard.this);
+				new ApiHelper.getPostFormatsTask().execute(args);
 			}
-
-			// get theme post formats
-			Vector<Object> args = new Vector<Object>();
-			args.add(blog);
-			args.add(Dashboard.this);
-			new ApiHelper.getPostFormatsTask().execute(args);
-
+			
 			// refresh the comments
 			HashMap<String, Object> hPost = new HashMap<String, Object>();
 			hPost.put("number", 30);
 			Object[] commentParams = { blog.getBlogId(), blog.getUsername(),
 					blog.getPassword(), hPost };
-			args.add(commentParams);
 
 			try {
 				ApiHelper.refreshComments(Dashboard.this, commentParams);
