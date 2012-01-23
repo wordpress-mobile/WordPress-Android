@@ -387,7 +387,11 @@ public class Comments extends FragmentActivity implements
 				replyHash };
 
 		try {
-			client.call("wp.newComment", params);
+			int newCommentID = (Integer) client.call("wp.newComment", params);
+			if (newCommentID >= 0)
+			{
+				WordPress.wpDB.updateLatestCommentID(WordPress.currentBlog.getId(), newCommentID);
+			}
 			dismissDialog(ID_DIALOG_REPLYING);
 			Thread action = new Thread() {
 				public void run() {
