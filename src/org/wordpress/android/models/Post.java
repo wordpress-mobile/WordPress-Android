@@ -551,6 +551,7 @@ public class Post {
 										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 								s.removeSpan(wpIS);
 							} else {
+								s.removeSpan(wpIS);
 								mediaError = true;
 							}
 						}
@@ -598,6 +599,12 @@ public class Post {
 											moreContent = moreContent.replace(
 													tag, imgHTML);
 									} else {
+										if (x == 0)
+											descriptionContent = descriptionContent
+													.replace(tag, "");
+										else
+											moreContent = moreContent.replace(
+													tag, "");
 										mediaError = true;
 									}
 								}
