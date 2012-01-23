@@ -106,7 +106,7 @@ public class Dashboard extends Activity {
 			} else {
 				WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 				actionBar.reloadBlogs();
-				titleBar.startRotatingRefreshIcon();
+				actionBar.startRotatingRefreshIcon();
 				new refreshBlogContentTask().execute(true);
 			}
 		}
