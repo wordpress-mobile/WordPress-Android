@@ -462,7 +462,6 @@ public class ViewStats extends Activity {
 
 				int eventType = pullParser.getEventType();
 				String apiKey = "";
-				String blogID = "";
 				boolean foundKey = false;
 				boolean foundID = false;
 				boolean foundURL = false;
@@ -505,11 +504,9 @@ public class ViewStats extends Activity {
 									.equals(curBlogID))
 									&& !curBlogID.equals("1")) {
 								// yay, found a match
-								blogID = curBlogID;
 								apiInfo = new Vector<String>();
 								apiInfo.add(apiKey);
-								apiInfo.add(blogID);
-								return apiInfo;
+								apiInfo.add(curBlogID);
 							}
 
 						}
