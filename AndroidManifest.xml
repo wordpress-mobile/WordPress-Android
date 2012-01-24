@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.0.5" android:versionCode="44">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"></uses-sdk>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
-		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true"  android:debuggable="true">
+		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true"  android:debuggable="false">
 		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:launchMode="singleTask"/>
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
 			android:label="@string/create_a_link" />
