@@ -346,7 +346,7 @@ public class Read extends Activity {
 				wv.getSettings().setJavaScriptEnabled(true);
 				wv.getSettings().setPluginsEnabled(true);
 				wv.getSettings().setDomStorageEnabled(true);
-				wv.loadData(responseContent, "text/html", HTTP.UTF_8);
+				wv.loadData(Uri.encode(responseContent), "text/html", HTTP.UTF_8);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
