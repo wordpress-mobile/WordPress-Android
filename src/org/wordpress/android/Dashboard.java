@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.ApiHelper;
@@ -33,6 +34,7 @@ import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -412,8 +414,13 @@ public class Dashboard extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (!isFinishing()) {
-				titleBar.stopRotatingRefreshIcon();
-				titleBar.updateCommentBadge();
+				Thread action = new Thread() {
+					public void run() {
+						titleBar.stopRotatingRefreshIcon();
+						titleBar.updateCommentBadge();
+					}
+				};
+				runOnUiThread(action);
 			}
 		}
 
