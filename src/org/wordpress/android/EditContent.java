@@ -708,33 +708,17 @@ public class EditContent extends Activity {
 			} else {
 				String startTag = "<" + tag + ">";
 				String endTag = "</" + tag + ">";
-				String content = contentText.getText().toString();
+				Editable content = contentText.getText();
 				if (selectionEnd > selectionStart) {
-					contentText
-							.setText(content.substring(0, selectionStart)
-									+ startTag
-									+ content.substring(selectionStart,
-											selectionEnd)
-									+ endTag
-									+ content.substring(selectionEnd,
-											content.length()));
-
+					content.insert(selectionStart, startTag);
+					content.insert(selectionEnd + startTag.length(), endTag);
 					toggleButton.setChecked(false);
-					contentText.setSelection(selectionStart
-							+ content.substring(selectionStart, selectionEnd)
-									.length() + startTag.length()
-							+ endTag.length());
+					contentText.setSelection(selectionEnd + startTag.length() + endTag.length());
 				} else if (toggleButton.isChecked()) {
-					contentText.setText(content.substring(0, selectionStart)
-							+ startTag
-							+ content.substring(selectionStart,
-									content.length()));
+					content.insert(selectionStart, startTag);
 					contentText.setSelection(selectionEnd + startTag.length());
 				} else if (!toggleButton.isChecked()) {
-					contentText.setText(content.substring(0, selectionStart)
-							+ endTag
-							+ content.substring(selectionStart,
-									content.length()));
+					content.insert(selectionEnd, endTag);
 					contentText.setSelection(selectionEnd + endTag.length());
 				}
 			}
