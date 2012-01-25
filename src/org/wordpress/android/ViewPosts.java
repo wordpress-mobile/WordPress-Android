@@ -213,22 +213,29 @@ public class ViewPosts extends ListFragment {
 				dateCreated[i] = contentHash.get("date_created_gmt").toString();
 
 				if (contentHash.get("post_status") != null) {
-					String api_status = contentHash.get("post_status").toString();
+					String api_status = contentHash.get("post_status")
+							.toString();
 					if (api_status.equals("publish")) {
-						statuses[i] = getResources().getText(R.string.published).toString();
+						statuses[i] = getResources()
+								.getText(R.string.published).toString();
 					} else if (api_status.equals("draft")) {
-						statuses[i] = getResources().getText(R.string.draft).toString();
+						statuses[i] = getResources().getText(R.string.draft)
+								.toString();
 					} else if (api_status.equals("pending")) {
-						statuses[i] = getResources().getText(R.string.pending_review).toString();
+						statuses[i] = getResources().getText(
+								R.string.pending_review).toString();
 					} else if (api_status.equals("private")) {
-						statuses[i] = getResources().getText(R.string.post_private).toString();
+						statuses[i] = getResources().getText(
+								R.string.post_private).toString();
 					}
-					
-					if ((Long) contentHash.get("date_created_gmt") > d.getTime() && api_status.equals("publish")){
-						statuses[i] = getResources().getText(R.string.scheduled).toString();
+
+					if ((Long) contentHash.get("date_created_gmt") > d
+							.getTime() && api_status.equals("publish")) {
+						statuses[i] = getResources()
+								.getText(R.string.scheduled).toString();
 					}
 				}
-				
+
 				// dateCreatedFormatted[i] =
 				// contentHash.get("postDateFormatted").toString();
 				int flags = 0;
@@ -238,7 +245,8 @@ public class ViewPosts extends ListFragment {
 				flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
 				long localTime = (Long) contentHash.get("date_created_gmt");
 				dateCreatedFormatted[i] = DateUtils
-						.formatDateTime(getActivity().getApplicationContext(),localTime, flags);
+						.formatDateTime(getActivity().getApplicationContext(),
+								localTime, flags);
 			}
 
 			// add the header
@@ -271,13 +279,13 @@ public class ViewPosts extends ListFragment {
 			newDateFormattedList.addAll(dateFormattedList);
 			dateCreatedFormatted = (String[]) newDateFormattedList
 					.toArray(new String[newDateFormattedList.size()]);
-			
+
 			List<String> statusList = Arrays.asList(statuses);
 			List<String> newStatusList = new ArrayList<String>();
 			newStatusList.add("postsHeader");
 			newStatusList.addAll(statusList);
-			statuses = (String[]) newStatusList.toArray(new String[newStatusList
-					.size()]);
+			statuses = (String[]) newStatusList
+					.toArray(new String[newStatusList.size()]);
 		}
 		// load drafts
 		boolean drafts = loadDrafts();
@@ -304,7 +312,7 @@ public class ViewPosts extends ListFragment {
 			newDraftDateList.addAll(draftDateList);
 			draftDateCreated = (String[]) newDraftDateList
 					.toArray(new String[newDraftDateList.size()]);
-			
+
 			List<String> draftStatusList = Arrays.asList(draftStatuses);
 			List<String> newDraftStatusList = new ArrayList<String>();
 			newDraftStatusList.add("draftsHeader");
@@ -312,13 +320,11 @@ public class ViewPosts extends ListFragment {
 			draftStatuses = (String[]) newDraftStatusList
 					.toArray(new String[newDraftStatusList.size()]);
 
-
 			postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
 			titles = StringHelper.mergeStringArrays(draftTitles, titles);
 			dateCreatedFormatted = StringHelper.mergeStringArrays(
 					draftDateCreated, dateCreatedFormatted);
-			statuses = StringHelper.mergeStringArrays(
-					draftStatuses, statuses);
+			statuses = StringHelper.mergeStringArrays(draftStatuses, statuses);
 		} else {
 			if (pla != null) {
 				pla.notifyDataSetChanged();
@@ -346,7 +352,9 @@ public class ViewPosts extends ListFragment {
 
 					public void onItemClick(AdapterView<?> arg0, View v,
 							int position, long id) {
-						if (v != null && !postIDs[position].equals("draftsHeader") && !postIDs[position].equals("postsHeader")) {
+						if (v != null
+								&& !postIDs[position].equals("draftsHeader")
+								&& !postIDs[position].equals("postsHeader")) {
 							selectedPosition = position;
 							selectedID = v.getId();
 							Post post = new Post(WordPress.currentBlog.getId(),
@@ -513,7 +521,7 @@ public class ViewPosts extends ListFragment {
 			}
 			return (date);
 		}
-		
+
 		TextView getStatus() {
 			if (status == null) {
 				status = (TextView) base.findViewById(R.id.status);
@@ -548,7 +556,8 @@ public class ViewPosts extends ListFragment {
 				// drafts won't show the date in the list
 				draftDateCreated[i] = "";
 				uploaded[i] = (Integer) contentHash.get("uploaded");
-				//leaving status blank for local drafts since it's pretty clear that they are already local drafts
+				// leaving status blank for local drafts since it's pretty clear
+				// that they are already local drafts
 				draftStatuses[i] = "";
 			}
 
@@ -563,7 +572,7 @@ public class ViewPosts extends ListFragment {
 
 		int sdk_version = 7;
 		boolean detailViewVisible = false;
-		
+
 		public PostListAdapter(Context context) {
 			sdk_version = android.os.Build.VERSION.SDK_INT;
 			FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -632,7 +641,8 @@ public class ViewPosts extends ListFragment {
 					status_text = "";
 				}
 			} else {
-				if (position == selectedPosition && sdk_version >= 11 && detailViewVisible) {
+				if (position == selectedPosition && sdk_version >= 11
+						&& detailViewVisible) {
 					pv.setBackgroundDrawable(getResources().getDrawable(
 							R.drawable.list_highlight_bg));
 				} else {
@@ -746,67 +756,78 @@ public class ViewPosts extends ListFragment {
 		return false;
 	}
 
-	public class getRecentPostsTask extends 
+	public class getRecentPostsTask extends
 			AsyncTask<Vector<?>, Void, Object[]> {
 
 		Context ctx;
 		boolean isPage, loadMore;
 
-		protected void onPostExecute(Object[] result) {
+		protected void onPostExecute(final Object[] result) {
 			if (isCancelled())
 				return;
+			
+			Thread action = new Thread() {
+				public void run() {
 
-			if (result != null) {
-				if (result.length > 0) {
-					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+					if (result != null) {
+						if (result.length > 0) {
+							HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+							Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
-					if (!loadMore) {
-						WordPress.wpDB.deleteUploadedPosts(
-								WordPress.currentBlog.getId(), isPage);
-					}
-
-					for (int ctr = 0; ctr < result.length; ctr++) {
-						HashMap<String, Object> dbValues = new HashMap<String, Object>();
-						contentHash = (HashMap<?, ?>) result[ctr];
-						dbValues.put("blogID",
-								WordPress.currentBlog.getBlogId());
-						dbVector.add(ctr, contentHash);
-					}
-
-					WordPress.wpDB.savePosts(dbVector,
-							WordPress.currentBlog.getId(), isPage);
-					numRecords += 20;
-					if (loadMore)
-						switcher.showPrevious();
-					loadPosts(loadMore);
-				} else {
-					if (pla != null) {
-						if (postIDs.length == 2) {
-							try {
-								WordPress.wpDB.deleteUploadedPosts(WordPress.currentBlog.getId(), WordPress.currentPost.isPage());
-								onPostActionListener.onPostAction(Posts.POST_CLEAR, WordPress.currentPost);
-							} catch (Exception e) {
-								e.printStackTrace();
+							if (!loadMore) {
+								WordPress.wpDB.deleteUploadedPosts(
+										WordPress.currentBlog.getId(), isPage);
 							}
-							WordPress.currentPost = null;
-							loadPosts(false);
+
+							for (int ctr = 0; ctr < result.length; ctr++) {
+								HashMap<String, Object> dbValues = new HashMap<String, Object>();
+								contentHash = (HashMap<?, ?>) result[ctr];
+								dbValues.put("blogID",
+										WordPress.currentBlog.getBlogId());
+								dbVector.add(ctr, contentHash);
+							}
+
+							WordPress.wpDB.savePosts(dbVector,
+									WordPress.currentBlog.getId(), isPage);
+							numRecords += 20;
+							if (loadMore)
+								switcher.showPrevious();
+							loadPosts(loadMore);
+						} else {
+							if (pla != null) {
+								if (postIDs.length == 2) {
+									try {
+										WordPress.wpDB.deleteUploadedPosts(
+												WordPress.currentBlog.getId(),
+												WordPress.currentPost.isPage());
+										onPostActionListener.onPostAction(
+												Posts.POST_CLEAR,
+												WordPress.currentPost);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									WordPress.currentPost = null;
+									loadPosts(false);
+								}
+							}
+						}
+						onRefreshListener.onRefresh(false);
+					} else {
+						onRefreshListener.onRefresh(false);
+
+						if (errorMsg != "") {
+							FragmentTransaction ft = getFragmentManager()
+									.beginTransaction();
+							WPAlertDialogFragment alert = WPAlertDialogFragment
+									.newInstance(errorMsg);
+							alert.show(ft, "alert");
+							errorMsg = "";
 						}
 					}
+					
 				}
-				onRefreshListener.onRefresh(false);
-			} else {
-				onRefreshListener.onRefresh(false);
-
-				if (errorMsg != "") {
-					FragmentTransaction ft = getFragmentManager()
-							.beginTransaction();
-					WPAlertDialogFragment alert = WPAlertDialogFragment
-							.newInstance(errorMsg);
-					alert.show(ft, "alert");
-					errorMsg = "";
-				}
-			}
+			};
+			getActivity().runOnUiThread(action);
 		}
 
 		@Override
