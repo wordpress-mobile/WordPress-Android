@@ -210,6 +210,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case 0:
+			WordPress.richPostContent = null;
 			Intent i = new Intent(this, EditPost.class);
 			i.putExtra("id", WordPress.currentBlog.getId());
 			i.putExtra("isNew", true);

@@ -127,11 +127,11 @@ public class EditPost extends Activity {
 
 		categories = new JSONArray();
 		String action = getIntent().getAction();
-		WordPress.richPostContent = null;
 
 		if (Intent.ACTION_SEND.equals(action)
 				|| Intent.ACTION_SEND_MULTIPLE.equals(action)) {
 			// we arrived here from a share action
+			WordPress.richPostContent = null;
 			isAction = true;
 			isNew = true;
 			Vector<?> accounts = WordPress.wpDB.getAccounts(this);
