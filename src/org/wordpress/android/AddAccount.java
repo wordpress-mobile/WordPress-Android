@@ -363,17 +363,6 @@ public class AddAccount extends Activity {
 		                          			int rowID = selectedItems.keyAt(i);
 		                          			long blogID = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID], wpcoms[rowID], wpVersions[rowID]);
 		                          			success = blogID > 0;
-		                          			if (success) {
-		        				    			Vector<Object> args = new Vector<Object>();
-		        								try {
-		        									Blog blog = new Blog((int)blogID, AddAccount.this);
-		        									args.add(blog);
-		        					    			args.add(AddAccount.this);
-		        					    			new ApiHelper.getPostFormatsTask().execute(args);
-		        								} catch (Exception e) {
-		        									e.printStackTrace();
-		        								}
-		        				    		}
 		                          		}
 		                          	}
 		                          	Bundle bundle = new Bundle();
@@ -391,17 +380,6 @@ public class AddAccount extends Activity {
 		                        	  for (int i=0;i<blogCtr;i++){
 		                        		  long blogID = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 		                        		  success = blogID > 0;
-		                        		  if (success) {
-		      				    			Vector<Object> args = new Vector<Object>();
-		      								try {
-		      									Blog blog = new Blog((int)blogID, AddAccount.this);
-		      									args.add(blog);
-		      					    			args.add(AddAccount.this);
-		      					    			new ApiHelper.getPostFormatsTask().execute(args);
-		      								} catch (Exception e) {
-		      									e.printStackTrace();
-		      								}
-		      				    		}
 		                        	  }
 		                        	  Bundle bundle = new Bundle();
 						                bundle.putString("returnStatus", "SAVE");
@@ -442,18 +420,6 @@ public class AddAccount extends Activity {
 				    	else {
                   		  	long blogID = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text", true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
 				    		success = blogID > 0;
-				    		if (success) {
-				    			Vector<Object> args = new Vector<Object>();
-								try {
-									Blog blog = new Blog((int)blogID, AddAccount.this);
-									args.add(blog);
-					    			args.add(AddAccount.this);
-					    			new ApiHelper.getPostFormatsTask().execute(args);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-				    		}
-				    			
 						    Bundle bundle = new Bundle();
 			                bundle.putString("returnStatus", "SAVE");
 			                Intent mIntent = new Intent();
@@ -462,7 +428,6 @@ public class AddAccount extends Activity {
 			                finish();
 				    	}
 				    }
-		        
 			}
         });
         Object[] params = {
@@ -756,10 +721,6 @@ public class AddAccount extends Activity {
 	      					           else if(attrName.equals("apiLink")){
 	      					        	   apiLink = attrValue;
 	      					           }
-
-	      					           
-	      						//	  Log.trace("attribute name: "+ parser.getAttributeName(i));
-	      						//	  Log.trace("attribute value: "+parser.getAttributeValue(i));
 	      					        }
 	      							
 	                              if(name.equals("WordPress") ){

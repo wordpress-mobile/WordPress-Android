@@ -104,9 +104,10 @@ public class Dashboard extends Activity {
 			if (status.equals("CANCEL") && WordPress.currentBlog == null) {
 				finish();
 			} else {
-				WPTitleBar actionBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
-				actionBar.reloadBlogs();
-				actionBar.startRotatingRefreshIcon();
+				if (titleBar == null)
+					titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
+				titleBar.reloadBlogs();
+				titleBar.startRotatingRefreshIcon();
 				new refreshBlogContentTask().execute(true);
 			}
 		}
