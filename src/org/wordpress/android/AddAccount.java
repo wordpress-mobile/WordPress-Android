@@ -1,10 +1,8 @@
 package org.wordpress.android;
 
 import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -51,7 +49,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
