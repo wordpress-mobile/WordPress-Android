@@ -1,5 +1,7 @@
 package org.wordpress.android;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
 import org.xmlrpc.android.ApiHelper;
 
 import android.app.Activity;
@@ -36,6 +39,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,48 +51,69 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Layout;
+import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.QuoteSpan;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Display;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class EditPost extends Activity {
 	/** Called when the activity is first created. */
 	public ProgressDialog pd;
 	Vector<String> selectedCategories = new Vector<String>();
 	public Boolean newStart = true;
-	public String categoryErrorMsg = "", accountName = "", option, provider;
+	public String categoryErrorMsg = "", accountName = "", option, provider,
+			SD_CARD_TEMP_DIR = "";
 	private JSONArray categories;
 	private int id;
 	long postID, customPubDate = 0;
 	private int ID_DIALOG_DATE = 0, ID_DIALOG_TIME = 1, ID_DIALOG_LOADING = 2;
 	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, isLargeScreen = false,
-			isCustomPubDate = false;
+			isCustomPubDate = false, isFullScreenEditing = false,
+			isBackspace = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
-	int styleStart = -1, cursorLoc = 0, screenDensity = 0;
+	int cursorLoc = 0, screenDensity = 0;
 	// date holders
-	private int mYear, mMonth, mDay, mHour, mMinute;
+	private int mYear, mMonth, mDay, mHour, mMinute, styleStart,
+			selectionStart, selectionEnd, lastPosition = -1;
 	private Blog blog;
 	private Post post;
 	// post formats
@@ -131,7 +156,6 @@ public class EditPost extends Activity {
 		if (Intent.ACTION_SEND.equals(action)
 				|| Intent.ACTION_SEND_MULTIPLE.equals(action)) {
 			// we arrived here from a share action
-			WordPress.richPostContent = null;
 			isAction = true;
 			isNew = true;
 			Vector<?> accounts = WordPress.wpDB.getAccounts(this);
@@ -165,7 +189,8 @@ public class EditPost extends Activity {
 
 				// Don't prompt if they have one blog only
 				if (accounts.size() != 1) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							EditPost.this);
 					builder.setCancelable(false);
 					builder.setTitle(getResources().getText(
 							R.string.select_a_blog));
@@ -290,6 +315,7 @@ public class EditPost extends Activity {
 			}
 
 			if (isNew) {
+				localDraft = true;
 				setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog
 						.getBlogName())
 						+ " - "
@@ -306,10 +332,18 @@ public class EditPost extends Activity {
 			}
 		}
 
+		setContentView(R.layout.edit);
 		if (isPage) {
-			setContentView(R.layout.edit_page);
+			// remove post specific views
+			RelativeLayout section3 = (RelativeLayout) findViewById(R.id.section3);
+			section3.setVisibility(View.GONE);
+			RelativeLayout locationWrapper = (RelativeLayout) findViewById(R.id.location_wrapper);
+			locationWrapper.setVisibility(View.GONE);
+			TextView postFormatLabel = (TextView) findViewById(R.id.postFormatLabel);
+			postFormatLabel.setVisibility(View.GONE);
+			Spinner postFormatSpinner = (Spinner) findViewById(R.id.postFormat);
+			postFormatSpinner.setVisibility(View.GONE);
 		} else {
-			setContentView(R.layout.edit);
 			if (blog.getPostFormats().equals("")) {
 				Vector<Object> args = new Vector<Object>();
 				args.add(blog);
@@ -549,7 +583,7 @@ public class EditPost extends Activity {
 					}
 					Intent i = new Intent(EditPost.this, SelectCategories.class);
 					i.putExtras(bundle);
-					startActivityForResult(i, 1);
+					startActivityForResult(i, 5);
 				}
 			});
 		}
@@ -558,16 +592,294 @@ public class EditPost extends Activity {
 		content.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View view, boolean hasFocus) {
-				if (hasFocus) {
-					Intent i = new Intent(EditPost.this, EditContent.class);
-					if (isNew || localDraft)
-						i.putExtra("localDraft", true);
-					else
-						i.putExtra("localDraft", false);
-					WordPress.richPostContent = content.getText();
-					i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-					startActivityForResult(i, 0);
+				if (!isFullScreenEditing && hasFocus)
+					content.performClick();
+			}
+		});
+
+		content.setOnClickListener(new EditText.OnClickListener() {
+			public void onClick(View v) {
+				if (!isFullScreenEditing) {
+					isFullScreenEditing = true;
+					content.setFocusableInTouchMode(true);
+					LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
+					smallEditorWrap.removeView(content);
+					ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+					scrollView.setVisibility(View.GONE);
+					LinearLayout contentEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorWrapper);
+					contentEditorWrap.addView(content);
+					contentEditorWrap.setVisibility(View.VISIBLE);
+					RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
+					formatBar.setVisibility(View.VISIBLE);
+					content.requestFocus();
+				} else {
+					final Spannable s = content.getText();
+					styleStart = content.getSelectionStart();
+					// check if image span was tapped
+					WPImageSpan[] click_spans = s.getSpans(
+							content.getSelectionStart(),
+							content.getSelectionStart(), WPImageSpan.class);
+
+					if (click_spans.length != 0) {
+						final WPImageSpan span = click_spans[0];
+						if (!span.isVideo()) {
+							LayoutInflater factory = LayoutInflater
+									.from(EditPost.this);
+							final View alertView = factory.inflate(
+									R.layout.alert_image_options, null);
+
+							final TextView imageWidthText = (TextView) alertView
+									.findViewById(R.id.imageWidthText);
+							final EditText titleText = (EditText) alertView
+									.findViewById(R.id.title);
+							// final EditText descText = (EditText) alertView
+							// .findViewById(R.id.description);
+							final EditText caption = (EditText) alertView
+									.findViewById(R.id.caption);
+							// final CheckBox featured = (CheckBox) alertView
+							// .findViewById(R.id.featuredImage);
+							final SeekBar seekBar = (SeekBar) alertView
+									.findViewById(R.id.imageWidth);
+							final Spinner alignmentSpinner = (Spinner) alertView
+									.findViewById(R.id.alignment_spinner);
+							ArrayAdapter<CharSequence> adapter = ArrayAdapter
+									.createFromResource(
+											EditPost.this,
+											R.array.alignment_array,
+											android.R.layout.simple_spinner_item);
+							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+							alignmentSpinner.setAdapter(adapter);
+
+							imageWidthText.setText(String.valueOf(span
+									.getWidth()) + "px");
+							seekBar.setProgress(span.getWidth());
+							titleText.setText(span.getTitle());
+							// descText.setText(span.getDescription());
+							caption.setText(span.getCaption());
+							// featured.setChecked(span.isFeatured());
+
+							alignmentSpinner.setSelection(
+									span.getHorizontalAlignment(), true);
+
+							seekBar.setMax(100);
+							if (span.getWidth() != 0)
+								seekBar.setProgress(span.getWidth() / 10);
+							seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+								@Override
+								public void onStopTrackingTouch(SeekBar seekBar) {
+								}
+
+								@Override
+								public void onStartTrackingTouch(SeekBar seekBar) {
+								}
+
+								@Override
+								public void onProgressChanged(SeekBar seekBar,
+										int progress, boolean fromUser) {
+									if (progress == 0)
+										progress = 1;
+									imageWidthText
+											.setText(progress * 10 + "px");
+								}
+							});
+
+							AlertDialog ad = new AlertDialog.Builder(
+									EditPost.this)
+									.setTitle("Image Settings")
+									.setView(alertView)
+									.setPositiveButton(
+											"OK",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int whichButton) {
+
+													span.setTitle(titleText
+															.getText()
+															.toString());
+													// span.setDescription(descText
+													// .getText().toString());
+
+													span.setHorizontalAlignment(alignmentSpinner
+															.getSelectedItemPosition());
+													span.setWidth(seekBar
+															.getProgress() * 10);
+													span.setCaption(caption
+															.getText()
+															.toString());
+													// span.setFeatured(featured
+													// .isChecked());
+
+												}
+											})
+									.setNegativeButton(
+											"Cancel",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int whichButton) {
+
+												}
+											}).create();
+							ad.show();
+						}
+
+					} else {
+						content.setMovementMethod(ArrowKeyMovementMethod
+								.getInstance());
+						content.setSelection(content.getSelectionStart());
+					}
 				}
+			}
+		});
+
+		content.setOnEditTextImeBackListener(new WPEditText.EditTextImeBackListener() {
+
+			@Override
+			public void onImeBack(WPEditText view, String text) {
+				finishEditing();
+			}
+
+		});
+
+		content.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable s) {
+
+				try {
+					int position = Selection.getSelectionStart(content
+							.getText());
+					if ((isBackspace && position != 1)
+							|| lastPosition == position || !localDraft)
+						return;
+
+					// add style as the user types if a toggle button is enabled
+					ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+					ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+					ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+					ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+					ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+
+					if (position < 0) {
+						position = 0;
+					}
+					lastPosition = position;
+					if (position > 0) {
+
+						if (styleStart > position) {
+							styleStart = position - 1;
+						}
+						boolean exists = false;
+						if (boldButton.isChecked()) {
+							StyleSpan[] ss = s.getSpans(styleStart, position,
+									StyleSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								if (ss[i].getStyle() == android.graphics.Typeface.BOLD) {
+									exists = true;
+								}
+							}
+							if (!exists)
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.BOLD),
+										styleStart, position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (emButton.isChecked()) {
+							StyleSpan[] ss = s.getSpans(styleStart, position,
+									StyleSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
+									exists = true;
+								}
+							}
+							if (!exists)
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.ITALIC),
+										styleStart, position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (emButton.isChecked()) {
+							StyleSpan[] ss = s.getSpans(styleStart, position,
+									StyleSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								if (ss[i].getStyle() == android.graphics.Typeface.ITALIC) {
+									exists = true;
+								}
+							}
+							if (!exists)
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.ITALIC),
+										styleStart, position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (underlineButton.isChecked()) {
+							WPUnderlineSpan[] ss = s.getSpans(styleStart,
+									position, WPUnderlineSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								exists = true;
+							}
+							if (!exists)
+								s.setSpan(new WPUnderlineSpan(), styleStart,
+										position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (strikeButton.isChecked()) {
+							StrikethroughSpan[] ss = s.getSpans(styleStart,
+									position, StrikethroughSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								exists = true;
+							}
+							if (!exists)
+								s.setSpan(new StrikethroughSpan(), styleStart,
+										position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+						if (bquoteButton.isChecked()) {
+
+							QuoteSpan[] ss = s.getSpans(styleStart, position,
+									QuoteSpan.class);
+							exists = false;
+							for (int i = 0; i < ss.length; i++) {
+								exists = true;
+							}
+							if (!exists)
+								s.setSpan(new QuoteSpan(), styleStart,
+										position,
+										Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+				if ((count - after == 1) || (s.length() == 0))
+					isBackspace = true;
+				else
+					isBackspace = false;
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+
+		});
+
+		final ImageButton addPictureButton = (ImageButton) findViewById(R.id.addPictureButton);
+		registerForContextMenu(addPictureButton);
+		addPictureButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				addPictureButton.performLongClick();
+
 			}
 		});
 
@@ -602,6 +914,400 @@ public class EditPost extends Activity {
 
 			}
 		});
+
+		final ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+		boldButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(boldButton, "strong");
+			}
+		});
+
+		final Button linkButton = (Button) findViewById(R.id.link);
+
+		linkButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+
+				selectionStart = contentText.getSelectionStart();
+
+				styleStart = selectionStart;
+
+				selectionEnd = contentText.getSelectionEnd();
+
+				if (selectionStart > selectionEnd) {
+					int temp = selectionEnd;
+					selectionEnd = selectionStart;
+					selectionStart = temp;
+				}
+
+				Intent i = new Intent(EditPost.this, Link.class);
+				if (selectionEnd > selectionStart) {
+					String selectedText = contentText.getText()
+							.subSequence(selectionStart, selectionEnd)
+							.toString();
+					i.putExtra("selectedText", selectedText);
+				}
+				startActivityForResult(i, 4);
+			}
+		});
+
+		final ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+		emButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(emButton, "em");
+			}
+		});
+
+		final ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+		underlineButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(underlineButton, "u");
+			}
+		});
+
+		final ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+		strikeButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(strikeButton, "strike");
+			}
+		});
+
+		final ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+		bquoteButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+
+				formatBtnClick(bquoteButton, "blockquote");
+
+			}
+		});
+
+		final Button moreButton = (Button) findViewById(R.id.more);
+		moreButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+				selectionEnd = contentText.getSelectionEnd();
+
+				Editable str = contentText.getText();
+				str.insert(selectionEnd, "\n\n<!--more-->\n\n");
+			}
+		});
+	}
+
+	protected void formatBtnClick(ToggleButton toggleButton, String tag) {
+		try {
+			WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+			Spannable s = contentText.getText();
+
+			int selectionStart = contentText.getSelectionStart();
+
+			styleStart = selectionStart;
+
+			int selectionEnd = contentText.getSelectionEnd();
+
+			if (selectionStart > selectionEnd) {
+				int temp = selectionEnd;
+				selectionEnd = selectionStart;
+				selectionStart = temp;
+			}
+
+			if (localDraft) {
+				if (selectionEnd > selectionStart) {
+					Spannable str = contentText.getText();
+					if (tag.equals("strong")) {
+						StyleSpan[] ss = str.getSpans(selectionStart,
+								selectionEnd, StyleSpan.class);
+
+						boolean exists = false;
+						for (int i = 0; i < ss.length; i++) {
+							int style = ((StyleSpan) ss[i]).getStyle();
+							if (style == android.graphics.Typeface.BOLD) {
+								str.removeSpan(ss[i]);
+								exists = true;
+							}
+						}
+
+						if (!exists) {
+							str.setSpan(new StyleSpan(
+									android.graphics.Typeface.BOLD),
+									selectionStart, selectionEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						toggleButton.setChecked(false);
+					} else if (tag.equals("em")) {
+						StyleSpan[] ss = str.getSpans(selectionStart,
+								selectionEnd, StyleSpan.class);
+
+						boolean exists = false;
+						for (int i = 0; i < ss.length; i++) {
+							int style = ((StyleSpan) ss[i]).getStyle();
+							if (style == android.graphics.Typeface.ITALIC) {
+								str.removeSpan(ss[i]);
+								exists = true;
+							}
+						}
+
+						if (!exists) {
+							str.setSpan(new StyleSpan(
+									android.graphics.Typeface.ITALIC),
+									selectionStart, selectionEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+						toggleButton.setChecked(false);
+					} else if (tag.equals("u")) {
+
+						WPUnderlineSpan[] ss = str.getSpans(selectionStart,
+								selectionEnd, WPUnderlineSpan.class);
+
+						boolean exists = false;
+						for (int i = 0; i < ss.length; i++) {
+							str.removeSpan(ss[i]);
+							exists = true;
+						}
+
+						if (!exists) {
+							str.setSpan(new WPUnderlineSpan(), selectionStart,
+									selectionEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+
+						toggleButton.setChecked(false);
+					} else if (tag.equals("strike")) {
+
+						StrikethroughSpan[] ss = str.getSpans(selectionStart,
+								selectionEnd, StrikethroughSpan.class);
+
+						boolean exists = false;
+						for (int i = 0; i < ss.length; i++) {
+							str.removeSpan(ss[i]);
+							exists = true;
+						}
+
+						if (!exists) {
+							str.setSpan(new StrikethroughSpan(),
+									selectionStart, selectionEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+
+						toggleButton.setChecked(false);
+					} else if (tag.equals("blockquote")) {
+
+						QuoteSpan[] ss = str.getSpans(selectionStart,
+								selectionEnd, QuoteSpan.class);
+
+						boolean exists = false;
+						for (int i = 0; i < ss.length; i++) {
+							str.removeSpan(ss[i]);
+							exists = true;
+						}
+
+						if (!exists) {
+							str.setSpan(new QuoteSpan(), selectionStart,
+									selectionEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+
+						toggleButton.setChecked(false);
+					}
+				} else if (!toggleButton.isChecked()) {
+
+					if (tag.equals("strong") || tag.equals("em")) {
+
+						StyleSpan[] ss = s.getSpans(styleStart - 1, styleStart,
+								StyleSpan.class);
+
+						for (int i = 0; i < ss.length; i++) {
+							int tagStart = s.getSpanStart(ss[i]);
+							int tagEnd = s.getSpanEnd(ss[i]);
+							if (ss[i].getStyle() == android.graphics.Typeface.BOLD
+									&& tag.equals("strong")) {
+								tagStart = s.getSpanStart(ss[i]);
+								tagEnd = s.getSpanEnd(ss[i]);
+								s.removeSpan(ss[i]);
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.BOLD),
+										tagStart, tagEnd,
+										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							}
+							if (ss[i].getStyle() == android.graphics.Typeface.ITALIC
+									&& tag.equals("em")) {
+								tagStart = s.getSpanStart(ss[i]);
+								tagEnd = s.getSpanEnd(ss[i]);
+								s.removeSpan(ss[i]);
+								s.setSpan(new StyleSpan(
+										android.graphics.Typeface.ITALIC),
+										tagStart, tagEnd,
+										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+							}
+
+						}
+					} else if (tag.equals("u")) {
+						WPUnderlineSpan[] us = s.getSpans(styleStart - 1,
+								styleStart, WPUnderlineSpan.class);
+						for (int i = 0; i < us.length; i++) {
+							int tagStart = s.getSpanStart(us[i]);
+							int tagEnd = s.getSpanEnd(us[i]);
+							s.removeSpan(us[i]);
+							s.setSpan(new WPUnderlineSpan(), tagStart, tagEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+					} else if (tag.equals("strike")) {
+						StrikethroughSpan[] ss = s.getSpans(styleStart - 1,
+								styleStart, StrikethroughSpan.class);
+						for (int i = 0; i < ss.length; i++) {
+							int tagStart = s.getSpanStart(ss[i]);
+							int tagEnd = s.getSpanEnd(ss[i]);
+							s.removeSpan(ss[i]);
+							s.setSpan(new StrikethroughSpan(), tagStart,
+									tagEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+					} else if (tag.equals("blockquote")) {
+						QuoteSpan[] ss = s.getSpans(styleStart - 1, styleStart,
+								QuoteSpan.class);
+						for (int i = 0; i < ss.length; i++) {
+							int tagStart = s.getSpanStart(ss[i]);
+							int tagEnd = s.getSpanEnd(ss[i]);
+							s.removeSpan(ss[i]);
+							s.setSpan(new QuoteSpan(), tagStart, tagEnd,
+									Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						}
+					}
+				}
+			} else {
+				String startTag = "<" + tag + ">";
+				String endTag = "</" + tag + ">";
+				Editable content = contentText.getText();
+				if (selectionEnd > selectionStart) {
+					content.insert(selectionStart, startTag);
+					content.insert(selectionEnd + startTag.length(), endTag);
+					toggleButton.setChecked(false);
+					contentText.setSelection(selectionEnd + startTag.length()
+							+ endTag.length());
+				} else if (toggleButton.isChecked()) {
+					content.insert(selectionStart, startTag);
+					contentText.setSelection(selectionEnd + startTag.length());
+				} else if (!toggleButton.isChecked()) {
+					content.insert(selectionEnd, endTag);
+					contentText.setSelection(selectionEnd + endTag.length());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	protected void finishEditing() {
+		WPEditText content = (WPEditText) findViewById(R.id.postContent);
+
+		if (isFullScreenEditing) {
+			isFullScreenEditing = false;
+			RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
+			formatBar.setVisibility(View.GONE);
+			LinearLayout contentEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorWrapper);
+			contentEditorWrap.removeView(content);
+			contentEditorWrap.setVisibility(View.GONE);
+			LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
+			smallEditorWrap.addView(content);
+			smallEditorWrap.setVisibility(View.VISIBLE);
+			ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+			scrollView.setVisibility(View.VISIBLE);
+		}
+
+	}
+
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
+		if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
+		}
+		menu.add(0, 2, 0, getResources().getText(R.string.select_video));
+		if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			menu.add(0, 3, 0, getResources().getText(R.string.take_video));
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case 0:
+			launchPictureLibrary();
+			return true;
+		case 1:
+			launchCamera();
+			return true;
+		case 2:
+			launchVideoLibrary();
+			return true;
+		case 3:
+			launchVideoCamera();
+			return true;
+		}
+		return false;
+	}
+
+	private void launchPictureLibrary() {
+		Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+		photoPickerIntent.setType("image/*");
+		startActivityForResult(photoPickerIntent, 0);
+	}
+
+	private void launchCamera() {
+		String state = android.os.Environment.getExternalStorageState();
+		if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+					EditPost.this);
+			dialogBuilder.setTitle(getResources()
+					.getText(R.string.sdcard_title));
+			dialogBuilder.setMessage(getResources().getText(
+					R.string.sdcard_message));
+			dialogBuilder.setPositiveButton("OK",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							// just close the dialog
+
+						}
+					});
+			dialogBuilder.setCancelable(true);
+			dialogBuilder.create().show();
+		} else {
+			SD_CARD_TEMP_DIR = Environment.getExternalStorageDirectory()
+					+ File.separator + "wordpress" + File.separator + "wp-"
+					+ System.currentTimeMillis() + ".jpg";
+			Intent takePictureFromCameraIntent = new Intent(
+					MediaStore.ACTION_IMAGE_CAPTURE);
+			takePictureFromCameraIntent.putExtra(
+					android.provider.MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(new File(SD_CARD_TEMP_DIR)));
+
+			// make sure the directory we plan to store the recording in exists
+			File directory = new File(SD_CARD_TEMP_DIR).getParentFile();
+			if (!directory.exists() && !directory.mkdirs()) {
+				try {
+					throw new IOException("Path to file could not be created.");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			startActivityForResult(takePictureFromCameraIntent, 1);
+		}
+	}
+
+	private void launchVideoLibrary() {
+		Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
+		videoPickerIntent.setType("video/*");
+		startActivityForResult(videoPickerIntent, 2);
+	}
+
+	private void launchVideoCamera() {
+		Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+		startActivityForResult(takeVideoIntent, 3);
 	}
 
 	private void evaluateSaveButtonText() {
@@ -696,27 +1402,138 @@ public class EditPost extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == Activity.RESULT_CANCELED && requestCode != 1) {
-			finish();
-		} else if (data != null || requestCode == 4) {
+		if (resultCode == RESULT_CANCELED)
+			return;
+		if (data != null || ((requestCode == 1 || requestCode == 3))) {
+			Bundle extras;
 			switch (requestCode) {
 			case 0:
-				if (WordPress.richPostContent != null) {
-					WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
+
+				Uri imageUri = data.getData();
+				String imgPath = imageUri.toString();
+
+				addMedia(imgPath, imageUri);
+				break;
+			case 1:
+				if (resultCode == Activity.RESULT_OK) {
+
+					File f = new File(SD_CARD_TEMP_DIR);
 					try {
-						contentET.setText(WordPress.richPostContent);
+						Uri capturedImage = Uri
+								.parse(android.provider.MediaStore.Images.Media
+										.insertImage(getContentResolver(),
+												f.getAbsolutePath(), null, null));
+
+						Log.i("camera",
+								"Selected image: " + capturedImage.toString());
+
+						f.delete();
+
+						addMedia(capturedImage.toString(), capturedImage);
+
+					} catch (FileNotFoundException e) {
 					} catch (Exception e) {
-						e.printStackTrace();
+					}
+
+				} else {
+					// user canceled capture
+					if (option != null) {
+						Intent intent = new Intent();
+						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+						setResult(Activity.RESULT_CANCELED, intent);
+						finish();
 					}
 				}
 
-				EditText title = (EditText) findViewById(R.id.title);
-				title.requestFocus();
+				break;
+			case 2:
+
+				Uri videoUri = data.getData();
+				String videoPath = videoUri.toString();
+
+				addMedia(videoPath, videoUri);
 
 				break;
-			case 1:
-				Bundle extras = data.getExtras();
+			case 3:
+				if (resultCode == Activity.RESULT_OK) {
+					Uri capturedVideo = data.getData();
+
+					addMedia(capturedVideo.toString(), capturedVideo);
+				} else {
+					// user canceled capture
+					if (option != null) {
+						Intent intent = new Intent();
+						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+						setResult(Activity.RESULT_CANCELED, intent);
+						finish();
+					}
+				}
+
+				break;
+			case 4:
+				try {
+					extras = data.getExtras();
+					String linkURL = extras.getString("linkURL");
+					if (!linkURL.equals("http://") && !linkURL.equals("")) {
+						WPEditText contentText = (WPEditText) findViewById(R.id.postContent);
+
+						if (selectionStart > selectionEnd) {
+							int temp = selectionEnd;
+							selectionEnd = selectionStart;
+							selectionStart = temp;
+						}
+						Editable str = contentText.getText();
+						if (localDraft) {
+							if (extras.getString("linkText") == null) {
+								if (selectionStart < selectionEnd)
+									str.delete(selectionStart, selectionEnd);
+								str.insert(selectionStart, linkURL);
+								str.setSpan(new URLSpan(linkURL),
+										selectionStart, selectionStart
+												+ linkURL.length(),
+										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+								contentText.setSelection(selectionStart
+										+ linkURL.length());
+							} else {
+								String linkText = extras.getString("linkText");
+								if (selectionStart < selectionEnd)
+									str.delete(selectionStart, selectionEnd);
+								str.insert(selectionStart, linkText);
+								str.setSpan(new URLSpan(linkURL),
+										selectionStart, selectionStart
+												+ linkText.length(),
+										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+								contentText.setSelection(selectionStart
+										+ linkText.length());
+							}
+						} else {
+							if (extras.getString("linkText") == null) {
+								if (selectionStart < selectionEnd)
+									str.delete(selectionStart, selectionEnd);
+								String urlHTML = "<a href=\"" + linkURL + "\">"
+										+ linkURL + "</a>";
+								str.insert(selectionStart, urlHTML);
+								contentText.setSelection(selectionStart
+										+ urlHTML.length());
+							} else {
+								String linkText = extras.getString("linkText");
+								if (selectionStart < selectionEnd)
+									str.delete(selectionStart, selectionEnd);
+								String urlHTML = "<a href=\"" + linkURL + "\">"
+										+ linkText + "</a>";
+								str.insert(selectionStart, urlHTML);
+								contentText.setSelection(selectionStart
+										+ urlHTML.length());
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case 5:
+				extras = data.getExtras();
 				String cats = extras.getString("selectedCategories");
 				String[] splitCats = cats.split(",");
 				categories = new JSONArray();
@@ -730,7 +1547,8 @@ public class EditPost extends Activity {
 
 				break;
 			}
-		}
+
+		}// end null check
 	}
 
 	@Override
@@ -998,11 +1816,8 @@ public class EditPost extends Activity {
 	}
 
 	@Override
-	public boolean onKeyDown(int i, KeyEvent event) {
-
-		// only intercept back button press
-		if (i == KeyEvent.KEYCODE_BACK) {
-
+	public void onBackPressed() {
+		if (!isFullScreenEditing) {
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 					EditPost.this);
 			dialogBuilder
@@ -1034,9 +1849,10 @@ public class EditPost extends Activity {
 					});
 			dialogBuilder.setCancelable(true);
 			dialogBuilder.create().show();
+		} else {
+			finishEditing();
 		}
-
-		return false;
+		return;
 	}
 
 	/** Register for the updates when Activity is in foreground */
@@ -1182,7 +1998,7 @@ public class EditPost extends Activity {
 				if (curStream != null && type != null) {
 					String imgPath = curStream.getEncodedPath();
 
-					ssb = addMedia(imgPath, curStream, ssb);
+					ssb = addMediaFromShareAction(imgPath, curStream, ssb);
 
 				}
 			}
@@ -1190,8 +2006,95 @@ public class EditPost extends Activity {
 		}
 	}
 
-	public SpannableStringBuilder addMedia(String imgPath, Uri curStream,
-			SpannableStringBuilder ssb) {
+	private void addMedia(String imgPath, Uri curStream) {
+
+		Bitmap resizedBitmap = null;
+		ImageHelper ih = new ImageHelper();
+		Display display = getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+
+		HashMap<String, Object> mediaData = ih.getImageBytesForPath(imgPath,
+				EditPost.this);
+
+		if (mediaData == null) {
+			// data stream not returned
+			Toast.makeText(EditPost.this,
+					getResources().getText(R.string.gallery_error),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"),
+				String.valueOf(width / 2),
+				(String) mediaData.get("orientation"), true);
+
+		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
+				finalBytes.length);
+
+		WPEditText content = (WPEditText) findViewById(R.id.postContent);
+		int selectionStart = content.getSelectionStart();
+
+		styleStart = selectionStart;
+
+		int selectionEnd = content.getSelectionEnd();
+
+		if (selectionStart > selectionEnd) {
+			int temp = selectionEnd;
+			selectionEnd = selectionStart;
+			selectionStart = temp;
+		}
+
+		if (content.getText().length() == 0) {
+			content.setText(" ");
+		}
+
+		Editable s = content.getText();
+
+		WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap,
+				curStream);
+
+		String imageWidth = WordPress.currentBlog.getMaxImageWidth();
+		if (!imageWidth.equals("Original Size")) {
+			try {
+				is.setWidth(Integer.valueOf(imageWidth));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+
+		is.setTitle((String) mediaData.get("title"));
+		is.setImageSource(curStream);
+		if (imgPath.contains("video")) {
+			is.setVideo(true);
+		}
+
+		// insert a few line breaks if the cursor is already on an image
+		WPImageSpan[] click_spans = s.getSpans(selectionStart, selectionEnd,
+				WPImageSpan.class);
+		if (click_spans.length != 0) {
+			s.insert(selectionEnd, "\n\n");
+			selectionStart = selectionStart + 2;
+			selectionEnd = selectionEnd + 2;
+		}
+
+		s.insert(selectionStart, " ");
+		s.setSpan(is, selectionStart, selectionEnd + 1,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		AlignmentSpan.Standard as = new AlignmentSpan.Standard(
+				Layout.Alignment.ALIGN_CENTER);
+		s.setSpan(as, selectionStart, selectionEnd + 1,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		s.insert(selectionEnd + 1, "\n\n");
+		try {
+			content.setSelection(selectionEnd + 3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public SpannableStringBuilder addMediaFromShareAction(String imgPath,
+			Uri curStream, SpannableStringBuilder ssb) {
 		Bitmap resizedBitmap = null;
 		String imageTitle = "";
 

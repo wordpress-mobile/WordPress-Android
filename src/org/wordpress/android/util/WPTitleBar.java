@@ -171,7 +171,6 @@ public class WPTitleBar extends RelativeLayout {
 		LinearLayout writeButton = (LinearLayout) findViewById(R.id.dashboard_newpost_btn);
 		writeButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				WordPress.richPostContent = null;
 				Intent i = new Intent(context, EditPost.class);
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
@@ -183,7 +182,6 @@ public class WPTitleBar extends RelativeLayout {
 		LinearLayout newPageButton = (LinearLayout) findViewById(R.id.dashboard_newpage_btn);
 		newPageButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				WordPress.richPostContent = null;
 				Intent i = new Intent(context, EditPost.class);
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
@@ -271,7 +269,6 @@ public class WPTitleBar extends RelativeLayout {
 			public void onClick(View v) {
 				PackageManager pm = context.getPackageManager();
 				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-					WordPress.richPostContent = null;
 					Intent i = new Intent(context, EditPost.class);
 					i.putExtra("option", "newphoto");
 					i.putExtra("isNew", true);
@@ -290,7 +287,6 @@ public class WPTitleBar extends RelativeLayout {
 			public void onClick(View v) {
 				PackageManager pm = context.getPackageManager();
 				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-					WordPress.richPostContent = null;
 					Intent i = new Intent(context, EditPost.class);
 					i.putExtra("option", "newvideo");
 					i.putExtra("isNew", true);

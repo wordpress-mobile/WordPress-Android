@@ -27,4 +27,5 @@
     <dimen name="format_bar_font_size">22dp</dimen>
     <dimen name="format_bar_button_padding">8dp</dimen>
     <dimen name="format_bar_height">50dp</dimen>
+    <dimen name="editor_height">220dp</dimen>
 </resources>

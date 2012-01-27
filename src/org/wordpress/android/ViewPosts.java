@@ -695,7 +695,6 @@ public class ViewPosts extends ListFragment {
 		if (item.getGroupId() == 0) {
 			switch (item.getItemId()) {
 			case 0:
-				WordPress.richPostContent = null;
 				Intent i2 = new Intent(getActivity().getApplicationContext(),
 						EditPost.class);
 				i2.putExtra("postID", selectedID);
@@ -714,7 +713,6 @@ public class ViewPosts extends ListFragment {
 		} else if (item.getGroupId() == 2) {
 			switch (item.getItemId()) {
 			case 0:
-				WordPress.richPostContent = null;
 				Intent i2 = new Intent(getActivity().getApplicationContext(),
 						EditPost.class);
 				i2.putExtra("postID", selectedID);
@@ -734,7 +732,6 @@ public class ViewPosts extends ListFragment {
 		} else {
 			switch (item.getItemId()) {
 			case 0:
-				WordPress.richPostContent = null;
 				Intent i2 = new Intent(getActivity().getApplicationContext(),
 						EditPost.class);
 				i2.putExtra("postID", selectedID);
