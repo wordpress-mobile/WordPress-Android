@@ -445,10 +445,16 @@ public class EditPost extends Activity {
 
 			// handles selections from the quick action bar
 			if (option != null) {
-				Intent i = new Intent(EditPost.this, EditContent.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-				i.putExtra("option", option);
-				startActivityForResult(i, 0);
+				if (option.equals("newphoto"))
+					launchCamera();
+				else if (option.equals("photolibrary"))
+					launchPictureLibrary();
+				else if (option.equals("newvideo")) 
+					launchVideoCamera();
+				else if (option.equals("videolibrary"))
+					launchVideoLibrary();
+				
+				localDraft = extras.getBoolean("localDraft");
 			}
 
 		} else {

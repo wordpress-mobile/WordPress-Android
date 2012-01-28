@@ -7,7 +7,7 @@
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
 			android:label="@string/create_a_link" />
 		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
-		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:theme="@style/IncludeTitleBar">
+		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden|adjustResize" android:theme="@style/IncludeTitleBar">
 			<intent-filter>
     			<action android:name="android.intent.action.SEND" />
     			<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -41,7 +41,6 @@
   </intent-filter>
 </activity>
 <activity android:name="About"></activity>
-<activity android:name="EditContent" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|keyboardHidden"></activity>
 <activity android:name="Comments" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
 <activity android:name="ViewCommentActivity"></activity>
 <activity android:name="Posts" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
