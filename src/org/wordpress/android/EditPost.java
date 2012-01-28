@@ -1408,8 +1408,14 @@ public class EditPost extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED)
+		if (resultCode == RESULT_CANCELED) {
+			if (option != null) {
+				Intent intent = new Intent();
+				setResult(Activity.RESULT_CANCELED, intent);
+				finish();
+			}
 			return;
+		}
 		if (data != null || ((requestCode == 1 || requestCode == 3))) {
 			Bundle extras;
 			switch (requestCode) {
@@ -1441,15 +1447,7 @@ public class EditPost extends Activity {
 					} catch (Exception e) {
 					}
 
-				} else {
-					// user canceled capture
-					if (option != null) {
-						Intent intent = new Intent();
-						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-						setResult(Activity.RESULT_CANCELED, intent);
-						finish();
-					}
-				}
+				} 
 
 				break;
 			case 2:
@@ -1465,14 +1463,6 @@ public class EditPost extends Activity {
 					Uri capturedVideo = data.getData();
 
 					addMedia(capturedVideo.toString(), capturedVideo);
-				} else {
-					// user canceled capture
-					if (option != null) {
-						Intent intent = new Intent();
-						intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-						setResult(Activity.RESULT_CANCELED, intent);
-						finish();
-					}
 				}
 
 				break;
