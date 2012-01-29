@@ -96,7 +96,6 @@ public class EditPost extends Activity {
 	/** Called when the activity is first created. */
 	public ProgressDialog pd;
 	Vector<String> selectedCategories = new Vector<String>();
-	public Boolean newStart = true;
 	public String categoryErrorMsg = "", accountName = "", option, provider,
 			SD_CARD_TEMP_DIR = "";
 	private JSONArray categories;
@@ -106,7 +105,7 @@ public class EditPost extends Activity {
 	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, isLargeScreen = false,
 			isCustomPubDate = false, isFullScreenEditing = false,
-			isBackspace = false;
+			isBackspace = false, imeBackPressed = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
@@ -745,6 +744,7 @@ public class EditPost extends Activity {
 			@Override
 			public void onImeBack(WPEditText view, String text) {
 				finishEditing();
+				imeBackPressed = true;
 			}
 
 		});
@@ -1813,7 +1813,7 @@ public class EditPost extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (!isFullScreenEditing) {
+		if (!isFullScreenEditing && !imeBackPressed) {
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 					EditPost.this);
 			dialogBuilder
@@ -1848,6 +1848,10 @@ public class EditPost extends Activity {
 		} else {
 			finishEditing();
 		}
+		
+		if (imeBackPressed)
+			imeBackPressed = false;
+		
 		return;
 	}
 
@@ -2115,6 +2119,16 @@ public class EditPost extends Activity {
 
 		WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap,
 				curStream);
+		
+		String imageWidth = WordPress.currentBlog.getMaxImageWidth();
+		if (!imageWidth.equals("Original Size")) {
+			try {
+				is.setWidth(Integer.valueOf(imageWidth));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		is.setTitle(imageTitle);
 		is.setImageSource(curStream);
 		is.setVideo(imgPath.contains("video"));
