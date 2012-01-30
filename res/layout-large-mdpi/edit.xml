@@ -78,7 +78,6 @@
                         android:capitalize="sentences"
                         android:gravity="top"
                         android:hint="@string/content"
-                        android:minLines="8"
                         android:textColorLink="#21759b" />
                 </LinearLayout>
             </RelativeLayout>
