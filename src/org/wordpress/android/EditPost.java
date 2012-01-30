@@ -607,15 +607,19 @@ public class EditPost extends Activity {
 				if (!isFullScreenEditing) {
 					isFullScreenEditing = true;
 					content.setFocusableInTouchMode(true);
-					LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
-					smallEditorWrap.removeView(content);
-					ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-					scrollView.setVisibility(View.GONE);
-					LinearLayout contentEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorWrapper);
-					contentEditorWrap.addView(content);
-					contentEditorWrap.setVisibility(View.VISIBLE);
-					RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
-					formatBar.setVisibility(View.VISIBLE);
+					try {
+						LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
+						smallEditorWrap.removeView(content);
+						ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+						scrollView.setVisibility(View.GONE);
+						LinearLayout contentEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorWrapper);
+						contentEditorWrap.addView(content);
+						contentEditorWrap.setVisibility(View.VISIBLE);
+						RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
+						formatBar.setVisibility(View.VISIBLE);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					content.requestFocus();
 				} else {
 					final Spannable s = content.getText();
@@ -1212,16 +1216,20 @@ public class EditPost extends Activity {
 
 		if (isFullScreenEditing) {
 			isFullScreenEditing = false;
-			RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
-			formatBar.setVisibility(View.GONE);
-			LinearLayout contentEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorWrapper);
-			contentEditorWrap.removeView(content);
-			contentEditorWrap.setVisibility(View.GONE);
-			LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
-			smallEditorWrap.addView(content);
-			smallEditorWrap.setVisibility(View.VISIBLE);
-			ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-			scrollView.setVisibility(View.VISIBLE);
+			try {
+				RelativeLayout formatBar = (RelativeLayout) findViewById(R.id.formatBar);
+				formatBar.setVisibility(View.GONE);
+				LinearLayout contentEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorWrapper);
+				contentEditorWrap.removeView(content);
+				contentEditorWrap.setVisibility(View.GONE);
+				LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
+				smallEditorWrap.addView(content);
+				smallEditorWrap.setVisibility(View.VISIBLE);
+				ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+				scrollView.setVisibility(View.VISIBLE);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -2086,7 +2094,7 @@ public class EditPost extends Activity {
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		s.insert(selectionEnd + 1, "\n\n");
 		try {
-			content.setSelection(selectionEnd + 3);
+			content.setSelection(s.length());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

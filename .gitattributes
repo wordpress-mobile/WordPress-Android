@@ -247,7 +247,6 @@ res/layout/dashboard.xml -text
 res/layout/dashboard_buttons_landscape.xml -text
 res/layout/dashboard_buttons_portrait.xml -text
 res/layout/edit.xml -text
-res/layout/edit_content.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
 res/layout/image_view.xml -text

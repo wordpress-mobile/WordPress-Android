@@ -1014,7 +1014,7 @@ public class Post {
 							}
 							
 							if (finalBytes == null) {
-								error = "Could not upload media: Device out of memory.";
+								error = context.getResources().getText(R.string.media_error).toString();
 								return null;
 							}
 

@@ -60,8 +60,8 @@
 
                 <LinearLayout
                     android:id="@+id/postContentEditorSmallWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_below="@id/title"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
@@ -73,6 +73,7 @@
                         android:layout_height="fill_parent"
                         android:layout_margin="4dp"
                         android:autoText="true"
+                        android:imeOptions="flagNoExtractUi"
                         android:background="@android:drawable/editbox_background"
                         android:capitalize="sentences"
                         android:gravity="top"

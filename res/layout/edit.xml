@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:id="@+id/postContentEditorWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:orientation="vertical"
@@ -60,10 +60,9 @@
 
                 <LinearLayout
                     android:id="@+id/postContentEditorSmallWrapper"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
                     android:layout_below="@id/title"
                     android:orientation="vertical" >
 
@@ -73,7 +72,7 @@
                         android:layout_height="fill_parent"
                         android:layout_margin="4dp"
                         android:autoText="true"
-                        android:minLines="4"
+                        android:imeOptions="flagNoExtractUi"
                         android:background="@android:drawable/editbox_background"
                         android:capitalize="sentences"
                         android:gravity="top"

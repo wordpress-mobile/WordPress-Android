@@ -317,6 +317,7 @@
   <string name="take_video">Take a new video</string>
   <string name="add_media">Add Media</string>
   <string name="media">Media</string>
+  <string name="media_error">Error uploading media: Could not create image.</string>
 
   <!-- category management -->
   <string name="refresh_categories">Refresh Categories</string>
