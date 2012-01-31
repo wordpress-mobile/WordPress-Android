@@ -37,7 +37,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class WPTitleBar extends RelativeLayout {
 
@@ -268,17 +267,14 @@ public class WPTitleBar extends RelativeLayout {
 		picButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				PackageManager pm = context.getPackageManager();
-				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-					Intent i = new Intent(context, EditPost.class);
+				Intent i = new Intent(context, EditPost.class);
+				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))
 					i.putExtra("option", "newphoto");
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-					hideOverlay();
-				} else {
-					Toast.makeText(context,
-							getResources().getText(R.string.no_camera_found),
-							Toast.LENGTH_LONG).show();
-				}
+				else
+					i.putExtra("option", "photolibrary");
+				i.putExtra("isNew", true);
+				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
@@ -286,17 +282,14 @@ public class WPTitleBar extends RelativeLayout {
 		videoButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				PackageManager pm = context.getPackageManager();
-				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-					Intent i = new Intent(context, EditPost.class);
+				Intent i = new Intent(context, EditPost.class);
+				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))
 					i.putExtra("option", "newvideo");
-					i.putExtra("isNew", true);
-					context.startActivity(i);
-					hideOverlay();
-				} else {
-					Toast.makeText(context,
-							getResources().getText(R.string.no_camera_found),
-							Toast.LENGTH_LONG).show();
-				}
+				else
+					i.putExtra("option", "videolibrary");
+				i.putExtra("isNew", true);
+				context.startActivity(i);
+				hideOverlay();
 			}
 		});
 
