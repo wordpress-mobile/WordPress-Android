@@ -55,6 +55,6 @@ public class BlackBerryUtils {
 
 	private BlackBerryUtils() {
 		isPlayBook =  android.os.Build.MANUFACTURER.equalsIgnoreCase( "Research in Motion" ) &&  
-				android.os.Build.MODEL.equalsIgnoreCase("BlackBerry Runtime for Android" );
+				android.os.Build.MODEL.startsWith( "BlackBerry Runtime for Android" );
 	};
 }
