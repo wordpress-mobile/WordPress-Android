@@ -453,6 +453,7 @@
 
   <!-- reader -->
   <string name="reader">Read</string>
+  <string name="topics">Topics</string>
 
   <!-- Post Formats -->
   <string-array name="post_formats_array">

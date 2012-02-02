@@ -11,6 +11,7 @@ import org.wordpress.android.Read;
 import org.wordpress.android.Settings;
 import org.wordpress.android.ViewComments;
 import org.wordpress.android.ViewStats;
+import org.wordpress.android.WPCOMReaderImpl;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
@@ -249,9 +250,8 @@ public class WPTitleBar extends RelativeLayout {
 			public void onClick(View v) {
 				int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
 				if (WordPress.currentBlog.isDotcomFlag()) {
-					Intent i = new Intent(context, Read.class);
+					Intent i = new Intent(context, WPCOMReaderImpl.class);
 					i.putExtra("id", readerBlogID);
-					i.putExtra("loadReader", true);
 					context.startActivity(i);
 					hideOverlay();
 				} else {

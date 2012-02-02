@@ -351,6 +351,9 @@ src/org/wordpress/android/ViewPostActivity.java -text
 src/org/wordpress/android/ViewPostFragment.java -text
 src/org/wordpress/android/ViewPosts.java -text
 src/org/wordpress/android/ViewStats.java -text
+src/org/wordpress/android/WPCOMReaderBase.java -text
+src/org/wordpress/android/WPCOMReaderImpl.java -text
+src/org/wordpress/android/WPCOMReaderTopicsSelector.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
 src/org/wordpress/android/models/Blog.java -text
