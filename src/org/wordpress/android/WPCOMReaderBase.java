@@ -17,6 +17,7 @@ import android.net.http.SslError;
 import android.util.Log;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -26,7 +27,18 @@ public abstract class WPCOMReaderBase extends Activity {
 	protected String httpuser = "";
 	protected String httppassword = "";
 	
-	public String getAuthorizeHybridURL(String URL) {
+	protected void setDefaultWebViewSettings(WebView wv) {
+		WebSettings webSettings = wv.getSettings();
+		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+		webSettings.setBuiltInZoomControls(true);
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setPluginsEnabled(true);
+		webSettings.setDomStorageEnabled(true);
+		webSettings.setUserAgentString("wp-android");
+		webSettings.setSavePassword(false);
+	}
+	
+	protected String getAuthorizeHybridURL(String URL) {
 		
 		if( ! isValidHybridURL(URL) ) return URL;
 		
@@ -36,11 +48,11 @@ public abstract class WPCOMReaderBase extends Activity {
 			return URL + "?wpcom-hybrid-auth-token=" + URLEncoder.encode( this.getHybridAuthToken() );
 	}
 	
-	public boolean isValidHybridURL(String URL) {
+	protected boolean isValidHybridURL(String URL) {
 		return URL.contains(Constants.authorizedHybridHost);
 	}
 
-	public String getHybridAuthToken() {
+	protected String getHybridAuthToken() {
 		// gather all of the device info
 		String uuid = WordPress.wpDB.getUUID(this);
 		if (uuid == "") {
@@ -49,7 +61,6 @@ public abstract class WPCOMReaderBase extends Activity {
 		}
 		return uuid;
 	}
-	
 	
 	protected class WordPressWebViewClient extends WebViewClient {
 		@Override

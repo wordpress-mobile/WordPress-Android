@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
@@ -27,24 +26,17 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 		if (extras != null) {
 			 extras.getString("currentTopic");
 		}
-
-		WebView wv = (WebView) findViewById(R.id.webView);
-		WebSettings webSettings = wv.getSettings();
-//		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-		webSettings.setBuiltInZoomControls(true);
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setPluginsEnabled(true);
-		webSettings.setDomStorageEnabled(true);
-		webSettings.setUserAgentString("wp-android");
-		wv.addJavascriptInterface( new JavaScriptInterface(this), "Android" );
+		
 		this.setTitle("Loading...");
 
+		WebView wv = (WebView) findViewById(R.id.webView);
+		this.setDefaultWebViewSettings(wv);
+		wv.addJavascriptInterface( new JavaScriptInterface(this), "Android" );
 		wv.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
 				WPCOMReaderTopicsSelector.this.setProgress(progress * 100);
 			}
 		});
-
 		wv.setWebViewClient(new WordPressWebViewClient());
 		String hybURL = this.getAuthorizeHybridURL(Constants.readerTopicsURL);
 		wv.loadUrl(hybURL);

@@ -16,6 +16,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -61,7 +61,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		this.setTitle(getResources().getText(R.string.reader)); //FIXME: set the title of the screen here
 		wv = (WebView) findViewById(R.id.webView);
 		wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-		wv.getSettings().setUserAgentString("wp-android");
+		this.setDefaultWebViewSettings(wv);
 		new loadReaderTask().execute(null, null, null, null);
 	}
 
@@ -81,16 +81,24 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		menuItem = menu.findItem(2);
 		menuItem.setIcon(R.drawable.ic_menu_refresh);
 		
-		//Show the topics selector only on the Reader main screen
-		if( wv.getUrl() == Constants.readerURL_v2_1 ) {
-			menu.add(0, 3, 0, getResources().getText(R.string.topics));
-			menuItem = menu.findItem(3);
-			//menuItem.setIcon(R.drawable.ic_menu_refresh);	
-		}
-
+		menu.add(0, 3, 0, getResources().getText(R.string.topics));
+		menuItem = menu.findItem(3);
+		//menuItem.setIcon(R.drawable.ic_menu_refresh);	
+	
 		return true;
 	}
 
+	@Override
+	public boolean onPrepareOptionsMenu (Menu menu){
+		//Show the topics selector only on the Reader main screen
+		if ( wv.getUrl().contains("wp-login.php") ) 
+			menu.getItem(3).setEnabled(true);
+		 else
+			menu.getItem(3).setEnabled(false);
+		
+		return true;
+	}
+	
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case 0:
@@ -150,9 +158,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	protected void loadPostFromPermalink() {
 
 		WebView wv = (WebView) findViewById(R.id.webView);
-		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-		wv.getSettings().setBuiltInZoomControls(true);
-		wv.getSettings().setJavaScriptEnabled(true);
+		this.setDefaultWebViewSettings(wv);
 
 		wv.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
@@ -295,15 +301,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 					}
 				});
 
-				
-				WebSettings webSettings = wv.getSettings();
-				webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-				webSettings.setBuiltInZoomControls(true);
-				webSettings.setJavaScriptEnabled(true);
-				webSettings.setPluginsEnabled(true);
-				webSettings.setDomStorageEnabled(true);
-				webSettings.setUserAgentString("wp-android");
-				webSettings.setSavePassword(false);
+		
 				wv.loadData(Uri.encode(responseContent), "text/html", HTTP.UTF_8);
 			} catch (Exception ex) {
 				ex.printStackTrace();
