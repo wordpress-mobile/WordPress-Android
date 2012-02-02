@@ -16,7 +16,6 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,11 +29,10 @@ import android.widget.Toast;
 
 public class WPCOMReaderImpl extends WPCOMReaderBase {
 	/** Called when the activity is first created. */
-	public String[] authors;
-	public String[] comments;
 	private String loginURL = "";
 	private boolean isPage = false;
 	private WebView wv;
+	private String topicsID;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -61,6 +59,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		this.setTitle(getResources().getText(R.string.reader)); //FIXME: set the title of the screen here
 		wv = (WebView) findViewById(R.id.webView);
 		wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+		wv.addJavascriptInterface( new JavaScriptInterface(this), interfaceNameForJS );
 		this.setDefaultWebViewSettings(wv);
 		new loadReaderTask().execute(null, null, null, null);
 	}
@@ -91,7 +90,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	@Override
 	public boolean onPrepareOptionsMenu (Menu menu){
 		//Show the topics selector only on the Reader main screen
-		if ( wv.getUrl().contains("wp-login.php") ) 
+		if ( wv.getUrl().contains("wp-login.php") || wv.getUrl().startsWith(Constants.readerURL) ) 
 			menu.getItem(3).setEnabled(true);
 		 else
 			menu.getItem(3).setEnabled(false);
@@ -134,7 +133,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			break;
 		case 3:
 			Intent i = new Intent(getBaseContext(), WPCOMReaderTopicsSelector.class);
-			i.putExtra("currentTopic", "thisIsATest");
+			i.putExtra("currentTopic", this.topicsID);
 			startActivityForResult(i, WPCOMReaderTopicsSelector.activityRequestCode);
 			break;
 		}
@@ -147,8 +146,10 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				//call the JS code to load the topic selected by the user
 				Bundle extras = data.getExtras();
 				if( extras != null ) {
-					String topicID = extras.getString("topicID");
-					String methodCall = "Reader2.load_topic('"+topicID+"')";
+					String newTopicID = extras.getString("topicID");
+					if ( this.topicsID.equalsIgnoreCase( newTopicID )) return; 
+					this.topicsID = newTopicID;
+					String methodCall = "Reader2.load_topic('"+this.topicsID+"')";
 					wv.loadUrl("javascript:"+methodCall);
 				}
 			}
@@ -209,6 +210,12 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		super.onConfigurationChanged(newConfig);
 	}
 
+	//The JS calls this method on first loading
+	public void setSelectedTopicFromJS(String topicsID) {
+		this.topicsID = topicsID;
+	}
+	
+	
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
 		protected void onPostExecute(Vector<?> result) {
@@ -250,7 +257,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			else
 				loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php", "wp-login.php");
 			
-			String readerURL = Constants.readerURL_v2_1;
+			String readerURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerURL_v3);
 		
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 				//FIXME  we can't do this right now

@@ -14,6 +14,8 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 	
 	public static int activityRequestCode = 1234322;
 
+	private String topicID = null;
+	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -24,12 +26,12 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			 extras.getString("currentTopic");
+			topicID = extras.getString("currentTopic");
 		}
 		
 		this.setTitle("Loading...");
 
-		WebView wv = (WebView) findViewById(R.id.webView);
+		final WebView wv = (WebView) findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
 		wv.addJavascriptInterface( new JavaScriptInterface(this), "Android" );
 		wv.setWebChromeClient(new WebChromeClient() {
@@ -39,6 +41,16 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 		});
 		wv.setWebViewClient(new WordPressWebViewClient());
 		String hybURL = this.getAuthorizeHybridURL(Constants.readerTopicsURL);
+		
+		wv.setWebChromeClient(new WebChromeClient() {
+			public void onProgressChanged(WebView view, int progress) {
+				if (progress == 100) {
+					String methodCall = "document.setSelectedTopic('"+WPCOMReaderTopicsSelector.this.topicID+"')";
+					wv.loadUrl("javascript:"+methodCall);
+				}
+			}
+		});
+		
 		wv.loadUrl(hybURL);
 	}
 

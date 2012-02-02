@@ -24,6 +24,8 @@ import android.webkit.WebViewClient;
 
 public abstract class WPCOMReaderBase extends Activity {
 	
+	protected final String interfaceNameForJS = "Android";
+	
 	protected String httpuser = "";
 	protected String httppassword = "";
 	
@@ -139,7 +141,8 @@ public abstract class WPCOMReaderBase extends Activity {
 	    				Log.e(parentClass.getClass().getName(), "Exception getting method name", e); 
 	    			} catch (NoSuchMethodException e) {
 	    				//This could happen when the JS code try to call a method not defined in the class. For ex when it is calling a method for the iOS app.
-	    				Log.w(parentClass.getClass().getName(), "Method not found in the class", e);
+	    				Log.w(parentClass.getClass().getName(), "Method not found in the class: " + methodName );
+	    				//Log.w(parentClass.getClass().getName(), "Method not found in the class", e);
 	    			}
 	    			catch (IllegalArgumentException e) {
 	    				Log.e(parentClass.getClass().getName(), "Method called with invalid arguments", e);
