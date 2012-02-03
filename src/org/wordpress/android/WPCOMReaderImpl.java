@@ -20,11 +20,18 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class WPCOMReaderImpl extends WPCOMReaderBase {
@@ -32,15 +39,14 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	private String loginURL = "";
 	private boolean isPage = false;
 	private WebView wv;
-	private String topicsID;
+	private static String topicsID;
 
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.reader);
+		setContentView(R.layout.reader_wpcom);
 
 		//Bundle extras = getIntent().getExtras();
 
@@ -55,8 +61,44 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				finish();
 			}
 		}
+		
+		RelativeLayout rl = (RelativeLayout) findViewById(R.id.topicSelector);
+		rl.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(getBaseContext(), WPCOMReaderTopicsSelector.class);
+				i.putExtra("currentTopic", WPCOMReaderImpl.topicsID);
+				startActivityForResult(i, WPCOMReaderTopicsSelector.activityRequestCode);
+			}
+		});
+		
+		Button refreshButton = (Button) findViewById(R.id.action_refresh);
+		refreshButton
+		.setOnClickListener(new ImageButton.OnClickListener() {
+			public void onClick(View v) {
+				wv.reload();
+				new Thread(new Runnable() {
+					public void run() {
+						// refresh stat
+						try {
+							HttpClient httpclient = new DefaultHttpClient();
+							HttpProtocolParams.setUserAgent(httpclient.getParams(),
+									"wp-android");
+							String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page_refresh";
+							if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
+								readerURL += "&per_page=20";
+							}
 
-		this.setTitle(getResources().getText(R.string.reader)); //FIXME: set the title of the screen here
+							httpclient.execute(new HttpGet(readerURL));
+						} catch (Exception e) {
+							// oh well
+						}
+					}
+				}).start();
+
+			}
+		});
+
+		//this.setTitle(getResources().getText(R.string.reader)); //FIXME: set the title of the screen here
 		wv = (WebView) findViewById(R.id.webView);
 		wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		wv.addJavascriptInterface( new JavaScriptInterface(this), interfaceNameForJS );
@@ -75,14 +117,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
 		menuItem = menu.findItem(1);
 		menuItem.setIcon(android.R.drawable.ic_menu_view);
-
-		menu.add(0, 2, 0, getResources().getText(R.string.refresh));
-		menuItem = menu.findItem(2);
-		menuItem.setIcon(R.drawable.ic_menu_refresh);
-		
-		menu.add(0, 3, 0, getResources().getText(R.string.topics));
-		menuItem = menu.findItem(3);
-		//menuItem.setIcon(R.drawable.ic_menu_refresh);	
 	
 		return true;
 	}
@@ -90,10 +124,10 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	@Override
 	public boolean onPrepareOptionsMenu (Menu menu){
 		//Show the topics selector only on the Reader main screen
-		if ( wv.getUrl().contains("wp-login.php") || wv.getUrl().startsWith(Constants.readerURL) ) 
+		/*if ( wv.getUrl().contains("wp-login.php") || wv.getUrl().startsWith(Constants.readerURL) ) 
 			menu.getItem(3).setEnabled(true);
 		 else
-			menu.getItem(3).setEnabled(false);
+			menu.getItem(3).setEnabled(false);*/
 		
 		return true;
 	}
@@ -110,32 +144,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				startActivity(i);
 			}
 			break;
-		case 2:
-			wv.reload();
-			new Thread(new Runnable() {
-				public void run() {
-					// refresh stat
-					try {
-						HttpClient httpclient = new DefaultHttpClient();
-						HttpProtocolParams.setUserAgent(httpclient.getParams(),
-								"wp-android");
-						String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page_refresh";
-						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-							readerURL += "&per_page=20";
-						}
-
-						httpclient.execute(new HttpGet(readerURL));
-					} catch (Exception e) {
-						// oh well
-					}
-				}
-			}).start();
-			break;
-		case 3:
-			Intent i = new Intent(getBaseContext(), WPCOMReaderTopicsSelector.class);
-			i.putExtra("currentTopic", this.topicsID);
-			startActivityForResult(i, WPCOMReaderTopicsSelector.activityRequestCode);
-			break;
 		}
 		return false;
 	}
@@ -148,11 +156,13 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				if( extras != null ) {
 					String newTopicID = extras.getString("topicID");
 					String newTopicName = extras.getString("topicName");
-					if (newTopicName != null)
-						this.setTitle(newTopicName);
-					if ( this.topicsID.equalsIgnoreCase( newTopicID )) return; 
-					this.topicsID = newTopicID;
-					String methodCall = "Reader2.load_topic('"+this.topicsID+"')";
+					if (newTopicName != null) {
+						TextView topicTV = (TextView) findViewById(R.id.topic_title);
+						topicTV.setText(newTopicName);
+					}
+					if ( topicsID.equalsIgnoreCase( newTopicID )) return; 
+					topicsID = newTopicID;
+					String methodCall = "Reader2.load_topic('"+topicsID+"')";
 					wv.loadUrl("javascript:"+methodCall);
 				}
 			}
@@ -214,17 +224,23 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	}
 
 	//The JS calls this method on first loading
-	public void setSelectedTopicFromJS(String topicsID) {
-		this.topicsID = topicsID;
+	public void setSelectedTopicFromJS(String topicID) {
+		topicsID = topicID;
 	}
 	
 	
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
+		@Override 
+		protected void onPreExecute() {
+			startRotatingRefreshIcon();
+		}
+		
 		protected void onPostExecute(Vector<?> result) {
 			new Thread(new Runnable() {
 				public void run() {
 					try {
+						stopRotatingRefreshIcon();
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
 								"wp-android");
@@ -304,7 +320,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				wv.setWebChromeClient(new WebChromeClient() {
 					public void onProgressChanged(WebView view, int progress) {
 						WPCOMReaderImpl.this.setTitle("Loading...");
-						WPCOMReaderImpl.this.setProgress(progress * 100);
+						//WPCOMReaderImpl.this.setProgress(progress * 100);
 
 						if (progress == 100) {
 							WPCOMReaderImpl.this.setTitle(getResources().getText(
@@ -338,6 +354,27 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		}
 
 		return false;
+	}
+	
+	public void startRotatingRefreshIcon() {
+
+		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		anim.setInterpolator(new LinearInterpolator());
+		anim.setRepeatCount(Animation.INFINITE);
+		anim.setDuration(1400);
+		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
+		iv.setImageDrawable(getResources().getDrawable(
+				R.drawable.icon_titlebar_refresh_active));
+		iv.startAnimation(anim);
+	}
+
+	public void stopRotatingRefreshIcon() {
+		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
+		iv.setImageDrawable(getResources().getDrawable(
+				R.drawable.icon_titlebar_refresh));
+		iv.clearAnimation();
 	}
 	
 }

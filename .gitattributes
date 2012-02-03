@@ -260,6 +260,7 @@ res/layout/popup.xml -text
 res/layout/posts.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/reader.xml -text
+res/layout/reader_wpcom.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/row_post_page.xml -text
