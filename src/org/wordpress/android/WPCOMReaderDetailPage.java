@@ -1,20 +1,18 @@
 package org.wordpress.android;
 
-import org.apache.http.protocol.HTTP;
-
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	
 	private String cachedPage = null;
+	private String requestedURL = null;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -27,12 +25,12 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			cachedPage = extras.getString("cachedPage");
+			requestedURL = extras.getString("requestedURL");
 		}
 		
-		this.setTitle("Loading...");
-
 		final WebView wv = (WebView) findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
+		wv.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT); //override the default setting of NO_CACHE
 		wv.addJavascriptInterface( new JavaScriptInterface(this), "Android" );
 		wv.setWebViewClient(new WordPressWebViewClient());
 		
@@ -45,22 +43,13 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			}
 		});
 		
-		wv.loadData(Uri.encode(this.cachedPage), "text/html", HTTP.UTF_8);
+		//wv.loadData(Uri.encode(this.cachedPage), "text/html", HTTP.UTF_8);
+		wv.loadUrl(requestedURL);
 	}
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public boolean onKeyDown(int i, KeyEvent event) {
-
-		if (i == KeyEvent.KEYCODE_BACK) {
-				finish();
-		}
-
-		return false;
 	}
 }

@@ -232,6 +232,17 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		this.topicsID = topicsID;
 	}
 	
+	public void setTitleFromJS(final String newTopicName) {
+		runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 if (newTopicName != null) {
+		    		 TextView topicTV = (TextView) findViewById(R.id.topic_title);
+		    		 topicTV.setText(newTopicName);
+		    	 }
+		    }
+		});
+	}
+	
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
 		@Override 
@@ -367,13 +378,13 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				wv.setWebViewClient(new WebViewClient() {
 					@Override
 					public boolean shouldOverrideUrlLoading(WebView view, String url) {
-					 //Re-enable this later
-					/*		if( url.equalsIgnoreCase( Constants.readerDetailURL ) && WPCOMReaderImpl.this.cachedDetailPage != null ) {
+						if( url.equalsIgnoreCase( Constants.readerDetailURL ) ) {
 							Intent i = new Intent(getBaseContext(), WPCOMReaderDetailPage.class);
+							i.putExtra("requestedURL", url);
 							i.putExtra("cachedPage", WPCOMReaderImpl.this.cachedDetailPage);
 							startActivity(i);
 							return true;
-						}*/
+						}
 						view.loadUrl(url);
 						return false;
 					}
