@@ -147,6 +147,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				Bundle extras = data.getExtras();
 				if( extras != null ) {
 					String newTopicID = extras.getString("topicID");
+					String newTopicName = extras.getString("topicName");
+					if (newTopicName != null)
+						this.setTitle(newTopicName);
 					if ( this.topicsID.equalsIgnoreCase( newTopicID )) return; 
 					this.topicsID = newTopicID;
 					String methodCall = "Reader2.load_topic('"+this.topicsID+"')";
