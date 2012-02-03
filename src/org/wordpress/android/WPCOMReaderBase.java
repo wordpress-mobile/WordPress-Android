@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-
-
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.UUID;
@@ -20,7 +18,6 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 
 public abstract class WPCOMReaderBase extends Activity {
 	
@@ -125,7 +122,8 @@ public abstract class WPCOMReaderBase extends Activity {
 	    			JSONArray args = currentMethodToCall.getJSONArray("args");
 	    			
 	    			Object[] formalParameters = new Object[args.length()];   //declares the parameters to be passed to the method
-	    			Class[] formalParametersType = new Class[args.length()]; //declares the parameters type the method takes
+	    			@SuppressWarnings("rawtypes")
+					Class[] formalParametersType = new Class[args.length()]; //declares the parameters type the method takes
 	    			
 	    			for (int j = 0; j < args.length(); j++) {
 	    				formalParameters[j] = args.getString(j); //We know that for now only String parameters are allowed

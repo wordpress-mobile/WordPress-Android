@@ -71,7 +71,7 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 	 	setResult(RESULT_OK, databackIntent);
 		finish();
 	}
-	//End of methods declartion called from the JS code
+	//End of methods called from the JS code
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

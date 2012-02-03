@@ -260,10 +260,12 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			String readerURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerURL_v3);
 		
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-				//FIXME  we can't do this right now
-				// readerURL += "/?per_page=20"; 
+				if( readerURL.contains("?") )
+					readerURL += "&per_page=20";
+				else 
+					readerURL += "?per_page=20";
 			}
-
+			
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
