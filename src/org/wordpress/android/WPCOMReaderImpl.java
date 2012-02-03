@@ -1,14 +1,19 @@
 package org.wordpress.android;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.EscapeUtils;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,6 +21,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +30,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -37,9 +44,11 @@ import android.widget.Toast;
 public class WPCOMReaderImpl extends WPCOMReaderBase {
 	/** Called when the activity is first created. */
 	private String loginURL = "";
-	private boolean isPage = false;
+//	private boolean isPage = false;
 	private WebView wv;
-	private static String topicsID;
+	private String topicsID;
+	private String cachedTopicsPage = null;
+	private String cachedDetailPage = null;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -66,7 +75,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		rl.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent i = new Intent(getBaseContext(), WPCOMReaderTopicsSelector.class);
-				i.putExtra("currentTopic", WPCOMReaderImpl.topicsID);
+				i.putExtra("currentTopic",WPCOMReaderImpl.this.topicsID);
+				if( WPCOMReaderImpl.this.cachedTopicsPage != null )
+					i.putExtra("cachedTopicsPage", WPCOMReaderImpl.this.cachedTopicsPage);
 				startActivityForResult(i, WPCOMReaderTopicsSelector.activityRequestCode);
 			}
 		});
@@ -120,17 +131,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	
 		return true;
 	}
-
-	@Override
-	public boolean onPrepareOptionsMenu (Menu menu){
-		//Show the topics selector only on the Reader main screen
-		/*if ( wv.getUrl().contains("wp-login.php") || wv.getUrl().startsWith(Constants.readerURL) ) 
-			menu.getItem(3).setEnabled(true);
-		 else
-			menu.getItem(3).setEnabled(false);*/
-		
-		return true;
-	}
 	
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
@@ -143,6 +143,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				i.setData(Uri.parse(wv.getUrl()));
 				startActivity(i);
 			}
+			break;
+		default:
 			break;
 		}
 		return false;
@@ -168,7 +170,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			}
 		}
 	}
-	
+
+	/*
 	protected void loadPostFromPermalink() {
 
 		WebView wv = (WebView) findViewById(R.id.webView);
@@ -216,7 +219,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		}
 
 	}
-
+*/
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
@@ -224,10 +227,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	}
 
 	//The JS calls this method on first loading
-	public void setSelectedTopicFromJS(String topicID) {
-		topicsID = topicID;
+	public void setSelectedTopicFromJS(String topicsID) {
+		this.topicsID = topicsID;
 	}
-	
 	
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
@@ -237,26 +239,83 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		}
 		
 		protected void onPostExecute(Vector<?> result) {
+			
+			//Read the WordPress.com cookies from the wv and pass them to the connections below!
+			CookieManager cookieManager = CookieManager.getInstance();
+			final String cookie = cookieManager.getCookie("wordpress.com");
+			stopRotatingRefreshIcon();
+      	
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						stopRotatingRefreshIcon();
 						HttpClient httpclient = new DefaultHttpClient();
-						HttpProtocolParams.setUserAgent(httpclient.getParams(),
-								"wp-android");
+						HttpProtocolParams.setUserAgent(httpclient.getParams(),	"wp-android");
+						
 						String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page";
-						if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-							readerURL += "&per_page=20";
-						}
+						HttpGet httpGet = new HttpGet(readerURL);
+						httpGet.setHeader("Cookie", cookie);
+						httpclient.execute(httpGet);
 
-						httpclient.execute(new HttpGet(readerURL));
+						//Cache the Topics page
+						String hybURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerTopicsURL);
+   	    		        WPCOMReaderImpl.this.cachedTopicsPage = cachePage(hybURL, cookie);
+   	    		        
+						//Cache the DAtil page
+						hybURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerDetailURL);
+   	    		        WPCOMReaderImpl.this.cachedDetailPage = cachePage(hybURL, cookie);
+						
 					} catch (Exception e) {
 						// oh well
+						e.printStackTrace();
 					}
 				}
 			}).start();
 		}
 
+		private String cachePage(String hybURL, String cookie) {
+			HttpClient httpclient = new DefaultHttpClient();
+
+			try {
+				HttpProtocolParams.setUserAgent(httpclient.getParams(), "wp-android");
+				HttpGet request = new HttpGet(hybURL);
+				request.setHeader("Cookie", cookie);
+				HttpResponse response = httpclient.execute(request);
+
+				// Check if server response is valid
+				StatusLine status = response.getStatusLine();
+				if (status.getStatusCode() != 200) {
+					throw new IOException("Invalid response from server when caching the page: " + status.toString());
+				}
+
+				// Pull content stream from response
+				HttpEntity entity = response.getEntity();
+				InputStream inputStream = (InputStream) entity.getContent();
+
+				ByteArrayOutputStream content = new ByteArrayOutputStream();
+
+				// Read response into a buffered stream
+				int readBytes = 0;
+				byte[] sBuffer = new byte[512];
+				while ((readBytes = inputStream.read(sBuffer)) != -1) {
+					content.write(sBuffer, 0, readBytes);
+				}
+				// Return result from buffered stream
+				String dataAsString = new String(content.toByteArray());
+				return dataAsString;
+			} catch (Exception e) {
+				// oh well
+				Log.d("Error while caching the Topics page", e.getLocalizedMessage());
+				return null;
+
+			} finally {
+				// When HttpClient instance is no longer needed,
+				// shut down the connection manager to ensure
+				// immediate deallocation of all system resources
+				httpclient.getConnectionManager().shutdown();
+			}
+		}
+
+		
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
@@ -306,16 +365,23 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 				wv.setWebViewClient(new WebViewClient() {
 					@Override
-					public boolean shouldOverrideUrlLoading(WebView view,
-							String url) {
+					public boolean shouldOverrideUrlLoading(WebView view, String url) {
+					 //Re-enable this later
+					/*		if( url.equalsIgnoreCase( Constants.readerDetailURL ) && WPCOMReaderImpl.this.cachedDetailPage != null ) {
+							Intent i = new Intent(getBaseContext(), WPCOMReaderDetailPage.class);
+							i.putExtra("cachedPage", WPCOMReaderImpl.this.cachedDetailPage);
+							startActivity(i);
+							return true;
+						}*/
 						view.loadUrl(url);
 						return false;
 					}
-
+					
 					@Override
 					public void onPageFinished(WebView view, String url) {
 					}
 				});
+
 
 				wv.setWebChromeClient(new WebChromeClient() {
 					public void onProgressChanged(WebView view, int progress) {
@@ -323,12 +389,10 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						//WPCOMReaderImpl.this.setProgress(progress * 100);
 
 						if (progress == 100) {
-							WPCOMReaderImpl.this.setTitle(getResources().getText(
-									R.string.reader));
+							WPCOMReaderImpl.this.setTitle(getResources().getText(R.string.reader));
 						}
 					}
 				});
-
 		
 				wv.loadData(Uri.encode(responseContent), "text/html", HTTP.UTF_8);
 			} catch (Exception ex) {

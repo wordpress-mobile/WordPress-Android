@@ -8,4 +8,5 @@ public class Constants {
 	public static String readerURL_v3 = "https://en.wordpress.com/reader/mobile/v2/?chrome=no";
 	public static String authorizedHybridHost = "en.wordpress.com";
 	public static String readerTopicsURL = "http://en.wordpress.com/reader/mobile/v2/?template=topics";
+	public static String readerDetailURL = "https://en.wordpress.com/wp-admin/admin-ajax.php?action=wpcom_load_mobile&template=details&v=2";
 }
