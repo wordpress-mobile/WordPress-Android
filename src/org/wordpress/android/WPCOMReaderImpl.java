@@ -86,6 +86,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		refreshButton
 		.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
+				startRotatingRefreshIcon();
 				wv.reload();
 				new Thread(new Runnable() {
 					public void run() {
@@ -304,7 +305,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				return dataAsString;
 			} catch (Exception e) {
 				// oh well
-				Log.d("Error while caching the Topics page", e.getLocalizedMessage());
+				Log.d("Error while caching the page" + hybURL, e.getLocalizedMessage());
 				return null;
 
 			} finally {
