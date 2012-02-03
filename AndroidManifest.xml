@@ -20,6 +20,7 @@
 		<activity android:name=".Read" android:configChanges="orientation|keyboardHidden" android:theme="@style/IncludeTitleBar"/>
 		<activity android:name=".WPCOMReaderImpl" android:configChanges="orientation|keyboardHidden" />
 		<activity android:name=".WPCOMReaderTopicsSelector" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Dialog"/>
+		<activity android:name=".WPCOMReaderDetailPage" android:configChanges="orientation|keyboardHidden" android:theme="@style/IncludeTitleBar"/>
 		<activity android:name="Preferences" android:windowSoftInputMode="stateHidden" android:theme="@style/IncludeTitleBar"/>
 		<service android:name="CommentService" android:label="Comment Service" />
 		<receiver android:name="CommentBroadcastReceiver" />
