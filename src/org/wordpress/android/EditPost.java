@@ -72,6 +72,7 @@ import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -105,7 +106,7 @@ public class EditPost extends Activity {
 	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, isLargeScreen = false,
 			isCustomPubDate = false, isFullScreenEditing = false,
-			isBackspace = false, imeBackPressed = false;
+			isBackspace = false, imeBackPressed = false, scrollDetected = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
@@ -448,11 +449,11 @@ public class EditPost extends Activity {
 					launchCamera();
 				else if (option.equals("photolibrary"))
 					launchPictureLibrary();
-				else if (option.equals("newvideo")) 
+				else if (option.equals("newvideo"))
 					launchVideoCamera();
 				else if (option.equals("videolibrary"))
 					launchVideoLibrary();
-				
+
 				localDraft = extras.getBoolean("localDraft");
 			}
 
@@ -602,6 +603,153 @@ public class EditPost extends Activity {
 			}
 		});
 
+		content.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				if (event.getAction() > 1)
+					scrollDetected = true;
+				
+				if (event.getAction() == 1 && !scrollDetected && isFullScreenEditing) {
+					Layout layout = ((TextView) v).getLayout();
+					int x = (int) event.getX();
+					int y = (int) event.getY();
+					if (layout != null) {
+						int line = layout.getLineForVertical(y);
+						int charPosition = layout.getOffsetForHorizontal(line,
+								x);
+
+						final Spannable s = content.getText();
+						// check if image span was tapped
+						WPImageSpan[] click_spans = s.getSpans(charPosition,
+								charPosition, WPImageSpan.class);
+
+						if (click_spans.length != 0) {
+							final WPImageSpan span = click_spans[0];
+							if (!span.isVideo()) {
+								LayoutInflater factory = LayoutInflater
+										.from(EditPost.this);
+								final View alertView = factory.inflate(
+										R.layout.alert_image_options, null);
+
+								final TextView imageWidthText = (TextView) alertView
+										.findViewById(R.id.imageWidthText);
+								final EditText titleText = (EditText) alertView
+										.findViewById(R.id.title);
+								// final EditText descText = (EditText)
+								// alertView
+								// .findViewById(R.id.description);
+								final EditText caption = (EditText) alertView
+										.findViewById(R.id.caption);
+								// final CheckBox featured = (CheckBox)
+								// alertView
+								// .findViewById(R.id.featuredImage);
+								final SeekBar seekBar = (SeekBar) alertView
+										.findViewById(R.id.imageWidth);
+								final Spinner alignmentSpinner = (Spinner) alertView
+										.findViewById(R.id.alignment_spinner);
+								ArrayAdapter<CharSequence> adapter = ArrayAdapter
+										.createFromResource(
+												EditPost.this,
+												R.array.alignment_array,
+												android.R.layout.simple_spinner_item);
+								adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+								alignmentSpinner.setAdapter(adapter);
+
+								imageWidthText.setText(String.valueOf(span
+										.getWidth()) + "px");
+								seekBar.setProgress(span.getWidth());
+								titleText.setText(span.getTitle());
+								// descText.setText(span.getDescription());
+								caption.setText(span.getCaption());
+								// featured.setChecked(span.isFeatured());
+
+								alignmentSpinner.setSelection(
+										span.getHorizontalAlignment(), true);
+
+								seekBar.setMax(100);
+								if (span.getWidth() != 0)
+									seekBar.setProgress(span.getWidth() / 10);
+								seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+									@Override
+									public void onStopTrackingTouch(
+											SeekBar seekBar) {
+									}
+
+									@Override
+									public void onStartTrackingTouch(
+											SeekBar seekBar) {
+									}
+
+									@Override
+									public void onProgressChanged(
+											SeekBar seekBar, int progress,
+											boolean fromUser) {
+										if (progress == 0)
+											progress = 1;
+										imageWidthText.setText(progress * 10
+												+ "px");
+									}
+								});
+
+								AlertDialog ad = new AlertDialog.Builder(
+										EditPost.this)
+										.setTitle("Image Settings")
+										.setView(alertView)
+										.setPositiveButton(
+												"OK",
+												new DialogInterface.OnClickListener() {
+													public void onClick(
+															DialogInterface dialog,
+															int whichButton) {
+
+														span.setTitle(titleText
+																.getText()
+																.toString());
+														// span.setDescription(descText
+														// .getText().toString());
+
+														span.setHorizontalAlignment(alignmentSpinner
+																.getSelectedItemPosition());
+														span.setWidth(seekBar
+																.getProgress() * 10);
+														span.setCaption(caption
+																.getText()
+																.toString());
+														// span.setFeatured(featured
+														// .isChecked());
+
+													}
+												})
+										.setNegativeButton(
+												"Cancel",
+												new DialogInterface.OnClickListener() {
+													public void onClick(
+															DialogInterface dialog,
+															int whichButton) {
+
+													}
+												}).create();
+								ad.show();
+								scrollDetected = false;
+								return true;
+							}
+
+						} else {
+							content.setMovementMethod(ArrowKeyMovementMethod
+									.getInstance());
+							content.setSelection(content.getSelectionStart());
+						}
+					}
+				} else if (event.getAction() == 1) {
+					scrollDetected = false;
+				}
+				return false;
+			}
+		});
+
 		content.setOnClickListener(new EditText.OnClickListener() {
 			public void onClick(View v) {
 				if (!isFullScreenEditing) {
@@ -621,124 +769,6 @@ public class EditPost extends Activity {
 						e.printStackTrace();
 					}
 					content.requestFocus();
-				} else {
-					final Spannable s = content.getText();
-					styleStart = content.getSelectionStart();
-					// check if image span was tapped
-					WPImageSpan[] click_spans = s.getSpans(
-							content.getSelectionStart(),
-							content.getSelectionStart(), WPImageSpan.class);
-
-					if (click_spans.length != 0) {
-						final WPImageSpan span = click_spans[0];
-						if (!span.isVideo()) {
-							LayoutInflater factory = LayoutInflater
-									.from(EditPost.this);
-							final View alertView = factory.inflate(
-									R.layout.alert_image_options, null);
-
-							final TextView imageWidthText = (TextView) alertView
-									.findViewById(R.id.imageWidthText);
-							final EditText titleText = (EditText) alertView
-									.findViewById(R.id.title);
-							// final EditText descText = (EditText) alertView
-							// .findViewById(R.id.description);
-							final EditText caption = (EditText) alertView
-									.findViewById(R.id.caption);
-							// final CheckBox featured = (CheckBox) alertView
-							// .findViewById(R.id.featuredImage);
-							final SeekBar seekBar = (SeekBar) alertView
-									.findViewById(R.id.imageWidth);
-							final Spinner alignmentSpinner = (Spinner) alertView
-									.findViewById(R.id.alignment_spinner);
-							ArrayAdapter<CharSequence> adapter = ArrayAdapter
-									.createFromResource(
-											EditPost.this,
-											R.array.alignment_array,
-											android.R.layout.simple_spinner_item);
-							adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-							alignmentSpinner.setAdapter(adapter);
-
-							imageWidthText.setText(String.valueOf(span
-									.getWidth()) + "px");
-							seekBar.setProgress(span.getWidth());
-							titleText.setText(span.getTitle());
-							// descText.setText(span.getDescription());
-							caption.setText(span.getCaption());
-							// featured.setChecked(span.isFeatured());
-
-							alignmentSpinner.setSelection(
-									span.getHorizontalAlignment(), true);
-
-							seekBar.setMax(100);
-							if (span.getWidth() != 0)
-								seekBar.setProgress(span.getWidth() / 10);
-							seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-								@Override
-								public void onStopTrackingTouch(SeekBar seekBar) {
-								}
-
-								@Override
-								public void onStartTrackingTouch(SeekBar seekBar) {
-								}
-
-								@Override
-								public void onProgressChanged(SeekBar seekBar,
-										int progress, boolean fromUser) {
-									if (progress == 0)
-										progress = 1;
-									imageWidthText
-											.setText(progress * 10 + "px");
-								}
-							});
-
-							AlertDialog ad = new AlertDialog.Builder(
-									EditPost.this)
-									.setTitle("Image Settings")
-									.setView(alertView)
-									.setPositiveButton(
-											"OK",
-											new DialogInterface.OnClickListener() {
-												public void onClick(
-														DialogInterface dialog,
-														int whichButton) {
-
-													span.setTitle(titleText
-															.getText()
-															.toString());
-													// span.setDescription(descText
-													// .getText().toString());
-
-													span.setHorizontalAlignment(alignmentSpinner
-															.getSelectedItemPosition());
-													span.setWidth(seekBar
-															.getProgress() * 10);
-													span.setCaption(caption
-															.getText()
-															.toString());
-													// span.setFeatured(featured
-													// .isChecked());
-
-												}
-											})
-									.setNegativeButton(
-											"Cancel",
-											new DialogInterface.OnClickListener() {
-												public void onClick(
-														DialogInterface dialog,
-														int whichButton) {
-
-												}
-											}).create();
-							ad.show();
-						}
-
-					} else {
-						content.setMovementMethod(ArrowKeyMovementMethod
-								.getInstance());
-						content.setSelection(content.getSelectionStart());
-					}
 				}
 			}
 		});
@@ -1455,7 +1485,7 @@ public class EditPost extends Activity {
 					} catch (Exception e) {
 					}
 
-				} 
+				}
 
 				break;
 			case 2:
@@ -1856,10 +1886,10 @@ public class EditPost extends Activity {
 		} else {
 			finishEditing();
 		}
-		
+
 		if (imeBackPressed)
 			imeBackPressed = false;
-		
+
 		return;
 	}
 
@@ -2031,9 +2061,19 @@ public class EditPost extends Activity {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
+		
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		byte[] bytes = (byte[]) mediaData.get("bytes");
+		BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+		
+		float conversionFactor = 0.25f;
+		
+		if (opts.outWidth > opts.outHeight)
+			conversionFactor = 0.45f;	
 
-		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"),
-				String.valueOf(width / 2),
+		byte[] finalBytes = ih.createThumbnail(bytes,
+				String.valueOf((int) (width * conversionFactor)),
 				(String) mediaData.get("orientation"), true);
 
 		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
@@ -2127,7 +2167,7 @@ public class EditPost extends Activity {
 
 		WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap,
 				curStream);
-		
+
 		String imageWidth = WordPress.currentBlog.getMaxImageWidth();
 		if (!imageWidth.equals("Original Size")) {
 			try {
@@ -2136,7 +2176,7 @@ public class EditPost extends Activity {
 				e.printStackTrace();
 			}
 		}
-		
+
 		is.setTitle(imageTitle);
 		is.setImageSource(curStream);
 		is.setVideo(imgPath.contains("video"));
