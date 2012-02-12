@@ -120,6 +120,7 @@ public class EditPost extends Activity {
 	String[] postFormats;
 	String[] postFormatTitles = null;
 	LocationHelper locationHelper;
+	float lastYPos = 0;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -607,9 +608,18 @@ public class EditPost extends Activity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+	
+				float pos = event.getY();
 				
-				if (event.getAction() > 1)
-					scrollDetected = true;
+				if (event.getAction() == 0)
+					lastYPos = pos;
+				
+				if (event.getAction() > 1) {
+					if (((lastYPos - pos) > 2.0f) || ((pos - lastYPos) > 2.0f))
+						scrollDetected = true;
+				} 
+				
+				lastYPos = pos;
 				
 				if (event.getAction() == 1 && !scrollDetected && isFullScreenEditing) {
 					Layout layout = ((TextView) v).getLayout();
@@ -747,6 +757,54 @@ public class EditPost extends Activity {
 					scrollDetected = false;
 				}
 				return false;
+			}
+		});
+		
+		content
+		.setOnSelectionChangedListener(new WPEditText.OnSelectionChangedListener() {
+
+			@Override
+			public void onSelectionChanged() {
+				if (!localDraft)
+					return;
+				
+				final Spannable s = content.getText();
+				// set toggle buttons if cursor is inside of a matching
+				// span
+				styleStart = content.getSelectionStart();
+				Object[] spans = s.getSpans(
+						content.getSelectionStart(),
+						content.getSelectionStart(), Object.class);
+				ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
+				ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
+				ToggleButton bquoteButton = (ToggleButton) findViewById(R.id.bquote);
+				ToggleButton underlineButton = (ToggleButton) findViewById(R.id.underline);
+				ToggleButton strikeButton = (ToggleButton) findViewById(R.id.strike);
+				boldButton.setChecked(false);
+				emButton.setChecked(false);
+				bquoteButton.setChecked(false);
+				underlineButton.setChecked(false);
+				strikeButton.setChecked(false);
+				for (Object span : spans) {
+					if (span instanceof StyleSpan) {
+						StyleSpan ss = (StyleSpan) span;
+						if (ss.getStyle() == android.graphics.Typeface.BOLD) {
+							boldButton.setChecked(true);
+						}
+						if (ss.getStyle() == android.graphics.Typeface.ITALIC) {
+							emButton.setChecked(true);
+						}
+					}
+					if (span instanceof QuoteSpan) {
+						bquoteButton.setChecked(true);
+					}
+					if (span instanceof WPUnderlineSpan) {
+						underlineButton.setChecked(true);
+					}
+					if (span instanceof StrikethroughSpan) {
+						strikeButton.setChecked(true);
+					}
+				}
 			}
 		});
 
@@ -2050,6 +2108,9 @@ public class EditPost extends Activity {
 		ImageHelper ih = new ImageHelper();
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
+		int height = display.getHeight();
+		if (width > height)
+			width = height;
 
 		HashMap<String, Object> mediaData = ih.getImageBytesForPath(imgPath,
 				EditPost.this);
@@ -2070,7 +2131,7 @@ public class EditPost extends Activity {
 		float conversionFactor = 0.25f;
 		
 		if (opts.outWidth > opts.outHeight)
-			conversionFactor = 0.45f;	
+			conversionFactor = 0.40f;	
 
 		byte[] finalBytes = ih.createThumbnail(bytes,
 				String.valueOf((int) (width * conversionFactor)),
@@ -2157,9 +2218,19 @@ public class EditPost extends Activity {
 		if (mediaData == null) {
 			return null;
 		}
+		
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inJustDecodeBounds = true;
+		byte[] bytes = (byte[]) mediaData.get("bytes");
+		BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+		
+		float conversionFactor = 0.25f;
+		
+		if (opts.outWidth > opts.outHeight)
+			conversionFactor = 0.40f;
 
 		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"),
-				String.valueOf(width / 2),
+				String.valueOf((int) (width * conversionFactor)),
 				(String) mediaData.get("orientation"), true);
 
 		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
