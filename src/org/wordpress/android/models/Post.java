@@ -1011,11 +1011,11 @@ public class Post {
 								finalBytes = ih2.createThumbnail(bytes,
 										String.valueOf(mf.getWidth()),
 										orientation, false);
-							}
-							
-							if (finalBytes == null) {
-								error = context.getResources().getText(R.string.media_error).toString();
-								return null;
+								
+								if (finalBytes == null) {
+									error = context.getResources().getText(R.string.media_error).toString();
+									return null;
+								}
 							}
 
 							// try to upload the image
