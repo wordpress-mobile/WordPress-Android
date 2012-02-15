@@ -106,8 +106,7 @@ public class EditPost extends Activity {
 	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, isLargeScreen = false,
 			isCustomPubDate = false, isFullScreenEditing = false,
-			isBackspace = false, imeBackPressed = false,
-			scrollDetected = false;
+			isBackspace = false, imeBackPressed = false, scrollDetected = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
@@ -388,16 +387,8 @@ public class EditPost extends Activity {
 			pfSpinner.setAdapter(pfAdapter);
 			String activePostFormat = "standard";
 			if (!isNew) {
-				try {
-					if (!post.getWP_post_format().equals(""))
-						activePostFormat = post.getWP_post_format();
-				} catch (Exception e) {
-					Toast.makeText(this,
-							getResources().getText(R.string.post_not_found),
-							Toast.LENGTH_LONG).show();
-					finish();
-					return;
-				}
+				if (!post.getWP_post_format().equals(""))
+					activePostFormat = post.getWP_post_format();
 			}
 			for (int i = 0; i < postFormats.length; i++) {
 				if (postFormats[i].equals(activePostFormat))
@@ -630,24 +621,26 @@ public class EditPost extends Activity {
 					content.requestFocus();
 					return true;
 				}
-
+	
 				float pos = event.getY();
-
+				
 				if (event.getAction() == 0)
 					lastYPos = pos;
-
+				
 				if (event.getAction() > 1) {
 					if (((lastYPos - pos) > 2.0f) || ((pos - lastYPos) > 2.0f))
 						scrollDetected = true;
-				}
-
+				} 
+				
 				lastYPos = pos;
-
-				if (event.getAction() == 1 && !scrollDetected
-						&& isFullScreenEditing) {
+				
+				if (event.getAction() == 1 && !scrollDetected && isFullScreenEditing) {
 					Layout layout = ((TextView) v).getLayout();
 					int x = (int) event.getX();
 					int y = (int) event.getY();
+
+	                x += v.getScrollX();
+	                y += v.getScrollY();
 					if (layout != null) {
 						int line = layout.getLineForVertical(y);
 						int charPosition = layout.getOffsetForHorizontal(line,
@@ -782,19 +775,21 @@ public class EditPost extends Activity {
 				return false;
 			}
 		});
-
-		content.setOnSelectionChangedListener(new WPEditText.OnSelectionChangedListener() {
+		
+		content
+		.setOnSelectionChangedListener(new WPEditText.OnSelectionChangedListener() {
 
 			@Override
 			public void onSelectionChanged() {
 				if (!localDraft)
 					return;
-
+				
 				final Spannable s = content.getText();
 				// set toggle buttons if cursor is inside of a matching
 				// span
 				styleStart = content.getSelectionStart();
-				Object[] spans = s.getSpans(content.getSelectionStart(),
+				Object[] spans = s.getSpans(
+						content.getSelectionStart(),
 						content.getSelectionStart(), Object.class);
 				ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
 				ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
@@ -1644,24 +1639,15 @@ public class EditPost extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (id == ID_DIALOG_DATE) {
-			DatePickerDialog dpd;
-			try {
-				dpd = new DatePickerDialog(this, mDateSetListener, mYear,
-						mMonth, mDay);
-				dpd.setTitle("");
-				return dpd;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener,
+					mYear, mMonth, mDay);
+			dpd.setTitle("");
+			return dpd;
 		} else if (id == ID_DIALOG_TIME) {
-			try {
-				TimePickerDialog tpd = new TimePickerDialog(this,
-						mTimeSetListener, mHour, mMinute, false);
-				tpd.setTitle("");
-				return tpd;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener,
+					mHour, mMinute, false);
+			tpd.setTitle("");
+			return tpd;
 		} else if (id == ID_DIALOG_LOADING) {
 			ProgressDialog loadingDialog = new ProgressDialog(this);
 			loadingDialog.setMessage(getResources().getText(R.string.loading));
@@ -2129,16 +2115,16 @@ public class EditPost extends Activity {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-
+		
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		byte[] bytes = (byte[]) mediaData.get("bytes");
 		BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
+		
 		float conversionFactor = 0.25f;
-
+		
 		if (opts.outWidth > opts.outHeight)
-			conversionFactor = 0.40f;
+			conversionFactor = 0.40f;	
 
 		byte[] finalBytes = ih.createThumbnail(bytes,
 				String.valueOf((int) (width * conversionFactor)),
@@ -2225,14 +2211,14 @@ public class EditPost extends Activity {
 		if (mediaData == null) {
 			return null;
 		}
-
+		
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		byte[] bytes = (byte[]) mediaData.get("bytes");
 		BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
+		
 		float conversionFactor = 0.25f;
-
+		
 		if (opts.outWidth > opts.outHeight)
 			conversionFactor = 0.40f;
 

@@ -707,14 +707,27 @@ class HtmlToSpannedConverter implements ContentHandler {
 		Display display = ((WindowManager) ctx
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		int width = display.getWidth();
+		int height = display.getHeight();
+		if (width > height)
+			width = height;
 		ImageHelper ih = new ImageHelper();
 
 		HashMap<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
 
 		if (mediaData != null) {
+			
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			byte[] bytes = (byte[]) mediaData.get("bytes");
+			BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
+			
+			float conversionFactor = 0.25f;
+			
+			if (opts.outWidth > opts.outHeight)
+				conversionFactor = 0.40f;	
 
 			byte[] finalBytes = ih.createThumbnail(
-					(byte[]) mediaData.get("bytes"), String.valueOf(width / 2),
+					(byte[]) mediaData.get("bytes"), String.valueOf((int) (width * conversionFactor)),
 					(String) mediaData.get("orientation"), true);
 
 			resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
@@ -743,12 +756,10 @@ class HtmlToSpannedConverter implements ContentHandler {
 				is.setVideo(mf.isVideo());
 				text.setSpan(is, len, text.length(),
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				text.insert(len, "\n\n");
 				AlignmentSpan.Standard as = new AlignmentSpan.Standard(
 						Layout.Alignment.ALIGN_CENTER);
 				text.setSpan(as, text.getSpanStart(is), text.getSpanEnd(is),
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				text.append("\n\n");
 			}
 		} else if (post != null) {
 			if (post.isLocalDraft()) {
