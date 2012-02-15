@@ -601,8 +601,20 @@ public class EditPost extends Activity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+	
+				float pos = event.getY();
 				
-				if (!isFullScreenEditing) {
+				if (event.getAction() == 0)
+					lastYPos = pos;
+				
+				if (event.getAction() > 1) {
+					if (((lastYPos - pos) > 2.0f) || ((pos - lastYPos) > 2.0f))
+						scrollDetected = true;
+				} 
+				
+				lastYPos = pos;
+				
+				if (!isFullScreenEditing && event.getAction() == 1) {
 					isFullScreenEditing = true;
 					content.setFocusableInTouchMode(true);
 					try {
@@ -619,20 +631,8 @@ public class EditPost extends Activity {
 						e.printStackTrace();
 					}
 					content.requestFocus();
-					return true;
-				}
-	
-				float pos = event.getY();
-				
-				if (event.getAction() == 0)
-					lastYPos = pos;
-				
-				if (event.getAction() > 1) {
-					if (((lastYPos - pos) > 2.0f) || ((pos - lastYPos) > 2.0f))
-						scrollDetected = true;
+					return false;
 				} 
-				
-				lastYPos = pos;
 				
 				if (event.getAction() == 1 && !scrollDetected && isFullScreenEditing) {
 					Layout layout = ((TextView) v).getLayout();
