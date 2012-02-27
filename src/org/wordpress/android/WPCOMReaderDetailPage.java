@@ -3,6 +3,9 @@ package org.wordpress.android;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -13,25 +16,34 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	
 	private String cachedPage = null;
 	private String requestedURL = null;
+	public WebView wv;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		getWindow().setFormat(PixelFormat.RGBA_8888);
+		/*getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.reader);
+		setContentView(R.layout.reader);*/
 
-		Bundle extras = getIntent().getExtras();
+		
+	}
+	
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+		View v = inflater.inflate(R.layout.reader, container, false);
+		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
 			cachedPage = extras.getString("cachedPage");
 			requestedURL = extras.getString("requestedURL");
 		}
 		
-		final WebView wv = (WebView) findViewById(R.id.webView);
+		wv = (WebView) v.findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
 		wv.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT); //override the default setting of NO_CACHE
-		wv.addJavascriptInterface( new JavaScriptInterface(this), "Android" );
+		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getApplicationContext()), "Android" );
 		wv.setWebViewClient(new WordPressWebViewClient());
 		
 		wv.setWebChromeClient(new WebChromeClient() {
@@ -45,7 +57,8 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		
 		//wv.loadData(Uri.encode(this.cachedPage), "text/html", HTTP.UTF_8);
 		wv.loadUrl(requestedURL);
-	}
+		return v;
+    }
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

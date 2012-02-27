@@ -129,5 +129,12 @@
       android:background="@drawable/wp_button_small"
       android:text="@string/reply"
       android:layout_toLeftOf="@id/markSpam" />
+    <Button
+      android:id="@+id/editComment"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/wp_button_small"
+      android:text="@string/edit"
+      android:layout_toLeftOf="@id/reply" />
   </RelativeLayout>
 </LinearLayout>

@@ -220,6 +220,7 @@ res/layout-land/action_bar.xml -text
 res/layout-large-mdpi/add_account.xml -text
 res/layout-large-mdpi/comments.xml -text
 res/layout-large-mdpi/edit.xml -text
+res/layout-large-mdpi/edit_comment.xml -text
 res/layout-large-mdpi/new_account.xml -text
 res/layout-large-mdpi/posts.xml -text
 res/layout-large-port-mdpi/moderatecomments.xml -text
@@ -247,6 +248,7 @@ res/layout/dashboard.xml -text
 res/layout/dashboard_buttons_landscape.xml -text
 res/layout/dashboard_buttons_portrait.xml -text
 res/layout/edit.xml -text
+res/layout/edit_comment.xml -text
 res/layout/home.xml -text
 res/layout/home_row.xml -text
 res/layout/image_view.xml -text
@@ -261,6 +263,7 @@ res/layout/posts.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/reader.xml -text
 res/layout/reader_wpcom.xml -text
+res/layout/reader_wpcom_pager.xml -text
 res/layout/reply.xml -text
 res/layout/row.xml -text
 res/layout/row_post_page.xml -text
@@ -334,6 +337,7 @@ src/org/wordpress/android/CommentService.java -text
 src/org/wordpress/android/Comments.java -text
 src/org/wordpress/android/Constants.java -text
 src/org/wordpress/android/Dashboard.java -text
+src/org/wordpress/android/EditComment.java -text
 src/org/wordpress/android/EditPost.java -text
 src/org/wordpress/android/Link.java -text
 src/org/wordpress/android/NewAccount.java -text
@@ -355,6 +359,7 @@ src/org/wordpress/android/ViewStats.java -text
 src/org/wordpress/android/WPCOMReaderBase.java -text
 src/org/wordpress/android/WPCOMReaderDetailPage.java -text
 src/org/wordpress/android/WPCOMReaderImpl.java -text
+src/org/wordpress/android/WPCOMReaderPager.java -text
 src/org/wordpress/android/WPCOMReaderTopicsSelector.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text

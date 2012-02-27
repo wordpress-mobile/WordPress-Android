@@ -1291,6 +1291,22 @@ public class WordPressDB {
 
 	}
 
+	public void updateComment(int blogID, int id, HashMap<?, ?> commentHash) {
+	
+		ContentValues values = new ContentValues();
+		values.put("author", commentHash.get("author").toString());
+		values.put("comment", commentHash.get("comment").toString());		
+		values.put("status", commentHash.get("status").toString());
+		values.put("url", commentHash.get("url").toString());
+		values.put("email", commentHash.get("email").toString());
+		
+		synchronized (this) {
+			db.update(COMMENTS_TABLE, values, "blogID=" + blogID
+					+ " AND iCommentID=" + id, null);
+		}
+		
+	}
+	
 	public void updateCommentStatus(int blogID, int id, String newStatus) {
 
 		ContentValues values = new ContentValues();

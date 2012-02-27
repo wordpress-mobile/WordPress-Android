@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -136,10 +137,38 @@ public class ViewCommentFragment extends Fragment {
 			}
 		});
 
+		Button editCommentButton = (Button) v.findViewById(R.id.editComment);
+		editCommentButton.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				if (WordPress.currentComment != null) {
+					Intent i = new Intent(
+							getActivity().getApplicationContext(),
+							EditComment.class);
+					startActivityForResult(i, 0);
+				}
+
+			}
+		});
+		
 		return v;
 
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);		
+		
+		switch (requestCode) {
+		case 0:
+			// Our user has returned from editing this comment. 
+			if (resultCode == 0) {
+				// nothing to do?
+			}
+			break;
+		}
+		
+	}
+	
 	private void processCommentStatus() {
 		
 		Button approve = (Button) getActivity().findViewById(R.id.approveComment);
@@ -269,7 +298,7 @@ public class ViewCommentFragment extends Fragment {
 			OnCommentStatusChangeListener listener) {
 		onCommentStatusChangeListener = listener;
 	}
-
+	
 	public void clearContent() {
 		TextView tvName = (TextView) getActivity().findViewById(
 				R.id.commentDetailName);

@@ -18,6 +18,7 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -421,6 +422,26 @@ public class ViewComments extends ListFragment {
 						onCommentSelectedListener.onCommentSelected(comment);
 					}
 				});
+				
+//				listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//					@Override
+//					public boolean onItemLongClick(AdapterView<?> arg0,
+//							View view, int position, long id) {
+//						
+//						selectedPosition = position;
+//						Comment comment = model.get((int) id);
+//						onCommentSelectedListener.onCommentSelected(comment);
+//						
+//						Intent i = new Intent(
+//								getActivity().getApplicationContext(),
+//								EditComment.class);
+//						startActivityForResult(i, 0);
+//						
+//						return false;
+//					}
+//					
+//				});
 
 				listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
@@ -449,6 +470,8 @@ public class ViewComments extends ListFragment {
 								.getText(R.string.reply));
 						menu.add(0, 4, 0,
 								getResources().getText(R.string.delete));
+						menu.add(0, 5, 0, 
+								getResources().getText(R.string.edit));
 					}
 				});
 			} else {
@@ -977,6 +1000,16 @@ public class ViewComments extends ListFragment {
 		case 4:
 			onCommentStatusChangeListener.onCommentStatusChanged("delete");
 			return true;
+		case 5:
+//			selectedPosition = position;
+//			Comment comment = model.get((int) id);
+//			onCommentSelectedListener.onCommentSelected(comment);
+			Intent i = new Intent(
+					getActivity().getApplicationContext(),
+					EditComment.class);
+			startActivityForResult(i, 0);
+			return true;
+			
 		}
 		return false;
 	}

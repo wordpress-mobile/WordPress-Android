@@ -12,6 +12,8 @@ import org.json.JSONTokener;
 import android.app.Activity;
 import android.content.Context;
 import android.net.http.SslError;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
@@ -19,7 +21,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public abstract class WPCOMReaderBase extends Activity {
+public abstract class WPCOMReaderBase extends Fragment {
 	
 	protected final String interfaceNameForJS = "Android";
 	
@@ -53,7 +55,7 @@ public abstract class WPCOMReaderBase extends Activity {
 
 	protected String getHybridAuthToken() {
 		// gather all of the device info
-		String uuid = WordPress.wpDB.getUUID(this);
+		String uuid = WordPress.wpDB.getUUID(getActivity().getApplicationContext());
 		if (uuid == "") {
 			uuid = UUID.randomUUID().toString();
 			WordPress.wpDB.updateUUID(uuid);

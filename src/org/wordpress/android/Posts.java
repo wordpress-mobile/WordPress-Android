@@ -53,6 +53,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		FragmentManager fm = getSupportFragmentManager();
 		postList = (ViewPosts) fm.findFragmentById(R.id.postList);
+		postList.setListShown(true);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {

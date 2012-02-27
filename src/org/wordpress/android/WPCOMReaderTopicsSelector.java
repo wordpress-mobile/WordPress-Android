@@ -1,15 +1,16 @@
 package org.wordpress.android;
 
 import org.apache.http.protocol.HTTP;
+import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -19,26 +20,25 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 
 	private String topicID = null;
 	private String cachedTopicsPage = null;
+	private ChangeTopicListener onChangeTopicListener;
 	
 	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		getWindow().setFormat(PixelFormat.RGBA_8888);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.reader);
-
-		Bundle extras = getIntent().getExtras();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+		View v = inflater.inflate(R.layout.reader, container, false);
+		
+		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
 			topicID = extras.getString("currentTopic");
 			cachedTopicsPage = extras.getString("cachedTopicsPage");
 		}
 		
-		this.setTitle("Loading...");
+		//this.setTitle("Loading...");
 
-		final WebView wv = (WebView) findViewById(R.id.webView);
+		final WebView wv = (WebView) v.findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
-		wv.addJavascriptInterface( new JavaScriptInterface(this), "Android" );
+		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
 		wv.setWebViewClient(new WordPressWebViewClient());
 		String hybURL = this.getAuthorizeHybridURL(Constants.readerTopicsURL);
 		
@@ -55,24 +55,34 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 			wv.loadData(Uri.encode(this.cachedTopicsPage), "text/html", HTTP.UTF_8);
 		else
 			wv.loadUrl(hybURL);
+		
+		return v;
+	}
+	
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			// check that the containing activity implements our callback
+			onChangeTopicListener = (ChangeTopicListener) activity;
+		} catch (ClassCastException e) {
+			activity.finish();
+			throw new ClassCastException(activity.toString()
+					+ " must implement Callback");
+		}
 	}
 
 	//Methods called from JS
 	public void setTitleFromJS(String title) {
 		final String fTitle = title;
-		runOnUiThread(new Runnable() {
+		/*runOnUiThread(new Runnable() {
 		     public void run() {
 		    	 WPCOMReaderTopicsSelector.this.setTitle(fTitle);
 		    }
-		});
+		});*/
 	}
 	
 	public void selectTopicFromJS(String topicID, String topicName) {
-	 	Intent databackIntent = new Intent(); 
-	 	databackIntent.putExtra("topicID", topicID); 
-	 	databackIntent.putExtra("topicName", topicName);
-	 	setResult(RESULT_OK, databackIntent);
-		finish();
+	 	onChangeTopicListener.onChangeTopic(topicID, topicName);
 	}
 	//End of methods called from the JS code
 	
@@ -81,8 +91,12 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
 	}
+	
+	public interface ChangeTopicListener {
+		public void onChangeTopic(String topicID, String topicName);
+	}
 
-	@Override
+	/*@Override
 	public boolean onKeyDown(int i, KeyEvent event) {
 
 		if (i == KeyEvent.KEYCODE_BACK) {
@@ -90,5 +104,5 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 		}
 
 		return false;
-	}
+	}*/
 }

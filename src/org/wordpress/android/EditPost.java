@@ -387,8 +387,12 @@ public class EditPost extends Activity {
 			pfSpinner.setAdapter(pfAdapter);
 			String activePostFormat = "standard";
 			if (!isNew) {
-				if (!post.getWP_post_format().equals(""))
-					activePostFormat = post.getWP_post_format();
+				try {
+					if (!post.getWP_post_format().equals(""))
+						activePostFormat = post.getWP_post_format();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			for (int i = 0; i < postFormats.length; i++) {
 				if (postFormats[i].equals(activePostFormat))

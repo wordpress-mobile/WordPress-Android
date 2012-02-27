@@ -28,7 +28,10 @@
   <string name="account_details">Account Details</string>
   <string name="status">Status</string>
   <string name="l_status">Status:</string>
-
+  
+  <!-- comment form labels -->
+  <string name="comment_content">Comment Content</string>
+  
   <!-- general strings -->
   <string name="app_name">WordPress</string>
   <string name="eula">GNU GENERAL PUBLIC LICENSE</string>
@@ -227,6 +230,18 @@
   <string name="reply_added">Reply Added Successfully</string>
   <string name="view_comment_from">Comment from</string>
 
+  <!-- edit comment view -->
+  <string name="author_name">Name</string>
+  <string name="author_email">E-mail</string>
+  <string name="author_url">URL</string>
+  <string name="comment_update">Update Comment</string>
+  <string name="saving_changes">Saving Changes</string>
+  <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?
+  </string>
+  <string name="author_name_required">The author\'s name is required.</string>
+  <string name="content_required">The comment body is required.</string>
+  <string name="author_email_required">The author\'s e-mail address is required.</string>
+  
   <!-- context menu -->
   <string name="blog_settings">Blog Settings</string>
   <string name="remove_account">Remove Blog</string>
