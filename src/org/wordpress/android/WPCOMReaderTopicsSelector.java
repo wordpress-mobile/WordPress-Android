@@ -9,16 +9,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
+public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 	
 	public static int activityRequestCode = 1234322;
 
 	private String topicID = null;
 	private String cachedTopicsPage = null;
 	private ChangeTopicListener onChangeTopicListener;
+	public WebView wv;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,28 +26,13 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
         // Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.reader, container, false);
 		
-		Bundle extras = getActivity().getIntent().getExtras();
-		if (extras != null) {
-			topicID = extras.getString("currentTopic");
-			cachedTopicsPage = extras.getString("cachedTopicsPage");
-		}
-		
 		//this.setTitle("Loading...");
 
-		final WebView wv = (WebView) v.findViewById(R.id.webView);
+		wv = (WebView) v.findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
 		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
 		wv.setWebViewClient(new WordPressWebViewClient());
 		String hybURL = this.getAuthorizeHybridURL(Constants.readerTopicsURL);
-		
-		wv.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress) {
-				if (progress == 100) {
-					String methodCall = "document.setSelectedTopic('"+WPCOMReaderTopicsSelector.this.topicID+"')";
-					wv.loadUrl("javascript:"+methodCall);
-				}
-			}
-		});
 		
 		if ( this.cachedTopicsPage != null )
 			wv.loadData(Uri.encode(this.cachedTopicsPage), "text/html", HTTP.UTF_8);
@@ -71,12 +56,7 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 
 	//Methods called from JS
 	public void setTitleFromJS(String title) {
-		/*final String fTitle = title;
-		runOnUiThread(new Runnable() {
-		     public void run() {
-		    	 WPCOMReaderTopicsSelector.this.setTitle(fTitle);
-		    }
-		});*/
+		//onChangeTopicListener.onChangeTopic(topicID, fTitle);
 	}
 	
 	public void selectTopicFromJS(String topicID, String topicName) {
@@ -93,14 +73,4 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 	public interface ChangeTopicListener {
 		public void onChangeTopic(String topicID, String topicName);
 	}
-
-	/*@Override
-	public boolean onKeyDown(int i, KeyEvent event) {
-
-		if (i == KeyEvent.KEYCODE_BACK) {
-				finish();
-		}
-
-		return false;
-	}*/
 }

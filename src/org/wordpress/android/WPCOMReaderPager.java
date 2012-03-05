@@ -5,7 +5,9 @@ import java.util.Vector;
 
 import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
 import org.wordpress.android.WPCOMReaderImpl.PostSelectedListener;
+import org.wordpress.android.WPCOMReaderImpl.UpdateTopicListener;
 import org.wordpress.android.WPCOMReaderTopicsSelector.ChangeTopicListener;
+import org.wordpress.android.util.WPViewPager;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,15 +16,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 public class WPCOMReaderPager extends FragmentActivity implements
-		ChangePageListener, ChangeTopicListener, PostSelectedListener {
+		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicListener {
 
-	private ViewPager readerPager;
+	private WPViewPager readerPager;
 	private ReaderPagerAdapter readerAdapter;
 	private Fragment readerPage;
 	private Fragment detailPage;
@@ -43,7 +44,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		
-		readerPager = (ViewPager) findViewById(R.id.pager);
+		readerPager = (WPViewPager) findViewById(R.id.pager);
 		readerPage = Fragment
 				.instantiate(this, WPCOMReaderImpl.class.getName());
 		detailPage = Fragment.instantiate(this,
@@ -207,7 +208,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public void onPostSelected(String requestedURL, String cachedPage) {
-		final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
 		readerPageDetailFragment.wv.clearView();
 		readerPageDetailFragment.wv.loadUrl(requestedURL);
 		readerPager.setCurrentItem(2, true);
@@ -220,5 +221,12 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		else
 			super.onBackPressed();
 
+	}
+
+	@Override
+	public void onUpdateTopic(String topicID) {
+		WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
+		String methodCall = "document.setSelectedTopic('"+topicID+"')";
+		topicsFragment.wv.loadUrl("javascript:"+methodCall);
 	}
 }

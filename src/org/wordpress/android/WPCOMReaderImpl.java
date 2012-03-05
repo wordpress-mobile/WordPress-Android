@@ -44,6 +44,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	private String cachedDetailPage = null;
 	private ChangePageListener onChangePageListener;
 	private PostSelectedListener onPostSelectedListener;
+	private UpdateTopicListener onUpdateTopicListener;
 	public TextView topicTV;
 	
 	@Override
@@ -117,6 +118,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			// check that the containing activity implements our callback
 			onChangePageListener= (ChangePageListener) activity;
 			onPostSelectedListener = (PostSelectedListener) activity;
+			onUpdateTopicListener = (UpdateTopicListener) activity;
 		} catch (ClassCastException e) {
 			activity.finish();
 			throw new ClassCastException(activity.toString()
@@ -128,59 +130,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
-	
-
-	/*
-	protected void loadPostFromPermalink() {
-
-		WebView wv = (WebView) findViewById(R.id.webView);
-		this.setDefaultWebViewSettings(wv);
-
-		wv.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress) {
-				WPCOMReaderImpl.this.setTitle("Loading...");
-				WPCOMReaderImpl.this.setProgress(progress * 100);
-
-				if (progress == 100) {
-					if (isPage) {
-						WPCOMReaderImpl.this.setTitle(EscapeUtils
-								.unescapeHtml(WordPress.currentBlog
-										.getBlogName())
-								+ " - "
-								+ getResources().getText(R.string.preview_page));
-					} else {
-						WPCOMReaderImpl.this.setTitle(EscapeUtils
-								.unescapeHtml(WordPress.currentBlog
-										.getBlogName())
-								+ " - "
-								+ getResources().getText(R.string.preview_post));
-					}
-				}
-			}
-		});
-
-		wv.setWebViewClient(new WordPressWebViewClient());
-		if (WordPress.currentPost != null) {
-			int sdk_int = 0;
-			try {
-				sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
-			} catch (Exception e1) {
-				sdk_int = 3; // assume they are on cupcake
-			}
-			if (sdk_int >= 8) {
-				// only 2.2 devices can load https correctly
-				wv.loadUrl(WordPress.currentPost.getPermaLink());
-			} else {
-				String url = WordPress.currentPost.getPermaLink().replace(
-						"https:", "http:");
-				wv.loadUrl(url);
-			}
-		}
-
-	}
-*/
-	
 	
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
@@ -355,19 +304,23 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	//The JS calls this method on first loading
 		public void setSelectedTopicFromJS(String topicsID) {
 			this.topicsID = topicsID;
+			onUpdateTopicListener.onUpdateTopic(topicsID);
 		}
 		
 		public void setTitleFromJS(final String newTopicName) {
 			getActivity().runOnUiThread(new Runnable() {
 			     public void run() {
 			    	 if (newTopicName != null) {
-			    		 //TextView topicTV = (TextView) findViewById(R.id.topic_title);
-			    		 //topicTV.setText(newTopicName);
+			    		 topicTV.setText(newTopicName);
 			    	 }
 			    }
 			});
 		}
 	
+	public interface UpdateTopicListener {
+		public void onUpdateTopic(String topicID);
+	}
+		
 	public interface ChangePageListener {
 		public void onChangePage(int position);
 	}
