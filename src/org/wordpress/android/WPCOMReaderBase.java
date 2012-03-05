@@ -9,11 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.http.SslError;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;

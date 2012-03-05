@@ -1,20 +1,17 @@
 package org.wordpress.android;
 
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	
-	private String cachedPage = null;
+	//private String cachedPage = null;
 	private String requestedURL = null;
 	public WebView wv;
 	
@@ -36,7 +33,7 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		View v = inflater.inflate(R.layout.reader, container, false);
 		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
-			cachedPage = extras.getString("cachedPage");
+			//cachedPage = extras.getString("cachedPage");
 			requestedURL = extras.getString("requestedURL");
 		}
 		

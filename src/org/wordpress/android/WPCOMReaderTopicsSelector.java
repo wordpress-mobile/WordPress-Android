@@ -1,10 +1,8 @@
 package org.wordpress.android;
 
 import org.apache.http.protocol.HTTP;
-import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -73,8 +71,8 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase {
 
 	//Methods called from JS
 	public void setTitleFromJS(String title) {
-		final String fTitle = title;
-		/*runOnUiThread(new Runnable() {
+		/*final String fTitle = title;
+		runOnUiThread(new Runnable() {
 		     public void run() {
 		    	 WPCOMReaderTopicsSelector.this.setTitle(fTitle);
 		    }

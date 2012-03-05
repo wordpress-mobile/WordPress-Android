@@ -7,10 +7,7 @@ import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
 import org.wordpress.android.WPCOMReaderImpl.PostSelectedListener;
 import org.wordpress.android.WPCOMReaderTopicsSelector.ChangeTopicListener;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -21,7 +18,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 public class WPCOMReaderPager extends FragmentActivity implements
 		ChangePageListener, ChangeTopicListener, PostSelectedListener {
@@ -38,7 +34,15 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reader_wpcom_pager);
 
-		// readerAdapter = new AwesomePagerAdapter();
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(this);
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
 		readerPager = (ViewPager) findViewById(R.id.pager);
 		readerPage = Fragment
 				.instantiate(this, WPCOMReaderImpl.class.getName());
@@ -57,6 +61,13 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 		readerPager.setAdapter(readerAdapter);
 		readerPager.setCurrentItem(1, true);
+
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		finish();
 	}
 
 	private class ReaderPagerAdapter extends FragmentPagerAdapter {
@@ -201,13 +212,13 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		readerPageDetailFragment.wv.loadUrl(requestedURL);
 		readerPager.setCurrentItem(2, true);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (readerPager.getCurrentItem() != 1)
 			readerPager.setCurrentItem(1, true);
-		else 
+		else
 			super.onBackPressed();
-		
+
 	}
 }

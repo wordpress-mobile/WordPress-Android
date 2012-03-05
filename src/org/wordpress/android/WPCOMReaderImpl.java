@@ -13,40 +13,23 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-import org.wordpress.android.ViewPosts.OnPostActionListener;
-import org.wordpress.android.ViewPosts.OnPostSelectedListener;
-import org.wordpress.android.ViewPosts.OnRefreshListener;
-import org.wordpress.android.WPCOMReaderBase.JavaScriptInterface;
-import org.wordpress.android.WPCOMReaderBase.WordPressWebViewClient;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Post;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +40,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 //	private boolean isPage = false;
 	public WebView wv;
 	public String topicsID;
-	private String cachedTopicsPage = null;
+	//private String cachedTopicsPage = null;
 	private String cachedDetailPage = null;
 	private ChangePageListener onChangePageListener;
 	private PostSelectedListener onPostSelectedListener;
@@ -226,7 +209,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 						//Cache the Topics page
 						String hybURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerTopicsURL);
-   	    		        WPCOMReaderImpl.this.cachedTopicsPage = cachePage(hybURL, cookie);
+   	    		        //WPCOMReaderImpl.this.cachedTopicsPage = cachePage(hybURL, cookie);
    	    		        
 						//Cache the DAtil page
 						hybURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerDetailURL);
