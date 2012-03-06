@@ -372,9 +372,6 @@ public class EditPost extends Activity {
 						i++;
 					}
 
-					java.util.Arrays.sort(postFormats);
-					java.util.Arrays.sort(postFormatTitles);
-
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
