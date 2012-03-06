@@ -24,12 +24,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,42 +41,51 @@ import android.widget.Toast;
 public class WPCOMReaderImpl extends WPCOMReaderBase {
 	/** Called when the activity is first created. */
 	private String loginURL = "";
-//	private boolean isPage = false;
+	// private boolean isPage = false;
 	public WebView wv;
 	public String topicsID;
-	//private String cachedTopicsPage = null;
+	// private String cachedTopicsPage = null;
 	private String cachedDetailPage = null;
 	private ChangePageListener onChangePageListener;
 	private PostSelectedListener onPostSelectedListener;
 	private UpdateTopicListener onUpdateTopicListener;
 	public TextView topicTV;
-	
+	private ImageView refreshIcon;
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.reader_wpcom, container, false);
 		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(getActivity().getApplicationContext());
+			WordPress.wpDB = new WordPressDB(getActivity()
+					.getApplicationContext());
 		if (WordPress.currentBlog == null) {
 			try {
 				WordPress.currentBlog = new Blog(
-						WordPress.wpDB.getLastBlogID(getActivity().getApplicationContext()), getActivity().getApplicationContext());
+						WordPress.wpDB.getLastBlogID(getActivity()
+								.getApplicationContext()), getActivity()
+								.getApplicationContext());
 			} catch (Exception e) {
-				Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity().getApplicationContext(),
+						getResources().getText(R.string.blog_not_found),
+						Toast.LENGTH_SHORT).show();
 				getActivity().finish();
 			}
 		}
-		
-		topicTV = (TextView) v.findViewById(R.id.topic_title);
 
-		//this.setTitle(getResources().getText(R.string.reader)); //FIXME: set the title of the screen here
+		topicTV = (TextView) v.findViewById(R.id.topic_title);
+		refreshIcon = (ImageView) v.findViewById(R.id.refresh_icon);
+
+		// this.setTitle(getResources().getText(R.string.reader)); //FIXME: set
+		// the title of the screen here
 		wv = (WebView) v.findViewById(R.id.webView);
 		wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getApplicationContext()), interfaceNameForJS );
+		wv.addJavascriptInterface(new JavaScriptInterface(getActivity()
+				.getApplicationContext()), interfaceNameForJS);
 		this.setDefaultWebViewSettings(wv);
 		new loadReaderTask().execute(null, null, null, null);
-		
+
 		RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.topicSelector);
 		rl.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -80,21 +93,21 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 					onChangePageListener.onChangePage(0);
 			}
 		});
-		
+
 		Button refreshButton = (Button) v.findViewById(R.id.action_refresh);
-		refreshButton
-		.setOnClickListener(new ImageButton.OnClickListener() {
+		refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
-				//startRotatingRefreshIcon();
+				startRotatingRefreshIcon();
 				wv.reload();
 				new Thread(new Runnable() {
 					public void run() {
 						// refresh stat
 						try {
 							HttpClient httpclient = new DefaultHttpClient();
-							HttpProtocolParams.setUserAgent(httpclient.getParams(),
-									"wp-android");
-							String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page_refresh";
+							HttpProtocolParams.setUserAgent(
+									httpclient.getParams(), "wp-android");
+							String readerURL = Constants.readerURL
+									+ "/?template=stats&stats_name=home_page_refresh";
 							if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 								readerURL += "&per_page=20";
 							}
@@ -108,15 +121,15 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 			}
 		});
-		
+
 		return v;
-    }
-	
+	}
+
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
 			// check that the containing activity implements our callback
-			onChangePageListener= (ChangePageListener) activity;
+			onChangePageListener = (ChangePageListener) activity;
 			onPostSelectedListener = (PostSelectedListener) activity;
 			onUpdateTopicListener = (UpdateTopicListener) activity;
 		} catch (ClassCastException e) {
@@ -125,45 +138,52 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 					+ " must implement Callback");
 		}
 	}
-	
+
 	@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-	
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
+
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
-		@Override 
+		@Override
 		protected void onPreExecute() {
-			//startRotatingRefreshIcon();
+			startRotatingRefreshIcon();
 		}
-		
+
 		protected void onPostExecute(Vector<?> result) {
-			
-			//Read the WordPress.com cookies from the wv and pass them to the connections below!
+
+			// Read the WordPress.com cookies from the wv and pass them to the
+			// connections below!
 			CookieManager cookieManager = CookieManager.getInstance();
 			final String cookie = cookieManager.getCookie("wordpress.com");
-			//stopRotatingRefreshIcon();
-      	
+			stopRotatingRefreshIcon();
+
 			new Thread(new Runnable() {
 				public void run() {
 					try {
 						HttpClient httpclient = new DefaultHttpClient();
-						HttpProtocolParams.setUserAgent(httpclient.getParams(),	"wp-android");
-						
-						String readerURL = Constants.readerURL + "/?template=stats&stats_name=home_page";
+						HttpProtocolParams.setUserAgent(httpclient.getParams(),
+								"wp-android");
+
+						String readerURL = Constants.readerURL
+								+ "/?template=stats&stats_name=home_page";
 						HttpGet httpGet = new HttpGet(readerURL);
 						httpGet.setHeader("Cookie", cookie);
 						httpclient.execute(httpGet);
 
-						//Cache the Topics page
-						String hybURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerTopicsURL);
-   	    		        //WPCOMReaderImpl.this.cachedTopicsPage = cachePage(hybURL, cookie);
-   	    		        
-						//Cache the DAtil page
-						hybURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerDetailURL);
-   	    		        WPCOMReaderImpl.this.cachedDetailPage = cachePage(hybURL, cookie);
-						
+						// Cache the Topics page
+						String hybURL = WPCOMReaderImpl.this
+								.getAuthorizeHybridURL(Constants.readerTopicsURL);
+						// WPCOMReaderImpl.this.cachedTopicsPage =
+						// cachePage(hybURL, cookie);
+
+						// Cache the DAtil page
+						hybURL = WPCOMReaderImpl.this
+								.getAuthorizeHybridURL(Constants.readerDetailURL);
+						WPCOMReaderImpl.this.cachedDetailPage = cachePage(
+								hybURL, cookie);
+
 					} catch (Exception e) {
 						// oh well
 						e.printStackTrace();
@@ -176,7 +196,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			HttpClient httpclient = new DefaultHttpClient();
 
 			try {
-				HttpProtocolParams.setUserAgent(httpclient.getParams(), "wp-android");
+				HttpProtocolParams.setUserAgent(httpclient.getParams(),
+						"wp-android");
 				HttpGet request = new HttpGet(hybURL);
 				request.setHeader("Cookie", cookie);
 				HttpResponse response = httpclient.execute(request);
@@ -184,7 +205,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				// Check if server response is valid
 				StatusLine status = response.getStatusLine();
 				if (status.getStatusCode() != 200) {
-					throw new IOException("Invalid response from server when caching the page: " + status.toString());
+					throw new IOException(
+							"Invalid response from server when caching the page: "
+									+ status.toString());
 				}
 
 				// Pull content stream from response
@@ -204,7 +227,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				return dataAsString;
 			} catch (Exception e) {
 				// oh well
-				Log.d("Error while caching the page" + hybURL, e.getLocalizedMessage());
+				Log.d("Error while caching the page" + hybURL,
+						e.getLocalizedMessage());
 				return null;
 
 			} finally {
@@ -215,35 +239,40 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			}
 		}
 
-		
 		@Override
 		protected Vector<?> doInBackground(String... args) {
 
 			if (WordPress.currentBlog == null) {
 				try {
 					WordPress.currentBlog = new Blog(
-							WordPress.wpDB.getLastBlogID(getActivity().getApplicationContext()), getActivity().getApplicationContext());
+							WordPress.wpDB.getLastBlogID(getActivity()
+									.getApplicationContext()), getActivity()
+									.getApplicationContext());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 
-			loginURL = WordPress.currentBlog.getUrl()
-					.replace("xmlrpc.php", "wp-login.php");
+			loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php",
+					"wp-login.php");
 			if (WordPress.currentBlog.getUrl().lastIndexOf("/") != -1)
-				loginURL = WordPress.currentBlog.getUrl().substring(0, WordPress.currentBlog.getUrl().lastIndexOf("/")) + "/wp-login.php";
+				loginURL = WordPress.currentBlog.getUrl().substring(0,
+						WordPress.currentBlog.getUrl().lastIndexOf("/"))
+						+ "/wp-login.php";
 			else
-				loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php", "wp-login.php");
-			
-			String readerURL = WPCOMReaderImpl.this.getAuthorizeHybridURL(Constants.readerURL_v3);
-		
+				loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php",
+						"wp-login.php");
+
+			String readerURL = WPCOMReaderImpl.this
+					.getAuthorizeHybridURL(Constants.readerURL_v3);
+
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-				if( readerURL.contains("?") )
+				if (readerURL.contains("?"))
 					readerURL += "&per_page=20";
-				else 
+				else
 					readerURL += "?per_page=20";
 			}
-			
+
 			try {
 				String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
@@ -265,33 +294,36 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 				wv.setWebViewClient(new WebViewClient() {
 					@Override
-					public boolean shouldOverrideUrlLoading(WebView view, String url) {
-						if( url.equalsIgnoreCase( Constants.readerDetailURL ) ) {
-							onPostSelectedListener.onPostSelected(url, WPCOMReaderImpl.this.cachedDetailPage);
+					public boolean shouldOverrideUrlLoading(WebView view,
+							String url) {
+						if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
+							onPostSelectedListener.onPostSelected(url,
+									WPCOMReaderImpl.this.cachedDetailPage);
 							return true;
 						}
 						view.loadUrl(url);
 						return false;
 					}
-					
+
 					@Override
 					public void onPageFinished(WebView view, String url) {
 					}
 				});
 
-
 				wv.setWebChromeClient(new WebChromeClient() {
 					public void onProgressChanged(WebView view, int progress) {
-						//WPCOMReaderImpl.this.setTitle("Loading...");
-						//WPCOMReaderImpl.this.setProgress(progress * 100);
+						// WPCOMReaderImpl.this.setTitle("Loading...");
+						// WPCOMReaderImpl.this.setProgress(progress * 100);
 
 						if (progress == 100) {
-							//WPCOMReaderImpl.this.setTitle(getResources().getText(R.string.reader));
+							stopRotatingRefreshIcon();
+							// WPCOMReaderImpl.this.setTitle(getResources().getText(R.string.reader));
 						}
 					}
 				});
-		
-				wv.loadData(Uri.encode(responseContent), "text/html", HTTP.UTF_8);
+
+				wv.loadData(Uri.encode(responseContent), "text/html",
+						HTTP.UTF_8);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -300,33 +332,52 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		}
 
 	}
-	
-	//The JS calls this method on first loading
-		public void setSelectedTopicFromJS(String topicsID) {
-			this.topicsID = topicsID;
-			onUpdateTopicListener.onUpdateTopic(topicsID);
-		}
-		
-		public void setTitleFromJS(final String newTopicName) {
-			getActivity().runOnUiThread(new Runnable() {
-			     public void run() {
-			    	 if (newTopicName != null) {
-			    		 topicTV.setText(newTopicName);
-			    	 }
-			    }
-			});
-		}
-	
+
+	// The JS calls this method on first loading
+	public void setSelectedTopicFromJS(String topicsID) {
+		this.topicsID = topicsID;
+		onUpdateTopicListener.onUpdateTopic(topicsID);
+	}
+
+	public void setTitleFromJS(final String newTopicName) {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				if (newTopicName != null) {
+					topicTV.setText(newTopicName);
+				}
+			}
+		});
+	}
+
+	public void startRotatingRefreshIcon() {
+
+		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		anim.setInterpolator(new LinearInterpolator());
+		anim.setRepeatCount(Animation.INFINITE);
+		anim.setDuration(1400);
+		refreshIcon.setImageDrawable(getResources().getDrawable(
+				R.drawable.icon_titlebar_refresh_active));
+		refreshIcon.startAnimation(anim);
+	}
+
+	public void stopRotatingRefreshIcon() {
+		refreshIcon.setImageDrawable(getResources().getDrawable(
+				R.drawable.icon_titlebar_refresh));
+		refreshIcon.clearAnimation();
+	}
+
 	public interface UpdateTopicListener {
 		public void onUpdateTopic(String topicID);
 	}
-		
+
 	public interface ChangePageListener {
 		public void onChangePage(int position);
 	}
-	
+
 	public interface PostSelectedListener {
 		public void onPostSelected(String requestedURL, String cachedPage);
 	}
-	
+
 }

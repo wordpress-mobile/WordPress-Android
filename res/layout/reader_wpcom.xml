@@ -73,14 +73,13 @@
                 <FrameLayout
                     android:layout_width="@dimen/action_bar_height"
                     android:layout_height="@dimen/action_bar_height"
-                    android:layout_marginRight="1px"
                     android:layout_marginTop="1px" >
 
                     <Button
                         android:id="@+id/action_refresh"
                         android:layout_width="@dimen/action_bar_height"
                         android:layout_height="@dimen/action_bar_height"
-                        android:background="@drawable/action_bar_btn_selector"
+                        android:background="@drawable/action_bar_btn_selector_right"
                         android:padding="@dimen/action_bar_button_padding"
                         android:scaleType="fitCenter" />
 

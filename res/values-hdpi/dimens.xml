@@ -2,4 +2,5 @@
 <resources>
     <dimen name="comment_badge_image_top_margin">0px</dimen>
     <dimen name="comment_badge_image_right_margin">0px</dimen>
+    <dimen name="action_bar_right_margin">97dp</dimen>
 </resources>

@@ -68,9 +68,8 @@
         android:src="@drawable/icon_titlebar_home"
         android:layout_alignParentRight="true"
         android:layout_marginTop="1px"
-        android:layout_marginRight="-1px"
         android:scaleType="fitCenter"
-        android:background="@drawable/action_bar_btn_selector" />
+        android:background="@drawable/action_bar_btn_selector_right" />
 
       <FrameLayout
         android:layout_width="@dimen/action_bar_height"

@@ -15,7 +15,7 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 	
 	public static int activityRequestCode = 1234322;
 
-	private String topicID = null;
+	//private String topicID = null;
 	private String cachedTopicsPage = null;
 	private ChangeTopicListener onChangeTopicListener;
 	public WebView wv;

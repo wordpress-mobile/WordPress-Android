@@ -74,6 +74,7 @@ res/drawable-v12/dashboard_btn_bottom_right.xml -text
 res/drawable-xhdpi-v11/notification_icon.png -text
 res/drawable-xhdpi/notification_icon.png -text
 res/drawable/action_bar_btn_selector.xml -text
+res/drawable/action_bar_btn_selector_right.xml -text
 res/drawable/action_bar_shadow.9.png -text
 res/drawable/action_item_btn.xml -text
 res/drawable/action_item_selected.9.png -text
@@ -185,6 +186,7 @@ res/drawable/tab_color_selector.xml -text
 res/drawable/tab_unselected.xml -text
 res/drawable/title_bar_gradient.xml -text
 res/drawable/title_bar_item_bg.xml -text
+res/drawable/title_bar_right_item_bg.xml -text
 res/drawable/title_bar_shadow.9.png -text
 res/drawable/title_bg.xml -text
 res/drawable/title_text_bg.xml -text

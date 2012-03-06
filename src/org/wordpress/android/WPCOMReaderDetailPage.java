@@ -16,17 +16,6 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	public WebView wv;
 	
 	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		/*getWindow().setFormat(PixelFormat.RGBA_8888);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.reader);*/
-
-		
-	}
-	
-	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment

@@ -10,6 +10,7 @@ import org.wordpress.android.WPCOMReaderTopicsSelector.ChangeTopicListener;
 import org.wordpress.android.util.WPViewPager;
 
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 public class WPCOMReaderPager extends FragmentActivity implements
 		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicListener {
@@ -33,6 +35,9 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
+		setContentView(R.layout.reader);
 		setContentView(R.layout.reader_wpcom_pager);
 
 		if (WordPress.wpDB == null)

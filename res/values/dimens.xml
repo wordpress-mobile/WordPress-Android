@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="comment_detail_font_size">16dp</dimen>
-    <dimen name="action_bar_height">47dp</dimen>
+    <dimen name="action_bar_height">48dp</dimen>
     <dimen name="dashboard_padding_large_left">20dp</dimen>
     <dimen name="dashboard_padding_small_left">20dp</dimen>
     <dimen name="dashboard_padding_large_right">16dp</dimen>
@@ -9,13 +9,13 @@
     <dimen name="dashboard_image_size">54dp</dimen>
     <dimen name="comment_badge_right_margin">2dp</dimen>
     <dimen name="comment_badge_text_view_size">31dp</dimen>
-    <dimen name="comment_badge_text_size">12dp</dimen>
+    <dimen name="comment_badge_text_size">14dp</dimen>
     <dimen name="comment_badge_size">44dp</dimen>
     <dimen name="comment_badge_image_top_margin">1px</dimen>
     <dimen name="comment_badge_image_right_margin">1px</dimen>
     <dimen name="action_bar_gravatar_size">26dp</dimen>
     <dimen name="action_bar_title_text_size">16dp</dimen>
-    <dimen name="action_bar_right_margin">95dp</dimen>
+    <dimen name="action_bar_right_margin">98dp</dimen>
     <dimen name="action_bar_button_padding">8dp</dimen>
     <dimen name="chart_width">320dp</dimen>
     <dimen name="chart_height">240dp</dimen>
