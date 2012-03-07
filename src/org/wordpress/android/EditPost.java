@@ -106,7 +106,8 @@ public class EditPost extends Activity {
 	public Boolean localDraft = false, isPage = false, isNew = false,
 			isAction = false, isUrl = false, isLargeScreen = false,
 			isCustomPubDate = false, isFullScreenEditing = false,
-			isBackspace = false, imeBackPressed = false, scrollDetected = false;
+			isBackspace = false, imeBackPressed = false,
+			scrollDetected = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
@@ -602,19 +603,19 @@ public class EditPost extends Activity {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-	
+
 				float pos = event.getY();
-				
+
 				if (event.getAction() == 0)
 					lastYPos = pos;
-				
+
 				if (event.getAction() > 1) {
 					if (((lastYPos - pos) > 2.0f) || ((pos - lastYPos) > 2.0f))
 						scrollDetected = true;
-				} 
-				
+				}
+
 				lastYPos = pos;
-				
+
 				if (!isFullScreenEditing && event.getAction() == 1) {
 					isFullScreenEditing = true;
 					content.setFocusableInTouchMode(true);
@@ -633,15 +634,16 @@ public class EditPost extends Activity {
 					}
 					content.requestFocus();
 					return false;
-				} 
-				
-				if (event.getAction() == 1 && !scrollDetected && isFullScreenEditing) {
+				}
+
+				if (event.getAction() == 1 && !scrollDetected
+						&& isFullScreenEditing) {
 					Layout layout = ((TextView) v).getLayout();
 					int x = (int) event.getX();
 					int y = (int) event.getY();
 
-	                x += v.getScrollX();
-	                y += v.getScrollY();
+					x += v.getScrollX();
+					y += v.getScrollY();
 					if (layout != null) {
 						int line = layout.getLineForVertical(y);
 						int charPosition = layout.getOffsetForHorizontal(line,
@@ -776,21 +778,19 @@ public class EditPost extends Activity {
 				return false;
 			}
 		});
-		
-		content
-		.setOnSelectionChangedListener(new WPEditText.OnSelectionChangedListener() {
+
+		content.setOnSelectionChangedListener(new WPEditText.OnSelectionChangedListener() {
 
 			@Override
 			public void onSelectionChanged() {
 				if (!localDraft)
 					return;
-				
+
 				final Spannable s = content.getText();
 				// set toggle buttons if cursor is inside of a matching
 				// span
 				styleStart = content.getSelectionStart();
-				Object[] spans = s.getSpans(
-						content.getSelectionStart(),
+				Object[] spans = s.getSpans(content.getSelectionStart(),
 						content.getSelectionStart(), Object.class);
 				ToggleButton boldButton = (ToggleButton) findViewById(R.id.bold);
 				ToggleButton emButton = (ToggleButton) findViewById(R.id.em);
@@ -1425,9 +1425,13 @@ public class EditPost extends Activity {
 				new getAddressTask().execute(curLocation.getLatitude(),
 						curLocation.getLongitude());
 			} else {
-				TextView locationText = (TextView) findViewById(R.id.locationText);
-				locationText.setText(getResources().getText(
-						R.string.location_not_found));
+				runOnUiThread(new Runnable() {
+					public void run() {
+						TextView locationText = (TextView) findViewById(R.id.locationText);
+						locationText.setText(getResources().getText(
+								R.string.location_not_found));
+					}
+				});
 			}
 		}
 	};
@@ -2116,16 +2120,16 @@ public class EditPost extends Activity {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		byte[] bytes = (byte[]) mediaData.get("bytes");
 		BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-		
+
 		float conversionFactor = 0.25f;
-		
+
 		if (opts.outWidth > opts.outHeight)
-			conversionFactor = 0.40f;	
+			conversionFactor = 0.40f;
 
 		byte[] finalBytes = ih.createThumbnail(bytes,
 				String.valueOf((int) (width * conversionFactor)),
@@ -2212,14 +2216,14 @@ public class EditPost extends Activity {
 		if (mediaData == null) {
 			return null;
 		}
-		
+
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inJustDecodeBounds = true;
 		byte[] bytes = (byte[]) mediaData.get("bytes");
 		BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-		
+
 		float conversionFactor = 0.25f;
-		
+
 		if (opts.outWidth > opts.outHeight)
 			conversionFactor = 0.40f;
 
