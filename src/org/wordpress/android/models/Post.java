@@ -451,16 +451,16 @@ public class Post {
 						context, 0, notificationIntent,
 						PendingIntent.FLAG_UPDATE_CURRENT);
 				n.flags |= Notification.FLAG_AUTO_CANCEL;
-				String errorText = context.getResources().getText(R.string.upload_failed).toString();
+				String errorText = context.getResources()
+						.getText(R.string.upload_failed).toString();
 				if (mediaError)
-					errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
-				n.setLatestEventInfo(
-						context,
-						(mediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
-						postOrPage
-								+ " "
-								+ errorText + ": " + error,
-						pendingIntent);
+					errorText = context.getResources().getText(R.string.media)
+							+ " "
+							+ context.getResources().getText(R.string.error);
+				n.setLatestEventInfo(context, (mediaError) ? errorText
+						: context.getResources()
+								.getText(R.string.upload_failed), postOrPage
+						+ " " + errorText + ": " + error, pendingIntent);
 
 				nm.notify(notificationID, n); // needs a unique id
 			}
@@ -1011,9 +1011,11 @@ public class Post {
 								finalBytes = ih2.createThumbnail(bytes,
 										String.valueOf(mf.getWidth()),
 										orientation, false);
-								
+
 								if (finalBytes == null) {
-									error = context.getResources().getText(R.string.media_error).toString();
+									error = context.getResources()
+											.getText(R.string.media_error)
+											.toString();
 									return null;
 								}
 							}
@@ -1099,13 +1101,17 @@ public class Post {
 									}
 								}
 
-								if (!mf.getCaption().equals("")) {
-									content = String
-											.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-													alignment, mf.getWidth(),
-													EscapeUtils.escapeHtml(mf
-															.getCaption()),
-													content);
+								if ((i == 0 && !post.blog.isFullSizeImage())
+										|| i == 1) {
+									if (!mf.getCaption().equals("")) {
+										content = String
+												.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+														alignment,
+														mf.getWidth(),
+														EscapeUtils.escapeHtml(mf
+																.getCaption()),
+														content);
+									}
 								}
 							}
 
