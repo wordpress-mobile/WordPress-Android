@@ -89,14 +89,6 @@ public class ViewPosts extends ListFragment {
 
 		createSwitcher();
 
-		// query for posts and refresh view
-		/*
-		 * boolean loadedPosts = loadPosts(false);
-		 * 
-		 * if (!loadedPosts) { onRefreshListener.onRefresh(true);
-		 * refreshPosts(false); }
-		 */
-
 		Display display = ((WindowManager) getActivity()
 				.getApplicationContext().getSystemService(
 						Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -174,7 +166,16 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
-
+		if (WordPress.wpDB == null)
+			WordPress.wpDB = new WordPressDB(getActivity().getBaseContext());
+		if (WordPress.currentBlog == null) {
+			try {
+				WordPress.currentBlog = new Blog(
+						WordPress.wpDB.getLastBlogID(getActivity().getBaseContext()), getActivity().getBaseContext());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		Vector<?> loadedPosts;
 		if (isPage) {
 			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()

@@ -73,6 +73,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
+		readerPageFragment.wv.stopLoading();
 		finish();
 	}
 
