@@ -699,6 +699,10 @@ public class Post {
 						contentStruct.put("categories", theCategories);
 				}
 			}
+			
+			if (post.getMt_excerpt() != null)
+				contentStruct.put("mt_excerpt", post.getMt_excerpt());
+			
 			contentStruct.put((post.isPage) ? "page_status" : "post_status",
 					post.post_status);
 			Double latitude = 0.0;

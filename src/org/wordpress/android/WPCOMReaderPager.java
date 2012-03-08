@@ -37,7 +37,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-		setContentView(R.layout.reader);
 		setContentView(R.layout.reader_wpcom_pager);
 
 		if (WordPress.wpDB == null)
