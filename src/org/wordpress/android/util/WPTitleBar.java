@@ -68,7 +68,8 @@ public class WPTitleBar extends RelativeLayout {
 		super.onFinishInflate();
 
 		initViews();
-
+		blogNames = new CharSequence[accounts.size()];
+		blogIDs = new int[accounts.size()];
 		for (int i = 0; i < accounts.size(); i++) {
 			HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
 			String curBlogName = EscapeUtils.unescapeHtml(defHash.get(
