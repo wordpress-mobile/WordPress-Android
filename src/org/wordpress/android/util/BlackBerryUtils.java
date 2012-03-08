@@ -54,7 +54,8 @@ public class BlackBerryUtils {
 	}
 
 	private BlackBerryUtils() {
-		isPlayBook =  android.os.Build.MANUFACTURER.equalsIgnoreCase( "Research in Motion" ) &&  
-				android.os.Build.MODEL.startsWith( "BlackBerry Runtime for Android" );
+		/*isPlayBook =  android.os.Build.MANUFACTURER.equalsIgnoreCase( "Research in Motion" ) &&  
+				android.os.Build.MODEL.startsWith( "BlackBerry Runtime for Android" ); */
+		isPlayBook = System.getProperty("os.name").equalsIgnoreCase("qnx") ? true : false;
 	};
 }
