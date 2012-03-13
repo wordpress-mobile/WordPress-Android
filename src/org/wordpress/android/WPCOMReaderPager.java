@@ -3,10 +3,11 @@ package org.wordpress.android;
 import java.util.List;
 import java.util.Vector;
 
+import org.wordpress.android.WPCOMReaderBase.ChangeTopicListener;
+import org.wordpress.android.WPCOMReaderBase.UpdateTopicIDListener;
+import org.wordpress.android.WPCOMReaderBase.UpdateTopicTitleListener;
 import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
 import org.wordpress.android.WPCOMReaderImpl.PostSelectedListener;
-import org.wordpress.android.WPCOMReaderImpl.UpdateTopicListener;
-import org.wordpress.android.WPCOMReaderTopicsSelector.ChangeTopicListener;
 import org.wordpress.android.util.WPViewPager;
 
 import android.content.res.Configuration;
@@ -23,7 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class WPCOMReaderPager extends FragmentActivity implements
-		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicListener {
+		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener, UpdateTopicTitleListener {
 
 	private WPViewPager readerPager;
 	private ReaderPagerAdapter readerAdapter;
@@ -197,8 +198,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	public void onChangeTopic(String topicID, final String topicName) {
 
 		final WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
-		if (readerPageFragment.topicsID.equalsIgnoreCase(topicID))
-			return;
 		readerPageFragment.topicsID = topicID;
 		String methodCall = "Reader2.load_topic('" + topicID + "')";
 		readerPageFragment.wv.loadUrl("javascript:" + methodCall);
@@ -230,7 +229,21 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	}
 
 	@Override
-	public void onUpdateTopic(String topicID) {
+	public void updateTopicTitle(final String topicTitle) {
+		final WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
+		runOnUiThread(new Runnable() {
+			public void run() {
+				if (topicTitle != null) {
+					readerPageFragment.topicTV.setText(topicTitle);
+				}
+				readerPager.setCurrentItem(1, true);
+			}
+		});
+		
+	}
+
+	@Override
+	public void onUpdateTopicID(String topicID) {
 		WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
 		String methodCall = "document.setSelectedTopic('"+topicID+"')";
 		topicsFragment.wv.loadUrl("javascript:"+methodCall);

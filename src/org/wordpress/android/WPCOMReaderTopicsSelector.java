@@ -2,7 +2,6 @@ package org.wordpress.android;
 
 import org.apache.http.protocol.HTTP;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 
 	//private String topicID = null;
 	private String cachedTopicsPage = null;
-	private ChangeTopicListener onChangeTopicListener;
 	public WebView wv;
 	
 	@Override
@@ -42,35 +40,9 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 		return v;
 	}
 	
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			// check that the containing activity implements our callback
-			onChangeTopicListener = (ChangeTopicListener) activity;
-		} catch (ClassCastException e) {
-			activity.finish();
-			throw new ClassCastException(activity.toString()
-					+ " must implement Callback");
-		}
-	}
-
-	//Methods called from JS
-	public void setTitleFromJS(String title) {
-		//onChangeTopicListener.onChangeTopic(topicID, fTitle);
-	}
-	
-	public void selectTopicFromJS(String topicID, String topicName) {
-	 	onChangeTopicListener.onChangeTopic(topicID, topicName);
-	}
-	//End of methods called from the JS code
-	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
-	}
-	
-	public interface ChangeTopicListener {
-		public void onChangeTopic(String topicID, String topicName);
 	}
 }
