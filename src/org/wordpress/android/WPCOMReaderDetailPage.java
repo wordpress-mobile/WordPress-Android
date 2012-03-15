@@ -28,7 +28,7 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		
 		wv = (WebView) v.findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
-		wv.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT); //override the default setting of NO_CACHE
+		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //override the default setting of NO_CACHE
 		//wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getApplicationContext()), interfaceNameForJS );
 		wv.setWebViewClient(new WordPressWebViewClient());
 		

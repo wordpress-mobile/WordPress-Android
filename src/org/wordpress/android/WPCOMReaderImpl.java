@@ -42,7 +42,6 @@ import android.widget.Toast;
 public class WPCOMReaderImpl extends WPCOMReaderBase {
 	/** Called when the activity is first created. */
 	private String loginURL = "";
-	// private boolean isPage = false;
 	public WebView wv;
 	public String topicsID;
 	// private String cachedTopicsPage = null;
@@ -301,6 +300,17 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 									WPCOMReaderImpl.this.cachedDetailPage);
 						}
 						
+					}
+					
+					@Override
+					public boolean shouldOverrideUrlLoading(WebView view, String url) {
+						/*if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
+							onPostSelectedListener.onPostSelected(url,
+									WPCOMReaderImpl.this.cachedDetailPage);
+							return true;
+						}
+						*/
+						return false;
 					}
 				});
 
