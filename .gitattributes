@@ -72,6 +72,7 @@ res/drawable-v11/list_highlight_bg.xml -text
 res/drawable-v12/dashboard_btn_bottom_left.xml -text
 res/drawable-v12/dashboard_btn_bottom_right.xml -text
 res/drawable-xhdpi-v11/notification_icon.png -text
+res/drawable-xhdpi/app_icon.png -text
 res/drawable-xhdpi/notification_icon.png -text
 res/drawable/action_bar_btn_selector.xml -text
 res/drawable/action_bar_btn_selector_right.xml -text
