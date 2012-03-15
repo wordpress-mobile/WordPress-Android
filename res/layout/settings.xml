@@ -177,6 +177,37 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/upload_full_size_image"
                     android:textColor="#444444" />
+                <CheckBox
+                    android:id="@+id/scaledImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/fullSizeImage"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/upload_scaled_image"
+                    android:textColor="#444444" />
+                <TextView
+                    android:id="@+id/l_scaledImage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/scaledImage"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/scaled_image"
+                    android:textColor="#444444" />
+                <EditText
+                    android:id="@+id/scaledImageWidth"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_scaledImage"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@android:drawable/editbox_background"
+                    android:minHeight="40dip"
+                    android:numeric="integer"
+                    android:maxLength="4"
+                    android:singleLine="true" />
             </RelativeLayout>
 
             <RelativeLayout

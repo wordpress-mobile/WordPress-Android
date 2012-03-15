@@ -117,6 +117,9 @@
   <string name="saved_to_local_drafts">Saved to local drafts</string>
   <string name="new_account">New Account</string>
   <string name="upload_full_size_image">Upload and link to full image</string>
+  <string name="upload_scaled_image">Upload and link to scaled image</string>
+  <string name="scaled_image_error">Please enter a valid scaled width value</string>
+  <string name="scaled_image">Scaled image width</string>
   <string name="uploading_content">Uploading Content</string>
   <string name="load_more">Load More</string>
   <string name="load_settings">Load settings now?</string>

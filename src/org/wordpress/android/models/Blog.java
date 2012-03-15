@@ -18,6 +18,8 @@ public class Blog {
 	private String imagePlacement;
 	private boolean centerThumbnail;
 	private boolean fullSizeImage;
+	private boolean scaledImage;
+	private int scaledImageWidth;
 	private String maxImageWidth;
 	private int maxImageWidthId;
 	private int lastCommentId;
@@ -68,6 +70,10 @@ public class Blog {
 				this.wpVersion = blogVals.get(19).toString();
 			this.postFormats = blogVals.get(20).toString();
 			this.lastCommentId = (Integer)blogVals.get(21);
+			if(blogVals.get(22)!=null)
+				this.scaledImage = (Integer)blogVals.get(22)>0;
+			if(blogVals.get(23)!=null)
+				this.scaledImageWidth = (Integer)blogVals.get(23);
 		} else {
 			throw new Exception();
 		}
@@ -251,7 +257,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password);
+		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.scaledImage, this.scaledImageWidth);
 	}
 
     public String getPostFormats() {
@@ -264,5 +270,21 @@ public class Blog {
 	
 	public int getUnmoderatedCommentCount(Context ctx) {
 	    return WordPress.wpDB.getUnmoderatedCommentCount(this.id);
-	}	
+	}
+
+	public boolean isScaledImage() {
+		return scaledImage;
+	}
+
+	public void setScaledImage(boolean scaledImage) {
+		this.scaledImage = scaledImage;
+	}
+
+	public int getScaledImageWidth() {
+		return scaledImageWidth;
+	}
+
+	public void setScaledImageWidth(int scaledImageWidth) {
+		this.scaledImageWidth = scaledImageWidth;
+	}
 }

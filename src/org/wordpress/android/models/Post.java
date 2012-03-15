@@ -927,7 +927,7 @@ public class Post {
 
 						curImagePath = mf.getFileName();
 
-						if (i == 0 || post.blog.isFullSizeImage()) {
+						if (i == 0 || (post.blog.isFullSizeImage() || post.blog.isScaledImage())) {
 
 							Uri imageUri = Uri.parse(curImagePath);
 							File jpeg = null;
@@ -990,7 +990,7 @@ public class Post {
 
 							byte[] finalBytes = null;
 
-							if (i == 0) {
+							if (i == 0 || post.blog.isScaledImage()) {
 								byte[] bytes = new byte[(int) jpeg.length()];
 
 								DataInputStream in = null;
@@ -1013,7 +1013,7 @@ public class Post {
 
 								ImageHelper ih2 = new ImageHelper();
 								finalBytes = ih2.createThumbnail(bytes,
-										String.valueOf(mf.getWidth()),
+										String.valueOf(i==0 ? mf.getWidth() : post.blog.getScaledImageWidth()),
 										orientation, false);
 
 								if (finalBytes == null) {
@@ -1029,7 +1029,7 @@ public class Post {
 
 							m.put("name", imageTitle);
 							m.put("type", mimeType);
-							if (i == 0) {
+							if (i == 0 || post.blog.isScaledImage()) {
 								m.put("bits", finalBytes);
 							} else {
 								m.put("bits", mf);
@@ -1059,7 +1059,7 @@ public class Post {
 							if (i == 0) {
 								finalThumbnailUrl = resultURL;
 							} else {
-								if (post.blog.isFullSizeImage()) {
+								if (post.blog.isFullSizeImage() || post.blog.isScaledImage()) {
 									finalImageUrl = resultURL;
 								} else {
 									finalImageUrl = "";
@@ -1085,7 +1085,7 @@ public class Post {
 							String alignmentCSS = "class=\"" + alignment
 									+ "\" ";
 							if (resultURL != null) {
-								if (i != 0 && post.blog.isFullSizeImage()) {
+								if (i != 0 && (post.blog.isFullSizeImage() || post.blog.isScaledImage())) {
 									content = content
 											+ "<a alt=\"image\" href=\""
 											+ finalImageUrl
@@ -1096,7 +1096,7 @@ public class Post {
 											+ finalThumbnailUrl + "\" /></a>";
 								} else {
 									if (i == 0
-											&& post.blog.isFullSizeImage() == false) {
+											&& (post.blog.isFullSizeImage() == false && !post.blog.isScaledImage())) {
 										content = content + "<img title=\""
 												+ mf.getTitle() + "\" "
 												+ alignmentCSS
@@ -1105,7 +1105,7 @@ public class Post {
 									}
 								}
 
-								if ((i == 0 && !post.blog.isFullSizeImage())
+								if ((i == 0 && !post.blog.isFullSizeImage() && !post.blog.isScaledImage())
 										|| i == 1) {
 									if (!mf.getCaption().equals("")) {
 										content = String

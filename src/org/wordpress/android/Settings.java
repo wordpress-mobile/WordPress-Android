@@ -5,6 +5,8 @@ import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
@@ -57,7 +59,7 @@ public class Settings extends Activity {
         });
         
         loadSettingsForBlog();
-     
+        
 	}
 	
 	@Override
@@ -108,7 +110,37 @@ public class Settings extends Activity {
 
     	CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
     	fullSize.setChecked(WordPress.currentBlog.isFullSizeImage());
-
+    	CheckBox scaledImage = (CheckBox)findViewById(R.id.scaledImage);
+    	scaledImage.setChecked(WordPress.currentBlog.isScaledImage());
+    	EditText scaledImageWidth = (EditText)findViewById(R.id.scaledImageWidth);
+    	scaledImageWidth.setText(""+WordPress.currentBlog.getScaledImageWidth());
+    	showScaledSetting(WordPress.currentBlog.isScaledImage());
+    	//sets up a state listener for the scaled image checkbox
+        ((CheckBox)findViewById(R.id.scaledImage)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				CheckBox scaledImage = (CheckBox)findViewById(R.id.scaledImage);
+				showScaledSetting(scaledImage.isChecked());
+				if(scaledImage.isChecked()){
+					CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
+					fullSize.setChecked(false);
+				}
+			}
+        });
+        //sets up a state listener for the fullsize checkbox
+        ((CheckBox)findViewById(R.id.fullSizeImage)).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
+				if(fullSize.isChecked()){
+					CheckBox scaledImage = (CheckBox)findViewById(R.id.scaledImage);
+					if(scaledImage.isChecked()){
+						scaledImage.setChecked(false);
+						showScaledSetting(false);
+					}
+				}
+			}
+        });
     	//don't show location option for devices that have no location support.
     	boolean hasLocationProvider = false;
     	LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -149,7 +181,38 @@ public class Settings extends Activity {
                 
                 CheckBox fullSize = (CheckBox)findViewById(R.id.fullSizeImage);
                 WordPress.currentBlog.setFullSizeImage(fullSize.isChecked());
-                
+                CheckBox scaledImage = (CheckBox)findViewById(R.id.scaledImage);
+                WordPress.currentBlog.setScaledImage(scaledImage.isChecked());
+                if(WordPress.currentBlog.isScaledImage()){
+                	EditText scaledImgWidth = (EditText)findViewById(R.id.scaledImageWidth);
+                	
+                	boolean error = false;
+                	int width = 0;
+                	try {
+                		width = Integer.parseInt(scaledImgWidth.getText().toString().trim());
+                	} catch (NumberFormatException e) {
+						error = true;
+					}
+                	
+                	if (width == 0)
+                		error = true;
+                	
+                	if (error) {
+                		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Settings.this);
+						  dialogBuilder.setTitle(getResources().getText(R.string.error));
+			            dialogBuilder.setMessage(getResources().getText(R.string.scaled_image_error));
+			            dialogBuilder.setPositiveButton("OK",  new
+			          		  DialogInterface.OnClickListener() {
+			                public void onClick(DialogInterface dialog, int whichButton) {
+			                }
+			            });
+			            dialogBuilder.setCancelable(true);
+			           dialogBuilder.create().show();
+			           return;
+                	} else {
+                		WordPress.currentBlog.setScaledImageWidth(width);
+                	}
+                }
                 Spinner spinner = (Spinner)findViewById(R.id.maxImageWidth);
                 WordPress.currentBlog.setMaxImageWidth(spinner.getSelectedItem().toString());
                 
@@ -174,6 +237,17 @@ public class Settings extends Activity {
             }
         }); 
 		
+	}
+	
+	/**
+	 * Hides / shows the scaled image settings
+	 * @param show
+	 */
+	private void showScaledSetting(boolean show){
+		TextView tw = (TextView)findViewById(R.id.l_scaledImage);
+		EditText et = (EditText)findViewById(R.id.scaledImageWidth);
+		tw.setVisibility(show?View.VISIBLE:View.GONE);
+		et.setVisibility(show?View.VISIBLE:View.GONE);
 	}
 
 	@Override

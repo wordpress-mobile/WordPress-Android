@@ -26,10 +26,12 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 11;
+	private static final int DATABASE_VERSION = 12;
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
-			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
+			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean"+
+			", isScaledImage boolean default false, scaledImgWidth integer default 1024" +
+			");";
 	private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
 			+ "read integer not null, interval text, statsdate integer);";
 	private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
@@ -101,6 +103,9 @@ public class WordPressDB {
 
 	// add field to store last used blog
 	private static final String ADD_POST_FORMATS = "alter table accounts add postFormats text default '';";
+	
+	private static final String ADD_SCALED_IMAGE = "alter table accounts add isScaledImage boolean default false;";
+	private static final String ADD_SCALED_IMAGE_IMG_WIDTH = "alter table accounts add scaledImgWidth integer default 1024;";
 
 	private SQLiteDatabase db;
 
@@ -368,6 +373,12 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.setVersion(DATABASE_VERSION);
 			}
+			
+			if(db.getVersion()>0 && db.getVersion()<12){
+				//lets add the two new img options for settings
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -489,7 +500,7 @@ public class WordPressDB {
 			String imagePlacement, boolean centerThumbnail,
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
 			boolean location, boolean isWPCom, String originalUsername,
-			String postFormats, String dotcomUsername, String dotcomPassword) {
+			String postFormats, String dotcomUsername, String dotcomPassword, boolean isScaledImage, int scaledImgWidth) {
 
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -506,6 +517,8 @@ public class WordPressDB {
 		values.put("postFormats", postFormats);
 		values.put("dotcom_username", dotcomUsername);
 		values.put("dotcom_password", encryptPassword(dotcomPassword));
+		values.put("isScaledImage", isScaledImage);
+		values.put("scaledImgWidth", scaledImgWidth);
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
 				null) > 0;
 		if (isWPCom) {
@@ -570,7 +583,7 @@ public class WordPressDB {
 				"maxImageWidth", "maxImageWidthId", "runService", "blogId",
 				"location", "dotcomFlag", "dotcom_username", "dotcom_password",
 				"api_key", "api_blogid", "wpVersion", "postFormats",
-				"lastCommentId" }, "id=" + id, null, null, null, null);
+				"lastCommentId","isScaledImage","scaledImgWidth" }, "id=" + id, null, null, null, null);
 
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -608,6 +621,8 @@ public class WordPressDB {
 				returnVector.add(c.getString(19));
 				returnVector.add(c.getString(20));
 				returnVector.add(c.getInt(21));
+				returnVector.add(c.getInt(22));
+				returnVector.add(c.getInt(23));
 			} else {
 				returnVector = null;
 			}
