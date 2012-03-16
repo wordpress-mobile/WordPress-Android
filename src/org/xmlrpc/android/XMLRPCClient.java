@@ -100,6 +100,10 @@ public class XMLRPCClient {
 		
 		serializer = Xml.newSerializer();
 	}
+	
+	public void addQuickPostHeader(String type) {
+		postMethod.addHeader("WP-QUICK-POST", type);
+	}
 
 	/**
 	 * Convenience constructor. Creates new instance based on server String address

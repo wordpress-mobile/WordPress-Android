@@ -982,9 +982,15 @@ public class EditPost extends Activity {
 
 				boolean result = savePost();
 				if (result) {
-					if (post.isUploaded()
-							|| !post.getPost_status().equals("localdraft"))
+					if (post.isUploaded() || !post.getPost_status().equals("localdraft")) {
+						if (option != null) {
+							if (option.equals("newphoto") || option.equals("photolibrary"))
+								post.setQuickPostType("QuickPhoto");
+							else if (option.equals("newvideo") || option.equals("videolibrary"))
+								post.setQuickPostType("QuickVideo");
+						}
 						post.upload();
+					}
 					finish();
 				}
 			}

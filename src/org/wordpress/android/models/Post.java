@@ -69,6 +69,7 @@ public class Post {
 	private double longitude;
 	private boolean isPage;
 	private String mediaPaths;
+	private String quickPostType;
 
 	private Blog blog;
 	static Context context;
@@ -732,6 +733,9 @@ public class Post {
 
 			XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 					post.blog.getHttpuser(), post.blog.getHttppassword());
+			
+			if (post.quickPostType != null)
+				client.addQuickPostHeader(post.quickPostType);
 
 			/*
 			 * client.setUploadProgressListener(new
@@ -1133,5 +1137,9 @@ public class Post {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void setQuickPostType(String type) {
+		this.quickPostType = type;
 	}
 }
