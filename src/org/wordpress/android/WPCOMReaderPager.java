@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.wordpress.android.WPCOMReaderBase.ChangeTopicListener;
+import org.wordpress.android.WPCOMReaderBase.GetLoadedItemsListener;
+import org.wordpress.android.WPCOMReaderBase.UpdateButtonStatusListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateTopicIDListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateTopicTitleListener;
 import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
@@ -24,7 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class WPCOMReaderPager extends FragmentActivity implements
-		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener, UpdateTopicTitleListener {
+		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener, UpdateTopicTitleListener, GetLoadedItemsListener, UpdateButtonStatusListener {
 
 	private WPViewPager readerPager;
 	private ReaderPagerAdapter readerAdapter;
@@ -215,6 +217,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	public void onPostSelected(String requestedURL, String cachedPage) {
 		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
 		readerPageDetailFragment.wv.clearView();
+		readerPageDetailFragment.nextPost.setEnabled(false);
+		readerPageDetailFragment.prevPost.setEnabled(false);
 		readerPageDetailFragment.wv.loadUrl(requestedURL);
 		readerPager.setCurrentItem(2, true);
 	}
@@ -247,5 +251,19 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
 		String methodCall = "document.setSelectedTopic('"+topicID+"')";
 		topicsFragment.wv.loadUrl("javascript:"+methodCall);
+	}
+
+	@Override
+	public void getLoadedItems(String items) {
+		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+		readerPageDetailFragment.updateLoadedItems(items);
+		
+	}
+
+	@Override
+	public void updateButtonStatus(int button, boolean enabled) {
+		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+		readerPageDetailFragment.updateButtonStatus(button, enabled);
+		
 	}
 }

@@ -24,6 +24,8 @@ public abstract class WPCOMReaderBase extends Fragment {
 	private UpdateTopicTitleListener updateTopicTitleListener;
 	private UpdateTopicIDListener updateTopicIDListener;
 	private ChangeTopicListener onChangeTopicListener;
+	private GetLoadedItemsListener getLoadedItemsListener;
+	private UpdateButtonStatusListener updateButtonStatusListener;
 	
 	protected void setDefaultWebViewSettings(WebView wv) {
 		WebSettings webSettings = wv.getSettings();
@@ -42,6 +44,8 @@ public abstract class WPCOMReaderBase extends Fragment {
 			updateTopicTitleListener = (UpdateTopicTitleListener) activity;
 			updateTopicIDListener = (UpdateTopicIDListener) activity;
 			onChangeTopicListener = (ChangeTopicListener) activity;
+			getLoadedItemsListener = (GetLoadedItemsListener) activity;
+			updateButtonStatusListener = (UpdateButtonStatusListener) activity;
 		} catch (ClassCastException e) {
 			activity.finish();
 			throw new ClassCastException(activity.toString()
@@ -120,6 +124,20 @@ public abstract class WPCOMReaderBase extends Fragment {
 		 	onChangeTopicListener.onChangeTopic(topicID, topicName);
 		}
 	    
+	    public void getLoadedItems(String items) {
+	    	getLoadedItemsListener.getLoadedItems(items);
+	    }
+	    
+	    public void isPrevItem(String isPrev) {
+	    	int hi = 0;
+	    	hi++;
+	    	//updateButtonStatusListener.updateButtonStatus(0, isPrev);
+	    }
+	    
+	    public void isNextItem(boolean isNext) {
+	    	//updateButtonStatusListener.updateButtonStatus(1, isNext);
+	    }
+	    
 	}
 	
 	public interface UpdateTopicTitleListener {
@@ -132,6 +150,14 @@ public abstract class WPCOMReaderBase extends Fragment {
 	
 	public interface ChangeTopicListener {
 		public void onChangeTopic(String topicID, String topicName);
+	}
+	
+	public interface GetLoadedItemsListener {
+		public void getLoadedItems(String items);
+	}
+	
+	public interface UpdateButtonStatusListener {
+		public void updateButtonStatus(int button, boolean enabled);
 	}
 	
 }

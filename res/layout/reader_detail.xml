@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="2" >
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+    </WebView>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:background="#C9C9C9"
+        android:paddingTop="4dp"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <ImageButton
+            android:id="@+id/up"
+            android:src="@drawable/up"
+            android:scaleType="fitCenter"
+            android:enabled="false"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/down"
+            android:src="@drawable/down"
+            android:scaleType="fitCenter"
+            android:enabled="false"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -123,6 +123,7 @@ res/drawable/dashboard_icon_stats.png -text
 res/drawable/dashboard_icon_subs.png -text
 res/drawable/dashboard_icon_video.png -text
 res/drawable/dashboard_icon_wp.png -text
+res/drawable/down.png -text
 res/drawable/drafts_icon.png -text
 res/drawable/drop_down_arrow.png -text
 res/drawable/format_bar_bg.xml -text
@@ -191,6 +192,7 @@ res/drawable/title_bar_right_item_bg.xml -text
 res/drawable/title_bar_shadow.9.png -text
 res/drawable/title_bg.xml -text
 res/drawable/title_text_bg.xml -text
+res/drawable/up.png -text
 res/drawable/video.png -text
 res/drawable/view_post_navbar_bg.xml -text
 res/drawable/wordpress_gallery_background.xml -text
@@ -265,6 +267,7 @@ res/layout/popup.xml -text
 res/layout/posts.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/reader.xml -text
+res/layout/reader_detail.xml -text
 res/layout/reader_wpcom.xml -text
 res/layout/reader_wpcom_pager.xml -text
 res/layout/reply.xml -text

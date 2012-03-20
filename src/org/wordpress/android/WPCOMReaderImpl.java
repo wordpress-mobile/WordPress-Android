@@ -296,6 +296,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 					public void onPageStarted(WebView view, String url, Bitmap favicon) {
 						if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
 							view.stopLoading();
+							wv.loadUrl("javascript:Reader2.get_loaded_items();");
 							onPostSelectedListener.onPostSelected(url,
 									WPCOMReaderImpl.this.cachedDetailPage);
 						}
