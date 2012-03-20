@@ -163,6 +163,7 @@ res/drawable/popup.9.png -text
 res/drawable/posts_tab.png -text
 res/drawable/posts_tab_active.png -text
 res/drawable/posts_tab_icon.png -text
+res/drawable/progress_color.xml -text
 res/drawable/quickcontact_arrow_down.png -text
 res/drawable/quickcontact_arrow_up.png -text
 res/drawable/quickcontact_bottom_frame.9.png -text
@@ -268,6 +269,7 @@ res/layout/posts.xml -text
 res/layout/posts_tab_selector.xml -text
 res/layout/reader.xml -text
 res/layout/reader_detail.xml -text
+res/layout/reader_web_page.xml -text
 res/layout/reader_wpcom.xml -text
 res/layout/reader_wpcom_pager.xml -text
 res/layout/reply.xml -text
@@ -367,6 +369,7 @@ src/org/wordpress/android/WPCOMReaderDetailPage.java -text
 src/org/wordpress/android/WPCOMReaderImpl.java -text
 src/org/wordpress/android/WPCOMReaderPager.java -text
 src/org/wordpress/android/WPCOMReaderTopicsSelector.java -text
+src/org/wordpress/android/WPCOMReaderWebPage.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
 src/org/wordpress/android/models/Blog.java -text

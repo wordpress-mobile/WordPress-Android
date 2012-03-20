@@ -28,7 +28,6 @@
             android:id="@+id/up"
             android:src="@drawable/up"
             android:scaleType="fitCenter"
-            android:enabled="false"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1" />
@@ -37,7 +36,6 @@
             android:id="@+id/down"
             android:src="@drawable/down"
             android:scaleType="fitCenter"
-            android:enabled="false"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1" />

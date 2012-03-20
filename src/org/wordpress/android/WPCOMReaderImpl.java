@@ -29,7 +29,6 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -44,10 +43,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	private String loginURL = "";
 	public WebView wv;
 	public String topicsID;
-	// private String cachedTopicsPage = null;
-	private String cachedDetailPage = null;
 	private ChangePageListener onChangePageListener;
 	private PostSelectedListener onPostSelectedListener;
+	private ShowTopicsListener showTopicsListener;
 	public TextView topicTV;
 	private ImageView refreshIcon;
 
@@ -88,8 +86,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.topicSelector);
 		rl.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (onChangePageListener != null)
-					onChangePageListener.onChangePage(0);
+				//if (onChangePageListener != null)
+					//onChangePageListener.onChangePage(0);
+				showTopicsListener.showTopics();
 			}
 		});
 
@@ -130,6 +129,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			// check that the containing activity implements our callback
 			onChangePageListener = (ChangePageListener) activity;
 			onPostSelectedListener = (PostSelectedListener) activity;
+			showTopicsListener = (ShowTopicsListener) activity;
 		} catch (ClassCastException e) {
 			activity.finish();
 			throw new ClassCastException(activity.toString()
@@ -155,7 +155,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			// connections below!
 			CookieManager cookieManager = CookieManager.getInstance();
 			final String cookie = cookieManager.getCookie("wordpress.com");
-			stopRotatingRefreshIcon();
+			
 
 			new Thread(new Runnable() {
 				public void run() {
@@ -169,18 +169,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						HttpGet httpGet = new HttpGet(readerURL);
 						httpGet.setHeader("Cookie", cookie);
 						httpclient.execute(httpGet);
-
-						// Cache the Topics page
-						String hybURL = WPCOMReaderImpl.this
-								.getAuthorizeHybridURL(Constants.readerTopicsURL);
-						// WPCOMReaderImpl.this.cachedTopicsPage =
-						// cachePage(hybURL, cookie);
-
-						// Cache the Detail page
-						hybURL = WPCOMReaderImpl.this
-								.getAuthorizeHybridURL(Constants.readerDetailURL);
-						WPCOMReaderImpl.this.cachedDetailPage = cachePage(
-								hybURL, cookie);
 
 					} catch (Exception e) {
 						// oh well
@@ -297,10 +285,16 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
 							view.stopLoading();
 							wv.loadUrl("javascript:Reader2.get_loaded_items();");
-							onPostSelectedListener.onPostSelected(url,
-									WPCOMReaderImpl.this.cachedDetailPage);
+							onPostSelectedListener.onPostSelected(url);
+						} else {
+							startRotatingRefreshIcon();
 						}
 						
+					}
+					
+					@Override
+					public void onPageFinished(WebView view, String url) {
+						stopRotatingRefreshIcon();
 					}
 					
 					@Override
@@ -312,15 +306,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						}
 						*/
 						return false;
-					}
-				});
-
-				wv.setWebChromeClient(new WebChromeClient() {
-					public void onProgressChanged(WebView view, int progress) {
-
-						if (progress == 100) {
-							stopRotatingRefreshIcon();
-						}
 					}
 				});
 
@@ -359,7 +344,11 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	}
 
 	public interface PostSelectedListener {
-		public void onPostSelected(String requestedURL, String cachedPage);
+		public void onPostSelected(String requestedURL);
+	}
+	
+	public interface ShowTopicsListener {
+		public void showTopics();
 	}
 
 }

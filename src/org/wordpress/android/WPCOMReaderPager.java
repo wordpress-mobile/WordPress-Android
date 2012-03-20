@@ -8,10 +8,13 @@ import org.wordpress.android.WPCOMReaderBase.GetLoadedItemsListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateButtonStatusListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateTopicIDListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateTopicTitleListener;
+import org.wordpress.android.WPCOMReaderDetailPage.LoadExternalURLListener;
 import org.wordpress.android.WPCOMReaderImpl.ChangePageListener;
 import org.wordpress.android.WPCOMReaderImpl.PostSelectedListener;
+import org.wordpress.android.WPCOMReaderImpl.ShowTopicsListener;
 import org.wordpress.android.util.WPViewPager;
 
+import android.app.Dialog;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -23,16 +26,23 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 public class WPCOMReaderPager extends FragmentActivity implements
-		ChangePageListener, ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener, UpdateTopicTitleListener, GetLoadedItemsListener, UpdateButtonStatusListener {
+		ChangePageListener, ChangeTopicListener, PostSelectedListener,
+		UpdateTopicIDListener, UpdateTopicTitleListener,
+		GetLoadedItemsListener, UpdateButtonStatusListener, ShowTopicsListener,
+		LoadExternalURLListener {
 
 	private WPViewPager readerPager;
 	private ReaderPagerAdapter readerAdapter;
 	private Fragment readerPage;
 	private Fragment detailPage;
 	private Fragment topicPage;
+	private Fragment webPage;
+	private Dialog topicsDialog;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -50,20 +60,24 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		readerPager = (WPViewPager) findViewById(R.id.pager);
+		readerPager.setOffscreenPageLimit(3);
 		readerPage = Fragment
 				.instantiate(this, WPCOMReaderImpl.class.getName());
-		detailPage = Fragment.instantiate(this,
-				WPCOMReaderDetailPage.class.getName());
 		topicPage = Fragment.instantiate(this,
 				WPCOMReaderTopicsSelector.class.getName());
+		detailPage = Fragment.instantiate(this,
+				WPCOMReaderDetailPage.class.getName());
+		webPage = Fragment.instantiate(this,
+				WPCOMReaderWebPage.class.getName());
 
 		List<Fragment> fragments = new Vector<Fragment>();
 
 		fragments.add(topicPage);
 		fragments.add(readerPage);
 		fragments.add(detailPage);
+		fragments.add(webPage);
 		readerAdapter = new ReaderPagerAdapter(
 				super.getSupportFragmentManager(), fragments);
 
@@ -71,13 +85,13 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		readerPager.setCurrentItem(1, true);
 
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
 		readerPageFragment.wv.stopLoading();
-		finish();
+		//finish();
 	}
 
 	private class ReaderPagerAdapter extends FragmentPagerAdapter {
@@ -94,56 +108,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 			return fragments.size();
 		}
 
-		/**
-		 * Remove a page for the given position. The adapter is responsible for
-		 * removing the view from its container, although it only must ensure
-		 * this is done by the time it returns from {@link #finishUpdate()}.
-		 * 
-		 * @param container
-		 *            The containing View from which the page will be removed.
-		 * @param position
-		 *            The page position to be removed.
-		 * @param object
-		 *            The same object that was returned by
-		 *            {@link #instantiateItem(View, int)}.
-		 */
-		/*
-		 * @Override public void destroyItem(View collection, int position,
-		 * Object view) { ((ViewPager) collection).removeView((TextView) view);
-		 * }
-		 * 
-		 * 
-		 * 
-		 * @Override public boolean isViewFromObject(View view, Object object) {
-		 * return view==((TextView)object); }
-		 */
-
-		/**
-		 * Called when the a change in the shown pages has been completed. At
-		 * this point you must ensure that all of the pages have actually been
-		 * added or removed from the container as appropriate.
-		 * 
-		 * @param container
-		 *            The containing View which is displaying this adapter's
-		 *            page views.
-		 */
-		@Override
-		public void finishUpdate(View arg0) {
-		}
-
-		@Override
-		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-		}
-
-		@Override
-		public Parcelable saveState() {
-			return null;
-		}
-
-		@Override
-		public void startUpdate(View arg0) {
-		}
-
 		@Override
 		public Fragment getItem(int location) {
 			// TODO Auto-generated method stub
@@ -156,13 +120,13 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		menu.add(0, 0, 0, getResources().getText(R.string.home));
+		/*menu.add(0, 0, 0, getResources().getText(R.string.home));
 		MenuItem menuItem = menu.findItem(0);
 		menuItem.setIcon(R.drawable.ic_menu_home);
 
 		menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
 		menuItem = menu.findItem(1);
-		menuItem.setIcon(android.R.drawable.ic_menu_view);
+		menuItem.setIcon(android.R.drawable.ic_menu_view);*/
 
 		return true;
 	}
@@ -214,7 +178,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	}
 
 	@Override
-	public void onPostSelected(String requestedURL, String cachedPage) {
+	public void onPostSelected(String requestedURL) {
 		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
 		readerPageDetailFragment.wv.clearView();
 		readerPageDetailFragment.nextPost.setEnabled(false);
@@ -225,8 +189,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (readerPager.getCurrentItem() != 1)
-			readerPager.setCurrentItem(1, true);
+		if (readerPager.getCurrentItem() > 1)
+			readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
 		else
 			super.onBackPressed();
 
@@ -237,33 +201,55 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		final WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
 		runOnUiThread(new Runnable() {
 			public void run() {
+				if (topicsDialog != null) {
+					if (topicsDialog.isShowing())
+						topicsDialog.cancel();
+				}
 				if (topicTitle != null) {
 					readerPageFragment.topicTV.setText(topicTitle);
 				}
-				readerPager.setCurrentItem(1, true);
+				//readerPager.setCurrentItem(1, true);
 			}
 		});
-		
+
 	}
 
 	@Override
 	public void onUpdateTopicID(String topicID) {
 		WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
-		String methodCall = "document.setSelectedTopic('"+topicID+"')";
-		topicsFragment.wv.loadUrl("javascript:"+methodCall);
+		String methodCall = "document.setSelectedTopic('" + topicID + "')";
+		topicsFragment.wv.loadUrl("javascript:" + methodCall);
 	}
 
 	@Override
 	public void getLoadedItems(String items) {
 		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
 		readerPageDetailFragment.updateLoadedItems(items);
-		
+
 	}
 
 	@Override
 	public void updateButtonStatus(int button, boolean enabled) {
 		WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
 		readerPageDetailFragment.updateButtonStatus(button, enabled);
-		
+	}
+
+	@Override
+	public void showTopics() {
+		WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
+		((ViewGroup)topicsFragment.getView().getParent()).removeView(topicsFragment.getView());
+		topicsDialog = new Dialog(this);
+		topicsDialog.setContentView(topicsFragment.getView());
+		topicsDialog.setTitle(getResources().getText(R.string.topics));
+		topicsDialog.setCancelable(true);   
+		topicsDialog.show();
+	}
+
+	@Override
+	public void loadExternalURL(String url) {
+		WPCOMReaderWebPage readerWebPageFragment = (WPCOMReaderWebPage) webPage;
+		readerWebPageFragment.wv.clearView();
+		readerWebPageFragment.wv.loadUrl(url);
+		readerPager.setCurrentItem(3, true);
 	}
 }

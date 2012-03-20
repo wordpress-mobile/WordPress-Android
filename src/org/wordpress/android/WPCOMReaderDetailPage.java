@@ -1,5 +1,6 @@
 package org.wordpress.android;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -13,16 +14,15 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	
-	//private String cachedPage = null;
 	private String requestedURL = null;
 	public WebView wv;
 	public String readerItems;
 	public ImageButton nextPost, prevPost;
+	private LoadExternalURLListener loadExternalURLListener;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +31,6 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		View v = inflater.inflate(R.layout.reader_detail, container, false);
 		Bundle extras = getActivity().getIntent().getExtras();
 		if (extras != null) {
-			//cachedPage = extras.getString("cachedPage");
 			requestedURL = extras.getString("requestedURL");
 		}
 		
@@ -50,7 +49,6 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			}
 		});
 		
-		//wv.loadData(Uri.encode(this.cachedPage), "text/html", HTTP.UTF_8);
 		wv.loadUrl(requestedURL);
 		
 		nextPost = (ImageButton) v.findViewById(R.id.down);
@@ -75,6 +73,18 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		return v;
     }
 	
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			// check that the containing activity implements our callback
+			loadExternalURLListener = (LoadExternalURLListener) activity;
+		} catch (ClassCastException e) {
+			activity.finish();
+			throw new ClassCastException(activity.toString()
+					+ " must implement Callback");
+		}
+	}
+	
 	public void updateLoadedItems(String items) {
 		readerItems = items;
 	}
@@ -87,9 +97,9 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 
 	public void updateButtonStatus(int button, boolean enabled) {
 		if (button == 0) {
-			prevPost.setEnabled(enabled);
+			//prevPost.setEnabled(enabled);
 		} else if (button == 1) {
-			nextPost.setEnabled(enabled);
+			//nextPost.setEnabled(enabled);
 		}
 		
 	}
@@ -97,8 +107,11 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	protected class DetailWebViewClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
+			if (!url.equalsIgnoreCase(Constants.readerDetailURL)) {
+				loadExternalURLListener.loadExternalURL(url);
+				return true;
+			} 
+			return false;
 		}
 
 		@Override
@@ -124,6 +137,10 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			HttpAuthHandler handler, String host, String realm) {
 			handler.proceed(httpuser, httppassword);
 		}
+	}
+	
+	public interface LoadExternalURLListener {
+		public void loadExternalURL(String url);
 	}
 }
 
