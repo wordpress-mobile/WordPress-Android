@@ -55,12 +55,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
 
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
 		readerPager = (WPViewPager) findViewById(R.id.pager);
 		readerPager.setOffscreenPageLimit(3);
 		readerPage = Fragment
@@ -71,18 +65,26 @@ public class WPCOMReaderPager extends FragmentActivity implements
 				WPCOMReaderDetailPage.class.getName());
 		webPage = Fragment
 				.instantiate(this, WPCOMReaderWebPage.class.getName());
-
+		
 		List<Fragment> fragments = new Vector<Fragment>();
 
 		fragments.add(topicPage);
 		fragments.add(readerPage);
 		fragments.add(detailPage);
 		fragments.add(webPage);
+		
 		readerAdapter = new ReaderPagerAdapter(
 				super.getSupportFragmentManager(), fragments);
 
 		readerPager.setAdapter(readerAdapter);
 		readerPager.setCurrentItem(1, true);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		
 
 	}
 
@@ -92,6 +94,16 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
 		readerPageFragment.wv.stopLoading();
 		// finish();
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+
+	    super.onSaveInstanceState(outState);
+	    getSupportFragmentManager().putFragment(outState, WPCOMReaderImpl.class.getName(), readerPage);
+	    getSupportFragmentManager().putFragment(outState, WPCOMReaderTopicsSelector.class.getName(), topicPage);
+	    getSupportFragmentManager().putFragment(outState, WPCOMReaderDetailPage.class.getName(), detailPage);
+	    getSupportFragmentManager().putFragment(outState, WPCOMReaderWebPage.class.getName(), webPage);
 	}
 
 	private class ReaderPagerAdapter extends FragmentPagerAdapter {
@@ -216,7 +228,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 				+ "')";
 		runOnUiThread(new Runnable() {
 			public void run() {
-				if (topicsFragment != null)
+				if (topicsFragment.wv != null)
 					topicsFragment.wv.loadUrl("javascript:" + methodCall);
 			}
 		});
@@ -284,7 +296,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		runOnUiThread(new Runnable() {
 			public void run() {
 				String methodCall = "Reader2.show_article_details(" + lastSelectedItem + ")";
-				if (readerPageDetailFragment != null) {
+				if (readerPageDetailFragment.wv != null) {
 					readerPageDetailFragment.wv.loadUrl("javascript:" + methodCall); 
 					readerPageDetailFragment.wv.loadUrl("javascript:Reader2.is_next_item();");
 					readerPageDetailFragment.wv.loadUrl("javascript:Reader2.is_prev_item();");
