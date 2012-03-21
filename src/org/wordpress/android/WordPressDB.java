@@ -378,6 +378,7 @@ public class WordPressDB {
 				//lets add the two new img options for settings
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
