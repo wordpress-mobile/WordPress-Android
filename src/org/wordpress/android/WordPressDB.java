@@ -391,6 +391,8 @@ public class WordPressDB {
 
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 11) {
 				db.execSQL(ADD_SCALED_IMAGE);
