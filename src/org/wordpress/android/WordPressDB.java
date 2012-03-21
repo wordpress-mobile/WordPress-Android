@@ -177,6 +177,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 2) {
@@ -201,6 +203,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 3) {
@@ -222,6 +226,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 4) {
@@ -243,6 +249,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 5) {
@@ -263,6 +271,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 6) {
@@ -281,6 +291,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 7) {
@@ -291,6 +303,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 8) {
@@ -300,6 +314,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 9) {
@@ -309,6 +325,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 10) {
@@ -374,10 +392,7 @@ public class WordPressDB {
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
 				db.setVersion(DATABASE_VERSION);
-			}
-			
-			if(db.getVersion()>0 && db.getVersion()<12){
-				//lets add the two new img options for settings
+			} else if (db.getVersion() == 11) {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.setVersion(DATABASE_VERSION);
