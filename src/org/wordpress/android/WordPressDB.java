@@ -29,9 +29,7 @@ public class WordPressDB {
 	private static final int DATABASE_VERSION = 12;
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
-			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean"+
-			", isScaledImage boolean default false, scaledImgWidth integer default 1024" +
-			");";
+			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
 	private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
 			+ "read integer not null, interval text, statsdate integer);";
 	private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
