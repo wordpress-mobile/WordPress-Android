@@ -149,6 +149,8 @@ public class WordPressDB {
 				db.execSQL(ADD_HTTPPASSWORD);
 				db.execSQL(ADD_LAST_BLOG_ID);
 				db.execSQL(ADD_POST_FORMATS);
+				db.execSQL(ADD_SCALED_IMAGE);
+				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 1) { // v1.0 or v1.0.1
