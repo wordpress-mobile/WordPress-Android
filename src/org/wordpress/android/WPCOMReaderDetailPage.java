@@ -2,23 +2,24 @@ package org.wordpress.android;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 
 public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	
-	private String requestedURL = null;
 	public WebView wv;
 	public String readerItems;
 	public ImageButton nextPost, prevPost;
@@ -29,27 +30,23 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.reader_detail, container, false);
-		Bundle extras = getActivity().getIntent().getExtras();
-		if (extras != null) {
-			requestedURL = extras.getString("requestedURL");
-		}
 		
 		wv = (WebView) v.findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
-		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //override the default setting of NO_CACHE
-		wv.getSettings().setJavaScriptEnabled(true);
-		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getApplicationContext()), interfaceNameForJS );
+		
+		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
 		wv.setWebViewClient(new DetailWebViewClient());
-		
 		wv.setWebChromeClient(new WebChromeClient() {
-			public void onProgressChanged(WebView view, int progress) {
-				if (progress == 100) {
-					
-				}
-			}
+			@Override
+		    public boolean onConsoleMessage(ConsoleMessage cm) {
+		        Log.d("WP", cm.message() + " -- From line "
+		        + cm.lineNumber() + " of "
+		        + cm.sourceId() );
+		        return true;
+		    }
 		});
-		
-		wv.loadUrl(requestedURL);
+		String hybURL = this.getAuthorizeHybridURL(Constants.readerDetailURL);
+		wv.loadUrl(hybURL);
 		
 		nextPost = (ImageButton) v.findViewById(R.id.down);
 		nextPost.setOnClickListener(new OnClickListener() {
@@ -57,6 +54,8 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			@Override
 			public void onClick(View v) {
 				wv.loadUrl("javascript:Reader2.show_next_item();");
+				wv.loadUrl("javascript:Reader2.is_next_item();");
+				wv.loadUrl("javascript:Reader2.is_prev_item();");
 			}
 		});
 		
@@ -66,6 +65,8 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			@Override
 			public void onClick(View v) {
 				wv.loadUrl("javascript:Reader2.show_prev_item();");
+				wv.loadUrl("javascript:Reader2.is_next_item();");
+				wv.loadUrl("javascript:Reader2.is_prev_item();");
 			}
 		});
 		
@@ -85,10 +86,6 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		}
 	}
 	
-	public void updateLoadedItems(String items) {
-		readerItems = items;
-	}
-	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
@@ -97,9 +94,9 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 
 	public void updateButtonStatus(int button, boolean enabled) {
 		if (button == 0) {
-			//prevPost.setEnabled(enabled);
+			prevPost.setEnabled(enabled);
 		} else if (button == 1) {
-			//nextPost.setEnabled(enabled);
+			nextPost.setEnabled(enabled);
 		}
 		
 	}
@@ -110,8 +107,14 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			if (!url.equalsIgnoreCase(Constants.readerDetailURL)) {
 				loadExternalURLListener.loadExternalURL(url);
 				return true;
-			} 
+			}
 			return false;
+		}
+		
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			//Log.d("WP", url);
+
 		}
 
 		@Override
@@ -119,8 +122,6 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 			if (readerItems != null) {
 				String method = "Reader2.set_loaded_items(" + readerItems + ")";
 				wv.loadUrl("javascript:" + method);
-				wv.loadUrl("javascript:Reader2.is_next_item();");
-				wv.loadUrl("javascript:Reader2.is_prev_item();");
 				nextPost.setEnabled(true);
 				prevPost.setEnabled(true);
 			}

@@ -1,13 +1,7 @@
 package org.wordpress.android;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Vector;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -21,7 +15,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +36,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	private String loginURL = "";
 	public WebView wv;
 	public String topicsID;
-	private ChangePageListener onChangePageListener;
 	private PostSelectedListener onPostSelectedListener;
 	private ShowTopicsListener showTopicsListener;
 	public TextView topicTV;
@@ -80,14 +72,44 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		wv.addJavascriptInterface(new JavaScriptInterface(getActivity()
 				.getApplicationContext()), interfaceNameForJS);
+
+		wv.setWebViewClient(new WebViewClient() {
+
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
+					view.stopLoading();
+					wv.loadUrl("javascript:Reader2.get_loaded_items();");
+					wv.loadUrl("javascript:Reader2.get_last_selected_item();");
+					onPostSelectedListener.onPostSelected(url);
+				} else {
+					startRotatingRefreshIcon();
+				}
+
+			}
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				stopRotatingRefreshIcon();
+			}
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				/*
+				 * if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
+				 * onPostSelectedListener.onPostSelected(url,
+				 * WPCOMReaderImpl.this.cachedDetailPage); return true; }
+				 */
+				return false;
+			}
+		});
+
 		this.setDefaultWebViewSettings(wv);
 		new loadReaderTask().execute(null, null, null, null);
 
 		RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.topicSelector);
 		rl.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//if (onChangePageListener != null)
-					//onChangePageListener.onChangePage(0);
 				showTopicsListener.showTopics();
 			}
 		});
@@ -127,7 +149,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		super.onAttach(activity);
 		try {
 			// check that the containing activity implements our callback
-			onChangePageListener = (ChangePageListener) activity;
 			onPostSelectedListener = (PostSelectedListener) activity;
 			showTopicsListener = (ShowTopicsListener) activity;
 		} catch (ClassCastException e) {
@@ -155,7 +176,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			// connections below!
 			CookieManager cookieManager = CookieManager.getInstance();
 			final String cookie = cookieManager.getCookie("wordpress.com");
-			
 
 			new Thread(new Runnable() {
 				public void run() {
@@ -176,53 +196,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 					}
 				}
 			}).start();
-		}
-
-		private String cachePage(String hybURL, String cookie) {
-			HttpClient httpclient = new DefaultHttpClient();
-
-			try {
-				HttpProtocolParams.setUserAgent(httpclient.getParams(),
-						"wp-android");
-				HttpGet request = new HttpGet(hybURL);
-				request.setHeader("Cookie", cookie);
-				HttpResponse response = httpclient.execute(request);
-
-				// Check if server response is valid
-				StatusLine status = response.getStatusLine();
-				if (status.getStatusCode() != 200) {
-					throw new IOException(
-							"Invalid response from server when caching the page: "
-									+ status.toString());
-				}
-
-				// Pull content stream from response
-				HttpEntity entity = response.getEntity();
-				InputStream inputStream = (InputStream) entity.getContent();
-
-				ByteArrayOutputStream content = new ByteArrayOutputStream();
-
-				// Read response into a buffered stream
-				int readBytes = 0;
-				byte[] sBuffer = new byte[512];
-				while ((readBytes = inputStream.read(sBuffer)) != -1) {
-					content.write(sBuffer, 0, readBytes);
-				}
-				// Return result from buffered stream
-				String dataAsString = new String(content.toByteArray());
-				return dataAsString;
-			} catch (Exception e) {
-				// oh well
-				Log.d("Error while caching the page" + hybURL,
-						e.getLocalizedMessage());
-				return null;
-
-			} finally {
-				// When HttpClient instance is no longer needed,
-				// shut down the connection manager to ensure
-				// immediate deallocation of all system resources
-				httpclient.getConnectionManager().shutdown();
-			}
 		}
 
 		@Override
@@ -260,7 +233,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			}
 
 			try {
-				String responseContent = "<head>"
+				final String responseContent = "<head>"
 						+ "<script type=\"text/javascript\">"
 						+ "function submitform(){document.loginform.submit();} </script>"
 						+ "</head>"
@@ -278,39 +251,13 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						+ "<input type=\"hidden\" name=\"redirect_to\" value=\""
 						+ readerURL + "\" />" + "</form>" + "</body>";
 
-				wv.setWebViewClient(new WebViewClient() {
-
-					@Override
-					public void onPageStarted(WebView view, String url, Bitmap favicon) {
-						if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
-							view.stopLoading();
-							wv.loadUrl("javascript:Reader2.get_loaded_items();");
-							onPostSelectedListener.onPostSelected(url);
-						} else {
-							startRotatingRefreshIcon();
-						}
-						
-					}
-					
-					@Override
-					public void onPageFinished(WebView view, String url) {
-						stopRotatingRefreshIcon();
-					}
-					
-					@Override
-					public boolean shouldOverrideUrlLoading(WebView view, String url) {
-						/*if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
-							onPostSelectedListener.onPostSelected(url,
-									WPCOMReaderImpl.this.cachedDetailPage);
-							return true;
-						}
-						*/
-						return false;
+				getActivity().runOnUiThread(new Runnable() {
+					public void run() {
+						wv.loadData(Uri.encode(responseContent), "text/html",
+								HTTP.UTF_8);
 					}
 				});
 
-				wv.loadData(Uri.encode(responseContent), "text/html",
-						HTTP.UTF_8);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -346,7 +293,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	public interface PostSelectedListener {
 		public void onPostSelected(String requestedURL);
 	}
-	
+
 	public interface ShowTopicsListener {
 		public void showTopics();
 	}

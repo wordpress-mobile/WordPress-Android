@@ -26,6 +26,8 @@ public abstract class WPCOMReaderBase extends Fragment {
 	private ChangeTopicListener onChangeTopicListener;
 	private GetLoadedItemsListener getLoadedItemsListener;
 	private UpdateButtonStatusListener updateButtonStatusListener;
+	private GetPermalinkListener getPermalinkListener;
+	private GetLastSelectedItemListener getLastSelectedItemListener;
 	
 	protected void setDefaultWebViewSettings(WebView wv) {
 		WebSettings webSettings = wv.getSettings();
@@ -46,6 +48,8 @@ public abstract class WPCOMReaderBase extends Fragment {
 			onChangeTopicListener = (ChangeTopicListener) activity;
 			getLoadedItemsListener = (GetLoadedItemsListener) activity;
 			updateButtonStatusListener = (UpdateButtonStatusListener) activity;
+			getPermalinkListener = (GetPermalinkListener) activity;
+			getLastSelectedItemListener = (GetLastSelectedItemListener) activity;
 		} catch (ClassCastException e) {
 			activity.finish();
 			throw new ClassCastException(activity.toString()
@@ -128,16 +132,21 @@ public abstract class WPCOMReaderBase extends Fragment {
 	    	getLoadedItemsListener.getLoadedItems(items);
 	    }
 	    
-	    public void isPrevItem(String isPrev) {
-	    	int hi = 0;
-	    	hi++;
-	    	//updateButtonStatusListener.updateButtonStatus(0, isPrev);
+	    public void getArticlePermalink(String permalink) {
+	    	getPermalinkListener.getPermalink(permalink);
 	    }
 	    
-	    public void isNextItem(boolean isNext) {
-	    	//updateButtonStatusListener.updateButtonStatus(1, isNext);
+	    public void getLastSelectedItem(String item) {
+	    	getLastSelectedItemListener.getLastSelectedItem(item);
 	    }
 	    
+	    public void hasPrev(boolean isPrev) {
+	    	updateButtonStatusListener.updateButtonStatus(0, isPrev);
+	    }
+	    
+	    public void hasNext(String isNext) {
+	    	updateButtonStatusListener.updateButtonStatus(1, Boolean.parseBoolean(isNext));
+	    }
 	}
 	
 	public interface UpdateTopicTitleListener {
@@ -159,5 +168,14 @@ public abstract class WPCOMReaderBase extends Fragment {
 	public interface UpdateButtonStatusListener {
 		public void updateButtonStatus(int button, boolean enabled);
 	}
+	
+	public interface GetPermalinkListener {
+		public void getPermalink(String permalink);
+	}
+	
+	public interface GetLastSelectedItemListener {
+		public void getLastSelectedItem(String lastSelectedItem);
+	}
+	
 	
 }
