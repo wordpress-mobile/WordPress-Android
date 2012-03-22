@@ -17,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:layout_weight="1"
-        android:background="#C9C9C9"
+        android:background="#555"
         android:paddingTop="4dp"
         android:paddingRight="2dp"
         android:paddingLeft="2dp"
