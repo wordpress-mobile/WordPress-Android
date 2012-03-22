@@ -6,7 +6,7 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content">
   <LinearLayout
-    android:id="@+id/dashboard"
+    android:id="@+id/mainDashboard"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -21,5 +21,5 @@
   <include
     layout="@layout/action_bar"
     android:id="@+id/dashboardActionBar"
-    android:layout_above="@id/dashboard" />
+    android:layout_above="@id/mainDashboard" />
 </RelativeLayout>

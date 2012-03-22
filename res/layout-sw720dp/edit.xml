@@ -65,7 +65,6 @@
                     android:layout_height="fill_parent"
                     android:layout_below="@id/title"
                     android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
                     android:orientation="vertical" >
 
                     <org.wordpress.android.util.WPEditText

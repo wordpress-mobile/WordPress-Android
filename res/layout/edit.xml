@@ -293,18 +293,16 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/postFormat"
                     android:layout_margin="4dp"
-                    android:autoText="true"
                     android:background="@android:drawable/editbox_background"
                     android:hint="@string/post_password"
                     android:minHeight="40dip"
-                    android:password="true" />
+                    android:inputType="textPassword" />
             </RelativeLayout>
 
             <Button
                 android:id="@+id/post"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/section5"
                 android:background="@drawable/wp_button"
                 android:text="@string/publish_post"
                 android:textSize="20dip" />

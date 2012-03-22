@@ -11,7 +11,6 @@ import org.wordpress.android.models.Blog;
 
 import android.app.Activity;
 import android.content.res.Configuration;
-import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;

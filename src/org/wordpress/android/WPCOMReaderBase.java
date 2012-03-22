@@ -2,12 +2,11 @@ package org.wordpress.android;
 
 import java.net.URLEncoder;
 import java.util.UUID;
+
 import android.app.Activity;
 import android.content.Context;
-import android.net.http.SslError;
 import android.support.v4.app.Fragment;
 import android.webkit.HttpAuthHandler;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
