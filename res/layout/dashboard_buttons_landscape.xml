@@ -183,7 +183,6 @@
                             android:src="@drawable/dashboard_icon_posts" />
 
                         <TextView
-                            android:id="@+id/button_text"
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -211,7 +210,6 @@
                             android:src="@drawable/dashboard_icon_pages" />
 
                         <TextView
-                            android:id="@+id/button_text"
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -245,7 +243,6 @@
                                 android:src="@drawable/dashboard_icon_comments" />
 
                             <TextView
-                                android:id="@+id/button_text"
                                 style="@style/DashboardButtonText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -313,7 +310,6 @@
                             android:src="@drawable/dashboard_icon_settings" />
 
                         <TextView
-                            android:id="@+id/button_text"
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -368,7 +364,6 @@
                             android:src="@drawable/dashboard_icon_stats" />
 
                         <TextView
-                            android:id="@+id/button_text"
                             style="@style/DashboardButtonText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

@@ -34,6 +34,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class ImageHelper {
 
@@ -253,8 +254,8 @@ public class ImageHelper {
 	}
 
 	static Bitmap downloadBitmap(String url) {
-		final AndroidHttpClient client = AndroidHttpClient
-				.newInstance("Android");
+		final DefaultHttpClient client = new DefaultHttpClient();
+
 		final HttpGet getRequest = new HttpGet(url);
 
 		try {
@@ -289,11 +290,7 @@ public class ImageHelper {
 			getRequest.abort();
 			Log.w("ImageDownloader", "Error while retrieving bitmap from "
 					+ url);
-		} finally {
-			if (client != null) {
-				client.close();
-			}
-		}
+		} 
 		return null;
 	}
 

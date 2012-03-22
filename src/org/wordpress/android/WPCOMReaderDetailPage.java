@@ -3,17 +3,12 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.ConsoleMessage;
 import android.webkit.HttpAuthHandler;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
@@ -41,15 +36,7 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		
 		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
 		wv.setWebViewClient(new DetailWebViewClient());
-		wv.setWebChromeClient(new WebChromeClient() {
-			@Override
-		    public boolean onConsoleMessage(ConsoleMessage cm) {
-		        Log.d("WP", cm.message() + " -- From line "
-		        + cm.lineNumber() + " of "
-		        + cm.sourceId() );
-		        return true;
-		    }
-		});
+
 		String hybURL = this.getAuthorizeHybridURL(Constants.readerDetailURL);
 		wv.loadUrl(hybURL);
 		
@@ -138,12 +125,6 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 				nextPost.setEnabled(true);
 				prevPost.setEnabled(true);
 			}
-		}
-
-		@Override
-		public void onReceivedSslError(WebView view, SslErrorHandler handler,
-				SslError error) {
-			handler.proceed();
 		}
 
 		@Override

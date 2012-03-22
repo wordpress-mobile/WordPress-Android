@@ -222,12 +222,6 @@ public class Read extends Activity {
 		}
 
 		@Override
-		public void onReceivedSslError(WebView view, SslErrorHandler handler,
-				SslError error) {
-			handler.proceed();
-		}
-
-		@Override
 		public void onReceivedHttpAuthRequest(WebView view,
 				HttpAuthHandler handler, String host, String realm) {
 			handler.proceed(httpuser, httppassword);

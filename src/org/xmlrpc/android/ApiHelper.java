@@ -1,27 +1,20 @@
 package org.xmlrpc.android;
 
-import org.json.JSONObject;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.text.format.DateUtils;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class ApiHelper extends Activity {
+import org.json.JSONObject;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+
+import android.content.Context;
+import android.os.AsyncTask;
+import android.text.format.DateUtils;
+
+public class ApiHelper {
 	/** Called when the activity is first created. */
 	private static XMLRPCClient client;
-
-	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-	}
 
 	@SuppressWarnings("unchecked")
 	static void refreshComments(final int id, final Context ctx) {

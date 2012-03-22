@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:orientation="vertical">
   <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/commentWrapper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -52,14 +48,12 @@
 	      android:id="@+id/bulkCheck"
 	      android:layout_width="wrap_content"
 	      android:layout_height="wrap_content"
-	      android:button="@drawable/wp_checkbox" 
-	      android:layout_alignParentRight="true"/>
+	      android:button="@drawable/wp_checkbox"/>
       	</LinearLayout>
         <TextView
           android:id="@+id/email_url"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
           android:gravity="left"
           android:singleLine="true"
           android:ellipsize="end"
@@ -102,4 +96,3 @@
       android:layout_below="@id/comment"
       android:paddingLeft="8dip" />
   </RelativeLayout>
-</RelativeLayout>

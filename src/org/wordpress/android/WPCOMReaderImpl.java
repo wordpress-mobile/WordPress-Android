@@ -11,6 +11,7 @@ import org.wordpress.android.models.Blog;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -294,9 +295,11 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	}
 
 	public void stopRotatingRefreshIcon() {
-		refreshIcon.setImageDrawable(getResources().getDrawable(
-				R.drawable.icon_titlebar_refresh));
-		refreshIcon.clearAnimation();
+		if (!(getActivity() == null)) {
+			refreshIcon.setImageDrawable(getResources().getDrawable(
+					R.drawable.icon_titlebar_refresh));
+			refreshIcon.clearAnimation();
+		}
 	}
 
 	public interface ChangePageListener {

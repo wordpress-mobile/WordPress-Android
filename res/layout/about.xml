@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/about"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical" >
 
@@ -70,7 +70,6 @@
             android:id="@+id/about_privacy"
             android:layout_width="220dip"
             android:layout_height="40dip"
-            android:layout_below="@id/about_tos"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/wp_button"
             android:text="@string/privacy_policy"

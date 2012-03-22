@@ -73,11 +73,11 @@
                     android:layout_marginRight="4dp"
                     android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
-                    android:password="true"
+                    android:inputType="textPassword"
                     android:singleLine="true" />
 
                 <TextView
-                    android:id="@+id/l_username"
+                    android:id="@+id/l_httpusername"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/l_section1"
@@ -126,7 +126,7 @@
                     android:layout_marginRight="4dp"
                     android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
-                    android:password="true"
+                    android:inputType="textPassword"
                     android:singleLine="true" />
             </RelativeLayout>
 
