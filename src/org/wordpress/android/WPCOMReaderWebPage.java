@@ -17,6 +17,11 @@ public class WPCOMReaderWebPage extends WPCOMReaderBase {
 	// private String cachedPage = null;
 	public WebView wv;
 	public ProgressBar progressBar;
+	
+	public static WPCOMReaderWebPage newInstance() {
+		WPCOMReaderWebPage f = new WPCOMReaderWebPage();
+        return f;
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +51,14 @@ public class WPCOMReaderWebPage extends WPCOMReaderBase {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (wv != null) {
+			wv.stopLoading();
+		}
 	}
 
 	protected class DetailWebViewClient extends WebViewClient {

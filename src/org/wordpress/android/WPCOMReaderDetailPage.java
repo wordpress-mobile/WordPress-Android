@@ -25,6 +25,11 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	public ImageButton nextPost, prevPost;
 	private LoadExternalURLListener loadExternalURLListener;
 	
+	public static WPCOMReaderDetailPage newInstance() {
+		WPCOMReaderDetailPage f = new WPCOMReaderDetailPage();
+        return f;
+    }
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -90,6 +95,14 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (wv != null) {
+			wv.stopLoading();
+		}
 	}
 
 	public void updateButtonStatus(int button, boolean enabled) {

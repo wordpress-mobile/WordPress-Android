@@ -40,6 +40,11 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	private ShowTopicsListener showTopicsListener;
 	public TextView topicTV;
 	private ImageView refreshIcon;
+	
+	public static WPCOMReaderImpl newInstance() {
+		WPCOMReaderImpl f = new WPCOMReaderImpl();
+        return f;
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -161,6 +166,14 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (wv != null) {
+			wv.stopLoading();
+		}
 	}
 
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {

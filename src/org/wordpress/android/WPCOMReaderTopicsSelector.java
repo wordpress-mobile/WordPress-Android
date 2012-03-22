@@ -14,6 +14,11 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 	//private String topicID = null;
 	public WebView wv;
 	
+	public static WPCOMReaderTopicsSelector newInstance() {
+		WPCOMReaderTopicsSelector f = new WPCOMReaderTopicsSelector();
+        return f;
+    }
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,6 +35,14 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 		wv.loadUrl(hybURL);
 		
 		return v;
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (wv != null) {
+			wv.stopLoading();
+		}
 	}
 	
 	@Override

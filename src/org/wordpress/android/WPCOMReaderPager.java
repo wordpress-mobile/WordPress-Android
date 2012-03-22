@@ -1,8 +1,5 @@
 package org.wordpress.android;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.wordpress.android.WPCOMReaderBase.ChangeTopicListener;
 import org.wordpress.android.WPCOMReaderBase.GetLastSelectedItemListener;
 import org.wordpress.android.WPCOMReaderBase.GetLoadedItemsListener;
@@ -24,7 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -50,50 +47,24 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-		setContentView(R.layout.reader_wpcom_pager);
-
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(this);
-
-		readerPager = (WPViewPager) findViewById(R.id.pager);
-		readerPager.setOffscreenPageLimit(3);
-		readerPage = Fragment
-				.instantiate(this, WPCOMReaderImpl.class.getName());
-		topicPage = Fragment.instantiate(this,
-				WPCOMReaderTopicsSelector.class.getName());
-		detailPage = Fragment.instantiate(this,
-				WPCOMReaderDetailPage.class.getName());
-		webPage = Fragment
-				.instantiate(this, WPCOMReaderWebPage.class.getName());
-		
-		List<Fragment> fragments = new Vector<Fragment>();
-
-		fragments.add(topicPage);
-		fragments.add(readerPage);
-		fragments.add(detailPage);
-		fragments.add(webPage);
-		
-		readerAdapter = new ReaderPagerAdapter(
-				super.getSupportFragmentManager(), fragments);
-
-		readerPager.setAdapter(readerAdapter);
-		readerPager.setCurrentItem(1, true);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
+		setContentView(R.layout.reader_wpcom_pager);
+
+		readerPager = (WPViewPager) findViewById(R.id.pager);
+		readerPager.setOffscreenPageLimit(3);
 		
+		readerAdapter = new ReaderPagerAdapter(
+				super.getSupportFragmentManager());
 
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
-		readerPageFragment.wv.stopLoading();
-		// finish();
+		readerPager.setAdapter(readerAdapter);
+		readerPager.setCurrentItem(1, true);
 	}
 	
 	@Override
@@ -106,24 +77,40 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	    getSupportFragmentManager().putFragment(outState, WPCOMReaderWebPage.class.getName(), webPage);
 	}
 
-	private class ReaderPagerAdapter extends FragmentPagerAdapter {
-
-		private List<Fragment> fragments;
-
-		public ReaderPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+	private class ReaderPagerAdapter extends FragmentStatePagerAdapter {
+		public ReaderPagerAdapter(FragmentManager fm) {
 			super(fm);
-			this.fragments = fragments;
 		}
 
 		@Override
 		public int getCount() {
-			return fragments.size();
+			return 4;
 		}
 
 		@Override
 		public Fragment getItem(int location) {
-			// TODO Auto-generated method stub
-			return fragments.get(location);
+			Fragment f = null;
+			
+			switch (location) {
+			case 0:
+				f = WPCOMReaderTopicsSelector.newInstance();
+				topicPage = f;
+				break;
+			case 1:
+				f = WPCOMReaderImpl.newInstance();
+				readerPage = f;
+				break;
+			case 2:
+				f = WPCOMReaderDetailPage.newInstance();
+				detailPage = f;
+				break;
+			case 3:
+				f = WPCOMReaderWebPage.newInstance();
+				webPage = f;
+				break;
+			}
+			
+			return f;
 		}
 
 	}
@@ -223,6 +210,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public void onUpdateTopicID(String topicID) {
+		if (topicPage == null)
+			topicPage = readerAdapter.getItem(0);
 		final WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
 		final String methodCall = "document.setSelectedTopic('" + topicID
 				+ "')";
@@ -302,9 +291,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 					readerPageDetailFragment.wv.loadUrl("javascript:Reader2.is_prev_item();");
 				}
 			}
-		});
-		
-		//readerPageDetailFragment.wv.loadDataWithBaseURL("https://en.wordpress.com", lastSelectedItem, "text/html", "utf-8", null);
-		
+		});		
 	}
 }
