@@ -278,6 +278,7 @@
   <string name="attempt_delete_post">Attempting to delete post</string>
   <string name="html">HTML Editor Activated</string>
   <string name="share_url">Share Post</string>
+  <string name="share_link">Share URL</string>
   <string name="attempting_fetch_url">Attempting to fetch URL</string>
   <string name="post_not_published">Post status is not published</string>
   <string name="page_not_published">Page status is not published</string>
