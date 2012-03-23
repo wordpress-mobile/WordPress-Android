@@ -52,6 +52,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Layout;
@@ -77,7 +78,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -87,6 +87,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -107,7 +108,7 @@ public class EditPost extends Activity {
 			isAction = false, isUrl = false, isLargeScreen = false,
 			isCustomPubDate = false, isFullScreenEditing = false,
 			isBackspace = false, imeBackPressed = false,
-			scrollDetected = false;
+			scrollDetected = false, isNewDraft = false;
 	Criteria criteria;
 	Location curLocation;
 	ProgressDialog postingDialog;
@@ -122,6 +123,7 @@ public class EditPost extends Activity {
 	String[] postFormatTitles = null;
 	LocationHelper locationHelper;
 	float lastYPos = 0;
+	private Handler autoSaveHandler = new Handler();
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -980,7 +982,7 @@ public class EditPost extends Activity {
 		saveButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
-				boolean result = savePost();
+				boolean result = savePost(false);
 				if (result) {
 					if (post.isUploaded() || !post.getPost_status().equals("localdraft")) {
 						if (option != null) {
@@ -1676,7 +1678,7 @@ public class EditPost extends Activity {
 		super.onConfigurationChanged(newConfig);
 	}
 
-	public boolean savePost() {
+	public boolean savePost(boolean autoSave) {
 
 		// grab the form data
 		EditText titleET = (EditText) findViewById(R.id.title);
@@ -1687,7 +1689,7 @@ public class EditPost extends Activity {
 
 		EditText passwordET = (EditText) findViewById(R.id.post_password);
 		String password = passwordET.getText().toString();
-		if (localDraft || isNew) {
+		if (localDraft || isNew && !autoSave) {
 			Editable e = contentET.getText();
 			if (android.os.Build.VERSION.SDK_INT >= 14) {
 				// remove suggestion spans, they cause craziness in
@@ -1738,7 +1740,7 @@ public class EditPost extends Activity {
 		String images = "";
 		boolean success = false;
 
-		if (content.equals("")) {
+		if (content.equals("") && !autoSave) {
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 					EditPost.this);
 			dialogBuilder.setTitle(getResources()
@@ -1781,14 +1783,16 @@ public class EditPost extends Activity {
 						mf.save(EditPost.this);
 
 						int tagStart = s.getSpanStart(wpIS);
-						s.removeSpan(wpIS);
-						s.insert(tagStart, "<img android-uri=\""
+						if (!autoSave) {
+							s.removeSpan(wpIS);
+							s.insert(tagStart, "<img android-uri=\""
 								+ wpIS.getImageSource().toString() + "\" />");
-						if (localDraft)
-							content = EscapeUtils
+							if (localDraft)
+								content = EscapeUtils
 									.unescapeHtml(WPHtml.toHtml(s));
-						else
-							content = s.toString();
+							else
+								content = s.toString();
+						}
 					}
 				}
 			}
@@ -1828,11 +1832,12 @@ public class EditPost extends Activity {
 
 			}
 			String needle = "<!--more-->";
+			
 			if (isNew) {
 				post = new Post(id, title, content, images, pubDateTimestamp,
 						categories.toString(), tags, status, password,
 						latitude, longitude, isPage, postFormat, EditPost.this,
-						true);
+						true, false);
 				post.setLocalDraft(true);
 
 				// split up the post content if there's a more tag
@@ -1845,7 +1850,12 @@ public class EditPost extends Activity {
 				}
 
 				success = post.save();
-
+				
+				if (success) {
+					isNew = false;
+					isNewDraft = true;
+				}
+				
 				post.deleteMediaFiles();
 
 				Spannable s = contentET.getText();
@@ -1903,6 +1913,8 @@ public class EditPost extends Activity {
 				post.setLatitude(latitude);
 				post.setLongitude(longitude);
 				post.setWP_post_form(postFormat);
+				if (!post.isLocalDraft())
+					post.setLocalChange(true);
 				success = post.update();
 			}
 
@@ -1926,8 +1938,9 @@ public class EditPost extends Activity {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
+							if (isNewDraft)
+								post.delete();
 							Bundle bundle = new Bundle();
-
 							bundle.putString("returnStatus", "CANCEL");
 							Intent mIntent = new Intent();
 							mIntent.putExtras(bundle);
@@ -1959,7 +1972,7 @@ public class EditPost extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		autoSaveHandler.postDelayed(autoSaveRunnable, 60000);
 	}
 
 	/** Stop the updates when Activity is paused */
@@ -1969,7 +1982,8 @@ public class EditPost extends Activity {
 		if (locationHelper != null) {
 			locationHelper.cancelTimer();
 		}
-	}
+		autoSaveHandler.removeCallbacks(autoSaveRunnable);
+		}
 
 	@Override
 	protected void onDestroy() {
@@ -2324,6 +2338,15 @@ public class EditPost extends Activity {
 
 		}
 
+	};
+	
+	/*AUTOSAVE*/
+	private Runnable autoSaveRunnable = new Runnable() {
+		@Override
+		public void run() {
+			savePost(true);
+			autoSaveHandler.postDelayed(this, 60000);
+		}
 	};
 
 }

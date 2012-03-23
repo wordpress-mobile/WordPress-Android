@@ -68,6 +68,8 @@ public class Post {
 	private double latitude;
 	private double longitude;
 	private boolean isPage;
+	private boolean isLocalChange;
+
 	private String mediaPaths;
 	private String quickPostType;
 
@@ -123,14 +125,14 @@ public class Post {
 			this.localDraft = (Integer) postVals.get(26) > 0;
 			this.uploaded = (Integer) postVals.get(27) > 0;
 			this.isPage = (Integer) postVals.get(28) > 0;
-
+			this.isLocalChange = (Integer) postVals.get(29) > 0;
 		}
 	}
 
 	public Post(int blog_id, String title, String content, String picturePaths,
 			long date, String categories, String tags, String status,
 			String password, double latitude, double longitude, boolean isPage,
-			String postFormat, Context ctx, boolean createBlogReference) {
+			String postFormat, Context ctx, boolean createBlogReference, boolean isLocalChange) {
 		// create a new post
 		context = ctx;
 		if (createBlogReference) {
@@ -153,6 +155,7 @@ public class Post {
 		this.wp_post_format = postFormat;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.isLocalChange = isLocalChange;
 	}
 
 	public long getId() {
@@ -399,6 +402,14 @@ public class Post {
 		new uploadPostTask().execute(this);
 
 	}
+	
+	public boolean isLocalChange() {
+		return isLocalChange;
+	}
+
+	public void setLocalChange(boolean isLocalChange) {
+		this.isLocalChange = isLocalChange;
+	}
 
 	public boolean save() {
 		long newPostID = WordPress.wpDB.savePost(this, this.blogID);
@@ -408,7 +419,7 @@ public class Post {
 			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	public boolean update() {
@@ -771,6 +782,7 @@ public class Post {
 						(post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
 								: "metaWeblog.editPost", params);
 				post.setUploaded(true);
+				post.setLocalChange(false);
 				post.update();
 				return true;
 			} catch (final XMLRPCException e) {

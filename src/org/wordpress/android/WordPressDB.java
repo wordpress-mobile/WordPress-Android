@@ -102,9 +102,13 @@ public class WordPressDB {
 	// add field to store last used blog
 	private static final String ADD_POST_FORMATS = "alter table accounts add postFormats text default '';";
 	
+	//add scaled image settings
 	private static final String ADD_SCALED_IMAGE = "alter table accounts add isScaledImage boolean default false;";
 	private static final String ADD_SCALED_IMAGE_IMG_WIDTH = "alter table accounts add scaledImgWidth integer default 1024;";
 
+	//add boolean to posts to check uploaded posts that have local changes
+	private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
+	
 	private SQLiteDatabase db;
 
 	protected static final String PASSWORD_SECRET = "nottherealpasscode";
@@ -149,6 +153,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -177,6 +182,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 2) {
@@ -203,6 +209,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 3) {
@@ -226,6 +233,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 4) {
@@ -249,6 +257,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 5) {
@@ -271,6 +280,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 6) {
@@ -291,6 +301,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 7) {
@@ -303,6 +314,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 8) {
@@ -314,6 +326,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 9) {
@@ -325,6 +338,7 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 10) {
@@ -349,7 +363,7 @@ public class WordPressDB {
 									c.getLong(4), c.getString(5),
 									c.getString(6), c.getString(7),
 									c.getString(8), c.getDouble(9),
-									c.getDouble(10), false, "", ctx, false);
+									c.getDouble(10), false, "", ctx, false, false);
 							post.setLocalDraft(true);
 							post.setPost_status("localdraft");
 							savePost(post, c.getInt(0));
@@ -373,7 +387,7 @@ public class WordPressDB {
 							Post post = new Post(c.getInt(0), c.getString(1),
 									c.getString(2), c.getString(3),
 									c.getLong(4), c.getString(5), "", "",
-									c.getString(6), 0, 0, true, "", ctx, false);
+									c.getString(6), 0, 0, true, "", ctx, false, false);
 							post.setLocalDraft(true);
 							post.setPost_status("localdraft");
 							post.setPage(true);
@@ -391,10 +405,12 @@ public class WordPressDB {
 				db.execSQL(ADD_POST_FORMATS);
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 11) {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -1085,6 +1101,7 @@ public class WordPressDB {
 			values.put("wp_post_format", post.getWP_post_format());
 			values.put("latitude", post.getLatitude());
 			values.put("longitude", post.getLongitude());
+			values.put("isLocalChange", post.isLocalChange());
 
 			returnValue = db.insert(POSTS_TABLE, null, values);
 
@@ -1122,6 +1139,7 @@ public class WordPressDB {
 			values.put("post_status", post.getPost_status());
 			values.put("isPage", post.isPage());
 			values.put("wp_post_format", post.getWP_post_format());
+			values.put("isLocalChange", post.isLocalChange());	
 
 			int pageInt = 0;
 			if (post.isPage())
@@ -1232,6 +1250,7 @@ public class WordPressDB {
 			values.add(c.getInt(26));
 			values.add(c.getInt(27));
 			values.add(c.getInt(28));
+			values.add(c.getInt(29));
 		}
 		c.close();
 
@@ -1757,6 +1776,18 @@ public class WordPressDB {
 
 		db.delete(COMMENTS_TABLE, "blogID=" + blogID, null);
 
+	}
+
+	public boolean findLocalChanges() {
+		Cursor c = db.query(POSTS_TABLE, null,
+				"isLocalChange=1", null, null, null, null);
+		int numRows = c.getCount();
+		if (numRows > 0) {
+			return true;
+		}
+		c.close();
+
+		return false;
 	}
 
 }

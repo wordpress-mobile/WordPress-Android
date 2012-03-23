@@ -85,9 +85,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		titleBar.refreshButton
 				.setOnClickListener(new ImageButton.OnClickListener() {
 					public void onClick(View v) {
-
-						postList.refreshPosts(false);
-
+						checkForLocalChanges();
 					}
 				});
 
@@ -132,6 +130,37 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		attemptToSelectPost();
 	}
 
+	protected void checkForLocalChanges() {
+		boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
+		if (hasLocalChanges) {
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+					Posts.this);
+			dialogBuilder.setTitle(getResources().getText(
+					R.string.local_changes));
+			dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
+			dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							postList.refreshPosts(false);
+						}
+					});
+			dialogBuilder.setNegativeButton(getResources().getText(R.string.no),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							//just close the window
+						}
+					});
+			dialogBuilder.setCancelable(true);
+			if (!isFinishing()) {
+				dialogBuilder.create().show();
+			}
+		} else {
+			postList.refreshPosts(false);
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -140,7 +169,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		attemptToSelectPost();
 		postList.loadPosts(false);
 		if (WordPress.postsShouldRefresh) {
-			postList.refreshPosts(false);
+			checkForLocalChanges();
 			WordPress.postsShouldRefresh = false;
 		}
 		
