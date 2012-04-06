@@ -106,10 +106,10 @@ abstract public class GraphView extends LinearLayout {
 
 			if (maxY != minY) {
 				paint.setStrokeCap(Paint.Cap.ROUND);
-				paint.setStrokeWidth(3);
 
 				for (int i=0; i<graphSeries.size(); i++) {
-					paint.setColor(graphSeries.get(i).color);
+					paint.setStrokeWidth(graphSeries.get(i).style.thickness);
+					paint.setColor(graphSeries.get(i).style.color);
 					drawSeries(canvas, _values(i), graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart);
 				}
 
@@ -170,8 +170,26 @@ abstract public class GraphView extends LinearLayout {
 					lastTouchEventX = event.getX();
 					handled = true;
 				}
+				if (handled)
+					invalidate();
 			}
 			return handled;
+		}
+	}
+
+	/**
+	 * graph series style: color and thickness
+	 */
+	static public class GraphViewStyle {
+		public int color = 0xff0077cc;
+		public int thickness = 3;
+		public GraphViewStyle() {
+			super();
+		}
+		public GraphViewStyle(int color, int thickness) {
+			super();
+			this.color = color;
+			this.thickness = thickness;
 		}
 	}
 
@@ -193,20 +211,20 @@ abstract public class GraphView extends LinearLayout {
 	 */
 	static public class GraphViewSeries {
 		final String description;
-		final int color;
+		final GraphViewStyle style;
 		final GraphViewData[] values;
 		public GraphViewSeries(GraphViewData[] values) {
 			description = null;
-			color = 0xff0077cc; // blue version
+			style = new GraphViewStyle();
 			this.values = values;
 		}
-		public GraphViewSeries(String description, Integer color, GraphViewData[] values) {
+		public GraphViewSeries(String description, GraphViewStyle style, GraphViewData[] values) {
 			super();
 			this.description = description;
-			if (color == null) {
-				color = 0xff0077cc; // blue version
+			if (style == null) {
+				style = new GraphViewStyle();
 			}
-			this.color = color;
+			this.style = style;
 			this.values = values;
 		}
 	}
@@ -361,7 +379,7 @@ abstract public class GraphView extends LinearLayout {
 		canvas.drawRoundRect(new RectF(lLeft, lTop, lRight, lBottom), 8, 8, paint);
 
 		for (int i=0; i<graphSeries.size(); i++) {
-			paint.setColor(graphSeries.get(i).color);
+			paint.setColor(graphSeries.get(i).style.color);
 			canvas.drawRect(new RectF(lLeft+5, lTop+5+(i*(shapeSize+5)), lLeft+5+shapeSize, lTop+((i+1)*(shapeSize+5))), paint);
 			if (graphSeries.get(i).description != null) {
 				paint.setColor(Color.WHITE);
