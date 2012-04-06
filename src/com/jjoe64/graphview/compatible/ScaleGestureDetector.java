@@ -50,7 +50,7 @@ public class ScaleGestureDetector {
 	public double getScaleFactor() {
 		if (method_getScaleFactor != null) {
 			try {
-				return (Float) method_getScaleFactor.invoke(realScaleGestureDetector);
+				return Math.max(0.25f, Math.min((Float)method_getScaleFactor.invoke(realScaleGestureDetector), 1.95f));	// Limit zoom range!
 			} catch (Exception e) {
 				e.printStackTrace();
 				return 1.0;
