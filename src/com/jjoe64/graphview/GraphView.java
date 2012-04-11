@@ -51,6 +51,9 @@ abstract public class GraphView extends LinearLayout {
 		 */
 		@Override
 		protected void onDraw(Canvas canvas) {
+
+            paint.setAntiAlias(true);
+
 			// normal
 			paint.setStrokeWidth(0);
 
