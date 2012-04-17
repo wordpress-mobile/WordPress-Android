@@ -35,7 +35,7 @@ public abstract class WPCOMReaderBase extends Fragment {
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setPluginsEnabled(true);
 		webSettings.setDomStorageEnabled(true);
-		webSettings.setUserAgentString("wp-android");
+		webSettings.setUserAgentString("wp-android-native");
 		webSettings.setSavePassword(false);
 	}
 	

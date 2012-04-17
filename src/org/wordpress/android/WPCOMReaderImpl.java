@@ -130,7 +130,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						try {
 							HttpClient httpclient = new DefaultHttpClient();
 							HttpProtocolParams.setUserAgent(
-									httpclient.getParams(), "wp-android");
+									httpclient.getParams(), "wp-android-native");
 							String readerURL = Constants.readerURL
 									+ "/?template=stats&stats_name=home_page_refresh";
 							if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
@@ -195,7 +195,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 					try {
 						HttpClient httpclient = new DefaultHttpClient();
 						HttpProtocolParams.setUserAgent(httpclient.getParams(),
-								"wp-android");
+								"wp-android-native");
 
 						String readerURL = Constants.readerURL
 								+ "/?template=stats&stats_name=home_page";
