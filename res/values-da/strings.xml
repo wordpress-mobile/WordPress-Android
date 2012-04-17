@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="local_changes">Lokale ændringer</string>
+	<string name="share_link">Delings-URL</string>
+	<string name="upload_scaled_image">Upload og link til skalerede billede</string>
+	<string name="scaled_image_error">Indtast venligst en gyldig værdi for den skalerede bredde</string>
+	<string name="scaled_image">Bredde på skalerede billede</string>
+	<string name="comment_content">Kommenter indhold</string>
+	<string name="author_name">Navn</string>
+	<string name="author_email">E-mail</string>
+	<string name="author_url">URL</string>
+	<string name="comment_update">Opdater kommentar</string>
+	<string name="saving_changes">Gemmer ændringer</string>
+	<string name="sure_to_cancel_edit_comment">Er du sikker på, at du ønsker at annullere redigeringen af denne kommentar?</string>
+	<string name="author_name_required">Forfatterens navn er påkrævet.</string>
+	<string name="content_required">Kommentarteksten er påkrævet.</string>
+	<string name="author_email_required">Forfatterens e-mail-adresse er påkrævet.</string>
+	<string name="topics">Emner</string>
+	<string name="media_error">Fejl ved upload af medie: Billede kunne ikke oprettes.</string>
+	<string name="update_location">Opdater</string>
+	<string name="remove_location">Fjern</string>
+	<string name="post_not_found">Beklager, en fejl opstod i forsøget på at indlæse indlægget. Genindslæs dine indlæg og prøv igen.</string>
+	<string name="location_not_found">Ukendt placering</string>
+	<string name="app_title_playbook">WordPress til PlayBook</string>
+	<string name="posted_from_playbook">Udgivet fra WordPress til PlayBook</string>
 	<string name="scheduled">Planlagt</string>
 	<string name="blog_not_found">Beklager, der opstod en fejl under forsøget på at tilgå denne blog.</string>
 	<string name="wp_admin">Kontrolpanel</string>
@@ -55,7 +78,6 @@
 	<string name="no_approved_comments">Der er ikke godkendt nogen kommentarer til dette indlæg.</string>
 	<string name="select_text_to_blockquote">Vælg venligst noget tekst for at lave en\n   blockquote.</string>
 	<string name="sure_to_remove_account">Er du sikker på, at du vil fjerne denne blog?</string>
-	<string name="location_toast">Lokalitetsoplysninger er endnu ikke tilgængelige, vent venligst.</string>
 	<string name="sdcard_message">Der skal være installeret et SD-kort for at medier kan uploades</string>
 	<string name="username_password_required">Brugernavn og kodeord er påkrævede felter.</string>
 	<string name="page_edited_image_error">Siden blev redigeret, men der opstod \n    en fejl, da\n    mediet blev uploadet\n  </string>
@@ -101,7 +123,6 @@
 	<string name="httppassword">HTTP Kodeord (valgfrit)</string>
 	<string name="settings">Indstillinger</string>
 	<string name="optional_settings">Valgfrie indstillinger</string>
-	<string name="update_location">Opdater lokalitet</string>
 	<string name="view_map">Se kort</string>
 	<string name="post_not_published">Indlæggets status er ikke offentligt</string>
 	<string name="page_not_published">Sidens status er ikke offentligt</string>
@@ -169,6 +190,7 @@
 	<string name="notification_blink">Blink beskedlys</string>
 	<string name="notification_sound">Afspil beskedlyd</string>
 	<string name="notification_vibrate">Vibrer</string>
+	<string name="location_toast">Lokaliseringsdata endnu ikke tilgængeligt, vent venligst.</string>
 	<string name="status">Status</string>
 	<string name="location">Placering</string>
 	<string name="take_video">Tag en ny video</string>

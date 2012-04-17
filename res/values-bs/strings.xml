@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="remote_changes">Napravili ste izmjene u dodanom sadržaju a niste ih sačuvali. Želite ni nastaviti i prebrisati lokalne promjene?</string>
+	<string name="local_changes">Lokalne promjene</string>
+	<string name="share_link">Podijeli URL</string>
+	<string name="upload_scaled_image">Dodaj i linkaj ka umanjenoj slici</string>
+	<string name="scaled_image_error">Molimo vas da unesete ispravnu vrijednost za umanjenu širinu</string>
+	<string name="scaled_image">Širina umanjene slike</string>
+	<string name="comment_content">Sadržaj komentara</string>
+	<string name="author_name">Ime</string>
+	<string name="author_email">Email</string>
+	<string name="author_url">URL</string>
+	<string name="comment_update">Ažuriraj komentar</string>
+	<string name="saving_changes">Spašavam promjene</string>
+	<string name="sure_to_cancel_edit_comment">Jeste li sigurni da želite poništiti uređivanje ovog komentara?\n  </string>
+	<string name="author_name_required">Ime autora je neophodno.</string>
+	<string name="content_required">Neophodno je da unesete tekst komentara.</string>
+	<string name="author_email_required">Email adresa autora komentara je neophodna.</string>
+	<string name="topics">Teme</string>
+	<string name="media_error">Greška prilikom dodavanja datoteke: nije moguće kreirati sliku.</string>
+	<string name="update_location">Ažuriraj</string>
+	<string name="remove_location">Ukloni</string>
+	<string name="post_not_found">Žao nam je, desila se greška prilikom pokušaja učitavanja članka. Molimo vas da osvježite vaše članke i pokušate ponovo.</string>
+	<string name="location_not_found">Nepoznata lokacija</string>
+	<string name="app_title_playbook">WordPress za Playbook</string>
+	<string name="posted_from_playbook">Objavljeno pomoću WordPressa za PlayBook</string>
 	<string name="scheduled">Zakazano</string>
 	<string name="blog_not_found">Žao nam je, desila se greška prilikom pokušaja pristupa ovom blogu.</string>
 	<string name="wp_admin">Kontrolna ploča</string>
@@ -56,7 +80,6 @@
 	<string name="no_account">Nije pronađen niti jedan WordPress račun, molimo vas da dodate račun\n    i pokušate\n    ponovo.\n  </string>
 	<string name="select_text_to_blockquote">Molimo vas da označite neki tekst kako biste ga mogli ubaciti u\n    blok citat.\n  </string>
 	<string name="sure_to_remove_account">Jeste li sigurni da želite ukloniti ovaj blog?\n  </string>
-	<string name="location_toast">Lokacija podataka još nije dostupna, molimo vas da sačekate.\n  </string>
 	<string name="sdcard_message">Morate ubaciti SD karticu kako biste mogli dodavati datoteke.\n  </string>
 	<string name="username_password_required">Korisničko ime i šifra su neophodna polja.\n  </string>
 	<string name="page_edited_image_error">Stranica je uspješno uređena, ali se desila greška\n    prilikom\n    dodavanja datoteke\n  </string>
@@ -101,7 +124,6 @@
 	<string name="httppassword">HTTP šifra (neobavezno):</string>
 	<string name="settings">Postavke</string>
 	<string name="optional_settings">Neobavezne postavke</string>
-	<string name="update_location">Ažuriraj lokaciju</string>
 	<string name="view_map">Pregledaj mapu</string>
 	<string name="post_not_published">Članak nije objavljen</string>
 	<string name="page_not_published">Stranica nije objavljena</string>
@@ -169,6 +191,7 @@
 	<string name="notification_sound">Reproduciraj zvučnu obavijest</string>
 	<string name="notification_vibrate">Vibriraj</string>
 	<string name="notification_blink">Trepereće svjetlo za obavijest</string>
+	<string name="location_toast">Podaci o lokaciji još nisu dostupni, molimo sačekajte.</string>
 	<string name="status">Status</string>
 	<string name="take_video">Snimi novi video</string>
 	<string name="uploading_content">Dodajem sadržaj</string>
