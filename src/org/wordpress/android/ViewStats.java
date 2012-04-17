@@ -521,6 +521,7 @@ public class ViewStats extends Activity {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			errorMsg = e.getLocalizedMessage();
 			e.printStackTrace();
 		}
 
@@ -608,7 +609,26 @@ public class ViewStats extends Activity {
 							Toast.LENGTH_SHORT).show();
 				}
 				firstRun++;
-				showOrHideLoginForm();
+				if (errorMsg.equals("")) {
+					showOrHideLoginForm();
+				} else {
+					errorMsg = "";
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+							ViewStats.this);
+					dialogBuilder.setTitle(getResources().getText(
+							R.string.connection_error));
+					dialogBuilder.setMessage(R.string.connection_error_occured);
+					dialogBuilder.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int whichButton) {
+									// Just close the window.
+								}
+							});
+					dialogBuilder.setCancelable(true);
+					if (!isFinishing())
+						dialogBuilder.create().show();
+				}
 			}
 		}
 
