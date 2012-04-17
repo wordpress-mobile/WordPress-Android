@@ -981,7 +981,9 @@ public class EditPost extends Activity {
 
 		saveButton.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-
+				if (autoSaveHandler != null)
+					autoSaveHandler.removeCallbacks(autoSaveRunnable);
+				
 				boolean result = savePost(false);
 				if (result) {
 					if (post.isUploaded() || !post.getPost_status().equals("localdraft")) {
