@@ -252,8 +252,7 @@
                     <RelativeLayout
                         android:id="@+id/location_wrapper"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/section3" >
+                        android:layout_height="wrap_content" >
 
                         <RelativeLayout
                             android:id="@+id/section4"
@@ -320,7 +319,6 @@
                 android:id="@+id/post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/section5"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/wp_button"
                 android:text="@string/publish_post"
