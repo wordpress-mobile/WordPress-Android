@@ -516,7 +516,7 @@
   
   <!-- Remote Post Changes -->
   <string name="local_changes">Local Changes</string>
-  <string name="remote_changes">You\'ve made changes to an uploaded post that hasn\'t been saved yet. Proceed with the refresh and overwrite local changes?</string>
+  <string name="remote_changes">You\'ve made changes to an uploaded post that haven\'t been saved yet. Proceed with the refresh and overwrite local changes?</string>
   
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991
