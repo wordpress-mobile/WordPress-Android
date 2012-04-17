@@ -103,24 +103,6 @@ public class Comments extends FragmentActivity implements
 		if (fromNotification)
 			commentList.refreshComments(false, false, false);
 
-		/*
-		 * titleBar.setOnBlogChangedListener(new OnBlogChangedListener() { //
-		 * user selected new blog in the title bar
-		 * 
-		 * @Override public void OnBlogChanged() { // remove footer 'load more'
-		 * button ListView listView = (ListView)
-		 * findViewById(android.R.id.list); listView.removeFooterView(switcher);
-		 * model.clear(); thumbs.notifyDataSetChanged();
-		 * 
-		 * id = WordPress.currentBlog.getId(); blog = new Blog(id,
-		 * Comments.this); // query for comments and refresh view boolean
-		 * loadedComments = loadComments(false, false);
-		 * 
-		 * if (!loadedComments) {
-		 * 
-		 * refreshComments(false, false, false); } } });
-		 */
-
 	}
 
 	@Override

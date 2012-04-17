@@ -89,20 +89,6 @@ public class ViewComments extends ListFragment {
 		super.onCreate(bundle);
 	}
 
-	@Override
-	public void onActivityCreated(Bundle bundle) {
-		super.onActivityCreated(bundle);
-
-		// query for comments and refresh view
-		/*
-		 * boolean loadedComments = loadComments(false, false);
-		 * 
-		 * if (!loadedComments) {
-		 * 
-		 * refreshComments(false, false, false); }
-		 */
-	}
-
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
