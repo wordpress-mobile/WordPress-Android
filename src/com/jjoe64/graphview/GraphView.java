@@ -577,31 +577,30 @@ abstract public class GraphView extends LinearLayout {
 			scaleDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
 				@Override
 				public boolean onScale(ScaleGestureDetector detector) {
-					double newSize = viewportSize*detector.getScaleFactor();
-					double diff = newSize-viewportSize;
-					viewportStart += diff/2;
-					viewportSize -= diff;
-					if (diff < 0) {
-						// viewportStart must not be < minX
-						double minX = getMinX(true);
-						if (viewportStart < minX) {
-							viewportStart = minX;
-						}
+					double center = viewportStart + viewportSize / 2;
+					viewportSize /= detector.getScaleFactor();
+					viewportStart = center - viewportSize / 2;
+					
+					// viewportStart must not be < minX
+					double minX = getMinX(true);
+					if (viewportStart < minX) {
+						viewportStart = minX;
+					}
 
-						// viewportStart + viewportSize must not be > maxX
-						double maxX = getMaxX(true);
-						double overlap = viewportStart + viewportSize - maxX;
-						if (overlap > 0) {
-							// scroll left
-							if (viewportStart-overlap > minX) {
-								viewportStart -= overlap;
-							} else {
-								// maximal scale
-								viewportStart = minX;
-								viewportSize = maxX - viewportStart;
-							}
+					// viewportStart + viewportSize must not be > maxX
+					double maxX = getMaxX(true);
+					double overlap = viewportStart + viewportSize - maxX;
+					if (overlap > 0) {
+						// scroll left
+						if (viewportStart-overlap > minX) {
+							viewportStart -= overlap;
+						} else {
+							// maximal scale
+							viewportStart = minX;
+							viewportSize = maxX - viewportStart;
 						}
 					}
+
 					verlabels = null;
 					horlabels = null;
 					numberformatter = null;
