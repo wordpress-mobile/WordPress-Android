@@ -437,7 +437,7 @@ class Entities {
          * {@inheritDoc}
          */
         public void add(String name, int value) {
-            mapNameToValue.put(name, new Integer(value));
+            mapNameToValue.put(name, Integer.valueOf(value));
             mapValueToName.put(value, name);
         }
 
@@ -469,15 +469,15 @@ class Entities {
          * {@inheritDoc}
          */
         public void add(String name, int value) {
-            mapNameToValue.put(name, new Integer(value));
-            mapValueToName.put(new Integer(value), name);
+            mapNameToValue.put(name, Integer.valueOf(value));
+            mapValueToName.put(Integer.valueOf(value), name);
         }
 
         /**
          * {@inheritDoc}
          */
         public String name(int value) {
-            return (String) mapValueToName.get(new Integer(value));
+            return (String) mapValueToName.get(Integer.valueOf(value));
         }
 
         /**
@@ -977,5 +977,4 @@ class Entities {
             }
         }
     }
-
 }
