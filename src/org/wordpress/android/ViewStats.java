@@ -533,7 +533,7 @@ public class ViewStats extends Activity {
 
 		postMethod.addHeader("charset", "UTF-8");
 		// UPDATE THE VERSION NUMBER BEFORE RELEASE! <3 Dan
-		postMethod.addHeader("User-Agent", "wp-android/2.0.5");
+		postMethod.addHeader("User-Agent", "wp-android/2.1");
 
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
