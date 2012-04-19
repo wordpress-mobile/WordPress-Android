@@ -2173,10 +2173,6 @@ public class EditPost extends Activity {
 			selectionStart = temp;
 		}
 
-		if (content.getText().length() == 0) {
-			content.setText(" ");
-		}
-
 		Editable s = content.getText();
 
 		WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap,
