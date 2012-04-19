@@ -5,10 +5,11 @@
     android:orientation="vertical"
     android:background="#FFFFFF" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/postBar"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
+        android:layout_alignParentTop="true"
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
@@ -18,7 +19,7 @@
             android:id="@+id/postTitle"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginRight="144dp"
+            android:layout_marginRight="4dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:shadowColor="#FFFFFF"
@@ -26,23 +27,61 @@
             android:shadowDy="1"
             android:shadowRadius="1"
             android:singleLine="true"
-            android:textSize="20dp" />
+            android:textSize="21dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <WebView
+                android:id="@+id/viewPostWebView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <TextView
+                android:id="@+id/viewPostTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#FFFFFF"
+                android:padding="10dp"
+                android:textSize="18dp"
+                android:visibility="gone" />
+        </FrameLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/footerBar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/format_bar_bg"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp" >
+
+        <ImageButton
+            android:id="@+id/deletePost"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/menu_button_selector"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_menu_delete"
+            android:text="@string/delete_post" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:orientation="horizontal" >
 
-            <ImageButton
-                android:id="@+id/deletePost"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="@drawable/menu_button_selector"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_menu_delete"
-                android:text="@string/delete_post" />
-            
             <ImageButton
                 android:id="@+id/viewPost"
                 android:layout_width="38dp"
@@ -71,30 +110,5 @@
                 android:text="@string/edit_post" />
         </LinearLayout>
     </RelativeLayout>
-
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/postBar" >
-
-        <FrameLayout
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content" >
-
-            <WebView
-                android:id="@+id/viewPostWebView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-
-            <TextView
-                android:id="@+id/viewPostTextView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:textSize="18dp"
-                android:padding="10dp"
-                android:background="#FFFFFF"
-                android:visibility="gone" />
-        </FrameLayout>
-    </ScrollView>
 
 </RelativeLayout>
