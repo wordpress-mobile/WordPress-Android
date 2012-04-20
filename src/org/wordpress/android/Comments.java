@@ -219,7 +219,6 @@ public class Comments extends FragmentActivity implements
 	private void changeCommentStatus(final String newStatus,
 			final int selCommentID) {
 		// for individual comment moderation
-		WordPressDB db = new WordPressDB(Comments.this);
 		client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 				WordPress.currentBlog.getHttpuser(),
 				WordPress.currentBlog.getHttppassword());
@@ -245,7 +244,7 @@ public class Comments extends FragmentActivity implements
 				WordPress.currentComment.status = newStatus;
 				commentList.model.set(WordPress.currentComment.position,
 						WordPress.currentComment);
-				db.updateCommentStatus(id, WordPress.currentComment.commentID,
+				WordPress.wpDB.updateCommentStatus(id, WordPress.currentComment.commentID,
 						newStatus);
 			}
 			dismissDialog(ID_DIALOG_MODERATING);
