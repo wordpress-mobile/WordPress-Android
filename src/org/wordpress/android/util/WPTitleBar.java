@@ -406,6 +406,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void reloadBlogs() {
+		initViews();
 		updateBlogSelector();
 	}
 
