@@ -31,7 +31,7 @@ public class WPCOMReaderWebPage extends WPCOMReaderBase {
 		progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 		wv = (WebView) v.findViewById(R.id.webView);
 		this.setDefaultWebViewSettings(wv);
-		wv.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+		wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		
 		wv.addJavascriptInterface(new JavaScriptInterface(getActivity()
 				.getApplicationContext()), interfaceNameForJS);
