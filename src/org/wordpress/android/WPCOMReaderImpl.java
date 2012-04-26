@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -49,6 +50,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		CookieSyncManager.createInstance(this.getActivity().getApplicationContext());
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.reader_wpcom, container, false);
 		if (WordPress.wpDB == null)
@@ -171,9 +174,16 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	@Override
 	public void onPause() {
 		super.onPause();
+		CookieSyncManager.getInstance().stopSync();
 		if (wv != null) {
 			wv.stopLoading();
 		}
+	}
+	
+	@Override 
+	public void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
 	}
 
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
