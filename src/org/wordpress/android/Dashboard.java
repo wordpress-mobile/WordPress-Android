@@ -103,7 +103,7 @@ public class Dashboard extends Activity {
 			String status = bundle.getString("returnStatus");
 			if (status.equals("CANCEL") && WordPress.currentBlog == null) {
 				finish();
-			} else {
+			} else if (!status.equals("CANCEL")){
 				if (titleBar == null)
 					titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 				titleBar.reloadBlogs();

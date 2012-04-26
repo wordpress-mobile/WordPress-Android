@@ -68,6 +68,10 @@ public class WPTitleBar extends RelativeLayout {
 		super.onFinishInflate();
 
 		initViews();
+		updateBlogSelector();
+	}
+
+	private void updateBlogSelector() {
 		blogNames = new CharSequence[accounts.size()];
 		blogIDs = new int[accounts.size()];
 		for (int i = 0; i < accounts.size(); i++) {
@@ -165,6 +169,7 @@ public class WPTitleBar extends RelativeLayout {
 
 			setupDashboardButtons();
 		}
+		
 	}
 
 	private void setupDashboardButtons() {
@@ -374,6 +379,7 @@ public class WPTitleBar extends RelativeLayout {
 		accounts = WordPress.wpDB.getAccounts(context);
 
 		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
+		
 		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
 
 		blogNames = new CharSequence[accounts.size()];
@@ -400,7 +406,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void reloadBlogs() {
-		onFinishInflate();
+		updateBlogSelector();
 	}
 
 	// Listener for when user changes blog in the ActionBar
@@ -451,6 +457,9 @@ public class WPTitleBar extends RelativeLayout {
 
 	public void switchDashboardLayout(int orientation) {
 
+		if (dashboard == null)
+			initViews();
+		
 		LayoutInflater inflater = LayoutInflater.from(context);
 		ViewGroup parent = (ViewGroup) dashboard.getParent();
 		int index = parent.indexOfChild(dashboard);
