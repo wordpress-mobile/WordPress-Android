@@ -375,10 +375,11 @@ public class WPTitleBar extends RelativeLayout {
 	private void initViews() {
 		if (WordPress.wpDB == null)
 			WordPress.wpDB = new WordPressDB(context);
-
+		
 		accounts = WordPress.wpDB.getAccounts(context);
-
-		dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
+		
+		if (dashboard == null)
+			dashboard = (LinearLayout) findViewById(R.id.dashboard_overlay);
 		
 		commentBadgeText = (TextView) findViewById(R.id.comment_badge_text);
 
