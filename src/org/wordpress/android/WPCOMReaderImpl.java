@@ -94,15 +94,16 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				} else {
 					startRotatingRefreshIcon();
 				}
+				
+				if (url.contains("chrome=no")) {
+					loadDetailListener.onLoadDetail();
+				}
 
 			}
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				stopRotatingRefreshIcon();
-				if (url.contains("chrome=no")) {
-					loadDetailListener.onLoadDetail();
-				}
 			}
 
 			@Override
