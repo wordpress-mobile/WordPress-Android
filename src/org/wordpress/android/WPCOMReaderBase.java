@@ -1,8 +1,5 @@
 package org.wordpress.android;
 
-import java.net.URLEncoder;
-import java.util.UUID;
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -54,30 +51,6 @@ public abstract class WPCOMReaderBase extends Fragment {
 			throw new ClassCastException(activity.toString()
 					+ " must implement Callback");
 		}
-	}
-	
-	protected String getAuthorizeHybridURL(String URL) {
-		
-		if( ! isValidHybridURL(URL) ) return URL;
-		
-		if( URL.contains("?") )
-			return URL + "&wpcom-hybrid-auth-token=" + URLEncoder.encode( this.getHybridAuthToken() );
-		else 
-			return URL + "?wpcom-hybrid-auth-token=" + URLEncoder.encode( this.getHybridAuthToken() );
-	}
-	
-	protected boolean isValidHybridURL(String URL) {
-		return URL.contains(Constants.authorizedHybridHost);
-	}
-
-	protected String getHybridAuthToken() {
-		// gather all of the device info
-		String uuid = WordPress.wpDB.getUUID(getActivity().getApplicationContext());
-		if (uuid == "") {
-			uuid = UUID.randomUUID().toString();
-			WordPress.wpDB.updateUUID(uuid);
-		}
-		return uuid;
 	}
 	
 	protected class WordPressWebViewClient extends WebViewClient {

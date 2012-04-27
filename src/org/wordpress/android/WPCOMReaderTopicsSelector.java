@@ -31,8 +31,7 @@ public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
 		this.setDefaultWebViewSettings(wv);
 		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
 		wv.setWebViewClient(new WordPressWebViewClient());
-		String hybURL = this.getAuthorizeHybridURL(Constants.readerTopicsURL);
-		wv.loadUrl(hybURL);
+		wv.loadUrl(Constants.readerTopicsURL);
 		
 		return v;
 	}

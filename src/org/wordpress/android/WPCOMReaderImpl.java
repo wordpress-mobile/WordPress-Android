@@ -39,6 +39,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	public String topicsID;
 	private PostSelectedListener onPostSelectedListener;
 	private ShowTopicsListener showTopicsListener;
+	private LoadDetailListener loadDetailListener;
 	public TextView topicTV;
 	private ImageView refreshIcon;
 	
@@ -99,6 +100,9 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				stopRotatingRefreshIcon();
+				if (url.contains("chrome=no")) {
+					loadDetailListener.onLoadDetail();
+				}
 			}
 
 			@Override
@@ -159,6 +163,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			// check that the containing activity implements our callback
 			onPostSelectedListener = (PostSelectedListener) activity;
 			showTopicsListener = (ShowTopicsListener) activity;
+			loadDetailListener = (LoadDetailListener) activity;
 		} catch (ClassCastException e) {
 			activity.finish();
 			throw new ClassCastException(activity.toString()
@@ -245,8 +250,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 				loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php",
 						"wp-login.php");
 
-			String readerURL = WPCOMReaderImpl.this
-					.getAuthorizeHybridURL(Constants.readerURL_v3);
+			String readerURL = Constants.readerURL_v3;
 
 			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
 				if (readerURL.contains("?"))
@@ -321,6 +325,10 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 	public interface ShowTopicsListener {
 		public void showTopics();
+	}
+	
+	public interface LoadDetailListener {
+		public void onLoadDetail();
 	}
 
 }

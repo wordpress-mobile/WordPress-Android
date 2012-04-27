@@ -8,6 +8,7 @@ import org.wordpress.android.WPCOMReaderBase.UpdateButtonStatusListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateTopicIDListener;
 import org.wordpress.android.WPCOMReaderBase.UpdateTopicTitleListener;
 import org.wordpress.android.WPCOMReaderDetailPage.LoadExternalURLListener;
+import org.wordpress.android.WPCOMReaderImpl.LoadDetailListener;
 import org.wordpress.android.WPCOMReaderImpl.PostSelectedListener;
 import org.wordpress.android.WPCOMReaderImpl.ShowTopicsListener;
 import org.wordpress.android.util.WPViewPager;
@@ -33,7 +34,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		UpdateTopicTitleListener, GetLoadedItemsListener,
 		UpdateButtonStatusListener, ShowTopicsListener,
 		LoadExternalURLListener, GetPermalinkListener,
-		GetLastSelectedItemListener {
+		GetLastSelectedItemListener, LoadDetailListener {
 
 	private WPViewPager readerPager;
 	private ReaderPagerAdapter readerAdapter;
@@ -57,7 +58,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		if (topicPage == null) {
 			Log.i("WP", "topicPage was null");
 			setContentView(R.layout.reader_wpcom_pager);
@@ -66,7 +67,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 			readerPager.setOffscreenPageLimit(3);
 
 			readerAdapter = new ReaderPagerAdapter(
-				super.getSupportFragmentManager());
+					super.getSupportFragmentManager());
 
 			readerPager.setAdapter(readerAdapter);
 			readerPager.setCurrentItem(1, true);
@@ -127,7 +128,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		
+
 		menu.clear();
 		menu.add(0, 0, 0, getResources().getText(R.string.home));
 		MenuItem menuItem = menu.findItem(0);
@@ -152,7 +153,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 			finish();
 			break;
 		case 1:
-			if (readerPageDetailFragment != null && readerPageDetailFragment != null) {
+			if (readerPageDetailFragment != null
+					&& readerPageDetailFragment != null) {
 				if (readerPager.getCurrentItem() == 2) {
 					runOnUiThread(new Runnable() {
 						public void run() {
@@ -175,7 +177,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 			}
 			break;
 		case 2:
-			if (readerWebPageFragment != null && readerPageDetailFragment != null) {
+			if (readerWebPageFragment != null
+					&& readerPageDetailFragment != null) {
 				if (readerPager.getCurrentItem() == 2) {
 					runOnUiThread(new Runnable() {
 						public void run() {
@@ -188,11 +191,11 @@ public class WPCOMReaderPager extends FragmentActivity implements
 				} else {
 					String url = readerWebPageFragment.wv.getUrl();
 					if (url != null) {
-						 Intent share = new Intent(Intent.ACTION_SEND);
-						 share.setType("text/plain");
-						 share.putExtra(Intent.EXTRA_TEXT, url);
-						 startActivity(Intent.createChooser(share,
-						 getResources().getText(R.string.share_url)));
+						Intent share = new Intent(Intent.ACTION_SEND);
+						share.setType("text/plain");
+						share.putExtra(Intent.EXTRA_TEXT, url);
+						startActivity(Intent.createChooser(share,
+								getResources().getText(R.string.share_url)));
 					}
 				}
 			}
@@ -275,15 +278,17 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public void getLoadedItems(String items) {
-		final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
-		readerPageDetailFragment.readerItems = items;
-		final String method = "Reader2.set_loaded_items("
-				+ readerPageDetailFragment.readerItems + ")";
-		runOnUiThread(new Runnable() {
-			public void run() {
-				readerPageDetailFragment.wv.loadUrl("javascript:" + method);
-			}
-		});
+		if (!items.equals("[]")) {
+			final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+			readerPageDetailFragment.readerItems = items;
+			final String method = "Reader2.set_loaded_items("
+					+ readerPageDetailFragment.readerItems + ")";
+			runOnUiThread(new Runnable() {
+				public void run() {
+					readerPageDetailFragment.wv.loadUrl("javascript:" + method);
+				}
+			});
+		}
 	}
 
 	@Override
@@ -326,7 +331,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 				share.setType("text/plain");
 				share.putExtra(Intent.EXTRA_TEXT, permalink);
 				startActivity(Intent.createChooser(share, getResources()
-					.getText(R.string.share_link)));
+						.getText(R.string.share_link)));
 			} else {
 				Uri uri = Uri.parse(permalink);
 				if (uri != null) {
@@ -354,6 +359,16 @@ public class WPCOMReaderPager extends FragmentActivity implements
 					readerPageDetailFragment.wv
 							.loadUrl("javascript:Reader2.is_prev_item();");
 				}
+			}
+		});
+	}
+
+	@Override
+	public void onLoadDetail() {
+		final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+		runOnUiThread(new Runnable() {
+			public void run() {
+				readerPageDetailFragment.wv.loadUrl(Constants.readerDetailURL);
 			}
 		});
 	}

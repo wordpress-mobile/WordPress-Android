@@ -37,8 +37,7 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 		wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
 		wv.setWebViewClient(new DetailWebViewClient());
 
-		String hybURL = this.getAuthorizeHybridURL(Constants.readerDetailURL);
-		wv.loadUrl(hybURL);
+		wv.loadUrl(Constants.readerDetailURL);
 		
 		nextPost = (ImageButton) v.findViewById(R.id.down);
 		nextPost.setOnClickListener(new OnClickListener() {
