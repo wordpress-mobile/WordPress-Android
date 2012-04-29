@@ -98,9 +98,6 @@
 	<string name="choose_blog">Wähle einen Blog:</string>
 	<string name="fullscreen">Im Vollbildmodus schreiben</string>
 	<string name="post_format">Artikelformat:</string>
-	<string name="strike">\n    \n  </string>
-	<string name="underline">\n    \n  </string>
-	<string name="link">\n    \n  </string>
 	<string name="exit_without_saving">Beenden ohne Speichern</string>
 	<string name="save_and_exit">Speichern und Vollbildmodus verlassen</string>
 	<string name="wpcom_signup">WordPress.com Registrierung</string>
