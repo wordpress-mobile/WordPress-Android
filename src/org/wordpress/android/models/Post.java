@@ -604,12 +604,16 @@ public class Post {
 								if (mf != null) {
 									String imgHTML = uploadImage(mf);
 									if (imgHTML != null) {
-										if (x == 0)
+										if (x == 0) {
 											descriptionContent = descriptionContent
 													.replace(tag, imgHTML);
-										else
+											matcher = pattern.matcher(descriptionContent);
+										}
+										else {
 											moreContent = moreContent.replace(
 													tag, imgHTML);
+											matcher = pattern.matcher(moreContent);
+										}
 									} else {
 										if (x == 0)
 											descriptionContent = descriptionContent
