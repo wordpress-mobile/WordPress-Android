@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -132,7 +134,8 @@ public class Post {
 	public Post(int blog_id, String title, String content, String picturePaths,
 			long date, String categories, String tags, String status,
 			String password, double latitude, double longitude, boolean isPage,
-			String postFormat, Context ctx, boolean createBlogReference, boolean isLocalChange) {
+			String postFormat, Context ctx, boolean createBlogReference,
+			boolean isLocalChange) {
 		// create a new post
 		context = ctx;
 		if (createBlogReference) {
@@ -402,7 +405,7 @@ public class Post {
 		new uploadPostTask().execute(this);
 
 	}
-	
+
 	public boolean isLocalChange() {
 		return isLocalChange;
 	}
@@ -583,14 +586,12 @@ public class Post {
 						matcher = pattern.matcher(moreContent);
 					}
 
+					List<String> imageTags = new ArrayList<String>();
 					while (matcher.find()) {
-						String tag = "";
-						if (x == 0)
-							tag = descriptionContent.substring(matcher.start(),
-									matcher.end());
-						else
-							tag = moreContent.substring(matcher.start(),
-									matcher.end());
+						imageTags.add(matcher.group());
+					}
+
+					for (String tag : imageTags) {
 
 						Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
 						Matcher m = p.matcher(tag);
@@ -607,12 +608,9 @@ public class Post {
 										if (x == 0) {
 											descriptionContent = descriptionContent
 													.replace(tag, imgHTML);
-											matcher = pattern.matcher(descriptionContent);
-										}
-										else {
+										} else {
 											moreContent = moreContent.replace(
 													tag, imgHTML);
-											matcher = pattern.matcher(moreContent);
 										}
 									} else {
 										if (x == 0)
@@ -715,10 +713,10 @@ public class Post {
 						contentStruct.put("categories", theCategories);
 				}
 			}
-			
+
 			if (post.getMt_excerpt() != null)
 				contentStruct.put("mt_excerpt", post.getMt_excerpt());
-			
+
 			contentStruct.put((post.isPage) ? "page_status" : "post_status",
 					post.post_status);
 			Double latitude = 0.0;
@@ -748,7 +746,7 @@ public class Post {
 
 			XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 					post.blog.getHttpuser(), post.blog.getHttppassword());
-			
+
 			if (post.quickPostType != null)
 				client.addQuickPostHeader(post.quickPostType);
 
@@ -947,7 +945,9 @@ public class Post {
 
 						curImagePath = mf.getFileName();
 
-						if (i == 0 || (post.blog.isFullSizeImage() || post.blog.isScaledImage())) {
+						if (i == 0
+								|| (post.blog.isFullSizeImage() || post.blog
+										.isScaledImage())) {
 
 							Uri imageUri = Uri.parse(curImagePath);
 							File jpeg = null;
@@ -1032,9 +1032,13 @@ public class Post {
 								}
 
 								ImageHelper ih2 = new ImageHelper();
-								finalBytes = ih2.createThumbnail(bytes,
-										String.valueOf(i==0 ? mf.getWidth() : post.blog.getScaledImageWidth()),
-										orientation, false);
+								finalBytes = ih2
+										.createThumbnail(
+												bytes,
+												String.valueOf(i == 0 ? mf
+														.getWidth() : post.blog
+														.getScaledImageWidth()),
+												orientation, false);
 
 								if (finalBytes == null) {
 									error = context.getResources()
@@ -1079,7 +1083,8 @@ public class Post {
 							if (i == 0) {
 								finalThumbnailUrl = resultURL;
 							} else {
-								if (post.blog.isFullSizeImage() || post.blog.isScaledImage()) {
+								if (post.blog.isFullSizeImage()
+										|| post.blog.isScaledImage()) {
 									finalImageUrl = resultURL;
 								} else {
 									finalImageUrl = "";
@@ -1105,7 +1110,9 @@ public class Post {
 							String alignmentCSS = "class=\"" + alignment
 									+ "\" ";
 							if (resultURL != null) {
-								if (i != 0 && (post.blog.isFullSizeImage() || post.blog.isScaledImage())) {
+								if (i != 0
+										&& (post.blog.isFullSizeImage() || post.blog
+												.isScaledImage())) {
 									content = content
 											+ "<a alt=\"image\" href=\""
 											+ finalImageUrl
@@ -1116,7 +1123,8 @@ public class Post {
 											+ finalThumbnailUrl + "\" /></a>";
 								} else {
 									if (i == 0
-											&& (post.blog.isFullSizeImage() == false && !post.blog.isScaledImage())) {
+											&& (post.blog.isFullSizeImage() == false && !post.blog
+													.isScaledImage())) {
 										content = content + "<img title=\""
 												+ mf.getTitle() + "\" "
 												+ alignmentCSS
@@ -1125,8 +1133,8 @@ public class Post {
 									}
 								}
 
-								if ((i == 0 && !post.blog.isFullSizeImage() && !post.blog.isScaledImage())
-										|| i == 1) {
+								if ((i == 0 && !post.blog.isFullSizeImage() && !post.blog
+										.isScaledImage()) || i == 1) {
 									if (!mf.getCaption().equals("")) {
 										content = String
 												.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
