@@ -767,8 +767,10 @@ public class ViewPosts extends ListFragment {
 		boolean isPage, loadMore;
 
 		protected void onPostExecute(final Object[] result) {
-			if (isCancelled())
+			if (isCancelled()) {
+				onRefreshListener.onRefresh(false);
 				return;
+			}
 
 			if (result != null) {
 				if (result.length > 0) {
