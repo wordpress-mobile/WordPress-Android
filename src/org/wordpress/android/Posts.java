@@ -174,6 +174,14 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		}
 		
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (isRefreshing)
+			titleBar.stopRotatingRefreshIcon();
+		
+	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {

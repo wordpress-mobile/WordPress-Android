@@ -118,6 +118,14 @@ public class Comments extends FragmentActivity implements
 		if (!commentsLoaded)
 			commentList.refreshComments(false, false, false);
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (titleBar != null)
+			titleBar.stopRotatingRefreshIcon();
+		
+	}
 
 	@Override
 	protected void onStop() {
