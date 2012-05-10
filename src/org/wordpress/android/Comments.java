@@ -73,7 +73,7 @@ public class Comments extends FragmentActivity implements
 		titleBar.refreshButton
 				.setOnClickListener(new ImageButton.OnClickListener() {
 					public void onClick(View v) {
-
+						popCommentDetail();
 						attemptToSelectComment();
 						commentList.refreshComments(false, false, false);
 
@@ -85,12 +85,7 @@ public class Comments extends FragmentActivity implements
 			@Override
 			public void OnBlogChanged() {
 
-				FragmentManager fm = getSupportFragmentManager();
-				ViewCommentFragment f = (ViewCommentFragment) fm
-						.findFragmentById(R.id.commentDetail);
-				if (f == null) {
-					fm.popBackStack();
-				}
+				popCommentDetail();
 				attemptToSelectComment();
 				boolean commentsLoaded = commentList.loadComments(false, false);
 				if (!commentsLoaded)
@@ -103,6 +98,15 @@ public class Comments extends FragmentActivity implements
 		if (fromNotification)
 			commentList.refreshComments(false, false, false);
 
+	}
+
+	protected void popCommentDetail() {
+		FragmentManager fm = getSupportFragmentManager();
+		ViewCommentFragment f = (ViewCommentFragment) fm
+				.findFragmentById(R.id.commentDetail);
+		if (f == null) {
+			fm.popBackStack();
+		}
 	}
 
 	@Override

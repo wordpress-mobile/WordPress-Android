@@ -45,6 +45,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	public ProgressDialog loadingDialog;
 	public boolean isPage = false;
 	public String errorMsg = "";
+	public boolean isRefreshing = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +95,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			@Override
 			public void OnBlogChanged() {
 
-				FragmentManager fm = getSupportFragmentManager();
-				ViewPostFragment f = (ViewPostFragment) fm
-						.findFragmentById(R.id.postDetail);
-				if (f == null) {
-					fm.popBackStack();
-				}
-
+				popPostDetail();
 				attemptToSelectPost();
 				postList.loadPosts(false);
 
@@ -114,13 +109,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 				if (isFinishing())
 					return;
 				
-				FragmentManager fm = getSupportFragmentManager();
-				ViewPostFragment f = (ViewPostFragment) fm
-						.findFragmentById(R.id.postDetail);
-				if (f == null) {
-					fm.popBackStack();
-				}
-
+				popPostDetail();
 				attemptToSelectPost();
 				postList.refreshPosts(false);
 			}
@@ -142,6 +131,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
+							popPostDetail();
 							postList.refreshPosts(false);
 						}
 					});
@@ -157,7 +147,17 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 				dialogBuilder.create().show();
 			}
 		} else {
+			popPostDetail();
 			postList.refreshPosts(false);
+		}
+	}
+
+	protected void popPostDetail() {
+		FragmentManager fm = getSupportFragmentManager();
+		ViewPostFragment f = (ViewPostFragment) fm
+				.findFragmentById(R.id.postDetail);
+		if (f == null) {
+			fm.popBackStack();
 		}
 	}
 
@@ -301,8 +301,10 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	public void onRefresh(boolean start) {
 		if (start) {
 			titleBar.startRotatingRefreshIcon();
+			isRefreshing = true;
 		} else {
 			titleBar.stopRotatingRefreshIcon();
+			isRefreshing = false;
 		}
 
 	}
@@ -336,12 +338,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		@Override
 		protected void onPreExecute() {
 			// pop out of the detail view if on a smaller screen
-			FragmentManager fm = getSupportFragmentManager();
-			ViewPostFragment f = (ViewPostFragment) fm
-					.findFragmentById(R.id.postDetail);
-			if (f == null) {
-				fm.popBackStack();
-			}
+			popPostDetail();
 			showDialog(ID_DIALOG_DELETING);
 		}
 
@@ -559,6 +556,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		if (postList.getPostsTask != null) {
 			postList.getPostsTask.cancel(true);
 			titleBar.stopRotatingRefreshIcon();
+			isRefreshing = false;
 		}
 		if (action == POST_DELETE) {
 			if (post.isLocalDraft()) {

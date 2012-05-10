@@ -70,6 +70,7 @@ public class ViewPosts extends ListFragment {
 	private OnRefreshListener onRefreshListener;
 	private OnPostActionListener onPostActionListener;
 	public getRecentPostsTask getPostsTask;
+	private Posts parentActivity;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -115,6 +116,8 @@ public class ViewPosts extends ListFragment {
 
 	public void onResume() {
 		super.onResume();
+		
+		parentActivity = (Posts) getActivity();
 
 	}
 
@@ -355,7 +358,7 @@ public class ViewPosts extends ListFragment {
 							int position, long id) {
 						if (v != null
 								&& !postIDs[position].equals("draftsHeader")
-								&& !postIDs[position].equals("postsHeader")) {
+								&& !postIDs[position].equals("postsHeader") && !parentActivity.isRefreshing) {
 							selectedPosition = position;
 							selectedID = v.getId();
 							Post post = new Post(WordPress.currentBlog.getId(),
@@ -381,6 +384,9 @@ public class ViewPosts extends ListFragment {
 							// Log.e(TAG, "bad menuInfo", e);
 							return;
 						}
+						
+						if (parentActivity.isRefreshing)
+							return;
 
 						Object[] args = { R.id.row_post_id };
 
