@@ -7,6 +7,7 @@
   <string name="url_username_password_required">Please fill in all of the fields before
     submitting.
   </string>
+  <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
 
   <!-- form labels -->
   <string name="categories">Categories</string>

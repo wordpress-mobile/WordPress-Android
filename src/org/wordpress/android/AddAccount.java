@@ -226,16 +226,8 @@ public class AddAccount extends Activity {
         if (xmlrpcURL != null){
         	//got the xmlrpc path ok!
         	fBlogURL = xmlrpcURL;
-        }
-        else{
-        	//let's try to guess, and if it doesn't work prompt the user to type in the path manually after the call.
-        	String lastChar = blogURL.substring(blogURL.length() - 1, blogURL.length());
-
-        	if (lastChar.equals("/")){
-        		blogURL = blogURL.substring(0, blogURL.length() - 1);
-        	}
-        
-        	fBlogURL = blogURL + "/xmlrpc.php";
+        } else {
+        	fBlogURL = blogURL;
         }
         
         //verify settings
@@ -521,8 +513,8 @@ public class AddAccount extends Activity {
 						  else{
 							  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-							  if (message.equals("HTTP status code: 404 != 200")){
-								  message = "xmlrpc.php not found, please check your path";
+							  if (message.contains("404")){
+								  message = getResources().getText(R.string.xmlrpc_error).toString();
 							  }
 				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
@@ -551,8 +543,8 @@ public class AddAccount extends Activity {
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
 							  String message = e.getMessage();
-							  if (message.equals("HTTP status code: 404 != 200")){
-								  message = "xmlrpc.php not found, please check your path";
+							  if (message.contains("404")){
+								  message = getResources().getText(R.string.xmlrpc_error).toString();
 							  }
 				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
