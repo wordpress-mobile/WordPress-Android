@@ -521,7 +521,6 @@ public class ViewStats extends Activity {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			errorMsg = e.getLocalizedMessage();
 			e.printStackTrace();
 		}
 
