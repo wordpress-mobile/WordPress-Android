@@ -9,4 +9,6 @@ public class Constants {
 	public static String authorizedHybridHost = "en.wordpress.com";
 	public static String readerTopicsURL = "http://en.wordpress.com/reader/mobile/v2/?template=topics";
 	public static String readerDetailURL = "https://en.wordpress.com/wp-admin/admin-ajax.php?action=wpcom_load_mobile&template=details&v=2";
+	//must be updated each release
+	public static String versionNumber = "2.1.1";
 }
