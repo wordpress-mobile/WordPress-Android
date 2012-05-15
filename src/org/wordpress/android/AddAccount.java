@@ -3,6 +3,7 @@ package org.wordpress.android;
 import org.apache.http.conn.HttpHostConnectException;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -520,9 +521,7 @@ public class AddAccount extends Activity {
 						  else{
 							  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-							  if (message.contains("404")){
-								  message = getResources().getText(R.string.xmlrpc_error).toString();
-							  }
+							  message = getResources().getText(R.string.xmlrpc_error).toString();
 				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
@@ -549,10 +548,7 @@ public class AddAccount extends Activity {
 						} else {
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-							  String message = e.getMessage();
-							  if (message.contains("404")){
-								  message = getResources().getText(R.string.xmlrpc_error).toString();
-							  }
+							  String message = getResources().getText(R.string.xmlrpc_error).toString();
 				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
@@ -635,7 +631,6 @@ public class AddAccount extends Activity {
 	
 	private String getRSDMetaTagHref(String urlString) {
 		//get the html code
-		
 		InputStream in = getResponse(urlString);
 
 		//parse the html and get the attribute for xmlrpc endpoint
@@ -688,53 +683,19 @@ public class AddAccount extends Activity {
 }
 	
 	private String getXMLRPCUrl(String urlString) {
-		//get the html code
-		
+		Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		InputStream in = getResponse(urlString);
-
-		//parse the html and get the attribute for xmlrpc endpoint
-		if(in != null) {
-			//try {		
-
-			XmlPullParser parser = Xml.newPullParser();
+		if (in != null) {
 			try {
-	            // auto-detect the encoding from the stream
-	            parser.setInput(in, null);
-	            int eventType = parser.getEventType();
-	            while (eventType != XmlPullParser.END_DOCUMENT){
-	            	String name="";
-					String apiLink="";
-	                switch (eventType){
-	                    case XmlPullParser.START_TAG:
-	                        name = parser.getName();
-	                            if (name.equalsIgnoreCase("api")){
-	                            	for (int i = 0; i < parser.getAttributeCount(); i++) {
-	      							  String attrName = parser.getAttributeName(i);
-	      							  String attrValue = parser.getAttributeValue(i);
-	      					           if(attrName.equals("name")){
-	      					        	   name = attrValue;
-	      					           }
-	      					           else if(attrName.equals("apiLink")){
-	      					        	   apiLink = attrValue;
-	      					           }
-	      					        }
-	      							
-	                              if(name.equals("WordPress") ){
-	      							  return apiLink;
-	      						  }
-	                             //   currentMessage.setLink(parser.nextText());
-	                            }                          
-	                        break;
-	                }
-	                eventType = parser.next();
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            return null;
-	        }
-			
-			
-		
+				String html = convertStreamToString(in);
+				Matcher matcher = xmlrpcLink.matcher(html);
+				if (matcher.find()) {
+					String href = matcher.group(1);
+					return href;
+				}
+			} catch (IOException e) {
+				return null;
+			}
 		}
 		return null;  //never found the rsd tag
 }
