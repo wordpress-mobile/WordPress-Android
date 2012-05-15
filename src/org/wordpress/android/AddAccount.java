@@ -62,6 +62,7 @@ public class AddAccount extends Activity {
 	private boolean wpcom = false;
 	private int blogCtr = 0;
 	public ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
+	boolean isCustomURL = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -223,11 +224,14 @@ public class AddAccount extends Activity {
         	xmlrpcURL = getXMLRPCUrl(rsdUrl);
         }
 		
+		isCustomURL = false;
+		
         if (xmlrpcURL != null){
         	//got the xmlrpc path ok!
         	fBlogURL = xmlrpcURL;
         } else {
         	fBlogURL = blogURL;
+        	isCustomURL = true;
         }
         
         //verify settings
@@ -256,8 +260,11 @@ public class AddAccount extends Activity {
 		                } 
 		                match = WordPress.wpDB.checkMatch(matchBlogName, contentHash.get("xmlrpc").toString(), username);
 		            if (!match){
-	                	blogNames[blogCtr] = matchBlogName;			        
-				        urls[blogCtr] = contentHash.get("xmlrpc").toString();
+	                	blogNames[blogCtr] = matchBlogName;	
+	                	if (isCustomURL)
+	                		urls[blogCtr] = blogURL;
+	                	else
+	                		urls[blogCtr] = contentHash.get("xmlrpc").toString();
 				        blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
 					    String blogURL = urls[blogCtr];
 		                
