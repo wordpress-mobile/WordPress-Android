@@ -1,8 +1,10 @@
 package org.xmlrpc.android;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PushbackInputStream;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
@@ -10,17 +12,18 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -400,17 +403,30 @@ public class XMLRPCClient {
 			// setup pull parser
 			XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 			HttpEntity entity = response.getEntity();
-			//change to pushbackinput stream 1/18/2010 to handle self installed wp sites that insert the BOM
-			PushbackInputStream is = new PushbackInputStream(entity.getContent());
+			InputStream is = entity.getContent();
 			
-			//get rid of junk characters before xml response.  60 = '<'.  Added stopper to prevent infinite loop
-			int bomCheck = is.read();
+			// Many WordPress configs can output junk before the xml response (php warnings for example), this cleans it.
+			int bomCheck = -1;
 			int stopper = 0;
-			while (bomCheck != 60 && stopper < 20){
-				bomCheck = is.read();
+			String snippet;
+			while ((bomCheck = is.read()) != -1 && stopper <= 5000) {
 				stopper++;
+				//60 == '<' character
+				if (bomCheck == 60) {
+					byte[] chunk = new byte[4];
+					is.read(chunk);
+					snippet = new String(chunk, "UTF8");
+					if (snippet.equals("?xml")) {
+						//it's all good, add xml tag back and start parsing
+						String start = "<" + snippet;
+						List<InputStream> streams = Arrays.asList(
+							    new ByteArrayInputStream(start.getBytes()),
+							    is);
+						is = new SequenceInputStream(Collections.enumeration(streams));
+						break;
+					}
+				}
 			}
-			is.unread(bomCheck);
 			
 			pullParser.setInput(is, "UTF-8");
 			
