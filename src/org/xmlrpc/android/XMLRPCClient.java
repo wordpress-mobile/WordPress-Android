@@ -409,14 +409,16 @@ public class XMLRPCClient {
 			// Many WordPress configs can output junk before the xml response (php warnings for example), this cleans it.
 			int bomCheck = -1;
 			int stopper = 0;
-			String snippet;
 			while ((bomCheck = is.read()) != -1 && stopper <= 5000) {
 				stopper++;
+				String snippet = "";
 				//60 == '<' character
 				if (bomCheck == 60) {
-					byte[] chunk = new byte[4];
-					is.read(chunk);
-					snippet = new String(chunk, "UTF8");
+					for (int i = 0; i < 4; i++) {
+						byte[] chunk = new byte[1];
+						is.read(chunk);
+						snippet += new String(chunk, "UTF-8");
+					}
 					if (snippet.equals("?xml")) {
 						//it's all good, add xml tag back and start parsing
 						String start = "<" + snippet;
@@ -425,6 +427,12 @@ public class XMLRPCClient {
 							    is);
 						is = new SequenceInputStream(Collections.enumeration(streams));
 						break;
+					} else {
+						//keep searching...
+						List<InputStream> streams = Arrays.asList(
+							    new ByteArrayInputStream(snippet.getBytes()),
+							    is);
+						is = new SequenceInputStream(Collections.enumeration(streams));
 					}
 				}
 			}
