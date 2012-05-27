@@ -520,7 +520,8 @@ public class AddAccount extends Activity {
 						  else{
 							  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-							  message = getResources().getText(R.string.xmlrpc_error).toString();
+							  if (message.contains("404"))
+								  message = getResources().getText(R.string.xmlrpc_error).toString();
 				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
@@ -542,12 +543,15 @@ public class AddAccount extends Activity {
 						Throwable couse = e.getCause();
 						e.printStackTrace();
 						pd.dismiss();
+						String message = e.getMessage();
 						if (couse instanceof HttpHostConnectException) {
 
 						} else {
 							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
 							  dialogBuilder.setTitle(getResources().getText(R.string.connection_error));
-							  String message = getResources().getText(R.string.xmlrpc_error).toString();
+							  if (message.contains("404"))
+								  message = getResources().getText(R.string.xmlrpc_error).toString();
+							  
 				              dialogBuilder.setMessage(message);
 				              dialogBuilder.setPositiveButton("OK",  new
 				            		  DialogInterface.OnClickListener() {
