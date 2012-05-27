@@ -1114,7 +1114,7 @@ public class Post {
 										&& (post.blog.isFullSizeImage() || post.blog
 												.isScaledImage())) {
 									content = content
-											+ "<a alt=\"image\" href=\""
+											+ "<a href=\""
 											+ finalImageUrl
 											+ "\"><img title=\""
 											+ mf.getTitle() + "\" "
