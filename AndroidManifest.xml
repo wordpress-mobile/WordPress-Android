@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.1.1" android:versionCode="49">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.1.2" android:versionCode="50">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"></uses-sdk>
     <supports-screens android:smallScreens="true"
         android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
