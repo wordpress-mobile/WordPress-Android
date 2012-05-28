@@ -132,6 +132,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
 							popPostDetail();
+							attemptToSelectPost();
 							postList.refreshPosts(false);
 						}
 					});
@@ -148,6 +149,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			}
 		} else {
 			popPostDetail();
+			attemptToSelectPost();
 			postList.refreshPosts(false);
 		}
 	}
