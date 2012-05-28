@@ -3,6 +3,7 @@ package org.wordpress.android;
 import org.apache.http.conn.HttpHostConnectException;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlrpc.android.Base64;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -728,7 +729,12 @@ public class AddAccount extends Activity {
             httpConn.setInstanceFollowRedirects(true);
             httpConn.setRequestMethod("GET");
             httpConn.addRequestProperty("user-agent", "Mozilla/5.0");
-            httpConn.connect(); 
+            if (!httpuser.equals("")) {
+            	String credentials = httpuser + ":" + httppassword;
+            	String encoded = Base64.encodeBytes(credentials.getBytes());
+            	httpConn.setRequestProperty("Authorization", "Basic " + encoded);
+            }
+            httpConn.connect();
 
             response = httpConn.getResponseCode();                 
             if (response == HttpURLConnection.HTTP_OK) {
