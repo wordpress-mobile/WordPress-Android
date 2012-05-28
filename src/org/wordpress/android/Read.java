@@ -73,6 +73,9 @@ public class Read extends Activity {
 				finish();
 			}
 		}
+		
+		httpuser = WordPress.currentBlog.getHttpuser();
+		httppassword = WordPress.currentBlog.getHttppassword();
 
 		if (loadReader || loadAdmin) {
 
@@ -311,6 +314,13 @@ public class Read extends Activity {
 
 					@Override
 					public void onPageFinished(WebView view, String url) {
+					}
+					
+					@Override
+					public void onReceivedHttpAuthRequest(WebView view,
+							HttpAuthHandler handler, String host, String realm) {
+						if (!httpuser.equals(""))
+							handler.proceed(httpuser, httppassword);
 					}
 				});
 
