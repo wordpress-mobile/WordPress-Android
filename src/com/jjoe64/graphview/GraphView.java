@@ -448,7 +448,14 @@ abstract public class GraphView extends LinearLayout {
 		return legendWidth;
 	}
 
-	private double getMaxX(boolean ignoreViewport) {
+	/**
+	 * returns the maximal X value of the current viewport (if viewport is set)
+	 * otherwise maximal X value of all data.
+	 * @param ignoreViewport
+	 *
+	 * warning: only override this, if you really know want you're doing!
+	 */
+	protected double getMaxX(boolean ignoreViewport) {
 		// if viewport is set, use this
 		if (!ignoreViewport && viewportSize != 0) {
 			return viewportStart+viewportSize;
@@ -469,7 +476,12 @@ abstract public class GraphView extends LinearLayout {
 		}
 	}
 
-	private double getMaxY() {
+	/**
+	 * returns the maximal Y value of all data.
+	 *
+	 * warning: only override this, if you really know want you're doing!
+	 */
+	protected double getMaxY() {
 		double largest;
 		if (manualYAxis) {
 			largest = manualMaxYValue;
@@ -485,7 +497,14 @@ abstract public class GraphView extends LinearLayout {
 		return largest;
 	}
 
-	private double getMinX(boolean ignoreViewport) {
+	/**
+	 * returns the minimal X value of the current viewport (if viewport is set)
+	 * otherwise minimal X value of all data.
+	 * @param ignoreViewport
+	 *
+	 * warning: only override this, if you really know want you're doing!
+	 */
+	protected double getMinX(boolean ignoreViewport) {
 		// if viewport is set, use this
 		if (!ignoreViewport && viewportSize != 0) {
 			return viewportStart;
@@ -506,7 +525,12 @@ abstract public class GraphView extends LinearLayout {
 		}
 	}
 
-	private double getMinY() {
+	/**
+	 * returns the minimal Y value of all data.
+	 *
+	 * warning: only override this, if you really know want you're doing!
+	 */
+	protected double getMinY() {
 		double smallest;
 		if (manualYAxis) {
 			smallest = manualMinYValue;
