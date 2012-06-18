@@ -816,6 +816,8 @@ public class ViewPosts extends ListFragment {
 				}
 				onRefreshListener.onRefresh(false);
 			} else {
+				if (loadMore)
+					switcher.showPrevious();
 				onRefreshListener.onRefresh(false);
 
 				if (errorMsg != "") {
@@ -850,8 +852,6 @@ public class ViewPosts extends ListFragment {
 						: "metaWeblog.getRecentPosts", params);
 			} catch (XMLRPCException e) {
 				errorMsg = e.getMessage();
-				if (loadMore)
-					switcher.showPrevious();
 			}
 
 			return result;
