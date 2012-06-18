@@ -312,6 +312,7 @@
     configured.
   </string>
   <string name="account_added">Account/Blog added successfully</string>
+  <string name="no_site_error">Sorry, no WordPress site was found at the URL provided.</string>
 
   <!-- drafts -->
   <string name="cancel_draft">Cancel Draft</string>
