@@ -467,7 +467,17 @@ public class EditPost extends Activity {
 			WPEditText contentET = (WPEditText) findViewById(R.id.postContent);
 			EditText passwordET = (EditText) findViewById(R.id.post_password);
 
-			titleET.setText(post.getTitle());
+			try {
+				titleET.setText(post.getTitle());
+			} catch (Exception e2) {
+				Toast.makeText(
+						this,
+						getResources().getText(
+								R.string.post_not_found),
+						Toast.LENGTH_LONG).show();
+				finish();
+				return;
+			}
 
 			if (post.isUploaded()) {
 				items = new String[] {
