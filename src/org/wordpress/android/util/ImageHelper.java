@@ -117,7 +117,7 @@ public class ImageHelper {
 				try {
 					bm = BitmapFactory
 							.decodeByteArray(bytes, 0, bytes.length, opts);
-				} catch (Exception e) {
+				} catch (OutOfMemoryError e) {
 					// out of memory
 					return null;
 				}
