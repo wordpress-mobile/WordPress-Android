@@ -153,6 +153,14 @@ public class EditPost extends Activity {
 		if (width > 480) {
 			isLargeScreen = true;
 		}
+		
+		//initialize the dates
+		Calendar c = Calendar.getInstance();
+		mYear = c.get(Calendar.YEAR);
+		mMonth = c.get(Calendar.MONTH);
+		mDay = c.get(Calendar.DAY_OF_MONTH);
+		mHour = c.get(Calendar.HOUR_OF_DAY);
+		mMinute = c.get(Calendar.MINUTE);
 
 		categories = new JSONArray();
 		String action = getIntent().getAction();
@@ -1013,17 +1021,7 @@ public class EditPost extends Activity {
 		Button pubDate = (Button) findViewById(R.id.pubDateButton);
 		pubDate.setOnClickListener(new TextView.OnClickListener() {
 			public void onClick(View v) {
-
-				// get the current date
-				Calendar c = Calendar.getInstance();
-				mYear = c.get(Calendar.YEAR);
-				mMonth = c.get(Calendar.MONTH);
-				mDay = c.get(Calendar.DAY_OF_MONTH);
-				mHour = c.get(Calendar.HOUR_OF_DAY);
-				mMinute = c.get(Calendar.MINUTE);
-
 				showDialog(ID_DIALOG_DATE);
-
 			}
 		});
 
