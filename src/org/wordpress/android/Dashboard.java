@@ -107,6 +107,7 @@ public class Dashboard extends Activity {
 				if (titleBar == null)
 					titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 				titleBar.reloadBlogs();
+				titleBar.updateBlogSelector(true);
 				titleBar.startRotatingRefreshIcon();
 				new refreshBlogContentTask().execute(true);
 			}
@@ -371,6 +372,7 @@ public class Dashboard extends Activity {
 			titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 			titleBar.isHome = true;
 			titleBar.refreshBlog();
+			titleBar.updateBlogSelector(true);
 			titleBar.showDashboard(600);
 
 			titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {

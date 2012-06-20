@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.wordpress.android.Comments;
+import org.wordpress.android.Dashboard;
 import org.wordpress.android.EditPost;
+import org.wordpress.android.NewAccount;
 import org.wordpress.android.Posts;
 import org.wordpress.android.R;
 import org.wordpress.android.Read;
@@ -68,21 +70,28 @@ public class WPTitleBar extends RelativeLayout {
 		super.onFinishInflate();
 
 		initViews();
-		updateBlogSelector();
+		updateBlogSelector(false);
 	}
 
-	private void updateBlogSelector() {
-		blogNames = new CharSequence[accounts.size()];
-		blogIDs = new int[accounts.size()];
-		for (int i = 0; i < accounts.size(); i++) {
-			HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
-			String curBlogName = EscapeUtils.unescapeHtml(defHash.get(
-					"blogName").toString());
-
-			blogNames[i] = curBlogName;
-			blogIDs[i] = Integer.valueOf(defHash.get("id").toString());
-
-			blogTitle = (TextView) findViewById(R.id.blog_title);
+	public void updateBlogSelector(boolean isDashboard) {
+		int blogCount = accounts.size();
+		if (accounts.size() >= 1 && isDashboard)
+			blogCount++;
+		blogNames = new CharSequence[blogCount];
+		blogIDs = new int[blogCount];
+		for (int i = 0; i < blogCount; i++) {
+			if ((blogCount - 1) == i && isDashboard) {
+				blogNames[i] = "+ " + getResources().getText(R.string.add_account);
+				blogIDs[i] = -1;
+			} else {
+				HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
+				String curBlogName = EscapeUtils.unescapeHtml(defHash.get(
+						"blogName").toString());
+				blogNames[i] = curBlogName;
+				blogIDs[i] = Integer.valueOf(defHash.get("id").toString());
+				blogTitle = (TextView) findViewById(R.id.blog_title);
+			}
+			
 		}
 
 		int lastBlogID = WordPress.wpDB.getLastBlogID(context);
@@ -130,20 +139,26 @@ public class WPTitleBar extends RelativeLayout {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int pos) {
-									blogTitle.setText(EscapeUtils.unescapeHtml(blogNames[pos].toString()));
-									try {
-										WordPress.currentBlog = new Blog(
-												blogIDs[pos], context);
-									} catch (Exception e) {
-										e.printStackTrace();
+									if (blogIDs[pos] == -1) {
+										Intent i = new Intent(context, NewAccount.class);
+										((Dashboard) context).startActivityForResult(i, 0);
 									}
-									WordPress.wpDB
-											.updateLastBlogID(blogIDs[pos]);
-									updateBlavatarImage();
-									updateCommentBadge();
-									updateReadButton();
-									if (onBlogChangedListener != null) {
-										onBlogChangedListener.OnBlogChanged();
+									else {
+										blogTitle.setText(EscapeUtils.unescapeHtml(blogNames[pos].toString()));
+										try {
+											WordPress.currentBlog = new Blog(
+													blogIDs[pos], context);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+										WordPress.wpDB
+										.updateLastBlogID(blogIDs[pos]);
+										updateBlavatarImage();
+										updateCommentBadge();
+										updateReadButton();
+										if (onBlogChangedListener != null) {
+											onBlogChangedListener.OnBlogChanged();
+										}
 									}
 								}
 
@@ -410,7 +425,7 @@ public class WPTitleBar extends RelativeLayout {
 
 	public void reloadBlogs() {
 		initViews();
-		updateBlogSelector();
+		updateBlogSelector(false);
 	}
 
 	// Listener for when user changes blog in the ActionBar
