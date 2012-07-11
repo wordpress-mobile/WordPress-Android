@@ -311,6 +311,8 @@ res/values-large-hdpi/dimens.xml -text
 res/values-large-hdpi/styles.xml -text
 res/values-large-mdpi/dimens.xml -text
 res/values-large-mdpi/styles.xml -text
+res/values-large-tvdpi/dimens.xml -text
+res/values-large-tvdpi/styles.xml -text
 res/values-mk/strings.xml -text
 res/values-nb/strings.xml -text
 res/values-pl/strings.xml -text

@@ -139,7 +139,11 @@ public class EditPost extends Activity {
 				WordPress.currentBlog = new Blog(
 						WordPress.wpDB.getLastBlogID(this), this);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Toast.makeText(
+						this,
+						getResources().getText(R.string.blog_not_found),
+						Toast.LENGTH_SHORT).show();
+				finish();
 			}
 		}
 
