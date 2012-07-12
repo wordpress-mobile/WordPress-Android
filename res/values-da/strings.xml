@@ -40,7 +40,6 @@
 	<string name="mark_spam">Spam</string>
 	<string name="uploading">Uploader</string>
 	<string name="uploading_media_item">Uploader medieelement #</string>
-	<string name="copyright">©2011 Automattic, Inc</string>
 	<string name="version">Version</string>
 	<string name="tos">Brugskrav</string>
 	<string name="privacy_policy">Privatlivspolitik</string>
@@ -282,7 +281,7 @@
 	<string name="reply_required">Påkrævet felt</string>
 	<string name="view_comments">Se kommentarer</string>
 	<string name="loading">Indlæser...</string>
-	<string name="on">Tænd</string>
+	<string name="on">på</string>
 	<string name="approved">Godkendt</string>
 	<string name="unapproved">Ikke godkendt</string>
 	<string name="spam">Spam</string>
