@@ -22,7 +22,7 @@ public class About extends Activity {
 		super.onCreate(icicle);
 		setContentView(R.layout.about);
 
-		if ( BlackBerryUtils.getInstance().isPlayBook() ) {
+		if ( BlackBerryUtils.getInstance().isBlackBerry() ) {
 			TextView appTitle = (TextView) findViewById(R.id.about_first_line);
 			appTitle.setText(getResources().getText(R.string.app_title_playbook));
 		}

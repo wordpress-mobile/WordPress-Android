@@ -283,7 +283,7 @@ public class Preferences extends Activity {
 			taglineET.setLayoutParams(taglineParams);
 			if (tagline != null) {
 				if (tagline.equals("")) {
-					if( BlackBerryUtils.getInstance().isPlayBook() ) 
+					if( BlackBerryUtils.getInstance().isBlackBerry() ) 
 						taglineET.setText(getResources().getText(
 								R.string.posted_from_playbook));
 					else

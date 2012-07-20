@@ -40,10 +40,10 @@ public class BlackBerryUtils {
 
 	private static BlackBerryUtils instance;
 
-	private boolean isPlayBook = false;
+	private boolean isBlackBerry = false;
 	
-	public boolean isPlayBook() {
-		return isPlayBook;
+	public boolean isBlackBerry() {
+		return isBlackBerry;
 	}
 
 	public static BlackBerryUtils getInstance() {
@@ -56,6 +56,6 @@ public class BlackBerryUtils {
 	private BlackBerryUtils() {
 		/*isPlayBook =  android.os.Build.MANUFACTURER.equalsIgnoreCase( "Research in Motion" ) &&  
 				android.os.Build.MODEL.startsWith( "BlackBerry Runtime for Android" ); */
-		isPlayBook = System.getProperty("os.name").equalsIgnoreCase("qnx") ? true : false;
+		isBlackBerry = System.getProperty("os.name").equalsIgnoreCase("qnx") ? true : false;
 	};
 }
