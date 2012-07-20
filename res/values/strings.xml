@@ -508,7 +508,7 @@
     
   <!-- About View -->
   <string name="app_title">WordPress for Android</string>
-  <string name="app_title_playbook">WordPress for PlayBook</string>
+  <string name="app_title_blackberry">WordPress for BlackBerry</string>
   <string name="publisher">Publisher: Automattic, Inc</string>
   <string name="copyright">©2012 Automattic, Inc</string>
   <string name="version">Version</string>

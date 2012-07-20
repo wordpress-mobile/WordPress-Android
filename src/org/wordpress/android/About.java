@@ -24,7 +24,7 @@ public class About extends Activity {
 
 		if ( BlackBerryUtils.getInstance().isBlackBerry() ) {
 			TextView appTitle = (TextView) findViewById(R.id.about_first_line);
-			appTitle.setText(getResources().getText(R.string.app_title_playbook));
+			appTitle.setText(getResources().getText(R.string.app_title_blackberry));
 		}
 		
 		TextView version = (TextView) findViewById(R.id.about_version);
