@@ -764,78 +764,36 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public class getRecentPostsTask extends
-			AsyncTask<Vector<?>, Void, Object[]> {
+			AsyncTask<Vector<?>, Void, Void> {
 
 		Context ctx;
 		boolean isPage, loadMore;
 
-		protected void onPostExecute(final Object[] result) {
+		protected void onPostExecute(Void result) {
 			if (isCancelled()) {
 				onRefreshListener.onRefresh(false);
 				return;
 			}
+			
+			loadPosts(loadMore);
 
-			if (result != null) {
-				if (result.length > 0) {
-					HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-					Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+			if (loadMore)
+				switcher.showPrevious();
+			onRefreshListener.onRefresh(false);
 
-					if (!loadMore) {
-						WordPress.wpDB.deleteUploadedPosts(
-								WordPress.currentBlog.getId(), isPage);
-					}
-
-					for (int ctr = 0; ctr < result.length; ctr++) {
-						HashMap<String, Object> dbValues = new HashMap<String, Object>();
-						contentHash = (HashMap<?, ?>) result[ctr];
-						dbValues.put("blogID",
-								WordPress.currentBlog.getBlogId());
-						dbVector.add(ctr, contentHash);
-					}
-
-					WordPress.wpDB.savePosts(dbVector,
-							WordPress.currentBlog.getId(), isPage);
-					numRecords += 20;
-					if (loadMore)
-						switcher.showPrevious();
-					loadPosts(loadMore);
-				} else {
-					if (pla != null) {
-						if (postIDs.length == 2) {
-							try {
-								WordPress.wpDB.deleteUploadedPosts(
-										WordPress.currentBlog.getId(),
-										WordPress.currentPost.isPage());
-								onPostActionListener
-										.onPostAction(Posts.POST_CLEAR,
-												WordPress.currentPost);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							WordPress.currentPost = null;
-							loadPosts(false);
-						}
-					}
-				}
-				onRefreshListener.onRefresh(false);
-			} else {
-				if (loadMore)
-					switcher.showPrevious();
-				onRefreshListener.onRefresh(false);
-
-				if (errorMsg != "") {
-					FragmentTransaction ft = getFragmentManager()
-							.beginTransaction();
-					WPAlertDialogFragment alert = WPAlertDialogFragment
-							.newInstance(errorMsg);
-					alert.show(ft, "alert");
-					errorMsg = "";
-				}
+			if (errorMsg != "") {
+				FragmentTransaction ft = getFragmentManager()
+						.beginTransaction();
+				WPAlertDialogFragment alert = WPAlertDialogFragment
+						.newInstance(errorMsg);
+				alert.show(ft, "alert");
+				errorMsg = "";
 			}
+			
 		}
 
 		@Override
-		protected Object[] doInBackground(Vector<?>... args) {
+		protected Void doInBackground(Vector<?>... args) {
 
 			Vector<?> arguments = args[0];
 			WordPress.currentBlog = (Blog) arguments.get(0);
@@ -853,14 +811,52 @@ public class ViewPosts extends ListFragment {
 			try {
 				result = (Object[]) client.call((isPage) ? "wp.getPages"
 						: "metaWeblog.getRecentPosts", params);
+				if (result != null) {
+					if (result.length > 0) {
+						HashMap<?, ?> contentHash = new HashMap<Object, Object>();
+						Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+
+						if (!loadMore) {
+							WordPress.wpDB.deleteUploadedPosts(
+									WordPress.currentBlog.getId(), isPage);
+						}
+
+						for (int ctr = 0; ctr < result.length; ctr++) {
+							HashMap<String, Object> dbValues = new HashMap<String, Object>();
+							contentHash = (HashMap<?, ?>) result[ctr];
+							dbValues.put("blogID",
+									WordPress.currentBlog.getBlogId());
+							dbVector.add(ctr, contentHash);
+						}
+
+						WordPress.wpDB.savePosts(dbVector,
+								WordPress.currentBlog.getId(), isPage);
+						numRecords += 20;
+					} else {
+						if (pla != null) {
+							if (postIDs.length == 2) {
+								try {
+									WordPress.wpDB.deleteUploadedPosts(
+											WordPress.currentBlog.getId(),
+											WordPress.currentPost.isPage());
+									onPostActionListener
+									.onPostAction(Posts.POST_CLEAR,
+											WordPress.currentPost);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								WordPress.currentPost = null;
+								loadPosts(false);
+							}
+						}
+					}
+				}
 			} catch (XMLRPCException e) {
 				errorMsg = e.getMessage();
 			}
 
-			return result;
-
+			return null;
 		}
-
 	}
 
 	public interface OnPostSelectedListener {
