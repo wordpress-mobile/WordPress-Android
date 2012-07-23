@@ -839,7 +839,6 @@ public class ViewPosts extends ListFragment {
 									e.printStackTrace();
 								}
 								WordPress.currentPost = null;
-								loadPosts(false);
 							}
 						}
 					}
