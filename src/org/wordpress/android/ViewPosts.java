@@ -54,12 +54,8 @@ public class ViewPosts extends ListFragment {
 	int rowID = 0;
 	long selectedID;
 	public boolean inDrafts = false;
-	public String imgHTML, sImagePlacement = "", sMaxImageWidth = "";
-	public boolean centerThumbnail = false;
 	public Vector<String> imageUrl = new Vector<String>();
-	public String imageTitle = null, accountName;
-	public boolean thumbnailOnly, secondPass, xmlrpcError = false;
-	public String submitResult = "", errorMsg = "";
+	public String errorMsg = "";
 	public int totalDrafts = 0, selectedPosition;
 	public boolean isPage = false, vpUpgrade = false;
 	public boolean largeScreen = false, shouldSelectAfterLoad = false;
@@ -709,7 +705,6 @@ public class ViewPosts extends ListFragment {
 						EditPost.class);
 				i2.putExtra("postID", selectedID);
 				i2.putExtra("id", WordPress.currentBlog.getId());
-				i2.putExtra("accountName", accountName);
 				startActivityForResult(i2, 0);
 				return true;
 			case 1:
@@ -727,7 +722,6 @@ public class ViewPosts extends ListFragment {
 						EditPost.class);
 				i2.putExtra("postID", selectedID);
 				i2.putExtra("id", WordPress.currentBlog.getId());
-				i2.putExtra("accountName", accountName);
 				i2.putExtra("isPage", true);
 				startActivityForResult(i2, 0);
 				return true;
@@ -749,7 +743,6 @@ public class ViewPosts extends ListFragment {
 				if (isPage) {
 					i2.putExtra("isPage", true);
 				}
-				i2.putExtra("accountName", accountName);
 				i2.putExtra("localDraft", true);
 				startActivityForResult(i2, 0);
 				return true;
