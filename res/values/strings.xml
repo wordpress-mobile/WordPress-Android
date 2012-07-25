@@ -287,7 +287,7 @@
   <string name="post_signature">Post Signature</string>
   <string name="add_tagline">Add a tagline to new posts</string>
   <string name="posted_from">Posted from WordPress for Android</string>
-  <string name="posted_from_playbook">Posted from WordPress for PlayBook</string>
+  <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
 
   <!-- comment actions -->
   <string name="comment_actions">Comment Actions</string>

@@ -285,7 +285,7 @@ public class Preferences extends Activity {
 				if (tagline.equals("")) {
 					if( BlackBerryUtils.getInstance().isBlackBerry() ) 
 						taglineET.setText(getResources().getText(
-								R.string.posted_from_playbook));
+								R.string.posted_from_blackberry));
 					else
 						taglineET.setText(getResources().getText(
 								R.string.posted_from));
