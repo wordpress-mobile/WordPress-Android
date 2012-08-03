@@ -438,7 +438,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void startRotatingRefreshIcon() {
-
+		this.refreshButton.setEnabled(false);
 		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
 				0.5f);
@@ -452,6 +452,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void stopRotatingRefreshIcon() {
+		this.refreshButton.setEnabled(true);
 		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
 		iv.setImageDrawable(getResources().getDrawable(
 				R.drawable.icon_titlebar_refresh));
