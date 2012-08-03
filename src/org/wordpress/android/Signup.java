@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
@@ -22,7 +23,7 @@ public class Signup extends Activity {
 
 		setProgressBarIndeterminateVisibility(true);
 
-		webview.getSettings().setUserAgentString("wp-android");
+		webview.getSettings().setUserAgentString("wp-android/" + Constants.versionNumber);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		webview.setWebViewClient(new WordPressWebViewClient());
@@ -33,6 +34,17 @@ public class Signup extends Activity {
 	private class WordPressWebViewClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			if (url.startsWith("wordpress://wpcom_signup_completed")) {
+				if (url.indexOf("username=") > 0) {
+					String username = url.substring(url.indexOf("username=") + 9, url.length());
+					Bundle bundle = new Bundle();
+					bundle.putString("username", username);
+					Intent mIntent = new Intent();
+					mIntent.putExtras(bundle);
+					setResult(RESULT_OK, mIntent);
+					finish();
+				}
+			}
 			view.loadUrl(url);
 			return true;
 		}

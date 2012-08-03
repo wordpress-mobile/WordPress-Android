@@ -82,9 +82,14 @@ public class AddAccount extends Activity {
 			WordPress.wpDB = new WordPressDB(this);
 
 		Bundle extras = getIntent().getExtras();
-
 		if (extras != null) {
 			wpcom = extras.getBoolean("wpcom", false);
+			String username = extras.getString("username");
+			if (username != null)
+			{
+				EditText usernameET = (EditText) findViewById(R.id.username);
+				usernameET.setText(username);
+			}
 		}
 
 		if (wpcom) {
@@ -151,8 +156,6 @@ public class AddAccount extends Activity {
 		signUp.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 
-				// Intent signupIntent = new Intent(Intent.ACTION_VIEW,
-				// Uri.parse("http://wordpress.com/signup/?ref=wp-android"));
 				Intent signupIntent = new Intent(AddAccount.this, Signup.class);
 				startActivity(signupIntent);
 			}
@@ -874,9 +877,10 @@ public class AddAccount extends Activity {
 			HttpGet httpRequest = new HttpGet(url.toURI());
 			HttpClient httpclient = new DefaultHttpClient();
 
-			HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
+			HttpResponse response = (HttpResponse) httpclient
+					.execute(httpRequest);
 			HttpEntity entity = response.getEntity();
-			
+
 			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
 			in = bufHttpEntity.getContent();
 			in.close();
