@@ -153,7 +153,7 @@
   <!-- page view -->
   <string name="page_content">Page Content</string>
   <string name="title">Title</string>
-  <string name="content">Content</string>
+  <string name="content">Tap to add text and media</string>
   <string name="page_edited">Page Edited</string>
   <string name="page_edited_image_error">Page edited successfully, but an error was
     encountered when

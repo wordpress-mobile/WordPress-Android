@@ -643,6 +643,7 @@ public class EditPost extends Activity {
 				if (!isFullScreenEditing && event.getAction() == 1) {
 					isFullScreenEditing = true;
 					content.setFocusableInTouchMode(true);
+					content.setHint("");
 					try {
 						LinearLayout smallEditorWrap = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
 						smallEditorWrap.removeView(content);
@@ -662,6 +663,7 @@ public class EditPost extends Activity {
 
 				if (event.getAction() == 1 && !scrollDetected
 						&& isFullScreenEditing) {
+					content.setHint(R.string.content);
 					Layout layout = ((TextView) v).getLayout();
 					int x = (int) event.getX();
 					int y = (int) event.getY();
