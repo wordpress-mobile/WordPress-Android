@@ -1,9 +1,31 @@
 package org.wordpress.android;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlrpc.android.Base64;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -27,6 +49,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,24 +57,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AddAccount extends Activity {
 	private XMLRPCClient client;
@@ -225,6 +230,8 @@ public class AddAccount extends Activity {
 
 			if (rsdUrl != null) {
 				xmlrpcURL = getXMLRPCUrl(rsdUrl);
+				if (xmlrpcURL == null)
+					xmlrpcURL = rsdUrl.replace("?rsd", "");
 			} else {
 				isCustomURL = false;
 				// try the user entered path
@@ -855,8 +862,6 @@ public class AddAccount extends Activity {
 
 	private InputStream getResponse(String urlString) {
 		InputStream in = null;
-		int response = -1;
-
 		URL url = null;
 		try {
 			url = new URL(urlString);
@@ -864,35 +869,27 @@ public class AddAccount extends Activity {
 			e1.printStackTrace();
 			return null;
 		}
-		URLConnection conn = null;
-		try {
-			conn = url.openConnection();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return null;
-		}
 
 		try {
-			HttpURLConnection httpConn = (HttpURLConnection) conn;
-			httpConn.setAllowUserInteraction(false);
-			httpConn.setInstanceFollowRedirects(true);
-			httpConn.setRequestMethod("GET");
-			httpConn.addRequestProperty("user-agent", "Mozilla/5.0");
-			if (!httpuser.equals("")) {
-				String credentials = httpuser + ":" + httppassword;
-				String encoded = Base64.encodeBytes(credentials.getBytes());
-				httpConn.setRequestProperty("Authorization", "Basic " + encoded);
-			}
-			httpConn.connect();
+			HttpGet httpRequest = new HttpGet(url.toURI());
+			HttpClient httpclient = new DefaultHttpClient();
 
-			response = httpConn.getResponseCode();
-			if (response == HttpURLConnection.HTTP_OK) {
-				in = httpConn.getInputStream();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
+			HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
+			HttpEntity entity = response.getEntity();
+			
+			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+			in = bufHttpEntity.getContent();
+			in.close();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		return in;
 	}
 }
