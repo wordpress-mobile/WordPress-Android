@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.1.4" android:versionCode="55">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.1.5" android:versionCode="56">
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"></uses-sdk>
     <supports-screens android:smallScreens="true"
         android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
@@ -19,7 +19,7 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"></uses-permission>
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"></uses-permission>
 	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
-		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true"  android:debuggable="false">
+		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true"  android:debuggable="true">
 		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:launchMode="singleTask"/>
 		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
 			android:label="@string/create_a_link" />
