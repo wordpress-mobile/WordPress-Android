@@ -277,8 +277,8 @@ public class EditPost extends Activity {
 		} else {
 
 			if (extras != null) {
-				id = WordPress.currentBlog.getId();
 				try {
+					id = WordPress.currentBlog.getId();
 					blog = new Blog(id, this);
 				} catch (Exception e) {
 					Toast.makeText(this,
