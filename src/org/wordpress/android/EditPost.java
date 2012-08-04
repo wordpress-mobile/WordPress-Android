@@ -1553,16 +1553,13 @@ public class EditPost extends Activity {
 								.parse(android.provider.MediaStore.Images.Media
 										.insertImage(getContentResolver(),
 												f.getAbsolutePath(), null, null));
-
-						Log.i("camera",
-								"Selected image: " + capturedImage.toString());
-
 						f.delete();
 
 						addMedia(capturedImage.toString(), capturedImage);
 
 					} catch (FileNotFoundException e) {
 					} catch (Exception e) {
+					} catch (OutOfMemoryError e) {
 					}
 
 				}
