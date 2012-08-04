@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,19 +87,21 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
-					view.stopLoading();
-					wv.loadUrl("javascript:Reader2.get_loaded_items();");
-					wv.loadUrl("javascript:Reader2.get_last_selected_item();");
-					onPostSelectedListener.onPostSelected(url);
-				} else {
-					startRotatingRefreshIcon();
-				}
 				
-				if (url.contains("chrome=no")) {
-					loadDetailListener.onLoadDetail();
+				if(isAdded()){ // check if the fragment is currently added to its activity
+					if (url.equalsIgnoreCase(Constants.readerDetailURL)) {
+						view.stopLoading();
+						wv.loadUrl("javascript:Reader2.get_loaded_items();");
+						wv.loadUrl("javascript:Reader2.get_last_selected_item();");
+						onPostSelectedListener.onPostSelected(url);
+					} else {
+						startRotatingRefreshIcon();
+					}
+				
+					if (url.contains("chrome=no")) {
+						loadDetailListener.onLoadDetail();
+					}
 				}
-
 			}
 
 			@Override
