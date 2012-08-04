@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.util.FloatMath;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -66,7 +67,7 @@ public class ImageHelper {
 				int sample = 0;
 
 				float fWidth = width;
-				sample = new Double(Math.ceil(fWidth / finWidth)).intValue();
+				sample = Double.valueOf(FloatMath.ceil(fWidth / finWidth)).intValue();
 
 				if (sample == 3) {
 					sample = 4;
@@ -103,7 +104,7 @@ public class ImageHelper {
 				int sample = 0;
 
 				float fWidth = width;
-				sample = new Double(Math.ceil(fWidth / 1200)).intValue();
+				sample = Double.valueOf(FloatMath.ceil(fWidth / 1200)).intValue();
 
 				if (sample == 3) {
 					sample = 4;
@@ -375,11 +376,6 @@ public class ImageHelper {
 				}
 				try {
 					in.readFully(bytes);
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-				try {
 					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();
