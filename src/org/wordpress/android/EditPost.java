@@ -68,7 +68,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
