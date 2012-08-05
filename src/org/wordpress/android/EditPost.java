@@ -662,7 +662,7 @@ public class EditPost extends Activity {
 
 				if (event.getAction() == 1 && !scrollDetected
 						&& isFullScreenEditing) {
-					content.setHint(R.string.content);
+					imeBackPressed = false;
 					Layout layout = ((TextView) v).getLayout();
 					int x = (int) event.getX();
 					int y = (int) event.getY();
@@ -855,7 +855,6 @@ public class EditPost extends Activity {
 			@Override
 			public void onImeBack(WPEditText view, String text) {
 				finishEditing();
-				imeBackPressed = true;
 			}
 
 		});
@@ -1318,7 +1317,7 @@ public class EditPost extends Activity {
 
 	protected void finishEditing() {
 		WPEditText content = (WPEditText) findViewById(R.id.postContent);
-
+		content.setHint(R.string.content);
 		if (isFullScreenEditing) {
 			isFullScreenEditing = false;
 			try {
@@ -1353,6 +1352,7 @@ public class EditPost extends Activity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		imeBackPressed = true;
 		switch (item.getItemId()) {
 		case 0:
 			launchPictureLibrary();
