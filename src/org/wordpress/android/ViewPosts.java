@@ -774,7 +774,7 @@ public class ViewPosts extends ListFragment {
 				switcher.showPrevious();
 			onRefreshListener.onRefresh(false);
 
-			if (errorMsg != "") {
+			if (errorMsg != "" && !getActivity().isFinishing()) {
 				FragmentTransaction ft = getFragmentManager()
 						.beginTransaction();
 				WPAlertDialogFragment alert = WPAlertDialogFragment

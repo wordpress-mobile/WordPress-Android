@@ -259,15 +259,18 @@ public class ViewComments extends ListFragment {
 					thumbs.notifyDataSetChanged();
 				} else {
 					// there was an xmlrpc error
-					checkedCommentTotal = 0;
-					hideModerationBar();
-					thumbs.notifyDataSetChanged();
-					FragmentTransaction ft = getFragmentManager()
+					if (!getActivity().isFinishing()) {
+						checkedCommentTotal = 0;
+						hideModerationBar();
+						thumbs.notifyDataSetChanged();
+						FragmentTransaction ft = getFragmentManager()
 							.beginTransaction();
-					WPAlertDialogFragment alert = WPAlertDialogFragment
+						WPAlertDialogFragment alert = WPAlertDialogFragment
 							.newInstance(moderateErrorMsg);
-					alert.show(ft, "alert");
+						alert.show(ft, "alert");
+					}
 					moderateErrorMsg = "";
+					
 				}
 			}
 		};
@@ -315,11 +318,13 @@ public class ViewComments extends ListFragment {
 					refreshComments(false, false, false);
 				} else {
 					// error occurred during delete request
-					FragmentTransaction ft = getFragmentManager()
-							.beginTransaction();
-					WPAlertDialogFragment alert = WPAlertDialogFragment
-							.newInstance(moderateErrorMsg);
-					alert.show(ft, "alert");
+					if (!getActivity().isFinishing()) {
+						FragmentTransaction ft = getFragmentManager()
+								.beginTransaction();
+						WPAlertDialogFragment alert = WPAlertDialogFragment
+								.newInstance(moderateErrorMsg);
+						alert.show(ft, "alert");
+					}
 				}
 			}
 		};
@@ -873,12 +878,14 @@ public class ViewComments extends ListFragment {
 						if (pd.isShowing()) {
 							pd.dismiss();
 						}
-						onAnimateRefreshButton.onAnimateRefreshButton(false);
-						FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						WPAlertDialogFragment alert = WPAlertDialogFragment
-								.newInstance(e.getLocalizedMessage());
-						alert.show(ft, "alert");
+						if (!getActivity().isFinishing()) {
+							onAnimateRefreshButton.onAnimateRefreshButton(false);
+							FragmentTransaction ft = getFragmentManager()
+									.beginTransaction();
+							WPAlertDialogFragment alert = WPAlertDialogFragment
+									.newInstance(e.getLocalizedMessage());
+							alert.show(ft, "alert");
+						}
 					}
 				});
 			} catch (final XMLRPCException e) {
@@ -887,12 +894,14 @@ public class ViewComments extends ListFragment {
 						if (pd.isShowing()) {
 							pd.dismiss();
 						}
-						onAnimateRefreshButton.onAnimateRefreshButton(false);
-						FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						WPAlertDialogFragment alert = WPAlertDialogFragment
-								.newInstance(e.getLocalizedMessage());
-						alert.show(ft, "alert");
+						if (!getActivity().isFinishing()) {
+							onAnimateRefreshButton.onAnimateRefreshButton(false);
+							FragmentTransaction ft = getFragmentManager()
+									.beginTransaction();
+							WPAlertDialogFragment alert = WPAlertDialogFragment
+									.newInstance(e.getLocalizedMessage());
+							alert.show(ft, "alert");
+						}
 					}
 				});
 			}
@@ -937,23 +946,27 @@ public class ViewComments extends ListFragment {
 			} catch (final XMLRPCFault e) {
 				handler.post(new Runnable() {
 					public void run() {
-						getActivity().dismissDialog(ID_DIALOG_MODERATING);
-						FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						WPAlertDialogFragment alert = WPAlertDialogFragment
-								.newInstance(e.getFaultString());
-						alert.show(ft, "alert");
+						if (!getActivity().isFinishing()) {
+							getActivity().dismissDialog(ID_DIALOG_MODERATING);
+							FragmentTransaction ft = getFragmentManager()
+									.beginTransaction();
+							WPAlertDialogFragment alert = WPAlertDialogFragment
+									.newInstance(e.getFaultString());
+							alert.show(ft, "alert");
+						}
 					}
 				});
 			} catch (final XMLRPCException e) {
 				handler.post(new Runnable() {
 					public void run() {
-						getActivity().dismissDialog(ID_DIALOG_MODERATING);
-						FragmentTransaction ft = getFragmentManager()
-								.beginTransaction();
-						WPAlertDialogFragment alert = WPAlertDialogFragment
-								.newInstance(e.getLocalizedMessage());
-						alert.show(ft, "alert");
+						if (!getActivity().isFinishing()) {
+							getActivity().dismissDialog(ID_DIALOG_MODERATING);
+							FragmentTransaction ft = getFragmentManager()
+									.beginTransaction();
+							WPAlertDialogFragment alert = WPAlertDialogFragment
+									.newInstance(e.getLocalizedMessage());
+							alert.show(ft, "alert");
+						}
 					}
 				});
 			}
@@ -1026,7 +1039,7 @@ public class ViewComments extends ListFragment {
 				}
 
 				onAnimateRefreshButton.onAnimateRefreshButton(false);
-				if (!moderateErrorMsg.equals("")) {
+				if (!moderateErrorMsg.equals("") && !getActivity().isFinishing()) {
 					FragmentTransaction ft = getFragmentManager()
 							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
