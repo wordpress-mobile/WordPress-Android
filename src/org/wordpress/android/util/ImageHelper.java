@@ -365,7 +365,13 @@ public class ImageHelper {
 
 				title = jpeg.getName();
 
-				bytes = new byte[(int) jpeg.length()];
+				try {
+					bytes = new byte[(int) jpeg.length()];
+				} catch (Exception e) {
+					return null;
+				} catch (OutOfMemoryError e) {
+					return null;
+				}
 
 				DataInputStream in = null;
 				try {
