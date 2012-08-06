@@ -36,7 +36,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,7 +43,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -74,7 +72,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -95,23 +92,17 @@ import android.widget.ToggleButton;
 
 public class EditPost extends Activity {
 	/** Called when the activity is first created. */
-	public ProgressDialog pd;
 	Vector<String> selectedCategories = new Vector<String>();
-	public String categoryErrorMsg = "", accountName = "", option, provider,
-			SD_CARD_TEMP_DIR = "";
+	public String accountName = "", option, SD_CARD_TEMP_DIR = "";
 	private JSONArray categories;
 	private int id;
 	long postID, customPubDate = 0;
 	private int ID_DIALOG_DATE = 0, ID_DIALOG_TIME = 1, ID_DIALOG_LOADING = 2;
 	public Boolean localDraft = false, isPage = false, isNew = false,
-			isAction = false, isUrl = false, isLargeScreen = false,
-			isCustomPubDate = false, isFullScreenEditing = false,
+			isAction = false, isCustomPubDate = false, isFullScreenEditing = false,
 			isBackspace = false, imeBackPressed = false,
 			scrollDetected = false, isNewDraft = false;
-	Criteria criteria;
 	Location curLocation;
-	ProgressDialog postingDialog;
-	int cursorLoc = 0, screenDensity = 0;
 	// date holders
 	private int mYear, mMonth, mDay, mHour, mMinute, styleStart,
 			selectionStart, selectionEnd, lastPosition = -1;
@@ -144,17 +135,6 @@ public class EditPost extends Activity {
 						Toast.LENGTH_SHORT).show();
 				finish();
 			}
-		}
-
-		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-				.getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		if (height > width) {
-			width = height;
-		}
-		if (width > 480) {
-			isLargeScreen = true;
 		}
 		
 		//initialize the dates
@@ -199,7 +179,6 @@ public class EditPost extends Activity {
 								Toast.LENGTH_SHORT).show();
 						finish();
 					}
-
 				}
 
 				// Don't prompt if they have one blog only
