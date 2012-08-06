@@ -651,9 +651,9 @@ public class Post {
 				String tagline = "";
 
 				if (globalSettings != null) {
-					if (globalSettings.get("tagline_flag").toString()
-							.equals("1")) {
-						taglineValue = true;
+					if (globalSettings.get("tagline_flag") != null) {
+						if (globalSettings.get("tagline_flag").toString().equals("1"))
+							taglineValue = true;
 					}
 
 					if (taglineValue) {
