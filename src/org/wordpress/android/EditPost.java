@@ -805,6 +805,7 @@ public class EditPost extends Activity implements OnClickListener,
 											}
 										}).create();
 						ad.show();
+						mImeBackPressed = true;
 						mScrollDetected = false;
 						return true;
 					}
