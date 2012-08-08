@@ -769,5 +769,7 @@
     HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
     DAMAGES.\n\nEND OF TERMS AND CONDITIONS
   </string>
+  <string name="ok">OK</string>
+  <string name="image_settings">Image Settings</string>
 
 </resources>
