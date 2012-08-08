@@ -830,6 +830,17 @@ public class Post {
 				if (curImagePath.contains("video")) {
 					video = true;
 				}
+				
+				//create temp file for media upload
+				String tempFileName = "wp-" + System.currentTimeMillis();
+				try {
+					context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+				} catch (FileNotFoundException e) {
+					error = "Could not create temp file for media upload.";
+					return null;
+				}
+				
+				File tempFile = context.getFileStreamPath(tempFileName);
 
 				if (video) { // upload the video
 
@@ -908,9 +919,9 @@ public class Post {
 							post.blog.getPassword(), m };
 
 					Object result = null;
-
+					
 					try {
-						result = (Object) client.call("wp.uploadFile", params);
+						result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
 					} catch (XMLRPCException e) {
 						String mediaErrorMsg = e.getLocalizedMessage();
 						if (video) {
@@ -1066,8 +1077,8 @@ public class Post {
 							Object result = null;
 
 							try {
-								result = (Object) client.call("wp.uploadFile",
-										params);
+								result = (Object) client.callUploadFile("wp.uploadFile",
+										params, tempFile);
 							} catch (XMLRPCException e) {
 								error = e.getMessage();
 								return null;

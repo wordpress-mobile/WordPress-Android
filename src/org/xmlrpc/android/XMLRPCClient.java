@@ -138,7 +138,7 @@ public class XMLRPCClient {
 	 * @throws XMLRPCException
 	 */
 	public Object call(String method, Object[] params) throws XMLRPCException {
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 	
 	/**
@@ -149,7 +149,7 @@ public class XMLRPCClient {
 	 * @throws XMLRPCException
 	 */
 	public Object call(String method) throws XMLRPCException {
-		return callXMLRPC(method, null);
+		return callXMLRPC(method, null, null);
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 	
 	/**
@@ -180,7 +180,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1, p2,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1, p2, p3,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1, p2, p3, p4,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1, p2, p3, p4, p5,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 
 	/**
@@ -275,7 +275,7 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1, p2, p3, p4, p5, p6,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
 	}
 
 	/**
@@ -297,7 +297,12 @@ public class XMLRPCClient {
 		Object[] params = {
 			p0, p1, p2, p3, p4, p5, p6, p7,
 		};
-		return callXMLRPC(method, params);
+		return callXMLRPC(method, params, null);
+	}
+	
+	public Object callUploadFile(String method, Object[] params, File tempFile) throws XMLRPCException {
+		
+		return callXMLRPC(method, params, tempFile);
 	}
 
 	/**
@@ -309,14 +314,10 @@ public class XMLRPCClient {
 	 * @throws XMLRPCException
 	 */
 	@SuppressWarnings("unchecked")
-	private Object callXMLRPC(String method, Object[] params) throws XMLRPCException {
-		File tempFile = null;
+	private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException {
 		try {
 			// prepare POST body
 			if (method.equals("wp.uploadFile")){
-				//String tempFilePath = Environment.getExternalStorageDirectory() + File.separator + "wordpress" + File.separator + "wp-" + System.currentTimeMillis() + ".xml";
-				String tempFileName = "wp-" + System.currentTimeMillis();
-				tempFile = File.createTempFile(tempFileName, null);
 				
 	            if (!tempFile.exists() && !tempFile.mkdirs()) {
 	            	throw new XMLRPCException("Path to file could not be created.");
