@@ -42,13 +42,8 @@ public class CommentService extends Service {
 	public void onCreate() {
 	  super.onCreate();
 	  
-	  if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
-	  
 	  // init the service here
 	  _startService();
-	  
-
 	}
 	
     @Override

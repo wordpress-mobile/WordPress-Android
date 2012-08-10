@@ -81,7 +81,7 @@
       android:layout_alignParentRight="true"
       android:layout_marginLeft="10dip"
       android:textSize="20dip"
-      android:text="OK"
+      android:text="@string/ok"
       android:layout_below="@id/parent_category" />
 
     <Button

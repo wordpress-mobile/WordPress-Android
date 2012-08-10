@@ -10,14 +10,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -28,29 +25,11 @@ import android.widget.Spinner;
 public class EditComment extends Activity {
 	
 	private int ID_DIALOG_SAVING = 0;
-	public Boolean isLargeScreen = false;
-	public ProgressDialog pd;
-	public String xmlErrorMessage;
+	private String xmlErrorMessage;
 	
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-
-		// need to make sure we have db and currentBlog on views that don't use
-		// the Action Bar
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
-
-		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-				.getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		if (height > width) {
-			width = height;
-		}
-		if (width > 480) {
-			isLargeScreen = true;
-		}
 		
 		setContentView(R.layout.edit_comment);
 		

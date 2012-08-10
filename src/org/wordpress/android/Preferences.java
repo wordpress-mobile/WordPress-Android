@@ -42,8 +42,6 @@ public class Preferences extends Activity {
 
 		setTitle(getResources().getText(R.string.preferences));
 		
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
 			try {
 				WordPress.currentBlog = new Blog(
@@ -407,6 +405,7 @@ public class Preferences extends Activity {
 							UPDATE_INTERVAL = 86400000;
 						}
 
+						// TODO: start service after reboot 
 						Intent intent = new Intent(Preferences.this,
 								CommentBroadcastReceiver.class);
 						PendingIntent pIntent = PendingIntent.getBroadcast(

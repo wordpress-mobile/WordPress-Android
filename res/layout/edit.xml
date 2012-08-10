@@ -96,7 +96,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/content_bg_header"
-                    android:text="Tags &amp; Categories" />
+                    android:text="@string/tags_and_categories" />
 
                 <EditText
                     android:id="@+id/tags"

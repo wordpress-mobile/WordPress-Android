@@ -275,7 +275,6 @@
                             android:shadowColor="#FF464646"
                             android:shadowDy="1"
                             android:shadowRadius="1"
-                            android:text="0"
                             android:textColor="#FFFFFFFF"
                             android:textSize="@dimen/comment_badge_text_size"
                             android:textStyle="bold" />

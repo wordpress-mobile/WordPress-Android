@@ -112,8 +112,6 @@ public class Comments extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 		boolean commentsLoaded = commentList.loadComments(false, false);
 		if (!commentsLoaded)
 			commentList.refreshComments(false, false, false);

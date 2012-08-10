@@ -771,5 +771,18 @@
   </string>
   <string name="ok">OK</string>
   <string name="image_settings">Image Settings</string>
+  <string name="add_account_blog_url">Blog URL:</string>
+  <string name="image_options_title">Title</string>
+  <string name="image_options_caption">Caption (optional)</string>
+  <string name="image_options_horizontal_alignment">Horizontal Alignment:</string>
+  <string name="image_options_width">Width:</string>
+  <string name="done">Done</string>
+  <string name="view_stats_go">GO</string>
+  <string name="view_stats_wp_login">WordPress.com login:</string>
+  <string name="action_item_chart">Chart</string>
+  <string name="wordpress_blog">WordPress Blog</string>
+  <string name="blogusername">blogusername</string>
+  <string name="column_1">Column 1</string>
+  <string name="column_2">Column 2</string>
 
 </resources>

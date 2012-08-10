@@ -165,8 +165,6 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(getActivity().getBaseContext());
 		if (WordPress.currentBlog == null) {
 			try {
 				WordPress.currentBlog = new Blog(

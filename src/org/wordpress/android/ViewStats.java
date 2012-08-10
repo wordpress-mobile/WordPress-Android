@@ -531,7 +531,7 @@ public class ViewStats extends Activity {
 		postMethod = new HttpPost(uri);
 
 		postMethod.addHeader("charset", "UTF-8");
-		postMethod.addHeader("User-Agent", "wp-android/" + Constants.versionNumber);
+		postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
 
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);

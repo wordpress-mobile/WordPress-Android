@@ -390,9 +390,6 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	private void initViews() {
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(context);
-		
 		accounts = WordPress.wpDB.getAccounts(context);
 		
 		if (dashboard == null)

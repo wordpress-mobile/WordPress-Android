@@ -881,8 +881,6 @@ public class EditPost extends Activity implements OnClickListener,
 	}
 
 	private void initBlog() {
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 		if (WordPress.currentBlog == null) {
 			try {
 				WordPress.currentBlog = new Blog(

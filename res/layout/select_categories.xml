@@ -40,7 +40,7 @@
       android:background="@drawable/menu_button_selector"
       android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
-      android:text="Done"
+      android:text="@string/done"
       android:padding="2dip"
       android:textStyle="bold"
       android:textSize="20dip"

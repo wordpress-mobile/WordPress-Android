@@ -37,7 +37,7 @@
             android:paddingRight="8dip"
             android:textColor="#777777"
             android:textSize="12dip"
-            android:text="Publish"
+            android:text="@string/publish"
             android:gravity="right" />
     </LinearLayout>
 

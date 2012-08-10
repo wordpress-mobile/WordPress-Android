@@ -49,7 +49,7 @@
                     android:shadowDy="-2"
                     android:shadowRadius="2"
                     android:singleLine="True"
-                    android:text="Read"
+                    android:text="@string/reader"
                     android:textColor="#FF212121"
                     android:textSize="@dimen/action_bar_title_text_size"
                     android:textStyle="bold" />

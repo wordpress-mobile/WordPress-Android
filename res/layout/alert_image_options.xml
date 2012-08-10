@@ -14,7 +14,7 @@
       android:id="@+id/title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Title"
+      android:hint="@string/image_options_title"
       android:singleLine="true" />
     <!--  <EditText
       android:id="@+id/description"
@@ -26,12 +26,12 @@
       android:id="@+id/caption"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Caption (optional)"
+      android:hint="@string/image_options_caption"
       android:singleLine="true" />
     <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:text="Horizontal Alignment:"
+      android:text="@string/image_options_horizontal_alignment"
       android:textStyle="bold"
       android:textColor="#CCCCCC" />
     <Spinner 
@@ -42,7 +42,7 @@
     <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:text="Width:"
+      android:text="@string/image_options_width"
       android:textStyle="bold"
       android:textColor="#CCCCCC" />
     <SeekBar

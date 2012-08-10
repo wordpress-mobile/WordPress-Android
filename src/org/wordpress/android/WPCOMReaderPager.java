@@ -51,8 +51,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 	}
 
 	@Override

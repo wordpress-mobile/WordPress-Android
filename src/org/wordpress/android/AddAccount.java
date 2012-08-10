@@ -59,27 +59,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class AddAccount extends Activity {
+	
 	private XMLRPCClient client;
-	public boolean success = false;
-	public String blogURL, xmlrpcURL;
-	public ProgressDialog pd;
+	private String blogURL, xmlrpcURL;
+	private ProgressDialog pd;
 	private String httpuser = "";
 	private String httppassword = "";
 	private boolean wpcom = false;
 	private int blogCtr = 0;
-	public ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
-	boolean isCustomURL = false;
+	private ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
+	private boolean isCustomURL = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_account);
-
-		this.setTitle("WordPress - "
-				+ getResources().getText(R.string.add_account));
-
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -282,7 +276,7 @@ public class AddAccount extends Activity {
 
 				XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs",
 						new XMLRPCMethodCallback() {
-							@SuppressWarnings("unchecked")
+					
 							public void callFinished(Object[] result) {
 
 								final String[] blogNames = new String[result.length];
@@ -432,7 +426,7 @@ public class AddAccount extends Activity {
 																					.keyAt(i)) == true) {
 																		int rowID = selectedItems
 																				.keyAt(i);
-																		long blogID = WordPress.wpDB
+																		WordPress.wpDB
 																				.addAccount(
 																						urls[rowID],
 																						blogNames[rowID],
@@ -449,7 +443,6 @@ public class AddAccount extends Activity {
 																						blogIds[rowID],
 																						wpcoms[rowID],
 																						wpVersions[rowID]);
-																		success = blogID > 0;
 																	}
 																}
 																Bundle bundle = new Bundle();
@@ -473,7 +466,7 @@ public class AddAccount extends Activity {
 																	DialogInterface dialog,
 																	int whichButton) {
 																for (int i = 0; i < blogCtr; i++) {
-																	long blogID = WordPress.wpDB
+																	WordPress.wpDB
 																			.addAccount(
 																					urls[i],
 																					blogNames[i],
@@ -490,7 +483,6 @@ public class AddAccount extends Activity {
 																					blogIds[i],
 																					wpcoms[i],
 																					wpVersions[i]);
-																	success = blogID > 0;
 																}
 																Bundle bundle = new Bundle();
 																bundle.putString(
@@ -540,7 +532,7 @@ public class AddAccount extends Activity {
 										});
 
 									} else {
-										long blogID = WordPress.wpDB
+										WordPress.wpDB
 												.addAccount(urls[0],
 														blogNames[0], username,
 														password, httpuser,
@@ -549,7 +541,6 @@ public class AddAccount extends Activity {
 														false, "500", 5, false,
 														blogIds[0], wpcoms[0],
 														wpVersions[0]);
-										success = blogID > 0;
 										Bundle bundle = new Bundle();
 										bundle.putString("returnStatus", "SAVE");
 										Intent mIntent = new Intent();

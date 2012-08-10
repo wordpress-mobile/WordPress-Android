@@ -42,7 +42,7 @@
         android:shadowRadius="1"
         android:layout_marginBottom="-2dip"
         android:paddingRight="8dip"
-        android:text="WordPress Blog" />
+        android:text="@string/wordpress_blog" />
       <TextView
         android:id="@+id/blogUser"
         android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
         android:textSize="12dip"
         android:textColor="#666666"
         android:textColorLink="#21759b"
-        android:text="blogusername" />
+        android:text="@string/blogusername" />
     </LinearLayout>
   </LinearLayout>
 </RelativeLayout>

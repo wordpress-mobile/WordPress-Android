@@ -8,12 +8,12 @@
     android:maxWidth="200dip"
     android:layout_marginRight="2dip"
     android:textColorLink="#FF21759b"
-    android:text="Column 1"
+    android:text="@string/column_1"
     android:padding="4dip"
     android:textColor="#FF464646" />
   <TextView
     android:id="@+id/col2"
-    android:text="Column 2"
+    android:text="@string/column_2"
     android:textColor="#FF464646"
     android:padding="4dip" />
 </TableRow> 

@@ -23,7 +23,7 @@ public class Signup extends Activity {
 
 		setProgressBarIndeterminateVisibility(true);
 
-		webview.getSettings().setUserAgentString("wp-android/" + Constants.versionNumber);
+		webview.getSettings().setUserAgentString("wp-android/" + WordPress.versionName);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		webview.setWebViewClient(new WordPressWebViewClient());

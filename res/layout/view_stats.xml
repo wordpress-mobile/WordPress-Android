@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/reportInterval"
                     android:layout_toRightOf="@id/reportInterval"
-                    android:text="GO" />
+                    android:text="@string/view_stats_go" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -114,7 +114,7 @@
                     android:shadowDx="0"
                     android:shadowDy=".5"
                     android:shadowRadius="1"
-                    android:text="WordPress.com login:"
+                    android:text="@string/view_stats_wp_login"
                     android:textColor="#FFFFFFFF" />
 
                 <EditText

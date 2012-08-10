@@ -65,8 +65,6 @@ public class Dashboard extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 		accounts = WordPress.wpDB.getAccounts(this);
 		boolean eula = checkEULA();
 		if (eula == false) {

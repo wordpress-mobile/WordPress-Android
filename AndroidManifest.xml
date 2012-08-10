@@ -1,68 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.wordpress.android" android:installLocation="auto" android:versionName="2.1.5" android:versionCode="56">
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"></uses-sdk>
-    <supports-screens android:smallScreens="true"
-        android:normalScreens="true" android:largeScreens="true" android:anyDensity="true"/>
-    <uses-permission xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="android.permission.INTERNET" />
-        
-    <uses-permission xmlns:android="http://schemas.android.com/apk/res/android" 
-        android:name="android.permission.CAMERA"></uses-permission>
-    <uses-permission xmlns:android="http://schemas.android.com/apk/res/android" 
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
-    <uses-feature android:name="android.hardware.location" android:required="false" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.wordpress.android"
+    android:installLocation="auto"
+    android:versionCode="56"
+    android:versionName="2.1.5" >
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"></uses-permission>
-    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"></uses-permission>
-	<application android:icon="@drawable/app_icon" android:theme="@style/WordPress"
-		android:label="WordPress" android:name="WordPress" android:hardwareAccelerated="true">
-		<activity android:name="Settings" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden" android:launchMode="singleTask"/>
-		<activity android:name="Link" android:theme="@android:style/Theme.Dialog"
-			android:label="@string/create_a_link" />
-		<activity android:name="AddAccount" android:configChanges="orientation|keyboardHidden"  android:windowSoftInputMode="adjustResize"/>
-		<activity android:name="EditPost" android:configChanges="orientation|keyboardHidden" android:windowSoftInputMode="stateHidden|adjustResize" android:theme="@style/IncludeTitleBar">
-			<intent-filter>
-    			<action android:name="android.intent.action.SEND" />
-    			<action android:name="android.intent.action.SEND_MULTIPLE" />
-    				<category android:name="android.intent.category.DEFAULT" />
-    				<data android:mimeType="text/plain" />
-    				<data android:mimeType="image/*" />
-    				<data android:mimeType="video/*" />
-  			</intent-filter>
-		</activity>
-		<activity android:name=".Read" android:configChanges="orientation|keyboardHidden" android:theme="@style/IncludeTitleBar"/>
-		<activity android:name="Preferences" android:windowSoftInputMode="stateHidden" android:theme="@style/IncludeTitleBar"/>
-		<service android:name="CommentService" android:label="Comment Service" />
-		<receiver android:name="CommentBroadcastReceiver" />
-		<activity android:name="ReplyToComment" android:theme="@android:style/Theme.Dialog" />
-<activity android:name="SelectCategories" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:theme="@android:style/Theme.Dialog" android:name=".AddCategory" android:label="@string/add_new_category" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="Signup" android:configChanges="orientation|keyboardHidden" android:theme="@android:style/Theme.Light"></activity>
-<activity android:name="NewAccount"></activity>
-<activity android:name="ViewStats" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
-		<activity android:name=".AddQuickPressShortcut" android:label="QuickPress">
-			<intent-filter>
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-<activity android:name="AddAcountSettings"></activity>
-<activity android:name="Dashboard" android:configChanges="orientation|keyboardHidden">
-  <intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	<category android:name="android.intent.category.LAUNCHER" />
-  </intent-filter>
-</activity>
-<activity android:name="About"></activity>
-<activity android:name="Comments" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
-<activity android:name="ViewCommentActivity"></activity>
-<activity android:name="Posts" android:configChanges="orientation|keyboardHidden" android:launchMode="singleTask"></activity>
-<activity android:name="ViewPostActivity"></activity>
-<activity android:name="WPCOMReaderPager" android:configChanges="orientation|keyboardHidden"></activity>
-<activity android:name="EditComment" android:configChanges="orientation|keyboardHidden"></activity>
-</application>
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="10" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+
+    <application
+        android:name="WordPress"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/app_icon"
+        android:label="WordPress"
+        android:theme="@style/WordPress" >
+        <activity
+            android:name="Settings"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="Link"
+            android:label="@string/create_a_link"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="AddAccount"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="EditPost"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/IncludeTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Read"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/IncludeTitleBar" />
+        <activity
+            android:name="Preferences"
+            android:theme="@style/IncludeTitleBar"
+            android:windowSoftInputMode="stateHidden" />
+
+        <service
+            android:name="CommentService"
+            android:label="Comment Service" />
+
+        <receiver android:name="CommentBroadcastReceiver" />
+
+        <activity
+            android:name="ReplyToComment"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="SelectCategories"
+            android:configChanges="orientation|keyboardHidden" />
+        <activity
+            android:name=".AddCategory"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/add_new_category"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="Signup"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Light" />
+        <activity android:name="NewAccount" />
+        <activity
+            android:name="ViewStats"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".AddQuickPressShortcut"
+            android:label="QuickPress" >
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="AddAcountSettings" />
+        <activity
+            android:name="Dashboard"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".About" />
+        <activity
+            android:name="Comments"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+        <activity android:name="ViewCommentActivity" />
+        <activity
+            android:name="Posts"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+        <activity android:name="ViewPostActivity" />
+        <activity
+            android:name="WPCOMReaderPager"
+            android:configChanges="orientation|keyboardHidden" />
+        <activity
+            android:name="EditComment"
+            android:configChanges="orientation|keyboardHidden" />
+    </application>
+
 </manifest>

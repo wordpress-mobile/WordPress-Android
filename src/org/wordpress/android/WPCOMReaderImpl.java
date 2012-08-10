@@ -55,9 +55,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		CookieSyncManager.createInstance(this.getActivity().getApplicationContext());
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.reader_wpcom, container, false);
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(getActivity()
-					.getApplicationContext());
 		if (WordPress.currentBlog == null) {
 			try {
 				WordPress.currentBlog = new Blog(

@@ -2,7 +2,7 @@
 <Button
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:id="@+id/btn_loadmorecontacts"
-  android:text="Load More"
+  android:text="@string/load_more"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:textSize="16dip"

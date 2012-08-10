@@ -166,8 +166,6 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
 		attemptToSelectPost();
 		postList.loadPosts(false);
 		if (WordPress.postsShouldRefresh) {

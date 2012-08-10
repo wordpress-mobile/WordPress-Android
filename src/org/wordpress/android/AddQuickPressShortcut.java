@@ -50,9 +50,6 @@ public class AddQuickPressShortcut extends ListActivity {
 		setContentView(R.layout.add_quickpress_shortcut);
 		setTitle(getResources().getText(R.string.quickpress_window_title));
 		
-		if (WordPress.wpDB == null)
-			WordPress.wpDB = new WordPressDB(this);
-		
 		displayAccounts();
 	}
 	
@@ -190,8 +187,7 @@ public class AddQuickPressShortcut extends ListActivity {
 		if (data != null) {
 			switch (requestCode) {
 			case 0:
-				WordPressDB settingsDB = new WordPressDB(this);
-				accounts = settingsDB.getAccounts(this);
+				accounts = WordPress.wpDB.getAccounts(this);
 
 				if (accounts.size() == 0) {
 					finish();

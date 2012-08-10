@@ -47,7 +47,7 @@
           android:textColor="#444444"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:text="Blog URL:"
+          android:text="@string/add_account_blog_url"
           android:layout_marginTop="4dp"
           android:layout_marginLeft="8dp"
           android:layout_below="@id/urlWrapper" />
