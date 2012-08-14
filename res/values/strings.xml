@@ -4,9 +4,7 @@
   <!-- account setup -->
   <string name="required_fields">Required Fields</string>
   <string name="required_field">Required Field</string>
-  <string name="url_username_password_required">Please fill in all of the fields before
-    submitting.
-  </string>
+  <string name="url_username_password_required">Please fill in all of the fields before submitting.</string>
   <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
 
   <!-- form labels -->
@@ -47,17 +45,13 @@
   <string name="success">Success</string>
   <string name="accept">Accept</string>
   <string name="decline">Decline</string>
-  <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or to
-    configure comment
-    notifications.
-  </string>
+  <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or toconfigure comment notifications.</string>
   <string name="add_account">Add Account</string>
   <string name="notification_settings">Settings</string>
   <string name="notification_sound">Play notification sound</string>
   <string name="notification_vibrate">Vibrate</string>
   <string name="notification_blink">Blink notification light</string>
-  <string name="sure_to_remove_account">Are you sure you want to remove this blog?
-  </string>
+  <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="account_removed_successfully">Blog removed successfully</string>
@@ -65,56 +59,33 @@
   <string name="could_not_remove_account">Could not remove blog.</string>
   <string name="edit_page">Edit Page</string>
   <string name="getting_page">Getting page</string>
-  <string name="please_wait_getting_page">Please wait while attempting to get page (note -
-    pictures will
-    not be loaded)
-  </string>
+  <string name="please_wait_getting_page">Please wait while attempting to get page (note - pictures will not be loaded)</string>
   <string name="edit_post">Edit Post</string>
   <string name="getting_post">Getting post</string>
-  <string name="please_wait_getting_post">Please wait while attempting to get post (note -
-    pictures will
-    not be loaded)
-  </string>
+  <string name="please_wait_getting_post">Please wait while attempting to get post (note - pictures will not be loaded)</string>
   <string name="no_text_selected">No text selected</string>
-  <string name="howto_select_text">You can select text by long pressing in the text
-    area.
-  </string>
-  <string name="select_text_to_bold">Please select some text first in order to bold it.
-  </string>
-  <string name="select_text_to_link">Please select some text first in order to link it.
-  </string>
-  <string name="select_text_to_emphasize">Please select some text in order to emphasize it.
-  </string>
-  <string name="select_text_to_blockquote">Please select some text in order to place it in a
-    blockquote.
-  </string>
+  <string name="howto_select_text">You can select text by long pressing in the text area.</string>
+  <string name="select_text_to_bold">Please select some text first in order to bold it.</string>
+  <string name="select_text_to_link">Please select some text first in order to link it.</string>
+  <string name="select_text_to_emphasize">Please select some text in order to emphasize it.</string>
+  <string name="select_text_to_blockquote">Please select some text in order to place it in a blockquote.</string>
   <string name="original_size">Original Size</string>
   <string name="refreshing_categories">Refreshing Categories</string>
   <string name="attempting_categories_refresh">Attempting to refresh categories</string>
   <string name="connection_error">Connection Error</string>
-  <string name="connection_error_occured">A connection error has occurred. Please try again
-    later.
-  </string>
+  <string name="connection_error_occured">A connection error has occurred. Please try again later.</string>
   <string name="categories_refreshed">Categories refreshed</string>
   <string name="category_refresh_error">Category refresh error</string>
   <string name="settings_not_found">Settings not found</string>
-  <string name="settings_not_found_load_now">Some required settings were not found. Load
-    settings now?
-  </string>
+  <string name="settings_not_found_load_now">Some required settings were not found. Load settings now?</string>
   <string name="empty_fields">No Content Found</string>
-  <string name="title_post_required">Please enter some post content or attach a media
-    item.
-  </string>
+  <string name="title_post_required">Please enter some post content or attach a media item.</string>
   <string name="post_edited">Post edited</string>
-  <string name="post_edited_image_error">Post edited successfully, but an error was
-    encountered when
-    uploading media
-  </string>
+  <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading media</string>
   <string name="post_edited_successfully">Post edited successfully</string>
   <string name="attempting_edit_post">Attempting to edit Post</string>
   <string name="cancel_edit">Cancel Edit</string>
-  <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?
-  </string>
+  <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?</string>
   <string name="saved_to_local_drafts">Saved to local drafts</string>
   <string name="new_account">New Account</string>
   <string name="upload_full_size_image">Upload and link to full image</string>
@@ -127,8 +98,7 @@
   <string name="immediately">Immediately</string>
   <string name="uploading">Uploading</string>
   <string name="uploading_media_item">Uploading media item #</string>
-  <string name="gallery_error">Sorry, the media item could not be retrieved from
-    the Gallery.</string>
+  <string name="gallery_error">Sorry, the media item could not be retrieved from the Gallery.</string>
   <string name="refresh">Refresh</string>
   <string name="home">Home</string>
   <string name="no_camera_found">Sorry, no camera was found on your device.</string>
@@ -155,14 +125,10 @@
   <string name="title">Title</string>
   <string name="content">Tap to add text and media</string>
   <string name="page_edited">Page Edited</string>
-  <string name="page_edited_image_error">Page edited successfully, but an error was
-    encountered when
-    uploading media
-  </string>
+  <string name="page_edited_image_error">Page edited successfully, but an error was encountered when uploading media</string>
   <string name="page_edited_successfully">Page edited successfully</string>
   <string name="attempting_edit_page">Attempting to edit Page</string>
-  <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?
-  </string>
+  <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
 
   <!-- pages tab -->
   <string name="pages_not_found">No Pages Found</string>
@@ -180,22 +146,11 @@
   <string name="post_added">Post Added</string>
   <string name="post_id">Post</string>
   <string name="uploaded_successfully">Uploaded Successfully</string>
-  <string name="uploaded_successfully_image_error">added successfully, but an error was encountered
-    when uploading
-    media
-  </string>
+  <string name="uploaded_successfully_image_error">added successfully, but an error was encountered when uploading media</string>
   <string name="upload_failed">Upload Failed</string>
   <string name="permalink_not_found">The permalink was not found.</string>
-  <string name="basic_html">Showing basic HTML preview until post status is
-    set to
-    published.
-  </string>
-  <string name="vp_upgrade">The video was not uploaded due to invalid file
-    type. You can
-    upload videos to your blog using the VideoPress
-    upgrade. Would you
-    like to learn more about VideoPress?
-  </string>
+  <string name="basic_html">Showing basic HTML preview until post status is set to published.</string>
+  <string name="vp_upgrade">The video was not uploaded due to invalid file type. You can upload videos to your blog using the VideoPress upgrade. Would you like to learn more about VideoPress?</string>
   <string name="post_password">Password (optional)</string>
   <string name="fullscreen">Write in Fullscreen</string>
 
@@ -240,8 +195,7 @@
   <string name="author_url">URL</string>
   <string name="comment_update">Update Comment</string>
   <string name="saving_changes">Saving Changes</string>
-  <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?
-  </string>
+  <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?</string>
   <string name="author_name_required">The author\'s name is required.</string>
   <string name="content_required">The comment body is required.</string>
   <string name="author_email_required">The author\'s e-mail address is required.</string>
@@ -307,22 +261,16 @@
   <string name="account_setup">Account Setup</string>
   <string name="attempting_configure">Attempting to configure account</string>
   <string name="account_exists">Account Exists</string>
-  <string name="account_already_exists">There is already a WordPress account for this
-    WordPress blog
-    configured.
-  </string>
+  <string name="account_already_exists">There is already a WordPress account for this WordPress blog configured.</string>
   <string name="account_added">Account/Blog added successfully</string>
   <string name="no_site_error">Sorry, no WordPress site was found at the URL provided.</string>
 
   <!-- drafts -->
   <string name="cancel_draft">Cancel Draft</string>
-  <string name="sure_cancel_draft">Are you sure you want to cancel this draft?
-  </string>
+  <string name="sure_cancel_draft">Are you sure you want to cancel this draft?</string>
 
   <!-- comment notifications -->
-  <string name="notifications_select">Select which blogs to receive comment
-    notifications:
-  </string>
+  <string name="notifications_select">Select which blogs to receive comment notifications:</string>
   <string name="comment_notifications">Comment Notifications</string>
   <string name="notifications_interval">Update interval:</string>
   <string name="minutes">minutes</string>
@@ -352,30 +300,23 @@
   <string name="adding_cat_failed_check">Please check your settings and try again.</string>
   <string name="adding_cat_success">Category added successfully.</string>
   <string name="duplicated_cat">Duplicated category</string>
-  <string name="cat_already_exists">A category with the name you specified already
-    exists.
-  </string>
+  <string name="cat_already_exists">A category with the name you specified already exists.</string>
   <string name="cat_name_required">The Category Name field is required.</string>
   <string name="cat_adding_category">Adding Category</string>
   <string name="cat_attempt_add_category">Attempting to add category</string>
 
   <!-- action from share intents -->
   <string name="select_a_blog">Select a Blog</string>
-  <string name="no_account">No WordPress account found, please add an account
-    and try
-    again.
-  </string>
+  <string name="no_account">No WordPress account found, please add an account and try again.</string>
 
   <!-- file errors -->
   <string name="file_error">File Error</string>
-  <string name="file_error_encountered">An error occurred while setting up the captured
-    media.
+  <string name="file_error_encountered">An error occurred while setting up the captured media.
   </string>
 
   <!-- SD Card errors -->
   <string name="sdcard_title">SD Card Required</string>
-  <string name="sdcard_message">A mounted SD card is required to upload media.
-  </string>
+  <string name="sdcard_message">A mounted SD card is required to upload media.</string>
 
   <!-- location -->
   <string name="location">Location</string>
@@ -402,8 +343,7 @@
   <string name="quarter">Quarter</string>
   <string name="year">Year</string>
   <string name="all">All Time</string>
-  <string name="username_password_required">Username and Password are required fields.
-  </string>
+  <string name="username_password_required">Username and Password are required fields.</string>
   <string name="help_stats">Need help?</string>
   <string name="stats_username">Username</string>
   <string name="stats_password">Password</string>
@@ -417,15 +357,9 @@
   <string name="site_not_found">or site not found.</string>
 
   <!-- editor button -->
-  <string name="strike">
-    <strike>ABC</strike>
-  </string>
-  <string name="link">
-    <u>link</u>
-  </string>
-  <string name="underline">
-    <u>U</u>
-  </string>
+  <string name="strike"><strike>ABC</strike></string>
+  <string name="link"><u>link</u></string>
+  <string name="underline"><u>U</u></string>
 
   <!-- invalid_url -->
   <string name="invalid_url">Invalid blog URL</string>
@@ -462,13 +396,8 @@
   <string name="email">E-Mail Address</string>
   <string name="sign_up">Sign up</string>
   <string name="dotcom_signup">.wordpress.com</string>
-  <string name="terms">You agree to the fascinating terms of service at
-    http://wordpress.com/tos by submitting this form.
-  </string>
-  <string name="instructions">Fill out this one-step form and you’ll be blogging
-    seconds
-    later!
-  </string>
+  <string name="terms">You agree to the fascinating terms of service at http://wordpress.com/tos by submitting this form.</string>
+  <string name="instructions">Fill out this one-step form and you’ll be blogging seconds later!</string>
   <string name="waiting_activation">Awaiting e-mail activation</string>
   <string name="post_format">Post Format:</string>
 
@@ -519,6 +448,22 @@
   <!-- Remote Post Changes -->
   <string name="local_changes">Local Changes</string>
   <string name="remote_changes">You\'ve made changes to an uploaded post that haven\'t been saved yet. Proceed with the refresh and overwrite local changes?</string>
+  
+  <string name="ok">OK</string>
+  <string name="image_settings">Image Settings</string>
+  <string name="add_account_blog_url">Blog URL:</string>
+  <string name="image_options_title">Title</string>
+  <string name="image_options_caption">Caption (optional)</string>
+  <string name="image_options_horizontal_alignment">Horizontal Alignment:</string>
+  <string name="image_options_width">Width:</string>
+  <string name="done">Done</string>
+  <string name="view_stats_go">GO</string>
+  <string name="view_stats_wp_login">WordPress.com login:</string>
+  <string name="action_item_chart">Chart</string>
+  <string name="wordpress_blog">WordPress Blog</string>
+  <string name="blogusername">blogusername</string>
+  <string name="column_1">Column 1</string>
+  <string name="column_2">Column 2</string>
   
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991
@@ -769,20 +714,5 @@
     HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
     DAMAGES.\n\nEND OF TERMS AND CONDITIONS
   </string>
-  <string name="ok">OK</string>
-  <string name="image_settings">Image Settings</string>
-  <string name="add_account_blog_url">Blog URL:</string>
-  <string name="image_options_title">Title</string>
-  <string name="image_options_caption">Caption (optional)</string>
-  <string name="image_options_horizontal_alignment">Horizontal Alignment:</string>
-  <string name="image_options_width">Width:</string>
-  <string name="done">Done</string>
-  <string name="view_stats_go">GO</string>
-  <string name="view_stats_wp_login">WordPress.com login:</string>
-  <string name="action_item_chart">Chart</string>
-  <string name="wordpress_blog">WordPress Blog</string>
-  <string name="blogusername">blogusername</string>
-  <string name="column_1">Column 1</string>
-  <string name="column_2">Column 2</string>
 
 </resources>
