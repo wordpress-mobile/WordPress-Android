@@ -765,8 +765,6 @@ public class ViewPosts extends ListFragment {
 				onRefreshListener.onRefresh(false);
 				return;
 			}
-			
-			loadPosts(loadMore);
 
 			if (loadMore)
 				switcher.showPrevious();
@@ -779,6 +777,8 @@ public class ViewPosts extends ListFragment {
 						.newInstance(errorMsg);
 				alert.show(ft, "alert");
 				errorMsg = "";
+			} else {
+				loadPosts(loadMore);
 			}
 			
 		}
