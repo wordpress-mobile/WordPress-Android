@@ -316,6 +316,7 @@ res/values-large-tvdpi/dimens.xml -text
 res/values-large-tvdpi/styles.xml -text
 res/values-mk/strings.xml -text
 res/values-nb/strings.xml -text
+res/values-nl/strings.xml -text
 res/values-pl/strings.xml -text
 res/values-pt/strings.xml -text
 res/values-ru/strings.xml -text
@@ -327,6 +328,7 @@ res/values-sw720dp/styles.xml -text
 res/values-ta/strings.xml -text
 res/values-tr/strings.xml -text
 res/values-xlarge-v11/styles.xml -text
+res/values-zh-tw/strings.xml -text
 res/values-zh/strings.xml -text
 res/values/arrays.xml -text
 res/values/dimens.xml -text
@@ -413,3 +415,4 @@ src/org/xmlrpc/android/XMLRPCClient.java -text
 src/org/xmlrpc/android/XMLRPCException.java -text
 src/org/xmlrpc/android/XMLRPCFault.java -text
 src/org/xmlrpc/android/XMLRPCSerializer.java -text
+/update-translations.rb -text

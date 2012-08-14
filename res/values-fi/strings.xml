@@ -8,11 +8,9 @@
 	<string name="httppassword">HTTP-salasana (valinnainen):</string>
 	<string name="settings">Asetukset</string>
 	<string name="optional_settings">Valinnaiset asetukset</string>
-	<string name="update_location">Päivitä sijainti</string>
 	<string name="view_map">Katsele karttaa</string>
 	<string name="post_not_published">Julkaisun asemaa ei ole\njulkaistu</string>
 	<string name="page_not_published">Sivun tilaa ei ole julkaistu</string>
-	<string name="share_url">Jaa URL</string>
 	<string name="attempting_fetch_url">Yritetään hakea URL</string>
 	<string name="quickpress_window_title">Valitse blogi QuickPress pikakuvakkeeseen</string>
 	<string name="quickpress_add_error">Pikakuvakkeen nimi ei voi olla tyhjä</string>
@@ -23,16 +21,12 @@
 	<string name="post_private">Yksityinen</string>
 	<string name="upload_full_size_image">Lataa ja linkki kokonaiseen kuvaan</string>
 	<string name="invalid_url">Väärä blogi-URL</string>
-	<string name="invalid_url_message">Ole hyvä ja tarkista että blogin URL on syötetty oikein.</string>
 	<string name="i_have_wp_blog">Lisää WordPress.com-blogi</string>
 	<string name="i_have_blog">Lisää itse isännöity WordPress-blogi</string>
 	<string name="html">HTML-muokkain otettu käyttöön.</string>
-	<string name="vp_upgrade">Ladattu tiedosto oli virheellisen muotoinen. Voit ladata videoita blogiisi käyttämällä VideoPress-päivitystä. Haluaisitko lukea lisää VideoPressistä?</string>
 	<string name="geotag">Geotag-artikkelit</string>
 	<string name="permalink_not_found">Kestolinkkiä ei löytynyt.</string>
-	<string name="align_thumb_to_center">Keskitä pikkukuva</string>
 	<string name="basic_html">HTML-perusesikatselu on käytössä siihen asti, kun tilaksi on asetettu julkaistu.</string>
-	<string name="max_thumbnail_px_width">Pikkukuvan enimmäisleveys pikseleinä</string>
 	<string name="load_settings">Ladataanko asetukset nyt?</string>
 	<string name="invalid_login">Virheellinen kirjautuminen</string>
 	<string name="site_not_found">tai sivustoa ei löydy.</string>
@@ -49,12 +43,11 @@
 	<string name="post_title">Artikkelin otsikko</string>
 	<string name="page_content">Sivun sisältö</string>
 	<string name="title">Otsikko</string>
-	<string name="content">Sisältö</string>
-	<string name="help_stats">Tarvitsetko apua WordPress.com-tilastojen kanssa?</string>
 	<string name="username_password_required">Käyttäjänimi ja salasana ovat pakollisia kenttiä.</string>
 	<string name="stats_password">Salasana</string>
 	<string name="stats_username">Käyttäjänimi</string>
 	<string name="date">Päiväys</string>
+	<string name="no_data_found">Tilastoja ei löytynyt. Yritä uudelleen.</string>
 	<string name="report_post_title">Artikkelin otsikko</string>
 	<string name="seven_days">7 päivää</string>
 	<string name="thirty_days">30 päivää</string>
@@ -81,8 +74,6 @@
 	<string name="delete_sure_page">Haluatko varmasti poistaa sivun</string>
 	<string name="attempt_delete_page">Yritetään poistaa sivua</string>
 	<string name="delete_page">Poista sivu</string>
-	<string name="added_successfully_image_error">lisätty onnistuneesti,mutta ilmeni virhe ladatessa mediaa</string>
-	<string name="file_error_encountered">Ilmeni virhe asettaessa valittua mediaa.</string>
 	<string name="post_edited_image_error">Artikkelin muokkaus suoritettiin onnistuneesti, mutta ilmeni virhe ladatessa mediaa.</string>
 	<string name="page_edited_image_error">Sivun muokkaus suoritettiin onnistuneesti, mutta ilmeni virhe ladatessa mediaa.</string>
 	<string name="notification_blink">Vilkuta ilmoitusvaloa</string>
@@ -99,7 +90,6 @@
 	<string name="tagline">Aloita bloggaus mobiililaitteellasi sekunneissa.</string>
 	<string name="preview_page">Näytä sivu</string>
 	<string name="preview_post">Näytä artikkeli</string>
-	<string name="title_post_required">Artikkelin otsikko artikkelin sisältö tai medialiite vaaditaan.</string>
 	<string name="howto_select_text">Voit valita tekstin pitkällä painalluksella tekstialueeseen.</string>
 	<string name="file_error">Tiedostovirhe</string>
 	<string name="media">Media</string>
@@ -107,7 +97,6 @@
 	<string name="account_removed_successfully">Blogi poistettu onnistuneesti.</string>
 	<string name="no_account">WordPress-tiliä ei löytynyt, lisää tili ja yritä uudelleen.</string>
 	<string name="select_a_blog">Valitse blogi</string>
-	<string name="upload_now">Lataa nyt</string>
 	<string name="adding_cat_failed_check">Tarkista asetuksesi ja yritä uudelleen.</string>
 	<string name="cat_name_required">Luokan nimi -kenttä on pakollinen.</string>
 	<string name="cat_already_exists">Samanniminen kategoria on jo olemassa.</string>
@@ -148,19 +137,15 @@
 	<string name="reply_send">Lähetä vastaus</string>
 	<string name="reply_to_comment">Vastaa kommenttiin</string>
 	<string name="reply_required">Pakollinen kenttä</string>
-	<string name="reply_please_enter">Kirjoita jotakin vastauskenttään.</string>
-	<string name="page_id">Sivun tunnusnumero</string>
 	<string name="reply_enter">Kirjoita vastaus:</string>
 	<string name="new_comment">Uusi kommentti vastaanotettu</string>
 	<string name="daily">päivittäin</string>
 	<string name="comment_actions">Kommenttitoiminnot</string>
 	<string name="mark_approved">Merkitse hyväksytyksi</string>
 	<string name="mark_unapproved">Merkitse arvioitavaksi</string>
-	<string name="mark_spam">Merkitse roskaviestiksi</string>
 	<string name="reply">Vastaa</string>
 	<string name="publish_yes">Julkaise: Kyllä</string>
 	<string name="view_comments">Näytä kommentit</string>
-	<string name="no_approved_comments">Tässä artikkelissa ei ole hyväksyttyjä kommentteja</string>
 	<string name="loading">Ladataan...</string>
 	<string name="on">aikana</string>
 	<string name="approved">Hyväksytty</string>
@@ -184,7 +169,6 @@
 	<string name="local_drafts">Paikalliset luonnokset</string>
 	<string name="new_post">Uusi artikkeli</string>
 	<string name="post_added">Artikkeli lähetetty.</string>
-	<string name="post_id">Artikkelin tunnusluku</string>
 	<string name="post_attempt_upload">Yritetään artikkelin lataamista palvelimelle</string>
 	<string name="post_actions">Artikkelitoiminnot</string>
 	<string name="page_attempt_upload">Yritetään ladata sivua palvelimeen</string>
@@ -204,16 +188,11 @@
 	<string name="success">Onnistui</string>
 	<string name="accept">Hyväksy</string>
 	<string name="decline">Hylkää</string>
-	<string name="hint_menu_to_add_acc">Valitse \'Valikko\' lisätäksesi toisen tilin tai asettaaksesi ilmoitukset kommenteista.</string>
 	<string name="add_account">Lisää tili</string>
 	<string name="yes">Kyllä</string>
 	<string name="no">Ei</string>
 	<string name="tab_pages">Sivut</string>
-	<string name="link_enter_url">Syötä URL-osoite:</string>
 	<string name="get_free_blog">Luo ilmainen blogi WordPress.comissa</string>
-	<string name="place_image">Sijoita kuva:</string>
-	<string name="above_text">Tekstin yläpuolelle</string>
-	<string name="below_text">Tekstin alapuolelle</string>
 	<string name="select_text_to_bold">Valitse ensin jotakin tekstiä lihavoidaksesi sen.</string>
 	<string name="select_text_to_link">Valitse ensin jotain tekstiä tehdäksesi siitä linkin.</string>
 	<string name="select_text_to_emphasize">Valitse ensin jotain tekstiä  korostaaksesi sen.</string>
@@ -224,7 +203,6 @@
 	<string name="sure_to_cancel_edit">Oletko varma, että haluat peruuttaa merkinnän muokkauksen?</string>
 	<string name="saved_to_local_drafts">Tallennettu paikallisiin luonnoksiin</string>
 	<string name="settings_not_found_load_now">Joitakin vaadittuja asetuksia ei löytynyt. Ladataanko asetukset nyt?</string>
-	<string name="empty_fields">Tyhjät kentät</string>
 	<string name="error">Virhe</string>
 	<string name="dont_yet_have_a_blog">Eikö sinulla ole vielä blogia?</string>
 	<string name="password">Salasana:</string>
@@ -245,7 +223,6 @@
 	<string name="tab_posts">Artikkelit</string>
 	<string name="page_edited">Sivun muokkaus suoritettu.</string>
 	<string name="pages_no_pages">Blogissasi ei ole sivuja.</string>
-	<string name="added_successfully">lisäys onnistui.</string>
 	<string name="moderating_comment">Hallitaan kommentteja</string>
 	<string name="category_refresh_error">Kategorian päivitysvirhe</string>
 	<string name="categories_refreshed">Kategoriat päivitetty.</string>
@@ -255,5 +232,4 @@
 	<string name="please_wait_getting_post">Odota, yritetään hakea artikkelia (huomaa - kuvia ei ladata)</string>
 	<string name="please_wait_getting_page">Odota, yritetään hakea sivua (huomaa - kuvia ei ladata)</string>
 	<string name="attempting_edit_post">Yritetään muokata artikkelia...</string>
-	<string name="no_data_found">Tilastoja ei löytynyt. Yritä uudelleen.</string>
 </resources>
