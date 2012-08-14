@@ -30,6 +30,8 @@
     <uses-feature
         android:name="android.hardware.location"
         android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" 
+        android:required="false"/>
 
     <application
         android:name="WordPress"

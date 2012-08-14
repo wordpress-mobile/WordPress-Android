@@ -48,7 +48,6 @@ public class ImageHelper {
 		Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
 
 		int width = opts.outWidth;
-		int height = opts.outHeight;
 
 		int finalWidth = 500; // default to this if there's a problem
 		// Change dimensions of thumbnail
@@ -60,41 +59,7 @@ public class ImageHelper {
 		byte[] finalBytes;
 
 		if (sMaxImageWidth.equals("Original Size")) {
-			if (bytes.length > 2000000) // it's a biggie! don't want out of
-										// memory crash
-			{
-				float finWidth = 1000;
-				int sample = 0;
-
-				float fWidth = width;
-				sample = Double.valueOf(FloatMath.ceil(fWidth / finWidth)).intValue();
-
-				if (sample == 3) {
-					sample = 4;
-				} else if (sample > 4 && sample < 8) {
-					sample = 8;
-				}
-
-				opts.inSampleSize = sample;
-				opts.inJustDecodeBounds = false;
-
-				float percentage = (float) finalWidth / width;
-				float proportionateHeight = height * percentage;
-				finalHeight = (int) Math.rint(proportionateHeight);
-
-				bm = BitmapFactory
-						.decodeByteArray(bytes, 0, bytes.length, opts);
-
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				bm.compress(Bitmap.CompressFormat.JPEG, 90, baos);
-
-				bm.recycle(); // free up memory
-
-				finalBytes = baos.toByteArray();
-			} else {
-				finalBytes = bytes;
-			}
-
+			finalBytes = bytes;
 		} else {
 			finalWidth = Integer.parseInt(sMaxImageWidth);
 			if (finalWidth > width) {
@@ -154,7 +119,6 @@ public class ImageHelper {
 
 				finalBytes = baos.toByteArray();
 			}
-
 		}
 
 		return finalBytes;

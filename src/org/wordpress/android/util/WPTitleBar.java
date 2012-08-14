@@ -15,7 +15,6 @@ import org.wordpress.android.ViewComments;
 import org.wordpress.android.ViewStats;
 import org.wordpress.android.WPCOMReaderPager;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapDownloaderTask;
 

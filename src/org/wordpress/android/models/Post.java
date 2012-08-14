@@ -830,19 +830,19 @@ public class Post {
 				if (curImagePath.contains("video")) {
 					video = true;
 				}
-				
-				//create temp file for media upload
-				String tempFileName = "wp-" + System.currentTimeMillis();
-				try {
-					context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-				} catch (FileNotFoundException e) {
-					error = "Could not create temp file for media upload.";
-					return null;
-				}
-				
-				File tempFile = context.getFileStreamPath(tempFileName);
 
 				if (video) { // upload the video
+					
+					//create temp file for media upload
+					String tempFileName = "wp-" + System.currentTimeMillis();
+					try {
+						context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+					} catch (FileNotFoundException e) {
+						error = "Could not create temp file for media upload.";
+						return null;
+					}
+					
+					File tempFile = context.getFileStreamPath(tempFileName);
 
 					Uri videoUri = Uri.parse(curImagePath);
 					File fVideo = null;
@@ -953,6 +953,17 @@ public class Post {
 				} // end video
 				else {
 					for (int i = 0; i < 2; i++) {
+						
+						//create temp file for media upload
+						String tempFileName = "wp-" + System.currentTimeMillis();
+						try {
+							context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+						} catch (FileNotFoundException e) {
+							error = "Could not create temp file for media upload.";
+							return null;
+						}
+						
+						File tempFile = context.getFileStreamPath(tempFileName);
 
 						curImagePath = mf.getFileName();
 
@@ -1042,13 +1053,19 @@ public class Post {
 									e.printStackTrace();
 								}
 
+								String width = String.valueOf(i == 0 ? mf
+										.getWidth() : post.blog
+										.getScaledImageWidth());
+								if (post.blog.getMaxImageWidth().equals(
+										"Original Size") && i == 0)
+									width = "Original Size";
+									
+								
 								ImageHelper ih2 = new ImageHelper();
 								finalBytes = ih2
 										.createThumbnail(
 												bytes,
-												String.valueOf(i == 0 ? mf
-														.getWidth() : post.blog
-														.getScaledImageWidth()),
+												width,
 												orientation, false);
 
 								if (finalBytes == null) {
