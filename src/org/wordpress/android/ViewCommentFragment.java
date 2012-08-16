@@ -254,8 +254,12 @@ public class ViewCommentFragment extends Fragment {
 
 		TextView tvName = (TextView) getActivity().findViewById(
 				R.id.commentDetailName);
-
-		tvName.setText(comment.name);
+		
+		String authName = comment.name;
+		if (authName.length() <= 0)
+			tvName.setText(R.string.anonymous);
+		else
+			tvName.setText(comment.name);
 
 		TextView tvEmail = (TextView) getActivity().findViewById(
 				R.id.commentDetailEmail);

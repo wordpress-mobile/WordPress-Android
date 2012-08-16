@@ -622,14 +622,18 @@ public class ViewComments extends ListFragment {
 		}
 
 		void populateFrom(Comment s, final int position) {
-			getName().setText(s.name);
-
+			
+			String authorName = s.name;
+					
+			if(authorName.length() > 0)
+				getName().setText(authorName);
+			else
+				getName().setText(getResources().getText(R.string.anonymous));
+			
 			String fEmailURL = s.authorURL;
-			// use the required email address if the commenter didn't leave a
-			// url
-			if (fEmailURL == "") {
+			// use the email address if the commenter didn't add a url
+			if (fEmailURL == "")
 				fEmailURL = s.emailURL;
-			}
 
 			getEmailURL().setText(fEmailURL);
 			getComment().setText(s.comment);

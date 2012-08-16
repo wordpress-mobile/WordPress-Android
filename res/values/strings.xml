@@ -30,6 +30,7 @@
   
   <!-- comment form labels -->
   <string name="comment_content">Comment Content</string>
+  <string name="anonymous">Anonymous</string>
   
   <!-- general strings -->
   <string name="app_name">WordPress</string>
