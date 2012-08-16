@@ -279,7 +279,7 @@ abstract public class GraphView extends LinearLayout {
 	private final View viewVerLabels;
 	private ScaleGestureDetector scaleDetector;
 	private boolean scalable;
-	private NumberFormat numberformatter;
+	private NumberFormat[] numberformatter = new NumberFormat[2];
 	private final List<GraphViewSeries> graphSeries;
 	private boolean showLegend = false;
 	private float legendWidth = 120;
@@ -399,23 +399,24 @@ abstract public class GraphView extends LinearLayout {
 	 * @return value to display
 	 */
 	protected String formatLabel(double value, boolean isValueX) {
-		if (numberformatter == null) {
-			numberformatter = NumberFormat.getNumberInstance();
-			double highestvalue = getMaxY();
-			double lowestvalue = getMinY();
+		int i = isValueX ? 1 : 0;
+		if (numberformatter[i] == null) {
+			numberformatter[i] = NumberFormat.getNumberInstance();
+			double highestvalue = isValueX ? getMaxX(false) : getMaxY();
+			double lowestvalue = isValueX ? getMinX(false) : getMinY();
 			if (highestvalue - lowestvalue < 0.1) {
-				numberformatter.setMaximumFractionDigits(6);
+				numberformatter[i].setMaximumFractionDigits(6);
 			} else if (highestvalue - lowestvalue < 1) {
-				numberformatter.setMaximumFractionDigits(4);
+				numberformatter[i].setMaximumFractionDigits(4);
 			} else if (highestvalue - lowestvalue < 20) {
-				numberformatter.setMaximumFractionDigits(3);
+				numberformatter[i].setMaximumFractionDigits(3);
 			} else if (highestvalue - lowestvalue < 100) {
-				numberformatter.setMaximumFractionDigits(1);
+				numberformatter[i].setMaximumFractionDigits(1);
 			} else {
-				numberformatter.setMaximumFractionDigits(0);
+				numberformatter[i].setMaximumFractionDigits(0);
 			}
 		}
-		return numberformatter.format(value);
+		return numberformatter[i].format(value);
 	}
 
 	private String[] generateHorlabels(float graphwidth) {
