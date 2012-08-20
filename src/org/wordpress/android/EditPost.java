@@ -77,6 +77,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -730,8 +731,7 @@ public class EditPost extends Activity implements OnClickListener,
 						// alertView.findViewById(R.id.description);
 						final EditText caption = (EditText) alertView
 								.findViewById(R.id.caption);
-						// final CheckBox featured = (CheckBox)
-						// alertView.findViewById(R.id.featuredImage);
+						final CheckBox featured = (CheckBox) alertView.findViewById(R.id.featuredImage);
 						final SeekBar seekBar = (SeekBar) alertView
 								.findViewById(R.id.imageWidth);
 						final Spinner alignmentSpinner = (Spinner) alertView
@@ -749,7 +749,7 @@ public class EditPost extends Activity implements OnClickListener,
 						titleText.setText(span.getTitle());
 						// descText.setText(span.getDescription());
 						caption.setText(span.getCaption());
-						// featured.setChecked(span.isFeatured());
+						featured.setChecked(span.isFeatured());
 
 						alignmentSpinner.setSelection(
 								span.getHorizontalAlignment(), true);
@@ -794,7 +794,19 @@ public class EditPost extends Activity implements OnClickListener,
 														.getProgress() * 10);
 												span.setCaption(caption
 														.getText().toString());
-												// span.setFeatured(featured.isChecked());
+												span.setFeatured(featured.isChecked());
+												if (featured.isChecked()) {
+													//remove featured span from all other images
+													WPImageSpan[] click_spans = s.getSpans(0, s.length(),
+															WPImageSpan.class);
+													if (click_spans.length > 1) {
+														for (int i = 0; i < click_spans.length; i++) {
+															WPImageSpan verifySpan = click_spans[i];
+															if (verifySpan != span)
+																verifySpan.setFeatured(false);
+														}
+													}
+												}
 											}
 										})
 								.setNegativeButton(getString(R.string.cancel),
@@ -1668,7 +1680,7 @@ public class EditPost extends Activity implements OnClickListener,
 						mf.setTitle(wpIS.getTitle());
 						mf.setCaption(wpIS.getCaption());
 						// mf.setDescription(wpIS.getDescription());
-						// mf.setFeatured(wpIS.isFeatured());
+						mf.setFeatured(wpIS.isFeatured());
 						mf.setFileName(wpIS.getImageSource().toString());
 						mf.setFilePath(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());

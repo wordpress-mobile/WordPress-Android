@@ -71,6 +71,7 @@ public class Post {
 	private double longitude;
 	private boolean isPage;
 	private boolean isLocalChange;
+	private static int featuredImageID = -1;
 
 	private String mediaPaths;
 	private String quickPostType;
@@ -743,6 +744,10 @@ public class Post {
 					contentStruct.put("custom_fields", geo);
 				}
 			}
+			
+			//featured image
+			if (featuredImageID != -1)
+				contentStruct.put("wp_post_thumbnail", featuredImageID);
 
 			XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
 					post.blog.getHttpuser(), post.blog.getHttppassword());
@@ -1108,6 +1113,14 @@ public class Post {
 
 							String resultURL = contentHash.get("url")
 									.toString();
+							
+							if (mf.isFeatured()) {
+								try {
+									featuredImageID = Integer.parseInt(contentHash.get("id").toString());
+								} catch (NumberFormatException e) {
+									e.printStackTrace();
+								}
+							}
 
 							if (i == 0) {
 								finalThumbnailUrl = resultURL;

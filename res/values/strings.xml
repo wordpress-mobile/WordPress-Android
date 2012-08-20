@@ -158,6 +158,10 @@
   <string name="vp_upgrade">The video was not uploaded due to invalid file type. You can upload videos to your blog using the VideoPress upgrade. Would you like to learn more about VideoPress?</string>
   <string name="post_password">Password (optional)</string>
   <string name="fullscreen">Write in Fullscreen</string>
+  <string name="caption">Caption (optional)</string>
+  <string name="horizontal_alignment">Horizontal Alignment</string>
+  <string name="width">Width</string>
+  <string name="featured">Featured Image</string>
 
   <!-- page view -->
   <string name="page_id">Page</string>

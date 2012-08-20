@@ -14,7 +14,7 @@
       android:id="@+id/title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="@string/image_options_title"
+      android:hint="@string/title"
       android:singleLine="true" />
     <!--  <EditText
       android:id="@+id/description"
@@ -26,12 +26,12 @@
       android:id="@+id/caption"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="@string/image_options_caption"
+      android:hint="@string/caption"
       android:singleLine="true" />
     <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:text="@string/image_options_horizontal_alignment"
+      android:text="@string/horizontal_alignment"
       android:textStyle="bold"
       android:textColor="#CCCCCC" />
     <Spinner 
@@ -42,7 +42,7 @@
     <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
-      android:text="@string/image_options_width"
+      android:text="@string/width"
       android:textStyle="bold"
       android:textColor="#CCCCCC" />
     <SeekBar
@@ -54,11 +54,11 @@
       android:id="@+id/imageWidthText"
       android:layout_width="match_parent"
       android:textColor="#CCCCCC" />
-    <!--  <CheckBox
-      android:text="Featured Image"
+    <CheckBox
+      android:text="@string/featured"
       android:id="@+id/featuredImage"
       android:textColor="#FFFFFF"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />-->
+      android:layout_height="wrap_content" />
   </LinearLayout>
 </ScrollView>
