@@ -477,6 +477,8 @@
   <string name="error_moderate_comment">Sorry, an error occured while attempting to moderate. Please try again later.</string>
   <string name="error_edit_comment">Sorry, an error occured while editing the comment. Please try again later.</string>
   <string name="error_stats">Sorry, an error occured while loading Stats. Please try again later.</string>
+  <string name="error_upload">Sorry, an error occured while uploading the %s. Please try again later.</string>
+  <string name="error_media_upload">An error occurred while uploading media.</string>
   
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991

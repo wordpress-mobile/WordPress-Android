@@ -788,7 +788,7 @@ public class Post {
 				post.update();
 				return true;
 			} catch (final XMLRPCException e) {
-				error = e.getLocalizedMessage();
+				error = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context.getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString());
 				mediaError = false;
 				Log.i("WP", error);
 			}
@@ -930,6 +930,7 @@ public class Post {
 										.getString(R.string.vp_upgrade);
 							}
 						}
+						error = context.getResources().getText(R.string.error_media_upload).toString();
 						return null;
 					}
 
