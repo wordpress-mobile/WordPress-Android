@@ -175,7 +175,8 @@ public class EditPost extends Activity implements OnClickListener,
 		String action = getIntent().getAction();
 		if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
 			// we arrived here from a share action
-			getAccounts();
+			if (!getAccounts())
+				return;
 		} else {
 
 			if (extras != null) {
@@ -909,7 +910,7 @@ public class EditPost extends Activity implements OnClickListener,
 		}
 	}
 
-	private void getAccounts() {
+	private boolean getAccounts() {
 
 		mIsNew = true;
 
@@ -993,6 +994,7 @@ public class EditPost extends Activity implements OnClickListener,
 								(mIsPage) ? R.string.new_page
 										: R.string.new_post));
 			}
+			return true;
 		} else {
 			// no account, load main view to load new account view
 			Toast.makeText(getApplicationContext(),
@@ -1000,7 +1002,7 @@ public class EditPost extends Activity implements OnClickListener,
 					Toast.LENGTH_LONG).show();
 			startActivity(new Intent(this, Dashboard.class));
 			finish();
-			return;
+			return false;
 		}
 	}
 
