@@ -1085,11 +1085,11 @@ public class ViewStats extends Activity {
 
 					}
 				} catch (NumberFormatException e) {
-					errorMsg = e.getMessage();
+					errorMsg = getResources().getText(R.string.error_stats).toString();
 				} catch (IllegalStateException e) {
-					errorMsg = e.getMessage();
+					errorMsg = getResources().getText(R.string.error_stats).toString();
 				} catch (NotFoundException e) {
-					errorMsg = e.getMessage();
+					errorMsg = getResources().getText(R.string.error_stats).toString();
 				}
 			}
 			if (!errorMsg.equals("")) {
@@ -1245,13 +1245,13 @@ public class ViewStats extends Activity {
 				}
 				return "OK";
 			} catch (ClientProtocolException e) {
-				errorMsg = e.getMessage();
+				errorMsg = getResources().getText(R.string.error_stats).toString();
 				return null;
 			} catch (IOException e) {
-				errorMsg = e.getMessage();
+				errorMsg = getResources().getText(R.string.error_stats).toString();
 				return null;
 			} catch (XmlPullParserException e) {
-				errorMsg = e.getMessage();
+				errorMsg = getResources().getText(R.string.error_stats).toString();
 				return null;
 			}
 		}

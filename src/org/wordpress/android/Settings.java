@@ -31,7 +31,6 @@ public class Settings extends Activity {
 		
 		setContentView(R.layout.settings);
 	
-        
         titleBar = (WPTitleBar) findViewById(R.id.settingsActionBar);
         titleBar.refreshButton.setEnabled(false);
 		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {

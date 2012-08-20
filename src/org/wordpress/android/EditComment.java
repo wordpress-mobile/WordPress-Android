@@ -238,7 +238,7 @@ public class EditComment extends Activity {
 				WordPress.currentComment.name = postHash.get("author");
 			}
 		} catch (XMLRPCException e) {
-			xmlErrorMessage = e.getLocalizedMessage();
+			xmlErrorMessage = getResources().getText(R.string.error_edit_comment).toString();
 		}
 		dismissDialog(ID_DIALOG_SAVING);
 		

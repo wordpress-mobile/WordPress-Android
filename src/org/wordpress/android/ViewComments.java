@@ -239,7 +239,7 @@ public class ViewComments extends ListFragment {
 								listRow.commentID, newStatus);
 					}
 				} catch (XMLRPCException e) {
-					moderateErrorMsg = e.getLocalizedMessage();
+					moderateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
 				}
 			}
 		}
@@ -298,7 +298,7 @@ public class ViewComments extends ListFragment {
 				try {
 					client.call("wp.deleteComment", params);
 				} catch (final XMLRPCException e) {
-					moderateErrorMsg = e.getLocalizedMessage();
+					moderateErrorMsg = getResources().getText(R.string.error_moderate_comment).toString();
 				}
 			}
 		}
@@ -1088,7 +1088,7 @@ public class ViewComments extends ListFragment {
 						.getApplicationContext(), commentParams);
 			} catch (XMLRPCException e) {
 				if (!getActivity().isFinishing())
-					moderateErrorMsg = e.getLocalizedMessage();
+					moderateErrorMsg = String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.tab_comments));
 				return null;
 			}
 

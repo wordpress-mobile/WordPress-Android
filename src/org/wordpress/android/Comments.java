@@ -281,7 +281,7 @@ public class Comments extends FragmentActivity implements
 							Comments.this);
 					dialogBuilder.setTitle(getResources().getText(
 							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
+					dialogBuilder.setMessage(getResources().getText(R.string.error_moderate_comment));
 					dialogBuilder.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
@@ -339,7 +339,7 @@ public class Comments extends FragmentActivity implements
 							Comments.this);
 					dialogBuilder.setTitle(getResources().getText(
 							R.string.connection_error));
-					dialogBuilder.setMessage(e.getLocalizedMessage());
+					dialogBuilder.setMessage(getResources().getText(R.string.error_moderate_comment));
 					dialogBuilder.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
@@ -406,7 +406,7 @@ public class Comments extends FragmentActivity implements
 			Thread action3 = new Thread() {
 				public void run() {
 					
-					Toast.makeText(Comments.this, getResources().getText(R.string.connection_error) + ": " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+					Toast.makeText(Comments.this, getResources().getText(R.string.connection_error), Toast.LENGTH_SHORT).show();
 					
 					Intent i = new Intent(Comments.this, ReplyToComment.class);
 					i.putExtra("commentID", commentID);

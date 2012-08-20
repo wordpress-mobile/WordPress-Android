@@ -405,7 +405,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 				result = true;
 			} catch (final XMLRPCException e) {
-				errorMsg = e.getLocalizedMessage();
+				errorMsg = String.format(getResources().getString(R.string.error_delete_post), (isPage) ? getResources().getText(R.string.page) : getResources().getText(R.string.post));
 				result = false;
 			}
 			return result;
@@ -479,7 +479,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 							vParams);
 				}
 			} catch (XMLRPCException e) {
-				errorMsg = e.getMessage();
+				errorMsg = getResources().getText(R.string.error_generic).toString();
 				Log.d("WP", "Error", e);
 				return null;
 			}
@@ -511,8 +511,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 						}
 					}
 				} catch (Exception e) {
-					errorMsg = e.getMessage();
-					Log.d("WP", "Error", e);
+					errorMsg = getResources().getText(R.string.error_generic).toString();
 					return null;
 				}
 			}

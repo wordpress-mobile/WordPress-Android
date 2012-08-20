@@ -34,6 +34,10 @@
   
   <!-- general strings -->
   <string name="app_name">WordPress</string>
+  <string name="post">Post</string>
+  <string name="page">Page</string>
+  <string name="posts">Posts</string>
+  <string name="pages">Pages</string>
   <string name="eula">GNU GENERAL PUBLIC LICENSE</string>
   <string name="about">About</string>
   <string name="username">Username:</string>
@@ -264,7 +268,7 @@
   <string name="account_exists">Account Exists</string>
   <string name="account_already_exists">There is already a WordPress account for this WordPress blog configured.</string>
   <string name="account_added">Account/Blog added successfully</string>
-  <string name="no_site_error">Sorry, no WordPress site was found at the URL provided.</string>
+  <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
 
   <!-- drafts -->
   <string name="cancel_draft">Cancel Draft</string>
@@ -465,6 +469,14 @@
   <string name="blogusername">blogusername</string>
   <string name="column_1">Column 1</string>
   <string name="column_2">Column 2</string>
+  
+  <!--  Error Messages -->
+  <string name="error_delete_post">Sorry, an error occured while attempting to delete the %s.</string>
+  <string name="error_refresh">Sorry, %s could not be refreshed at this time. Please try again later.</string>
+  <string name="error_generic">Sorry, an error occured. Please try again later.</string>
+  <string name="error_moderate_comment">Sorry, an error occured while attempting to moderate. Please try again later.</string>
+  <string name="error_edit_comment">Sorry, an error occured while editing the comment. Please try again later.</string>
+  <string name="error_stats">Sorry, an error occured while loading Stats. Please try again later.</string>
   
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991

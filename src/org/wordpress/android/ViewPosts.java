@@ -842,7 +842,7 @@ public class ViewPosts extends ListFragment {
 					}
 				}
 			} catch (XMLRPCException e) {
-				errorMsg = e.getMessage();
+				errorMsg = String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts));
 			}
 
 			return null;

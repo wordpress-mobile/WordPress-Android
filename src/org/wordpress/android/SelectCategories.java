@@ -268,11 +268,9 @@ public class SelectCategories extends ListActivity {
         	result = (Object[]) client.call("wp.getCategories", params);
         	success = true;
         } catch (XMLRPCException e) {
-        	//e.getMessage();
         	e.printStackTrace();
         }
 
-        //Vector categoryIds = (Vector) result;
         if (success){
         	int size = result.length;
 
