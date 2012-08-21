@@ -55,8 +55,16 @@
       android:layout_width="match_parent"
       android:textColor="#CCCCCC" />
     <CheckBox
+      android:layout_gravity="left"
       android:text="@string/featured"
       android:id="@+id/featuredImage"
+      android:textColor="#FFFFFF"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
+    <CheckBox
+      android:layout_gravity="left"
+      android:text="@string/featured_in_post"
+      android:id="@+id/featuredInPost"
       android:textColor="#FFFFFF"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content" />

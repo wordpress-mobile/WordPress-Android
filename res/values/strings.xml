@@ -169,7 +169,8 @@
   <string name="caption">Caption (optional)</string>
   <string name="horizontal_alignment">Horizontal Alignment</string>
   <string name="width">Width</string>
-  <string name="featured">Featured Image</string>
+  <string name="featured">Use as featured image</string>
+  <string name="featured_in_post">Include image in post content</string>
 
   <!-- page view -->
   <string name="page_id">Page</string>
@@ -191,7 +192,7 @@
   <string name="loading">Loading...</string>
 
   <!-- comment view -->
-  <string name="on">on</string> <!-- ex. on My favorite Things -->
+  <string name="on">on</string>
   <string name="approved">Approved</string>
   <string name="unapproved">Unapproved</string>
   <string name="spam">Spam</string>

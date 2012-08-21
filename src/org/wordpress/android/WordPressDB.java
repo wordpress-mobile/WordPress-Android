@@ -26,7 +26,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 12;
+	private static final int DATABASE_VERSION = 13;
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -109,6 +109,9 @@ public class WordPressDB {
 	//add boolean to posts to check uploaded posts that have local changes
 	private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
 	
+	//add boolean to track if featured image should be included in the post content
+	private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
+	
 	private SQLiteDatabase db;
 
 	protected static final String PASSWORD_SECRET = "nottherealpasscode";
@@ -154,6 +157,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -183,6 +187,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 2) {
@@ -210,6 +215,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 3) {
@@ -234,6 +240,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 4) {
@@ -258,6 +265,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 5) {
@@ -281,6 +289,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 6) {
@@ -302,6 +311,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 7) {
@@ -315,6 +325,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 8) {
@@ -327,6 +338,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 9) {
@@ -339,6 +351,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 10) {
@@ -406,11 +419,16 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 11) {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
+				db.execSQL(ADD_FEATURED_IN_POST);
+				db.setVersion(DATABASE_VERSION);
+			} else if (db.getVersion() == 12) {
+				db.execSQL(ADD_FEATURED_IN_POST);
 				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -1665,6 +1683,7 @@ public class WordPressDB {
 		values.put("mimeType", mf.getMIMEType());
 		values.put("featured", mf.isFeatured());
 		values.put("isVideo", mf.isVideo());
+		values.put("isFeaturedInPost", mf.isFeaturedInPost());
 		synchronized (this) {
 			int result = db.update(
 					MEDIA_TABLE,
@@ -1700,6 +1719,7 @@ public class WordPressDB {
 			mf.setMIMEType(c.getString(10));
 			mf.setFeatured(c.getInt(11) > 0);
 			mf.setVideo(c.getInt(12) > 0);
+			mf.setFeaturedInPost(c.getInt(13) > 0);
 			mediaFiles[i] = mf;
 			c.moveToNext();
 		}
@@ -1742,6 +1762,7 @@ public class WordPressDB {
 			mf.setMIMEType(c.getString(10));
 			mf.setFeatured(c.getInt(11) > 0);
 			mf.setVideo(c.getInt(12) > 0);
+			mf.setFeaturedInPost(c.getInt(13) > 0);
 		} else {
 			c.close();
 			return null;

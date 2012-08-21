@@ -78,6 +78,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -731,7 +733,21 @@ public class EditPost extends Activity implements OnClickListener,
 						// alertView.findViewById(R.id.description);
 						final EditText caption = (EditText) alertView
 								.findViewById(R.id.caption);
-						final CheckBox featured = (CheckBox) alertView.findViewById(R.id.featuredImage);
+						final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
+						final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
+						
+						featuredCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+							@Override
+							public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+								if (isChecked) {
+									featuredInPostCheckBox.setVisibility(View.VISIBLE);
+								} else {
+									featuredInPostCheckBox.setVisibility(View.GONE);
+								}
+								
+							}
+						});
+						
 						final SeekBar seekBar = (SeekBar) alertView
 								.findViewById(R.id.imageWidth);
 						final Spinner alignmentSpinner = (Spinner) alertView
@@ -749,7 +765,14 @@ public class EditPost extends Activity implements OnClickListener,
 						titleText.setText(span.getTitle());
 						// descText.setText(span.getDescription());
 						caption.setText(span.getCaption());
-						featured.setChecked(span.isFeatured());
+						featuredCheckBox.setChecked(span.isFeatured());
+						
+						if (span.isFeatured())
+							featuredInPostCheckBox.setVisibility(View.VISIBLE);
+						else
+							featuredInPostCheckBox.setVisibility(View.GONE);
+						
+						featuredInPostCheckBox.setChecked(span.isFeaturedInPost());
 
 						alignmentSpinner.setSelection(
 								span.getHorizontalAlignment(), true);
@@ -794,19 +817,22 @@ public class EditPost extends Activity implements OnClickListener,
 														.getProgress() * 10);
 												span.setCaption(caption
 														.getText().toString());
-												span.setFeatured(featured.isChecked());
-												if (featured.isChecked()) {
+												span.setFeatured(featuredCheckBox.isChecked());
+												if (featuredCheckBox.isChecked()) {
 													//remove featured flag from all other images
 													WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 															WPImageSpan.class);
 													if (click_spans.length > 1) {
 														for (int i = 0; i < click_spans.length; i++) {
 															WPImageSpan verifySpan = click_spans[i];
-															if (verifySpan != span)
+															if (verifySpan != span) {
 																verifySpan.setFeatured(false);
+																verifySpan.setFeaturedInPost(false);
+															}
 														}
 													}
 												}
+												span.setFeaturedInPost(featuredInPostCheckBox.isChecked());
 											}
 										})
 								.setNegativeButton(getString(R.string.cancel),
@@ -1584,6 +1610,7 @@ public class EditPost extends Activity implements OnClickListener,
 						mf.setCaption(wpIS.getCaption());
 						mf.setDescription(wpIS.getDescription());
 						mf.setFeatured(wpIS.isFeatured());
+						mf.setFeaturedInPost(wpIS.isFeaturedInPost());
 						mf.setFileName(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 						mf.setWidth(wpIS.getWidth());
@@ -1681,6 +1708,7 @@ public class EditPost extends Activity implements OnClickListener,
 						mf.setCaption(wpIS.getCaption());
 						// mf.setDescription(wpIS.getDescription());
 						mf.setFeatured(wpIS.isFeatured());
+						mf.setFeaturedInPost(wpIS.isFeaturedInPost());
 						mf.setFileName(wpIS.getImageSource().toString());
 						mf.setFilePath(wpIS.getImageSource().toString());
 						mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
