@@ -17,6 +17,8 @@ public class WPImageSpan extends ImageSpan {
 		private String caption = "";
 		private int horizontalAlignment = 0;
 		private boolean isVideo;
+		private boolean featured = false;
+		private boolean featuredInPost = false;
 
 		public String getTitle() {
 			return title;
@@ -45,8 +47,6 @@ public class WPImageSpan extends ImageSpan {
 		public void setImageSource(Uri imageSource) {
 			this.imageSource = imageSource;
 		}
-
-		private boolean featured = false;
 
 		public WPImageSpan(Context context, Bitmap b, Uri src) {
 		super(context, b);
@@ -84,6 +84,14 @@ public class WPImageSpan extends ImageSpan {
 
 		public void setFeatured(boolean featured) {
 			this.featured = featured;
+		}
+		
+		public boolean isFeaturedInPost() {
+			return featuredInPost;
+		}
+
+		public void setFeaturedInPost(boolean featuredInPost) {
+			this.featuredInPost = featuredInPost;
 		}
 		
 		public boolean isVideo() {

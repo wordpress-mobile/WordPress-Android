@@ -21,6 +21,7 @@ public class MediaFile {
 	protected String videoPressShortCode = null;
 	protected boolean featured = false;
 	protected boolean isVideo = false;
+	protected boolean featuredInPost;
 
 	public int getId() {
 		return id;
@@ -148,6 +149,14 @@ public class MediaFile {
 
 	public void setVideo(boolean isVideo) {
 		this.isVideo = isVideo;
+	}
+	
+	public boolean isFeaturedInPost() {
+		return featuredInPost;
+	}
+
+	public void setFeaturedInPost(boolean featuredInPost) {
+		this.featuredInPost = featuredInPost;
 	}
 	
 	public void save(Context ctx) {

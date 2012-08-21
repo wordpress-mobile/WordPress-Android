@@ -554,6 +554,7 @@ public class Post {
 							mf.setCaption(wpIS.getCaption());
 							mf.setDescription(wpIS.getDescription());
 							mf.setFeatured(wpIS.isFeatured());
+							mf.setFeaturedInPost(wpIS.isFeaturedInPost());
 							mf.setFileName(wpIS.getImageSource().toString());
 							mf.setHorizontalAlignment(wpIS
 									.getHorizontalAlignment());
@@ -1117,6 +1118,8 @@ public class Post {
 							if (mf.isFeatured()) {
 								try {
 									featuredImageID = Integer.parseInt(contentHash.get("id").toString());
+									if (!mf.isFeaturedInPost())
+										return "";
 								} catch (NumberFormatException e) {
 									e.printStackTrace();
 								}
