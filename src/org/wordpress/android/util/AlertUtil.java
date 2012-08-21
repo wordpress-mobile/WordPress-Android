@@ -90,13 +90,13 @@ public class AlertUtil {
      * @param positiveButtontxt
      * @param positiveListener
      */
-    public static void showAlert(Context context, int titleId, int messageId,
+    public static void showAlert(Context context, int titleId, String message,
             CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener) {
         Dialog dlg = new AlertDialog.Builder(context)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setTitle(titleId)
             .setPositiveButton(positiveButtontxt, positiveListener)
-            .setMessage(messageId)
+            .setMessage(message)
             .setCancelable(false)
             .create();
         

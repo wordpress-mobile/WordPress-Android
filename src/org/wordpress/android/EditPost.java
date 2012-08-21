@@ -796,7 +796,7 @@ public class EditPost extends Activity implements OnClickListener,
 														.getText().toString());
 												span.setFeatured(featured.isChecked());
 												if (featured.isChecked()) {
-													//remove featured span from all other images
+													//remove featured flag from all other images
 													WPImageSpan[] click_spans = s.getSpans(0, s.length(),
 															WPImageSpan.class);
 													if (click_spans.length > 1) {

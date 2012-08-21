@@ -24,6 +24,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.XMLRPCClient;
@@ -37,15 +38,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.Xml;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -58,8 +60,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddAccount extends Activity {
-	
+public class AddAccount extends Activity implements OnClickListener {
+
+	private static final String URL_WORDPRESS = "http://wordpress.com";
+
 	private XMLRPCClient client;
 	private String blogURL, xmlrpcURL;
 	private ProgressDialog pd;
@@ -69,108 +73,93 @@ public class AddAccount extends Activity {
 	private int blogCtr = 0;
 	private ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
 	private boolean isCustomURL = false;
+	private ConnectivityManager mSystemService;
+	private EditText mUserNameEdit;
+	private EditText mUrlEdit;
+	private EditText mUsernameEdit;
+	private EditText mPasswordEdit;
+	private Button mSettingsButton;
+	private Button mCancelButton;
+	private Button mSaveButton;
+	private Button mSignUpButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_account);
+		mUserNameEdit = (EditText) findViewById(R.id.username);
+		mSettingsButton = (Button) findViewById(R.id.settingsButton);
+		mCancelButton = (Button) findViewById(R.id.cancel);
+		mSaveButton = (Button) findViewById(R.id.save);
+		mSignUpButton = (Button) findViewById(R.id.wordpressdotcom);
+		mUrlEdit = (EditText) findViewById(R.id.url);
+		mUsernameEdit = (EditText) findViewById(R.id.username);
+		mPasswordEdit = (EditText) findViewById(R.id.password);
+
+		mSystemService = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			wpcom = extras.getBoolean("wpcom", false);
 			String username = extras.getString("username");
-			if (username != null)
-			{
-				EditText usernameET = (EditText) findViewById(R.id.username);
-				usernameET.setText(username);
+			if (username != null) {
+				mUserNameEdit.setText(username);
 			}
 		}
 
 		if (wpcom) {
-			TextView urlLabel = (TextView) findViewById(R.id.l_url);
-			urlLabel.setVisibility(View.GONE);
-			EditText urlET = (EditText) findViewById(R.id.url);
-			urlET.setVisibility(View.GONE);
+			((TextView) findViewById(R.id.l_url)).setVisibility(View.GONE);
+			((EditText) findViewById(R.id.url)).setVisibility(View.GONE);
 		} else {
 			ImageView logo = (ImageView) findViewById(R.id.wpcomLogo);
 			logo.setImageDrawable(getResources().getDrawable(R.drawable.wplogo));
 		}
 
-		final Button settingsButton = (Button) findViewById(R.id.settingsButton);
-		if (!wpcom) {
-			settingsButton.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					Intent settings = new Intent(AddAccount.this,
-							AddAcountSettings.class);
-					settings.putExtra("httpuser", httpuser);
-					settings.putExtra("httppassword", httppassword);
-					startActivityForResult(settings, R.id.settingsButton);
-				}
-			});
-		} else {
-			settingsButton.setVisibility(View.GONE);
-		}
+		if (wpcom)
+			mSettingsButton.setVisibility(View.GONE);
+		else
+			mSettingsButton.setOnClickListener(this);
 
-		final Button cancelButton = (Button) findViewById(R.id.cancel);
-		final Button saveButton = (Button) findViewById(R.id.save);
-
-		saveButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				pd = ProgressDialog.show(AddAccount.this, getResources()
-						.getText(R.string.account_setup), getResources()
-						.getText(R.string.attempting_configure), true, false);
-
-				Thread action = new Thread() {
-					public void run() {
-						Looper.prepare();
-						configureAccount();
-						Looper.loop();
-					}
-				};
-				action.start();
-
-			}
-		});
-
-		cancelButton.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				Bundle bundle = new Bundle();
-
-				bundle.putString("returnStatus", "CANCEL");
-				Intent mIntent = new Intent();
-				mIntent.putExtras(bundle);
-				setResult(RESULT_OK, mIntent);
-				finish();
-			}
-		});
-
-		Button signUp = (Button) findViewById(R.id.wordpressdotcom);
-		signUp.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				Intent signupIntent = new Intent(AddAccount.this, Signup.class);
-				startActivity(signupIntent);
-			}
-		});
+		mSaveButton.setOnClickListener(this);
+		mCancelButton.setOnClickListener(this);
+		mSignUpButton.setOnClickListener(this);
 	}
 
-	protected void configureAccount() {
-
-		// capture the entered fields *needs validation*
-		EditText urlET = (EditText) findViewById(R.id.url);
-		if (wpcom) {
-			blogURL = "http://wordpress.com";
-		} else {
-			blogURL = urlET.getText().toString().trim();
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case R.id.settingsButton:
+			if (resultCode == RESULT_OK) {
+				Bundle extras = data.getExtras();
+				httpuser = extras.getString("httpuser");
+				httppassword = extras.getString("httppassword");
+			}
+			break;
 		}
-		EditText usernameET = (EditText) findViewById(R.id.username);
-		final String username = usernameET.getText().toString().trim();
-		EditText passwordET = (EditText) findViewById(R.id.password);
-		final String password = passwordET.getText().toString().trim();
+	}
+
+	@Override
+	public void onBackPressed() {
+		Bundle bundle = new Bundle();
+		bundle.putString("returnStatus", "CANCEL");
+		Intent mIntent = new Intent();
+		mIntent.putExtras(bundle);
+		setResult(RESULT_OK, mIntent);
+		finish();
+	}
+
+	private void configureAccount() {
 
 		boolean invalidURL = false;
+
+		if (wpcom) {
+			blogURL = URL_WORDPRESS;
+		} else {
+			blogURL = mUrlEdit.getText().toString().trim();
+		}
+		final String username = mUsernameEdit.getText().toString().trim();
+		final String password = mPasswordEdit.getText().toString().trim();
+
 		try {
 			URI.create(blogURL);
 		} catch (Exception e1) {
@@ -179,43 +168,14 @@ public class AddAccount extends Activity {
 
 		if (blogURL.equals("") || username.equals("") || password.equals("")) {
 			pd.dismiss();
-			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-					AddAccount.this);
-			dialogBuilder.setTitle(getResources().getText(
-					R.string.required_fields));
-			dialogBuilder.setMessage(getResources().getText(
-					R.string.url_username_password_required));
-			dialogBuilder.setPositiveButton("OK",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-
-						}
-					});
-			dialogBuilder.setCancelable(true);
-			dialogBuilder.create().show();
+			AlertUtil.showAlert(AddAccount.this, R.string.required_fields, R.string.url_username_password_required);
 		} else if (invalidURL) {
 			pd.dismiss();
-			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-					AddAccount.this);
-			dialogBuilder
-					.setTitle(getResources().getText(R.string.invalid_url));
-			dialogBuilder.setMessage(getResources().getText(
-					R.string.invalid_url_message));
-			dialogBuilder.setPositiveButton("OK",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-
-						}
-					});
-			dialogBuilder.setCancelable(true);
-			dialogBuilder.create().show();
+			AlertUtil.showAlert(AddAccount.this, R.string.invalid_url, R.string.invalid_url_message);
 		} else {
 
 			// add http to the beginning of the URL if needed
-			if (!(blogURL.toLowerCase().contains("http://"))
-					&& !(blogURL.toLowerCase().contains("https://"))) {
+			if (!(blogURL.toLowerCase().contains("http://")) && !(blogURL.toLowerCase().contains("https://"))) {
 				blogURL = "http://" + blogURL; // default to http
 			}
 
@@ -240,8 +200,7 @@ public class AddAccount extends Activity {
 				} catch (XMLRPCException e) {
 					// guess the xmlrpc path
 					String guessURL = blogURL;
-					if (guessURL.substring(guessURL.length() - 1,
-							guessURL.length()).equals("/")) {
+					if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
 						guessURL = guessURL.substring(0, guessURL.length() - 1);
 					}
 					guessURL += "/xmlrpc.php";
@@ -256,291 +215,137 @@ public class AddAccount extends Activity {
 
 			if (xmlrpcURL == null) {
 				pd.dismiss();
-				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-						AddAccount.this);
-				dialogBuilder.setTitle(getResources().getText(R.string.error));
-				dialogBuilder.setMessage(getResources().getText(
-						R.string.no_site_error));
-				dialogBuilder.setPositiveButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
-
-							}
-						});
-				dialogBuilder.setCancelable(true);
-				dialogBuilder.create().show();
+				AlertUtil.showAlert(AddAccount.this, R.string.error, R.string.no_site_error);
 			} else {
 				// verify settings
 				client = new XMLRPCClient(xmlrpcURL, httpuser, httppassword);
 
-				XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs",
-						new XMLRPCMethodCallback() {
-					
-							public void callFinished(Object[] result) {
+				XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 
-								final String[] blogNames = new String[result.length];
-								final String[] urls = new String[result.length];
-								final int[] blogIds = new int[result.length];
-								final boolean[] wpcoms = new boolean[result.length];
-								final String[] wpVersions = new String[result.length];
-								HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
+					public void callFinished(Object[] result) {
 
-								// loop this!
-								for (int ctr = 0; ctr < result.length; ctr++) {
-									contentHash = (HashMap<Object, Object>) result[ctr];
-									// check if this blog is already set up
-									boolean match = false;
-									String matchBlogName = contentHash.get(
-											"blogName").toString();
-									if (matchBlogName.length() == 0) {
-										matchBlogName = contentHash.get("url")
-												.toString();
+						final String[] blogNames = new String[result.length];
+						final String[] urls = new String[result.length];
+						final int[] blogIds = new int[result.length];
+						final boolean[] wpcoms = new boolean[result.length];
+						final String[] wpVersions = new String[result.length];
+						HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
+
+						// loop this!
+						for (int ctr = 0; ctr < result.length; ctr++) {
+							contentHash = (HashMap<Object, Object>) result[ctr];
+							// check if this blog is already set up
+							boolean match = false;
+							String matchBlogName = contentHash.get("blogName").toString();
+							if (matchBlogName.length() == 0) {
+								matchBlogName = contentHash.get("url").toString();
+							}
+							match = WordPress.wpDB.checkMatch(matchBlogName, contentHash.get("xmlrpc").toString(), username);
+							if (!match) {
+								blogNames[blogCtr] = matchBlogName;
+								if (isCustomURL)
+									urls[blogCtr] = blogURL;
+								else
+									urls[blogCtr] = contentHash.get("xmlrpc").toString();
+								blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
+								String blogURL = urls[blogCtr];
+
+								aBlogNames.add(EscapeUtils.unescapeHtml(blogNames[blogCtr]));
+
+								boolean wpcomFlag = false;
+								// check for wordpress.com
+								if (blogURL.toLowerCase().contains("wordpress.com")) {
+									wpcomFlag = true;
+								}
+								wpcoms[blogCtr] = wpcomFlag;
+
+								// attempt to get the software version
+								String wpVersion = "";
+								if (!wpcomFlag) {
+									HashMap<String, String> hPost = new HashMap<String, String>();
+									hPost.put("software_version", "software_version");
+									Object[] vParams = { 1, username, password, hPost };
+									Object versionResult = new Object();
+									try {
+										versionResult = (Object) client.call("wp.getOptions", vParams);
+									} catch (XMLRPCException e) {
 									}
-									match = WordPress.wpDB.checkMatch(
-											matchBlogName,
-											contentHash.get("xmlrpc")
-													.toString(), username);
-									if (!match) {
-										blogNames[blogCtr] = matchBlogName;
-										if (isCustomURL)
-											urls[blogCtr] = blogURL;
-										else
-											urls[blogCtr] = contentHash.get(
-													"xmlrpc").toString();
-										blogIds[blogCtr] = Integer
-												.parseInt(contentHash.get(
-														"blogid").toString());
-										String blogURL = urls[blogCtr];
 
-										aBlogNames.add(EscapeUtils
-												.unescapeHtml(blogNames[blogCtr]));
-
-										boolean wpcomFlag = false;
-										// check for wordpress.com
-										if (blogURL.toLowerCase().contains(
-												"wordpress.com")) {
-											wpcomFlag = true;
+									if (versionResult != null) {
+										try {
+											contentHash = (HashMap<Object, Object>) versionResult;
+											HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
+											wpVersion = sv.get("value").toString();
+										} catch (Exception e) {
 										}
-										wpcoms[blogCtr] = wpcomFlag;
-
-										// attempt to get the software version
-										String wpVersion = "";
-										if (!wpcomFlag) {
-											HashMap<String, String> hPost = new HashMap<String, String>();
-											hPost.put("software_version",
-													"software_version");
-											Object[] vParams = { 1, username,
-													password, hPost };
-											Object versionResult = new Object();
-											try {
-												versionResult = (Object) client
-														.call("wp.getOptions",
-																vParams);
-											} catch (XMLRPCException e) {
-											}
-
-											if (versionResult != null) {
-												try {
-													contentHash = (HashMap<Object, Object>) versionResult;
-													HashMap<?, ?> sv = (HashMap<?, ?>) contentHash
-															.get("software_version");
-													wpVersion = sv.get("value")
-															.toString();
-												} catch (Exception e) {
-												}
-											}
-										} else {
-											wpVersion = "3.4";
-										}
-
-										wpVersions[blogCtr] = wpVersion;
-
-										blogCtr++;
 									}
-								} // end loop
-								pd.dismiss();
-								if (blogCtr == 0) {
-									AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-											AddAccount.this);
-									dialogBuilder.setTitle("No Blogs Found");
-									String additionalText = "";
-									if (result.length > 0) {
-										additionalText = " additional ";
-									}
-									dialogBuilder
-											.setMessage("No "
-													+ additionalText
-													+ "blogs were found for that account.");
-									dialogBuilder
-											.setPositiveButton(
-													"OK",
-													new DialogInterface.OnClickListener() {
-														public void onClick(
-																DialogInterface dialog,
-																int whichButton) {
-															// Just close the
-															// window.
-
-														}
-													});
-									dialogBuilder.setCancelable(true);
-									dialogBuilder.create().show();
 								} else {
-									// take them to the blog selection screen if
-									// there's more than one blog
-									if (blogCtr > 1) {
+									wpVersion = "3.4";
+								}
 
-										LayoutInflater inflater = (LayoutInflater) AddAccount.this
-												.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-										final ListView lv = (ListView) inflater
-												.inflate(
-														R.layout.select_blogs_list,
-														null);
-										lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-										lv.setItemsCanFocus(false);
+								wpVersions[blogCtr] = wpVersion;
 
-										ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(
-												AddAccount.this,
-												R.layout.blogs_row, aBlogNames);
+								blogCtr++;
+							}
+						} // end loop
+						pd.dismiss();
+						if (blogCtr == 0) {
+							String additionalText = "";
+							if (result.length > 0) {
+								additionalText = getString(R.string.additional);
+							}
+							AlertUtil.showAlert(AddAccount.this, R.string.no_blogs_found,
+									String.format(getString(R.string.no_blogs_message), additionalText), getString(R.string.ok),
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int whichButton) {
+											dialog.dismiss();
+										}
+									});
+						} else {
+							// take them to the blog selection screen if
+							// there's more than one blog
+							if (blogCtr > 1) {
 
-										lv.setAdapter(blogs);
+								LayoutInflater inflater = (LayoutInflater) AddAccount.this
+										.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+								final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
+								lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+								lv.setItemsCanFocus(false);
 
-										AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-												AddAccount.this);
-										dialogBuilder.setTitle("Select Blogs");
-										dialogBuilder.setView(lv);
-										dialogBuilder
-												.setNegativeButton(
-														"Add Selected",
-														new DialogInterface.OnClickListener() {
-															public void onClick(
-																	DialogInterface dialog,
-																	int whichButton) {
-																SparseBooleanArray selectedItems = lv
-																		.getCheckedItemPositions();
-																for (int i = 0; i < selectedItems
-																		.size(); i++) {
-																	if (selectedItems
-																			.get(selectedItems
-																					.keyAt(i)) == true) {
-																		int rowID = selectedItems
-																				.keyAt(i);
-																		WordPress.wpDB
-																				.addAccount(
-																						urls[rowID],
-																						blogNames[rowID],
-																						username,
-																						password,
-																						httpuser,
-																						httppassword,
-																						"Above Text",
-																						true,
-																						false,
-																						"500",
-																						5,
-																						false,
-																						blogIds[rowID],
-																						wpcoms[rowID],
-																						wpVersions[rowID]);
-																	}
-																}
-																Bundle bundle = new Bundle();
-																bundle.putString(
-																		"returnStatus",
-																		"SAVE");
-																Intent mIntent = new Intent();
-																mIntent.putExtras(bundle);
-																setResult(
-																		RESULT_OK,
-																		mIntent);
-																finish();
+								ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(AddAccount.this, R.layout.blogs_row,
+										aBlogNames);
 
-															}
-														});
-										dialogBuilder
-												.setPositiveButton(
-														"Add All",
-														new DialogInterface.OnClickListener() {
-															public void onClick(
-																	DialogInterface dialog,
-																	int whichButton) {
-																for (int i = 0; i < blogCtr; i++) {
-																	WordPress.wpDB
-																			.addAccount(
-																					urls[i],
-																					blogNames[i],
-																					username,
-																					password,
-																					httpuser,
-																					httppassword,
-																					"Above Text",
-																					true,
-																					false,
-																					"500",
-																					5,
-																					false,
-																					blogIds[i],
-																					wpcoms[i],
-																					wpVersions[i]);
-																}
-																Bundle bundle = new Bundle();
-																bundle.putString(
-																		"returnStatus",
-																		"SAVE");
-																Intent mIntent = new Intent();
-																mIntent.putExtras(bundle);
-																setResult(
-																		RESULT_OK,
-																		mIntent);
-																finish();
-															}
-														});
-										dialogBuilder.setCancelable(true);
-										AlertDialog ad = dialogBuilder.create();
-										ad.setInverseBackgroundForced(true);
-										ad.show();
+								lv.setAdapter(blogs);
 
-										final Button addSelected = ad
-												.getButton(AlertDialog.BUTTON_NEGATIVE);
-										addSelected.setEnabled(false);
-
-										lv.setOnItemClickListener(new OnItemClickListener() {
-											public void onItemClick(
-													AdapterView<?> arg0,
-													View arg1, int arg2,
-													long arg3) {
-												SparseBooleanArray selectedItems = lv
-														.getCheckedItemPositions();
-												boolean isChecked = false;
-												for (int i = 0; i < selectedItems
-														.size(); i++) {
-													if (selectedItems
-															.get(selectedItems
-																	.keyAt(i)) == true) {
-														isChecked = true;
-													}
-												}
-												if (!isChecked) {
-													addSelected
-															.setEnabled(false);
-												} else {
-													addSelected
-															.setEnabled(true);
-												}
+								AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
+								dialogBuilder.setTitle(R.string.select_blogs);
+								dialogBuilder.setView(lv);
+								dialogBuilder.setNegativeButton(R.string.add_selected, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
+										for (int i = 0; i < selectedItems.size(); i++) {
+											if (selectedItems.get(selectedItems.keyAt(i)) == true) {
+												int rowID = selectedItems.keyAt(i);
+												WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser,
+														httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID],
+														wpcoms[rowID], wpVersions[rowID]);
 											}
-										});
+										}
+										Bundle bundle = new Bundle();
+										bundle.putString("returnStatus", "SAVE");
+										Intent mIntent = new Intent();
+										mIntent.putExtras(bundle);
+										setResult(RESULT_OK, mIntent);
+										finish();
 
-									} else {
-										WordPress.wpDB
-												.addAccount(urls[0],
-														blogNames[0], username,
-														password, httpuser,
-														httppassword,
-														"Above Text", true,
-														false, "500", 5, false,
-														blogIds[0], wpcoms[0],
-														wpVersions[0]);
+									}
+								});
+								dialogBuilder.setPositiveButton(R.string.add_all, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										for (int i = 0; i < blogCtr; i++) {
+											WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword,
+													"Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+										}
 										Bundle bundle = new Bundle();
 										bundle.putString("returnStatus", "SAVE");
 										Intent mIntent = new Intent();
@@ -548,46 +353,50 @@ public class AddAccount extends Activity {
 										setResult(RESULT_OK, mIntent);
 										finish();
 									}
-								}
+								});
+								dialogBuilder.setCancelable(true);
+								AlertDialog ad = dialogBuilder.create();
+								ad.setInverseBackgroundForced(true);
+								ad.show();
+
+								final Button addSelected = ad.getButton(AlertDialog.BUTTON_NEGATIVE);
+								addSelected.setEnabled(false);
+
+								lv.setOnItemClickListener(new OnItemClickListener() {
+									public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+										SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
+										boolean isChecked = false;
+										for (int i = 0; i < selectedItems.size(); i++) {
+											if (selectedItems.get(selectedItems.keyAt(i)) == true) {
+												isChecked = true;
+											}
+										}
+										if (!isChecked) {
+											addSelected.setEnabled(false);
+										} else {
+											addSelected.setEnabled(true);
+										}
+									}
+								});
+
+							} else {
+								WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
+										true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+								Bundle bundle = new Bundle();
+								bundle.putString("returnStatus", "SAVE");
+								Intent mIntent = new Intent();
+								mIntent.putExtras(bundle);
+								setResult(RESULT_OK, mIntent);
+								finish();
 							}
-						});
+						}
+					}
+				});
 				Object[] params = { username, password };
 
 				method.call(params);
 			}
 		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// See which child activity is calling us back.
-		switch (requestCode) {
-		case R.id.settingsButton:
-			if (resultCode == RESULT_OK) {
-				Bundle extras = data.getExtras();
-				httpuser = extras.getString("httpuser");
-				httppassword = extras.getString("httppassword");
-			}
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public boolean onKeyDown(int i, KeyEvent event) {
-
-		// only intercept back button press
-		if (i == KeyEvent.KEYCODE_BACK) {
-			Bundle bundle = new Bundle();
-
-			bundle.putString("returnStatus", "CANCEL");
-			Intent mIntent = new Intent();
-			mIntent.putExtras(bundle);
-			setResult(RESULT_OK, mIntent);
-			finish();
-		}
-
-		return false; // propagate this keyevent
 	}
 
 	interface XMLRPCMethodCallback {
@@ -637,37 +446,23 @@ public class AddAccount extends Activity {
 							// invalid login
 							Thread shake = new Thread() {
 								public void run() {
-									Animation shake = AnimationUtils
-											.loadAnimation(AddAccount.this,
-													R.anim.shake);
-									findViewById(R.id.section1).startAnimation(
-											shake);
-									Toast.makeText(
-											AddAccount.this,
-											getResources().getString(
-													R.string.invalid_login),
-											Toast.LENGTH_SHORT).show();
+									Animation shake = AnimationUtils.loadAnimation(AddAccount.this, R.anim.shake);
+									findViewById(R.id.section1).startAnimation(shake);
+									Toast.makeText(AddAccount.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
 								}
 							};
 							runOnUiThread(shake);
 						} else {
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-									AddAccount.this);
-							dialogBuilder.setTitle(getResources().getText(
-									R.string.connection_error));
+							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
+							dialogBuilder.setTitle(getString(R.string.connection_error));
 							if (message.contains("404"))
-								message = getResources().getText(
-										R.string.xmlrpc_error).toString();
+								message = getString(R.string.xmlrpc_error);
 							dialogBuilder.setMessage(message);
-							dialogBuilder.setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-											// Just close the window.
-
-										}
-									});
+							dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									dialog.dismiss();
+								}
+							});
 							dialogBuilder.setCancelable(true);
 							dialogBuilder.create().show();
 						}
@@ -685,24 +480,16 @@ public class AddAccount extends Activity {
 						if (couse instanceof HttpHostConnectException) {
 
 						} else {
-							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-									AddAccount.this);
-							dialogBuilder.setTitle(getResources().getText(
-									R.string.connection_error));
+							AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
+							dialogBuilder.setTitle(getString(R.string.connection_error));
 							if (message.contains("404"))
-								message = getResources().getText(
-										R.string.xmlrpc_error).toString();
-
+								message = getString(R.string.xmlrpc_error);
 							dialogBuilder.setMessage(message);
-							dialogBuilder.setPositiveButton("OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int whichButton) {
-											// Just close the window.
-
-										}
-									});
+							dialogBuilder.setPositiveButton(getString(R.id.ok), new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									dialog.dismiss();
+								}
+							});
 							dialogBuilder.setCancelable(true);
 							dialogBuilder.create().show();
 						}
@@ -721,10 +508,9 @@ public class AddAccount extends Activity {
 		super.onConfigurationChanged(newConfig);
 	}
 
-	private static final Pattern rsdLink = Pattern
-			.compile(
-					"<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"\\s*?/>",
-					Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	private static final Pattern rsdLink = Pattern.compile(
+			"<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"\\s*?/>",
+			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	private String getRSDMetaTagHrefRegEx(String urlString) {
 		InputStream in = getResponse(urlString);
@@ -809,14 +595,9 @@ public class AddAccount extends Activity {
 									type = attrValue;
 								else if (attrName.equals("href"))
 									href = attrValue;
-
-								// Log.trace("attribute name: "+
-								// parser.getAttributeName(i));
-								// Log.trace("attribute value: "+parser.getAttributeValue(i));
 							}
 
-							if (rel.equals("EditURI")
-									&& type.equals("application/rsd+xml")) {
+							if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
 								return href;
 							}
 							// currentMessage.setLink(parser.nextText());
@@ -835,9 +616,7 @@ public class AddAccount extends Activity {
 	}
 
 	private String getXMLRPCUrl(String urlString) {
-		Pattern xmlrpcLink = Pattern.compile(
-				"<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
-				Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		InputStream in = getResponse(urlString);
 		if (in != null) {
 			try {
@@ -868,8 +647,7 @@ public class AddAccount extends Activity {
 			HttpGet httpRequest = new HttpGet(url.toURI());
 			HttpClient httpclient = new DefaultHttpClient();
 
-			HttpResponse response = (HttpResponse) httpclient
-					.execute(httpRequest);
+			HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
 			HttpEntity entity = response.getEntity();
 
 			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
@@ -886,5 +664,45 @@ public class AddAccount extends Activity {
 		}
 
 		return in;
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.save:
+			if (mSystemService.getActiveNetworkInfo() == null) {
+				AlertUtil.showAlert(AddAccount.this, R.string.no_network_title, R.string.no_network_message);
+			} else {
+				pd = ProgressDialog.show(AddAccount.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
+						true, false);
+
+				Thread action = new Thread() {
+					public void run() {
+						Looper.prepare();
+						configureAccount();
+						Looper.loop();
+					}
+				};
+				action.start();
+			}
+			break;
+		case R.id.cancel:
+			Bundle bundle = new Bundle();
+			bundle.putString("returnStatus", "CANCEL");
+			Intent mIntent = new Intent();
+			mIntent.putExtras(bundle);
+			setResult(RESULT_OK, mIntent);
+			finish();
+			break;
+		case R.id.settingsButton:
+			Intent settings = new Intent(AddAccount.this, AddAcountSettings.class);
+			settings.putExtra("httpuser", httpuser);
+			settings.putExtra("httppassword", httppassword);
+			startActivityForResult(settings, R.id.settingsButton);
+			break;
+		case R.id.wordpressdotcom:
+			startActivity(new Intent(AddAccount.this, Signup.class));
+			break;
+		}
 	}
 }

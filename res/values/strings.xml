@@ -6,7 +6,15 @@
   <string name="required_field">Required Field</string>
   <string name="url_username_password_required">Please fill in all of the fields before submitting.</string>
   <string name="xmlrpc_error">Could not connect. Please enter the full path to xmlrpc.php on your site and try again.</string>
-
+  <string name="no_blogs_found">No Blogs Found</string>
+  <string name="no_blogs_message">No %s blogs were found for that account.</string>
+  <string name="additional">additional</string>
+  <string name="add_all">Add All</string>
+  <string name="add_selected">Add Selected</string>
+  <string name="select_blogs">Select Blogs</string>
+  <string name="no_network_title">No network available</string>
+  <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
+  
   <!-- form labels -->
   <string name="categories">Categories</string>
   <string name="select_categories">Select Categories</string>
