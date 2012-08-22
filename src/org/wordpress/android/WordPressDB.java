@@ -1235,40 +1235,41 @@ public class WordPressDB {
 		Cursor c = db.query(POSTS_TABLE, null, "blogID=" + blogID + " AND id="
 				+ id + " AND isPage=" + pageInt, null, null, null, null);
 
-		c.moveToFirst();
-
-		if (c.getString(0) != null) {
-			values = new Vector<Object>();
-			values.add(c.getLong(0));
-			values.add(c.getString(1));
-			values.add(c.getString(2));
-			values.add(c.getString(3));
-			values.add(c.getLong(4));
-			values.add(c.getLong(5));
-			values.add(c.getString(6));
-			values.add(c.getString(7));
-			values.add(c.getString(8));
-			values.add(c.getString(9));
-			values.add(c.getInt(10));
-			values.add(c.getInt(11));
-			values.add(c.getString(12));
-			values.add(c.getString(13));
-			values.add(c.getString(14));
-			values.add(c.getString(15));
-			values.add(c.getString(16));
-			values.add(c.getString(17));
-			values.add(c.getString(18));
-			values.add(c.getString(19));
-			values.add(c.getString(20));
-			values.add(c.getString(21));
-			values.add(c.getString(22));
-			values.add(c.getString(23));
-			values.add(c.getDouble(24));
-			values.add(c.getDouble(25));
-			values.add(c.getInt(26));
-			values.add(c.getInt(27));
-			values.add(c.getInt(28));
-			values.add(c.getInt(29));
+		if (c.getCount() > 0) {
+			c.moveToFirst();
+			if (c.getString(0) != null) {
+				values = new Vector<Object>();
+				values.add(c.getLong(0));
+				values.add(c.getString(1));
+				values.add(c.getString(2));
+				values.add(c.getString(3));
+				values.add(c.getLong(4));
+				values.add(c.getLong(5));
+				values.add(c.getString(6));
+				values.add(c.getString(7));
+				values.add(c.getString(8));
+				values.add(c.getString(9));
+				values.add(c.getInt(10));
+				values.add(c.getInt(11));
+				values.add(c.getString(12));
+				values.add(c.getString(13));
+				values.add(c.getString(14));
+				values.add(c.getString(15));
+				values.add(c.getString(16));
+				values.add(c.getString(17));
+				values.add(c.getString(18));
+				values.add(c.getString(19));
+				values.add(c.getString(20));
+				values.add(c.getString(21));
+				values.add(c.getString(22));
+				values.add(c.getString(23));
+				values.add(c.getDouble(24));
+				values.add(c.getDouble(25));
+				values.add(c.getInt(26));
+				values.add(c.getInt(27));
+				values.add(c.getInt(28));
+				values.add(c.getInt(29));
+			}
 		}
 		c.close();
 

@@ -353,9 +353,19 @@ public class ViewPosts extends ListFragment {
 								Post post = new Post(WordPress.currentBlog
 										.getId(), selectedID, isPage,
 										getActivity().getApplicationContext());
-								WordPress.currentPost = post;
-								onPostSelectedListener.onPostSelected(post);
-								pla.notifyDataSetChanged();
+								if (post.getId() >= 0) {
+									WordPress.currentPost = post;
+									onPostSelectedListener.onPostSelected(post);
+									pla.notifyDataSetChanged();
+								} else {
+									if (!getActivity().isFinishing()) {
+										FragmentTransaction ft = getFragmentManager()
+												.beginTransaction();
+										WPAlertDialogFragment alert = WPAlertDialogFragment
+												.newInstance(getString(R.string.post_not_found));
+										alert.show(ft, "alert");
+									}
+								}
 							}
 						}
 					}
@@ -468,11 +478,12 @@ public class ViewPosts extends ListFragment {
 						Post post = new Post(WordPress.currentBlog.getId(),
 								Integer.valueOf(postIDs[1]), isPage,
 								getActivity().getApplicationContext());
-						WordPress.currentPost = post;
-						onPostSelectedListener.onPostSelected(post);
-						selectedPosition = 1;
-						pla.notifyDataSetChanged();
-
+						if (post.getId() >= 0) {
+							WordPress.currentPost = post;
+							onPostSelectedListener.onPostSelected(post);
+							selectedPosition = 1;
+							pla.notifyDataSetChanged();
+						}
 					}
 				}
 				shouldSelectAfterLoad = false;
@@ -687,6 +698,18 @@ public class ViewPosts extends ListFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 		Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage,
 				getActivity().getApplicationContext());
+		
+		if (post.getId() < 0) {
+			if (!getActivity().isFinishing()) {
+				FragmentTransaction ft = getFragmentManager()
+						.beginTransaction();
+				WPAlertDialogFragment alert = WPAlertDialogFragment
+						.newInstance(getString(R.string.post_not_found));
+				alert.show(ft, "alert");
+			}
+			return false;
+		}
+		
 		/* Switch on the ID of the item, to get what the user selected. */
 		if (item.getGroupId() == 0) {
 			switch (item.getItemId()) {

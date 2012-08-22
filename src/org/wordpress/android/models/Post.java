@@ -129,6 +129,8 @@ public class Post {
 			this.uploaded = (Integer) postVals.get(27) > 0;
 			this.isPage = (Integer) postVals.get(28) > 0;
 			this.isLocalChange = (Integer) postVals.get(29) > 0;
+		} else {
+			this.id = -1;
 		}
 	}
 
