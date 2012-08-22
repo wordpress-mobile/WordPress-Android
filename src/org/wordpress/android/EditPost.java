@@ -23,6 +23,7 @@ import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.BlackBerryUtils;
 import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
@@ -2240,6 +2241,8 @@ public class EditPost extends Activity implements OnClickListener,
 
 	@Override
 	public void onImeBack(WPEditText ctrl, String text) {
+		if ( BlackBerryUtils.getInstance().isBlackBerry() && mIsFullScreenEditing ) 
+			mImeBackPressed = true;
 		finishEditing();
 	}
 }
