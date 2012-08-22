@@ -227,6 +227,12 @@ public class ViewStats extends Activity {
 		reportInterval.setSelection(1);
 
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		titleBar.setupCurrentBlog();
+	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {

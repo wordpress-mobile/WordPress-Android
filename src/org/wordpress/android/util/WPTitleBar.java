@@ -93,30 +93,7 @@ public class WPTitleBar extends RelativeLayout {
 			
 		}
 
-		int lastBlogID = WordPress.wpDB.getLastBlogID(context);
-		if (lastBlogID != -1) {
-			try {
-				boolean matchedID = false;
-				for (int i = 0; i < blogIDs.length; i++) {
-					if (blogIDs[i] == lastBlogID) {
-						matchedID = true;
-						WordPress.currentBlog = new Blog(blogIDs[i], context);
-					}
-				}
-				if (!matchedID) {
-					WordPress.currentBlog = new Blog(blogIDs[0], context);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			if (blogIDs.length > 0)
-				try {
-					WordPress.currentBlog = new Blog(blogIDs[0], context);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		}
+		setupCurrentBlog();
 
 		if (WordPress.currentBlog != null) {
 			WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
@@ -184,6 +161,37 @@ public class WPTitleBar extends RelativeLayout {
 			setupDashboardButtons();
 		}
 		
+	}
+	
+	public void setupCurrentBlog() {
+		
+		if (WordPress.currentBlog != null)
+			return;
+		
+		int lastBlogID = WordPress.wpDB.getLastBlogID(context);
+		if (lastBlogID != -1) {
+			try {
+				boolean matchedID = false;
+				for (int i = 0; i < blogIDs.length; i++) {
+					if (blogIDs[i] == lastBlogID) {
+						matchedID = true;
+						WordPress.currentBlog = new Blog(blogIDs[i], context);
+					}
+				}
+				if (!matchedID) {
+					WordPress.currentBlog = new Blog(blogIDs[0], context);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			if (blogIDs.length > 0)
+				try {
+					WordPress.currentBlog = new Blog(blogIDs[0], context);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		}
 	}
 
 	private void setupDashboardButtons() {

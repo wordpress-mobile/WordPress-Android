@@ -165,14 +165,6 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
-		if (WordPress.currentBlog == null) {
-			try {
-				WordPress.currentBlog = new Blog(
-						WordPress.wpDB.getLastBlogID(getActivity().getBaseContext()), getActivity().getBaseContext());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		Vector<?> loadedPosts;
 		if (isPage) {
 			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()

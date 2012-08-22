@@ -112,6 +112,7 @@ public class Comments extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		titleBar.setupCurrentBlog();
 		boolean commentsLoaded = commentList.loadComments(false, false);
 		if (!commentsLoaded)
 			commentList.refreshComments(false, false, false);

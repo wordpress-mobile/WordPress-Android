@@ -62,6 +62,12 @@ public class Settings extends Activity {
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		titleBar.setupCurrentBlog();
+	}
+	
+	@Override
 	protected void onNewIntent (Intent intent){
 		super.onNewIntent(intent);
 		

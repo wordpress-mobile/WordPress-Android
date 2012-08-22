@@ -43,7 +43,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class Dashboard extends Activity {
-	public Vector<?> accounts;
 	private int id;
 	boolean fromNotification = false;
 	int uploadID = 0;
@@ -65,7 +64,6 @@ public class Dashboard extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		accounts = WordPress.wpDB.getAccounts(this);
 		boolean eula = checkEULA();
 		if (eula == false) {
 
@@ -357,7 +355,7 @@ public class Dashboard extends Activity {
 
 	public void displayAccounts() {
 
-		accounts = WordPress.wpDB.getAccounts(this);
+		Vector<?> accounts = WordPress.wpDB.getAccounts(this);
 
 		checkStats(accounts.size());
 
