@@ -102,6 +102,7 @@ public class ViewWebStats extends Activity {
 		webSettings.setPluginsEnabled(true);
 		webSettings.setDomStorageEnabled(true);
 		webSettings.setSavePassword(false);
+		clearCookies();
 		
 		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 		titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
@@ -126,6 +127,7 @@ public class ViewWebStats extends Activity {
 				webView.setVisibility(View.INVISIBLE);
 				webView.clearHistory();
 				webView.clearCache(false);
+				clearCookies();
 				initStats();
 			}
 		});
@@ -233,6 +235,12 @@ public class ViewWebStats extends Activity {
 		currentTask = new StatsAPIBlogInfoAsyncTask().execute(sUsername, sPassword, blog.getUrl(), String.valueOf(blog.getBlogId()));
 	}
 	
+	private void clearCookies() {
+		//get rid of old auth cookie
+		CookieSyncManager.createInstance(ViewWebStats.this); 
+	    CookieManager cookieManager = CookieManager.getInstance();
+	    cookieManager.removeAllCookie();
+	}
 	
 	protected void authStats() {
 		String sUsername, sPassword;
