@@ -164,8 +164,6 @@ public class EditPost extends Activity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		Bundle extras = getIntent().getExtras();
 
-		initBlog();
-
 		Calendar c = Calendar.getInstance();
 		mYear = c.get(Calendar.YEAR);
 		mMonth = c.get(Calendar.MONTH);
@@ -179,10 +177,10 @@ public class EditPost extends Activity implements OnClickListener,
 		String action = getIntent().getAction();
 		if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
 			// we arrived here from a share action
-			if (!getAccounts())
+			if (!selectBlogForShareAction())
 				return;
 		} else {
-
+			initBlog();
 			if (extras != null) {
 				mAccountName = EscapeUtils.unescapeHtml(extras
 						.getString("accountName"));
@@ -211,10 +209,7 @@ public class EditPost extends Activity implements OnClickListener,
 					mBlog = new Blog(mBlogID, this);
 					WordPress.currentBlog = mBlog;
 				} catch (Exception e) {
-					Toast.makeText(this,
-							getResources().getText(R.string.blog_not_found),
-							Toast.LENGTH_LONG).show();
-					finish();
+					showBlogErrorAndFinish();
 					return;
 				}
 
@@ -926,10 +921,7 @@ public class EditPost extends Activity implements OnClickListener,
 				WordPress.currentBlog = new Blog(
 						WordPress.wpDB.getLastBlogID(this), this);
 			} catch (Exception e) {
-				Toast.makeText(this,
-						getResources().getText(R.string.blog_not_found),
-						Toast.LENGTH_SHORT).show();
-				finish();
+				showBlogErrorAndFinish();
 			}
 		}
 	}
@@ -949,7 +941,7 @@ public class EditPost extends Activity implements OnClickListener,
 		}
 	}
 
-	private boolean getAccounts() {
+	private boolean selectBlogForShareAction() {
 
 		mIsNew = true;
 
@@ -973,10 +965,8 @@ public class EditPost extends Activity implements OnClickListener,
 				try {
 					mBlog = new Blog(accountIDs[i], EditPost.this);
 				} catch (Exception e) {
-					Toast.makeText(this,
-							getResources().getText(R.string.blog_not_found),
-							Toast.LENGTH_SHORT).show();
-					finish();
+					showBlogErrorAndFinish();
+					return false;
 				}
 			}
 
@@ -993,12 +983,7 @@ public class EditPost extends Activity implements OnClickListener,
 								try {
 									mBlog = new Blog(mBlogID, EditPost.this);
 								} catch (Exception e) {
-									Toast.makeText(
-											EditPost.this,
-											getResources().getText(
-													R.string.blog_not_found),
-											Toast.LENGTH_SHORT).show();
-									finish();
+									showBlogErrorAndFinish();
 								}
 								WordPress.currentBlog = mBlog;
 								WordPress.wpDB
@@ -1019,10 +1004,8 @@ public class EditPost extends Activity implements OnClickListener,
 				try {
 					mBlog = new Blog(mBlogID, EditPost.this);
 				} catch (Exception e) {
-					Toast.makeText(this,
-							getResources().getText(R.string.blog_not_found),
-							Toast.LENGTH_SHORT).show();
-					finish();
+					showBlogErrorAndFinish();
+					return false;
 				}
 				WordPress.currentBlog = mBlog;
 				WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
@@ -1043,6 +1026,13 @@ public class EditPost extends Activity implements OnClickListener,
 			finish();
 			return false;
 		}
+	}
+	
+	private void showBlogErrorAndFinish() {
+		Toast.makeText(this,
+				getResources().getText(R.string.blog_not_found),
+				Toast.LENGTH_SHORT).show();
+		finish();
 	}
 
 	private void formatBtnClick(ToggleButton toggleButton, String tag) {
