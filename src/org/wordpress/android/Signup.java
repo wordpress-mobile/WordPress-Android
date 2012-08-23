@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,6 +25,10 @@ public class Signup extends Activity {
 
 		setProgressBarIndeterminateVisibility(true);
 
+		CookieSyncManager.createInstance(this); 
+	    CookieManager cookieManager = CookieManager.getInstance();
+	    cookieManager.removeAllCookie();
+		
 		webview.getSettings().setUserAgentString("wp-android/" + WordPress.versionName);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
