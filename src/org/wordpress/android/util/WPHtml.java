@@ -729,6 +729,9 @@ class HtmlToSpannedConverter implements ContentHandler {
 			byte[] finalBytes = ih.createThumbnail(
 					(byte[]) mediaData.get("bytes"), String.valueOf((int) (width * conversionFactor)),
 					(String) mediaData.get("orientation"), true);
+			
+			if (finalBytes == null)
+				return;
 
 			resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0,
 					finalBytes.length);
