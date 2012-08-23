@@ -46,7 +46,7 @@ public class WPTitleBar extends RelativeLayout {
 	public int[] blogIDs;
 	public Vector<?> accounts;
 	private Context context;
-	TextView blogTitle;
+	TextView blogTitleTextView;
 	public Button refreshButton;
 	OnBlogChangedListener onBlogChangedListener = null;
 	AlertDialog.Builder dialogBuilder;
@@ -83,12 +83,13 @@ public class WPTitleBar extends RelativeLayout {
 				blogNames[i] = "+ " + getResources().getText(R.string.add_account);
 				blogIDs[i] = -1;
 			} else {
-				HashMap<?, ?> defHash = (HashMap<?, ?>) accounts.get(i);
-				String curBlogName = EscapeUtils.unescapeHtml(defHash.get(
-						"blogName").toString());
+				HashMap<?, ?> accountHash = (HashMap<?, ?>) accounts.get(i);
+				String curBlogName = accountHash.get("url").toString();
+				if (accountHash.get("blogName") != null)
+					curBlogName = EscapeUtils.unescapeHtml(accountHash.get("blogName").toString());
 				blogNames[i] = curBlogName;
-				blogIDs[i] = Integer.valueOf(defHash.get("id").toString());
-				blogTitle = (TextView) findViewById(R.id.blog_title);
+				blogIDs[i] = Integer.valueOf(accountHash.get("id").toString());
+				blogTitleTextView = (TextView) findViewById(R.id.blog_title);
 			}
 			
 		}
@@ -101,7 +102,7 @@ public class WPTitleBar extends RelativeLayout {
 			updateCommentBadge();
 			refreshButton = (Button) findViewById(R.id.action_refresh);
 
-			blogTitle.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog
+			blogTitleTextView.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog
 					.getBlogName()));
 
 			rl = (RelativeLayout) findViewById(R.id.blogSelector);
@@ -120,7 +121,7 @@ public class WPTitleBar extends RelativeLayout {
 										((Dashboard) context).startActivityForResult(i, 0);
 									}
 									else {
-										blogTitle.setText(EscapeUtils.unescapeHtml(blogNames[pos].toString()));
+										blogTitleTextView.setText(EscapeUtils.unescapeHtml(blogNames[pos].toString()));
 										try {
 											WordPress.currentBlog = new Blog(
 													blogIDs[pos], context);
@@ -503,7 +504,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void refreshBlog() {
-		blogTitle.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()));
+		blogTitleTextView.setText(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()));
 		updateBlavatarImage();
 	}
 }
