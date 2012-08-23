@@ -552,7 +552,8 @@ public class WordPressDB {
 			String imagePlacement, boolean centerThumbnail,
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
 			boolean location, boolean isWPCom, String originalUsername,
-			String postFormats, String dotcomUsername, String dotcomPassword, boolean isScaledImage, int scaledImgWidth) {
+			String postFormats, String dotcomUsername, String dotcomPassword, 
+			String apiBlogID, String apiKey, boolean isScaledImage, int scaledImgWidth) {
 
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -569,6 +570,8 @@ public class WordPressDB {
 		values.put("postFormats", postFormats);
 		values.put("dotcom_username", dotcomUsername);
 		values.put("dotcom_password", encryptPassword(dotcomPassword));
+		values.put("api_blogid", apiBlogID);
+		values.put("api_key", apiKey);
 		values.put("isScaledImage", isScaledImage);
 		values.put("scaledImgWidth", scaledImgWidth);
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
@@ -703,37 +706,6 @@ public class WordPressDB {
 		c.close();
 
 		return returnVector;
-	}
-
-	public Vector<String> loadAPIData(int id) {
-
-		Cursor c = db.query(SETTINGS_TABLE, new String[] { "api_key",
-				"api_blogid" }, "id=" + id, null, null, null, null);
-
-		c.moveToFirst();
-
-		Vector<String> returnVector = new Vector<String>();
-		if (c.getString(0) != null) {
-			returnVector.add(c.getString(0));
-			returnVector.add(c.getString(1));
-		} else {
-			returnVector = null;
-		}
-		c.close();
-
-		return returnVector;
-	}
-
-	public boolean saveAPIData(int id, String apiKey, String apiBlogID) {
-
-		ContentValues values = new ContentValues();
-		values.put("api_key", apiKey);
-		values.put("api_blogid", apiBlogID);
-		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
-				null) > 0;
-
-		return (returnValue);
-
 	}
 
 	public boolean updateLatestCommentID(int id, Integer newCommentID) {

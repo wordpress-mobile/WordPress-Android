@@ -13,6 +13,7 @@ import org.wordpress.android.Read;
 import org.wordpress.android.Settings;
 import org.wordpress.android.ViewComments;
 import org.wordpress.android.ViewStats;
+import org.wordpress.android.ViewWebStats;
 import org.wordpress.android.WPCOMReaderPager;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -56,6 +57,7 @@ public class WPTitleBar extends RelativeLayout {
 	public boolean isShowingDashboard;
 	public boolean isHome;
 	TextView commentBadgeText;
+	boolean isRotating = false;
 
 	public WPTitleBar(final Context ctx, AttributeSet attrs) {
 		super(ctx, attrs);
@@ -255,7 +257,8 @@ public class WPTitleBar extends RelativeLayout {
 		LinearLayout statsButton = (LinearLayout) findViewById(R.id.dashboard_stats_btn);
 		statsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(context, ViewStats.class);
+//				Intent i = new Intent(context, ViewStats.class);
+				Intent i = new Intent(context, ViewWebStats.class);
 				i.putExtra("id", WordPress.currentBlog.getId());
 				i.putExtra("isNew", true);
 				context.startActivity(i);
@@ -443,6 +446,8 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void startRotatingRefreshIcon() {
+		if (isRotating) return;
+		isRotating = true;
 		this.refreshButton.setEnabled(false);
 		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -457,6 +462,7 @@ public class WPTitleBar extends RelativeLayout {
 	}
 
 	public void stopRotatingRefreshIcon() {
+		isRotating = false;
 		this.refreshButton.setEnabled(true);
 		ImageView iv = (ImageView) findViewById(R.id.refresh_icon);
 		iv.setImageDrawable(getResources().getDrawable(

@@ -372,7 +372,9 @@
   <string name="stats_login">Stats Login</string>
   <string name="no_data_found">No stats data found. Please try again.</string>
   <string name="invalid_login">Incorrect Login</string>
+  <string name="invalid_jp_login">Incorrect login, or blog is not linked to this WordPress.com account.</string>
   <string name="site_not_found">or site not found.</string>
+  <string name="stats_service_error">Sorry. There was an error trying to connect to your stats. Please try again.</string>
 
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>

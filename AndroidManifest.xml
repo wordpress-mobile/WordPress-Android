@@ -105,6 +105,10 @@
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />
         <activity
+            android:name="ViewWebStats"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".AddQuickPressShortcut"
             android:label="QuickPress" >
             <intent-filter>

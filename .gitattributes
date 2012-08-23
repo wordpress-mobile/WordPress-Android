@@ -13,6 +13,7 @@ libs/android-support-v4.jar -text
 libs/httpmime-4.1.2.jar -text
 libs/tagsoup-1.2.1.jar -text
 /lint.xml -text
+/local.properties -text
 /project.properties -text
 res/anim/cycle_5.xml -text
 res/anim/dashboard_hide.xml -text
@@ -287,6 +288,7 @@ res/layout/table_row.xml -text
 res/layout/table_row_header.xml -text
 res/layout/view_comment.xml -text
 res/layout/view_stats.xml -text
+res/layout/view_web_stats.xml -text
 res/layout/viewcomments.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
@@ -372,6 +374,7 @@ src/org/wordpress/android/ViewPostActivity.java -text
 src/org/wordpress/android/ViewPostFragment.java -text
 src/org/wordpress/android/ViewPosts.java -text
 src/org/wordpress/android/ViewStats.java -text
+src/org/wordpress/android/ViewWebStats.java -text
 src/org/wordpress/android/WPCOMReaderBase.java -text
 src/org/wordpress/android/WPCOMReaderDetailPage.java -text
 src/org/wordpress/android/WPCOMReaderImpl.java -text
