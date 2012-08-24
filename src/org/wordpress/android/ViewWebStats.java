@@ -524,12 +524,10 @@ public class ViewWebStats extends Activity {
 					CookieManager cookieManager = CookieManager.getInstance();
 
 					for (Cookie cookie : cookies){
-						if(cookie.getName().equalsIgnoreCase("wordpress_logged_in")) {
-							if(cookie.getValue().toLowerCase().indexOf(sUsername.toLowerCase()) != -1){
-								// Auth cookie found so mark the parent class authed and set the lastAuthedName
-								authed = true;
-								lastAuthedName = sUsername;
-							}
+						if (cookie.getName().equalsIgnoreCase("wordpress_logged_in")) {
+							// Auth cookie found so mark the parent class authed and set the lastAuthedName
+							authed = true;
+							lastAuthedName = sUsername;
 						}
 						
 						String cookieString = cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain();
