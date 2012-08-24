@@ -164,7 +164,7 @@ public class ViewWebStats extends Activity {
 			public void onClick(View v) {
 
 				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse("http://en.support.wordpress.com/stats/"));
+				intent.setData(Uri.parse("http://jetpack.me/about"));
 				startActivity(intent);
 
 			}
