@@ -1119,9 +1119,11 @@ public class Post {
 							
 							if (mf.isFeatured()) {
 								try {
-									featuredImageID = Integer.parseInt(contentHash.get("id").toString());
-									if (!mf.isFeaturedInPost())
-										return "";
+									if (contentHash.get("id") != null) {
+										featuredImageID = Integer.parseInt(contentHash.get("id").toString());
+										if (!mf.isFeaturedInPost())
+											return "";
+									}
 								} catch (NumberFormatException e) {
 									e.printStackTrace();
 								}
