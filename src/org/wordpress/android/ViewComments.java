@@ -411,6 +411,7 @@ public class ViewComments extends ListFragment {
 						selectedPosition = position;
 						Comment comment = model.get((int) id);
 						onCommentSelectedListener.onCommentSelected(comment);
+						thumbs.notifyDataSetChanged();
 					}
 				});
 				
