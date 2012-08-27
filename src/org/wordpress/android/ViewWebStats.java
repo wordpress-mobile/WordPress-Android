@@ -565,6 +565,7 @@ public class ViewWebStats extends Activity {
 		
 		protected void onPostExecute(Vector<?> result) {
 			currentTask = null;
+			titleBar.stopRotatingRefreshIcon();
 			if(authed) {
 				loadStats();
 			} else {
