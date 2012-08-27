@@ -23,6 +23,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -318,14 +319,26 @@ public class AddAccount extends Activity implements OnClickListener {
 							dialogBuilder.setNegativeButton(R.string.add_selected, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int whichButton) {
 									SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
+
 									for (int i = 0; i < selectedItems.size(); i++) {
 										if (selectedItems.get(selectedItems.keyAt(i)) == true) {
 											int rowID = selectedItems.keyAt(i);
-											WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser,
+											long blogID = -1;
+											blogID = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser,
 													httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID],
 													wpcoms[rowID], wpVersions[rowID]);
+											//Set the first blog in the list to the currentBlog
+											if (i == 0) {
+												try {
+													if (blogID >= 0)
+														WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
+												} catch (Exception e) {
+													e.printStackTrace();
+												}
+											}
 										}
 									}
+									
 									Bundle bundle = new Bundle();
 									bundle.putString("returnStatus", "SAVE");
 									Intent mIntent = new Intent();
@@ -337,10 +350,22 @@ public class AddAccount extends Activity implements OnClickListener {
 							});
 							dialogBuilder.setPositiveButton(R.string.add_all, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int whichButton) {
+									
 									for (int i = 0; i < blogCtr; i++) {
-										WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword,
+										long blogID = -1;
+										blogID = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword,
 												"Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+										//Set the first blog in the list to the currentBlog
+										if (i == 0) {
+											try {
+												if (blogID >= 0)
+													WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										}
 									}
+									
 									Bundle bundle = new Bundle();
 									bundle.putString("returnStatus", "SAVE");
 									Intent mIntent = new Intent();
@@ -375,8 +400,14 @@ public class AddAccount extends Activity implements OnClickListener {
 							});
 
 						} else {
-							WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
+							long blogID = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
 									true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+							try {
+								if (blogID >= 0)
+									WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 							Bundle bundle = new Bundle();
 							bundle.putString("returnStatus", "SAVE");
 							Intent mIntent = new Intent();

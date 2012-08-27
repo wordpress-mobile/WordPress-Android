@@ -477,7 +477,7 @@ public class Post {
 							+ context.getResources().getText(R.string.error);
 				n.setLatestEventInfo(context, (mediaError) ? errorText
 						: context.getResources()
-								.getText(R.string.upload_failed), postOrPage
+								.getText(R.string.upload_failed), (mediaError) ? error : postOrPage
 						+ " " + errorText + ": " + error, pendingIntent);
 
 				nm.notify(notificationID, n); // needs a unique id
@@ -693,7 +693,7 @@ public class Post {
 			}
 
 			if (!moreContent.equals("")) {
-				descriptionContent = descriptionContent + "\n\n<!--more-->\n\n"
+				descriptionContent = descriptionContent.trim() + "<!--more-->"
 						+ moreContent;
 				post.mt_text_more = "";
 			}
@@ -847,6 +847,7 @@ public class Post {
 						context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
 					} catch (FileNotFoundException e) {
 						error = "Could not create temp file for media upload.";
+						mediaError = true;
 						return null;
 					}
 					
@@ -968,7 +969,8 @@ public class Post {
 						try {
 							context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
 						} catch (FileNotFoundException e) {
-							error = "Could not create temp file for media upload.";
+							mediaError = true;
+							error = context.getString(R.string.file_not_found);
 							return null;
 						}
 						
@@ -1027,10 +1029,11 @@ public class Post {
 								mf.setFilePath(path);
 							}
 
-							// check if the file is now gone! (removed SD
-							// card, etc)
+							// check if the file exists
 							if (jpeg == null) {
-								break;
+								error = context.getString(R.string.file_not_found);
+								mediaError = true;
+								return null;
 							}
 
 							ImageHelper ih = new ImageHelper();
@@ -1078,9 +1081,8 @@ public class Post {
 												orientation, false);
 
 								if (finalBytes == null) {
-									error = context.getResources()
-											.getText(R.string.media_error)
-											.toString();
+									error = context.getString(R.string.out_of_memory);
+									mediaError = true;
 									return null;
 								}
 							}
@@ -1107,6 +1109,7 @@ public class Post {
 										params, tempFile);
 							} catch (XMLRPCException e) {
 								error = e.getMessage();
+								mediaError = true;
 								return null;
 							}
 

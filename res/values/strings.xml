@@ -90,7 +90,7 @@
   <string name="categories_refreshed">Categories refreshed</string>
   <string name="category_refresh_error">Category refresh error</string>
   <string name="settings_not_found">Settings not found</string>
-  <string name="settings_not_found_load_now">Some required settings were not found. Load settings now?</string>
+  <string name="incorrect_credentials">Incorrect username or password. Load settings now?</string>
   <string name="empty_fields">No Content Found</string>
   <string name="title_post_required">Please enter some post content or attach a media item.</string>
   <string name="post_edited">Post edited</string>
@@ -171,6 +171,8 @@
   <string name="width">Width</string>
   <string name="featured">Use as featured image</string>
   <string name="featured_in_post">Include image in post content</string>
+  <string name="out_of_memory">Device out of memory.</string>
+  <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
 
   <!-- page view -->
   <string name="page_id">Page</string>

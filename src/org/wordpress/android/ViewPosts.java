@@ -789,7 +789,7 @@ public class ViewPosts extends ListFragment {
 				FragmentTransaction ft = getFragmentManager()
 						.beginTransaction();
 				WPAlertDialogFragment alert = WPAlertDialogFragment
-						.newInstance(errorMsg);
+						.newInstance(String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
 				alert.show(ft, "alert");
 				errorMsg = "";
 			} else {
@@ -857,7 +857,7 @@ public class ViewPosts extends ListFragment {
 					}
 				}
 			} catch (XMLRPCException e) {
-				errorMsg = String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts));
+				errorMsg = e.getLocalizedMessage();
 			}
 
 			return null;

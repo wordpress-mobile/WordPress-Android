@@ -570,7 +570,7 @@ public class EditPost extends Activity implements OnClickListener,
 		case R.id.more:
 			mSelectionEnd = mContentEditText.getSelectionEnd();
 			Editable str = mContentEditText.getText();
-			str.insert(mSelectionEnd, "\n\n<!--more-->\n\n");
+			str.insert(mSelectionEnd, "\n<!--more-->\n");
 			break;
 		case R.id.link:
 			mSelectionStart = mContentEditText.getSelectionStart();
@@ -1623,7 +1623,7 @@ public class EditPost extends Activity implements OnClickListener,
 				}
 			}
 
-			final String NEEDLE = "<!--more-->";
+			final String moreTag = "<!--more-->";
 			int selectedStatus = mStatusSpinner.getSelectedItemPosition();
 			String status = "";
 
@@ -1666,11 +1666,11 @@ public class EditPost extends Activity implements OnClickListener,
 				mPost.setLocalDraft(true);
 
 				// split up the post content if there's a more tag
-				if (content.indexOf(NEEDLE) >= 0) {
+				if (content.indexOf(moreTag) >= 0) {
 					mPost.setDescription(content.substring(0,
-							content.indexOf(NEEDLE)));
+							content.indexOf(moreTag)));
 					mPost.setMt_text_more(content.substring(
-							content.indexOf(NEEDLE) + NEEDLE.length(),
+							content.indexOf(moreTag) + moreTag.length(),
 							content.length()));
 				}
 
@@ -1720,11 +1720,11 @@ public class EditPost extends Activity implements OnClickListener,
 
 				mPost.setTitle(title);
 				// split up the post content if there's a more tag
-				if (mLocalDraft && content.indexOf(NEEDLE) >= 0) {
+				if (mLocalDraft && content.indexOf(moreTag) >= 0) {
 					mPost.setDescription(content.substring(0,
-							content.indexOf(NEEDLE)));
+							content.indexOf(moreTag)));
 					mPost.setMt_text_more(content.substring(
-							content.indexOf(NEEDLE) + NEEDLE.length(),
+							content.indexOf(moreTag) + moreTag.length(),
 							content.length()));
 				} else {
 					mPost.setDescription(content);

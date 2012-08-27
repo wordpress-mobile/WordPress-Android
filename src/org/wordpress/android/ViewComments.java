@@ -1047,8 +1047,9 @@ public class ViewComments extends ListFragment {
 					FragmentTransaction ft = getFragmentManager()
 							.beginTransaction();
 					WPAlertDialogFragment alert = WPAlertDialogFragment
-							.newInstance(moderateErrorMsg);
+							.newInstance(String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.tab_comments)), moderateErrorMsg);
 					alert.show(ft, "alert");
+					moderateErrorMsg = "";
 				}
 				return;
 			}
@@ -1088,7 +1089,7 @@ public class ViewComments extends ListFragment {
 						.getApplicationContext(), commentParams);
 			} catch (XMLRPCException e) {
 				if (!getActivity().isFinishing())
-					moderateErrorMsg = String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.tab_comments));
+					moderateErrorMsg = e.getLocalizedMessage();
 				return null;
 			}
 
