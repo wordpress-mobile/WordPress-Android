@@ -103,6 +103,7 @@ public class ViewWebStats extends Activity {
 		webSettings.setDomStorageEnabled(true);
 		webSettings.setSavePassword(false);
 		clearCookies();
+		webView.clearCache(false);
 		
 		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 		titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
@@ -187,6 +188,13 @@ public class ViewWebStats extends Activity {
 	protected void onPause() {
 		super.onPause();
 		CookieSyncManager.getInstance().stopSync();
+	}
+	
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		webView.clearCache(false);
 	}
 	
 	
