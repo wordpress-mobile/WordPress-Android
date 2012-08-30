@@ -101,10 +101,6 @@
             android:theme="@android:style/Theme.Light" />
         <activity android:name="NewAccount" />
         <activity
-            android:name="ViewStats"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask" />
-        <activity
             android:name="ViewWebStats"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />

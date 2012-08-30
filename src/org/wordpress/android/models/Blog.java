@@ -16,7 +16,7 @@ public class Blog {
 	private String username;
 	private String password;
 	private String imagePlacement;
-	private boolean centerThumbnail;
+	private boolean featuredImageCapable;
 	private boolean fullSizeImage;
 	private boolean scaledImage;
 	private int scaledImageWidth;
@@ -49,7 +49,7 @@ public class Blog {
 			this.httpuser = blogVals.get(4).toString();
 			this.httppassword = blogVals.get(5).toString();
 			this.imagePlacement = blogVals.get(6).toString();
-			this.centerThumbnail = (Integer)blogVals.get(7)>0;
+			this.featuredImageCapable = (Integer)blogVals.get(7)>0;
 			this.fullSizeImage = (Integer)blogVals.get(8)>0;
 			this.maxImageWidth = blogVals.get(9).toString();
 			this.maxImageWidthId = (Integer) blogVals.get(10);
@@ -127,12 +127,12 @@ public class Blog {
 		this.imagePlacement = imagePlacement;
 	}
 
-	public boolean isCenterThumbnail() {
-		return centerThumbnail;
+	public boolean isFeaturedImageCapable() {
+		return featuredImageCapable;
 	}
 
-	public void setCenterThumbnail(boolean centerThumbnail) {
-		this.centerThumbnail = centerThumbnail;
+	public void setFeaturedImageCapable(boolean isCapable) {
+		this.featuredImageCapable = isCapable;
 	}
 
 	public boolean isFullSizeImage() {
@@ -257,7 +257,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.centerThumbnail, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth);
+		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth);
 	}
 
     public String getPostFormats() {

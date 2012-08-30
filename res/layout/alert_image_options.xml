@@ -60,13 +60,15 @@
       android:id="@+id/featuredImage"
       android:textColor="#FFFFFF"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
+      android:layout_height="wrap_content"
+      android:visibility="gone" />
     <CheckBox
       android:layout_gravity="left"
       android:text="@string/featured_in_post"
       android:id="@+id/featuredInPost"
       android:textColor="#FFFFFF"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
+      android:layout_height="wrap_content"
+      android:visibility="gone" />
   </LinearLayout>
 </ScrollView>

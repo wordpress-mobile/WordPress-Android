@@ -82,10 +82,8 @@ public class Dashboard extends Activity {
 				}
 			};
 
-			AlertUtil.showAlert(Dashboard.this, R.string.eula,
-					R.string.eula_content, getString(R.string.accept),
-					positiveListener, getString(R.string.decline),
-					negativeListener);
+			AlertUtil.showAlert(Dashboard.this, R.string.eula, R.string.eula_content, getString(R.string.accept), positiveListener,
+					getString(R.string.decline), negativeListener);
 		} else {
 			displayAccounts();
 		}
@@ -99,7 +97,7 @@ public class Dashboard extends Activity {
 			String status = bundle.getString("returnStatus");
 			if (status.equals("CANCEL") && WordPress.currentBlog == null) {
 				finish();
-			} else if (!status.equals("CANCEL")){
+			} else if (!status.equals("CANCEL")) {
 				if (titleBar == null)
 					titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
 				titleBar.reloadBlogs();
@@ -161,62 +159,40 @@ public class Dashboard extends Activity {
 			startActivity(i2);
 			return true;
 		case 2:
-			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-					Dashboard.this);
-			dialogBuilder.setTitle(getResources().getText(
-					R.string.remove_account));
-			dialogBuilder.setMessage(getResources().getText(
-					R.string.sure_to_remove_account));
-			dialogBuilder.setPositiveButton(getResources()
-					.getText(R.string.yes),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							boolean deleteSuccess = WordPress.wpDB
-									.deleteAccount(Dashboard.this, id);
-							if (deleteSuccess) {
-								Toast.makeText(
-										Dashboard.this,
-										getResources()
-												.getText(
-														R.string.blog_removed_successfully),
-										Toast.LENGTH_SHORT).show();
-								WordPress.wpDB.deleteLastBlogID();
-								WordPress.currentBlog = null;
-								titleBar.reloadBlogs();
-								displayAccounts();
-							} else {
-								AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-										Dashboard.this);
-								dialogBuilder.setTitle(getResources().getText(
-										R.string.error));
-								dialogBuilder
-										.setMessage(getResources()
-												.getText(
-														R.string.could_not_remove_account));
-								dialogBuilder.setPositiveButton("OK",
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int whichButton) {
-												// just close the dialog
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Dashboard.this);
+			dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+			dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+			dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					boolean deleteSuccess = WordPress.wpDB.deleteAccount(Dashboard.this, id);
+					if (deleteSuccess) {
+						Toast.makeText(Dashboard.this, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
+								.show();
+						WordPress.wpDB.deleteLastBlogID();
+						WordPress.currentBlog = null;
+						titleBar.reloadBlogs();
+						displayAccounts();
+					} else {
+						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Dashboard.this);
+						dialogBuilder.setTitle(getResources().getText(R.string.error));
+						dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
+						dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) {
+								// just close the dialog
 
-											}
-										});
-								dialogBuilder.setCancelable(true);
-								dialogBuilder.create().show();
 							}
+						});
+						dialogBuilder.setCancelable(true);
+						dialogBuilder.create().show();
+					}
 
-						}
-					});
-			dialogBuilder.setNegativeButton(
-					getResources().getText(R.string.no),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							// just close the window
-						}
-					});
+				}
+			});
+			dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// just close the window
+				}
+			});
 			dialogBuilder.setCancelable(false);
 			dialogBuilder.create().show();
 			return true;
@@ -238,6 +214,9 @@ public class Dashboard extends Activity {
 			new Thread() {
 				public void run() {
 					uploadStats(numBlogs);
+					//refresh blog settings in background
+					if (WordPress.currentBlog != null)
+						new refreshBlogContentTask().execute(false);
 				}
 			}.start();
 			WordPress.wpDB.setStatsDate(this);
@@ -265,8 +244,7 @@ public class Dashboard extends Activity {
 			}
 
 			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			String device_language = getResources().getConfiguration().locale
-					.getLanguage();
+			String device_language = getResources().getConfiguration().locale.getLanguage();
 			String mobile_country_code = tm.getNetworkCountryIso();
 			String mobile_network_number = tm.getNetworkOperator();
 			int network_type = tm.getNetworkType();
@@ -318,23 +296,18 @@ public class Dashboard extends Activity {
 
 			// post the data
 			HttpClient client = new DefaultHttpClient();
-			HttpPost post = new HttpPost(
-					"http://api.wordpress.org/androidapp/update-check/1.0/");
+			HttpPost post = new HttpPost("http://api.wordpress.org/androidapp/update-check/1.0/");
 			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			pairs.add(new BasicNameValuePair("device_uuid", uuid));
 			pairs.add(new BasicNameValuePair("app_version", app_version));
 			pairs.add(new BasicNameValuePair("device_language", device_language));
-			pairs.add(new BasicNameValuePair("mobile_country_code",
-					mobile_country_code));
-			pairs.add(new BasicNameValuePair("mobile_network_number",
-					mobile_network_number));
-			pairs.add(new BasicNameValuePair("mobile_network_type",
-					mobile_network_type));
+			pairs.add(new BasicNameValuePair("mobile_country_code", mobile_country_code));
+			pairs.add(new BasicNameValuePair("mobile_network_number", mobile_network_number));
+			pairs.add(new BasicNameValuePair("mobile_network_type", mobile_network_type));
 			pairs.add(new BasicNameValuePair("device_version", device_version));
-			pairs.add(new BasicNameValuePair("num_blogs", String
-					.valueOf(num_blogs)));
+			pairs.add(new BasicNameValuePair("num_blogs", String.valueOf(num_blogs)));
 			try {
 				post.setEntity(new UrlEncodedFormEntity(pairs));
 			} catch (UnsupportedEncodingException e) {
@@ -380,10 +353,7 @@ public class Dashboard extends Activity {
 					try {
 						blog = new Blog(id, Dashboard.this);
 					} catch (Exception e) {
-						Toast.makeText(
-								Dashboard.this,
-								getResources().getText(R.string.blog_not_found),
-								Toast.LENGTH_SHORT).show();
+						Toast.makeText(Dashboard.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
 						finish();
 					}
 					titleBar.startRotatingRefreshIcon();
@@ -391,20 +361,20 @@ public class Dashboard extends Activity {
 				}
 			});
 
-			titleBar.refreshButton
-					.setOnClickListener(new ImageButton.OnClickListener() {
-						public void onClick(View v) {
+			titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
+				public void onClick(View v) {
 
-							titleBar.startRotatingRefreshIcon();
-							new refreshBlogContentTask().execute(false);
-						}
-					});
+					titleBar.startRotatingRefreshIcon();
+					new refreshBlogContentTask().execute(false);
+				}
+			});
+			
+			new refreshBlogContentTask().execute(false);
 
 		}
 	}
 
-	private class refreshBlogContentTask extends
-			AsyncTask<Boolean, Void, Boolean> {
+	private class refreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
 
 		// refreshes blog level info (WP version number) and stuff related to
 		// theme (available post types, recent comments etc)
@@ -425,34 +395,39 @@ public class Dashboard extends Activity {
 		protected Boolean doInBackground(Boolean... params) {
 			boolean commentsOnly = params[0];
 			Blog blog = WordPress.currentBlog;
-			XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-					blog.getHttpuser(), blog.getHttppassword());
+			XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 			if (!commentsOnly) {
 				// check the WP number if self-hosted
-				if (!blog.isDotcomFlag()) {
-					HashMap<String, String> hPost = new HashMap<String, String>();
-					hPost.put("software_version", "software_version");
-					Object[] vParams = { blog.getBlogId(), blog.getUsername(),
-							blog.getPassword(), hPost };
-					Object versionResult = new Object();
-					try {
-						versionResult = (Object) client.call("wp.getOptions",
-								vParams);
-					} catch (XMLRPCException e) {
-					}
+				HashMap<String, String> hPost = new HashMap<String, String>();
+				hPost.put("software_version", "software_version");
+				hPost.put("post_thumbnail", "post_thumbnail");
+				Object[] vParams = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost };
+				Object versionResult = new Object();
+				try {
+					versionResult = (Object) client.call("wp.getOptions", vParams);
+				} catch (XMLRPCException e) {
+				}
 
-					if (versionResult != null) {
-						try {
-							HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
-							HashMap<?, ?> sv = (HashMap<?, ?>) contentHash
-									.get("software_version");
+				if (versionResult != null) {
+					try {
+						HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
+						// Software version
+						if (!blog.isDotcomFlag()) {
+							HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
 							String wpVersion = sv.get("value").toString();
 							if (wpVersion.length() > 0) {
 								blog.setWpVersion(wpVersion);
 							}
-						} catch (Exception e) {
 						}
+						// Featured image support
+						HashMap<?, ?> featuredImageHash = (HashMap<?, ?>) contentHash.get("post_thumbnail");
+						if (featuredImageHash != null) {
+							boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash.get("value").toString());
+							blog.setFeaturedImageCapable(featuredImageCapable);
+						}
+						blog.save(Dashboard.this, "");
+					} catch (Exception e) {
 					}
 				}
 
@@ -462,12 +437,11 @@ public class Dashboard extends Activity {
 				args.add(Dashboard.this);
 				new ApiHelper.getPostFormatsTask().execute(args);
 			}
-			
+
 			// refresh the comments
 			HashMap<String, Object> hPost = new HashMap<String, Object>();
 			hPost.put("number", 30);
-			Object[] commentParams = { blog.getBlogId(), blog.getUsername(),
-					blog.getPassword(), hPost };
+			Object[] commentParams = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost };
 
 			try {
 				ApiHelper.refreshComments(Dashboard.this, commentParams);

@@ -549,7 +549,7 @@ public class WordPressDB {
 
 	public boolean saveSettings(String id, String url, String username,
 			String password, String httpuser, String httppassword,
-			String imagePlacement, boolean centerThumbnail,
+			String imagePlacement, boolean isFeaturedImageCapable,
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
 			boolean location, boolean isWPCom, String originalUsername,
 			String postFormats, String dotcomUsername, String dotcomPassword, 
@@ -562,7 +562,7 @@ public class WordPressDB {
 		values.put("httpuser", httpuser);
 		values.put("httppassword", encryptPassword(httppassword));
 		values.put("imagePlacement", imagePlacement);
-		values.put("centerThumbnail", centerThumbnail);
+		values.put("centerThumbnail", isFeaturedImageCapable);
 		values.put("fullSizeImage", fullSizeImage);
 		values.put("maxImageWidth", maxImageWidth);
 		values.put("maxImageWidthId", maxImageWidthId);
@@ -1570,7 +1570,6 @@ public class WordPressDB {
 					.getBytes("UTF-8")));
 			return encrypedPwd;
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return clearText;
 	}
@@ -1588,7 +1587,6 @@ public class WordPressDB {
 			byte[] plainTextPwdBytes = cipher.doFinal(encryptedWithoutB64);
 			return new String(plainTextPwdBytes);
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 		return encryptedPwd;
 	}

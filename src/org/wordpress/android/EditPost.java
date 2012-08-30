@@ -74,6 +74,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -708,14 +709,14 @@ public class EditPost extends Activity implements OnClickListener,
 			if (layout != null) {
 				int line = layout.getLineForVertical(y);
 				int charPosition = layout.getOffsetForHorizontal(line, x);
-
+				
 				final Spannable s = mContentEditText.getText();
 				// check if image span was tapped
-				WPImageSpan[] click_spans = s.getSpans(charPosition,
+				WPImageSpan[] image_spans = s.getSpans(charPosition,
 						charPosition, WPImageSpan.class);
 
-				if (click_spans.length != 0) {
-					final WPImageSpan span = click_spans[0];
+				if (image_spans.length != 0) {
+					final WPImageSpan span = image_spans[0];
 					if (!span.isVideo()) {
 						LayoutInflater factory = LayoutInflater
 								.from(EditPost.this);
@@ -731,6 +732,12 @@ public class EditPost extends Activity implements OnClickListener,
 								.findViewById(R.id.caption);
 						final CheckBox featuredCheckBox = (CheckBox) alertView.findViewById(R.id.featuredImage);
 						final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
+						
+						//show featured image checkboxes if theme support it
+						if (WordPress.currentBlog.isFeaturedImageCapable()) {
+							featuredCheckBox.setVisibility(View.VISIBLE);
+							featuredInPostCheckBox.setVisibility(View.VISIBLE);
+						}
 						
 						featuredCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 							@Override
@@ -839,6 +846,7 @@ public class EditPost extends Activity implements OnClickListener,
 												dialog.dismiss();
 											}
 										}).create();
+						ad.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 						ad.show();
 						mImeBackPressed = true;
 						mScrollDetected = false;
@@ -1932,15 +1940,24 @@ public class EditPost extends Activity implements OnClickListener,
 			is.setVideo(true);
 		}
 
-		// insert a few line breaks if the cursor is already on an image
-		WPImageSpan[] click_spans = s.getSpans(selectionStart, selectionEnd,
+		int line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+		int column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+				
+		
+		WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd,
 				WPImageSpan.class);
-		if (click_spans.length != 0) {
+		if (image_spans.length != 0) {
+			// insert a few line breaks if the cursor is already on an image
 			s.insert(selectionEnd, "\n\n");
 			selectionStart = selectionStart + 2;
 			selectionEnd = selectionEnd + 2;
+		} else if (column != 0) {
+			// insert one line break if the cursor is not at the first column
+			s.insert(selectionEnd, "\n");
+			selectionStart = selectionStart + 1;
+			selectionEnd = selectionEnd + 1;
 		}
-
+		
 		s.insert(selectionStart, " ");
 		s.setSpan(is, selectionStart, selectionEnd + 1,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2179,8 +2196,8 @@ public class EditPost extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		
 		if ((count - after == 1) || (s.length() == 0))
 			mIsBackspace = true;
 		else

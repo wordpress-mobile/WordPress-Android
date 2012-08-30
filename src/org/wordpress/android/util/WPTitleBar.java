@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.Read;
 import org.wordpress.android.Settings;
 import org.wordpress.android.ViewComments;
-import org.wordpress.android.ViewStats;
 import org.wordpress.android.ViewWebStats;
 import org.wordpress.android.WPCOMReaderPager;
 import org.wordpress.android.WordPress;
