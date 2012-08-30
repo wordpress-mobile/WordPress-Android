@@ -72,6 +72,7 @@ public class Read extends Activity {
 			}
 		}
 		
+		wv.clearCache(true);
 		httpuser = WordPress.currentBlog.getHttpuser();
 		httppassword = WordPress.currentBlog.getHttppassword();
 
@@ -98,6 +99,12 @@ public class Read extends Activity {
 			loadPostFromPermalink();
 
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {        
+	    wv.clearCache(true);
+	    super.onDestroy();
 	}
 
 	@Override
@@ -216,8 +223,6 @@ public class Read extends Activity {
 
 		@Override
 		public void onPageFinished(WebView view, String url) {
-			// setProgressBarIndeterminateVisibility(false);
-			view.clearCache(true);
 		}
 
 		@Override
