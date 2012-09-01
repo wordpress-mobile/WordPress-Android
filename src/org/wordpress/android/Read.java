@@ -72,7 +72,6 @@ public class Read extends Activity {
 			}
 		}
 		
-		wv.clearCache(true);
 		httpuser = WordPress.currentBlog.getHttpuser();
 		httppassword = WordPress.currentBlog.getHttppassword();
 
@@ -99,12 +98,6 @@ public class Read extends Activity {
 			loadPostFromPermalink();
 
 		}
-	}
-	
-	@Override
-	protected void onDestroy() {        
-	    wv.clearCache(true);
-	    super.onDestroy();
 	}
 
 	@Override
