@@ -325,7 +325,7 @@ public class AddAccount extends Activity implements OnClickListener {
 											int rowID = selectedItems.keyAt(i);
 											long blogID = -1;
 											blogID = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser,
-													httppassword, "Above Text", true, false, "500", 5, false, blogIds[rowID],
+													httppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
 													wpcoms[rowID], wpVersions[rowID]);
 											//Set the first blog in the list to the currentBlog
 											if (i == 0) {
@@ -354,7 +354,7 @@ public class AddAccount extends Activity implements OnClickListener {
 									for (int i = 0; i < blogCtr; i++) {
 										long blogID = -1;
 										blogID = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword,
-												"Above Text", true, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+												"Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 										//Set the first blog in the list to the currentBlog
 										if (i == 0) {
 											try {
@@ -401,7 +401,7 @@ public class AddAccount extends Activity implements OnClickListener {
 
 						} else {
 							long blogID = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
-									true, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+									false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
 							try {
 								if (blogID >= 0)
 									WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
