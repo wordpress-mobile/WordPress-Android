@@ -425,6 +425,8 @@ public class Dashboard extends Activity {
 						if (featuredImageHash != null) {
 							boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash.get("value").toString());
 							blog.setFeaturedImageCapable(featuredImageCapable);
+						} else {
+							blog.setFeaturedImageCapable(false);
 						}
 						blog.save(Dashboard.this, "");
 					} catch (Exception e) {
