@@ -182,6 +182,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		CookieSyncManager.getInstance().stopSync();
 		if (wv != null) {
 			wv.stopLoading();
+			wv.clearCache(true);
 		}
 	}
 	

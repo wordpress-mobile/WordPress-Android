@@ -58,6 +58,7 @@ public class WPCOMReaderWebPage extends WPCOMReaderBase {
 		super.onPause();
 		if (wv != null) {
 			wv.stopLoading();
+			wv.clearCache(true);
 		}
 	}
 
