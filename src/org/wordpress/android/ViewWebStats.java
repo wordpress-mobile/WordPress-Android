@@ -267,10 +267,10 @@ public class ViewWebStats extends Activity {
 			// Check for a valid auth cookie for this username.
 			CookieManager cookieManager = CookieManager.getInstance();
 			if(cookieManager.hasCookies()){
-				String rawCookieString = cookieManager.getCookie("wordpress.com").toLowerCase();
-				Log.d("cookeis", rawCookieString);
-				
-				if (rawCookieString.length() > 0) {
+				String rawCookieString = cookieManager.getCookie("wordpress.com");
+				if (rawCookieString != null && rawCookieString.length() > 0) {
+					rawCookieString = rawCookieString.toLowerCase();
+					Log.d("cookeis", rawCookieString);
 					String[] rawCookies = rawCookieString.split(";");
 				    String[] rawCookieNameAndValue = rawCookies[0].split("=");
 				    String val = rawCookieNameAndValue[1].trim();
