@@ -111,7 +111,7 @@ public class ApiHelper {
 					blog.save(ctx, null);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 
@@ -130,7 +130,7 @@ public class ApiHelper {
 			try {
 				result = (Object) client.call("wp.getPostFormats", params);
 			} catch (XMLRPCException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 
 			return result;

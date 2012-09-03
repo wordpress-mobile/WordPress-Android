@@ -1,7 +1,7 @@
 package org.wordpress.android;
 
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.BlackBerryUtils;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 
 import android.app.Activity;
@@ -281,7 +281,7 @@ public class Preferences extends Activity {
 			taglineET.setLayoutParams(taglineParams);
 			if (tagline != null) {
 				if (tagline.equals("")) {
-					if( BlackBerryUtils.getInstance().isBlackBerry() ) 
+					if( DeviceUtils.getInstance().isBlackBerry() ) 
 						taglineET.setText(getResources().getText(
 								R.string.posted_from_blackberry));
 					else

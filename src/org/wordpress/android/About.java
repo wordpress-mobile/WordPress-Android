@@ -1,7 +1,7 @@
 package org.wordpress.android;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.BlackBerryUtils;
+import org.wordpress.android.util.DeviceUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +23,7 @@ public class About extends Activity implements OnClickListener {
 		super.onCreate(icicle);
 		setContentView(R.layout.about);
 
-		if (BlackBerryUtils.getInstance().isBlackBerry()) {
+		if (DeviceUtils.getInstance().isBlackBerry()) {
 			TextView appTitle = (TextView) findViewById(R.id.about_first_line);
 			appTitle.setText(getString(R.string.app_title_blackberry));
 		}

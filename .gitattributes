@@ -391,6 +391,7 @@ src/org/wordpress/android/util/Base64.java -text
 src/org/wordpress/android/util/BlackBerryUtils.java -text
 src/org/wordpress/android/util/CommentBadgeTextView.java -text
 src/org/wordpress/android/util/DashboardLayout.java -text
+src/org/wordpress/android/util/DeviceUtils.java -text
 src/org/wordpress/android/util/DrawableManager.java -text
 src/org/wordpress/android/util/Entities.java -text
 src/org/wordpress/android/util/EscapeUtils.java -text
