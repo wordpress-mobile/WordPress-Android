@@ -165,6 +165,8 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
+		if (WordPress.currentBlog == null)
+			return false;
 		Vector<?> loadedPosts;
 		if (isPage) {
 			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
