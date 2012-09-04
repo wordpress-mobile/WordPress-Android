@@ -276,6 +276,8 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public void getLoadedItems(String items) {
+		if (items == null)
+			return;
 		if (!items.equals("[]")) {
 			final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
 			readerPageDetailFragment.readerItems = items;
