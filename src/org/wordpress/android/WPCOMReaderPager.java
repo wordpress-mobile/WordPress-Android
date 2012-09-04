@@ -213,18 +213,21 @@ public class WPCOMReaderPager extends FragmentActivity implements
 	@Override
 	public void onChangeTopic(String topicID, final String topicName) {
 
-		final WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
-		readerPageFragment.topicsID = topicID;
-		String methodCall = "Reader2.load_topic('" + topicID + "')";
-		readerPageFragment.wv.loadUrl("javascript:" + methodCall);
-		runOnUiThread(new Runnable() {
-			public void run() {
-				if (topicName != null) {
-					readerPageFragment.topicTV.setText(topicName);
+		try {
+			final WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
+			readerPageFragment.topicsID = topicID;
+			String methodCall = "Reader2.load_topic('" + topicID + "')";
+			readerPageFragment.wv.loadUrl("javascript:" + methodCall);
+			runOnUiThread(new Runnable() {
+				public void run() {
+					if (topicName != null) {
+						readerPageFragment.topicTV.setText(topicName);
+					}
+					readerPager.setCurrentItem(1, true);
 				}
-				readerPager.setCurrentItem(1, true);
-			}
-		});
+			});
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
