@@ -510,7 +510,7 @@ public class AddAccount extends Activity implements OnClickListener {
 							if (message.contains("404"))
 								message = getString(R.string.xmlrpc_error);
 							dialogBuilder.setMessage(message);
-							dialogBuilder.setPositiveButton(getString(R.id.ok), new DialogInterface.OnClickListener() {
+							dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int whichButton) {
 									dialog.dismiss();
 								}
