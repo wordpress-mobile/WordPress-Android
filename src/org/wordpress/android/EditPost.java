@@ -1975,6 +1975,7 @@ public class EditPost extends Activity implements OnClickListener,
 
 	public SpannableStringBuilder addMediaFromShareAction(String imgPath,
 			Uri curStream, SpannableStringBuilder ssb) {
+		initBlog();
 		Bitmap resizedBitmap = null;
 		String imageTitle = "";
 
