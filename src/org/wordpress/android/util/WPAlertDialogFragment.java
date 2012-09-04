@@ -52,7 +52,11 @@ public class WPAlertDialogFragment extends DialogFragment implements
 		return b.create();
 	} else {
 		String error = this.getArguments().getString("alert-error");
+		if (error == null)
+			error = getString(R.string.error_generic);
 		String message = this.getArguments().getString("alert-message");
+		if (message == null)
+			message = getString(R.string.error_generic);
 		if (error.contains("code 403")) {
     		//invalid credentials
             b.setIcon(android.R.drawable.ic_dialog_alert);
