@@ -1940,8 +1940,12 @@ public class EditPost extends Activity implements OnClickListener,
 			is.setVideo(true);
 		}
 
-		int line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-		int column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+		int line = 0, column = 0;
+		try {
+			line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+			column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+		} catch (Exception ex) {
+		}
 				
 		
 		WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd,
