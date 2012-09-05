@@ -227,7 +227,7 @@ public class AddAccount extends Activity implements OnClickListener {
 					final boolean[] wpcoms = new boolean[result.length];
 					final String[] wpVersions = new String[result.length];
 					HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
-
+					blogCtr = 0;
 					// loop this!
 					for (int ctr = 0; ctr < result.length; ctr++) {
 						contentHash = (HashMap<Object, Object>) result[ctr];
