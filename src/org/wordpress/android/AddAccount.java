@@ -27,6 +27,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
@@ -183,7 +184,7 @@ public class AddAccount extends Activity implements OnClickListener {
 		}
 
 		if (rsdUrl != null) {
-			xmlrpcURL = getXMLRPCUrl(rsdUrl);
+			xmlrpcURL = ApiHelper.getXMLRPCUrl(rsdUrl, false);
 			if (xmlrpcURL == null)
 				xmlrpcURL = rsdUrl.replace("?rsd", "");
 		} else {
@@ -538,10 +539,10 @@ public class AddAccount extends Activity implements OnClickListener {
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	private String getRSDMetaTagHrefRegEx(String urlString) {
-		InputStream in = getResponse(urlString);
+		InputStream in = ApiHelper.getResponse(urlString);
 		if (in != null) {
 			try {
-				String html = convertStreamToString(in);
+				String html = ApiHelper.convertStreamToString(in);
 				Matcher matcher = rsdLink.matcher(html);
 				if (matcher.find()) {
 					String href = matcher.group(1);
@@ -555,45 +556,9 @@ public class AddAccount extends Activity implements OnClickListener {
 		return null;
 	}
 
-	private String convertStreamToString(InputStream is) throws IOException {
-		/*
-		 * To convert the InputStream to String we use the Reader.read(char[]
-		 * buffer) method. We iterate until the Reader return -1 which means
-		 * there's no more data to read. We use the StringWriter class to
-		 * produce the string.
-		 */
-		int bufSize = 8 * 1024;
-		if (is != null) {
-			Writer writer = new StringWriter();
-
-			char[] buffer = new char[bufSize];
-			try {
-				InputStreamReader ireader = new InputStreamReader(is, "UTF-8");
-				Reader reader = new BufferedReader(ireader, bufSize);
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
-				reader.close();
-				ireader.close();
-				return writer.toString();
-			} catch (OutOfMemoryError ex) {
-				Log.e("wp_android", "Convert Stream: (out of memory)");
-				writer.close();
-				writer = null;
-				System.gc();
-				return "";
-			} finally {
-				is.close();
-			}
-		} else {
-			return "";
-		}
-	}
-
 	private String getRSDMetaTagHref(String urlString) {
 		// get the html code
-		InputStream in = getResponse(urlString);
+		InputStream in = ApiHelper.getResponse(urlString);
 
 		// parse the html and get the attribute for xmlrpc endpoint
 		if (in != null) {
@@ -638,57 +603,6 @@ public class AddAccount extends Activity implements OnClickListener {
 
 		}
 		return null; // never found the rsd tag
-	}
-
-	private String getXMLRPCUrl(String urlString) {
-		Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-		InputStream in = getResponse(urlString);
-		if (in != null) {
-			try {
-				String html = convertStreamToString(in);
-				Matcher matcher = xmlrpcLink.matcher(html);
-				if (matcher.find()) {
-					String href = matcher.group(1);
-					return href;
-				}
-			} catch (IOException e) {
-				return null;
-			}
-		}
-		return null; // never found the rsd tag
-	}
-
-	private InputStream getResponse(String urlString) {
-		InputStream in = null;
-		URL url = null;
-		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-
-		try {
-			HttpGet httpRequest = new HttpGet(url.toURI());
-			HttpClient httpclient = new DefaultHttpClient();
-
-			HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
-			HttpEntity entity = response.getEntity();
-
-			BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
-			in = bufHttpEntity.getContent();
-			in.close();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return in;
 	}
 
 	@Override

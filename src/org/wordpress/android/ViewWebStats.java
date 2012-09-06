@@ -33,6 +33,7 @@ import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ConnectionClient;
 
 import android.annotation.SuppressLint;
@@ -616,7 +617,14 @@ public class ViewWebStats extends Activity {
 			String wwwURL = "";						
 			Vector<String> apiInfo = null;
 
-			url = url.replace("xmlrpc.php", "");
+			//get the 'homePageLink' url to match with the stats api
+			String homePageLink = ApiHelper.getXMLRPCUrl(url + "?rsd", true);
+			if (homePageLink != null) {
+				url = homePageLink;
+			} else {
+				url = url.replace("xmlrpc.php", "");
+			}
+			
 			url = url.replace("https://", "http://");
 
 			if (url.indexOf("http://www.") >= 0) {
