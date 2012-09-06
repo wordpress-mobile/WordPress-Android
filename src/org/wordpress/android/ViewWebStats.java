@@ -617,6 +617,7 @@ public class ViewWebStats extends Activity {
 			Vector<String> apiInfo = null;
 
 			url = url.replace("xmlrpc.php", "");
+			url = url.replace("https://", "http://");
 
 			if (url.indexOf("http://www.") >= 0) {
 				wwwURL = url;
