@@ -26,7 +26,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 13;
+	private static final int DATABASE_VERSION = 14;
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -112,6 +112,9 @@ public class WordPressDB {
 	//add boolean to track if featured image should be included in the post content
 	private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
 	
+	// add home url to blog settings
+	private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
+	
 	private SQLiteDatabase db;
 
 	protected static final String PASSWORD_SECRET = "nottherealpasscode";
@@ -158,6 +161,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -188,6 +192,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION); // set to latest revision
 			} else if (db.getVersion() == 2) {
@@ -216,6 +221,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 3) {
@@ -241,6 +247,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 4) {
@@ -266,6 +273,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 5) {
@@ -290,6 +298,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 6) {
@@ -312,6 +321,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 7) {
@@ -326,6 +336,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 8) {
@@ -339,6 +350,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 9) {
@@ -352,6 +364,7 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				migratePasswords(ctx);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 10) {
@@ -420,15 +433,21 @@ public class WordPressDB {
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 11) {
 				db.execSQL(ADD_SCALED_IMAGE);
 				db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
 				db.execSQL(ADD_LOCAL_POST_CHANGES);
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
 				db.setVersion(DATABASE_VERSION);
 			} else if (db.getVersion() == 12) {
 				db.execSQL(ADD_FEATURED_IN_POST);
+				db.execSQL(ADD_HOME_URL);
+				db.setVersion(DATABASE_VERSION);
+			} else if (db.getVersion() == 13) {
+				db.execSQL(ADD_HOME_URL);
 				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
@@ -437,7 +456,7 @@ public class WordPressDB {
 
 	}
 
-	public long addAccount(String url, String blogName, String username,
+	public long addAccount(String url, String homeURL, String blogName, String username,
 			String password, String httpuser, String httppassword,
 			String imagePlacement, boolean centerThumbnail,
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
@@ -445,6 +464,7 @@ public class WordPressDB {
 
 		ContentValues values = new ContentValues();
 		values.put("url", url);
+		values.put("homeURL", homeURL);
 		values.put("blogName", blogName);
 		values.put("username", username);
 		values.put("password", encryptPassword(password));
@@ -547,7 +567,7 @@ public class WordPressDB {
 		return sb.toString();
 	}
 
-	public boolean saveSettings(String id, String url, String username,
+	public boolean saveSettings(String id, String url, String homeURL, String username,
 			String password, String httpuser, String httppassword,
 			String imagePlacement, boolean isFeaturedImageCapable,
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
@@ -557,6 +577,7 @@ public class WordPressDB {
 
 		ContentValues values = new ContentValues();
 		values.put("url", url);
+		values.put("homeURL", homeURL);
 		values.put("username", username);
 		values.put("password", encryptPassword(password));
 		values.put("httpuser", httpuser);
@@ -638,7 +659,7 @@ public class WordPressDB {
 				"maxImageWidth", "maxImageWidthId", "runService", "blogId",
 				"location", "dotcomFlag", "dotcom_username", "dotcom_password",
 				"api_key", "api_blogid", "wpVersion", "postFormats",
-				"lastCommentId","isScaledImage","scaledImgWidth" }, "id=" + id, null, null, null, null);
+				"lastCommentId","isScaledImage","scaledImgWidth", "homeURL" }, "id=" + id, null, null, null, null);
 
 		int numRows = c.getCount();
 		c.moveToFirst();
@@ -678,6 +699,7 @@ public class WordPressDB {
 				returnVector.add(c.getInt(21));
 				returnVector.add(c.getInt(22));
 				returnVector.add(c.getInt(23));
+				returnVector.add(c.getString(24));
 			} else {
 				returnVector = null;
 			}

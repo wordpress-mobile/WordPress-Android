@@ -224,6 +224,7 @@ public class AddAccount extends Activity implements OnClickListener {
 
 					final String[] blogNames = new String[result.length];
 					final String[] urls = new String[result.length];
+					final String[] homeURLs = new String[result.length];
 					final int[] blogIds = new int[result.length];
 					final boolean[] wpcoms = new boolean[result.length];
 					final String[] wpVersions = new String[result.length];
@@ -245,6 +246,7 @@ public class AddAccount extends Activity implements OnClickListener {
 								urls[blogCtr] = blogURL;
 							else
 								urls[blogCtr] = contentHash.get("xmlrpc").toString();
+							homeURLs[blogCtr] = contentHash.get("url").toString();
 							blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
 							String blogURL = urls[blogCtr];
 
@@ -325,7 +327,7 @@ public class AddAccount extends Activity implements OnClickListener {
 										if (selectedItems.get(selectedItems.keyAt(i)) == true) {
 											int rowID = selectedItems.keyAt(i);
 											long blogID = -1;
-											blogID = WordPress.wpDB.addAccount(urls[rowID], blogNames[rowID], username, password, httpuser,
+											blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, httpuser,
 													httppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
 													wpcoms[rowID], wpVersions[rowID]);
 											//Set the first blog in the list to the currentBlog
@@ -354,7 +356,7 @@ public class AddAccount extends Activity implements OnClickListener {
 									
 									for (int i = 0; i < blogCtr; i++) {
 										long blogID = -1;
-										blogID = WordPress.wpDB.addAccount(urls[i], blogNames[i], username, password, httpuser, httppassword,
+										blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, httpuser, httppassword,
 												"Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
 										//Set the first blog in the list to the currentBlog
 										if (i == 0) {
@@ -401,7 +403,7 @@ public class AddAccount extends Activity implements OnClickListener {
 							});
 
 						} else {
-							long blogID = WordPress.wpDB.addAccount(urls[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
+							long blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
 									false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
 							try {
 								if (blogID >= 0)

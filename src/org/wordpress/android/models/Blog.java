@@ -12,6 +12,7 @@ public class Blog {
 	
 	private int id;
 	private String url;
+	private String homeURL;
 	private String blogName;
 	private String username;
 	private String password;
@@ -74,6 +75,7 @@ public class Blog {
 				this.scaledImage = (Integer)blogVals.get(22)>0;
 			if(blogVals.get(23)!=null)
 				this.scaledImageWidth = (Integer)blogVals.get(23);
+			this.homeURL = blogVals.get(24).toString();
 		} else {
 			throw new Exception();
 		}
@@ -93,6 +95,14 @@ public class Blog {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public String getHomeURL() {
+		return homeURL;
+	}
+
+	public void setHomeURL(String homeURL) {
+		this.homeURL = homeURL;
 	}
 
 	public String getBlogName() {
@@ -257,7 +267,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth);
+		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth);
 	}
 
     public String getPostFormats() {

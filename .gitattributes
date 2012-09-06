@@ -388,7 +388,6 @@ src/org/wordpress/android/models/MediaFile.java -text
 src/org/wordpress/android/models/Post.java -text
 src/org/wordpress/android/util/AlertUtil.java -text
 src/org/wordpress/android/util/Base64.java -text
-src/org/wordpress/android/util/BlackBerryUtils.java -text
 src/org/wordpress/android/util/CommentBadgeTextView.java -text
 src/org/wordpress/android/util/DashboardLayout.java -text
 src/org/wordpress/android/util/DeviceUtils.java -text

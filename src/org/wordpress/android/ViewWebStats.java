@@ -223,7 +223,6 @@ public class ViewWebStats extends Activity {
 			this.loadStats();
 		}
 	}
-
 	
 	private void checkAPIBlogInfo() {
 		String sUsername, sPassword;
@@ -241,7 +240,7 @@ public class ViewWebStats extends Activity {
 		titleBar.startRotatingRefreshIcon();
 		
 		// Start an async task to retrieve the blog's data from the api.
-		currentTask = new StatsAPIBlogInfoAsyncTask().execute(sUsername, sPassword, blog.getUrl(), String.valueOf(blog.getBlogId()));
+		currentTask = new StatsAPIBlogInfoAsyncTask().execute(sUsername, sPassword);
 	}
 	
 	private void clearCookies() {
@@ -612,17 +611,25 @@ public class ViewWebStats extends Activity {
 
 			String username = args[0];
 			String password = args[1];
-			String url = args[2];
-			String storedBlogID = args[3];
+			String url = WordPress.currentBlog.getUrl();
+			String homeURL = WordPress.currentBlog.getHomeURL();
+			String storedBlogID = String.valueOf(WordPress.currentBlog.getBlogId());
 			String wwwURL = "";						
 			Vector<String> apiInfo = null;
 
-			//get the 'homePageLink' url to match with the stats api
-			String homePageLink = ApiHelper.getXMLRPCUrl(url + "?rsd", true);
-			if (homePageLink != null) {
-				url = homePageLink;
+			if (homeURL.equals("")) {
+				//get the 'homePageLink' url from RSD to match with the stats api
+				String homePageLink = ApiHelper.getXMLRPCUrl(url + "?rsd", true);
+				if (homePageLink != null) {
+					url = homePageLink;
+					//home url was added in 2.2.2, it may need to be set if the user upgraded
+					WordPress.currentBlog.setHomeURL(url);
+					WordPress.currentBlog.save(ViewWebStats.this, "");
+				} else {
+					url = url.replace("xmlrpc.php", "");
+				}
 			} else {
-				url = url.replace("xmlrpc.php", "");
+				url = homeURL;
 			}
 			
 			url = url.replace("https://", "http://");
