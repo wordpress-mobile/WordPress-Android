@@ -165,17 +165,19 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public boolean loadPosts(boolean loadMore) { // loads posts from the db
-		if (WordPress.currentBlog == null)
-			return false;
 		Vector<?> loadedPosts;
-		if (isPage) {
-			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(),
-					true);
-		} else {
-			loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
-					.getApplicationContext(), WordPress.currentBlog.getId(),
-					false);
+		try {
+			if (isPage) {
+				loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
+						.getApplicationContext(), WordPress.currentBlog.getId(),
+						true);
+			} else {
+				loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
+						.getApplicationContext(), WordPress.currentBlog.getId(),
+						false);
+			}
+		} catch (Exception e1) {
+			return false;
 		}
 
 		if (loadedPosts != null) {
