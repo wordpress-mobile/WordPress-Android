@@ -178,22 +178,6 @@ abstract public class GraphView extends LinearLayout {
 	}
 
 	/**
-	 * graph series style: color and thickness
-	 */
-	static public class GraphViewStyle {
-		public int color = 0xff0077cc;
-		public int thickness = 3;
-		public GraphViewStyle() {
-			super();
-		}
-		public GraphViewStyle(int color, int thickness) {
-			super();
-			this.color = color;
-			this.thickness = thickness;
-		}
-	}
-
-	/**
 	 * one data set for a graph series
 	 */
 	static public class GraphViewData {
@@ -203,29 +187,6 @@ abstract public class GraphView extends LinearLayout {
 			super();
 			this.valueX = valueX;
 			this.valueY = valueY;
-		}
-	}
-
-	/**
-	 * a graph series
-	 */
-	static public class GraphViewSeries {
-		final String description;
-		final GraphViewStyle style;
-		final GraphViewData[] values;
-		public GraphViewSeries(GraphViewData[] values) {
-			description = null;
-			style = new GraphViewStyle();
-			this.values = values;
-		}
-		public GraphViewSeries(String description, GraphViewStyle style, GraphViewData[] values) {
-			super();
-			this.description = description;
-			if (style == null) {
-				style = new GraphViewStyle();
-			}
-			this.style = style;
-			this.values = values;
 		}
 	}
 
@@ -338,24 +299,10 @@ abstract public class GraphView extends LinearLayout {
 	}
 
 	public void addSeries(GraphViewSeries series) {
+		series.addGraphView(this);
 		graphSeries.add(series);
 	}
 
-	public void removeSeries(int index)
-	{
-		if (index < 0 || index >= graphSeries.size())
-		{
-			throw new IndexOutOfBoundsException("No series at index " + index);
-		}
-		
-		graphSeries.remove(index);
-	}
-	
-	public void removeSeries(GraphViewSeries series)
-	{
-		graphSeries.remove(series);
-	}
-	
 	protected void drawLegend(Canvas canvas, float height, float width) {
 		int shapeSize = 15;
 
@@ -554,6 +501,36 @@ abstract public class GraphView extends LinearLayout {
 		return showLegend;
 	}
 
+	public void redrawAll() {
+		verlabels = null;
+		horlabels = null;
+		numberformatter = null;
+		invalidate();
+		viewVerLabels.invalidate();
+	}
+
+	public void removeSeries(GraphViewSeries series)
+	{
+		graphSeries.remove(series);
+	}
+
+	public void removeSeries(int index)
+	{
+		if (index < 0 || index >= graphSeries.size())
+		{
+			throw new IndexOutOfBoundsException("No series at index " + index);
+		}
+
+		graphSeries.remove(index);
+	}
+
+	public void scrollToEnd() {
+		if (!scrollable) throw new IllegalStateException("This GraphView is not scrollable.");
+		double max = getMaxX(true);
+		viewportStart = max-viewportSize;
+		redrawAll();
+	}
+
 	/**
 	 * set's static horizontal labels (from left to right)
 	 * @param horlabels if null, labels were generated automatically
@@ -604,7 +581,7 @@ abstract public class GraphView extends LinearLayout {
 					double center = viewportStart + viewportSize / 2;
 					viewportSize /= detector.getScaleFactor();
 					viewportStart = center - viewportSize / 2;
-					
+
 					// viewportStart must not be < minX
 					double minX = getMinX(true);
 					if (viewportStart < minX) {
@@ -624,12 +601,7 @@ abstract public class GraphView extends LinearLayout {
 							viewportSize = maxX - viewportStart;
 						}
 					}
-
-					verlabels = null;
-					horlabels = null;
-					numberformatter = null;
-					invalidate();
-					viewVerLabels.invalidate();
+					redrawAll();
 					return true;
 				}
 			});

@@ -36,6 +36,7 @@ Since Android 2.3! With two-fingers touch scale gesture (Multi-touch), the viewp
 * Background (line graph)
 Optionally draws a light background under the diagram stroke.
 * Manual Y axis limits
+* Realtime Graph (Live)
 
 <h2>How to use</h2>
 <a href="http://www.jjoe64.com/p/graphview-library.html">View GraphView page http://www.jjoe64.com/p/graphview-library.html</a>
