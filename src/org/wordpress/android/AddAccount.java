@@ -190,24 +190,27 @@ public class AddAccount extends Activity implements OnClickListener {
 		} else {
 			isCustomURL = false;
 			// try the user entered path
-			client = new XMLRPCClient(blogURL, httpuser, httppassword);
 			try {
-				client.call("system.listMethods");
-				xmlrpcURL = blogURL;
-				isCustomURL = true;
-			} catch (XMLRPCException e) {
-				// guess the xmlrpc path
-				String guessURL = blogURL;
-				if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
-					guessURL = guessURL.substring(0, guessURL.length() - 1);
-				}
-				guessURL += "/xmlrpc.php";
-				client = new XMLRPCClient(guessURL, httpuser, httppassword);
+				client = new XMLRPCClient(blogURL, httpuser, httppassword);
 				try {
 					client.call("system.listMethods");
-					xmlrpcURL = guessURL;
-				} catch (XMLRPCException ex) {
+					xmlrpcURL = blogURL;
+					isCustomURL = true;
+				} catch (XMLRPCException e) {
+					// guess the xmlrpc path
+					String guessURL = blogURL;
+					if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
+						guessURL = guessURL.substring(0, guessURL.length() - 1);
+					}
+					guessURL += "/xmlrpc.php";
+					client = new XMLRPCClient(guessURL, httpuser, httppassword);
+					try {
+						client.call("system.listMethods");
+						xmlrpcURL = guessURL;
+					} catch (XMLRPCException ex) {
+					}
 				}
+			} catch (Exception e) {
 			}
 		}
 
