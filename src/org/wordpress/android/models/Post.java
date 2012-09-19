@@ -268,7 +268,10 @@ public class Post {
 	}
 
 	public String getMt_keywords() {
-		return mt_keywords;
+		if (mt_keywords == null)
+			return "";
+		else
+			return mt_keywords;
 	}
 
 	public void setMt_keywords(String mtKeywords) {
@@ -276,7 +279,10 @@ public class Post {
 	}
 
 	public String getMt_text_more() {
-		return mt_text_more;
+		if (mt_text_more == null)
+			return "";
+		else
+			return mt_text_more;
 	}
 
 	public void setMt_text_more(String mtTextMore) {
