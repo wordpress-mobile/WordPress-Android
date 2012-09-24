@@ -13,7 +13,6 @@ libs/android-support-v4.jar -text
 libs/httpmime-4.1.2.jar -text
 libs/tagsoup-1.2.1.jar -text
 /lint.xml -text
-/local.properties -text
 /project.properties -text
 res/anim/cycle_5.xml -text
 res/anim/dashboard_hide.xml -text
