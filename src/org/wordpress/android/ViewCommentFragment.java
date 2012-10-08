@@ -290,6 +290,10 @@ public class ViewCommentFragment extends Fragment {
 
 		tvDate.setText(comment.dateCreatedFormatted);
 		
+		TextView tvPost = (TextView) getActivity().findViewById(
+				R.id.commentDetailPost);
+
+		tvPost.setText(comment.postTitle);
 		processCommentStatus();
 
 	}
@@ -325,6 +329,10 @@ public class ViewCommentFragment extends Fragment {
 				R.id.commentDetailDate);
 		tvDate.setText("");
 		
+		TextView tvPost = (TextView) getActivity().findViewById(
+				R.id.commentDetailPost);
+		tvDate.setText("");
+
 		ImageView ivGravatar = (ImageView) getActivity()
 				.findViewById(R.id.gravatar);
 		ivGravatar.setImageDrawable(null);
