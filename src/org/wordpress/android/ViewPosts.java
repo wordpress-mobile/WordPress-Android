@@ -122,8 +122,7 @@ public class ViewPosts extends ListFragment {
 		switcher = new ViewSwitcher(getActivity().getApplicationContext());
 		Button footer = (Button) View.inflate(getActivity()
 				.getApplicationContext(), R.layout.list_footer_btn, null);
-		footer.setText(getResources().getText(R.string.load_more) + " "
-				+ getResources().getText(R.string.tab_posts));
+		footer.setText(getResources().getText(R.string.load_more));
 
 		footer.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
@@ -328,11 +327,9 @@ public class ViewPosts extends ListFragment {
 		if (loadedPosts != null || drafts == true) {
 			ListView listView = getListView();
 			listView.removeFooterView(switcher);
-			if (!isPage) {
-				if (loadedPosts != null) {
-					if (loadedPosts.size() >= 20) {
-						listView.addFooterView(switcher);
-					}
+			if (loadedPosts != null) {
+				if (loadedPosts.size() >= 20) {
+					listView.addFooterView(switcher);
 				}
 			}
 
