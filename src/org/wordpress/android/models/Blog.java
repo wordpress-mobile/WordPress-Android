@@ -2,6 +2,7 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 
 import android.content.Context;
@@ -36,6 +37,7 @@ public class Blog {
 	private String httpuser;
 	private String httppassword;
 	private String postFormats;
+	private JSONObject blogOptions;
 	
 	public Blog(int blog_id, Context ctx) throws Exception{
 		//instantiate a new blog
@@ -76,6 +78,10 @@ public class Blog {
 			if(blogVals.get(23)!=null)
 				this.scaledImageWidth = (Integer)blogVals.get(23);
 			this.homeURL = blogVals.get(24).toString();
+			if(blogVals.get(25) !=null && blogVals.get(25).toString().length() > 0)
+				this.blogOptions = new JSONObject( blogVals.get(25).toString() );
+			else
+				this.blogOptions = new JSONObject();
 		} else {
 			throw new Exception();
 		}
@@ -267,7 +273,7 @@ public class Blog {
 
 	public void save(Context ctx, String originalUsername) {
 		//save blog to db
-		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth);
+		WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions );
 	}
 
     public String getPostFormats() {
@@ -296,5 +302,13 @@ public class Blog {
 
 	public void setScaledImageWidth(int scaledImageWidth) {
 		this.scaledImageWidth = scaledImageWidth;
+	}
+
+	public JSONObject getBlogOptions() {
+		return blogOptions;
+	}
+
+	public void setBlogOptions(JSONObject blogOptions) {
+		this.blogOptions = blogOptions;
 	}
 }

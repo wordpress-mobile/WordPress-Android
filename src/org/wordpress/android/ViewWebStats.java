@@ -11,6 +11,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,6 +28,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
@@ -722,16 +724,34 @@ public class ViewWebStats extends Activity {
 								curBlogURL = pullParser.getText();
 								foundURL = false;
 
-								// make sure we're matching with a '/' at the end of
-								// the string, the api returns both with and w/o
-								if (!curBlogURL.endsWith("/"))
-									curBlogURL += "/";
+								HashMap<?, ?> jetpackClientIDOption = null;
+								try {
+									jetpackClientIDOption = WordPress.currentBlog.getBlogOptions() != null ? (HashMap<?, ?>) WordPress.currentBlog.getBlogOptions().get("jetpack_client_id") : null;
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if( jetpackClientIDOption != null ) {
+									//Try to match the ID first. The WordPress.com ID of the Jetpack blog was introduced in options in Jetpack 1.8.3 or higher
+									String jetpackClientIDString = jetpackClientIDOption.get("value").toString();
+									if ( jetpackClientIDString.equals(curBlogID) && !curBlogID.equals("1") ) {
+										// yay, found a match
+										apiInfo = new Vector<String>();
+										apiInfo.add(apiKey);
+										apiInfo.add(curBlogID);
+									}
+								} else {
+									// make sure we're matching with a '/' at the end of
+									// the string, the api returns both with and w/o
+									if (!curBlogURL.endsWith("/"))
+										curBlogURL += "/";
 
-								if (((curBlogURL.equals(url) || (curBlogURL.equals(wwwURL))) || storedBlogID.equals(curBlogID)) && !curBlogID.equals("1")) {
-									// yay, found a match
-									apiInfo = new Vector<String>();
-									apiInfo.add(apiKey);
-									apiInfo.add(curBlogID);
+									if (((curBlogURL.equals(url) || (curBlogURL.equals(wwwURL))) || storedBlogID.equals(curBlogID)) && !curBlogID.equals("1")) {
+										// yay, found a match
+										apiInfo = new Vector<String>();
+										apiInfo.add(apiKey);
+										apiInfo.add(curBlogID);
+									}
 								}
 							}
 						}

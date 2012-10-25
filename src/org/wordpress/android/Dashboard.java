@@ -13,6 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.WPTitleBar;
@@ -402,6 +403,7 @@ public class Dashboard extends Activity {
 				HashMap<String, String> hPost = new HashMap<String, String>();
 				hPost.put("software_version", "software_version");
 				hPost.put("post_thumbnail", "post_thumbnail");
+				hPost.put("jetpack_client_id", "jetpack_client_id");
 				Object[] vParams = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost };
 				Object versionResult = new Object();
 				try {
@@ -412,6 +414,7 @@ public class Dashboard extends Activity {
 				if (versionResult != null) {
 					try {
 						HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
+						blog.setBlogOptions(new JSONObject(contentHash));
 						// Software version
 						if (!blog.isDotcomFlag()) {
 							HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
