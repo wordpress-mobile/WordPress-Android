@@ -27,7 +27,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="@string/caption"
-      android:singleLine="true" />
+      android:singleLine="true"
+      android:inputType="textCapSentences" />
     <TextView
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"

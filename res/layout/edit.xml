@@ -72,7 +72,6 @@
                         android:layout_height="fill_parent"
                         android:layout_margin="4dp"
                         android:autoText="true"
-                        android:imeOptions="flagNoExtractUi"
                         android:background="@android:drawable/editbox_background"
                         android:capitalize="sentences"
                         android:gravity="top"
