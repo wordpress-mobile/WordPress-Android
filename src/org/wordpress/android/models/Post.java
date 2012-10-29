@@ -1183,11 +1183,11 @@ public class Post {
 									if (i == 0
 											&& (post.blog.isFullSizeImage() == false && !post.blog
 													.isScaledImage())) {
-										content = content + "<img title=\""
+										content = content + "<a href=\"" + finalThumbnailUrl + "\"><img title=\""
 												+ mf.getTitle() + "\" "
 												+ alignmentCSS
 												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl + "\" />";
+												+ finalThumbnailUrl + "\" /></a>";
 									}
 								}
 
