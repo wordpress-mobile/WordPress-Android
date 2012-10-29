@@ -13,6 +13,8 @@ import android.support.v4.app.DialogFragment;
 public class WPAlertDialogFragment extends DialogFragment implements
     DialogInterface.OnClickListener {
 	private static boolean isXMLRPC = false;
+	private static boolean isLoadMore = false;
+	
   public static WPAlertDialogFragment newInstance(String message) {
 	  WPAlertDialogFragment adf = new WPAlertDialogFragment();
     Bundle bundle = new Bundle();
@@ -22,7 +24,7 @@ public class WPAlertDialogFragment extends DialogFragment implements
     return adf;
   }
   
-  //XMLRPC Error
+  // XMLRPC Error
   public static WPAlertDialogFragment newInstance(String message, String error) {
 	  WPAlertDialogFragment adf = new WPAlertDialogFragment();
     Bundle bundle = new Bundle();
@@ -32,7 +34,18 @@ public class WPAlertDialogFragment extends DialogFragment implements
     isXMLRPC = true;
     return adf;
   }
-
+  
+  // Load More Posts Override Warning
+  public static WPAlertDialogFragment newInstance(String message, String error, boolean loadMore) {
+	  WPAlertDialogFragment adf = new WPAlertDialogFragment();
+	  Bundle bundle = new Bundle();
+	  bundle.putString("alert-message", message);
+	  bundle.putString("alert-error", error);
+	  adf.setArguments(bundle);
+	  isLoadMore = true;
+	  return adf;
+  }
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,13 +57,7 @@ public class WPAlertDialogFragment extends DialogFragment implements
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
 	  AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-	if (!isXMLRPC) {
-		b.setTitle(R.string.error);
-		b.setPositiveButton("OK", this);
-		//b.setNegativeButton("Cancel", this);
-		b.setMessage(this.getArguments().getString("alert-message"));
-		return b.create();
-	} else {
+	if (isXMLRPC) {
 		String error = this.getArguments().getString("alert-error");
 		if (error == null)
 			error = getString(R.string.error_generic);
@@ -91,20 +98,48 @@ public class WPAlertDialogFragment extends DialogFragment implements
             b.setCancelable(true);
             return b.create();
     	}
+	} else if (isLoadMore) {
+		String error = this.getArguments().getString("alert-error");
+		String message = this.getArguments().getString("alert-message");
+    		//invalid credentials
+            b.setIcon(android.R.drawable.ic_dialog_alert);
+            b.setTitle(error);
+            b.setMessage(message);
+            b.setCancelable(true);
+            b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					OnDialogConfirmListener act = (OnDialogConfirmListener) getActivity();
+				    act.onDialogConfirm();
+				}
+			});
+			b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+						
+				}
+			});
+            return b.create();
+	}
+	else {
+		b.setTitle(R.string.error);
+		b.setPositiveButton("OK", this);
+		//b.setNegativeButton("Cancel", this);
+		b.setMessage(this.getArguments().getString("alert-message"));
+		return b.create();
 	}
   }
-
-  public void onClick(DialogInterface dialog, int which) {
-    /*OnDialogDoneListener act = (OnDialogDoneListener) getActivity();
-    boolean cancelled = false;
-    if (which == AlertDialog.BUTTON_NEGATIVE) {
-      cancelled = true;
-    }
-    act.onDialogDone(getTag(), cancelled, "Alert dismissed");*/
-  }
   
-  public interface OnDialogDoneListener {
-	  public void onDialogDone(String tag, boolean cancelled, CharSequence message);
+  public interface OnDialogConfirmListener {
+	  public void onDialogConfirm();
+}
+
+@Override
+public void onClick(DialogInterface dialog, int which) {
+	// TODO Auto-generated method stub
+	
 }
 }
 
