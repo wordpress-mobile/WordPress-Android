@@ -339,4 +339,12 @@ public class ViewCommentFragment extends Fragment {
 		
 		
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
+	}
 }

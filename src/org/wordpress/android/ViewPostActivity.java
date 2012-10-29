@@ -16,4 +16,12 @@ public class ViewPostActivity extends FragmentActivity {
             		android.R.id.content, postFragment).commit();
         }
     }
+    
+    @Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
+	}
 }

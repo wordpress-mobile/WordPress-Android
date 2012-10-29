@@ -11,6 +11,7 @@ import org.wordpress.android.ViewPosts.OnPostActionListener;
 import org.wordpress.android.ViewPosts.OnPostSelectedListener;
 import org.wordpress.android.ViewPosts.OnRefreshListener;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPTitleBar;
 import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
@@ -36,7 +37,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class Posts extends FragmentActivity implements OnPostSelectedListener,
-		OnRefreshListener, OnPostActionListener, OnDetailPostActionListener {
+		OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
 
 	private WPTitleBar titleBar;
 	private ViewPosts postList;
@@ -86,7 +87,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		titleBar.refreshButton
 				.setOnClickListener(new ImageButton.OnClickListener() {
 					public void onClick(View v) {
-						checkForLocalChanges();
+						checkForLocalChanges(true);
 					}
 				});
 
@@ -109,9 +110,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 				if (isFinishing())
 					return;
 				
-				popPostDetail();
-				attemptToSelectPost();
-				postList.refreshPosts(false);
+				checkForLocalChanges(false);
 			}
 	     
 	     });
@@ -119,9 +118,11 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		attemptToSelectPost();
 	}
 
-	protected void checkForLocalChanges() {
+	protected void checkForLocalChanges(boolean shouldPrompt) {
 		boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
 		if (hasLocalChanges) {
+			if (!shouldPrompt)
+				return;
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 					Posts.this);
 			dialogBuilder.setTitle(getResources().getText(
@@ -170,7 +171,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		attemptToSelectPost();
 		postList.loadPosts(false);
 		if (WordPress.postsShouldRefresh) {
-			checkForLocalChanges();
+			checkForLocalChanges(false);
 			WordPress.postsShouldRefresh = false;
 		}
 		
@@ -362,7 +363,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 								(isPage) ? R.string.page_deleted
 										: R.string.post_deleted),
 						Toast.LENGTH_SHORT).show();
-				postList.refreshPosts(false);
+				checkForLocalChanges(false);
 			} else {
 				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 						Posts.this);
@@ -658,5 +659,12 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		titleBar.switchDashboardLayout(newConfig.orientation);
 
+	}
+
+	@Override
+	public void onDialogConfirm() {
+		postList.switcher.showNext();
+		postList.numRecords += 30;
+		postList.refreshPosts(true);
 	}
 }

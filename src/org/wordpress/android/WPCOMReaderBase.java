@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebSettings;
@@ -143,5 +144,12 @@ public abstract class WPCOMReaderBase extends Fragment {
 		public void getLastSelectedItem(String lastSelectedItem);
 	}
 	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
+	}
 	
 }

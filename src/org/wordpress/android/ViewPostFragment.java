@@ -181,5 +181,13 @@ public class ViewPostFragment extends Fragment {
 		webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
 				"text/html", "utf-8", null);
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
+	}
 
 }

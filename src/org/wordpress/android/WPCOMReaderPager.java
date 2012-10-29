@@ -74,7 +74,9 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
 		super.onSaveInstanceState(outState);
 		getSupportFragmentManager().putFragment(outState,
 				WPCOMReaderImpl.class.getName(), readerPage);
@@ -237,8 +239,13 @@ public class WPCOMReaderPager extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (readerPager.getCurrentItem() > 1)
+		if (readerPager.getCurrentItem() > 1) {
+			if (readerPager.getCurrentItem() == 2) {
+				WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+				readerPageDetailFragment.wv.loadUrl("javascript:Reader2.clear_article_details();");
+			}
 			readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
+		}
 		else
 			super.onBackPressed();
 

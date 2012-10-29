@@ -17,4 +17,12 @@ public class ViewCommentActivity extends FragmentActivity {
         	//commentFragment.loadComment(WordPress.currentComment);
         }
     }
+    
+    @Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
+	}
 }

@@ -122,15 +122,27 @@ public class ViewPosts extends ListFragment {
 		switcher = new ViewSwitcher(getActivity().getApplicationContext());
 		Button footer = (Button) View.inflate(getActivity()
 				.getApplicationContext(), R.layout.list_footer_btn, null);
-		footer.setText(getResources().getText(R.string.load_more));
+		footer.setText(getResources().getText(R.string.load_more) + " "
+				+ getResources().getText((isPage)? R.string.tab_pages : R.string.tab_posts));
 
 		footer.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				// first view is showing, show the second progress view
-				switcher.showNext();
-				// get 30 more posts
-				numRecords += 30;
-				refreshPosts(true);
+
+				if (!WordPress.wpDB.findLocalChanges()) {
+					// first view is showing, show the second progress view
+					switcher.showNext();
+					// get 20 more posts
+					numRecords += 20;
+					refreshPosts(true);
+				} else {
+					if (!getActivity().isFinishing()) {
+						FragmentTransaction ft = getFragmentManager()
+								.beginTransaction();
+						WPAlertDialogFragment alert = WPAlertDialogFragment
+								.newInstance(getString(R.string.remote_changes), getString(R.string.local_changes), true);
+						alert.show(ft, "alert");
+					}
+				}
 			}
 		});
 
@@ -146,6 +158,7 @@ public class ViewPosts extends ListFragment {
 
 		if (!loadMore) {
 			onRefreshListener.onRefresh(true);
+			numRecords = 20;
 		}
 		Vector<Object> apiArgs = new Vector<Object>();
 		apiArgs.add(WordPress.currentBlog);
@@ -180,6 +193,7 @@ public class ViewPosts extends ListFragment {
 		}
 
 		if (loadedPosts != null) {
+			numRecords = loadedPosts.size();
 			titles = new String[loadedPosts.size()];
 			postIDs = new String[loadedPosts.size()];
 			dateCreated = new String[loadedPosts.size()];
@@ -672,14 +686,8 @@ public class ViewPosts extends ListFragment {
 				pv.setTag(R.id.row_post_id, postIDs[position]);
 				pv.setId(Integer.valueOf(postIDs[position]));
 
-				if (wrapper.getDate().getHeight() == 0) {
-					wrapper.getDate().setHeight(
-							(int) wrapper.getTitle().getTextSize()
-									+ wrapper.getDate().getPaddingBottom());
-					wrapper.getStatus().setHeight(
-							(int) wrapper.getTitle().getTextSize()
-									+ wrapper.getStatus().getPaddingBottom());
-				}
+				wrapper.getDate().setHeight((int) wrapper.getTitle().getTextSize() + wrapper.getDate().getPaddingBottom());
+				wrapper.getStatus().setHeight((int) wrapper.getTitle().getTextSize() + wrapper.getStatus().getPaddingBottom());
 			}
 			String titleText = titles[position];
 			if (titleText == "")
@@ -805,7 +813,7 @@ public class ViewPosts extends ListFragment {
 			Vector<?> arguments = args[0];
 			WordPress.currentBlog = (Blog) arguments.get(0);
 			isPage = (Boolean) arguments.get(1);
-			int numRecords = (Integer) arguments.get(2);
+			int recordCount = (Integer) arguments.get(2);
 			loadMore = (Boolean) arguments.get(3);
 			client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
 					WordPress.currentBlog.getHttpuser(),
@@ -814,7 +822,7 @@ public class ViewPosts extends ListFragment {
 			Object[] result = null;
 			Object[] params = { WordPress.currentBlog.getBlogId(),
 					WordPress.currentBlog.getUsername(),
-					WordPress.currentBlog.getPassword(), numRecords };
+					WordPress.currentBlog.getPassword(), recordCount };
 			try {
 				result = (Object[]) client.call((isPage) ? "wp.getPages"
 						: "metaWeblog.getRecentPosts", params);
@@ -838,7 +846,6 @@ public class ViewPosts extends ListFragment {
 
 						WordPress.wpDB.savePosts(dbVector,
 								WordPress.currentBlog.getId(), isPage);
-						numRecords += 20;
 					} else {
 						if (pla != null) {
 							if (postIDs.length == 2) {

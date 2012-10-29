@@ -1111,4 +1111,12 @@ public class ViewComments extends ListFragment {
 	public interface OnContextCommentStatusChangeListener {
 		public void onCommentStatusChanged(String status);
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
+	}
 }
