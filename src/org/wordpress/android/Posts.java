@@ -220,6 +220,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 		titleBar.refreshBlog();
 		attemptToSelectPost();
+		postList.getListView().removeFooterView(postList.switcher);
+		postList.createSwitcher();
 		postList.loadPosts(false);
 
 	}

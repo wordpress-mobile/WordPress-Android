@@ -779,13 +779,13 @@ public class ViewPosts extends ListFragment {
 	}
 
 	public class getRecentPostsTask extends
-			AsyncTask<Vector<?>, Void, Void> {
+			AsyncTask<Vector<?>, Void, Boolean> {
 
 		Context ctx;
 		boolean isPage, loadMore;
 
-		protected void onPostExecute(Void result) {
-			if (isCancelled()) {
+		protected void onPostExecute(Boolean result) {
+			if (isCancelled() || !result) {
 				onRefreshListener.onRefresh(false);
 				return;
 			}
@@ -808,8 +808,8 @@ public class ViewPosts extends ListFragment {
 		}
 
 		@Override
-		protected Void doInBackground(Vector<?>... args) {
-
+		protected Boolean doInBackground(Vector<?>... args) {
+			boolean success = false;
 			Vector<?> arguments = args[0];
 			WordPress.currentBlog = (Blog) arguments.get(0);
 			isPage = (Boolean) arguments.get(1);
@@ -828,6 +828,7 @@ public class ViewPosts extends ListFragment {
 						: "metaWeblog.getRecentPosts", params);
 				if (result != null) {
 					if (result.length > 0) {
+						success = true;
 						HashMap<?, ?> contentHash = new HashMap<Object, Object>();
 						Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
 
@@ -868,7 +869,7 @@ public class ViewPosts extends ListFragment {
 				errorMsg = e.getLocalizedMessage();
 			}
 
-			return null;
+			return success;
 		}
 	}
 
