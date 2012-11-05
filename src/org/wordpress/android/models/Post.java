@@ -984,7 +984,7 @@ public class Post {
 
 						curImagePath = mf.getFileName();
 
-						if (i == 0 || ((post.blog.isFullSizeImage() || post.blog.isScaledImage()))) {
+						if (i == 0 || (((post.blog.isFullSizeImage() && !post.blog.getMaxImageWidth().equals("Original Size")) || post.blog.isScaledImage()))) {
 
 							Uri imageUri = Uri.parse(curImagePath);
 							File jpeg = null;
