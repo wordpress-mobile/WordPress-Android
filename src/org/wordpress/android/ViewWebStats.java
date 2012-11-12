@@ -213,9 +213,7 @@ public class ViewWebStats extends Activity {
 		titleBar.startRotatingRefreshIcon();
 		Blog blog = WordPress.currentBlog;
 		
-		int blogid = blog.getBlogId();
-		
-		if (blogid == 1 && blog.getApi_blogid() == null) {
+		if (!blog.isDotcomFlag() && blog.getApi_blogid() == null) {
 			// first run or was deleted.
 			this.checkAPIBlogInfo();
 		} else if(!blog.isDotcomFlag() && blog.getDotcom_username() == null) {
