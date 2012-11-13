@@ -252,12 +252,16 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						"wp-login.php");
 
 			String readerURL = Constants.readerURL_v3;
-
-			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-				if (readerURL.contains("?"))
-					readerURL += "&per_page=20";
-				else
-					readerURL += "?per_page=20";
+			
+			try {
+				if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
+					if (readerURL.contains("?"))
+						readerURL += "&per_page=20";
+					else
+						readerURL += "?per_page=20";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			try {
