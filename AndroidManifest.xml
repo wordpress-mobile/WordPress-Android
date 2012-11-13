@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wordpress.android"
     android:installLocation="auto"
-    android:versionCode="62"
-    android:versionName="2.2.4" >
+    android:versionCode="63"
+    android:versionName="2.2.5" >
 
     <uses-sdk
         android:minSdkVersion="7"
