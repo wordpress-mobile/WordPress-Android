@@ -1,28 +1,13 @@
 package org.wordpress.android;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
@@ -540,7 +525,7 @@ public class AddAccount extends Activity implements OnClickListener {
 	}
 
 	private static final Pattern rsdLink = Pattern.compile(
-			"<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"\\s*?/>",
+			"<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	private String getRSDMetaTagHrefRegEx(String urlString) {
