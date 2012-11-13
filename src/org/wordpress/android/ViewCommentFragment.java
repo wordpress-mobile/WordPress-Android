@@ -331,7 +331,7 @@ public class ViewCommentFragment extends Fragment {
 		
 		TextView tvPost = (TextView) getActivity().findViewById(
 				R.id.commentDetailPost);
-		tvDate.setText("");
+		tvPost.setText("");
 
 		ImageView ivGravatar = (ImageView) getActivity()
 				.findViewById(R.id.gravatar);
