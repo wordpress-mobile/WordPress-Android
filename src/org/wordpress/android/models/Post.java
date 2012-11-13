@@ -202,6 +202,8 @@ public class Post {
 
 	public JSONArray getCategories() {
 		JSONArray jArray = null;
+		if (categories == null)
+			categories = "";
 		try {
 			jArray = new JSONArray(categories);
 		} catch (JSONException e) {
