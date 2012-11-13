@@ -77,7 +77,6 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		if (outState.isEmpty()) {
 			outState.putBoolean("bug_19917_fix", true);
 		}
-		super.onSaveInstanceState(outState);
 		getSupportFragmentManager().putFragment(outState,
 				WPCOMReaderImpl.class.getName(), readerPage);
 		getSupportFragmentManager().putFragment(outState,
@@ -86,6 +85,7 @@ public class WPCOMReaderPager extends FragmentActivity implements
 				WPCOMReaderDetailPage.class.getName(), detailPage);
 		getSupportFragmentManager().putFragment(outState,
 				WPCOMReaderWebPage.class.getName(), webPage);
+		super.onSaveInstanceState(outState);
 	}
 
 	private class ReaderPagerAdapter extends FragmentStatePagerAdapter {
@@ -321,7 +321,13 @@ public class WPCOMReaderPager extends FragmentActivity implements
 		topicsDialog.setContentView(topicsFragment.getView());
 		topicsDialog.setTitle(getResources().getText(R.string.topics));
 		topicsDialog.setCancelable(true);
-		topicsDialog.show();
+		if (!isFinishing()) {
+			try {
+				topicsDialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
