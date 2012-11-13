@@ -45,7 +45,9 @@ public class AddCategory extends Activity {
             	EditText categoryDescET = (EditText)findViewById(R.id.category_desc);
             	String category_desc = categoryDescET.getText().toString();
             	Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
-            	String parent_category = sCategories.getSelectedItem().toString();
+            	String parent_category = "";
+            	if (sCategories.getSelectedItem() != null)
+            		parent_category = sCategories.getSelectedItem().toString();
             	int parent_id = 0;
             	if (sCategories.getSelectedItemPosition() != 0){
                 	parent_id = WordPress.wpDB.getCategoryId(id, parent_category);
