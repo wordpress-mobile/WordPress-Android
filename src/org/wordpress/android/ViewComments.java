@@ -323,7 +323,11 @@ public class ViewComments extends ListFragment {
 								.beginTransaction();
 						WPAlertDialogFragment alert = WPAlertDialogFragment
 								.newInstance(moderateErrorMsg);
-						alert.show(ft, "alert");
+						try {
+							alert.show(ft, "alert");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}

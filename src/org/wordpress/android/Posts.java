@@ -160,7 +160,11 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		ViewPostFragment f = (ViewPostFragment) fm
 				.findFragmentById(R.id.postDetail);
 		if (f == null) {
-			fm.popBackStack();
+			try {
+				fm.popBackStack();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -668,5 +672,13 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		postList.switcher.showNext();
 		postList.numRecords += 30;
 		postList.refreshPosts(true);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (outState.isEmpty()) {
+			outState.putBoolean("bug_19917_fix", true);
+		}
+		super.onSaveInstanceState(outState);
 	}
 }
