@@ -63,7 +63,6 @@ abstract public class GraphView extends LinearLayout {
 			float width = getWidth() - 1;
 			double maxY = getMaxY();
 			double minY = getMinY();
-			double diffY = maxY - minY;
 			double maxX = getMaxX(false);
 			double minX = getMinX(false);
 			double diffX = maxX - minX;
@@ -104,17 +103,22 @@ abstract public class GraphView extends LinearLayout {
 			paint.setTextAlign(Align.CENTER);
 			canvas.drawText(title, (graphwidth / 2) + horstart, border - 4, paint);
 
-			if (maxY != minY) {
-				paint.setStrokeCap(Paint.Cap.ROUND);
-
-				for (int i=0; i<graphSeries.size(); i++) {
-					paint.setStrokeWidth(graphSeries.get(i).style.thickness);
-					paint.setColor(graphSeries.get(i).style.color);
-					drawSeries(canvas, _values(i), graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart);
-				}
-
-				if (showLegend) drawLegend(canvas, height, width);
+			if (maxY == minY) {
+				// if min/max is the same, fake it so that we can render a line
+				maxY = maxY*1.05d;
+				minY = minY*0.95d;
 			}
+
+			double diffY = maxY - minY;
+			paint.setStrokeCap(Paint.Cap.ROUND);
+
+			for (int i=0; i<graphSeries.size(); i++) {
+				paint.setStrokeWidth(graphSeries.get(i).style.thickness);
+				paint.setColor(graphSeries.get(i).style.color);
+				drawSeries(canvas, _values(i), graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart);
+			}
+
+			if (showLegend) drawLegend(canvas, height, width);
 		}
 
 		private void onMoveGesture(float f) {
@@ -382,6 +386,12 @@ abstract public class GraphView extends LinearLayout {
 		String[] labels = new String[numLabels+1];
 		double min = getMinY();
 		double max = getMaxY();
+		if (max == min) {
+			// if min/max is the same, fake it so that we can render a line
+			max = max*1.05d;
+			min = min*0.95d;
+		}
+
 		for (int i=0; i<=numLabels; i++) {
 			labels[numLabels-i] = formatLabel(min + ((max-min)*i/numLabels), false);
 		}
