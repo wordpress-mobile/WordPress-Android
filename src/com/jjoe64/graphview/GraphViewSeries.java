@@ -12,35 +12,43 @@ public class GraphViewSeries {
 	/**
 	 * graph series style: color and thickness
 	 */
-	static public class GraphViewStyle {
+	static public class GraphViewSeriesStyle {
 		public int color = 0xff0077cc;
 		public int thickness = 3;
-		public GraphViewStyle() {
+		private ValueDependentColor valueDependentColor;
+
+		public GraphViewSeriesStyle() {
 			super();
 		}
-		public GraphViewStyle(int color, int thickness) {
+		public GraphViewSeriesStyle(int color, int thickness) {
 			super();
 			this.color = color;
 			this.thickness = thickness;
 		}
+		public void setValueDependentColor(ValueDependentColor valueDependentColor) {
+			this.valueDependentColor = valueDependentColor;
+		}
+		public ValueDependentColor getValueDependentColor() {
+			return valueDependentColor;
+		}
 	}
 
 	final String description;
-	final GraphViewStyle style;
+	final GraphViewSeriesStyle style;
 	GraphViewData[] values;
 	private final List<GraphView> graphViews = new ArrayList<GraphView>();
 
 	public GraphViewSeries(GraphViewData[] values) {
 		description = null;
-		style = new GraphViewStyle();
+		style = new GraphViewSeriesStyle();
 		this.values = values;
 	}
 
-	public GraphViewSeries(String description, GraphViewStyle style, GraphViewData[] values) {
+	public GraphViewSeries(String description, GraphViewSeriesStyle style, GraphViewData[] values) {
 		super();
 		this.description = description;
 		if (style == null) {
-			style = new GraphViewStyle();
+			style = new GraphViewSeriesStyle();
 		}
 		this.style = style;
 		this.values = values;

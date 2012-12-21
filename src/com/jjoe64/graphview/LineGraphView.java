@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+
 /**
  * Line Graph View. This draws a line chart.
  * @author jjoe64 - jonas gehring - http://www.jjoe64.com
@@ -25,7 +27,7 @@ public class LineGraphView extends GraphView {
 	}
 
 	@Override
-	public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart) {
+	public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart, GraphViewSeriesStyle style) {
 		// draw background
 		double lastEndY = 0;
 		double lastEndX = 0;
@@ -66,6 +68,9 @@ public class LineGraphView extends GraphView {
 		}
 
 		// draw data
+		paint.setStrokeWidth(style.thickness);
+		paint.setColor(style.color);
+
 		lastEndY = 0;
 		lastEndX = 0;
 		for (int i = 0; i < values.length; i++) {

@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.compatible.ScaleGestureDetector;
 
 /**
@@ -80,7 +81,7 @@ abstract public class GraphView extends LinearLayout {
 			paint.setTextAlign(Align.LEFT);
 			int vers = verlabels.length - 1;
 			for (int i = 0; i < verlabels.length; i++) {
-				paint.setColor(Color.DKGRAY);
+				paint.setColor(graphViewStyle.getGridColor());
 				float y = ((graphheight / vers) * i) + border;
 				canvas.drawLine(horstart, y, width, y, paint);
 			}
@@ -88,7 +89,7 @@ abstract public class GraphView extends LinearLayout {
 			// horizontal labels + lines
 			int hors = horlabels.length - 1;
 			for (int i = 0; i < horlabels.length; i++) {
-				paint.setColor(Color.DKGRAY);
+				paint.setColor(graphViewStyle.getGridColor());
 				float x = ((graphwidth / hors) * i) + horstart;
 				canvas.drawLine(x, height - border, x, border, paint);
 				paint.setTextAlign(Align.CENTER);
@@ -96,7 +97,7 @@ abstract public class GraphView extends LinearLayout {
 					paint.setTextAlign(Align.RIGHT);
 				if (i==0)
 					paint.setTextAlign(Align.LEFT);
-				paint.setColor(Color.WHITE);
+				paint.setColor(graphViewStyle.getHorizontalLabelsColor());
 				canvas.drawText(horlabels[i], x, height - 4, paint);
 			}
 
@@ -113,9 +114,7 @@ abstract public class GraphView extends LinearLayout {
 			paint.setStrokeCap(Paint.Cap.ROUND);
 
 			for (int i=0; i<graphSeries.size(); i++) {
-				paint.setStrokeWidth(graphSeries.get(i).style.thickness);
-				paint.setColor(graphSeries.get(i).style.color);
-				drawSeries(canvas, _values(i), graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart);
+				drawSeries(canvas, _values(i), graphwidth, graphheight, border, minX, minY, diffX, diffY, horstart, graphSeries.get(i).style);
 			}
 
 			if (showLegend) drawLegend(canvas, height, width);
@@ -228,7 +227,7 @@ abstract public class GraphView extends LinearLayout {
 			int vers = verlabels.length - 1;
 			for (int i = 0; i < verlabels.length; i++) {
 				float y = ((graphheight / vers) * i) + border;
-				paint.setColor(Color.WHITE);
+				paint.setColor(graphViewStyle.getVerticalLabelsColor());
 				canvas.drawText(verlabels[i], 0, y, paint);
 			}
 		}
@@ -244,7 +243,7 @@ abstract public class GraphView extends LinearLayout {
 	private final View viewVerLabels;
 	private ScaleGestureDetector scaleDetector;
 	private boolean scalable;
-	private NumberFormat[] numberformatter = new NumberFormat[2];
+	private final NumberFormat[] numberformatter = new NumberFormat[2];
 	private final List<GraphViewSeries> graphSeries;
 	private boolean showLegend = false;
 	private float legendWidth = 120;
@@ -252,6 +251,7 @@ abstract public class GraphView extends LinearLayout {
 	private boolean manualYAxis;
 	private double manualMaxYValue;
 	private double manualMinYValue;
+	private GraphViewStyle graphViewStyle;
 
 	/**
 	 *
@@ -267,12 +267,22 @@ abstract public class GraphView extends LinearLayout {
 		else
 			this.title = title;
 
+		graphViewStyle = new GraphViewStyle();
+
 		paint = new Paint();
 		graphSeries = new ArrayList<GraphViewSeries>();
 
 		viewVerLabels = new VerLabelsView(context);
 		addView(viewVerLabels);
 		addView(new GraphViewContentView(context), new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
+	}
+
+	public GraphViewStyle getGraphViewStyle() {
+		return graphViewStyle;
+	}
+
+	public void setGraphViewStyle(GraphViewStyle style) {
+		graphViewStyle = style;
 	}
 
 	private GraphViewData[] _values(int idxSeries) {
@@ -340,7 +350,7 @@ abstract public class GraphView extends LinearLayout {
 		}
 	}
 
-	abstract public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart);
+	abstract public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart, GraphViewSeriesStyle style);
 
 	/**
 	 * formats the label
@@ -523,7 +533,8 @@ abstract public class GraphView extends LinearLayout {
 	public void redrawAll() {
 		verlabels = null;
 		horlabels = null;
-		numberformatter = null;
+		numberformatter[0] = null;
+		numberformatter[1] = null;
 		invalidate();
 		viewVerLabels.invalidate();
 	}
