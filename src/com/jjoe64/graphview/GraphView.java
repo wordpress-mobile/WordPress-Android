@@ -414,10 +414,14 @@ abstract public class GraphView extends LinearLayout {
 			if (graphSeries.size() > 0)
 			{
 				GraphViewData[] values = graphSeries.get(0).values;
-				highest = values[values.length-1].valueX;
-				for (int i=1; i<graphSeries.size(); i++) {
-					values = graphSeries.get(i).values;
-					highest = Math.max(highest, values[values.length-1].valueX);
+				if (values.length == 0) {
+					highest = 0;
+				} else {
+					highest = values[values.length-1].valueX;
+					for (int i=1; i<graphSeries.size(); i++) {
+						values = graphSeries.get(i).values;
+						highest = Math.max(highest, values[values.length-1].valueX);
+					}
 				}
 			}
 			return highest;
@@ -463,10 +467,14 @@ abstract public class GraphView extends LinearLayout {
 			if (graphSeries.size() > 0)
 			{
 				GraphViewData[] values = graphSeries.get(0).values;
-				lowest = values[0].valueX;
-				for (int i=1; i<graphSeries.size(); i++) {
-					values = graphSeries.get(i).values;
-					lowest = Math.min(lowest, values[0].valueX);
+				if (values.length == 0) {
+					lowest = 0;
+				} else {
+					lowest = values[0].valueX;
+					for (int i=1; i<graphSeries.size(); i++) {
+						values = graphSeries.get(i).values;
+						lowest = Math.min(lowest, values[0].valueX);
+					}
 				}
 			}
 			return lowest;
