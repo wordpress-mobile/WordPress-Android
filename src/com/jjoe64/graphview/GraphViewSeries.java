@@ -67,9 +67,11 @@ public class GraphViewSeries {
 	 * @param value the new data to append
 	 * @param scrollToEnd true => graphview will scroll to the end (maxX)
 	 */
-	@TargetApi(9)
 	public void appendData(GraphViewData value, boolean scrollToEnd) {
-		GraphViewData[] newValues = Arrays.copyOf(values, values.length+1);
+		GraphViewData[] newValues = new GraphViewData[values.length + 1];
+		int offset = values.length;
+		System.arraycopy(values, 0, newValues, 0, offset);
+
 		newValues[values.length] = value;
 		values = newValues;
 		for (GraphView g : graphViews) {
