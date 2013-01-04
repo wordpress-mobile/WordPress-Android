@@ -411,8 +411,6 @@ src/org/wordpress/android/util/WPTitleBar.java -text
 src/org/wordpress/android/util/WPUnderlineSpan.java -text
 src/org/wordpress/android/util/WPViewPager.java -text
 src/org/xmlrpc/android/ApiHelper.java -text
-src/org/xmlrpc/android/Base64.java -text
-src/org/xmlrpc/android/Base64Coder.java -text
 src/org/xmlrpc/android/ConnectionClient.java -text
 src/org/xmlrpc/android/CustomMultipartEntity.java -text
 src/org/xmlrpc/android/XMLRPCClient.java -text

@@ -1,6 +1,7 @@
 package org.xmlrpc.android;
 
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.Base64;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -71,7 +72,7 @@ class XMLRPCSerializer {
 			serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
 		} else
 		if (object instanceof byte[] ){
-			String value = new String(Base64Coder.encode((byte[])object));
+			String value = Base64.encodeBytes((byte[])object);
 			serializer.startTag(null, TYPE_BASE64).text(value).endTag(null, TYPE_BASE64);
 		} 
 		else if( object instanceof MediaFile ) {
@@ -184,7 +185,7 @@ class XMLRPCSerializer {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line);
 			}
-			obj = Base64Coder.decode(sb.toString());
+			obj = Base64.decode(sb.toString());
 		} else
 		if (typeNodeName.equals(TYPE_ARRAY)) {
 			parser.nextTag(); // TAG_DATA (<data>)
