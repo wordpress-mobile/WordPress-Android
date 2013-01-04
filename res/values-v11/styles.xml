@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="WordPress" parent="@android:style/Theme.Holo.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
+        <item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
+        <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
+        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    
+    <style name="IncludeTitleBar" parent="@android:style/Theme.Holo.Light">
+        <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
+        <item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
+        <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
+        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+</resources>

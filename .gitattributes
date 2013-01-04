@@ -331,6 +331,7 @@ res/values-sw720dp/styles.xml -text
 res/values-ta/strings.xml -text
 res/values-th/strings.xml -text
 res/values-tr/strings.xml -text
+res/values-v11/styles.xml -text
 res/values-xlarge-v11/styles.xml -text
 res/values-zh-rTW/strings.xml -text
 res/values-zh/strings.xml -text

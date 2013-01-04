@@ -149,7 +149,7 @@
     <style name="DashboardButtonText">
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">12dip</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">#333333</item>
     </style>
 
