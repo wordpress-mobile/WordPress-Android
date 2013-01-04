@@ -1166,7 +1166,7 @@ public class Post {
 							}
 
 							String alignmentCSS = "class=\"" + alignment
-									+ "\" ";
+									+ " size-full\" ";
 							if (resultURL != null) {
 								if (i != 0
 										&& (post.blog.isFullSizeImage() || post.blog
