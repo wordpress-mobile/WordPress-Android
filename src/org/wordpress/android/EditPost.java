@@ -1290,8 +1290,11 @@ public class EditPost extends Activity implements OnClickListener,
 			dialogBuilder.setCancelable(true);
 			dialogBuilder.create().show();
 		} else {
+			String dcimFolderName = Environment.DIRECTORY_DCIM;
+			if (dcimFolderName == null)
+				dcimFolderName = "DCIM";
 			mMediaCapturePath = Environment.getExternalStorageDirectory()
-					+ File.separator + "wordpress" + File.separator + "wp-"
+					+ File.separator + dcimFolderName + File.separator + "Camera" + File.separator + "wp-"
 					+ System.currentTimeMillis() + ".jpg";
 			Intent takePictureFromCameraIntent = new Intent(
 					MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1393,14 +1396,10 @@ public class EditPost extends Activity implements OnClickListener,
 				if (resultCode == Activity.RESULT_OK) {
 					try {
 						File f = new File(mMediaCapturePath);
-						Uri capturedImage = Uri
-								.parse(android.provider.MediaStore.Images.Media
-										.insertImage(getContentResolver(),
-												f.getAbsolutePath(), null, null));
-						f.delete();
-						addMedia(capturedImage.toString(), capturedImage);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
+						Uri capturedImageUri = Uri.fromFile(f);
+						f = null;
+						addMedia(capturedImageUri.toString(), capturedImageUri);
+						sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"+ Environment.getExternalStorageDirectory())));
 					} catch (Exception e) {
 						e.printStackTrace();
 					} catch (OutOfMemoryError e) {

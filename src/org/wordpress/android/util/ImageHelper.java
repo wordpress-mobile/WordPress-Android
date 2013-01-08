@@ -37,8 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class ImageHelper {
 
-	public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth,
-			String orientation, boolean tiny) {
+	public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny) {
 		// creates a thumbnail and returns the bytes
 
 		int finalHeight = 0;
@@ -80,8 +79,7 @@ public class ImageHelper {
 				opts.inJustDecodeBounds = false;
 
 				try {
-					bm = BitmapFactory
-							.decodeByteArray(bytes, 0, bytes.length, opts);
+					bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
 				} catch (OutOfMemoryError e) {
 					// out of memory
 					return null;
@@ -100,15 +98,11 @@ public class ImageHelper {
 				Matrix matrix = new Matrix();
 				// Resize the bitmap
 				matrix.postScale(scaleBy, scaleBy);
-				if ((orientation != null)
-						&& (orientation.equals("90")
-								|| orientation.equals("180") || orientation
-									.equals("270"))) {
+				if ((orientation != null) && (orientation.equals("90") || orientation.equals("180") || orientation.equals("270"))) {
 					matrix.postRotate(Integer.valueOf(orientation));
 				}
 
-				Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(),
-						bm.getHeight(), matrix, true);
+				Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				resized.compress(Bitmap.CompressFormat.JPEG, 85, baos);
@@ -125,61 +119,25 @@ public class ImageHelper {
 	}
 
 	public String getExifOrientation(String path, String orientation) {
-		// get image EXIF orientation if Android 2.0 or higher, using reflection
-		// http://developer.android.com/resources/articles/backward-compatibility.html
-		Method exif_getAttribute;
-		Constructor<ExifInterface> exif_construct;
-		String exifOrientation = "";
-
-		int sdk_int = 0;
+		ExifInterface exif;
 		try {
-			sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
-		} catch (Exception e1) {
-			sdk_int = 3; // assume they are on cupcake
+			exif = new ExifInterface(path);
+		} catch (IOException e) {
+			return orientation;
 		}
-		if (sdk_int >= 5) {
-			try {
-				exif_construct = android.media.ExifInterface.class
-						.getConstructor(new Class[] { String.class });
-				Object exif = exif_construct.newInstance(path);
-				exif_getAttribute = android.media.ExifInterface.class
-						.getMethod("getAttribute", new Class[] { String.class });
-				try {
-					exifOrientation = (String) exif_getAttribute.invoke(exif,
-							android.media.ExifInterface.TAG_ORIENTATION);
-					if (exifOrientation != null) {
-						if (exifOrientation.equals("1")) {
-							orientation = "0";
-						} else if (exifOrientation.equals("3")) {
-							orientation = "180";
-						} else if (exifOrientation.equals("6")) {
-							orientation = "90";
-						} else if (exifOrientation.equals("8")) {
-							orientation = "270";
-						}
-					} else {
-						orientation = "0";
-					}
-				} catch (InvocationTargetException ite) {
-					/* unpack original exception when possible */
-					orientation = "0";
-				} catch (IllegalAccessException ie) {
-					System.err.println("unexpected " + ie);
-					orientation = "0";
-				}
-				/* success, this is a newer device */
-			} catch (NoSuchMethodException nsme) {
+		String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+		if (exifOrientation != null) {
+			if (exifOrientation.equals("1")) {
 				orientation = "0";
-			} catch (IllegalArgumentException e) {
-				orientation = "0";
-			} catch (InstantiationException e) {
-				orientation = "0";
-			} catch (IllegalAccessException e) {
-				orientation = "0";
-			} catch (InvocationTargetException e) {
-				orientation = "0";
+			} else if (exifOrientation.equals("3")) {
+				orientation = "180";
+			} else if (exifOrientation.equals("6")) {
+				orientation = "90";
+			} else if (exifOrientation.equals("8")) {
+				orientation = "270";
 			}
-
+		} else {
+			orientation = "0";
 		}
 		return orientation;
 	}
@@ -225,7 +183,8 @@ public class ImageHelper {
 			HttpResponse response = client.execute(getRequest);
 			final int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				//Log.w("ImageDownloader", "Error " + statusCode + " while retrieving bitmap from " + url);
+				// Log.w("ImageDownloader", "Error " + statusCode +
+				// " while retrieving bitmap from " + url);
 				return null;
 			}
 
@@ -236,8 +195,7 @@ public class ImageHelper {
 					inputStream = entity.getContent();
 					Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 					BitmapDrawable bd = new BitmapDrawable(bitmap);
-					bitmap = com.commonsware.cwac.thumbnail.ThumbnailAdapter
-							.getRoundedCornerBitmap(bd.getBitmap());
+					bitmap = com.commonsware.cwac.thumbnail.ThumbnailAdapter.getRoundedCornerBitmap(bd.getBitmap());
 					return bitmap;
 				} finally {
 					if (inputStream != null) {
@@ -250,13 +208,13 @@ public class ImageHelper {
 			// Could provide a more explicit error message for IOException or
 			// IllegalStateException
 			getRequest.abort();
-			//Log.w("ImageDownloader", "Error while retrieving bitmap from " + url);
-		} 
+			// Log.w("ImageDownloader", "Error while retrieving bitmap from " +
+			// url);
+		}
 		return null;
 	}
 
-	public HashMap<String, Object> getImageBytesForPath(String filePath,
-			Context ctx) {
+	public HashMap<String, Object> getImageBytesForPath(String filePath, Context ctx) {
 		Uri curStream = null;
 		String[] projection;
 		HashMap<String, Object> mediaData = new HashMap<String, Object>();
@@ -271,14 +229,12 @@ public class ImageHelper {
 		if (curStream != null) {
 			if (filePath.contains("video")) {
 				int videoID = Integer.parseInt(curStream.getLastPathSegment());
-				projection = new String[] { Video.Thumbnails._ID,
-						Video.Thumbnails.DATA };
+				projection = new String[] { Video.Thumbnails._ID, Video.Thumbnails.DATA };
 				ContentResolver crThumb = ctx.getContentResolver();
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inSampleSize = 1;
-				Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(
-						crThumb, videoID,
-						MediaStore.Video.Thumbnails.MINI_KIND, options);
+				Bitmap videoBitmap = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoID, MediaStore.Video.Thumbnails.MINI_KIND,
+						options);
 
 				ByteArrayOutputStream stream = new ByteArrayOutputStream();
 				try {
@@ -291,12 +247,10 @@ public class ImageHelper {
 				}
 
 			} else {
-				projection = new String[] { Images.Thumbnails._ID,
-						Images.Thumbnails.DATA, Images.Media.ORIENTATION };
+				projection = new String[] { Images.Thumbnails._ID, Images.Thumbnails.DATA, Images.Media.ORIENTATION };
 
 				String path = "";
-				Cursor cur = ctx.getContentResolver().query(curStream,
-						projection, null, null, null);
+				Cursor cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
 				File jpeg = null;
 				if (cur != null) {
 					String thumbData = "";
@@ -307,15 +261,16 @@ public class ImageHelper {
 
 						dataColumn = cur.getColumnIndex(Images.Media.DATA);
 						thumbData = cur.getString(dataColumn);
-						orientationColumn = cur
-								.getColumnIndex(Images.Media.ORIENTATION);
+						orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
 						orientation = cur.getString(orientationColumn);
+						if (orientation == null)
+							orientation = "";
 					}
-					
-					if (thumbData == null) { 
-					 	return null;
+
+					if (thumbData == null) {
+						return null;
 					}
-					
+
 					jpeg = new File(thumbData);
 					path = thumbData;
 				} else {
