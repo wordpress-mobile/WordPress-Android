@@ -725,7 +725,7 @@ public class ViewWebStats extends Activity {
 								HashMap<?, ?> jetpackClientIDOption = null;
 								try {
 									jetpackClientIDOption = WordPress.currentBlog.getBlogOptions() != null ? (HashMap<?, ?>) WordPress.currentBlog.getBlogOptions().get("jetpack_client_id") : null;
-								} catch (JSONException e) {
+								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
