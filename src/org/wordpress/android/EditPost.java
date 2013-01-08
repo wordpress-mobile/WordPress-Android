@@ -1,7 +1,6 @@
 package org.wordpress.android;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,11 +18,11 @@ import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;

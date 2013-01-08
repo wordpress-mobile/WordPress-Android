@@ -619,7 +619,7 @@ public class ViewWebStats extends Activity {
 
 			if (homeURL.equals("")) {
 				//get the 'homePageLink' url from RSD to match with the stats api
-				String homePageLink = ApiHelper.getXMLRPCUrl(url + "?rsd", true);
+				String homePageLink = ApiHelper.getHomePageLink(url + "?rsd");
 				if (homePageLink != null) {
 					url = homePageLink;
 					//home url was added in 2.2.2, it may need to be set if the user upgraded

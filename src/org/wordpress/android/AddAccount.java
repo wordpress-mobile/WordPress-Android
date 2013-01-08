@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -169,7 +167,7 @@ public class AddAccount extends Activity implements OnClickListener {
 		}
 
 		if (rsdUrl != null) {
-			xmlrpcURL = ApiHelper.getXMLRPCUrl(rsdUrl, false);
+			xmlrpcURL = ApiHelper.getXMLRPCUrl(rsdUrl);
 			if (xmlrpcURL == null)
 				xmlrpcURL = rsdUrl.replace("?rsd", "");
 		} else {
@@ -529,26 +527,18 @@ public class AddAccount extends Activity implements OnClickListener {
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	private String getRSDMetaTagHrefRegEx(String urlString) {
-		InputStream in = ApiHelper.getResponse(urlString);
-		if (in != null) {
-			try {
-				String html = ApiHelper.convertStreamToString(in);
-				Matcher matcher = rsdLink.matcher(html);
-				if (matcher.find()) {
-					String href = matcher.group(1);
-					return href;
-				}
-			} catch (IOException e) {
-				Log.e("wp_android", "IOEX", e);
-				return null;
-			}
+		String html = ApiHelper.getResponse(urlString);
+		Matcher matcher = rsdLink.matcher(html);
+		if (matcher.find()) {
+			String href = matcher.group(1);
+			return href;
 		}
 		return null;
 	}
 
 	private String getRSDMetaTagHref(String urlString) {
 		// get the html code
-		InputStream in = ApiHelper.getResponse(urlString);
+		InputStream in = ApiHelper.getResponseStream(urlString);
 
 		// parse the html and get the attribute for xmlrpc endpoint
 		if (in != null) {

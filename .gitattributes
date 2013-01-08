@@ -398,6 +398,7 @@ src/org/wordpress/android/util/DrawableManager.java -text
 src/org/wordpress/android/util/Entities.java -text
 src/org/wordpress/android/util/EscapeUtils.java -text
 src/org/wordpress/android/util/FastXmlSerializer.java -text
+src/org/wordpress/android/util/HttpRequest.java -text
 src/org/wordpress/android/util/ImageHelper.java -text
 src/org/wordpress/android/util/IntHashMap.java -text
 src/org/wordpress/android/util/LocationHelper.java -text
