@@ -126,6 +126,10 @@ public class ViewPostFragment extends Fragment {
 
 	public void loadPost(Post post) {
 
+		// Don't load if the Post object of title are null, see #395
+		if (post == null || post.getTitle() == null)
+			return;
+		
 		TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
 		if (post.getTitle().equals(""))
 			title.setText("(" + getResources().getText(R.string.untitled) + ")");
