@@ -329,6 +329,7 @@ res/values-sk/strings.xml -text
 res/values-small/dimens.xml -text
 res/values-sv/strings.xml -text
 res/values-sw720dp/dimens.xml -text
+res/values-sw720dp/styles.xml -text
 res/values-ta/strings.xml -text
 res/values-th/strings.xml -text
 res/values-tr/strings.xml -text

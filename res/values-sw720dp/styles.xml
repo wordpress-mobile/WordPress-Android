@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.Theme.PlainText" parent="android:TextAppearance.Theme">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="NoActionBar" parent="@android:style/Theme.Light">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="WordPress" parent="NoActionBar"></style>
+
+    <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#FF464646</item>
+    </style>
+
+    <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
+        <item name="android:singleLine">true</item>
+        <item name="android:shadowColor">#BB000000</item>
+        <item name="android:shadowRadius">2.75</item>
+        <item name="android:textColor">#FFF6F6F6</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
+        <item name="android:textColor">#FF464646</item>
+    </style>
+
+    <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#FFFFFFFF</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:layout_marginTop">1px</item>
+        <item name="android:layout_marginRight">1px</item>
+        <item name="android:layout_marginLeft">1px</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingTop">2dp</item>
+    </style>
+
+    <style name="DashboardButtonText">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">18dip</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="IncludeTitleBar" parent="@android:style/Theme.Light">
+        <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
+        <item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
+        <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
+        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="WindowTitleBackground">
+        <item name="android:background">@drawable/title_text_bg</item>
+        <item name="android:paddingLeft">4dip</item>
+    </style>
+
+</resources>
