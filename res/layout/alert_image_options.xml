@@ -34,7 +34,7 @@
       android:layout_height="wrap_content"
       android:text="@string/horizontal_alignment"
       android:textStyle="bold"
-      android:textColor="#CCCCCC" />
+      android:textColor="@color/image_options_label" />
     <Spinner 
         android:id="@+id/alignment_spinner"
         android:layout_width="fill_parent"
@@ -45,7 +45,7 @@
       android:layout_height="wrap_content"
       android:text="@string/width"
       android:textStyle="bold"
-      android:textColor="#CCCCCC" />
+      android:textColor="@color/image_options_label" />
     <SeekBar
       android:layout_height="wrap_content"
       android:id="@+id/imageWidth"
@@ -54,12 +54,12 @@
       android:layout_height="wrap_content"
       android:id="@+id/imageWidthText"
       android:layout_width="match_parent"
-      android:textColor="#CCCCCC" />
+      android:textColor="@color/image_options_label" />
     <CheckBox
       android:layout_gravity="left"
       android:text="@string/featured"
       android:id="@+id/featuredImage"
-      android:textColor="#FFFFFF"
+      android:textColor="@color/image_options_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone" />
@@ -67,7 +67,7 @@
       android:layout_gravity="left"
       android:text="@string/featured_in_post"
       android:id="@+id/featuredInPost"
-      android:textColor="#FFFFFF"
+      android:textColor="@color/image_options_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone" />

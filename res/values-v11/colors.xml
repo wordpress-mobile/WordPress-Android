@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="image_options_label">#464646</color>
+    <color name="image_options_text">#000000</color>
+    
+</resources>

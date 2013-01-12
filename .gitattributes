@@ -329,15 +329,16 @@ res/values-sk/strings.xml -text
 res/values-small/dimens.xml -text
 res/values-sv/strings.xml -text
 res/values-sw720dp/dimens.xml -text
-res/values-sw720dp/styles.xml -text
 res/values-ta/strings.xml -text
 res/values-th/strings.xml -text
 res/values-tr/strings.xml -text
+res/values-v11/colors.xml -text
 res/values-v11/styles.xml -text
 res/values-xlarge-v11/styles.xml -text
 res/values-zh-rTW/strings.xml -text
 res/values-zh/strings.xml -text
 res/values/arrays.xml -text
+res/values/colors.xml -text
 res/values/dimens.xml -text
 res/values/ids.xml -text
 res/values/strings.xml -text
