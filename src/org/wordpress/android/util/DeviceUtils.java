@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import org.wordpress.android.WordPress;
+
 /**
  * As of January 20 2012:
  * The BlackBerry Runtime for Android Apps supports Android 2.3.3 applications. 
@@ -64,4 +66,8 @@ public class DeviceUtils {
 		isBlackBerry = System.getProperty("os.name").equalsIgnoreCase("qnx") ? true : false;
 		isKindleFire = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true: false;
 	};
+	
+	public static String getBlackBerryUserAgent() {
+		return "wp-blackberry/"+WordPress.versionName;
+	}
 }

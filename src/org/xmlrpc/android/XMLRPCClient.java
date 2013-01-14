@@ -28,6 +28,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.DeviceUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
@@ -59,7 +60,12 @@ public class XMLRPCClient {
 		postMethod.addHeader("Content-Type", "text/xml");
 		
 		postMethod.addHeader("charset", "UTF-8");
-		postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
+		
+		if (DeviceUtils.getInstance().isBlackBerry()) {
+			postMethod.addHeader("User-Agent", DeviceUtils.getBlackBerryUserAgent());
+		} else {
+			postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
+		}
 		
 		httpParams = postMethod.getParams();
 		HttpProtocolParams.setUseExpectContinue(httpParams, false);
