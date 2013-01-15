@@ -311,10 +311,8 @@ res/values-it/strings.xml -text
 res/values-ja/strings.xml -text
 res/values-ka/strings.xml -text
 res/values-ko/strings.xml -text
-res/values-large-hdpi-v11/styles.xml -text
 res/values-large-hdpi/dimens.xml -text
 res/values-large-hdpi/styles.xml -text
-res/values-large-mdpi-v11/styles.xml -text
 res/values-large-mdpi/dimens.xml -text
 res/values-large-mdpi/styles.xml -text
 res/values-large-tvdpi/dimens.xml -text
