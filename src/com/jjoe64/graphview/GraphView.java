@@ -147,7 +147,7 @@ abstract public class GraphView extends LinearLayout {
 		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
-			if (!isScrollable()) {
+			if (!isScrollable() || isDisableTouch()) {
 				return super.onTouchEvent(event);
 			}
 
@@ -238,6 +238,7 @@ abstract public class GraphView extends LinearLayout {
 	private String[] verlabels;
 	private String title;
 	private boolean scrollable;
+	private boolean disableTouch;
 	private double viewportStart;
 	private double viewportSize;
 	private final View viewVerLabels;
@@ -527,6 +528,10 @@ abstract public class GraphView extends LinearLayout {
 	public boolean isScrollable() {
 		return scrollable;
 	}
+	
+	public boolean isDisableTouch() {
+		return disableTouch;
+	}
 
 	public boolean isShowLegend() {
 		return showLegend;
@@ -647,6 +652,14 @@ abstract public class GraphView extends LinearLayout {
 	 */
 	public void setScrollable(boolean scrollable) {
 		this.scrollable = scrollable;
+	}
+	
+	/**
+	 * The user can disable any touch gestures, this is useful if you are using a real time graph, but don't want the user to interact
+	 * @param disableTouch
+	 */
+	public void setDiscableTouch(boolean disableTouch) {
+		this.disableTouch = disableTouch;
 	}
 
 	public void setShowLegend(boolean showLegend) {
