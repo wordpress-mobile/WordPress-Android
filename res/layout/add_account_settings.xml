@@ -31,47 +31,27 @@
                 android:background="@drawable/content_bg_header"
                 android:text="@string/optional_settings" />
 
-            <TextView
-                android:id="@+id/l_httpuser"
+            <EditText
+                android:id="@+id/httpuser"
+                android:hint="@string/httpuser"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/l_section1"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="4dp"
-                android:text="@string/httpuser"
-                android:textColor="#444444" />
-
-            <EditText
-                android:id="@+id/httpuser"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/l_httpuser"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
-                android:background="@android:drawable/editbox_background"
                 android:minHeight="40dip"
                 android:singleLine="true" />
 
-            <TextView
-                android:id="@+id/l_httppassword"
+            <EditText
+                android:id="@+id/httppassword"
+                android:hint="@string/httppassword"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/httpuser"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/httppassword"
-                android:textColor="#444444" />
-
-            <EditText
-                android:id="@+id/httppassword"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/l_httppassword"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
-                android:background="@android:drawable/editbox_background"
                 android:minHeight="40dip"
-                android:password="true"
+                android:inputType="textPassword"
                 android:singleLine="true" />
 
             <Button

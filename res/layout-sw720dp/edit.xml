@@ -54,7 +54,6 @@
                     android:layout_margin="4dip"
                     android:autoText="true"
                     android:imeOptions="flagNoExtractUi"
-                    android:background="@android:drawable/editbox_background"
                     android:capitalize="sentences"
                     android:hint="@string/title"
                     android:minHeight="40dip" />
@@ -73,7 +72,6 @@
                         android:layout_height="fill_parent"
                         android:layout_margin="4dp"
                         android:autoText="true"
-                        android:background="@android:drawable/editbox_background"
                         android:capitalize="sentences"
                         android:gravity="top"
                         android:hint="@string/content"
@@ -186,7 +184,6 @@
                         android:layout_below="@id/postFormat"
                         android:layout_margin="4dp"
                         android:autoText="true"
-                        android:background="@android:drawable/editbox_background"
                         android:hint="@string/post_password"
                         android:minHeight="40dip"
                         android:password="true" />
@@ -222,7 +219,6 @@
                             android:layout_below="@id/l_tags_categories"
                             android:layout_margin="4dp"
                             android:autoText="true"
-                            android:background="@android:drawable/editbox_background"
                             android:hint="@string/tags_separate_with_commas"
                             android:minHeight="40dip" />
 

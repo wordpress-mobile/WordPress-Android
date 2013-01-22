@@ -17,5 +17,8 @@
         <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+    
+    <style name="WordPress.Dialog" parent="@android:style/Theme.Holo.Light.Dialog">
+    </style>
 
 </resources>

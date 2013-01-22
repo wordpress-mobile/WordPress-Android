@@ -12,8 +12,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:hint="@string/link_enter_url"
-    android:minHeight="40px"
-    android:background="@android:drawable/editbox_background" />
+    android:minHeight="40dp" />
   
   <EditText
     android:id="@+id/linkText"
@@ -22,8 +21,7 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/linkURL"
     android:hint="@string/link_enter_url_text"
-    android:minHeight="40px"
-    android:background="@android:drawable/editbox_background" />
+    android:minHeight="40dp" />
 
   <Button
     android:id="@+id/ok"
@@ -32,7 +30,7 @@
     android:layout_below="@id/linkText"
     android:layout_alignParentRight="true"
     android:layout_marginLeft="10dip"
-    android:textSize="20dip"
+    android:textSize="20sp"
     android:text="@string/ok" />
 
   <Button
@@ -41,7 +39,7 @@
     android:layout_height="wrap_content"
     android:layout_alignTop="@id/ok"
     android:layout_toLeftOf="@id/ok"
-    android:textSize="20dip"
+    android:textSize="20sp"
     android:text="@string/cancel" />
 
 </RelativeLayout>

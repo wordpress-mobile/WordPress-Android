@@ -48,7 +48,7 @@
         <activity
             android:name="Link"
             android:label="@string/create_a_link"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/WordPress.Dialog" />
         <activity
             android:name="AddAccount"
             android:configChanges="orientation|keyboardHidden"
@@ -86,7 +86,7 @@
 
         <activity
             android:name="ReplyToComment"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/WordPress.Dialog" />
         <activity
             android:name="SelectCategories"
             android:configChanges="orientation|keyboardHidden" />
@@ -94,11 +94,10 @@
             android:name=".AddCategory"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/add_new_category"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/WordPress.Dialog" />
         <activity
             android:name="Signup"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Light" />
+            android:configChanges="orientation|keyboardHidden" />
         <activity android:name="NewAccount" />
         <activity
             android:name="ViewWebStats"

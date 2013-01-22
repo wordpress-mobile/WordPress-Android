@@ -50,7 +50,6 @@
                     android:layout_below="@id/l_username"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:singleLine="true" />
 
@@ -71,7 +70,6 @@
                     android:layout_below="@id/l_password"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:inputType="textPassword"
                     android:singleLine="true" />
@@ -103,7 +101,6 @@
                     android:layout_below="@id/l_httpuser"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:singleLine="true" />
 
@@ -124,7 +121,6 @@
                     android:layout_below="@id/l_httppassword"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:inputType="textPassword"
                     android:singleLine="true" />
@@ -203,7 +199,6 @@
                     android:layout_below="@id/l_scaledImage"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@android:drawable/editbox_background"
                     android:minHeight="40dip"
                     android:numeric="integer"
                     android:maxLength="4"

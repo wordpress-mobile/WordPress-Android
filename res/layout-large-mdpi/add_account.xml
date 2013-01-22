@@ -43,66 +43,39 @@
         android:layout_below="@id/l_section1"
         android:layout_height="wrap_content"
         android:id="@+id/urlWrapper">
-        <TextView
-          android:id="@+id/l_url"
-          android:textColor="#444444"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:text="@string/add_account_blog_url"
-          android:layout_marginTop="4dp"
-          android:layout_marginLeft="8dp"
-          android:layout_below="@id/urlWrapper" />
         <EditText
           android:id="@+id/url"
+          android:hint="@string/add_account_blog_url"
           android:inputType="textUri"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
-          android:minHeight="40dip"
+          android:minHeight="40dp"
           android:layout_marginLeft="4dp"
           android:layout_marginRight="4dp"
-          android:background="@android:drawable/editbox_background"
-          android:layout_below="@id/l_url" />
+          android:layout_below="@id/urlWrapper" />
       </RelativeLayout>
-      <TextView
-        android:id="@+id/l_username"
-        android:textColor="#444444"
-        android:layout_marginTop="10dip"
-        android:layout_marginLeft="8dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/username"
-        android:layout_below="@id/urlWrapper" />
       <EditText
         android:id="@+id/username"
+        android:hint="@string/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:singleLine="true"
-        android:minHeight="40dip"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/l_username" />
-      <TextView
-        android:id="@+id/l_password"
-        android:textColor="#444444"
-        android:layout_marginTop="10dip"
-        android:layout_marginLeft="8dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/password"
-        android:layout_below="@id/username" />
+        android:minHeight="40dp"
+        android:layout_below="@id/urlWrapper" />
       <EditText
         android:id="@+id/password"
+        android:hint="@string/password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:minHeight="40dip"
+        android:minHeight="40dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="10dip"
+        android:layout_marginBottom="10dp"
         android:password="true"
-        android:background="@android:drawable/editbox_background"
-        android:layout_below="@id/l_password" />
+        android:layout_below="@id/username" />
       <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -119,7 +92,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="4dp"
-        android:text="@string/save"
+        android:text="@string/log_in"
         android:shadowColor="#FFFFFF"
         android:shadowDx="0"
         android:shadowDy="1"

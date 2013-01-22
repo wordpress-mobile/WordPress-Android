@@ -42,7 +42,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class AddAccount extends Activity implements OnClickListener {
@@ -93,7 +92,6 @@ public class AddAccount extends Activity implements OnClickListener {
 		}
 
 		if (wpcom) {
-			((TextView) findViewById(R.id.l_url)).setVisibility(View.GONE);
 			((EditText) findViewById(R.id.url)).setVisibility(View.GONE);
 		} else {
 			ImageView logo = (ImageView) findViewById(R.id.wpcomLogo);

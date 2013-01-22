@@ -15,7 +15,7 @@
  * limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme is the default theme. -->
     <style name="Theme" parent="android:Theme"></style>
@@ -71,6 +71,17 @@
         <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
         <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+    
+    <style name="WordPress.Dialog" parent="@android:style/Theme.Dialog"></style>
+    
+    <style name="WordPress.ToggleButton">
+        <item name="android:textSize">@dimen/format_bar_font_size</item>
+        <item name="android:minWidth">26dp</item>
+        <item name="android:textColor">#464646</item>
+        <item name="android:paddingLeft">@dimen/format_bar_button_padding</item>
+        <item name="android:paddingRight">@dimen/format_bar_button_padding</item>
+        <item name="android:background">@drawable/wp_button_toggle</item>
     </style>
 
     <style name="IncludeTitleBar" parent="@android:style/Theme.Light">

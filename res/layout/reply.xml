@@ -23,7 +23,6 @@
     android:autoText="true"
     android:capitalize="sentences"
     android:layout_below="@id/replyLabel"
-    android:background="@android:drawable/editbox_background"
     android:layout_marginBottom="6dip" />
 
   <Button

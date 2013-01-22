@@ -24,7 +24,7 @@
   <string name="post_title">Post Title</string>
   <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
   <string name="max_thumbnail_px_width">Default image width</string>
-  <string name="password">Password:</string>
+  <string name="password">Password</string>
   <string name="get_free_blog">Get a free blog at WordPress.com</string>
   <string name="tagline">Start blogging from your mobile in seconds.</string>
   <string name="tagline_tablet">Start blogging from your tablet in seconds.</string>
@@ -48,7 +48,7 @@
   <string name="pages">Pages</string>
   <string name="eula">GNU GENERAL PUBLIC LICENSE</string>
   <string name="about">About</string>
-  <string name="username">Username:</string>
+  <string name="username">Username</string>
   <string name="cancel">Cancel</string>
   <string name="save">Save</string>
   <string name="add">Add</string>
@@ -59,7 +59,7 @@
   <string name="accept">Accept</string>
   <string name="decline">Decline</string>
   <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or toconfigure comment notifications.</string>
-  <string name="add_account">Add Account</string>
+  <string name="add_account">Add Blog</string>
   <string name="notification_settings">Settings</string>
   <string name="notification_sound">Play notification sound</string>
   <string name="notification_vibrate">Vibrate</string>
@@ -311,9 +311,9 @@
   <!-- category management -->
   <string name="refresh_categories">Refresh Categories</string>
   <string name="add_new_category">Add New Category</string>
-  <string name="category_name">Category Name:</string>
-  <string name="category_slug">Category Slug (optional):</string>
-  <string name="category_desc">Category Description (optional):</string>
+  <string name="category_name">Category Name</string>
+  <string name="category_slug">Category Slug (optional)</string>
+  <string name="category_desc">Category Description (optional)</string>
   <string name="category_parent">Category Parent (optional):</string>
   <string name="none">None</string>
   <string name="adding_cat_failed">Adding category failed.</string>
@@ -402,8 +402,8 @@
   <string name="quickpress_add_alert_title">Set shortcut name</string>
 
   <!-- HTTP Authentication -->
-  <string name="httpuser">HTTP Username (optional):</string>
-  <string name="httppassword">HTTP Password (optional):</string>
+  <string name="httpuser">HTTP Username (optional)</string>
+  <string name="httppassword">HTTP Password (optional)</string>
   <string name="settings">Settings</string>
   <string name="optional_settings">Optional Settings</string>
 
@@ -422,6 +422,7 @@
   <string name="instructions">Fill out this one-step form and you’ll be blogging seconds later!</string>
   <string name="waiting_activation">Awaiting e-mail activation</string>
   <string name="post_format">Post Format:</string>
+  <string name="log_in">Log In</string>
 
   <!-- reader -->
   <string name="reader">Reader</string>
@@ -473,7 +474,7 @@
   
   <string name="ok">OK</string>
   <string name="image_settings">Image Settings</string>
-  <string name="add_account_blog_url">Blog URL:</string>
+  <string name="add_account_blog_url">Blog URL</string>
   <string name="image_options_title">Title</string>
   <string name="image_options_caption">Caption (optional)</string>
   <string name="image_options_horizontal_alignment">Horizontal Alignment:</string>

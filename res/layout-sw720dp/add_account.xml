@@ -61,7 +61,6 @@
           android:minHeight="40dp"
           android:layout_marginLeft="4dp"
           android:layout_marginRight="4dp"
-          android:background="@android:drawable/editbox_background"
           android:layout_below="@id/l_url" />
       </RelativeLayout>
       <TextView
@@ -81,7 +80,6 @@
         android:layout_marginRight="4dp"
         android:singleLine="true"
         android:minHeight="40dp"
-        android:background="@android:drawable/editbox_background"
         android:layout_below="@id/l_username" />
       <TextView
         android:id="@+id/l_password"
@@ -102,7 +100,6 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="10dp"
         android:password="true"
-        android:background="@android:drawable/editbox_background"
         android:layout_below="@id/l_password" />
       <Button
         android:layout_width="wrap_content"
