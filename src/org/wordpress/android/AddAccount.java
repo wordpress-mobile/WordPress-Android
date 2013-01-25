@@ -526,10 +526,12 @@ public class AddAccount extends Activity implements OnClickListener {
 
 	private String getRSDMetaTagHrefRegEx(String urlString) {
 		String html = ApiHelper.getResponse(urlString);
-		Matcher matcher = rsdLink.matcher(html);
-		if (matcher.find()) {
-			String href = matcher.group(1);
-			return href;
+		if (html != null) {
+			Matcher matcher = rsdLink.matcher(html);
+			if (matcher.find()) {
+				String href = matcher.group(1);
+				return href;
+			}
 		}
 		return null;
 	}
