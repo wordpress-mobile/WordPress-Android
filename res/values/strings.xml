@@ -90,7 +90,7 @@
   <string name="categories_refreshed">Categories refreshed</string>
   <string name="category_refresh_error">Category refresh error</string>
   <string name="settings_not_found">Settings not found</string>
-  <string name="incorrect_credentials">Incorrect username or password. Load settings now?</string>
+  <string name="incorrect_credentials">Incorrect username or password.</string>
   <string name="empty_fields">No Content Found</string>
   <string name="title_post_required">Please enter some post content or attach a media item.</string>
   <string name="post_edited">Post edited</string>
@@ -489,14 +489,16 @@
   <string name="column_2">Column 2</string>
   
   <!--  Error Messages -->
-  <string name="error_delete_post">Sorry, an error occured while attempting to delete the %s.</string>
+  <string name="error_delete_post">Sorry, an error occurred while attempting to delete the %s.</string>
   <string name="error_refresh">Sorry, %s could not be refreshed at this time. Please try again later.</string>
-  <string name="error_generic">Sorry, an error occured. Please try again later.</string>
-  <string name="error_moderate_comment">Sorry, an error occured while attempting to moderate. Please try again later.</string>
-  <string name="error_edit_comment">Sorry, an error occured while editing the comment. Please try again later.</string>
-  <string name="error_stats">Sorry, an error occured while loading Stats. Please try again later.</string>
-  <string name="error_upload">Sorry, an error occured while uploading the %s. Please try again later.</string>
+  <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
+  <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
+  <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
+  <string name="error_stats">Sorry, an error occurred while loading Stats. Please try again later.</string>
+  <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
   <string name="error_media_upload">An error occurred while uploading media.</string>
+  <string name="error_upload_credentials">Sorry, could not upload the %s due to incorrect username or password. Please update your credentials in Settings and try again.</string>
+  <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
   
   <!-- GPL v2 -->
   <string name="eula_content">Version 2, June 1991\n\nCopyright (C) 1989, 1991

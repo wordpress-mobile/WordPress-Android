@@ -88,8 +88,7 @@ public class Post {
 	public Post(int blog_id, long post_id, boolean isPage, Context ctx) {
 		// load an existing post
 		context = ctx;
-		Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage,
-				post_id);
+		Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
 		if (postVals != null) {
 			try {
 				this.blog = new Blog(blog_id, ctx);
@@ -134,11 +133,9 @@ public class Post {
 		}
 	}
 
-	public Post(int blog_id, String title, String content, String picturePaths,
-			long date, String categories, String tags, String status,
-			String password, double latitude, double longitude, boolean isPage,
-			String postFormat, Context ctx, boolean createBlogReference,
-			boolean isLocalChange) {
+	public Post(int blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status,
+			String password, double latitude, double longitude, boolean isPage, String postFormat, Context ctx,
+			boolean createBlogReference, boolean isLocalChange) {
 		// create a new post
 		context = ctx;
 		if (createBlogReference) {
@@ -447,8 +444,7 @@ public class Post {
 		WordPress.wpDB.deletePost(this);
 	}
 
-	public static class uploadPostTask extends
-			AsyncTask<Post, Boolean, Boolean> {
+	public static class uploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
 
 		private Post post;
 		String error = "";
@@ -464,29 +460,19 @@ public class Post {
 				if (mediaError)
 					WordPress.postUploaded();
 
-				String postOrPage = (String) (post.isPage() ? context
-						.getResources().getText(R.string.page_id) : context
-						.getResources().getText(R.string.post_id));
+				String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
+						.getText(R.string.post_id));
 				Intent notificationIntent = new Intent(context, Posts.class);
-				notificationIntent.setData((Uri
-						.parse("custom://wordpressNotificationIntent"
-								+ post.blogID)));
+				notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.blogID)));
 				notificationIntent.putExtra("fromNotification", true);
 				notificationIntent.putExtra("errorMessage", error);
-				PendingIntent pendingIntent = PendingIntent.getActivity(
-						context, 0, notificationIntent,
-						PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 				n.flags |= Notification.FLAG_AUTO_CANCEL;
-				String errorText = context.getResources()
-						.getText(R.string.upload_failed).toString();
+				String errorText = context.getResources().getText(R.string.upload_failed).toString();
 				if (mediaError)
-					errorText = context.getResources().getText(R.string.media)
-							+ " "
-							+ context.getResources().getText(R.string.error);
-				n.setLatestEventInfo(context, (mediaError) ? errorText
-						: context.getResources()
-								.getText(R.string.upload_failed), (mediaError) ? error : postOrPage
-						+ " " + errorText + ": " + error, pendingIntent);
+					errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
+				n.setLatestEventInfo(context, (mediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
+						(mediaError) ? error : postOrPage + " " + errorText + ": " + error, pendingIntent);
 
 				nm.notify(notificationID, n); // needs a unique id
 			}
@@ -500,21 +486,15 @@ public class Post {
 			// add the uploader to the notification bar
 			nm = (NotificationManager) context.getSystemService("notification");
 
-			String postOrPage = (String) (post.isPage() ? context
-					.getResources().getText(R.string.page_id) : context
-					.getResources().getText(R.string.post_id));
-			String message = context.getResources().getText(R.string.uploading)
-					+ " " + postOrPage;
-			n = new Notification(R.drawable.notification_icon, message,
-					System.currentTimeMillis());
+			String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
+					.getText(R.string.post_id));
+			String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
+			n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
 			Intent notificationIntent = new Intent(context, Posts.class);
-			notificationIntent
-					.setData((Uri.parse("custom://wordpressNotificationIntent"
-							+ post.blogID)));
+			notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.blogID)));
 			notificationIntent.putExtra("fromNotification", true);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-					notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 			n.setLatestEventInfo(context, message, message, pendingIntent);
 
@@ -537,23 +517,17 @@ public class Post {
 			for (int x = 0; x < moreCount; x++) {
 				if (post.isLocalDraft()) {
 					if (x == 0)
-						s = (Spannable) WPHtml.fromHtml(post.getDescription(),
-								context, post);
+						s = (Spannable) WPHtml.fromHtml(post.getDescription(), context, post);
 					else
-						s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(),
-								context, post);
-					WPImageSpan[] click_spans = s.getSpans(0, s.length(),
-							WPImageSpan.class);
+						s = (Spannable) WPHtml.fromHtml(post.getMt_text_more(), context, post);
+					WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
 
 					if (click_spans.length != 0) {
 
 						for (int i = 0; i < click_spans.length; i++) {
-							String prompt = context.getResources().getText(
-									R.string.uploading_media_item)
-									+ String.valueOf(i + 1);
-							n.setLatestEventInfo(context, context
-									.getResources().getText(R.string.uploading)
-									+ " " + postOrPage, prompt, n.contentIntent);
+							String prompt = context.getResources().getText(R.string.uploading_media_item) + String.valueOf(i + 1);
+							n.setLatestEventInfo(context, context.getResources().getText(R.string.uploading) + " " + postOrPage, prompt,
+									n.contentIntent);
 							nm.notify(notificationID, n);
 							WPImageSpan wpIS = click_spans[i];
 							int start = s.getSpanStart(wpIS);
@@ -566,16 +540,13 @@ public class Post {
 							mf.setFeatured(wpIS.isFeatured());
 							mf.setFeaturedInPost(wpIS.isFeaturedInPost());
 							mf.setFileName(wpIS.getImageSource().toString());
-							mf.setHorizontalAlignment(wpIS
-									.getHorizontalAlignment());
+							mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 							mf.setWidth(wpIS.getWidth());
 
 							String imgHTML = uploadImage(mf);
 							if (imgHTML != null) {
-								SpannableString ss = new SpannableString(
-										imgHTML);
-								s.setSpan(ss, start, end,
-										Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+								SpannableString ss = new SpannableString(imgHTML);
+								s.setSpan(ss, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 								s.removeSpan(wpIS);
 							} else {
 								s.removeSpan(wpIS);
@@ -611,26 +582,21 @@ public class Post {
 						if (m.find()) {
 							imgPath = m.group(1);
 							if (!imgPath.equals("")) {
-								MediaFile mf = WordPress.wpDB.getMediaFile(
-										imgPath, post);
+								MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
 								if (mf != null) {
 									String imgHTML = uploadImage(mf);
 									if (imgHTML != null) {
 										if (x == 0) {
-											descriptionContent = descriptionContent
-													.replace(tag, imgHTML);
+											descriptionContent = descriptionContent.replace(tag, imgHTML);
 										} else {
-											moreContent = moreContent.replace(
-													tag, imgHTML);
+											moreContent = moreContent.replace(tag, imgHTML);
 										}
 									} else {
 										if (x == 0)
-											descriptionContent = descriptionContent
-													.replace(tag, "");
+											descriptionContent = descriptionContent.replace(tag, "");
 										else
-											moreContent = moreContent.replace(
-													tag, "");
+											moreContent = moreContent.replace(tag, "");
 										mediaError = true;
 									}
 								}
@@ -657,8 +623,7 @@ public class Post {
 
 			if (!post.isPage && post.isLocalDraft()) {
 				// add the tagline
-				HashMap<?, ?> globalSettings = WordPress.wpDB
-						.getNotificationOptions(context);
+				HashMap<?, ?> globalSettings = WordPress.wpDB.getNotificationOptions(context);
 				boolean taglineValue = false;
 				String tagline = "";
 
@@ -671,8 +636,7 @@ public class Post {
 					if (taglineValue) {
 						tagline = globalSettings.get("tagline").toString();
 						if (tagline != null) {
-							String tag = "\n\n<span class=\"post_sig\">"
-									+ tagline + "</span>\n\n";
+							String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
 							if (moreContent == "")
 								descriptionContent += tag;
 							else
@@ -684,8 +648,7 @@ public class Post {
 				// post format
 				if (!post.getWP_post_format().equals("")) {
 					if (!post.getWP_post_format().equals("standard"))
-						contentStruct.put("wp_post_format",
-								post.getWP_post_format());
+						contentStruct.put("wp_post_format", post.getWP_post_format());
 				}
 			}
 
@@ -695,21 +658,18 @@ public class Post {
 			if (pubDate != 0) {
 				Date date_created_gmt = new Date(pubDate);
 				contentStruct.put("date_created_gmt", date_created_gmt);
-				Date dateCreated = new Date(pubDate
-						+ (date_created_gmt.getTimezoneOffset() * 60000));
+				Date dateCreated = new Date(pubDate + (date_created_gmt.getTimezoneOffset() * 60000));
 				contentStruct.put("dateCreated", dateCreated);
 			}
 
 			if (!moreContent.equals("")) {
-				descriptionContent = descriptionContent.trim() + "<!--more-->"
-						+ moreContent;
+				descriptionContent = descriptionContent.trim() + "<!--more-->" + moreContent;
 				post.mt_text_more = "";
 			}
 
 			// get rid of the p and br tags that the editor adds.
 			if (post.isLocalDraft()) {
-				descriptionContent = descriptionContent.replace("<p>", "")
-						.replace("</p>", "\n").replace("<br>", "");
+				descriptionContent = descriptionContent.replace("<p>", "").replace("</p>", "\n").replace("<br>", "");
 			}
 
 			// gets rid of the weird character android inserts after images
@@ -729,8 +689,7 @@ public class Post {
 			if (post.getMt_excerpt() != null)
 				contentStruct.put("mt_excerpt", post.getMt_excerpt());
 
-			contentStruct.put((post.isPage) ? "page_status" : "post_status",
-					post.post_status);
+			contentStruct.put((post.isPage) ? "page_status" : "post_status", post.post_status);
 			Double latitude = 0.0;
 			Double longitude = 0.0;
 			if (!post.isPage) {
@@ -755,13 +714,12 @@ public class Post {
 					contentStruct.put("custom_fields", geo);
 				}
 			}
-			
-			//featured image
+
+			// featured image
 			if (featuredImageID != -1)
 				contentStruct.put("wp_post_thumbnail", featuredImageID);
 
-			XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-					post.blog.getHttpuser(), post.blog.getHttppassword());
+			XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(), post.blog.getHttpuser(), post.blog.getHttppassword());
 
 			if (post.quickPostType != null)
 				client.addQuickPostHeader(post.quickPostType);
@@ -787,24 +745,27 @@ public class Post {
 			Object[] params;
 
 			if (post.isLocalDraft() && !post.uploaded)
-				params = new Object[] { post.blog.getBlogId(),
-						post.blog.getUsername(), post.blog.getPassword(),
-						contentStruct, publishThis };
+				params = new Object[] { post.blog.getBlogId(), post.blog.getUsername(), post.blog.getPassword(), contentStruct, publishThis };
 			else
-				params = new Object[] { post.getPostid(),
-						post.blog.getUsername(), post.blog.getPassword(),
-						contentStruct, publishThis };
+				params = new Object[] { post.getPostid(), post.blog.getUsername(), post.blog.getPassword(), contentStruct, publishThis };
 
 			try {
-				client.call(
-						(post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost"
-								: "metaWeblog.editPost", params);
+				client.call((post.isLocalDraft() && !post.uploaded) ? "metaWeblog.newPost" : "metaWeblog.editPost", params);
 				post.setUploaded(true);
 				post.setLocalChange(false);
 				post.update();
 				return true;
 			} catch (final XMLRPCException e) {
-				error = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context.getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString());
+				// Clean up the error message (remove codes and namespace)
+				String exceptionMessage = e.getMessage();
+				if (exceptionMessage.indexOf(": ") > -1)
+					exceptionMessage = exceptionMessage.substring(exceptionMessage.indexOf(": ") + 2, exceptionMessage.length());
+				if (exceptionMessage.indexOf("[code") > -1)
+					exceptionMessage = exceptionMessage.substring(0, exceptionMessage.indexOf("[code"));
+				
+				error = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
+						.getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
+						+ " " + exceptionMessage;
 				mediaError = false;
 				Log.i("WP", error);
 			}
@@ -821,8 +782,7 @@ public class Post {
 
 			// check for image, and upload it
 			if (mf.getFileName() != null) {
-				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(),
-						post.blog.getHttpuser(), post.blog.getHttppassword());
+				XMLRPCClient client = new XMLRPCClient(post.blog.getUrl(), post.blog.getHttpuser(), post.blog.getHttppassword());
 
 				/*
 				 * client.setUploadProgressListener(new
@@ -848,8 +808,8 @@ public class Post {
 				}
 
 				if (video) { // upload the video
-					
-					//create temp file for media upload
+
+					// create temp file for media upload
 					String tempFileName = "wp-" + System.currentTimeMillis();
 					try {
 						context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
@@ -858,7 +818,7 @@ public class Post {
 						mediaError = true;
 						return null;
 					}
-					
+
 					File tempFile = context.getFileStreamPath(tempFileName);
 
 					Uri videoUri = Uri.parse(curImagePath);
@@ -869,13 +829,10 @@ public class Post {
 						String[] projection;
 						Uri imgPath;
 
-						projection = new String[] { Video.Media._ID,
-								Video.Media.DATA, Video.Media.MIME_TYPE,
-								Video.Media.RESOLUTION };
+						projection = new String[] { Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION };
 						imgPath = videoUri;
 
-						Cursor cur = context.getContentResolver().query(
-								imgPath, projection, null, null, null);
+						Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
 						String thumbData = "";
 
 						if (cur.moveToFirst()) {
@@ -883,10 +840,8 @@ public class Post {
 							int mimeTypeColumn, resolutionColumn, dataColumn;
 
 							dataColumn = cur.getColumnIndex(Video.Media.DATA);
-							mimeTypeColumn = cur
-									.getColumnIndex(Video.Media.MIME_TYPE);
-							resolutionColumn = cur
-									.getColumnIndex(Video.Media.RESOLUTION);
+							mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+							resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
 
 							mf = new MediaFile();
 
@@ -903,12 +858,9 @@ public class Post {
 								// set the width of the video to the
 								// thumbnail
 								// width, else 640x480
-								if (!post.blog.getMaxImageWidth().equals(
-										"Original Size")) {
+								if (!post.blog.getMaxImageWidth().equals("Original Size")) {
 									xRes = post.blog.getMaxImageWidth();
-									yRes = String
-											.valueOf(Math.round(Integer.valueOf(post.blog
-													.getMaxImageWidth()) * 0.75));
+									yRes = String.valueOf(Math.round(Integer.valueOf(post.blog.getMaxImageWidth()) * 0.75));
 								} else {
 									xRes = "640";
 									yRes = "480";
@@ -918,8 +870,7 @@ public class Post {
 
 						}
 					} else { // file is not in media library
-						fVideo = new File(videoUri.toString().replace(
-								"file://", ""));
+						fVideo = new File(videoUri.toString().replace("file://", ""));
 					}
 
 					String imageTitle = fVideo.getName();
@@ -932,19 +883,17 @@ public class Post {
 					m.put("bits", mf);
 					m.put("overwrite", true);
 
-					Object[] params = { 1, post.blog.getUsername(),
-							post.blog.getPassword(), m };
+					Object[] params = { 1, post.blog.getUsername(), post.blog.getPassword(), m };
 
 					Object result = null;
-					
+
 					try {
 						result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
 					} catch (XMLRPCException e) {
 						String mediaErrorMsg = e.getLocalizedMessage();
 						if (video) {
 							if (mediaErrorMsg.contains("Invalid file type")) {
-								mediaErrorMsg = context.getResources()
-										.getString(R.string.vp_upgrade);
+								mediaErrorMsg = context.getResources().getString(R.string.vp_upgrade);
 							}
 						}
 						error = context.getResources().getText(R.string.error_media_upload).toString();
@@ -957,13 +906,11 @@ public class Post {
 
 					String resultURL = contentHash.get("url").toString();
 					if (contentHash.containsKey("videopress_shortcode")) {
-						resultURL = contentHash.get("videopress_shortcode")
-								.toString() + "\n";
+						resultURL = contentHash.get("videopress_shortcode").toString() + "\n";
 					} else {
 						resultURL = String
 								.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-										xRes, yRes, resultURL, mimeType,
-										resultURL);
+										xRes, yRes, resultURL, mimeType, resultURL);
 					}
 
 					content = content + resultURL;
@@ -971,8 +918,8 @@ public class Post {
 				} // end video
 				else {
 					for (int i = 0; i < 2; i++) {
-						
-						//create temp file for media upload
+
+						// create temp file for media upload
 						String tempFileName = "wp-" + System.currentTimeMillis();
 						try {
 							context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
@@ -981,12 +928,14 @@ public class Post {
 							error = context.getString(R.string.file_not_found);
 							return null;
 						}
-						
+
 						File tempFile = context.getFileStreamPath(tempFileName);
 
 						curImagePath = mf.getFileName();
 
-						if (i == 0 || (((post.blog.isFullSizeImage() && !post.blog.getMaxImageWidth().equals("Original Size")) || post.blog.isScaledImage()))) {
+						if (i == 0
+								|| (((post.blog.isFullSizeImage() && !post.blog.getMaxImageWidth().equals("Original Size")) || post.blog
+										.isScaledImage()))) {
 
 							Uri imageUri = Uri.parse(curImagePath);
 							File jpeg = null;
@@ -996,31 +945,23 @@ public class Post {
 								String[] projection;
 								Uri imgPath;
 
-								projection = new String[] { Images.Media._ID,
-										Images.Media.DATA,
-										Images.Media.MIME_TYPE,
+								projection = new String[] { Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE,
 										Images.Media.ORIENTATION };
 
 								imgPath = imageUri;
 
-								Cursor cur = context.getContentResolver()
-										.query(imgPath, projection, null, null,
-												null);
+								Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
 								String thumbData = "";
 
 								if (cur.moveToFirst()) {
 
 									int dataColumn, mimeTypeColumn, orientationColumn;
 
-									dataColumn = cur
-											.getColumnIndex(Images.Media.DATA);
-									mimeTypeColumn = cur
-											.getColumnIndex(Images.Media.MIME_TYPE);
-									orientationColumn = cur
-											.getColumnIndex(Images.Media.ORIENTATION);
+									dataColumn = cur.getColumnIndex(Images.Media.DATA);
+									mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+									orientationColumn = cur.getColumnIndex(Images.Media.ORIENTATION);
 
-									orientation = cur
-											.getString(orientationColumn);
+									orientation = cur.getString(orientationColumn);
 									thumbData = cur.getString(dataColumn);
 									mimeType = cur.getString(mimeTypeColumn);
 									jpeg = new File(thumbData);
@@ -1029,8 +970,7 @@ public class Post {
 
 								}
 							} else { // file is not in media library
-								path = imageUri.toString().replace("file://",
-										"");
+								path = imageUri.toString().replace("file://", "");
 								jpeg = new File(path);
 								mf.setFilePath(path);
 							}
@@ -1043,8 +983,7 @@ public class Post {
 							}
 
 							ImageHelper ih = new ImageHelper();
-							orientation = ih.getExifOrientation(path,
-									orientation);
+							orientation = ih.getExifOrientation(path, orientation);
 
 							String imageTitle = jpeg.getName();
 
@@ -1055,8 +994,7 @@ public class Post {
 
 								DataInputStream in = null;
 								try {
-									in = new DataInputStream(
-											new FileInputStream(jpeg));
+									in = new DataInputStream(new FileInputStream(jpeg));
 								} catch (FileNotFoundException e) {
 									e.printStackTrace();
 								}
@@ -1071,20 +1009,12 @@ public class Post {
 									e.printStackTrace();
 								}
 
-								String width = String.valueOf(i == 0 ? mf
-										.getWidth() : post.blog
-										.getScaledImageWidth());
-								if (post.blog.getMaxImageWidth().equals(
-										"Original Size") && i == 0)
+								String width = String.valueOf(i == 0 ? mf.getWidth() : post.blog.getScaledImageWidth());
+								if (post.blog.getMaxImageWidth().equals("Original Size") && i == 0)
 									width = "Original Size";
-									
-								
+
 								ImageHelper ih2 = new ImageHelper();
-								finalBytes = ih2
-										.createThumbnail(
-												bytes,
-												width,
-												orientation, false);
+								finalBytes = ih2.createThumbnail(bytes, width, orientation, false);
 
 								if (finalBytes == null) {
 									error = context.getString(R.string.out_of_memory);
@@ -1105,14 +1035,12 @@ public class Post {
 							}
 							m.put("overwrite", true);
 
-							Object[] params = { 1, post.blog.getUsername(),
-									post.blog.getPassword(), m };
+							Object[] params = { 1, post.blog.getUsername(), post.blog.getPassword(), m };
 
 							Object result = null;
 
 							try {
-								result = (Object) client.callUploadFile("wp.uploadFile",
-										params, tempFile);
+								result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
 							} catch (XMLRPCException e) {
 								error = e.getMessage();
 								mediaError = true;
@@ -1123,9 +1051,8 @@ public class Post {
 
 							contentHash = (HashMap<?, ?>) result;
 
-							String resultURL = contentHash.get("url")
-									.toString();
-							
+							String resultURL = contentHash.get("url").toString();
+
 							if (mf.isFeatured()) {
 								try {
 									if (contentHash.get("id") != null) {
@@ -1141,8 +1068,7 @@ public class Post {
 							if (i == 0) {
 								finalThumbnailUrl = resultURL;
 							} else {
-								if (post.blog.isFullSizeImage()
-										|| post.blog.isScaledImage()) {
+								if (post.blog.isFullSizeImage() || post.blog.isScaledImage()) {
 									finalImageUrl = resultURL;
 								} else {
 									finalImageUrl = "";
@@ -1165,44 +1091,24 @@ public class Post {
 								break;
 							}
 
-							String alignmentCSS = "class=\"" + alignment
-									+ " size-full\" ";
+							String alignmentCSS = "class=\"" + alignment + " size-full\" ";
 							if (resultURL != null) {
-								if (i != 0
-										&& (post.blog.isFullSizeImage() || post.blog
-												.isScaledImage())) {
-									content = content
-											+ "<a href=\""
-											+ finalImageUrl
-											+ "\"><img title=\""
-											+ mf.getTitle() + "\" "
-											+ alignmentCSS
-											+ "alt=\"image\" src=\""
-											+ finalThumbnailUrl + "\" /></a>";
+								if (i != 0 && (post.blog.isFullSizeImage() || post.blog.isScaledImage())) {
+									content = content + "<a href=\"" + finalImageUrl + "\"><img title=\"" + mf.getTitle() + "\" "
+											+ alignmentCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
 								} else {
-									if (i == 0
-											&& (post.blog.isFullSizeImage() == false && !post.blog
-													.isScaledImage()) || (post.blog.getMaxImageWidth().equals("Original Size") && !post.blog
-															.isScaledImage())) {
-										content = content + "<a href=\"" + finalThumbnailUrl + "\"><img title=\""
-												+ mf.getTitle() + "\" "
-												+ alignmentCSS
-												+ "alt=\"image\" src=\""
-												+ finalThumbnailUrl + "\" /></a>";
+									if (i == 0 && (post.blog.isFullSizeImage() == false && !post.blog.isScaledImage())
+											|| (post.blog.getMaxImageWidth().equals("Original Size") && !post.blog.isScaledImage())) {
+										content = content + "<a href=\"" + finalThumbnailUrl + "\"><img title=\"" + mf.getTitle() + "\" "
+												+ alignmentCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
 									}
 								}
 
-								if ((i == 0 && (!post.blog.isFullSizeImage() && !post.blog
-										.isScaledImage()) || (post.blog.getMaxImageWidth().equals("Original Size") && !post.blog
-												.isScaledImage())) || i == 1) {
+								if ((i == 0 && (!post.blog.isFullSizeImage() && !post.blog.isScaledImage()) || (post.blog
+										.getMaxImageWidth().equals("Original Size") && !post.blog.isScaledImage())) || i == 1) {
 									if (!mf.getCaption().equals("")) {
-										content = String
-												.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-														alignment,
-														mf.getWidth(),
-														EscapeUtils.escapeHtml(mf
-																.getCaption()),
-														content);
+										content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+												alignment, mf.getWidth(), EscapeUtils.escapeHtml(mf.getCaption()), content);
 									}
 								}
 							}

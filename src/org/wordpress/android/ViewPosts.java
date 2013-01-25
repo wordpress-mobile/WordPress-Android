@@ -787,24 +787,21 @@ public class ViewPosts extends ListFragment {
 		protected void onPostExecute(Boolean result) {
 			if (isCancelled() || !result) {
 				onRefreshListener.onRefresh(false);
+				if (errorMsg != "" && !getActivity().isFinishing()) {
+					FragmentTransaction ft = getFragmentManager()
+							.beginTransaction();
+					WPAlertDialogFragment alert = WPAlertDialogFragment
+							.newInstance(String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
+					alert.show(ft, "alert");
+					errorMsg = "";
+				}
 				return;
 			}
 
 			if (loadMore)
 				switcher.showPrevious();
 			onRefreshListener.onRefresh(false);
-
-			if (errorMsg != "" && !getActivity().isFinishing()) {
-				FragmentTransaction ft = getFragmentManager()
-						.beginTransaction();
-				WPAlertDialogFragment alert = WPAlertDialogFragment
-						.newInstance(String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
-				alert.show(ft, "alert");
-				errorMsg = "";
-			} else {
-				loadPosts(loadMore);
-			}
-			
+			loadPosts(loadMore);
 		}
 
 		@Override
