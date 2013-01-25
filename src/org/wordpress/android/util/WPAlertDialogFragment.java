@@ -64,11 +64,14 @@ public class WPAlertDialogFragment extends DialogFragment implements
 		String message = this.getArguments().getString("alert-message");
 		if (message == null)
 			message = getString(R.string.error_generic);
-		if (error.contains("code 403")) {
+		if (error.contains("code 403") || error.contains("code 503")) {
     		//invalid credentials
             b.setIcon(android.R.drawable.ic_dialog_alert);
             b.setTitle(R.string.connection_error);
-            b.setMessage(R.string.incorrect_credentials);
+            if (error.contains("code 503"))
+            	b.setMessage(getResources().getText(R.string.login_limit) + " " + getResources().getText(R.string.load_settings));
+            else
+            	b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.load_settings));
             b.setCancelable(true);
             b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				
