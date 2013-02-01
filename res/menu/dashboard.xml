@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/refresh_icon"
+        android:showAsAction="always"
+        android:title="@string/refresh"/>
+    <item
+        android:id="@+id/menu_add_account"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="never"
+        android:title="@string/add_account"/>
+    <item
+        android:id="@+id/menu_preferences"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:showAsAction="never"
+        android:title="@string/preferences"/>
+    <item
+        android:id="@+id/menu_remove_account"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:showAsAction="never"
+        android:title="@string/remove_account"/>
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:showAsAction="never"
+        android:title="@string/about"/>
+
+</menu>

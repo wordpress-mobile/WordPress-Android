@@ -8,7 +8,6 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="@dimen/action_bar_height"
         android:background="#FFFFFFFF"
         android:fillViewport="true" >
 
@@ -256,10 +255,4 @@
                 android:textSize="18dp" />
         </RelativeLayout>
     </ScrollView>
-
-    <include
-        android:id="@+id/settingsActionBar"
-        android:layout_above="@id/settings"
-        layout="@layout/action_bar" />
-
 </RelativeLayout>

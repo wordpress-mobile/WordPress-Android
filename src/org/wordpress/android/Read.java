@@ -10,7 +10,10 @@ import org.apache.http.protocol.HTTP;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,8 +22,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,7 +33,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class Read extends Activity {
+public class Read extends SherlockActivity {
 	/** Called when the activity is first created. */
 	public String[] authors;
 	public String[] comments;

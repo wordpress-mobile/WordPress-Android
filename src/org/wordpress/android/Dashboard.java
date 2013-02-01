@@ -6,45 +6,45 @@ import java.util.Vector;
 import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import android.app.Activity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class Dashboard extends Activity {
+public class Dashboard extends WPActionBarActivity {
 	private int id;
 	boolean fromNotification = false;
 	int uploadID = 0;
 	public Integer default_blog;
 	public LinearLayout mainDashboard;
 	public Blog blog;
-	WPTitleBar titleBar;
+	private MenuItem refreshMenuItem;
+	private TextView commentBadgeTextView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.dashboard);
-		getWindow().setFormat(PixelFormat.RGBA_8888);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-
 	}
 
 	@Override
@@ -81,70 +81,69 @@ public class Dashboard extends Activity {
 		if (data != null) {
 			Bundle bundle = data.getExtras();
 			String status = bundle.getString("returnStatus");
-			if (status.equals("CANCEL") && WordPress.currentBlog == null) {
+			if (status.equals("CANCEL") && WordPress.getCurrentBlog(Dashboard.this) == null) {
 				finish();
 			} else if (!status.equals("CANCEL")) {
-				if (titleBar == null)
-					titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
-				titleBar.reloadBlogs();
-				titleBar.updateBlogSelector(true);
-				titleBar.startRotatingRefreshIcon();
 				new refreshBlogContentTask().execute(true);
 			}
 		}
 	}
 
 	public boolean checkEULA() {
-		boolean sEULA = WordPress.wpDB.checkEULA(this);
-
-		return sEULA;
-
+		return WordPress.wpDB.checkEULA(this);
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		if (titleBar != null)
-			titleBar.switchDashboardLayout(newConfig.orientation);
+		switchDashboardLayout(newConfig.orientation);
+	}
+	
+	public void switchDashboardLayout(int orientation) {
+		
+		LayoutInflater inflater = LayoutInflater.from(Dashboard.this);
+		RelativeLayout fullDashboard = (RelativeLayout)findViewById(R.id.full_dashboard);
+		LinearLayout dashboard = (LinearLayout)findViewById(R.id.dashboard);
+		int index = fullDashboard.indexOfChild(dashboard);
+		fullDashboard.removeView(dashboard);
+		if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+			dashboard = (LinearLayout) inflater.inflate(
+					R.layout.dashboard_buttons_landscape, fullDashboard, false);
+		else if (orientation == Configuration.ORIENTATION_PORTRAIT)
+			dashboard = (LinearLayout) inflater.inflate(
+					R.layout.dashboard_buttons_portrait, fullDashboard, false);
+
+		fullDashboard.addView(dashboard, index);
+		setupDashboardButtons();
 	}
 
 	// Add settings to menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-
-		menu.add(0, 0, 0, getResources().getText(R.string.add_account));
-		MenuItem menuItem1 = menu.findItem(0);
-		menuItem1.setIcon(android.R.drawable.ic_menu_add);
-
-		menu.add(0, 1, 0, getResources().getText(R.string.preferences));
-		MenuItem menuItem2 = menu.findItem(1);
-		menuItem2.setIcon(android.R.drawable.ic_menu_preferences);
-
-		menu.add(0, 2, 0, getResources().getText(R.string.remove_account));
-		MenuItem menuItem3 = menu.findItem(2);
-		menuItem3.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-
-		menu.add(0, 3, 0, getResources().getText(R.string.about));
-		MenuItem menuItem4 = menu.findItem(3);
-		menuItem4.setIcon(android.R.drawable.ic_menu_info_details);
-
-		return true;
+		MenuInflater inflater = getSupportMenuInflater();
+	    inflater.inflate(R.menu.dashboard, menu);
+	    refreshMenuItem = menu.findItem(R.id.menu_refresh);
+	    return true;
 	}
 
 	// Menu actions
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case 0:
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_refresh) {
+			refreshMenuItem = item;
+			new refreshBlogContentTask().execute(true);
+			return true;
+		} else if (itemId == R.id.menu_add_account) {
 			Intent i = new Intent(this, NewAccount.class);
 			startActivityForResult(i, 0);
 			return true;
-		case 1:
+		} else if (itemId == R.id.menu_preferences) {
 			Intent i2 = new Intent(this, Preferences.class);
 			startActivity(i2);
 			return true;
-		case 2:
+		} else if (itemId == R.id.menu_remove_account) {
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Dashboard.this);
 			dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
 			dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
@@ -156,7 +155,6 @@ public class Dashboard extends Activity {
 								.show();
 						WordPress.wpDB.deleteLastBlogID();
 						WordPress.currentBlog = null;
-						titleBar.reloadBlogs();
 						displayAccounts();
 					} else {
 						AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Dashboard.this);
@@ -182,13 +180,12 @@ public class Dashboard extends Activity {
 			dialogBuilder.setCancelable(false);
 			dialogBuilder.create().show();
 			return true;
-		case 3:
+		} else if (itemId == R.id.menu_about) {
 			Intent intent = new Intent(this, About.class);
 			startActivity(intent);
 			return true;
 		}
 		return false;
-
 	}
 
 	public void displayAccounts() {
@@ -200,41 +197,177 @@ public class Dashboard extends Activity {
 			Intent i = new Intent(Dashboard.this, NewAccount.class);
 			startActivityForResult(i, 0);
 		} else {
-			id = WordPress.currentBlog.getId();
-			titleBar = (WPTitleBar) findViewById(R.id.dashboardActionBar);
-			titleBar.isHome = true;
-			titleBar.refreshBlog();
-			titleBar.updateBlogSelector(true);
-			titleBar.showDashboard(600);
+			id = WordPress.getCurrentBlog(Dashboard.this).getId();
+			setupDashboardButtons();			
+			updateCommentBadge();
+		}
+	}
+	
+	private void setupDashboardButtons() {
+		// dashboard button click handlers
+		LinearLayout writeButton = (LinearLayout) findViewById(R.id.dashboard_newpost_btn);
+		writeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, EditPost.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				startActivity(i);
+			}
+		});
 
-			titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-				// user selected new blog in the title bar
-				@Override
-				public void OnBlogChanged() {
+		LinearLayout newPageButton = (LinearLayout) findViewById(R.id.dashboard_newpage_btn);
+		newPageButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, EditPost.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				i.putExtra("isPage", true);
+				startActivity(i);
+			}
+		});
 
-					id = WordPress.currentBlog.getId();
-					try {
-						blog = new Blog(id, Dashboard.this);
-					} catch (Exception e) {
-						Toast.makeText(Dashboard.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-						finish();
-					}
-					titleBar.startRotatingRefreshIcon();
-					new refreshBlogContentTask().execute(false);
+		LinearLayout postsButton = (LinearLayout) findViewById(R.id.dashboard_posts_btn);
+		postsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, Posts.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				startActivity(i);
+				
+			}
+		});
+
+		LinearLayout pagesButton = (LinearLayout) findViewById(R.id.dashboard_pages_btn);
+		pagesButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, Posts.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				i.putExtra("viewPages", true);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				startActivity(i);
+				
+			}
+		});
+
+		LinearLayout commentsButton = (LinearLayout) findViewById(R.id.dashboard_comments_btn);
+		commentsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, Comments.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				startActivity(i);
+				
+			}
+		});
+
+		LinearLayout statsButton = (LinearLayout) findViewById(R.id.dashboard_stats_btn);
+		statsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, ViewWebStats.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				startActivity(i);
+				
+			}
+		});
+
+		LinearLayout settingsButton = (LinearLayout) findViewById(R.id.dashboard_settings_btn);
+		settingsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Dashboard.this, Settings.class);
+				i.putExtra("id", WordPress.currentBlog.getId());
+				i.putExtra("isNew", true);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+				startActivity(i);
+				
+			}
+		});
+
+		LinearLayout readButton = (LinearLayout) findViewById(R.id.dashboard_subs_btn);
+		readButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
+				if (WordPress.currentBlog.isDotcomFlag()) {
+					Intent i = new Intent(Dashboard.this, WPCOMReaderPager.class);
+					i.putExtra("id", readerBlogID);
+					startActivity(i);
+					
+				} else {
+					Intent i = new Intent(Dashboard.this, Read.class);
+					i.putExtra("loadAdmin", true);
+					startActivity(i);
+					
 				}
-			});
+			}
+		});
 
-			titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
-				public void onClick(View v) {
+		LinearLayout picButton = (LinearLayout) findViewById(R.id.dashboard_quickphoto_btn);
+		picButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				PackageManager pm = Dashboard.this.getPackageManager();
+				Intent i = new Intent(Dashboard.this, EditPost.class);
+				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))
+					i.putExtra("option", "newphoto");
+				else
+					i.putExtra("option", "photolibrary");
+				i.putExtra("isNew", true);
+				startActivity(i);
+				
+			}
+		});
 
-					titleBar.startRotatingRefreshIcon();
-					new refreshBlogContentTask().execute(false);
-				}
-			});
-			
-			new refreshBlogContentTask().execute(false);
+		LinearLayout videoButton = (LinearLayout) findViewById(R.id.dashboard_quickvideo_btn);
+		videoButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				PackageManager pm = Dashboard.this.getPackageManager();
+				Intent i = new Intent(Dashboard.this, EditPost.class);
+				if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))
+					i.putExtra("option", "newvideo");
+				else
+					i.putExtra("option", "videolibrary");
+				i.putExtra("isNew", true);
+				startActivity(i);
+				
+			}
+		});
+
+		commentBadgeTextView = (TextView) findViewById(R.id.comment_badge_text);
+		updateCommentBadge();
+		updateReadButton();
+
+	}
+	
+	public void updateCommentBadge() {
+		if (WordPress.currentBlog != null) {
+			int commentCount = WordPress.currentBlog
+					.getUnmoderatedCommentCount(this);
+			FrameLayout commentBadge = (FrameLayout) findViewById(R.id.comment_badge_frame);
+			if (commentCount > 0) {
+				commentBadge.setVisibility(View.VISIBLE);
+			} else {
+				commentBadge.setVisibility(View.GONE);
+			}
+
+			commentBadgeTextView.setText(String.valueOf(commentCount));
 
 		}
+	}
+	
+	private void updateReadButton() {
+		if (WordPress.currentBlog == null)
+			return;
+		TextView readButtonText = (TextView) findViewById(R.id.read_button_text);
+		ImageView readButtonImage = (ImageView) findViewById(R.id.read_button_image);
+		if (WordPress.currentBlog.isDotcomFlag()){
+			readButtonText.setText(getResources().getText(R.string.reader));
+			readButtonImage.setImageDrawable(getResources().getDrawable(R.drawable.dashboard_icon_subs));
+		}
+		else {
+			readButtonText.setText(getResources().getText(R.string.wp_admin));
+			readButtonImage.setImageDrawable(getResources().getDrawable(R.drawable.dashboard_icon_wp));
+		}	
 	}
 
 	private class refreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
@@ -242,22 +375,14 @@ public class Dashboard extends Activity {
 		// refreshes blog level info (WP version number) and stuff related to
 		// theme (available post types, recent comments etc)
 		@Override
-		protected void onPostExecute(Boolean result) {
-			if (!isFinishing()) {
-				Thread action = new Thread() {
-					public void run() {
-						titleBar.stopRotatingRefreshIcon();
-						titleBar.updateCommentBadge();
-					}
-				};
-				runOnUiThread(action);
-			}
+		protected void onPreExecute() {
+			startAnimatingRefreshButton(refreshMenuItem);
 		}
 
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
 			boolean commentsOnly = params[0];
-			Blog blog = WordPress.currentBlog;
+			Blog blog = WordPress.getCurrentBlog(Dashboard.this);
 			XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
 			if (!commentsOnly) {
@@ -319,6 +444,25 @@ public class Dashboard extends Activity {
 
 			return true;
 		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (!isFinishing() && refreshMenuItem != null) {
+				stopAnimatingRefreshButton(refreshMenuItem);
+			}
+		}
 
+	}
+
+	@Override
+	public void onBlogChanged() {
+		try {
+			blog = new Blog(id, Dashboard.this);
+		} catch (Exception e) {
+			Toast.makeText(Dashboard.this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+			finish();
+		}
+		updateCommentBadge();
+		new refreshBlogContentTask().execute(false);
 	}
 }

@@ -9,7 +9,6 @@
         android:id="@+id/webView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="@dimen/action_bar_height"
         android:background="#FFFFFFFF"
         />
     
@@ -77,10 +76,4 @@
             android:text="@string/help_stats"
             android:textColor="#FFFFFFFF" />
     </RelativeLayout>
-
-    <include
-        android:id="@+id/actionBar"
-        android:layout_above="@id/webView"
-        layout="@layout/action_bar" />
-
 </RelativeLayout>

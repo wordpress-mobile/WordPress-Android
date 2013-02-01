@@ -12,8 +12,6 @@ import org.wordpress.android.ViewPosts.OnPostSelectedListener;
 import org.wordpress.android.ViewPosts.OnRefreshListener;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -25,21 +23,20 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class Posts extends FragmentActivity implements OnPostSelectedListener,
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+public class Posts extends WPActionBarActivity implements OnPostSelectedListener,
 		OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
 
-	private WPTitleBar titleBar;
 	private ViewPosts postList;
 	private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
 	public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3;
@@ -47,11 +44,16 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	public boolean isPage = false;
 	public String errorMsg = "";
 	public boolean isRefreshing = false;
+	private MenuItem refreshMenuItem;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.posts);
+		
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		FragmentManager fm = getSupportFragmentManager();
 		postList = (ViewPosts) fm.findFragmentById(R.id.postList);
@@ -82,26 +84,6 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 		}
 
 		WordPress.currentPost = null;
-
-		titleBar = (WPTitleBar) findViewById(R.id.postsActionBar);
-		titleBar.refreshButton
-				.setOnClickListener(new ImageButton.OnClickListener() {
-					public void onClick(View v) {
-						checkForLocalChanges(true);
-					}
-				});
-
-		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-			// user selected new blog in the title bar
-			@Override
-			public void OnBlogChanged() {
-
-				popPostDetail();
-				attemptToSelectPost();
-				postList.loadPosts(false);
-
-			}
-		});
 		
 	     WordPress.setOnPostUploadedListener(new WordPress.OnPostUploadedListener(){
 
@@ -171,7 +153,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		titleBar.setupCurrentBlog();
+		//titleBar.setupCurrentBlog();
 		attemptToSelectPost();
 		postList.loadPosts(false);
 		if (WordPress.postsShouldRefresh) {
@@ -185,8 +167,8 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	protected void onPause() {
 		super.onPause();
 		if (isRefreshing)
-			titleBar.stopRotatingRefreshIcon();
-		
+			stopAnimatingRefreshButton(refreshMenuItem);
+		 overridePendingTransition(0, 0);
 	}
 
 	@Override
@@ -222,7 +204,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			postList.isPage = isPage;
 		}
 
-		titleBar.refreshBlog();
+		//titleBar.refreshBlog();
 		attemptToSelectPost();
 		postList.getListView().removeFooterView(postList.switcher);
 		postList.createSwitcher();
@@ -237,25 +219,21 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			postList.getPostsTask.cancel(true);
 	}
 
-	// Add settings to menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-
-		if (isPage)
-			menu.add(0, 0, 0, getResources().getText(R.string.new_page));
-		else
-			menu.add(0, 0, 0, getResources().getText(R.string.new_post));
-		MenuItem menuItem1 = menu.findItem(0);
-		menuItem1.setIcon(android.R.drawable.ic_menu_add);
-
-		return true;
+		MenuInflater inflater = getSupportMenuInflater();
+	    inflater.inflate(R.menu.posts, menu);
+	    refreshMenuItem = menu.findItem(R.id.menu_refresh);
+	    return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case 0:
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_refresh) {
+			postList.refreshPosts(false);
+		} else if (itemId == R.id.menu_new_post) {
 			Intent i = new Intent(this, EditPost.class);
 			i.putExtra("id", WordPress.currentBlog.getId());
 			i.putExtra("isNew", true);
@@ -263,6 +241,11 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 				i.putExtra("isPage", true);
 			startActivity(i);
 			return true;
+		} else if (itemId == android.R.id.home) {
+            Intent intent = new Intent(this, Dashboard.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            return true;
 		}
 		return false;
 
@@ -282,10 +265,10 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
+		/*if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
 			titleBar.hideDashboardOverlay();
 			return false;
-		}
+		}*/
 
 		return super.onKeyDown(keyCode, event);
 	}
@@ -316,10 +299,10 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	@Override
 	public void onRefresh(boolean start) {
 		if (start) {
-			titleBar.startRotatingRefreshIcon();
+			startAnimatingRefreshButton(refreshMenuItem);
 			isRefreshing = true;
 		} else {
-			titleBar.stopRotatingRefreshIcon();
+			stopAnimatingRefreshButton(refreshMenuItem);
 			isRefreshing = false;
 		}
 
@@ -570,7 +553,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	public void onPostAction(int action, final Post post) {
 		if (postList.getPostsTask != null) {
 			postList.getPostsTask.cancel(true);
-			titleBar.stopRotatingRefreshIcon();
+			//titleBar.stopRotatingRefreshIcon();
 			isRefreshing = false;
 		}
 		if (action == POST_DELETE) {
@@ -663,7 +646,7 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		titleBar.switchDashboardLayout(newConfig.orientation);
+		//titleBar.switchDashboardLayout(newConfig.orientation);
 
 	}
 
@@ -680,5 +663,12 @@ public class Posts extends FragmentActivity implements OnPostSelectedListener,
 			outState.putBoolean("bug_19917_fix", true);
 		}
 		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	public void onBlogChanged() {
+		popPostDetail();
+		attemptToSelectPost();
+		postList.loadPosts(false);
 	}
 }

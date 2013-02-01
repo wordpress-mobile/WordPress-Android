@@ -3,6 +3,8 @@ package org.wordpress.android.util;
 import org.wordpress.android.R;
 import org.wordpress.android.Settings;
 
+import com.actionbarsherlock.app.SherlockDialogFragment;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,7 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class WPAlertDialogFragment extends DialogFragment implements
+public class WPAlertDialogFragment extends SherlockDialogFragment implements
     DialogInterface.OnClickListener {
 	private static boolean isXMLRPC = false;
 	private static boolean isLoadMore = false;

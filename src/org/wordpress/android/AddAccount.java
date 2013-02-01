@@ -110,14 +110,12 @@ public class AddAccount extends Activity implements OnClickListener {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case R.id.settingsButton:
+		if (requestCode == R.id.settingsButton) {
 			if (resultCode == RESULT_OK) {
 				Bundle extras = data.getExtras();
 				httpuser = extras.getString("httpuser");
 				httppassword = extras.getString("httppassword");
 			}
-			break;
 		}
 	}
 
@@ -587,8 +585,8 @@ public class AddAccount extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.save:
+		int id = v.getId();
+		if (id == R.id.save) {
 			if (mSystemService.getActiveNetworkInfo() == null) {
 				AlertUtil.showAlert(AddAccount.this, R.string.no_network_title, R.string.no_network_message);
 			} else {
@@ -604,24 +602,20 @@ public class AddAccount extends Activity implements OnClickListener {
 				};
 				action.start();
 			}
-			break;
-		case R.id.cancel:
+		} else if (id == R.id.cancel) {
 			Bundle bundle = new Bundle();
 			bundle.putString("returnStatus", "CANCEL");
 			Intent mIntent = new Intent();
 			mIntent.putExtras(bundle);
 			setResult(RESULT_OK, mIntent);
 			finish();
-			break;
-		case R.id.settingsButton:
+		} else if (id == R.id.settingsButton) {
 			Intent settings = new Intent(AddAccount.this, AddAcountSettings.class);
 			settings.putExtra("httpuser", httpuser);
 			settings.putExtra("httppassword", httppassword);
 			startActivityForResult(settings, R.id.settingsButton);
-			break;
-		case R.id.wordpressdotcom:
+		} else if (id == R.id.wordpressdotcom) {
 			startActivity(new Intent(AddAccount.this, Signup.class));
-			break;
 		}
 	}
 }

@@ -29,8 +29,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -38,6 +36,7 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ConnectionClient;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -70,7 +69,7 @@ import android.widget.Toast;
  * @author Eric
  *
  */
-public class ViewWebStats extends Activity {
+public class ViewWebStats extends WPActionBarActivity {
 
 	static String lastAuthedName = "";
 	
@@ -79,7 +78,6 @@ public class ViewWebStats extends Activity {
 	private HttpParams httpParams;
 	protected String errorMsg = "";
 	
-	private WPTitleBar titleBar;
 	private WebView webView;
 	boolean loginShowing = false;
 	boolean authed = false;
@@ -88,12 +86,14 @@ public class ViewWebStats extends Activity {
 	
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
 		setContentView(R.layout.view_web_stats);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 				
 		webView = (WebView) findViewById(R.id.webView);
 		webView.setWebViewClient(new StatsWebViewClient());
@@ -107,7 +107,7 @@ public class ViewWebStats extends Activity {
 		clearCookies();
 		webView.clearCache(false);
 		
-		titleBar = (WPTitleBar) findViewById(R.id.actionBar);
+		/*titleBar = (WPTitleBar) findViewById(R.id.actionBar);
 		titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
 			public void onClick(View v) {
 				reloadStats();
@@ -133,7 +133,7 @@ public class ViewWebStats extends Activity {
 				clearCookies();
 				initStats();
 			}
-		});
+		});*/
 		
 		Button saveStatsLogin = (Button) findViewById(R.id.saveDotcom);
 		saveStatsLogin.setOnClickListener(new Button.OnClickListener() {
@@ -204,12 +204,12 @@ public class ViewWebStats extends Activity {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 
-		titleBar.refreshBlog();
+		//titleBar.refreshBlog();
 	}
 
 
 	private void initStats() {
-		titleBar.startRotatingRefreshIcon();
+		//titleBar.startRotatingRefreshIcon();
 		Blog blog = WordPress.currentBlog;
 		
 		if (!blog.isDotcomFlag() && blog.getApi_blogid() == null) {
@@ -236,7 +236,7 @@ public class ViewWebStats extends Activity {
 			sPassword = blog.getDotcom_password();
 		}
 		
-		titleBar.startRotatingRefreshIcon();
+		//titleBar.startRotatingRefreshIcon();
 		
 		// Start an async task to retrieve the blog's data from the api.
 		currentTask = new StatsAPIBlogInfoAsyncTask().execute(sUsername, sPassword);
@@ -433,10 +433,10 @@ public class ViewWebStats extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) { 
-			if (titleBar.isShowingDashboard) {
+			/*if (titleBar.isShowingDashboard) {
 				titleBar.hideDashboardOverlay();
 				return false;
-			}
+			}*/
 		    if ( webView.canGoBack() ) {
 		        webView.goBack();
 		        return true;
@@ -454,7 +454,7 @@ public class ViewWebStats extends Activity {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			//Log.d("WP", url);
-			titleBar.startRotatingRefreshIcon();
+			//titleBar.startRotatingRefreshIcon();
 		}
 
 		
@@ -462,14 +462,14 @@ public class ViewWebStats extends Activity {
 		public void onPageFinished(WebView view, String url) {
 			if (authed) {
 				// The webview loads an empty string during init/auth. We don't want to stop the refresh icon in this case.
-				titleBar.stopRotatingRefreshIcon();
+				//titleBar.stopRotatingRefreshIcon();
 			}
 		}
 
 		
 		@Override
 		public void onReceivedError (WebView view, int errorCode, String description, String failingUrl) {
-			titleBar.stopRotatingRefreshIcon();			
+			//titleBar.stopRotatingRefreshIcon();			
 		}
 		
 		
@@ -572,7 +572,7 @@ public class ViewWebStats extends Activity {
 		
 		protected void onPostExecute(Vector<?> result) {
 			currentTask = null;
-			titleBar.stopRotatingRefreshIcon();
+			//titleBar.stopRotatingRefreshIcon();
 			if(authed) {
 				loadStats();
 			} else {
@@ -774,7 +774,7 @@ public class ViewWebStats extends Activity {
 		
 		protected void onPostExecute(Vector<?> result) {
 			currentTask = null;
-			titleBar.stopRotatingRefreshIcon();
+			//titleBar.stopRotatingRefreshIcon();
 			if (result != null) {
 				// store the api key and blog id
 				final String apiKey = result.get(0).toString();

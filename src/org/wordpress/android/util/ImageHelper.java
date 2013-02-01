@@ -247,7 +247,12 @@ public class ImageHelper {
 				projection = new String[] { Images.Thumbnails._ID, Images.Thumbnails.DATA, Images.Media.ORIENTATION };
 
 				String path = "";
-				Cursor cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
+				Cursor cur;
+				try {
+					cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
+				} catch (Exception e1) {
+					return null;	
+				}
 				File jpeg = null;
 				if (cur != null) {
 					String thumbData = "";

@@ -120,7 +120,7 @@ public class WordPressDB {
 	
 	private SQLiteDatabase db;
 
-	protected static final String PASSWORD_SECRET = "nottherealpasscode";
+	protected static final String PASSWORD_SECRET = "makemetopsecretforrelease!";
 
 	public String defaultBlog = "";
 

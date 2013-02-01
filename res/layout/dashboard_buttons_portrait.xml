@@ -12,8 +12,7 @@
     android:paddingBottom="@dimen/dashboard_padding_large_left"
     android:paddingLeft="@dimen/dashboard_padding_small_left"
     android:paddingRight="@dimen/dashboard_padding_small_right"
-    android:paddingTop="@dimen/dashboard_padding_large_right"
-    android:visibility="gone" >
+    android:paddingTop="@dimen/dashboard_padding_large_right" >
 
     <FrameLayout
         android:layout_width="fill_parent"

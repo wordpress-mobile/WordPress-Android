@@ -11,18 +11,12 @@
     android:id="@+id/postDetailFragmentContainer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/action_bar_height">
+    android:orientation="horizontal">
     <fragment
       android:name="org.wordpress.android.ViewPosts"
       android:id="@+id/postList"
       android:layout_weight="1"
       android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:background="#00FF00" />
+      android:layout_height="match_parent" />
   </LinearLayout>
-  <include
-    layout="@layout/action_bar"
-    android:id="@+id/postsActionBar"
-    android:layout_above="@id/posts" />
 </RelativeLayout>

@@ -31,8 +31,9 @@
     <uses-feature
         android:name="android.hardware.location"
         android:required="false" />
-    <uses-feature android:name="android.hardware.touchscreen" 
-        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
 
     <application
         android:name="WordPress"
@@ -56,7 +57,6 @@
         <activity
             android:name="EditPost"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/IncludeTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -71,11 +71,9 @@
         </activity>
         <activity
             android:name=".Read"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/IncludeTitleBar" />
+            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name="Preferences"
-            android:theme="@style/IncludeTitleBar"
             android:windowSoftInputMode="stateHidden" />
 
         <service
@@ -115,7 +113,7 @@
         <activity android:name="AddAcountSettings" />
         <activity
             android:name="Dashboard"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

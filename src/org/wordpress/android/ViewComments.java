@@ -386,7 +386,7 @@ public class ViewComments extends ListFragment {
 						authorURL, authorEmail, URI
 								.create("http://gravatar.com/avatar/"
 										+ getMd5Hash(authorEmail.trim())
-										+ "?s=60&d=404")));
+										+ "?s=140&d=404")));
 			}
 
 			if (!refreshOnly) {
@@ -567,7 +567,7 @@ public class ViewComments extends ListFragment {
 		boolean detailViewVisible = false;
 
 		CommentAdapter() {
-			super(getActivity().getApplicationContext(), R.layout.row, model);
+			super(getActivity().getApplicationContext(), R.layout.comment_row, model);
 
 			sdk_version = android.os.Build.VERSION.SDK_INT;
 			FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -584,7 +584,7 @@ public class ViewComments extends ListFragment {
 			if (row == null) {
 				LayoutInflater inflater = getActivity().getLayoutInflater();
 
-				row = inflater.inflate(R.layout.row, null);
+				row = inflater.inflate(R.layout.comment_row, null);
 				wrapper = new CommentEntryWrapper(row);
 				row.setTag(wrapper);
 			} else {
@@ -594,13 +594,13 @@ public class ViewComments extends ListFragment {
 
 			if (position == selectedPosition && sdk_version >= 11
 					&& detailViewVisible) {
-				row.setBackgroundDrawable(getResources().getDrawable(
+				row.setBackground(getResources().getDrawable(
 						R.drawable.list_highlight_bg));
 			} else if ("hold".equals(commentEntry.status)) {
-				row.setBackgroundDrawable(getResources().getDrawable(
+				row.setBackground(getResources().getDrawable(
 						R.drawable.comment_pending_bg_selector));
 			} else {
-				row.setBackgroundDrawable(getResources().getDrawable(
+				row.setBackground(getResources().getDrawable(
 						R.drawable.list_bg_selector));
 			}
 
@@ -751,8 +751,7 @@ public class ViewComments extends ListFragment {
 
 		RelativeLayout getBulkEditGroup() {
 			if (bulkEditGroup == null) {
-				bulkEditGroup = (RelativeLayout) row
-						.findViewById(R.id.bulkEditGroup);
+				bulkEditGroup = (RelativeLayout) row.findViewById(R.id.bulkEditGroup);
 			}
 
 			return (bulkEditGroup);

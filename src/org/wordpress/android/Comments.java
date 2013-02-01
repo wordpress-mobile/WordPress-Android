@@ -8,8 +8,6 @@ import org.wordpress.android.ViewComments.OnCommentSelectedListener;
 import org.wordpress.android.ViewComments.OnContextCommentStatusChangeListener;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -21,19 +19,20 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class Comments extends FragmentActivity implements
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+public class Comments extends WPActionBarActivity implements
 		OnCommentSelectedListener, OnCommentStatusChangeListener,
 		OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
 
-	private WPTitleBar titleBar;
 	protected int id;
 	public int ID_DIALOG_MODERATING = 1;
 	public int ID_DIALOG_REPLYING = 2;
@@ -42,13 +41,16 @@ public class Comments extends FragmentActivity implements
 	public ProgressDialog pd;
 	private ViewComments commentList;
 	private boolean fromNotification = false;
+	private MenuItem refreshMenuItem;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comments);
 
-		titleBar = (WPTitleBar) findViewById(R.id.commentsActionBar);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -61,7 +63,6 @@ public class Comments extends FragmentActivity implements
 					Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
 					finish();
 				}
-				titleBar.refreshBlog();
 			}
 		}
 
@@ -70,7 +71,7 @@ public class Comments extends FragmentActivity implements
 
 		WordPress.currentComment = null;
 
-		titleBar.refreshButton
+		/*titleBar.refreshButton
 				.setOnClickListener(new ImageButton.OnClickListener() {
 					public void onClick(View v) {
 						popCommentDetail();
@@ -92,12 +93,33 @@ public class Comments extends FragmentActivity implements
 					commentList.refreshComments(false, false, false);
 
 			}
-		});
+		});*/
 
 		attemptToSelectComment();
 		if (fromNotification)
 			commentList.refreshComments(false, false, false);
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.refresh_only, menu);
+		refreshMenuItem = menu.findItem(R.id.menu_refresh);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_refresh) {
+			popCommentDetail();
+			attemptToSelectComment();
+			commentList.refreshComments(false, false, false);
+			return true;
+		}
+		return false;
 	}
 
 	protected void popCommentDetail() {
@@ -112,7 +134,7 @@ public class Comments extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		titleBar.setupCurrentBlog();
+		//titleBar.setupCurrentBlog();
 		boolean commentsLoaded = commentList.loadComments(false, false);
 		if (!commentsLoaded)
 			commentList.refreshComments(false, false, false);
@@ -121,8 +143,8 @@ public class Comments extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (titleBar != null)
-			titleBar.stopRotatingRefreshIcon();
+		/*if (titleBar != null)
+			titleBar.stopRotatingRefreshIcon();*/
 		
 	}
 
@@ -148,7 +170,7 @@ public class Comments extends FragmentActivity implements
 					Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
 					finish();
 				}
-				titleBar.refreshBlog();
+				//titleBar.refreshBlog();
 			}
 		}
 
@@ -492,10 +514,10 @@ public class Comments extends FragmentActivity implements
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
+		/*if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
 			titleBar.hideDashboardOverlay();
 			return false;
-		}
+		}*/
 
 		return super.onKeyDown(keyCode, event);
 	}
@@ -504,9 +526,9 @@ public class Comments extends FragmentActivity implements
 	public void onAnimateRefreshButton(boolean start) {
 
 		if (start) {
-			titleBar.startRotatingRefreshIcon();
+			this.startAnimatingRefreshButton(refreshMenuItem);
 		} else {
-			titleBar.stopRotatingRefreshIcon();
+			this.stopAnimatingRefreshButton(refreshMenuItem);
 		}
 
 	}
@@ -527,7 +549,7 @@ public class Comments extends FragmentActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		titleBar.switchDashboardLayout(newConfig.orientation);
+		//titleBar.switchDashboardLayout(newConfig.orientation);
 
 	}
 }

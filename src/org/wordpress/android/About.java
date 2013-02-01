@@ -42,17 +42,14 @@ public class About extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Uri uri;
-		switch (v.getId()) {
-		case R.id.about_url:
+		int id = v.getId();
+		if (id == R.id.about_url) {
 			uri = Uri.parse(URL_AUTOMATTIC);
-			break;
-		case R.id.about_tos:
+		} else if (id == R.id.about_tos) {
 			uri = Uri.parse(URL_TOS);
-			break;
-		case R.id.about_privacy:
+		} else if (id == R.id.about_privacy) {
 			uri = Uri.parse(URL_AUTOMATTIC + URL_PRIVACY_POLICY);
-			break;
-		default:
+		} else {
 			return;
 		}
 		startActivity(new Intent(Intent.ACTION_VIEW, uri));

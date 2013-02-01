@@ -23,8 +23,4 @@
       android:cacheColorHint="#00000000">
     </ListView>
   </RelativeLayout>
-  <include
-    layout="@layout/action_bar"
-    android:id="@+id/actionBar"
-    android:layout_above="@id/posts" />
 </RelativeLayout>

@@ -11,8 +11,7 @@
     android:id="@+id/commentDetailFragmentContainer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/action_bar_height">
+    android:orientation="horizontal">
     <fragment
       android:name="org.wordpress.android.ViewComments"
       android:id="@+id/commentList"
@@ -21,8 +20,4 @@
       android:layout_height="match_parent"
       android:background="#00FF00" />
   </LinearLayout>
-  <include
-    layout="@layout/action_bar"
-    android:id="@+id/commentsActionBar"
-    android:layout_above="@id/comments" />
 </RelativeLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/refresh_icon"
+        android:showAsAction="always"
+        android:title="@string/refresh"/>
+    <item
+        android:id="@+id/menu_new_post"
+        android:icon="@drawable/new_post_icon"
+        android:showAsAction="ifRoom"
+        android:title="@string/new_post"/>
+</menu>

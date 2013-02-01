@@ -1,9 +1,5 @@
 package org.wordpress.android;
 import java.util.List;
-
-import org.wordpress.android.util.WPTitleBar;
-import org.wordpress.android.util.WPTitleBar.OnBlogChangedListener;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,17 +17,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
-public class Settings extends Activity {
+public class Settings extends WPActionBarActivity {
 	protected static Intent svc = null;
 	private String originalUsername;
-	WPTitleBar titleBar;
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.settings);
 	
-        titleBar = (WPTitleBar) findViewById(R.id.settingsActionBar);
+        /*titleBar = (WPTitleBar) findViewById(R.id.settingsActionBar);
         titleBar.refreshButton.setEnabled(false);
 		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
 			// user selected new blog in the title bar
@@ -41,7 +36,7 @@ public class Settings extends Activity {
 				loadSettingsForBlog();
 
 			}
-		});
+		});*/
 		  
         Button cancelButton = (Button) findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new Button.OnClickListener() {
@@ -64,14 +59,14 @@ public class Settings extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		titleBar.setupCurrentBlog();
+		//titleBar.setupCurrentBlog();
 	}
 	
 	@Override
 	protected void onNewIntent (Intent intent){
 		super.onNewIntent(intent);
 		
-		titleBar.refreshBlog();
+		//titleBar.refreshBlog();
 		loadSettingsForBlog();
 		
 	}

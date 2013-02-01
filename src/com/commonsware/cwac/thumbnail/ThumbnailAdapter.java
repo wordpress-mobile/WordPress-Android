@@ -102,15 +102,7 @@ public class ThumbnailAdapter extends AdapterWrapper {
 				public void run() {
 					if (image.getTag()!=null &&
 							image.getTag().toString().equals(message.getUrl())) {
-						
-							BitmapDrawable bd = (BitmapDrawable) cache.get(message.getUrl());
-							bdRounded = getRoundedCornerBitmap(bd.getBitmap());
-							if (bdRounded != null){
-								image.setImageBitmap(bdRounded);
-							}
-							else{
-								image.setImageDrawable(cache.get(message.getUrl()));
-							}
+							image.setImageDrawable(cache.get(message.getUrl()));
 					}
 				}
 			});

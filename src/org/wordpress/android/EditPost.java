@@ -551,38 +551,30 @@ public class EditPost extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.bold:
+		int id = v.getId();
+		if (id == R.id.bold) {
 			formatBtnClick(mBoldToggleButton, "strong");
-			break;
-		case R.id.em:
+		} else if (id == R.id.em) {
 			formatBtnClick(mEmToggleButton, "em");
-			break;
-		case R.id.underline:
+		} else if (id == R.id.underline) {
 			formatBtnClick(mUnderlineToggleButton, "u");
-			break;
-		case R.id.strike:
+		} else if (id == R.id.strike) {
 			formatBtnClick(mStrikeToggleButton, "strike");
-			break;
-		case R.id.bquote:
+		} else if (id == R.id.bquote) {
 			formatBtnClick(mBquoteToggleButton, "blockquote");
-			break;
-		case R.id.more:
+		} else if (id == R.id.more) {
 			mSelectionEnd = mContentEditText.getSelectionEnd();
 			Editable str = mContentEditText.getText();
 			str.insert(mSelectionEnd, "\n<!--more-->\n");
-			break;
-		case R.id.link:
+		} else if (id == R.id.link) {
 			mSelectionStart = mContentEditText.getSelectionStart();
 			mStyleStart = mSelectionStart;
 			mSelectionEnd = mContentEditText.getSelectionEnd();
-
 			if (mSelectionStart > mSelectionEnd) {
 				int temp = mSelectionEnd;
 				mSelectionEnd = mSelectionStart;
 				mSelectionStart = temp;
 			}
-
 			Intent i = new Intent(EditPost.this, Link.class);
 			if (mSelectionEnd > mSelectionStart) {
 				String selectedText = mContentEditText.getText()
@@ -590,14 +582,11 @@ public class EditPost extends Activity implements OnClickListener,
 				i.putExtra("selectedText", selectedText);
 			}
 			startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
-			break;
-		case R.id.addPictureButton:
+		} else if (id == R.id.addPictureButton) {
 			mAddPictureButton.performLongClick();
-			break;
-		case R.id.pubDateButton:
+		} else if (id == R.id.pubDateButton) {
 			showDialog(ID_DIALOG_DATE);
-			break;
-		case R.id.selectCategories:
+		} else if (id == R.id.selectCategories) {
 			Bundle bundle = new Bundle();
 			bundle.putInt("id", mBlogID);
 			if (mCategories.length() > 0) {
@@ -606,11 +595,9 @@ public class EditPost extends Activity implements OnClickListener,
 			Intent i1 = new Intent(EditPost.this, SelectCategories.class);
 			i1.putExtras(bundle);
 			startActivityForResult(i1, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
-			break;
-		case R.id.post: // mSaveButton
+		} else if (id == R.id.post) {
 			if (mAutoSaveHandler != null)
 				mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-
 			if (savePost(false)) {
 				if (mPost.isUploaded()
 						|| !mPost.getPost_status().equals("localdraft")) {
@@ -626,8 +613,7 @@ public class EditPost extends Activity implements OnClickListener,
 				}
 				finish();
 			}
-			break;
-		case R.id.viewMap:
+		} else if (id == R.id.viewMap) {
 			Double latitude = 0.0;
 			try {
 				latitude = mCurrentLocation.getLatitude();
@@ -644,11 +630,9 @@ public class EditPost extends Activity implements OnClickListener,
 						getResources().getText(R.string.location_toast),
 						Toast.LENGTH_SHORT).show();
 			}
-			break;
-		case R.id.updateLocation:
+		} else if (id == R.id.updateLocation) {
 			mLocationHelper.getLocation(EditPost.this, locationResult);
-			break;
-		case R.id.removeLocation:
+		} else if (id == R.id.removeLocation) {
 			if (mCurrentLocation != null) {
 				mCurrentLocation.setLatitude(0.0);
 				mCurrentLocation.setLongitude(0.0);
@@ -658,7 +642,6 @@ public class EditPost extends Activity implements OnClickListener,
 				mPost.setLongitude(0.0);
 			}
 			mLocationText.setText("");
-			break;
 		}
 	}
 
@@ -1023,6 +1006,8 @@ public class EditPost extends Activity implements OnClickListener,
 								(mIsPage) ? R.string.new_page
 										: R.string.new_post));
 			}
+			getActionBar().setHomeButtonEnabled(true);
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 			return true;
 		} else {
 			// no account, load main view to load new account view
@@ -2254,5 +2239,20 @@ public class EditPost extends Activity implements OnClickListener,
 		if ((DeviceUtils.getInstance().isBlackBerry() || DeviceUtils.getInstance().isKindleFire()) && mIsFullScreenEditing) 
 			mImeBackPressed = true;
 		finishEditing();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, Dashboard.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	            startActivity(intent);
+	            finish();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 }

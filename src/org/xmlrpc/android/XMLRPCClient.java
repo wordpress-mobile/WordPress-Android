@@ -397,7 +397,7 @@ public class XMLRPCClient {
 			// execute HTTP POST request
 			HttpResponse response = client.execute(postMethod);
 			
-			Log.i("WordPress", "response = " + response.getStatusLine());
+			//Log.i("WordPress", "response = " + response.getStatusLine());
 			// check status code
 			int statusCode = response.getStatusLine().getStatusCode();
 			

@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -57,8 +58,7 @@ public class ViewPosts extends ListFragment {
 	public Vector<String> imageUrl = new Vector<String>();
 	public String errorMsg = "";
 	public int totalDrafts = 0, selectedPosition;
-	public boolean isPage = false, vpUpgrade = false;
-	public boolean largeScreen = false, shouldSelectAfterLoad = false;
+	public boolean isPage = false, vpUpgrade = false, shouldSelectAfterLoad = false;
 	public int numRecords = 20;
 	public ViewSwitcher switcher;
 	private PostListAdapter pla;
@@ -77,7 +77,6 @@ public class ViewPosts extends ListFragment {
 		if (extras != null) {
 			isPage = extras.getBoolean("viewPages");
 		}
-
 	}
 
 	@Override
@@ -85,15 +84,6 @@ public class ViewPosts extends ListFragment {
 		super.onActivityCreated(bundle);
 
 		createSwitcher();
-
-		Display display = ((WindowManager) getActivity()
-				.getApplicationContext().getSystemService(
-						Context.WINDOW_SERVICE)).getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		if (width > 480 || height > 480) {
-			largeScreen = true;
-		}
 	}
 
 	public void onAttach(Activity activity) {
@@ -637,19 +627,12 @@ public class ViewPosts extends ListFragment {
 			String status_text = statuses[position];
 			if (date.equals("postsHeader") || date.equals("draftsHeader")) {
 
-				pv.setBackgroundDrawable(getResources().getDrawable(
-						R.drawable.title_text_bg));
-
-				wrapper.getTitle().setTextColor(Color.parseColor("#EEEEEE"));
-				wrapper.getTitle().setShadowLayer(1, 1, 1,
-						Color.parseColor("#444444"));
-				if (largeScreen) {
-					wrapper.getTitle().setPadding(12, 0, 12, 3);
-				} else {
-					wrapper.getTitle().setPadding(8, 0, 8, 2);
-				}
-				wrapper.getTitle().setTextScaleX(1.2f);
+				//pv.setBackground(getResources().getDrawable(
+				//		R.drawable.title_text_bg));
+				wrapper.getTitle().setTextColor(Color.parseColor("#464646"));
+				wrapper.getTitle().setPadding(20, 0, 20, 3);
 				wrapper.getTitle().setTextSize(17);
+				wrapper.getTitle().setTypeface(null, Typeface.BOLD);
 				wrapper.getDate().setHeight(0);
 				wrapper.getStatus().setHeight(0);
 
@@ -665,22 +648,20 @@ public class ViewPosts extends ListFragment {
 			} else {
 				if (position == selectedPosition && sdk_version >= 11
 						&& detailViewVisible) {
-					pv.setBackgroundDrawable(getResources().getDrawable(
+					pv.setBackground(getResources().getDrawable(
 							R.drawable.list_highlight_bg));
 				} else {
-					pv.setBackgroundDrawable(getResources().getDrawable(
+					pv.setBackground(getResources().getDrawable(
 							R.drawable.list_bg_selector));
 				}
-				if (largeScreen) {
-					wrapper.getTitle().setPadding(12, 12, 12, 0);
-				} else {
-					wrapper.getTitle().setPadding(8, 8, 8, 0);
-				}
+				wrapper.getTitle().setPadding(12, 12, 12, 0);
+
 				wrapper.getTitle().setTextColor(Color.parseColor("#444444"));
 				wrapper.getTitle().setShadowLayer(0, 0, 0,
 						Color.parseColor("#444444"));
 				wrapper.getTitle().setTextScaleX(1.0f);
-				wrapper.getTitle().setTextSize(16);
+				wrapper.getTitle().setTextSize(18);
+				wrapper.getTitle().setTypeface(null, Typeface.NORMAL);
 				wrapper.getDate().setTextColor(Color.parseColor("#888888"));
 
 				pv.setTag(R.id.row_post_id, postIDs[position]);

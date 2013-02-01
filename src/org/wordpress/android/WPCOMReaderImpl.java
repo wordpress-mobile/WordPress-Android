@@ -69,7 +69,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			}
 		}
 
-		topicTV = (TextView) v.findViewById(R.id.topic_title);
+		//topicTV = (TextView) v.findViewById(R.id.topic_title);
 		refreshIcon = (ImageView) v.findViewById(R.id.refresh_icon);
 
 		// this.setTitle(getResources().getText(R.string.reader)); //FIXME: set
@@ -91,7 +91,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						wv.loadUrl("javascript:Reader2.get_last_selected_item();");
 						onPostSelectedListener.onPostSelected(url);
 					} else {
-						startRotatingRefreshIcon();
+						//startRotatingRefreshIcon();
 					}
 				
 					if (url.contains("chrome=no")) {
@@ -102,7 +102,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				stopRotatingRefreshIcon();
+				//stopRotatingRefreshIcon();
 			}
 
 			@Override
@@ -119,40 +119,13 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		this.setDefaultWebViewSettings(wv);
 		new loadReaderTask().execute(null, null, null, null);
 
-		RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.topicSelector);
+		/*RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.topicSelector);
 		rl.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showTopicsListener.showTopics();
 			}
-		});
+		});*/
 
-		Button refreshButton = (Button) v.findViewById(R.id.action_refresh);
-		refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-				startRotatingRefreshIcon();
-				wv.reload();
-				new Thread(new Runnable() {
-					public void run() {
-						// refresh stat
-						try {
-							HttpClient httpclient = new DefaultHttpClient();
-							HttpProtocolParams.setUserAgent(
-									httpclient.getParams(), "wp-android-native");
-							String readerURL = Constants.readerURL
-									+ "/?template=stats&stats_name=home_page_refresh";
-							if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
-								readerURL += "&per_page=20";
-							}
-
-							httpclient.execute(new HttpGet(readerURL));
-						} catch (Exception e) {
-							// oh well
-						}
-					}
-				}).start();
-
-			}
-		});
 
 		return v;
 	}
@@ -192,11 +165,34 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		CookieSyncManager.getInstance().startSync();
 	}
 
+	public void refreshReader() {
+		wv.reload();
+		new Thread(new Runnable() {
+			public void run() {
+				// refresh stat
+				try {
+					HttpClient httpclient = new DefaultHttpClient();
+					HttpProtocolParams.setUserAgent(
+							httpclient.getParams(), "wp-android-native");
+					String readerURL = Constants.readerURL
+							+ "/?template=stats&stats_name=home_page_refresh";
+					if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4) {
+						readerURL += "&per_page=20";
+					}
+
+					httpclient.execute(new HttpGet(readerURL));
+				} catch (Exception e) {
+					// oh well
+				}
+			}
+		}).start();
+	}
+	
 	private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
 
 		@Override
 		protected void onPreExecute() {
-			startRotatingRefreshIcon();
+			//startRotatingRefreshIcon();
 		}
 
 		protected void onPostExecute(Vector<?> result) {
@@ -297,27 +293,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 		}
 
-	}
-
-	public void startRotatingRefreshIcon() {
-
-		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
-				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-				0.5f);
-		anim.setInterpolator(new LinearInterpolator());
-		anim.setRepeatCount(Animation.INFINITE);
-		anim.setDuration(1400);
-		refreshIcon.setImageDrawable(getResources().getDrawable(
-				R.drawable.icon_titlebar_refresh_active));
-		refreshIcon.startAnimation(anim);
-	}
-
-	public void stopRotatingRefreshIcon() {
-		if (!(getActivity() == null)) {
-			refreshIcon.setImageDrawable(getResources().getDrawable(
-					R.drawable.icon_titlebar_refresh));
-			refreshIcon.clearAnimation();
-		}
 	}
 
 	public interface ChangePageListener {

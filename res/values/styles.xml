@@ -1,79 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
- * Copyright (C) 2007 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
--->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Base application theme is the default theme. -->
-    <style name="Theme" parent="android:Theme"></style>
-
-    <drawable name="screen_background_black">#ff000000</drawable>
-    <drawable name="translucent_background">#88000000</drawable>
-    <drawable name="transparent_background">#00000000</drawable>
-
-    <!--
-         Variation on our application theme that forces a plain
-        text style.
-    -->
-    <style name="Theme.PlainText">
-        <item name="android:textAppearance">@style/TextAppearance.Theme.PlainText</item>
-    </style>
-
-    <!--
-         A theme that has a translucent background.  Here we explicitly specify
-         that this theme is to inherit from the system's translucent theme,
-         which sets up various attributes correctly..
-    -->
-    <style name="Theme.Translucent" parent="android:style/Theme.Translucent">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:colorForeground">#fff</item>
-        <item name="android:windowBackground">@drawable/translucent_background</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowIsFloating">true</item>
-    </style>
-
-    <!--
-         Variation on our application theme that has a transparent
-         background; this example completely removes the background,
-         allowing the activity to decide how to composite.  Also here we
-         force the translucency ourself rather than making use of the built-in
-         translucent theme.
-    -->
-    <style name="Theme.Transparent">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
-        <item name="android:windowBackground">@drawable/transparent_background</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:colorForeground">#fff</item>
-    </style>
-
-    <style name="TextAppearance.Theme.PlainText" parent="android:TextAppearance.Theme">
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="WordPress" parent="@android:style/Theme.Light">
-        <item name="android:windowNoTitle">true</item>
+    <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
-        <item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
         <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
-        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
+        <item name="android:popupMenuStyle">@style/wordpress_PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
+        <item name="android:actionBarTabStyle">@style/wordpress_ActionBarTabStyle</item>
+        <item name="android:actionDropDownStyle">@style/wordpress_DropDownNav</item>
+        <item name="android:actionBarStyle">@style/wordpress_solid_ActionBar</item>
+        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
+                <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
     </style>
     
-    <style name="WordPress.Dialog" parent="@android:style/Theme.Dialog"></style>
+    <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_wordpress</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
+        <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
+    </style>
+
+    <style name="wordpress_transparent_ActionBar" parent="Widget.Sherlock.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_wordpress</item>
+        <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
+    </style>
+
+    <style name="wordpress_PopupMenu" parent="Widget.Sherlock.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item> 
+    </style>
+
+    <style name="wordpress_DropDownListView" parent="Widget.Sherlock.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
+    </style>
+
+    <style name="wordpress_ActionBarTabStyle" parent="Widget.Sherlock.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_wordpress</item>
+    </style>
+
+    <style name="wordpress_DropDownNav" parent="Widget.Sherlock.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
+    </style>
+    
+    <style name="wordpress_ProgressBar" parent="Widget.Sherlock.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.wordpress.widget" parent="Theme.Sherlock">
+        <item name="android:popupMenuStyle">@style/wordpress_PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
+    </style>
+    
+    <style name="WordPress.Dialog" parent="Theme.Sherlock.Light.Dialog"></style>
     
     <style name="WordPress.ToggleButton">
         <item name="android:textSize">@dimen/format_bar_font_size</item>
@@ -82,14 +65,6 @@
         <item name="android:paddingLeft">@dimen/format_bar_button_padding</item>
         <item name="android:paddingRight">@dimen/format_bar_button_padding</item>
         <item name="android:background">@drawable/wp_button_toggle</item>
-    </style>
-
-    <style name="IncludeTitleBar" parent="@android:style/Theme.Light">
-        <item name="android:textViewStyle">@style/WordPressTextAppearance</item>
-        <item name="android:windowTitleStyle">@style/WordPressTitleAppearance</item>
-        <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
-        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
@@ -110,7 +85,7 @@
     </style>
 
     <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#FFFFFFFF</item>
         <item name="android:shadowDx">0</item>
@@ -123,38 +98,6 @@
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingTop">2dp</item>
-    </style>
-
-    <style name="Theme.TabView">
-        <item name="android:windowBackground">@drawable/screen_background_black</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:progressBarStyle">@android:style/Widget.ProgressBar</item>
-        <item name="android:progressBarStyleHorizontal">@android:style/Widget.ProgressBar.Horizontal</item>
-        <item name="android:progressBarStyleSmall">@android:style/Widget.ProgressBar.Small</item>
-        <item name="android:progressBarStyleLarge">@android:style/Widget.ProgressBar.Large</item>
-        <item name="android:progressBarStyleInverse">@android:style/Widget.ProgressBar.Inverse</item>
-        <item name="android:progressBarStyleSmallInverse">@android:style/Widget.ProgressBar.Small.Inverse</item>
-        <item name="android:progressBarStyleLargeInverse">@android:style/Widget.ProgressBar.Large.Inverse</item>
-        <item name="android:tabWidgetStyle">@style/WordPress.TabWidget</item>
-        <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
-    </style>
-
-    <style name="WordPress.TabWidget">
-        <item name="android:textAppearance">@style/WordPress.TabWidgetText</item>
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:marqueeRepeatLimit">2</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="WordPress.TabWidgetText">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@android:color/tab_indicator_text</item>
-    </style>
-
-    <style name="WindowTitleBackground">
-        <item name="android:background">@drawable/title_text_bg</item>
-        <item name="android:paddingLeft">4dip</item>
     </style>
 
     <style name="DashboardButtonText">
