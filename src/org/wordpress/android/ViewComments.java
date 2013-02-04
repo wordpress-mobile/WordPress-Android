@@ -594,13 +594,13 @@ public class ViewComments extends ListFragment {
 
 			if (position == selectedPosition && sdk_version >= 11
 					&& detailViewVisible) {
-				row.setBackground(getResources().getDrawable(
+				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.list_highlight_bg));
 			} else if ("hold".equals(commentEntry.status)) {
-				row.setBackground(getResources().getDrawable(
+				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.comment_pending_bg_selector));
 			} else {
-				row.setBackground(getResources().getDrawable(
+				row.setBackgroundDrawable(getResources().getDrawable(
 						R.drawable.list_bg_selector));
 			}
 

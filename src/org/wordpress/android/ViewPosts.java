@@ -648,10 +648,10 @@ public class ViewPosts extends ListFragment {
 			} else {
 				if (position == selectedPosition && sdk_version >= 11
 						&& detailViewVisible) {
-					pv.setBackground(getResources().getDrawable(
+					pv.setBackgroundDrawable(getResources().getDrawable(
 							R.drawable.list_highlight_bg));
 				} else {
-					pv.setBackground(getResources().getDrawable(
+					pv.setBackgroundDrawable(getResources().getDrawable(
 							R.drawable.list_bg_selector));
 				}
 				wrapper.getTitle().setPadding(12, 12, 12, 0);
