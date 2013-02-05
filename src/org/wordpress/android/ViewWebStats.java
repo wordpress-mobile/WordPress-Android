@@ -36,8 +36,6 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ConnectionClient;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,7 +46,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -60,10 +57,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.ActionBar;
 
 /**
  * @author Eric
@@ -91,7 +89,7 @@ public class ViewWebStats extends WPActionBarActivity {
 		
 		setContentView(R.layout.view_web_stats);
 		
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 				
@@ -445,6 +443,11 @@ public class ViewWebStats extends WPActionBarActivity {
 	    return super.onKeyDown(keyCode, event);
 	}
 	
+	@Override
+	public void onBlogChanged() {
+		// TODO: switch stats to current blog if possible.  If the blog does not have stats on
+		// wordpress.com, display a helpful message (maybe directing them at jetpack?)
+	}
 	
 	/*
 	 * 

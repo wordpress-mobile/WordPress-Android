@@ -102,6 +102,11 @@ public class Comments extends WPActionBarActivity implements
 	}
 	
 	@Override
+	public void onBlogChanged() {
+		// TODO: load comments for current blog
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getSupportMenuInflater();

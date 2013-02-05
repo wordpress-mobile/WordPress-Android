@@ -1,6 +1,5 @@
 package org.wordpress.android;
 import java.util.List;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -71,6 +70,11 @@ public class Settings extends WPActionBarActivity {
 		
 	}
 	
+	@Override
+	public void onBlogChanged() {
+		// TODO: show settings for current blog
+	}
+
 	private void loadSettingsForBlog() {
 		Spinner spinner = (Spinner)this.findViewById(R.id.maxImageWidth);
 	    ArrayAdapter<Object> spinnerArrayAdapter = new ArrayAdapter<Object>(this,

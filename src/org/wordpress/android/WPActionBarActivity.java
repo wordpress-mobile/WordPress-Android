@@ -22,7 +22,11 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class WPActionBarActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener {
+/**
+ * Base class for Activities that include a standard action bar.
+ */
+public abstract class WPActionBarActivity extends SherlockFragmentActivity
+	implements ActionBar.OnNavigationListener {
 
 	private static int[] blogIDs;
 
@@ -105,8 +109,6 @@ public class WPActionBarActivity extends SherlockFragmentActivity implements Act
 				}
 		}
 	}
-
-	
 	
 	@Override
 	public boolean onNavigationItemSelected(int pos, long itemId) {
@@ -125,10 +127,11 @@ public class WPActionBarActivity extends SherlockFragmentActivity implements Act
 		return true;
 	}
 	
-	public void onBlogChanged() {
-		// Overridden by activities that inherit this class
-	}
-	
+	/**
+	 * This method is called when the user changes the active blog.
+	 */
+	public abstract void onBlogChanged();
+
 	public void startAnimatingRefreshButton(MenuItem refreshItem) {
 		if (refreshItem != null) {
 			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
