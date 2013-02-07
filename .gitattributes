@@ -202,7 +202,6 @@ res/drawable/icon_titlebar_home.png -text
 res/drawable/icon_titlebar_home_active.png -text
 res/drawable/icon_titlebar_refresh.png -text
 res/drawable/icon_titlebar_refresh_active.png -text
-res/drawable/list_bg.xml -text
 res/drawable/list_bg_selector.xml -text
 res/drawable/list_divider.xml -text
 res/drawable/list_header_bg.xml -text
@@ -244,7 +243,6 @@ res/drawable/spinner_white_48.png -text
 res/drawable/stats_tab.png -text
 res/drawable/stats_tab_active.png -text
 res/drawable/stats_tab_icon.png -text
-res/drawable/tab_bg_selector.xml -text
 res/drawable/tab_color_selector.xml -text
 res/drawable/tab_indicator_ab_wordpress.xml -text
 res/drawable/tab_unselected.xml -text
@@ -302,7 +300,6 @@ res/layout/add_category.xml -text
 res/layout/add_quickpress_shortcut.xml -text
 res/layout/alert_image_options.xml -text
 res/layout/blogs_row.xml -text
-res/layout/blogs_row_actionbar.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_row.xml -text
 res/layout/comment_tab_selector.xml -text

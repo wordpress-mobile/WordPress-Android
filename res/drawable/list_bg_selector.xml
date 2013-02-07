@@ -10,7 +10,7 @@
     android:drawable="@android:color/transparent" />
   <item
     android:state_selected="false"
-    android:drawable="@drawable/list_bg" />
+    android:drawable="@color/list_row_bg" />
     
    <item android:state_selected="true"
    android:drawable="@android:color/transparent" />

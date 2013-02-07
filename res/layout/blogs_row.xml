@@ -6,9 +6,9 @@
   android:layout_height="?android:attr/listPreferredItemHeight"
   android:textAppearance="?android:attr/textAppearance"
   android:gravity="center_vertical"
-  android:textSize="16dip"
+  android:textSize="16sp"
   android:paddingLeft="6dip"
   android:paddingRight="6dip"
   android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-  android:background="@drawable/list_bg" />
+  android:background="@color/list_row_bg" />
 

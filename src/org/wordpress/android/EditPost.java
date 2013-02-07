@@ -30,6 +30,9 @@ import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
 import org.xmlrpc.android.ApiHelper;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -68,7 +71,6 @@ import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -95,7 +97,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class EditPost extends Activity implements OnClickListener,
+public class EditPost extends SherlockActivity implements OnClickListener,
 		OnTouchListener, TextWatcher, WPEditText.OnSelectionChangedListener,
 		WPEditText.EditTextImeBackListener {
 
@@ -530,26 +532,6 @@ public class EditPost extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		mImeBackPressed = true;
-		switch (item.getItemId()) {
-		case 0:
-			launchPictureLibrary();
-			return true;
-		case 1:
-			launchCamera();
-			return true;
-		case 2:
-			launchVideoLibrary();
-			return true;
-		case 3:
-			launchVideoCamera();
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.bold) {
@@ -893,18 +875,6 @@ public class EditPost extends Activity implements OnClickListener,
 		return;
 	}
 
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenu.ContextMenuInfo menuInfo) {
-		menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-		if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-			menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
-		}
-		menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-		if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-			menu.add(0, 3, 0, getResources().getText(R.string.take_video));
-		}
-	}
-
 	private void initBlog() {
 		if (WordPress.currentBlog == null) {
 			try {
@@ -1006,8 +976,8 @@ public class EditPost extends Activity implements OnClickListener,
 								(mIsPage) ? R.string.new_page
 										: R.string.new_post));
 			}
-			getActionBar().setHomeButtonEnabled(true);
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			return true;
 		} else {
 			// no account, load main view to load new account view
@@ -2239,20 +2209,5 @@ public class EditPost extends Activity implements OnClickListener,
 		if ((DeviceUtils.getInstance().isBlackBerry() || DeviceUtils.getInstance().isKindleFire()) && mIsFullScreenEditing) 
 			mImeBackPressed = true;
 		finishEditing();
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, Dashboard.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	            startActivity(intent);
-	            finish();
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
 	}
 }
