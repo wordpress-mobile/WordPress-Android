@@ -301,11 +301,13 @@ public class ApiHelper {
 			HttpRequest request = HttpRequest.get(urlString);
 
 			// manually follow one additional redirect to support protocol switching
-			if (request.code() == HttpURLConnection.HTTP_MOVED_PERM
-					|| request.code() == HttpURLConnection.HTTP_MOVED_TEMP) {
-				String location = request.location();
-				if (location != null) {
-					request = HttpRequest.get(location);
+			if (request != null) {
+				if (request.code() == HttpURLConnection.HTTP_MOVED_PERM
+						|| request.code() == HttpURLConnection.HTTP_MOVED_TEMP) {
+					String location = request.location();
+					if (location != null) {
+						request = HttpRequest.get(location);
+					}
 				}
 			}
 
