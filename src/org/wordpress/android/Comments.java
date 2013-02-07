@@ -137,9 +137,8 @@ public class Comments extends WPActionBarActivity implements
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		//titleBar.setupCurrentBlog();
+	protected void onPostResume() {
+		super.onPostResume();
 		boolean commentsLoaded = commentList.loadComments(false, false);
 		if (!commentsLoaded)
 			commentList.refreshComments(false, false, false);

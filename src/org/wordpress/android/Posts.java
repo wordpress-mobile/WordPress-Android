@@ -155,6 +155,11 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 		super.onResume();
 		//titleBar.setupCurrentBlog();
 		attemptToSelectPost();
+	}
+	
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
 		postList.loadPosts(false);
 		if (WordPress.postsShouldRefresh) {
 			checkForLocalChanges(false);
