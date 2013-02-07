@@ -165,7 +165,6 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 			checkForLocalChanges(false);
 			WordPress.postsShouldRefresh = false;
 		}
-		
 	}
 	
 	@Override
@@ -209,7 +208,6 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 			postList.isPage = isPage;
 		}
 
-		//titleBar.refreshBlog();
 		attemptToSelectPost();
 		postList.getListView().removeFooterView(postList.switcher);
 		postList.createSwitcher();
@@ -266,16 +264,6 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 			postList.shouldSelectAfterLoad = true;
 		}
 
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		/*if (keyCode == KeyEvent.KEYCODE_BACK && titleBar.isShowingDashboard) {
-			titleBar.hideDashboardOverlay();
-			return false;
-		}*/
-
-		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -454,6 +442,8 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 		protected String doInBackground(Post... params) {
 			String result = null;
 			post = params[0];
+			if (post == null)
+				return null;
 			XMLRPCClient client = new XMLRPCClient(
 					WordPress.currentBlog.getUrl(),
 					WordPress.currentBlog.getHttpuser(),
@@ -476,7 +466,6 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 				}
 			} catch (XMLRPCException e) {
 				errorMsg = getResources().getText(R.string.error_generic).toString();
-				Log.d("WP", "Error", e);
 				return null;
 			}
 
