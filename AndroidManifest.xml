@@ -56,7 +56,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="EditPost"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -77,7 +77,11 @@
             android:windowSoftInputMode="stateHidden" />
 
         <service
-            android:name="CommentService"
+            android:name=".util.PostUploadService"
+            android:label="Post Upload Service" >
+        </service>
+        <service
+            android:name=".util.CommentService"
             android:label="Comment Service" />
 
         <receiver android:name="CommentBroadcastReceiver" />

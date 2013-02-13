@@ -23,6 +23,7 @@ import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
@@ -591,7 +592,8 @@ public class EditPost extends SherlockActivity implements OnClickListener,
 								|| mOption.equals("videolibrary"))
 							mPost.setQuickPostType("QuickVideo");
 					}
-					mPost.upload();
+					WordPress.currentPost = mPost;
+					startService(new Intent(this, PostUploadService.class));
 				}
 				finish();
 			}

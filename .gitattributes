@@ -446,6 +446,7 @@ src/org/wordpress/android/models/Post.java -text
 src/org/wordpress/android/util/AlertUtil.java -text
 src/org/wordpress/android/util/Base64.java -text
 src/org/wordpress/android/util/CommentBadgeTextView.java -text
+src/org/wordpress/android/util/CommentService.java -text
 src/org/wordpress/android/util/DashboardLayout.java -text
 src/org/wordpress/android/util/DeviceUtils.java -text
 src/org/wordpress/android/util/DrawableManager.java -text
@@ -456,6 +457,7 @@ src/org/wordpress/android/util/HttpRequest.java -text
 src/org/wordpress/android/util/ImageHelper.java -text
 src/org/wordpress/android/util/IntHashMap.java -text
 src/org/wordpress/android/util/LocationHelper.java -text
+src/org/wordpress/android/util/PostUploadService.java -text
 src/org/wordpress/android/util/StringHelper.java -text
 src/org/wordpress/android/util/TrustAllManager.java -text
 src/org/wordpress/android/util/TrustAllSSLSocketFactory.java -text
