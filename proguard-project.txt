@@ -4,6 +4,8 @@
 # Don't obfuscate output.
 -dontobfuscate
 
+-optimizations !code/allocation/variable
+
 # Allow JS Bridge for WordPress.com reader
 -keepattributes JavascriptInterface
 -keep public class org.wordpress.android.WPCOMReaderBase$JavaScriptInterface

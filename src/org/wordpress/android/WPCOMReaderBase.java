@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.webkit.HttpAuthHandler;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -86,42 +85,34 @@ public abstract class WPCOMReaderBase extends SherlockFragment {
 	        mContext = c;
 	    }
 
-	    @JavascriptInterface
 	    public void setTopicTitle(String topicTitle) {
 	    	updateTopicTitleListener.updateTopicTitle(topicTitle);
 	    }
 	    
-	    @JavascriptInterface
 	    public void setSelectedTopic(String topicID) {
 	    	updateTopicIDListener.onUpdateTopicID(topicID);
 	    }
 	    
-	    @JavascriptInterface
 	    public void selectTopic(String topicID, String topicName) {
 		 	onChangeTopicListener.onChangeTopic(topicID, topicName);
 		}
 	    
-	    @JavascriptInterface
 	    public void getLoadedItems(String items) {
 	    	getLoadedItemsListener.getLoadedItems(items);
 	    }
 	    
-	    @JavascriptInterface
 	    public void getArticlePermalink(String permalink) {
 	    	getPermalinkListener.getPermalink(permalink);
 	    }
 	    
-	    @JavascriptInterface
 	    public void getLastSelectedItem(String item) {
 	    	getLastSelectedItemListener.getLastSelectedItem(item);
 	    }
 	    
-	    @JavascriptInterface
 	    public void hasPrev(boolean isPrev) {
 	    	updateButtonStatusListener.updateButtonStatus(0, isPrev);
 	    }
 	    
-	    @JavascriptInterface
 	    public void hasNext(String isNext) {
 	    	updateButtonStatusListener.updateButtonStatus(1, Boolean.parseBoolean(isNext));
 	    }
