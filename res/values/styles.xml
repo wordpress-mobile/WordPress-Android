@@ -79,7 +79,6 @@
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.wordpress.widget" parent="Theme.Sherlock">
-        <item name="android:popupMenuStyle">@style/wordpress_PopupMenu</item>
         <item name="popupMenuStyle">@style/wordpress_PopupMenu</item>
         
         <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
@@ -87,6 +86,25 @@
     </style>
     
     <style name="WordPress.Dialog" parent="Theme.Sherlock.Light.Dialog"></style>
+    
+    <style name="WordPressSectionHeader">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textColor">#AAAAAA</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="WordPressSubHeader">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:textColor">#AAAAAA</item>
+        <item name="android:layout_marginBottom">-4dp</item>
+    </style>
     
     <style name="WordPress.ToggleButton">
         <item name="android:textSize">@dimen/format_bar_font_size</item>
@@ -112,22 +130,6 @@
 
     <style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
         <item name="android:textColor">#FF464646</item>
-    </style>
-
-    <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#FFFFFFFF</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">2</item>
-        <item name="android:shadowRadius">1</item>
-        <item name="android:layout_marginTop">1px</item>
-        <item name="android:layout_marginRight">1px</item>
-        <item name="android:layout_marginLeft">1px</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:paddingRight">4dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingTop">2dp</item>
     </style>
 
     <style name="DashboardButtonText">

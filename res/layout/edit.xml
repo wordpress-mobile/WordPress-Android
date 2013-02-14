@@ -1,306 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFFFF"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/postContentEditorWrapper"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:visibility="gone" >
-    </LinearLayout>
+    android:orientation="vertical" >
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fillViewport="false"
-        android:scrollbars="none" >
+        android:scrollbars="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="10dip" >
+            android:padding="8dp" >
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/section1"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/editor_height"
-                android:layout_weight="1"
-                android:background="@drawable/content_bg"
-                android:paddingBottom="10dp" >
-
-                <TextView
-                    android:id="@+id/l_section1"
-                    style="@style/WordPressSectionHeader"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/content_bg_header"
-                    android:text="@string/post_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" >
 
                 <EditText
                     android:id="@+id/title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/l_section1"
-                    android:layout_margin="4dp"
-                    android:autoText="true"
-                    android:capitalize="sentences"
+                    android:layout_marginTop="4dp"
                     android:hint="@string/title"
-                    android:minHeight="40dip" />
+                    android:inputType="textCapSentences|textAutoCorrect" />
 
-                <LinearLayout
-                    android:id="@+id/postContentEditorSmallWrapper"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_below="@id/title"
-                    android:orientation="vertical" >
-
-                    <org.wordpress.android.util.WPEditText
-                        android:id="@+id/postContent"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_margin="4dp"
-                        android:autoText="true"
-                        android:capitalize="sentences"
-                        android:gravity="top"
-                        android:hint="@string/content"
-                        android:textColorLink="#21759b" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/section3"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/content_bg"
-                android:paddingBottom="10dp" >
-
-                <TextView
-                    android:id="@+id/l_tags_categories"
-                    style="@style/WordPressSectionHeader"
+                <org.wordpress.android.util.WPEditText
+                    android:id="@+id/postContent"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/content_bg_header"
-                    android:text="@string/tags_and_categories" />
+                    android:gravity="top"
+                    android:hint="@string/post_content"
+                    android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+                    android:minLines="@integer/content_editor_min_lines"
+                    android:textColorLink="#21759b" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/section2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" >
 
                 <EditText
                     android:id="@+id/tags"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/l_tags_categories"
-                    android:layout_margin="4dp"
-                    android:autoText="true"
+                    android:layout_marginTop="4dp"
                     android:hint="@string/tags_separate_with_commas"
-                    android:minHeight="40dip" />
+                    android:inputType="textAutoCorrect" />
 
                 <Button
                     android:id="@+id/selectCategories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tags"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
                     android:layout_marginTop="4dp"
-                    android:background="@drawable/wp_button_small"
                     android:text="@string/select_categories" />
 
                 <TextView
                     android:id="@+id/selectedCategories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/selectCategories"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="4dp"
                     android:text="@string/selected_categories"
-                    android:textColor="#444444" />
-            </RelativeLayout>
+                    android:textColor="#444444"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/location_wrapper"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="-10dip" >
-
-                <RelativeLayout
-                    android:id="@+id/section4"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_below="@id/section3"
-                    android:layout_marginBottom="10dip"
-                    android:layout_marginTop="10dip"
-                    android:background="@drawable/content_bg"
-                    android:paddingBottom="10dp"
-                    android:visibility="gone" >
-
-                    <TextView
-                        android:id="@+id/l_location"
-                        style="@style/WordPressSectionHeader"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/content_bg_header"
-                        android:text="@string/location" />
-
-                    <TextView
-                        android:id="@+id/locationText"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/l_location"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/loading" />
-
-                    <Button
-                        android:id="@+id/viewMap"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/locationText"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginTop="4dp"
-                        android:background="@drawable/wp_button_small"
-                        android:text="@string/view_map" />
-
-                    <Button
-                        android:id="@+id/updateLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/viewMap"
-                        android:layout_toRightOf="@id/viewMap"
-                        android:background="@drawable/wp_button_small"
-                        android:text="@string/update_location" />
-
-                    <Button
-                        android:id="@+id/removeLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/updateLocation"
-                        android:layout_toRightOf="@id/updateLocation"
-                        android:background="@drawable/wp_button_small"
-                        android:text="@string/remove_location" />
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/section5"
+                android:id="@+id/section3"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dip"
-                android:layout_marginTop="10dip"
-                android:background="@drawable/content_bg"
-                android:paddingBottom="10dp" >
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <TextView
+                    android:id="@+id/locationText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/loading" />
+
+                <Button
+                    android:id="@+id/viewMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/locationText"
+                    android:text="@string/view_map" />
+
+                <Button
+                    android:id="@+id/updateLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/viewMap"
+                    android:layout_toRightOf="@id/viewMap"
+                    android:text="@string/update_location" />
+
+                <Button
+                    android:id="@+id/removeLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/updateLocation"
+                    android:layout_toRightOf="@id/updateLocation"
+                    android:text="@string/remove_location" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/section4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" >
+
+                <!--  <TextView
                     android:id="@+id/l_status"
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/content_bg_header"
-                    android:text="@string/settings" />
+                    android:text="@string/settings" />-->
 
                 <TextView
                     android:id="@+id/statusLabel"
+                    style="@style/WordPressSubHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/l_status"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/l_status" />
+                    android:text="@string/status" />
 
                 <Spinner
                     android:id="@+id/status"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/statusLabel"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/wp_spinner_bg" />
-
-                <TextView
-                    android:id="@+id/pubDateLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/status"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/publish_date" />
-
-                <TextView
-                    android:id="@+id/pubDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/status"
-                    android:layout_margin="4dp"
-                    android:layout_toRightOf="@id/pubDateLabel"
-                    android:text="@string/immediately" />
-
-                <Button
-                    android:id="@+id/pubDateButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/pubDate"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/wp_button_small"
-                    android:text="@string/edit" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/postFormatLabel"
+                    style="@style/WordPressSubHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/pubDateButton"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="4dp"
                     android:text="@string/post_format" />
 
                 <Spinner
                     android:id="@+id/postFormat"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/postFormatLabel"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/wp_spinner_bg"
                     android:prompt="@string/post_format" />
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/pubDateLabel"
+                        style="@style/WordPressSubHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/publish_date" />
+
+                    <Button
+                        android:id="@+id/pubDateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/pubDateLabel"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="@string/edit" />
+
+                    <TextView
+                        android:id="@+id/pubDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@id/pubDateLabel"
+                        android:layout_margin="4dp"
+                        android:layout_toLeftOf="@id/pubDateButton"
+                        android:paddingLeft="8dp"
+                        android:paddingTop="8dp"
+                        android:text="@string/immediately" />
+                </RelativeLayout>
 
                 <EditText
                     android:id="@+id/post_password"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/postFormat"
-                    android:layout_margin="4dp"
                     android:hint="@string/post_password"
-                    android:minHeight="40dip"
                     android:inputType="textPassword" />
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/post"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/wp_button"
-                android:text="@string/publish_post"
-                android:textSize="20sp" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -308,6 +204,7 @@
         android:id="@+id/formatBar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/format_bar_height"
+        android:layout_gravity="bottom"
         android:background="@drawable/format_bar_bg"
         android:orientation="horizontal"
         android:padding="4dp"
@@ -409,8 +306,9 @@
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
             android:background="@drawable/wp_button_toggle"
+            android:contentDescription="@string/content_description_add_media"
             android:scaleType="centerInside"
             android:src="@drawable/camera" />
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>

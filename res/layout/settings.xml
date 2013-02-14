@@ -157,10 +157,7 @@
                     android:id="@+id/maxImageWidth"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/l_maxImageWidth"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/wp_spinner_bg" />
+                    android:layout_below="@id/l_maxImageWidth" />
 
                 <CheckBox
                     android:id="@+id/fullSizeImage"
