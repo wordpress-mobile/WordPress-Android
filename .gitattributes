@@ -14,6 +14,7 @@ libs/tagsoup-1.2.1.jar -text
 /lint.xml -text
 /proguard-project.txt -text
 /project.properties -text
+/readme.md -text
 res/anim/cycle_5.xml -text
 res/anim/dashboard_hide.xml -text
 res/anim/dashboard_show.xml -text
