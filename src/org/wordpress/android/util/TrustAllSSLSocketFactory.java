@@ -1,10 +1,13 @@
 package org.wordpress.android.util;
 
+import org.apache.http.conn.scheme.SocketFactory;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
@@ -12,15 +15,11 @@ import java.security.UnrecoverableKeyException;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import org.apache.http.conn.scheme.SocketFactory;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-
 public class TrustAllSSLSocketFactory extends SSLSocketFactory { 
     private javax.net.ssl.SSLSocketFactory factory; 
 
     public TrustAllSSLSocketFactory() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException { 
-        super((KeyStore) null);
+        super(null); 
             try { 
                 SSLContext sslcontext = SSLContext.getInstance("TLS"); 
                 sslcontext.init(null, new TrustManager[] { new TrustAllManager() }, null);
