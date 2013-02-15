@@ -36,8 +36,4 @@
       android:layout_width="0dp"
       android:layout_height="match_parent" />
   </LinearLayout>
-  <include
-    layout="@layout/action_bar"
-    android:id="@+id/commentsActionBar"
-    android:layout_above="@id/commentsRL" />
 </RelativeLayout>
