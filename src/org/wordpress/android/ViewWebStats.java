@@ -5,6 +5,7 @@ package org.wordpress.android;
 
 import java.io.IOException;
 import java.io.PushbackInputStream;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -62,6 +63,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.google.gson.Gson;
+import com.google.gson.internal.StringMap;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @author Eric
@@ -724,21 +728,26 @@ public class ViewWebStats extends WPActionBarActivity {
 								curBlogURL = pullParser.getText();
 								foundURL = false;
 
-								HashMap<?, ?> jetpackClientIDOption = null;
+								StringMap<?> jetpackClientIDOption = null;
 								try {
-									jetpackClientIDOption = WordPress.currentBlog.getBlogOptions() != null ? (HashMap<?, ?>) WordPress.currentBlog.getBlogOptions().get("jetpack_client_id") : null;
+									Gson gson = new Gson();
+									Type type = new TypeToken<HashMap<?, ?>>(){}.getType();
+							        HashMap<?, ?> blogOptions = gson.fromJson(WordPress.currentBlog.getBlogOptions(), type);
+									jetpackClientIDOption = blogOptions != null ? (StringMap<?>) blogOptions.get("jetpack_client_id") : null;
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 								if( jetpackClientIDOption != null ) {
 									//Try to match the ID first. The WordPress.com ID of the Jetpack blog was introduced in options in Jetpack 1.8.3 or higher
-									String jetpackClientIDString = jetpackClientIDOption.get("value").toString();
-									if ( jetpackClientIDString.equals(curBlogID) && !curBlogID.equals("1") ) {
-										// yay, found a match
-										apiInfo = new Vector<String>();
-										apiInfo.add(apiKey);
-										apiInfo.add(curBlogID);
+									if (jetpackClientIDOption.get("value") instanceof Double) {
+										double clientID = (Double)jetpackClientIDOption.get("value");
+										String jetpackClientIDString = String.valueOf((long) clientID);
+										if ( jetpackClientIDString.equals(curBlogID) && !curBlogID.equals("1") ) {
+											// yay, found a match
+											apiInfo = new Vector<String>();
+											apiInfo.add(apiKey);
+											apiInfo.add(curBlogID);
+										}
 									}
 								} else {
 									// make sure we're matching with a '/' at the end of

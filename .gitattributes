@@ -9,6 +9,7 @@ assets/webview.css -text
 libs/CWAC-AdapterWrapper.jar -text
 libs/CWAC-Bus.jar -text
 libs/CWAC-Task.jar -text
+libs/gson-2.2.2.jar -text
 libs/httpmime-4.1.2.jar -text
 libs/tagsoup-1.2.1.jar -text
 /lint.xml -text

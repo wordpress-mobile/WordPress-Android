@@ -3,7 +3,6 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.xmlrpc.android.ApiHelper;
@@ -13,6 +12,7 @@ import org.xmlrpc.android.XMLRPCException;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.gson.Gson;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -391,6 +391,7 @@ public class Dashboard extends WPActionBarActivity {
 				hPost.put("software_version", "software_version");
 				hPost.put("post_thumbnail", "post_thumbnail");
 				hPost.put("jetpack_client_id", "jetpack_client_id");
+				hPost.put("blog_public", "blog_public");
 				Object[] vParams = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost };
 				Object versionResult = new Object();
 				try {
@@ -400,18 +401,22 @@ public class Dashboard extends WPActionBarActivity {
 
 				if (versionResult != null) {
 					try {
-						HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
-						blog.setBlogOptions(new JSONObject(contentHash));
+						HashMap<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
+						Gson gson = new Gson();
+						String blogOptionsJson = gson.toJson(blogOptions);
+						if (blogOptionsJson != null)
+							blog.setBlogOptions(blogOptionsJson);
+						
 						// Software version
 						if (!blog.isDotcomFlag()) {
-							HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
+							HashMap<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
 							String wpVersion = sv.get("value").toString();
 							if (wpVersion.length() > 0) {
 								blog.setWpVersion(wpVersion);
 							}
 						}
 						// Featured image support
-						HashMap<?, ?> featuredImageHash = (HashMap<?, ?>) contentHash.get("post_thumbnail");
+						HashMap<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
 						if (featuredImageHash != null) {
 							boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash.get("value").toString());
 							blog.setFeaturedImageCapable(featuredImageCapable);
@@ -422,7 +427,7 @@ public class Dashboard extends WPActionBarActivity {
 					} catch (Exception e) {
 					}
 				}
-
+				
 				// get theme post formats
 				Vector<Object> args = new Vector<Object>();
 				args.add(blog);

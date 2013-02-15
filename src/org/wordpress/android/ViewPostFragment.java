@@ -145,24 +145,20 @@ public class ViewPostFragment extends Fragment {
 		ImageButton viewPostButton = (ImageButton) getActivity().findViewById(
 				R.id.viewPost);
 
+		tv.setVisibility(View.GONE);
+		webView.setVisibility(View.VISIBLE);
+		String html = StringHelper.addPTags(post.getDescription()
+				+ "\n\n" + post.getMt_text_more());
+
+		String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
+				+ html + "</div></body></html>";
+		webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
+				"text/html", "utf-8", null);
+
 		if (post.isLocalDraft()) {
-			tv.setVisibility(View.VISIBLE);
-			webView.setVisibility(View.GONE);
-			tv.setText(WPHtml.fromHtml(
-					(post.getDescription() + post.getMt_text_more()).replaceAll("\uFFFC", ""),
-					getActivity().getApplicationContext(), post));
 			shareURLButton.setVisibility(View.GONE);
 			viewPostButton.setVisibility(View.GONE);
 		} else {
-			tv.setVisibility(View.GONE);
-			webView.setVisibility(View.VISIBLE);
-			String html = StringHelper.addPTags(post.getDescription()
-					+ "\n\n" + post.getMt_text_more());
-
-			String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
-					+ html + "</div></body></html>";
-			webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
-					"text/html", "utf-8", null);
 			shareURLButton.setVisibility(View.VISIBLE);
 			viewPostButton.setVisibility(View.VISIBLE);
 		}

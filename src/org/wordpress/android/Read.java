@@ -1,5 +1,8 @@
 package org.wordpress.android;
 
+import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.http.client.HttpClient;
@@ -7,12 +10,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EncodingUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.gson.Gson;
+import com.google.gson.internal.StringMap;
+import com.google.gson.reflect.TypeToken;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -190,19 +200,36 @@ public class Read extends SherlockActivity {
 
 		wv.setWebViewClient(new WordPressWebViewClient());
 		if (WordPress.currentPost != null) {
-			int sdk_int = 0;
+			Post post = WordPress.currentPost;
+			String previewUrl = post.getPermaLink();
+			boolean isPrivate = false;
 			try {
-				sdk_int = Integer.valueOf(android.os.Build.VERSION.SDK);
-			} catch (Exception e1) {
-				sdk_int = 3; // assume they are on cupcake
+				Gson gson = new Gson();
+				Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
+		        HashMap<String, Object> blogOptions = gson.fromJson(WordPress.currentBlog.getBlogOptions(), type);
+				StringMap<?> blogPublicOption = (StringMap<?>)blogOptions.get("blog_public");
+				String blogPublicOptionValue = blogPublicOption.get("value").toString();
+				if (blogPublicOptionValue.equals("-1")) {
+					isPrivate = true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (sdk_int >= 8) {
-				// only 2.2 devices can load https correctly
-				wv.loadUrl(WordPress.currentPost.getPermaLink());
+			if (isPrivate || post.isLocalDraft() || post.isLocalChange() || !post.getPost_status().equals("publish")) {
+				if (-1 == previewUrl.indexOf('?')) {
+					previewUrl = previewUrl.concat("?preview=true");
+				} else {
+					previewUrl = previewUrl.concat("&preview=true");
+				}
+				if (WordPress.currentBlog.getUrl().lastIndexOf("/") != -1)
+					loginURL = WordPress.currentBlog.getUrl().substring(0, WordPress.currentBlog.getUrl().lastIndexOf("/")) + "/wp-login.php";
+				else
+					loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php", "wp-login.php");
+
+				String postData = String.format("log=%s&pwd=%s&redirect_to=%s", WordPress.currentBlog.getUsername(), WordPress.currentBlog.getPassword(), URLEncoder.encode(previewUrl)); 
+				wv.postUrl(loginURL, EncodingUtils.getBytes(postData, "utf-8"));
 			} else {
-				String url = WordPress.currentPost.getPermaLink().replace(
-						"https:", "http:");
-				wv.loadUrl(url);
+				wv.loadUrl(previewUrl);
 			}
 		}
 

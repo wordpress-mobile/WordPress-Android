@@ -3,18 +3,17 @@ package org.wordpress.android;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -99,6 +98,8 @@ import android.widget.ToggleButton;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuInflater;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class EditPost extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
 		WPEditText.OnSelectionChangedListener, OnFocusChangeListener {
@@ -286,19 +287,20 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 				mPostFormats = defaultPostFormatTitles;
 			} else {
 				try {
-					JSONObject jsonPostFormats = new JSONObject(mBlog.getPostFormats());
-					mPostFormats = new String[jsonPostFormats.length()];
-					mPostFormatTitles = new String[jsonPostFormats.length()];
-					Iterator<?> it = jsonPostFormats.keys();
+					Gson gson = new Gson();
+					Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+					HashMap<String, String> jsonPostFormats = gson.fromJson(mBlog.getPostFormats(), type);
+					mPostFormats = new String[jsonPostFormats.size()];
+					mPostFormatTitles = new String[jsonPostFormats.size()];
 					int i = 0;
-					while (it.hasNext()) {
-						String key = (String) it.next();
-						String val = (String) jsonPostFormats.get(key);
+					for (HashMap.Entry<String, String> entry : jsonPostFormats.entrySet()) {
+					    String key = entry.getKey();
+						String val = entry.getValue();
 						mPostFormats[i] = key;
 						mPostFormatTitles[i] = val;
 						i++;
 					}
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

@@ -37,7 +37,7 @@ public class Blog {
 	private String httpuser;
 	private String httppassword;
 	private String postFormats;
-	private JSONObject blogOptions;
+	private String blogOptions;
 	
 	public Blog(int blog_id, Context ctx) throws Exception{
 		//instantiate a new blog
@@ -79,9 +79,9 @@ public class Blog {
 				this.scaledImageWidth = (Integer)blogVals.get(23);
 			this.homeURL = blogVals.get(24).toString();
 			if(blogVals.get(25) !=null && blogVals.get(25).toString().length() > 0)
-				this.blogOptions = new JSONObject( blogVals.get(25).toString() );
+				this.blogOptions = blogVals.get(25).toString();
 			else
-				this.blogOptions = new JSONObject();
+				this.blogOptions = "";
 		} else {
 			throw new Exception();
 		}
@@ -304,11 +304,11 @@ public class Blog {
 		this.scaledImageWidth = scaledImageWidth;
 	}
 
-	public JSONObject getBlogOptions() {
+	public String getBlogOptions() {
 		return blogOptions;
 	}
 
-	public void setBlogOptions(JSONObject blogOptions) {
+	public void setBlogOptions(String blogOptions) {
 		this.blogOptions = blogOptions;
 	}
 }

@@ -8,11 +8,12 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
+
+import com.google.gson.Gson;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -112,9 +113,12 @@ public class ApiHelper {
 			try {
 				HashMap<?, ?> postFormats = (HashMap<?, ?>) result;
 				if (postFormats.size() > 0) {
-					JSONObject jsonPostFormats = new JSONObject(postFormats);
-					blog.setPostFormats(jsonPostFormats.toString());
-					blog.save(ctx, null);
+					Gson gson = new Gson();
+					String postFormatsJson = gson.toJson(postFormats);
+					if (postFormatsJson != null) {
+						blog.setPostFormats(postFormatsJson);
+						blog.save(ctx, null);
+					}
 				}
 			} catch (Exception e) {
 				//e.printStackTrace();

@@ -593,7 +593,7 @@ public class WordPressDB {
 			boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
 			boolean location, boolean isWPCom, String originalUsername,
 			String postFormats, String dotcomUsername, String dotcomPassword, 
-			String apiBlogID, String apiKey, boolean isScaledImage, int scaledImgWidth, JSONObject blogOptions) {
+			String apiBlogID, String apiKey, boolean isScaledImage, int scaledImgWidth, String blogOptions) {
 
 		ContentValues values = new ContentValues();
 		values.put("url", url);
@@ -615,16 +615,7 @@ public class WordPressDB {
 		values.put("api_key", apiKey);
 		values.put("isScaledImage", isScaledImage);
 		values.put("scaledImgWidth", scaledImgWidth);
-		
-		if (blogOptions != null) {
-			String blogOptionsSerialized;
-			try {
-				blogOptionsSerialized = blogOptions.toString();
-				values.put("blog_options", blogOptionsSerialized);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		values.put("blog_options", blogOptions);
 		
 		boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
 				null) > 0;
