@@ -1415,31 +1415,6 @@ public class WordPressDB {
 	}
 
 	// eula table
-	public boolean checkEULA(Context ctx) {
-
-		Cursor c = db.query(EULA_TABLE, new String[] { "read" }, "id=0", null,
-				null, null, null);
-		int numRows = c.getCount();
-		c.moveToFirst();
-		boolean returnValue = false;
-		if (numRows == 1) {
-			returnValue = (c.getInt(0) != 0);
-		}
-		c.close();
-
-		return returnValue;
-	}
-
-	public void setEULA(Context ctx) {
-
-		ContentValues values = new ContentValues();
-		values.put("id", 0);
-		values.put("read", 1); // set that they've read the EULA
-		synchronized (this) {
-			db.insert(EULA_TABLE, null, values);
-		}
-
-	}
 
 	public void setStatsDate(Context ctx) {
 

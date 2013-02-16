@@ -50,29 +50,7 @@ public class Dashboard extends WPActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		boolean eula = checkEULA();
-		if (eula == false) {
-
-			DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					// User clicked Accept so set that they've agreed to
-					// the eula.
-					WordPress.wpDB.setEULA(Dashboard.this);
-					displayAccounts();
-				}
-			};
-
-			DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					finish(); // goodbye!
-				}
-			};
-
-			AlertUtil.showAlert(Dashboard.this, R.string.eula, R.string.eula_content, getString(R.string.accept), positiveListener,
-					getString(R.string.decline), negativeListener);
-		} else {
-			displayAccounts();
-		}
+		displayAccounts();
 	}
 
 	@Override
@@ -87,10 +65,6 @@ public class Dashboard extends WPActionBarActivity {
 				new refreshBlogContentTask().execute(true);
 			}
 		}
-	}
-
-	public boolean checkEULA() {
-		return WordPress.wpDB.checkEULA(this);
 	}
 
 	@Override
