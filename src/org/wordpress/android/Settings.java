@@ -22,8 +22,7 @@ public class Settings extends WPActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.settings);
+		createMenuDrawer(R.layout.settings);
 	
         /*titleBar = (WPTitleBar) findViewById(R.id.settingsActionBar);
         titleBar.refreshButton.setEnabled(false);
@@ -72,6 +71,7 @@ public class Settings extends WPActionBarActivity {
 	
 	@Override
 	public void onBlogChanged() {
+		super.onBlogChanged();
 		// TODO: show settings for current blog
 	}
 

@@ -46,7 +46,7 @@ public class Comments extends WPActionBarActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.comments);
+		createMenuDrawer(R.layout.comments);
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
@@ -103,6 +103,7 @@ public class Comments extends WPActionBarActivity implements
 	
 	@Override
 	public void onBlogChanged() {
+		super.onBlogChanged();
 		// TODO: load comments for current blog
 	}
 
@@ -124,7 +125,8 @@ public class Comments extends WPActionBarActivity implements
 			commentList.refreshComments(false, false, false);
 			return true;
 		}
-		return false;
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	protected void popCommentDetail() {

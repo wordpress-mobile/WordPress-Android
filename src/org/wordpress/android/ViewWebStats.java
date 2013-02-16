@@ -90,8 +90,7 @@ public class ViewWebStats extends WPActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.view_web_stats);
+		createMenuDrawer(R.layout.view_web_stats);
 		
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
@@ -449,6 +448,7 @@ public class ViewWebStats extends WPActionBarActivity {
 	
 	@Override
 	public void onBlogChanged() {
+		super.onBlogChanged();
 		// TODO: switch stats to current blog if possible.  If the blog does not have stats on
 		// wordpress.com, display a helpful message (maybe directing them at jetpack?)
 	}

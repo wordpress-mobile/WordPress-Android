@@ -5,4 +5,7 @@
     <color name="image_options_text">#FFFFFF</color>
     <color name="pressed_wordpress">#CC2EA2CC</color>
     <color name="list_row_bg">#EDEDED</color>
+
+    <!-- Colors for menu drawer. -->
+    <color name="md__itemBackground">#CC2EA2CC</color>
 </resources>

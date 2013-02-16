@@ -43,14 +43,14 @@ public class Dashboard extends WPActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.dashboard);
+		createMenuDrawer(R.layout.dashboard);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		displayAccounts();
+		menuDrawer.peekDrawer();
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class Dashboard extends WPActionBarActivity {
 			startActivity(intent);
 			return true;
 		}
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void displayAccounts() {

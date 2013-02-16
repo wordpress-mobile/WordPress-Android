@@ -49,7 +49,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.posts);
+		createMenuDrawer(R.layout.posts);
 		
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
@@ -236,6 +236,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_refresh) {
 			postList.refreshPosts(false);
+			return true;
 		} else if (itemId == R.id.menu_new_post) {
 			Intent i = new Intent(this, EditPost.class);
 			i.putExtra("id", WordPress.currentBlog.getId());
@@ -244,14 +245,9 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 				i.putExtra("isPage", true);
 			startActivity(i);
 			return true;
-		} else if (itemId == android.R.id.home) {
-            Intent intent = new Intent(this, Dashboard.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            return true;
 		}
-		return false;
 
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void attemptToSelectPost() {
@@ -661,6 +657,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 	
 	@Override
 	public void onBlogChanged() {
+		super.onBlogChanged();
 		popPostDetail();
 		attemptToSelectPost();
 		postList.loadPosts(false);
