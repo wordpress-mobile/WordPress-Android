@@ -25,6 +25,10 @@ res/anim/shake.xml -text
 res/anim/show.xml -text
 res/drawable-hdpi-v11/notification_icon.png -text
 res/drawable-hdpi/ab_bottom_solid_wordpress.9.png -text
+res/drawable-hdpi/ab_icon_navigation_down.png -text
+res/drawable-hdpi/ab_icon_navigation_up.png -text
+res/drawable-hdpi/ab_icon_save.png -text
+res/drawable-hdpi/ab_icon_share.png -text
 res/drawable-hdpi/ab_solid_wordpress.9.png -text
 res/drawable-hdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-hdpi/ab_transparent_wordpress.9.png -text
@@ -39,6 +43,7 @@ res/drawable-hdpi/gallery_selected_default.9.png -text
 res/drawable-hdpi/grey_wp_button.9.png -text
 res/drawable-hdpi/grey_wp_button_active.9.png -text
 res/drawable-hdpi/grey_wp_button_down.9.png -text
+res/drawable-hdpi/ib_icon_web.png -text
 res/drawable-hdpi/ic_menu_compose.png -text
 res/drawable-hdpi/ic_menu_delete.png -text
 res/drawable-hdpi/ic_menu_home.png -text
@@ -61,7 +66,6 @@ res/drawable-hdpi/progress_primary_wordpress.9.png -text
 res/drawable-hdpi/progress_secondary_wordpress.9.png -text
 res/drawable-hdpi/refresh_icon.png -text
 res/drawable-hdpi/right_shadow.9.png -text
-res/drawable-hdpi/save.png -text
 res/drawable-hdpi/spinner_ab_default_wordpress.9.png -text
 res/drawable-hdpi/spinner_ab_disabled_wordpress.9.png -text
 res/drawable-hdpi/spinner_ab_focused_wordpress.9.png -text
@@ -73,7 +77,6 @@ res/drawable-hdpi/tab_selected_pressed_wordpress.9.png -text
 res/drawable-hdpi/tab_selected_wordpress.9.png -text
 res/drawable-hdpi/tab_unselected_focused_wordpress.9.png -text
 res/drawable-hdpi/tab_unselected_pressed_wordpress.9.png -text
-res/drawable-hdpi/title_bar_shadow.9.png -text
 res/drawable-hdpi/wp_check_off.png -text
 res/drawable-hdpi/wp_check_on.png -text
 res/drawable-hdpi/wp_logo_actionbar.png -text
@@ -88,6 +91,11 @@ res/drawable-ldpi/app_icon.png -text
 res/drawable-ldpi/notification_icon.png -text
 res/drawable-mdpi-v11/notification_icon.png -text
 res/drawable-mdpi/ab_bottom_solid_wordpress.9.png -text
+res/drawable-mdpi/ab_icon_navigation_down.png -text
+res/drawable-mdpi/ab_icon_navigation_up.png -text
+res/drawable-mdpi/ab_icon_save.png -text
+res/drawable-mdpi/ab_icon_share.png -text
+res/drawable-mdpi/ab_icon_web.png -text
 res/drawable-mdpi/ab_solid_wordpress.9.png -text
 res/drawable-mdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-mdpi/ab_transparent_wordpress.9.png -text
@@ -100,7 +108,6 @@ res/drawable-mdpi/preview_icon.png -text
 res/drawable-mdpi/progress_bg_wordpress.9.png -text
 res/drawable-mdpi/progress_primary_wordpress.9.png -text
 res/drawable-mdpi/progress_secondary_wordpress.9.png -text
-res/drawable-mdpi/save.png -text
 res/drawable-mdpi/spinner_ab_default_wordpress.9.png -text
 res/drawable-mdpi/spinner_ab_disabled_wordpress.9.png -text
 res/drawable-mdpi/spinner_ab_focused_wordpress.9.png -text
@@ -116,6 +123,11 @@ res/drawable-v12/dashboard_btn_bottom_left.xml -text
 res/drawable-v12/dashboard_btn_bottom_right.xml -text
 res/drawable-xhdpi-v11/notification_icon.png -text
 res/drawable-xhdpi/ab_bottom_solid_wordpress.9.png -text
+res/drawable-xhdpi/ab_icon_navigation_down.png -text
+res/drawable-xhdpi/ab_icon_navigation_up.png -text
+res/drawable-xhdpi/ab_icon_save.png -text
+res/drawable-xhdpi/ab_icon_share.png -text
+res/drawable-xhdpi/ab_icon_web.png -text
 res/drawable-xhdpi/ab_solid_wordpress.9.png -text
 res/drawable-xhdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-xhdpi/ab_transparent_wordpress.9.png -text
@@ -128,7 +140,6 @@ res/drawable-xhdpi/preview_icon.png -text
 res/drawable-xhdpi/progress_bg_wordpress.9.png -text
 res/drawable-xhdpi/progress_primary_wordpress.9.png -text
 res/drawable-xhdpi/progress_secondary_wordpress.9.png -text
-res/drawable-xhdpi/save.png -text
 res/drawable-xhdpi/spinner_ab_default_wordpress.9.png -text
 res/drawable-xhdpi/spinner_ab_disabled_wordpress.9.png -text
 res/drawable-xhdpi/spinner_ab_focused_wordpress.9.png -text
@@ -138,11 +149,6 @@ res/drawable-xhdpi/tab_selected_pressed_wordpress.9.png -text
 res/drawable-xhdpi/tab_selected_wordpress.9.png -text
 res/drawable-xhdpi/tab_unselected_focused_wordpress.9.png -text
 res/drawable-xhdpi/tab_unselected_pressed_wordpress.9.png -text
-res/drawable/action_bar_btn_selector.xml -text
-res/drawable/action_bar_btn_selector_right.xml -text
-res/drawable/action_bar_shadow.9.png -text
-res/drawable/action_item_btn.xml -text
-res/drawable/action_item_selected.9.png -text
 res/drawable/add.png -text
 res/drawable/add_small.png -text
 res/drawable/app_icon.png -text
@@ -180,9 +186,7 @@ res/drawable/dashboard_icon_stats.png -text
 res/drawable/dashboard_icon_subs.png -text
 res/drawable/dashboard_icon_video.png -text
 res/drawable/dashboard_icon_wp.png -text
-res/drawable/down.png -text
 res/drawable/drafts_icon.png -text
-res/drawable/drop_down_arrow.png -text
 res/drawable/format_bar_bg.xml -text
 res/drawable/format_bar_btn.xml -text
 res/drawable/format_bar_btn_toggled.xml -text
@@ -239,6 +243,7 @@ res/drawable/quickcontact_slider_btn_selected.9.png -text
 res/drawable/quickcontact_slider_grip_left.png -text
 res/drawable/quickcontact_slider_grip_right.png -text
 res/drawable/quickcontact_top_frame.9.png -text
+res/drawable/reader_footer_bg.xml -text
 res/drawable/section_header.xml -text
 res/drawable/selectable_background_wordpress.xml -text
 res/drawable/spinner_background_ab_wordpress.xml -text
@@ -249,13 +254,8 @@ res/drawable/stats_tab_icon.png -text
 res/drawable/tab_color_selector.xml -text
 res/drawable/tab_indicator_ab_wordpress.xml -text
 res/drawable/tab_unselected.xml -text
-res/drawable/title_bar_gradient.xml -text
-res/drawable/title_bar_item_bg.xml -text
-res/drawable/title_bar_right_item_bg.xml -text
-res/drawable/title_bar_shadow.9.png -text
 res/drawable/title_bg.xml -text
 res/drawable/title_text_bg.xml -text
-res/drawable/up.png -text
 res/drawable/video.png -text
 res/drawable/view_post_navbar_bg.xml -text
 res/drawable/wordpress_gallery_background.xml -text
@@ -279,7 +279,6 @@ res/drawable/wp_statusbar_icon.png -text
 res/drawable/wpcom.png -text
 res/drawable/wplogo.png -text
 res/layout-hdpi/new_account.xml -text
-res/layout-land/action_bar.xml -text
 res/layout-large-mdpi/add_account.xml -text
 res/layout-large-mdpi/comments.xml -text
 res/layout-large-mdpi/edit_comment.xml -text
@@ -292,7 +291,6 @@ res/layout-sw720dp/comments.xml -text
 res/layout-sw720dp/new_account.xml -text
 res/layout-sw720dp/posts.xml -text
 res/layout/about.xml -text
-res/layout/action_item.xml -text
 res/layout/add_account.xml -text
 res/layout/add_account_settings.xml -text
 res/layout/add_category.xml -text
@@ -421,7 +419,6 @@ src/org/wordpress/android/Link.java -text
 src/org/wordpress/android/NewAccount.java -text
 src/org/wordpress/android/Posts.java -text
 src/org/wordpress/android/Preferences.java -text
-src/org/wordpress/android/Read.java -text
 src/org/wordpress/android/ReplyToComment.java -text
 src/org/wordpress/android/SelectCategories.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
@@ -441,6 +438,7 @@ src/org/wordpress/android/WPCOMReaderImpl.java -text
 src/org/wordpress/android/WPCOMReaderPager.java -text
 src/org/wordpress/android/WPCOMReaderTopicsSelector.java -text
 src/org/wordpress/android/WPCOMReaderWebPage.java -text
+src/org/wordpress/android/WebViewActivity.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
 src/org/wordpress/android/models/Blog.java -text

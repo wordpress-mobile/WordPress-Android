@@ -269,7 +269,7 @@ public class Dashboard extends WPActionBarActivity {
 					startActivity(i);
 					
 				} else {
-					Intent i = new Intent(Dashboard.this, Read.class);
+					Intent i = new Intent(Dashboard.this, WebViewActivity.class);
 					i.putExtra("loadAdmin", true);
 					startActivity(i);
 					

@@ -34,6 +34,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 
 	protected MenuDrawer menuDrawer;
 	private static int[] blogIDs;
+	protected boolean isAnimatingRefreshButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				}
 			}
 		}
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (isAnimatingRefreshButton)
+			isAnimatingRefreshButton = false;
 	}
 
 	/**
@@ -152,7 +160,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		LinearLayout dashboardButton = (LinearLayout) findViewById(R.id.menu_dashboard_btn);
 		dashboardButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(WPActionBarActivity.this, Read.class);
+				Intent i = new Intent(WPActionBarActivity.this, WebViewActivity.class);
 				i.putExtra("loadAdmin", true);
 				menuDrawer.closeMenu();
 				startActivity(i);
@@ -314,7 +322,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	}
 
 	public void startAnimatingRefreshButton(MenuItem refreshItem) {
-		if (refreshItem != null) {
+		if (refreshItem != null && !isAnimatingRefreshButton) {
+			isAnimatingRefreshButton = true;
 			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			ImageView iv = (ImageView) inflater.inflate(getResources().getLayout(R.layout.menu_refresh_view), null);
 			RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
@@ -329,7 +338,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	}
 	
 	public void stopAnimatingRefreshButton(MenuItem refreshItem) {
-		if (refreshItem.getActionView() != null) {
+		isAnimatingRefreshButton = false;
+		if (refreshItem != null && refreshItem.getActionView() != null) {
 			refreshItem.getActionView().clearAnimation();
 			refreshItem.setActionView(null);
 		}

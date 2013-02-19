@@ -70,8 +70,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Read"
-            android:configChanges="orientation|keyboardHidden" />
+            android:name=".WebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="Preferences"
             android:windowSoftInputMode="stateHidden" />
@@ -91,19 +91,19 @@
             android:theme="@style/WordPress.Dialog" />
         <activity
             android:name="SelectCategories"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".AddCategory"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/add_new_category"
             android:theme="@style/WordPress.Dialog" />
         <activity
             android:name="Signup"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name="NewAccount" />
         <activity
             android:name="ViewWebStats"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
         <activity
             android:name=".AddQuickPressShortcut"
@@ -127,20 +127,20 @@
         <activity android:name=".About" />
         <activity
             android:name="Comments"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
         <activity android:name="ViewCommentActivity" />
         <activity
             android:name="Posts"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
         <activity android:name="ViewPostActivity" />
         <activity
             android:name="WPCOMReaderPager"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="EditComment"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 
 </manifest>

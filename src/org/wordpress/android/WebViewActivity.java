@@ -11,8 +11,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EncodingUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
@@ -43,7 +41,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class Read extends SherlockActivity {
+public class WebViewActivity extends SherlockActivity {
 	/** Called when the activity is first created. */
 	public String[] authors;
 	public String[] comments;
@@ -177,18 +175,18 @@ public class Read extends SherlockActivity {
 
 		wv.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
-				Read.this.setTitle("Loading...");
-				Read.this.setProgress(progress * 100);
+				WebViewActivity.this.setTitle("Loading...");
+				WebViewActivity.this.setProgress(progress * 100);
 
 				if (progress == 100) {
 					if (isPage) {
-						Read.this.setTitle(EscapeUtils
+						WebViewActivity.this.setTitle(EscapeUtils
 								.unescapeHtml(WordPress.currentBlog
 										.getBlogName())
 								+ " - "
 								+ getResources().getText(R.string.preview_page));
 					} else {
-						Read.this.setTitle(EscapeUtils
+						WebViewActivity.this.setTitle(EscapeUtils
 								.unescapeHtml(WordPress.currentBlog
 										.getBlogName())
 								+ " - "
@@ -287,7 +285,7 @@ public class Read extends SherlockActivity {
 			if (WordPress.currentBlog == null) {
 				try {
 					WordPress.currentBlog = new Blog(
-							WordPress.wpDB.getLastBlogID(Read.this), Read.this);
+							WordPress.wpDB.getLastBlogID(WebViewActivity.this), WebViewActivity.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -350,15 +348,15 @@ public class Read extends SherlockActivity {
 
 				wv.setWebChromeClient(new WebChromeClient() {
 					public void onProgressChanged(WebView view, int progress) {
-						Read.this.setTitle("Loading...");
-						Read.this.setProgress(progress * 100);
+						WebViewActivity.this.setTitle("Loading...");
+						WebViewActivity.this.setProgress(progress * 100);
 
 						if (progress == 100) {
 							if (loadReader)
-								Read.this.setTitle(getResources().getText(
+								WebViewActivity.this.setTitle(getResources().getText(
 										R.string.reader));
 							else
-								Read.this.setTitle(getResources().getText(
+								WebViewActivity.this.setTitle(getResources().getText(
 										R.string.wp_admin));
 						}
 					}

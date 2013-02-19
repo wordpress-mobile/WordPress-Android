@@ -18,17 +18,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +31,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 	public WebView wv;
 	public String topicsID;
 	private PostSelectedListener onPostSelectedListener;
-	private ShowTopicsListener showTopicsListener;
 	private LoadDetailListener loadDetailListener;
 	public TextView topicTV;
-	private ImageView refreshIcon;
 	
 	public static WPCOMReaderImpl newInstance() {
 		WPCOMReaderImpl f = new WPCOMReaderImpl();
@@ -69,11 +60,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 			}
 		}
 
-		//topicTV = (TextView) v.findViewById(R.id.topic_title);
-		refreshIcon = (ImageView) v.findViewById(R.id.refresh_icon);
-
-		// this.setTitle(getResources().getText(R.string.reader)); //FIXME: set
-		// the title of the screen here
 		wv = (WebView) v.findViewById(R.id.webView);
 		wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		wv.addJavascriptInterface(new JavaScriptInterface(getActivity()
@@ -91,7 +77,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 						wv.loadUrl("javascript:Reader2.get_last_selected_item();");
 						onPostSelectedListener.onPostSelected(url);
 					} else {
-						//startRotatingRefreshIcon();
+						((WPCOMReaderPager) getActivity()).startAnimatingButton();
 					}
 				
 					if (url.contains("chrome=no")) {
@@ -102,7 +88,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				//stopRotatingRefreshIcon();
+				if (getActivity() != null && !getActivity().isFinishing())
+					((WPCOMReaderPager) getActivity()).stopAnimatingButton();
 			}
 
 			@Override
@@ -118,15 +105,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 		this.setDefaultWebViewSettings(wv);
 		new loadReaderTask().execute(null, null, null, null);
-
-		/*RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.topicSelector);
-		rl.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				showTopicsListener.showTopics();
-			}
-		});*/
-
-
 		return v;
 	}
 
@@ -135,7 +113,6 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 		try {
 			// check that the containing activity implements our callback
 			onPostSelectedListener = (PostSelectedListener) activity;
-			showTopicsListener = (ShowTopicsListener) activity;
 			loadDetailListener = (LoadDetailListener) activity;
 		} catch (ClassCastException e) {
 			activity.finish();
@@ -192,7 +169,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
 		@Override
 		protected void onPreExecute() {
-			//startRotatingRefreshIcon();
+			((WPCOMReaderPager) getActivity()).startAnimatingButton();
 		}
 
 		protected void onPostExecute(Vector<?> result) {

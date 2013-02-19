@@ -17,15 +17,16 @@
         android:singleLine="True"
         android:text="@string/reader"
         android:textColor="#FFFFFFFF"
+        android:background="@drawable/spinner_background_ab_wordpress"
         android:textSize="@dimen/action_bar_title_text_size" />
 
-    <ImageView
+    <!--  <ImageView
         android:id="@+id/drop_down_arrow"
         android:layout_width="14dp"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/drop_down_arrow" />
+        android:src="@drawable/drop_down_arrow" />-->
 
 </RelativeLayout>

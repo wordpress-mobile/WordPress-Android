@@ -10,7 +10,6 @@
     android:id="@+id/dashboard"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_below="@id/actionBarWrapper"
     android:layout_weight="1"
     android:background="#AA000000"
     android:clickable="true"

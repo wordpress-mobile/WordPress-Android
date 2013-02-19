@@ -27,19 +27,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class WPCOMReaderPager extends SherlockFragmentActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
+public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
 		UpdateTopicTitleListener, GetLoadedItemsListener, UpdateButtonStatusListener, ShowTopicsListener, LoadExternalURLListener,
 		GetPermalinkListener, GetLastSelectedItemListener, LoadDetailListener, OnNavigationListener {
 
@@ -53,27 +49,30 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 	private boolean isShare;
 	private RelativeLayout topicSelector;
 	private TextView topicText;
+	private MenuItem refreshMenuItem;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowCustomEnabled(true);
+		// No blog selector for the Reader
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		topicSelector = (RelativeLayout)inflator.inflate(R.layout.reader_topics, null);
-		topicText = (TextView)topicSelector.findViewById(R.id.topic_title);
-		
-		topicSelector.setOnClickListener(new OnClickListener(){
+		topicSelector = (RelativeLayout) inflator.inflate(R.layout.reader_topics, null);
+		topicText = (TextView) topicSelector.findViewById(R.id.topic_title);
+
+		topicSelector.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				showTopics();
 			}
-			
+
 		});
-		
+
 		actionBar.setCustomView(topicSelector);
 	}
 
@@ -94,24 +93,13 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 			readerPager.setCurrentItem(1, true);
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.refresh_only, menu);
-		return true;
-	}
 	
 	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.menu_refresh) {
-			WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
-			readerPageFragment.refreshReader();
-			return true;
-		}
-		return false;
+	protected void onPause() {
+		if (refreshMenuItem != null && isAnimatingRefreshButton)
+			this.stopAnimatingButton();
+		
+		super.onPause();
 	}
 
 	@Override
@@ -164,20 +152,24 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 
 	}
 
-	/*@Override
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		menu.clear();
-		menu.add(0, 0, 0, getResources().getText(R.string.home));
-		MenuItem menuItem = menu.findItem(0);
-		menuItem.setIcon(R.drawable.ic_menu_home);
+		menu.add(0, 0, 0, getResources().getText(R.string.refresh));
+		refreshMenuItem = menu.findItem(0);
+		refreshMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		refreshMenuItem.setIcon(R.drawable.refresh_icon);
 		if (readerPager.getCurrentItem() > 1) {
+			menu.removeItem(0);
 			menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
-			menuItem = menu.findItem(1);
-			menuItem.setIcon(android.R.drawable.ic_menu_view);
+			MenuItem viewMenuItem = menu.findItem(1);
+			viewMenuItem.setIcon(R.drawable.ab_icon_web);
+			viewMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			menu.add(0, 2, 0, getResources().getText(R.string.share_link));
-			menuItem = menu.findItem(2);
-			menuItem.setIcon(android.R.drawable.ic_menu_share);
+			MenuItem shareMenuItem = menu.findItem(2);
+			shareMenuItem.setIcon(R.drawable.ab_icon_share);
+			shareMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		}
 
 		return super.onPrepareOptionsMenu(menu);
@@ -186,11 +178,13 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		final WPCOMReaderWebPage readerWebPageFragment = (WPCOMReaderWebPage) webPage;
 		final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
-		switch (item.getItemId()) {
-		case 0:
-			finish();
-			break;
-		case 1:
+
+		int itemId = item.getItemId();
+		if (itemId == 0) {
+			WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
+			readerPageFragment.refreshReader();
+			return true;
+		} else if (itemId == 1) {
 			if (readerPageDetailFragment != null && readerPageDetailFragment != null) {
 				if (readerPager.getCurrentItem() == 2) {
 					runOnUiThread(new Runnable() {
@@ -211,8 +205,8 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 					}
 				}
 			}
-			break;
-		case 2:
+			return true;
+		} else if (itemId == 2) {
 			if (readerWebPageFragment != null && readerPageDetailFragment != null) {
 				if (readerPager.getCurrentItem() == 2) {
 					runOnUiThread(new Runnable() {
@@ -232,12 +226,10 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 					}
 				}
 			}
-			break;
-		default:
-			break;
+			return true;
 		}
 		return false;
-	}*/
+	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -259,6 +251,7 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 						topicText.setText(topicName);
 					}
 					readerPager.setCurrentItem(1, true);
+					invalidateOptionsMenu();
 				}
 			});
 		} catch (Exception e) {
@@ -268,6 +261,7 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 	@Override
 	public void onPostSelected(String requestedURL) {
 		readerPager.setCurrentItem(2, true);
+		invalidateOptionsMenu();
 	}
 
 	@Override
@@ -278,9 +272,9 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 				readerPageDetailFragment.wv.loadUrl("javascript:Reader2.clear_article_details();");
 			}
 			readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
+			invalidateOptionsMenu();
 		} else
 			super.onBackPressed();
-
 	}
 
 	@Override
@@ -412,9 +406,11 @@ public class WPCOMReaderPager extends SherlockFragmentActivity implements Change
 		});
 	}
 
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		showTopics();
-		return true;
+	public void startAnimatingButton() {
+		startAnimatingRefreshButton(refreshMenuItem);
+	}
+
+	public void stopAnimatingButton() {
+		stopAnimatingRefreshButton(refreshMenuItem);
 	}
 }

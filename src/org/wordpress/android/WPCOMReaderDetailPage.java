@@ -94,9 +94,15 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 
 	public void updateButtonStatus(int button, boolean enabled) {
 		if (button == 0) {
-			prevPost.setEnabled(enabled);
+			if (enabled)
+				prevPost.setAlpha(160);
+			else
+				prevPost.setAlpha(70);
 		} else if (button == 1) {
-			nextPost.setEnabled(enabled);
+			if (enabled)
+				nextPost.setAlpha(160);
+			else
+				nextPost.setAlpha(70);
 		}
 		
 	}
