@@ -74,6 +74,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 		});
 
 		actionBar.setCustomView(topicSelector);
+		createMenuDrawer(R.layout.reader_wpcom_pager);
 	}
 
 	@Override
@@ -82,7 +83,6 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
 		if (topicPage == null) {
 			Log.i("WP", "topicPage was null");
-			setContentView(R.layout.reader_wpcom_pager);
 
 			readerPager = (WPViewPager) findViewById(R.id.pager);
 			readerPager.setOffscreenPageLimit(3);
@@ -228,7 +228,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 			}
 			return true;
 		}
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

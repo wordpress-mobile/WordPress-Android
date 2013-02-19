@@ -42,7 +42,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		super.onCreate(savedInstanceState);
 
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		String[] blogNames = getBlogNames(this);
@@ -83,6 +82,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	 * @param contentView {@link View} of the main content for the activity.
 	 */
 	protected void createMenuDrawer(int contentView) {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
 		menuDrawer.setContentView(contentView);
 		menuDrawer.setMenuView(R.layout.menu_drawer);
@@ -237,7 +238,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	 * for a WordPress.com account.
 	 */
 	protected void updateMenuReaderButton() {
-		// hide Reader menu item if current blog is not a WordPress.com blog
 		View readButton = findViewById(R.id.menu_reader_btn);
 		if (WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag()) {
 			readButton.setVisibility(View.VISIBLE);
