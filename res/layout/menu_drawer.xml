@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -40,8 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -63,8 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -78,6 +75,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_comments" />
+
+            <TextView
+                android:id="@+id/comment_badge"
+                style="@style/MenuDrawer.CommentBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
@@ -86,8 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -109,8 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -132,8 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -155,8 +155,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -178,8 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -201,8 +199,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="@dimen/menu_image_size"
@@ -220,4 +217,3 @@
     </LinearLayout>
 
 </ScrollView>
-

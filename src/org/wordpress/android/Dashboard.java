@@ -435,6 +435,7 @@ public class Dashboard extends WPActionBarActivity {
 
 	@Override
 	public void onBlogChanged() {
+		super.onBlogChanged();
 		try {
 			blog = new Blog(id, Dashboard.this);
 		} catch (Exception e) {

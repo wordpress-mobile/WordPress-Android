@@ -146,6 +146,7 @@ res/drawable/app_icon.png -text
 res/drawable/browser_reload.png -text
 res/drawable/camera.png -text
 res/drawable/comment_badge.png -text
+res/drawable/comment_badge_background.xml -text
 res/drawable/comment_pending_bg_selector.xml -text
 res/drawable/comment_pending_gradient.xml -text
 res/drawable/content_bg.xml -text

@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -64,6 +65,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		super.onPause();
 		if (isAnimatingRefreshButton)
 			isAnimatingRefreshButton = false;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// update menu drawer, since the current blog may have changed
+		if (menuDrawer != null) {
+			updateMenuDrawer();
+		}
 	}
 
 	/**
@@ -196,9 +207,36 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	}
 
 	/**
-	 * Update the items in the menu drawer based on the current active blog.
+	 * Update all of the items in the menu drawer based on the current active blog.
 	 */
 	protected void updateMenuDrawer() {
+		updateMenuCommentBadge();
+		updateMenuReaderButton();
+	}
+
+	/**
+	 * Update the comment badge in the menu drawer to reflect the number of unmoderated comments for
+	 * the current active blog.
+	 */
+	protected void updateMenuCommentBadge() {
+		if (WordPress.currentBlog != null) {
+			int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount(this);
+			TextView commentBadge = (TextView) findViewById(R.id.comment_badge);
+			if (commentCount > 0) {
+				commentBadge.setVisibility(View.VISIBLE);
+			} else {
+				commentBadge.setVisibility(View.GONE);
+			}
+
+			commentBadge.setText(String.valueOf(commentCount));
+		}
+	}
+
+	/**
+	 * Update the reader button in the menu drawer to only be visible if the current active blog is
+	 * for a WordPress.com account.
+	 */
+	protected void updateMenuReaderButton() {
 		// hide Reader menu item if current blog is not a WordPress.com blog
 		View readButton = findViewById(R.id.menu_reader_btn);
 		if (WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag()) {
@@ -206,8 +244,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		} else {
 			readButton.setVisibility(View.GONE);
 		}
-
-		// TODO(willnorris): update comment count
 	}
 
 	/**
