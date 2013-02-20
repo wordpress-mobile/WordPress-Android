@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -37,6 +38,7 @@ public abstract class WPCOMReaderBase extends SherlockFragment {
 		webSettings.setDomStorageEnabled(true);
 		webSettings.setUserAgentString("wp-android-native");
 		webSettings.setSavePassword(false);
+		webSettings.setRenderPriority(RenderPriority.HIGH);
 	}
 	
 	public void onAttach(Activity activity) {

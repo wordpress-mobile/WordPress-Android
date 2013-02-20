@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.view.ViewGroup;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
@@ -19,6 +20,8 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 	public String readerItems;
 	public ImageButton nextPost, prevPost;
 	private LoadExternalURLListener loadExternalURLListener;
+	private int navButtonEnabled = 200;
+	private int navButtonDisabled = 70;
 	
 	public static WPCOMReaderDetailPage newInstance() {
 		WPCOMReaderDetailPage f = new WPCOMReaderDetailPage();
@@ -47,6 +50,8 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 				wv.loadUrl("javascript:Reader2.show_next_item();");
 				wv.loadUrl("javascript:Reader2.is_next_item();");
 				wv.loadUrl("javascript:Reader2.is_prev_item();");
+				if (nextPost.getAlpha() != 70)
+					fadeInWebView();
 			}
 		});
 		
@@ -58,12 +63,19 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 				wv.loadUrl("javascript:Reader2.show_prev_item();");
 				wv.loadUrl("javascript:Reader2.is_next_item();");
 				wv.loadUrl("javascript:Reader2.is_prev_item();");
+				fadeInWebView();
 			}
 		});
 		
-		
 		return v;
     }
+	
+	private void fadeInWebView() {
+		AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+		fadeInAnimation.setDuration(600);
+		wv.scrollTo(0, 0);
+	    wv.startAnimation(fadeInAnimation);
+	}
 	
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -94,15 +106,17 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 
 	public void updateButtonStatus(int button, boolean enabled) {
 		if (button == 0) {
+			prevPost.setEnabled(enabled);
 			if (enabled)
-				prevPost.setAlpha(160);
+				prevPost.setAlpha(navButtonEnabled);
 			else
-				prevPost.setAlpha(70);
+				prevPost.setAlpha(navButtonDisabled);
 		} else if (button == 1) {
+			nextPost.setEnabled(enabled);
 			if (enabled)
-				nextPost.setAlpha(160);
+				nextPost.setAlpha(navButtonEnabled);
 			else
-				nextPost.setAlpha(70);
+				nextPost.setAlpha(navButtonDisabled);
 		}
 		
 	}

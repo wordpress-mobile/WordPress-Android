@@ -43,7 +43,7 @@
         android:theme="@style/WordPress" >
         <activity
             android:name="Settings"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
