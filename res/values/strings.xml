@@ -324,8 +324,8 @@
 
   <!-- file errors -->
   <string name="file_error">File Error</string>
-  <string name="file_error_encountered">An error occurred while setting up the captured media.
-  </string>
+  <string name="file_error_encountered">An error occurred while setting up the captured media.</string>
+  <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
 
   <!-- SD Card errors -->
   <string name="sdcard_title">SD Card Required</string>
@@ -489,7 +489,7 @@
   <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
   <string name="error_stats">Sorry, an error occurred while loading Stats. Please try again later.</string>
   <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
-  <string name="error_media_upload">An error occurred while uploading media.</string>
+  <string name="error_media_upload">An error occurred while uploading media</string>
   <string name="error_upload_credentials">Sorry, could not upload the %s due to incorrect username or password. Please update your credentials in Settings and try again.</string>
   <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
   

@@ -81,15 +81,12 @@ public class PostUploadService extends Service {
 		boolean mediaError = false;
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(Boolean postUploadedSuccessfully) {
 
-			if (result && !mediaError) {
+			if (postUploadedSuccessfully) {
 				WordPress.postUploaded();
 				nm.cancel(notificationID);
 			} else {
-				if (mediaError)
-					WordPress.postUploaded();
-
 				String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
 						.getText(R.string.post_id));
 				Intent notificationIntent = new Intent(context, Posts.class);
@@ -175,7 +172,7 @@ public class PostUploadService extends Service {
 							mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
 							mf.setWidth(wpIS.getWidth());
 
-							String imgHTML = uploadImage(mf);
+							String imgHTML = uploadMediaFile(mf);
 							if (imgHTML != null) {
 								SpannableString ss = new SpannableString(imgHTML);
 								s.setSpan(ss, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -217,7 +214,7 @@ public class PostUploadService extends Service {
 								MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
 								if (mf != null) {
-									String imgHTML = uploadImage(mf);
+									String imgHTML = uploadMediaFile(mf);
 									if (imgHTML != null) {
 										if (x == 0) {
 											descriptionContent = descriptionContent.replace(tag, imgHTML);
@@ -237,6 +234,10 @@ public class PostUploadService extends Service {
 					}
 				}
 			}
+			
+			// If media file upload failed, let's stop here and prompt the user
+			if (mediaError)
+				return false;
 
 			JSONArray categories = post.getCategories();
 			String[] theCategories = null;
@@ -377,16 +378,9 @@ public class PostUploadService extends Service {
 				post.update();
 				return true;
 			} catch (final XMLRPCException e) {
-				// Clean up the error message (remove codes and namespace)
-				String exceptionMessage = e.getMessage();
-				if (exceptionMessage.indexOf(": ") > -1)
-					exceptionMessage = exceptionMessage.substring(exceptionMessage.indexOf(": ") + 2, exceptionMessage.length());
-				if (exceptionMessage.indexOf("[code") > -1)
-					exceptionMessage = exceptionMessage.substring(0, exceptionMessage.indexOf("[code"));
-
 				error = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
 						.getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
-						+ " " + exceptionMessage;
+						+ " " + cleanXMLRPCErrorMessage(e.getMessage());
 				mediaError = false;
 				Log.i("WP", error);
 			}
@@ -394,7 +388,7 @@ public class PostUploadService extends Service {
 			return false;
 		}
 
-		public String uploadImage(MediaFile mf) {
+		public String uploadMediaFile(MediaFile mf) {
 			String content = "";
 
 			// image variables
@@ -421,7 +415,7 @@ public class PostUploadService extends Service {
 					try {
 						context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
 					} catch (FileNotFoundException e) {
-						error = "Could not create temp file for media upload.";
+						error = getResources().getString(R.string.file_error_create);
 						mediaError = true;
 						return null;
 					}
@@ -497,13 +491,7 @@ public class PostUploadService extends Service {
 					try {
 						result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
 					} catch (XMLRPCException e) {
-						String mediaErrorMsg = e.getLocalizedMessage();
-						if (video) {
-							if (mediaErrorMsg.contains("Invalid file type")) {
-								mediaErrorMsg = context.getResources().getString(R.string.vp_upgrade);
-							}
-						}
-						error = context.getResources().getText(R.string.error_media_upload).toString();
+						error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
 						return null;
 					}
 
@@ -649,7 +637,7 @@ public class PostUploadService extends Service {
 							try {
 								result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
 							} catch (XMLRPCException e) {
-								error = e.getMessage();
+								error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
 								mediaError = true;
 								return null;
 							}
@@ -728,6 +716,18 @@ public class PostUploadService extends Service {
 				}
 			}// end image stuff
 			return content;
+		}
+	}
+
+	public String cleanXMLRPCErrorMessage(String message) {
+		if (message != null) {
+			if (message.indexOf(": ") > -1)
+				message = message.substring(message.indexOf(": ") + 2, message.length());
+			if (message.indexOf("[code") > -1)
+				message = message.substring(0, message.indexOf("[code"));
+			return message;
+		} else {
+			return "";
 		}
 	}
 }
