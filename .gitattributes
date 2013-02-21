@@ -32,7 +32,6 @@ res/drawable-hdpi/ab_icon_share.png -text
 res/drawable-hdpi/ab_solid_wordpress.9.png -text
 res/drawable-hdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-hdpi/ab_transparent_wordpress.9.png -text
-res/drawable-hdpi/add.png -text
 res/drawable-hdpi/app_icon.png -text
 res/drawable-hdpi/camera.png -text
 res/drawable-hdpi/comment_badge.png -text
@@ -140,8 +139,6 @@ res/drawable-xhdpi/tab_selected_pressed_wordpress.9.png -text
 res/drawable-xhdpi/tab_selected_wordpress.9.png -text
 res/drawable-xhdpi/tab_unselected_focused_wordpress.9.png -text
 res/drawable-xhdpi/tab_unselected_pressed_wordpress.9.png -text
-res/drawable/add.png -text
-res/drawable/add_small.png -text
 res/drawable/app_icon.png -text
 res/drawable/browser_reload.png -text
 res/drawable/camera.png -text
@@ -281,6 +278,7 @@ res/layout/view_comment.xml -text
 res/layout/view_web_stats.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
+res/menu/categories.xml -text
 res/menu/dashboard.xml -text
 res/menu/edit.xml -text
 res/menu/posts.xml -text

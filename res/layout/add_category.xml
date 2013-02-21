@@ -38,11 +38,10 @@
     <!--  Parent category -->
     <TextView
       android:id="@+id/parentDescLabel"
+      style="@style/WordPressSubHeader"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/category_desc"
-      android:layout_marginTop="5dp"
-      android:textStyle="bold"
       android:text="@string/category_parent" />
     <Spinner
       android:id="@+id/parent_category"

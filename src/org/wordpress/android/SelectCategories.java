@@ -5,8 +5,13 @@ import org.wordpress.android.util.EscapeUtils;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,12 +19,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseBooleanArray;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-public class SelectCategories extends ListActivity {
+public class SelectCategories extends SherlockListActivity {
 	/** Called when the activity is first created. */
 	String categoriesCSV = "";
 	long[] checkedCategories;
@@ -42,6 +42,7 @@ public class SelectCategories extends ListActivity {
 	private final Handler mHandler = new Handler();
 	private Blog blog;
 	private int id;
+	private ListView lv;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -49,7 +50,12 @@ public class SelectCategories extends ListActivity {
 
 		setContentView(R.layout.select_categories);
 		setTitle(getResources().getString(R.string.select_categories));
-		final ListView lv = getListView();
+
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		lv = getListView();
 		lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		lv.setItemsCanFocus(false);
 
@@ -67,60 +73,6 @@ public class SelectCategories extends ListActivity {
 		}
 
 		loadCategories();
-
-		// Button to add a Category
-		final ImageButton addCategory = (ImageButton) findViewById(R.id.newCategory);
-		addCategory.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-
-				Bundle bundle = new Bundle();
-				bundle.putInt("id", id);
-				Intent i = new Intent(SelectCategories.this, AddCategory.class);
-				i.putExtras(bundle);
-				startActivityForResult(i, 0);
-			}
-		});
-
-		Button categoriesDone = (Button) findViewById(R.id.categories_done);
-
-		categoriesDone.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-
-				String selectedCategories = "";
-
-				SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-				Vector<Integer> rCheckedItems = new Vector<Integer>();
-
-				for (int i = 0; i < selectedItems.size(); i++) {
-					if (selectedItems.get(selectedItems.keyAt(i)) == true) {
-						rCheckedItems.add(selectedItems.keyAt(i));
-						selectedCategories += loadTextArray.get(selectedItems.keyAt(i)).toString() + ",";
-					}
-				}
-
-				long finalCheckedItems[] = new long[rCheckedItems.size()];
-
-				for (int x = 0; x < rCheckedItems.size(); x++) {
-					finalCheckedItems[x] = Long.parseLong(rCheckedItems.get(x).toString());
-				}
-
-				Bundle bundle = new Bundle();
-				selectedCategories = selectedCategories.trim();
-				if (selectedCategories.endsWith(",")) {
-					selectedCategories = selectedCategories.substring(0, selectedCategories.length() - 1);
-				}
-
-				bundle.putString("selectedCategories", selectedCategories);
-				bundle.putLongArray("checkedItems", finalCheckedItems);
-				Intent mIntent = new Intent();
-				mIntent.putExtras(bundle);
-				setResult(RESULT_OK, mIntent);
-				finish();
-
-			}
-
-		});
-
 	}
 
 	private void loadCategories() {
@@ -160,20 +112,8 @@ public class SelectCategories extends ListActivity {
 				}
 			}
 		} else {
-			// go get the categories!
-			pd = ProgressDialog.show(SelectCategories.this, getResources().getText(R.string.refreshing_categories),
-					getResources().getText(R.string.attempting_categories_refresh), true, true);
-			Thread th = new Thread() {
-				public void run() {
-					finalResult = getCategories();
-
-					mHandler.post(mUpdateResults);
-
-				}
-			};
-			th.start();
+			refreshCategories();
 		}
-
 	}
 
 	final Runnable mUpdateResults = new Runnable() {
@@ -227,14 +167,11 @@ public class SelectCategories extends ListActivity {
 				dialogBuilder.setCancelable(true);
 				if (!isFinishing())
 					dialogBuilder.create().show();
-
 			}
-
 		}
 	};
 
 	public String getCategories() {
-
 		// gets the categories via xmlrpc call to wp blog
 		String returnMessage = "";
 
@@ -270,9 +207,7 @@ public class SelectCategories extends ListActivity {
 				WordPress.wpDB.insertCategory(id, convertedCategoryID, categoryName);
 
 				// populate the spinner with the category names
-
 				textArray.add(categoryName);
-
 			}
 
 			returnMessage = "gotCategories";
@@ -281,7 +216,6 @@ public class SelectCategories extends ListActivity {
 		}
 
 		return returnMessage;
-
 	}
 
 	/**
@@ -316,8 +250,8 @@ public class SelectCategories extends ListActivity {
 
 		if (result == null) {
 			returnString = "addCategory_failed";
-		} else { // Category successfully created. "result" is the ID of the new
-					// category.
+		} else {
+			// Category successfully created. "result" is the ID of the new category
 			// Initialize the category database
 			// Convert "result" (= category_id) from type Object to int
 			int category_id = Integer.parseInt(result.toString());
@@ -351,8 +285,7 @@ public class SelectCategories extends ListActivity {
 					final int parent_id = extras.getInt("parent_id");
 
 					if (loadTextArray.contains(category_name)) {
-						// A category with the specified name does already
-						// exist.
+						// A category with the specified name already exists
 					} else {
 						// Add the category
 						pd = ProgressDialog.show(SelectCategories.this, getResources().getText(R.string.cat_adding_category),
@@ -361,65 +294,106 @@ public class SelectCategories extends ListActivity {
 							public void run() {
 								finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
 
-								if (finalResult.equals("addCategory_success")) {
-									// Add category to spinner
+								if (finalResult.equals("addCategory_success"))
 									loadTextArray.add(category_name);
 
-								}
-
 								mHandler.post(mUpdateResults);
-
 							}
 						};
 						th.start();
-
 					}
-
 					break;
 				}
 			}// end null check
 		}
-
 	}
 
-	// Add settings to menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, 0, 0, getResources().getText(R.string.refresh_categories));
-		MenuItem menuItem1 = menu.findItem(0);
-		menuItem1.setIcon(android.R.drawable.ic_menu_rotate);
-
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.categories, menu);
 		return true;
 	}
 
-	// Menu actions
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case 0:
-			pd = ProgressDialog.show(SelectCategories.this, getResources().getText(R.string.refreshing_categories),
-					getResources().getText(R.string.attempting_categories_refresh), true, true);
-			Thread th = new Thread() {
-				public void run() {
-					finalResult = getCategories();
-
-					mHandler.post(mUpdateResults);
-
-				}
-			};
-			th.start();
-
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_refresh) {
+			refreshCategories();
+			return true;
+		} else if (itemId == R.id.menu_new_category) {
+			Bundle bundle = new Bundle();
+			bundle.putInt("id", id);
+			Intent i = new Intent(SelectCategories.this, AddCategory.class);
+			i.putExtras(bundle);
+			startActivityForResult(i, 0);
+			return true;
+		} else if (itemId == android.R.id.home) {
+			saveAndFinish();
 			return true;
 		}
-		return false;
 
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void refreshCategories() {
+		pd = ProgressDialog.show(SelectCategories.this, getResources().getText(R.string.refreshing_categories),
+				getResources().getText(R.string.attempting_categories_refresh), true, true);
+		Thread th = new Thread() {
+			public void run() {
+				finalResult = getCategories();
+
+				mHandler.post(mUpdateResults);
+
+			}
+		};
+		th.start();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public void onBackPressed() {
+		saveAndFinish();
+		super.onBackPressed();
+	}
+
+	private void saveAndFinish() {
+		String selectedCategories = "";
+
+		SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
+		Vector<Integer> rCheckedItems = new Vector<Integer>();
+
+		for (int i = 0; i < selectedItems.size(); i++) {
+			if (selectedItems.get(selectedItems.keyAt(i)) == true) {
+				rCheckedItems.add(selectedItems.keyAt(i));
+				selectedCategories += loadTextArray.get(selectedItems.keyAt(i)).toString() + ",";
+			}
+		}
+
+		long finalCheckedItems[] = new long[rCheckedItems.size()];
+
+		for (int x = 0; x < rCheckedItems.size(); x++) {
+			finalCheckedItems[x] = Long.parseLong(rCheckedItems.get(x).toString());
+		}
+
+		Bundle bundle = new Bundle();
+		selectedCategories = selectedCategories.trim();
+		if (selectedCategories.endsWith(",")) {
+			selectedCategories = selectedCategories.substring(0, selectedCategories.length() - 1);
+		}
+
+		bundle.putString("selectedCategories", selectedCategories);
+		bundle.putLongArray("checkedItems", finalCheckedItems);
+		Intent mIntent = new Intent();
+		mIntent.putExtras(bundle);
+		setResult(RESULT_OK, mIntent);
+		finish();
 	}
 
 }
