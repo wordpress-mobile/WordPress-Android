@@ -231,17 +231,11 @@ res/drawable/wp_small_toggle.9.png -text
 res/drawable/wp_statusbar_icon.png -text
 res/drawable/wpcom.png -text
 res/drawable/wplogo.png -text
-res/layout-hdpi/new_account.xml -text
-res/layout-large-mdpi/add_account.xml -text
 res/layout-large-mdpi/comments.xml -text
 res/layout-large-mdpi/edit_comment.xml -text
-res/layout-large-mdpi/new_account.xml -text
 res/layout-large-mdpi/posts.xml -text
 res/layout-large-port-mdpi/moderatecomments.xml -text
-res/layout-small/new_account.xml -text
-res/layout-sw720dp/add_account.xml -text
 res/layout-sw720dp/comments.xml -text
-res/layout-sw720dp/new_account.xml -text
 res/layout-sw720dp/posts.xml -text
 res/layout/about.xml -text
 res/layout/add_account.xml -text

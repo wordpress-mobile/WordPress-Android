@@ -20,7 +20,6 @@
              android:layout_width="fill_parent"
              android:layout_height="0dp"
              android:layout_weight="1"
-             android:background="@drawable/content_bg"
              android:paddingBottom="10dp" >
 
              <TextView
@@ -28,7 +27,6 @@
                  style="@style/WordPressSectionHeader"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
-                 android:background="@drawable/content_bg_header"
                  android:text="@string/comment_content" />
 
              <EditText
@@ -87,7 +85,6 @@
              android:layout_height="wrap_content"
              android:layout_marginBottom="10dip"
              android:layout_marginTop="10dip"
-             android:background="@drawable/content_bg"
              android:paddingBottom="10dp" >
 
              <TextView
@@ -95,7 +92,6 @@
                  style="@style/WordPressSectionHeader"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
-                 android:background="@drawable/content_bg_header"
                  android:text="@string/settings" />
 
              <TextView

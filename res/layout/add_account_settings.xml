@@ -7,7 +7,6 @@
     android:scrollbars="none" >
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#FFF5F5F5"
@@ -20,15 +19,13 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginTop="10dip"
-            android:paddingBottom="10dp"
-            android:background="@drawable/content_bg" >
+            android:paddingBottom="10dp" >
 
             <TextView
                 android:id="@+id/l_section1"
                 style="@style/WordPressSectionHeader"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/content_bg_header"
                 android:text="@string/optional_settings" />
 
             <EditText

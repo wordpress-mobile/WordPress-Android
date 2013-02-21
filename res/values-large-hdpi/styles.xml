@@ -10,10 +10,6 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
   	</style>
-  	
-  	<style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
-    	<item name="android:textColor">#FF464646</item>
-  	</style>
     
    <style name="WindowTitleBackground">     
         <item name="android:background">@drawable/title_text_bg</item>  
