@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,8 +31,7 @@ import com.actionbarsherlock.view.MenuItem;
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends SherlockFragmentActivity
-	implements ActionBar.OnNavigationListener {
+public abstract class WPActionBarActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener {
 
 	protected MenuDrawer menuDrawer;
 	private static int[] blogIDs;
@@ -45,7 +45,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		String[] blogNames = getBlogNames(this);
-		SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar().getThemedContext(), R.layout.sherlock_spinner_dropdown_item, blogNames);
+		SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar().getThemedContext(),
+				R.layout.sherlock_spinner_dropdown_item, blogNames);
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
 		setupCurrentBlog();
 		Blog currentBlog = WordPress.getCurrentBlog(this);
@@ -58,10 +59,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
+		overridePendingTransition(0, 0);
 		if (isAnimatingRefreshButton)
 			isAnimatingRefreshButton = false;
 	}
@@ -74,12 +76,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		if (menuDrawer != null) {
 			updateMenuDrawer();
 		}
-	}
+	}	
 
 	/**
 	 * Create a menu drawer and attach it to the activity.
-	 *
-	 * @param contentView {@link View} of the main content for the activity.
+	 * 
+	 * @param contentView
+	 *            {@link View} of the main content for the activity.
 	 */
 	protected void createMenuDrawer(int contentView) {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -93,10 +96,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		LinearLayout postsButton = (LinearLayout) findViewById(R.id.menu_posts_btn);
 		postsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				menuDrawer.closeMenu();
 				Intent i = new Intent(WPActionBarActivity.this, Posts.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -109,7 +112,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				i.putExtra("viewPages", true);
 				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -121,7 +124,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				i.putExtra("isNew", true);
 				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -137,7 +140,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				}
 				i.putExtra("isNew", true);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -153,7 +156,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				}
 				i.putExtra("isNew", true);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -165,7 +168,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				i.putExtra("isNew", true);
 				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -174,8 +177,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 			public void onClick(View v) {
 				Intent i = new Intent(WPActionBarActivity.this, WebViewActivity.class);
 				i.putExtra("loadAdmin", true);
+				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -187,7 +191,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				i.putExtra("isNew", true);
 				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				menuDrawer.closeMenu();
-				startActivity(i);
+				startActivityWithDelay(i);
 			}
 		});
 
@@ -198,8 +202,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				if (WordPress.currentBlog.isDotcomFlag()) {
 					Intent i = new Intent(WPActionBarActivity.this, WPCOMReaderPager.class);
 					i.putExtra("id", readerBlogID);
+					i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 					menuDrawer.closeMenu();
-					startActivity(i);
+					startActivityWithDelay(i);
 				}
 			}
 		});
@@ -207,8 +212,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		updateMenuDrawer();
 	}
 
+	protected void startActivityWithDelay(final Intent i) {
+		// Let the menu animation finish before starting a new activity
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				startActivity(i);
+			}
+		}, 350);
+	}
+
 	/**
-	 * Update all of the items in the menu drawer based on the current active blog.
+	 * Update all of the items in the menu drawer based on the current active
+	 * blog.
 	 */
 	protected void updateMenuDrawer() {
 		updateMenuCommentBadge();
@@ -216,8 +232,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	}
 
 	/**
-	 * Update the comment badge in the menu drawer to reflect the number of unmoderated comments for
-	 * the current active blog.
+	 * Update the comment badge in the menu drawer to reflect the number of
+	 * unmoderated comments for the current active blog.
 	 */
 	protected void updateMenuCommentBadge() {
 		if (WordPress.currentBlog != null) {
@@ -234,8 +250,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	}
 
 	/**
-	 * Update the reader button in the menu drawer to only be visible if the current active blog is
-	 * for a WordPress.com account.
+	 * Update the reader button in the menu drawer to only be visible if the
+	 * current active blog is for a WordPress.com account.
 	 */
 	protected void updateMenuReaderButton() {
 		View readButton = findViewById(R.id.menu_reader_btn);
@@ -247,9 +263,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 	}
 
 	/**
-	 * Called when the activity has detected the user's press of the back key. If the activity has a
-	 * menu drawer attached that is opened or in the process of opening, the back button press
-	 * closes it. Otherwise, the normal back action is taken.
+	 * Called when the activity has detected the user's press of the back key.
+	 * If the activity has a menu drawer attached that is opened or in the
+	 * process of opening, the back button press closes it. Otherwise, the
+	 * normal back action is taken.
 	 */
 	@Override
 	public void onBackPressed() {
@@ -321,7 +338,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 				}
 		}
 	}
-	
+
 	@Override
 	public boolean onNavigationItemSelected(int pos, long itemId) {
 		if (blogIDs[pos] == -1) {
@@ -338,14 +355,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 		}
 		return true;
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				if (menuDrawer != null) {
-					menuDrawer.toggleMenu();
-					return true;
-				}
+		case android.R.id.home:
+			if (menuDrawer != null) {
+				menuDrawer.toggleMenu();
+				return true;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -362,9 +379,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 			isAnimatingRefreshButton = true;
 			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			ImageView iv = (ImageView) inflater.inflate(getResources().getLayout(R.layout.menu_refresh_view), null);
-			RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
-					Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-					0.5f);
+			RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 			anim.setInterpolator(new LinearInterpolator());
 			anim.setRepeatCount(Animation.INFINITE);
 			anim.setDuration(1400);
@@ -372,7 +387,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity
 			refreshItem.setActionView(iv);
 		}
 	}
-	
+
 	public void stopAnimatingRefreshButton(MenuItem refreshItem) {
 		isAnimatingRefreshButton = false;
 		if (refreshItem != null && refreshItem.getActionView() != null) {
