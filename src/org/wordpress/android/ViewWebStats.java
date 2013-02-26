@@ -63,6 +63,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
@@ -85,6 +88,7 @@ public class ViewWebStats extends WPActionBarActivity {
 	boolean authed = false;
 	boolean isRetrying = false;
 	private AsyncTask<String, Void, Vector<?>> currentTask = null;
+	private MenuItem refreshMenuItem;
 	
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -107,34 +111,6 @@ public class ViewWebStats extends WPActionBarActivity {
 		webSettings.setSavePassword(false);
 		clearCookies();
 		webView.clearCache(false);
-		
-		/*titleBar = (WPTitleBar) findViewById(R.id.actionBar);
-		titleBar.refreshButton.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-				reloadStats();
-			}
-		});
-		titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-			// user selected new blog in the title bar
-			@Override
-			public void OnBlogChanged() {
-				// stop any asyncTask that might be running.
-				if (currentTask != null) {
-					currentTask.cancel(true);
-					currentTask = null;
-				}
-				authed = false;
-				isRetrying = false;
-				hideLoginForm();
-				// hide the view 
-				webView.clearView();
-				webView.setVisibility(View.INVISIBLE);
-				webView.clearHistory();
-				webView.clearCache(false);
-				clearCookies();
-				initStats();
-			}
-		});*/
 		
 		Button saveStatsLogin = (Button) findViewById(R.id.saveDotcom);
 		saveStatsLogin.setOnClickListener(new Button.OnClickListener() {
@@ -200,17 +176,28 @@ public class ViewWebStats extends WPActionBarActivity {
 		webView.clearCache(false);
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.refresh_only, menu);
+		refreshMenuItem = menu.findItem(R.id.menu_refresh);
+		return true;
+	}
 	
 	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_refresh) {
+			reloadStats();
+		}
 
-		//titleBar.refreshBlog();
+		return super.onOptionsItemSelected(item);
 	}
 
 
 	private void initStats() {
-		//titleBar.startRotatingRefreshIcon();
+		this.startAnimatingRefreshButton(refreshMenuItem);
 		Blog blog = WordPress.currentBlog;
 		
 		if (!blog.isDotcomFlag() && blog.getApi_blogid() == null) {
@@ -237,7 +224,7 @@ public class ViewWebStats extends WPActionBarActivity {
 			sPassword = blog.getDotcom_password();
 		}
 		
-		//titleBar.startRotatingRefreshIcon();
+		this.startAnimatingRefreshButton(refreshMenuItem);
 		
 		// Start an async task to retrieve the blog's data from the api.
 		currentTask = new StatsAPIBlogInfoAsyncTask().execute(sUsername, sPassword);
@@ -433,11 +420,7 @@ public class ViewWebStats extends WPActionBarActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) { 
-			/*if (titleBar.isShowingDashboard) {
-				titleBar.hideDashboardOverlay();
-				return false;
-			}*/
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 		    if ( webView.canGoBack() ) {
 		        webView.goBack();
 		        return true;
@@ -461,7 +444,7 @@ public class ViewWebStats extends WPActionBarActivity {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			//Log.d("WP", url);
-			//titleBar.startRotatingRefreshIcon();
+			startAnimatingRefreshButton(refreshMenuItem);
 		}
 
 		
@@ -469,14 +452,14 @@ public class ViewWebStats extends WPActionBarActivity {
 		public void onPageFinished(WebView view, String url) {
 			if (authed) {
 				// The webview loads an empty string during init/auth. We don't want to stop the refresh icon in this case.
-				//titleBar.stopRotatingRefreshIcon();
+				stopAnimatingRefreshButton(refreshMenuItem);
 			}
 		}
 
 		
 		@Override
 		public void onReceivedError (WebView view, int errorCode, String description, String failingUrl) {
-			//titleBar.stopRotatingRefreshIcon();			
+			stopAnimatingRefreshButton(refreshMenuItem);		
 		}
 		
 		
@@ -579,7 +562,7 @@ public class ViewWebStats extends WPActionBarActivity {
 		
 		protected void onPostExecute(Vector<?> result) {
 			currentTask = null;
-			//titleBar.stopRotatingRefreshIcon();
+			stopAnimatingRefreshButton(refreshMenuItem);
 			if(authed) {
 				loadStats();
 			} else {
@@ -786,7 +769,7 @@ public class ViewWebStats extends WPActionBarActivity {
 		
 		protected void onPostExecute(Vector<?> result) {
 			currentTask = null;
-			//titleBar.stopRotatingRefreshIcon();
+			stopAnimatingRefreshButton(refreshMenuItem);
 			if (result != null) {
 				// store the api key and blog id
 				final String apiKey = result.get(0).toString();
