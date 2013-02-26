@@ -55,7 +55,28 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if (savedInstanceState != null) {
+			// Restore fragments
+			readerPage = getSupportFragmentManager().getFragment(
+                    savedInstanceState, WPCOMReaderImpl.class.getName());
+			topicPage = getSupportFragmentManager().getFragment(
+                    savedInstanceState, WPCOMReaderTopicsSelector.class.getName());
+			detailPage = getSupportFragmentManager().getFragment(
+                    savedInstanceState, WPCOMReaderDetailPage.class.getName());
+			webPage = getSupportFragmentManager().getFragment(
+                    savedInstanceState, WPCOMReaderWebPage.class.getName());
+        }
+		
+		createMenuDrawer(R.layout.reader_wpcom_pager);
+		readerPager = (WPViewPager) findViewById(R.id.pager);
+		readerPager.setOffscreenPageLimit(3);
 
+		readerAdapter = new ReaderPagerAdapter(super.getSupportFragmentManager());
+
+		readerPager.setAdapter(readerAdapter);
+		readerPager.setCurrentItem(1, true);
+		
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowCustomEnabled(true);
 		// No blog selector for the Reader
@@ -74,24 +95,6 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 		});
 
 		actionBar.setCustomView(topicSelector);
-		createMenuDrawer(R.layout.reader_wpcom_pager);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		if (topicPage == null) {
-			Log.i("WP", "topicPage was null");
-
-			readerPager = (WPViewPager) findViewById(R.id.pager);
-			readerPager.setOffscreenPageLimit(3);
-
-			readerAdapter = new ReaderPagerAdapter(super.getSupportFragmentManager());
-
-			readerPager.setAdapter(readerAdapter);
-			readerPager.setCurrentItem(1, true);
-		}
 	}
 	
 	@Override
@@ -127,7 +130,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 		@Override
 		public Fragment getItem(int location) {
 			Fragment f = null;
-
+			
 			switch (location) {
 			case 0:
 				f = WPCOMReaderTopicsSelector.newInstance();
