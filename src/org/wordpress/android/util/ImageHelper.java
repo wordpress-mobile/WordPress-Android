@@ -99,7 +99,12 @@ public class ImageHelper {
 					matrix.postRotate(Integer.valueOf(orientation));
 				}
 
-				Bitmap resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+				Bitmap resized;
+				try {
+					resized = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+				} catch (OutOfMemoryError e) {
+					return null;
+				}
 
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				resized.compress(Bitmap.CompressFormat.JPEG, 85, baos);

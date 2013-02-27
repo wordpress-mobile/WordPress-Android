@@ -562,7 +562,6 @@ public class PostUploadService extends Service {
 									jpeg = new File(thumbData);
 									path = thumbData;
 									mf.setFilePath(jpeg.getPath());
-
 								}
 							} else { // file is not in media library
 								path = imageUri.toString().replace("file://", "");
@@ -585,7 +584,14 @@ public class PostUploadService extends Service {
 							byte[] finalBytes = null;
 
 							if (i == 0 || post.getBlog().isScaledImage()) {
-								byte[] bytes = new byte[(int) jpeg.length()];
+								byte[] bytes;
+								try {
+									bytes = new byte[(int) jpeg.length()];
+								} catch (OutOfMemoryError er) {
+									error = context.getString(R.string.out_of_memory);
+									mediaError = true;
+									return null;
+								}
 
 								DataInputStream in = null;
 								try {
