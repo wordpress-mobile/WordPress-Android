@@ -1730,6 +1730,11 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
 		byte[] finalBytes = ih.createThumbnail(bytes, String.valueOf((int) (width * conversionFactor)),
 				(String) mediaData.get("orientation"), true);
+		
+		if (finalBytes == null) {
+			Toast.makeText(EditPost.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
+			return;
+		}
 
 		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
 
@@ -1805,6 +1810,8 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 		HashMap<?, ?> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
 
 		if (mediaData == null) {
+			// data stream not returned
+			Toast.makeText(EditPost.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
 			return null;
 		}
 
@@ -1820,6 +1827,11 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
 		byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf((int) (width * conversionFactor)),
 				(String) mediaData.get("orientation"), true);
+		
+		if (finalBytes == null) {
+			Toast.makeText(EditPost.this, getResources().getText(R.string.file_error_encountered), Toast.LENGTH_SHORT).show();
+			return null;
+		}
 
 		resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
 
