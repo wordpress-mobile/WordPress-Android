@@ -1481,6 +1481,8 @@ public class WordPressDB {
 		Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
 				"category_name=\"" + category + "\" AND blog_id=" + id, null,
 				null, null, null);
+		if (c.getCount() == 0)
+			return 0;
 		c.moveToFirst();
 		int categoryID = 0;
 		categoryID = c.getInt(0);
