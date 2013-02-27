@@ -219,7 +219,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 			public void run() {
 				startActivity(i);
 			}
-		}, 350);
+		}, 400);
 	}
 
 	/**
