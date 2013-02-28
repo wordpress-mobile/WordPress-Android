@@ -1,20 +1,14 @@
 <resources>
 
-<string-array name="reportTypes">
-	<item>@string/report_views</item>
-	<item>@string/report_postviews</item>
-	<item>@string/report_referrers</item>
-	<item>@string/report_searchterms</item>
-	<item>@string/report_clicks</item>
-</string-array>
-
-<string-array name="reportIntervals">
-	<item>@string/today</item>
-	<item>@string/seven_days</item>
-	<item>@string/thirty_days</item>
-	<item>@string/quarter</item>
-	<item>@string/year</item>
-	<item>@string/all</item>
-</string-array>
+    <string-array name="notificationIntervals">
+        <item>5 Minutes</item>
+        <item>10 Minutes</item>
+        <item>15 Minutes</item>
+        <item>30 Minutes</item>
+        <item>1 Hour</item>
+        <item>3 Hours</item>
+        <item>12 Hours</item>
+        <item>Daily</item>
+    </string-array>
 
 </resources>
