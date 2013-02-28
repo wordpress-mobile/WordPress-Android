@@ -336,6 +336,7 @@ res/values/ids.xml -text
 res/values/integers.xml -text
 res/values/strings.xml -text
 res/values/styles.xml -text
+res/xml/preferences.xml -text
 src/com/commonsware/cwac/cache/AsyncCache.java -text
 src/com/commonsware/cwac/cache/CacheBase.java -text
 src/com/commonsware/cwac/cache/SimpleWebImageCache.java -text

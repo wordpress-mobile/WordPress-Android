@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="wp_pref_notification_settings"
+        android:title="@string/comment_notifications" >
+        <PreferenceScreen
+            android:key="wp_pref_notification_blogs"
+            android:persistent="false"
+            android:title="@string/enable_blogs" >
+        </PreferenceScreen>
+
+        <ListPreference
+            android:key="wp_pref_notifications_interval"
+            android:title="@string/notifications_interval"
+            android:entries="@array/notificationIntervals"
+            android:entryValues="@array/notificationIntervals" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wp_pref_notification_sound"
+            android:title="@string/notification_sound" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wp_pref_notification_vibrate"
+            android:title="@string/notification_vibrate" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wp_pref_notification_light"
+            android:title="@string/notification_blink" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="wp_pref_notification_settings"
+        android:title="@string/post_signature" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="wp_pref_signature_enabled"
+            android:title="@string/add_tagline" />
+
+        <EditTextPreference
+            android:key="wp_pref_post_signature"
+            android:title="@string/post_signature" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
