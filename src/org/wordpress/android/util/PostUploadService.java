@@ -29,10 +29,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.Spannable;
@@ -256,18 +258,11 @@ public class PostUploadService extends Service {
 
 			if (!post.isPage() && post.isLocalDraft()) {
 				// add the tagline
-				HashMap<?, ?> globalSettings = WordPress.wpDB.getNotificationOptions(context);
-				boolean taglineValue = false;
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				String tagline = "";
 
-				if (globalSettings != null) {
-					if (globalSettings.get("tagline_flag") != null) {
-						if (globalSettings.get("tagline_flag").toString().equals("1"))
-							taglineValue = true;
-					}
-
-					if (taglineValue) {
-						tagline = globalSettings.get("tagline").toString();
+					if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
+						tagline = prefs.getString("wp_pref_post_signature", "");
 						if (tagline != null) {
 							String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
 							if (moreContent == "")
@@ -276,7 +271,6 @@ public class PostUploadService extends Service {
 								moreContent += tag;
 						}
 					}
-				}
 
 				// post format
 				if (!post.getWP_post_format().equals("")) {

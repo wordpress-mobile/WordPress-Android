@@ -10,9 +10,11 @@ import org.wordpress.android.util.Base64;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 
 import java.text.StringCharacterIterator;
 import java.util.Date;
@@ -27,7 +29,7 @@ import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
 
-	private static final int DATABASE_VERSION = 15;
+	private static final int DATABASE_VERSION = 16;
 
 	private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
 			+ "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -469,6 +471,29 @@ public class WordPressDB {
 			} else if (db.getVersion() == 14) {
 				db.execSQL(ADD_BLOG_OPTIONS);
 				db.setVersion(DATABASE_VERSION);
+			} else if (db.getVersion() == 15) {
+				// Migrate preferences out of the db
+				HashMap<?, ?> notificationOptions = getNotificationOptions(ctx);
+				if (notificationOptions != null) {
+					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+					SharedPreferences.Editor editor = settings.edit();
+					String interval = getInterval(ctx);
+					if (interval != "") {
+						editor.putString("wp_pref_notifications_interval", interval);
+					}
+					editor.putBoolean("wp_pref_notification_sound", (notificationOptions.get("sound").toString().equals("1")) ? true : false);
+					editor.putBoolean("wp_pref_notification_vibrate", (notificationOptions.get("vibrate").toString().equals("1")) ? true : false);
+					editor.putBoolean("wp_pref_notification_light", (notificationOptions.get("light").toString().equals("1")) ? true : false);
+					editor.putBoolean("wp_pref_signature_enabled", (notificationOptions.get("tagline_flag").toString().equals("1")) ? true : false);
+					
+					String tagline = notificationOptions.get("tagline").toString();
+					if (tagline != "") {
+						editor.putString("wp_pref_post_signature", tagline);
+					}
+					editor.commit();
+				}
+				
+				db.setVersion(DATABASE_VERSION);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -835,7 +860,7 @@ public class WordPressDB {
 		values.put("tagline_flag", tagline_flag);
 		values.put("tagline", tagline);
 
-		boolean returnValue = db.update("eula", values, null, null) > 0;
+		boolean returnValue = db.update(EULA_TABLE, values, null, null) > 0;
 		if (returnValue) {
 		}
 		;
@@ -862,7 +887,7 @@ public class WordPressDB {
 
 	public HashMap<String, Object> getNotificationOptions(Context ctx) {
 
-		Cursor c = db.query("eula", new String[] { "id", "sound", "vibrate",
+		Cursor c = db.query(EULA_TABLE, new String[] { "id", "sound", "vibrate",
 				"light", "tagline_flag", "tagline" }, "id=0", null, null, null,
 				null);
 		int sound, vibrate, light;
@@ -886,6 +911,8 @@ public class WordPressDB {
 				thisHash.put("tagline", "");
 			}
 
+		} else {
+			return null;
 		}
 
 		c.close();
