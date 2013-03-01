@@ -50,7 +50,7 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
 				wv.loadUrl("javascript:Reader2.show_next_item();");
 				wv.loadUrl("javascript:Reader2.is_next_item();");
 				wv.loadUrl("javascript:Reader2.is_prev_item();");
-				if (nextPost.getAlpha() != 70)
+				if (nextPost.isEnabled())
 					fadeInWebView();
 			}
 		});

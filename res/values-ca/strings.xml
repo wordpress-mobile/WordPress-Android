@@ -49,7 +49,6 @@
 	<string name="content">Feu un toc per afegir text i mèdia</string>
 	<string name="file_error_encountered">S\'ha produït un error en configurar el mèdia capturat.\n  </string>
 	<string name="ok">D\'acord</string>
-	<string name="hint_menu_to_add_acc">Seleccioneu \'Menú\' per afegir altre compte o per configurar les notificacions de comentaris.</string>
 	<string name="sure_to_cancel_edit_comment">Segur que voleu cancel·lar l\'edició d\'aquest comentari?</string>
 	<string name="xmlrpc_error">No es pot connectar. Entreu el camí complet a xmlrpc.php del lloc web i proveu-ho de nou.</string>
 	<string name="copyright">©2012 Automattic, Inc</string>

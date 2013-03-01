@@ -14,7 +14,6 @@
 	<string name="new_to_wp">Jsem nový na WordPressu</string>
 	<string name="no_account">Účet WordPress nenalezen, prosím, přidejte účet a zkuste to znovu.</string>
 	<string name="select_a_blog">Vyberte Blog</string>
-	<string name="upload_now">Náhrát teď</string>
 	<string name="adding_cat_failed_check">Zkontrolujte prosím své nastavení a zkuste to znovu.</string>
 	<string name="adding_cat_success">Kategorie úspěšně přidána.</string>
 	<string name="cat_already_exists">Kategorie se zadaným názvem již existuje.</string>
@@ -23,7 +22,6 @@
 	<string name="delete">Vymazat</string>
 	<string name="approve">Schválit</string>
 	<string name="unapprove">Neschválit</string>
-	<string name="align_thumb_to_center">Zarovnat náhled do středu:</string>
 	<string name="required_field">Povinné pole</string>
 	<string name="refresh_categories">Obnovit Kategorie</string>
 	<string name="add_new_category">Přidat novou kategorii</string>
@@ -53,14 +51,10 @@
 	<string name="selected_categories">Vybrané kategorie:</string>
 	<string name="categories">Kategorie:</string>
 	<string name="tags_separate_with_commas">Tagy (oddělte tagy čárkami):</string>
-	<string name="pictures">Obrázky:</string>
 	<string name="post_content">Obsah článku:</string>
 	<string name="post_title">Nadpis článku:</string>
 	<string name="dont_yet_have_a_blog">Stále ještě nemáte blog??</string>
 	<string name="max_thumbnail_px_width">Maximálni šířka náhledu v pixelech:</string>
-	<string name="below_text">Pod textem</string>
-	<string name="above_text">Nad textem</string>
-	<string name="place_image">Umístit obrázek:</string>
 	<string name="password">Heslo:</string>
 	<string name="get_free_blog">Získejte blog zdarma na WordPress.com</string>
 	<string name="app_name">WordPress</string>
@@ -103,7 +97,6 @@
 	<string name="tab_posts">Články</string>
 	<string name="tab_pages">Stránky</string>
 	<string name="link_enter_url">Vložte URL:</string>
-	<string name="page_title">Nadpis stránky:</string>
 	<string name="page_content">Obsah stránky:</string>
 	<string name="page_edited">Stránka upravena</string>
 	<string name="page_edited_image_error">Stránka úspěšně upravena, ale při nahrávaní obrázků nastala chyba.</string>
@@ -119,8 +112,6 @@
 	<string name="new_post">Nový článek</string>
 	<string name="post_added">Článek přidán</string>
 	<string name="post_id">ID článku #</string>
-	<string name="added_successfully">přidán úspěšně</string>
-	<string name="added_successfully_image_error">přidán úspěšně, ale při nahrávání obrázků nastala chyba</string>
 	<string name="page_id">ID stránky #</string>
 	<string name="reply_enter">Vložte odpověď:</string>
 	<string name="reply_send">Odeslat odpověď</string>

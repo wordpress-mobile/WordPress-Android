@@ -86,9 +86,6 @@
 	<string name="reply_to_comment">Balas Komentar</string>
 	<string name="reply_required">Ruas Diperlukan</string>
 	<string name="reply_please_enter">Silahkan masukkan sesuatu ke ruas balasan</string>
-	<string name="post_preview">Pratinjau tulisan</string>
-	<string name="getting_preview">Masuk Pratinjau</string>
-	<string name="getting_preview_attempting">Berusaha mendapatkan pratinjau</string>
 	<string name="preview">Pratinjau</string>
 	<string name="view_comments">Lihat Komentar</string>
 	<string name="no_approved_comments">Tidak terdapat komentar disetujui untuk tulisan ini</string>
@@ -113,7 +110,6 @@
 	<string name="page_actions">Tindakan Halaman</string>
 	<string name="preview_page">Pratinjau Halaman</string>
 	<string name="page_attempt_upload">Mencoba mengunggah halaman</string>
-	<string name="page_preview">Pratinjau Halaman</string>
 	<string name="post_actions">Tindakan Tulisan</string>
 	<string name="preview_post">Pratinjau Tulisan</string>
 	<string name="post_attempt_upload">Mencoba mengunggah tulisan</string>

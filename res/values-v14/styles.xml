@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
@@ -6,6 +7,9 @@
         <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
         <item name="android:editTextStyle">@style/WordPressEditTextStyle</item>
         <item name="android:checkboxStyle">@style/WordPressCheckBoxStyle</item>
+        
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         
         <item name="android:popupMenuStyle">@style/wordpress_PopupMenu</item>
         <item name="popupMenuStyle">@style/wordpress_PopupMenu</item>
@@ -23,10 +27,23 @@
         <item name="actionBarStyle">@style/wordpress_solid_ActionBar</item>
         
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
+                <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
+        <item name="actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
     </style>
     
-    <style name="WordPressButtonAppearance" parent="@android:style/Widget.Holo.Light.Button">
-        <item name="android:textColor">#FF464646</item>
+    <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_wordpress</item>
+        <item name="background">@drawable/ab_solid_wordpress</item>
+        
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
+        
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
+        
+        <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
+        <item name="progressBarStyle">@style/wordpress_ProgressBar</item>
     </style>
-
+  
 </resources>

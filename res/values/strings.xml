@@ -17,12 +17,10 @@
   <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
   
   <!-- form labels -->
-  <string name="categories">Categories</string>
   <string name="select_categories">Select Categories</string>
   <string name="tags_and_categories">Tags &amp; Categories</string>
   <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
   <string name="post_content">Content (tap to add text and media)</string>
-  <string name="post_title">Post Title</string>
   <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
   <string name="max_thumbnail_px_width">Default image width</string>
   <string name="password">Password</string>
@@ -40,7 +38,6 @@
   <string name="anonymous">Anonymous</string>
   
   <!-- general strings -->
-  <string name="app_name">WordPress</string>
   <string name="post">Post</string>
   <string name="page">Page</string>
   <string name="posts">Posts</string>
@@ -50,58 +47,35 @@
   <string name="cancel">Cancel</string>
   <string name="save">Save</string>
   <string name="add">Add</string>
-  <string name="clear">Clear</string>
   <string name="selected_categories">Selected categories:</string>
   <string name="publish">Publish? </string>
-  <string name="success">Success</string>
-  <string name="accept">Accept</string>
-  <string name="decline">Decline</string>
-  <string name="hint_menu_to_add_acc">Select \'Menu\' to add another account or toconfigure comment notifications.</string>
   <string name="add_account">Add Blog</string>
-  <string name="notification_settings">Settings</string>
   <string name="notification_sound">Play notification sound</string>
   <string name="notification_vibrate">Vibrate</string>
   <string name="notification_blink">Blink notification light</string>
   <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
-  <string name="account_removed_successfully">Blog removed successfully</string>
   <string name="error">Error</string>
   <string name="could_not_remove_account">Could not remove blog.</string>
   <string name="edit_page">Edit Page</string>
-  <string name="getting_page">Getting page</string>
   <string name="edit_post">Edit Post</string>
-  <string name="getting_post">Getting post</string>
-  <string name="no_text_selected">No text selected</string>
-  <string name="howto_select_text">You can select text by long pressing in the text area.</string>
-  <string name="select_text_to_bold">Please select some text first in order to bold it.</string>
-  <string name="select_text_to_link">Please select some text first in order to link it.</string>
-  <string name="select_text_to_emphasize">Please select some text in order to emphasize it.</string>
-  <string name="select_text_to_blockquote">Please select some text in order to place it in a blockquote.</string>
-  <string name="original_size">Original Size</string>
   <string name="refreshing_categories">Refreshing Categories</string>
   <string name="attempting_categories_refresh">Attempting to refresh categories</string>
   <string name="connection_error">Connection Error</string>
   <string name="connection_error_occured">A connection error has occurred. Please try again later.</string>
   <string name="categories_refreshed">Categories refreshed</string>
   <string name="category_refresh_error">Category refresh error</string>
-  <string name="settings_not_found">Settings not found</string>
   <string name="incorrect_credentials">Incorrect username or password.</string>
   <string name="empty_fields">No Content Found</string>
   <string name="title_post_required">Please enter some post content or attach a media item.</string>
-  <string name="post_edited">Post edited</string>
-  <string name="post_edited_image_error">Post edited successfully, but an error was encountered when uploading media</string>
-  <string name="post_edited_successfully">Post edited successfully</string>
-  <string name="attempting_edit_post">Attempting to edit Post</string>
   <string name="cancel_edit">Cancel Edit</string>
   <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?</string>
-  <string name="saved_to_local_drafts">Saved to local drafts</string>
   <string name="new_account">New Account</string>
   <string name="upload_full_size_image">Upload and link to full image</string>
   <string name="upload_scaled_image">Upload and link to scaled image</string>
   <string name="scaled_image_error">Please enter a valid scaled width value</string>
   <string name="scaled_image">Scaled image width</string>
-  <string name="uploading_content">Uploading Content</string>
   <string name="load_more">Load More</string>
   <string name="load_settings">Load settings now?</string>
   <string name="immediately">Immediately</string>
@@ -110,9 +84,7 @@
   <string name="gallery_error">Sorry, the media item could not be retrieved from the Gallery.</string>
   <string name="refresh">Refresh</string>
   <string name="home">Home</string>
-  <string name="no_camera_found">Sorry, no camera was found on your device.</string>
   <string name="more_tag">More</string>
-  <string name="wpcom_login_required">A WordPress.com account is required to use this feature</string>
   <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
   <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
 
@@ -121,7 +93,6 @@
   <string name="tab_posts">Posts</string>
   <string name="tab_pages">Pages</string>
   <string name="tab_stats">Stats</string>
-  <string name="choose_blog">Choose a blog:</string>
 
 
   <!-- link view -->
@@ -130,38 +101,20 @@
   <string name="create_a_link">Create a Link</string>
 
   <!-- page view -->
-  <string name="page_content">Page Content</string>
   <string name="title">Title</string>
   <string name="content">Tap to add text and media</string>
-  <string name="page_edited">Page Edited</string>
-  <string name="page_edited_image_error">Page edited successfully, but an error was encountered when uploading media</string>
-  <string name="page_edited_successfully">Page edited successfully</string>
-  <string name="attempting_edit_page">Attempting to edit Page</string>
   <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
 
-  <!-- pages tab -->
-  <string name="pages_not_found">No Pages Found</string>
-  <string name="pages_no_pages">You don\'t have any pages on your blog</string>
-
   <!-- posts tab -->
-  <string name="posts_not_found">No Posts Found</string>
-  <string name="posts_no_posts">You don\'t have any posts on your blog</string>
   <string name="untitled">Untitled</string>
   <string name="local_draft">Local Draft</string>
 
   <string name="local_drafts">Local Drafts</string>
 
   <!-- post view -->
-  <string name="post_added">Post Added</string>
   <string name="post_id">Post</string>
-  <string name="uploaded_successfully">Uploaded Successfully</string>
-  <string name="uploaded_successfully_image_error">added successfully, but an error was encountered when uploading media</string>
   <string name="upload_failed">Upload Failed</string>
-  <string name="permalink_not_found">The permalink was not found.</string>
-  <string name="basic_html">Showing basic HTML preview until post status is set to published.</string>
-  <string name="vp_upgrade">The video was not uploaded due to invalid file type. You can upload videos to your blog using the VideoPress upgrade. Would you like to learn more about VideoPress?</string>
   <string name="post_password">Password (optional)</string>
-  <string name="fullscreen">Write in Fullscreen</string>
   <string name="caption">Caption (optional)</string>
   <string name="horizontal_alignment">Horizontal Alignment</string>
   <string name="width">Width</string>
@@ -181,11 +134,6 @@
   <string name="reply_please_enter">Please enter something in the reply field.
   </string>
 
-  <!-- view post comments -->
-  <string name="view_comments">View Comments</string>
-  <string name="no_approved_comments">There are no approved comments for this post
-  </string>
-
   <!-- reload drop down -->
   <string name="loading">Loading...</string>
 
@@ -194,7 +142,6 @@
   <string name="approved">Approved</string>
   <string name="unapproved">Unapproved</string>
   <string name="spam">Spam</string>
-  <string name="moderate_comments">Moderate Comments</string>
   <string name="moderating_comment">Moderating comment</string>
   <string name="moderating_comments">Moderating comments</string>
   <string name="replying_comment">Replying to comment</string>
@@ -212,28 +159,21 @@
   <string name="comment_update">Update Comment</string>
   <string name="saving_changes">Saving Changes</string>
   <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?</string>
-  <string name="author_name_required">The author\'s name is required.</string>
   <string name="content_required">The comment body is required.</string>
-  <string name="author_email_required">The author\'s e-mail address is required.</string>
   
   <!-- context menu -->
-  <string name="blog_settings">Blog Settings</string>
   <string name="remove_account">Remove Blog</string>
   <string name="blog_removed_successfully">Blog Removed Successfully</string>
-  <string name="save_and_exit">Save and Exit Fullscreen</string>
-  <string name="exit_without_saving">Exit without Saving</string>
 
   <!-- draft actions -->
   <string name="draft_actions">Draft Actions</string>
   <string name="edit_draft">Edit Draft</string>
-  <string name="upload">Upload Draft to Blog</string>
   <string name="delete_draft">Delete Draft</string>
   <string name="delete_sure">Are you sure you want to delete the draft</string>
 
   <!-- page actions -->
   <string name="page_actions">Page Actions</string>
   <string name="preview_page">View Page</string>
-  <string name="page_attempt_upload">Attempting to upload page</string>
   <string name="delete_page">Delete Page</string>
   <string name="page_deleted">Page Deleted Successfully</string>
   <string name="delete_sure_page">Are you sure you want to delete the page</string>
@@ -242,20 +182,18 @@
   <!-- post actions -->
   <string name="post_actions">Post Actions</string>
   <string name="preview_post">View Post</string>
-  <string name="post_attempt_upload">Attempting to upload post</string>
   <string name="delete_post">Delete Post</string>
   <string name="post_deleted">Post Deleted Successfully</string>
   <string name="delete_sure_post">Are you sure you want to delete the post</string>
   <string name="attempt_delete_post">Attempting to delete post</string>
-  <string name="html">HTML Editor Activated</string>
   <string name="share_url">Share Post</string>
   <string name="share_link">Share Link</string>
   <string name="attempting_fetch_url">Attempting to fetch URL</string>
   <string name="post_not_published">Post status is not published</string>
   <string name="page_not_published">Page status is not published</string>
   <string name="view_in_browser">View in Browser</string>
-  <string name="post_signature">Post Signature</string>
-  <string name="add_tagline">Add a tagline to new posts</string>
+  <string name="post_signature">Post signature</string>
+  <string name="add_tagline">Add a signature to new posts</string>
   <string name="posted_from">Posted from WordPress for Android</string>
   <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
   <string name="preview">Preview</string>
@@ -273,36 +211,23 @@
   <!-- new account view -->
   <string name="account_setup">Account Setup</string>
   <string name="attempting_configure">Attempting to configure account</string>
-  <string name="account_exists">Account Exists</string>
-  <string name="account_already_exists">There is already a WordPress account for this WordPress blog configured.</string>
-  <string name="account_added">Account/Blog added successfully</string>
   <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
 
   <!-- drafts -->
   <string name="cancel_draft">Cancel Draft</string>
-  <string name="sure_cancel_draft">Are you sure you want to cancel this draft?</string>
 
   <!-- comment notifications -->
-  <string name="notifications_select">Select which blogs to receive comment notifications:</string>
   <string name="comment_notifications">Comment Notifications</string>
   <string name="notifications_interval">Update interval</string>
-  <string name="minutes">minutes</string>
-  <string name="hour">hour</string>
-  <string name="hours">hours</string>
-  <string name="daily">daily</string>
-  <string name="new_comment">New Comment Received</string>
 
   <!-- media selection -->
   <string name="select_photo">Select a photo from gallery</string>
   <string name="take_photo">Take a new photo</string>
   <string name="select_video">Select a video from gallery</string>
   <string name="take_video">Take a new video</string>
-  <string name="add_media">Add Media</string>
   <string name="media">Media</string>
-  <string name="media_error">Error uploading media: Could not create image.</string>
 
   <!-- category management -->
-  <string name="refresh_categories">Refresh Categories</string>
   <string name="add_new_category">Add New Category</string>
   <string name="category_name">Category Name</string>
   <string name="category_slug">Category Slug (optional)</string>
@@ -312,8 +237,6 @@
   <string name="adding_cat_failed">Adding category failed.</string>
   <string name="adding_cat_failed_check">Please check your settings and try again.</string>
   <string name="adding_cat_success">Category added successfully.</string>
-  <string name="duplicated_cat">Duplicated category</string>
-  <string name="cat_already_exists">A category with the name you specified already exists.</string>
   <string name="cat_name_required">The Category Name field is required.</string>
   <string name="cat_adding_category">Adding Category</string>
   <string name="cat_attempt_add_category">Attempting to add category</string>
@@ -323,7 +246,6 @@
   <string name="no_account">No WordPress account found, please add an account and try again.</string>
 
   <!-- file errors -->
-  <string name="file_error">File Error</string>
   <string name="file_error_encountered">An error occurred while setting up the captured media.</string>
   <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
 
@@ -344,28 +266,10 @@
   <string name="preferences">Preferences</string>
 
   <!-- stats -->
-  <string name="report_views">Views</string>
-  <string name="report_postviews">Post Views</string>
-  <string name="report_referrers">Referrers</string>
-  <string name="report_searchterms">Search Terms</string>
-  <string name="report_clicks">Clicks</string>
-  <string name="report_videoplays">Video Plays</string>
-  <string name="today">Today</string>
-  <string name="seven_days">7 Days</string>
-  <string name="thirty_days">30 Days</string>
-  <string name="quarter">Quarter</string>
-  <string name="year">Year</string>
-  <string name="all">All Time</string>
   <string name="username_password_required">Username and Password are required fields.</string>
   <string name="help_stats">Need help?</string>
   <string name="stats_username">Username</string>
   <string name="stats_password">Password</string>
-  <string name="date">Date</string>
-  <string name="report_post_title">Post Title</string>
-  <string name="retrieving_stats">Retrieving Stats</string>
-  <string name="attempt_retrieve">Attempting to retrieve stats</string>
-  <string name="stats_login">Stats Login</string>
-  <string name="no_data_found">No stats data found. Please try again.</string>
   <string name="invalid_login">Incorrect Login</string>
   <string name="invalid_jp_login">Incorrect login, or blog is not linked to this WordPress.com account.</string>
   <string name="site_not_found">or site not found.</string>
@@ -395,25 +299,15 @@
   <string name="quickpress_add_alert_title">Set shortcut name</string>
 
   <!-- HTTP Authentication -->
-  <string name="httpuser">HTTP Username (optional)</string>
-  <string name="httppassword">HTTP Password (optional)</string>
+  <string name="httpuser">HTTP username</string>
+  <string name="httppassword">HTTP password</string>
   <string name="settings">Settings</string>
   <string name="optional_settings">Optional Settings</string>
+  <string name="http_credentials">HTTP Credentials (optional)</string>
 
   <!-- post scheduling and password -->
   <string name="publish_date">Publish</string>
   <string name="edit">Edit</string>
-
-  <!-- WordPress.com signup -->
-  <string name="wpcom_signup">WordPress.com Sign Up</string>
-  <string name="blog_address">Blog Address</string>
-  <string name="your_account">Your Account</string>
-  <string name="email">E-Mail Address</string>
-  <string name="sign_up">Sign up</string>
-  <string name="dotcom_signup">.wordpress.com</string>
-  <string name="terms">You agree to the fascinating terms of service at http://wordpress.com/tos by submitting this form.</string>
-  <string name="instructions">Fill out this one-step form and you’ll be blogging seconds later!</string>
-  <string name="waiting_activation">Awaiting e-mail activation</string>
   <string name="post_format">Post Format</string>
   <string name="log_in">Log In</string>
 
@@ -468,14 +362,6 @@
   <string name="ok">OK</string>
   <string name="image_settings">Image Settings</string>
   <string name="add_account_blog_url">Blog URL</string>
-  <string name="image_options_title">Title</string>
-  <string name="image_options_caption">Caption (optional)</string>
-  <string name="image_options_horizontal_alignment">Horizontal Alignment:</string>
-  <string name="image_options_width">Width:</string>
-  <string name="done">Done</string>
-  <string name="view_stats_go">GO</string>
-  <string name="view_stats_wp_login">WordPress.com login:</string>
-  <string name="action_item_chart">Chart</string>
   <string name="wordpress_blog">WordPress Blog</string>
   <string name="blogusername">blogusername</string>
   <string name="column_1">Column 1</string>
@@ -487,10 +373,8 @@
   <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
   <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
   <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
-  <string name="error_stats">Sorry, an error occurred while loading Stats. Please try again later.</string>
   <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
   <string name="error_media_upload">An error occurred while uploading media</string>
-  <string name="error_upload_credentials">Sorry, could not upload the %s due to incorrect username or password. Please update your credentials in Settings and try again.</string>
   <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
   
   <!--  Image Descriptions for Accessibility -->
