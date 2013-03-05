@@ -187,9 +187,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 		LinearLayout settingsButton = (LinearLayout) findViewById(R.id.menu_settings_btn);
 		settingsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(WPActionBarActivity.this, Settings.class);
-				i.putExtra("id", WordPress.currentBlog.getId());
-				i.putExtra("isNew", true);
+				Intent i = new Intent(WPActionBarActivity.this, Preferences.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				menuDrawer.closeMenu();
 				startActivityWithDelay(i);

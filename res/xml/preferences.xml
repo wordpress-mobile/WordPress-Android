@@ -2,6 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory
+        android:key="wp_pref_category_blogs"
+        android:title="@string/blogs">
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/comment_notifications" >
         <PreferenceScreen
             android:key="wp_pref_notification_blogs"
@@ -28,6 +33,7 @@
             android:key="wp_pref_notification_light"
             android:title="@string/notification_blink" />
     </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/post_signature" >
         <CheckBoxPreference
@@ -39,10 +45,12 @@
             android:key="wp_pref_post_signature"
             android:title="@string/post_signature" />
     </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/about">
         <Preference android:title="@string/app_title" >
-            <intent android:action=".About" />
+            <intent android:targetClass="org.wordpress.android.About"
+                android:targetPackage="org.wordpress.android"/>
         </Preference>
     </PreferenceCategory>
 

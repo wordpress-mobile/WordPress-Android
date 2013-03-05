@@ -17,7 +17,9 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -59,6 +61,44 @@ public class Preferences extends SherlockPreferenceActivity {
 		taglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
 
 		displayPreferences();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		// the set of blogs may have changed while we were away
+		updateBlogsPreferenceCategory();
+	}
+
+	/**
+	 * Update the "blogs" preference category to contain a preference for each blog to configure
+	 * blog-specific settings. This also adds an "add blog" preference for setting up new blogs.
+	 */
+	protected void updateBlogsPreferenceCategory() {
+		PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
+		blogsCategory.removeAll();
+
+		Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(this);
+		for (HashMap<String, Object> account : accounts) {
+			String blogName = account.get("blogName").toString();
+			int accountId = (Integer) account.get("id");
+
+			Preference blogSettingsPreference = new Preference(this);
+			blogSettingsPreference.setTitle(blogName);
+			Intent intent = new Intent(this, Settings.class);
+			intent.putExtra("id", accountId);
+			blogSettingsPreference.setIntent(intent);
+			blogSettingsPreference.setOrder(0);
+			blogsCategory.addPreference(blogSettingsPreference);
+		}
+
+		Preference addBlogPreference = new Preference(this);
+		addBlogPreference.setTitle(R.string.add_account);
+		Intent intent = new Intent(this, NewAccount.class);
+		addBlogPreference.setIntent(intent);
+		addBlogPreference.setOrder(1);
+		blogsCategory.addPreference(addBlogPreference);
 	}
 
 	protected int getEnabledBlogsCount() {

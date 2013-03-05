@@ -20,7 +20,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Settings extends WPActionBarActivity {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class Settings extends SherlockFragmentActivity {
 	protected static Intent svc = null;
 	private String originalUsername;
 
@@ -30,17 +32,13 @@ public class Settings extends WPActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		createMenuDrawer(R.layout.settings);
+		setContentView(R.layout.settings);
 
 		Integer id = getIntent().getIntExtra("id", -1);
 		blog = WordPress.getBlog(this, id);
 
+		getSupportActionBar().setTitle(blog.getBlogName());
 		loadSettingsForBlog();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 	@Override
@@ -115,13 +113,6 @@ public class Settings extends WPActionBarActivity {
 		super.onNewIntent(intent);
 		loadSettingsForBlog();
 
-	}
-
-	@Override
-	public void onBlogChanged() {
-		super.onBlogChanged();
-		blog = WordPress.currentBlog;
-		loadSettingsForBlog();
 	}
 
 	private void loadSettingsForBlog() {
@@ -234,6 +225,9 @@ public class Settings extends WPActionBarActivity {
 		super.onConfigurationChanged(newConfig);
 	}
 
+	/**
+	 * Remove the blog this activity is managing settings for.
+	 */
 	public void removeBlog(View view) {
 		final Settings activity = this;
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -241,7 +235,7 @@ public class Settings extends WPActionBarActivity {
 		dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
 		dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				boolean deleteSuccess = WordPress.wpDB.deleteAccount(Settings.this, blog.getBlogId());
+				boolean deleteSuccess = WordPress.wpDB.deleteAccount(Settings.this, blog.getId());
 				if (deleteSuccess) {
 					Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
 							.show();
