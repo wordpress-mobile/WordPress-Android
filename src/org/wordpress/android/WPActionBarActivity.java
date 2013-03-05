@@ -72,7 +72,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 	protected void onResume() {
 		super.onResume();
 
-		// update menu drawer, since the current blog may have changed
+		// the current blog may have changed while we were away
+		setupCurrentBlog();
 		if (menuDrawer != null) {
 			updateMenuDrawer();
 		}
@@ -308,34 +309,49 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 		return blogNames;
 	}
 
+	/**
+	 * Setup the global state tracking which blog is currently active.
+	 * <p>
+	 * If the global state is not already set, try and determine the last active blog from the last
+	 * time the application was used. If we're not able to determine the last active blog, just
+	 * select the first one.
+	 * <p>
+	 * If no blogs are configured, display the "new account" activity to allow the user to setup a
+	 * blog.
+	 */
 	public void setupCurrentBlog() {
-
-		if (WordPress.currentBlog != null)
+		if (WordPress.currentBlog != null) {
 			return;
+		}
 
+		// no blogs are configured, so display new account activity
+		if (blogIDs.length == 0) {
+			Intent i = new Intent(this, NewAccount.class);
+			startActivityForResult(i, 0);
+			return;
+		}
+
+		// attempt to restore the last active blog
 		int lastBlogID = WordPress.wpDB.getLastBlogID(this);
 		if (lastBlogID != -1) {
 			try {
-				boolean matchedID = false;
 				for (int i = 0; i < blogIDs.length; i++) {
 					if (blogIDs[i] == lastBlogID) {
-						matchedID = true;
 						WordPress.currentBlog = new Blog(blogIDs[i], this);
 					}
-				}
-				if (!matchedID) {
-					WordPress.currentBlog = new Blog(blogIDs[0], this);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else {
-			if (blogIDs.length > 0)
-				try {
-					WordPress.currentBlog = new Blog(blogIDs[0], this);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		}
+
+		// fallback to just using the first blog
+		if (WordPress.currentBlog == null) {
+			try {
+				WordPress.currentBlog = new Blog(blogIDs[0], this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
