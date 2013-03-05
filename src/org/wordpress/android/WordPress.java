@@ -122,4 +122,26 @@ public class WordPress extends Application {
 		}
 		return currentBlog;	
 	}
+
+	/**
+	 * Get the blog with the specified ID.
+	 *
+	 * @param context application context.
+	 * @param id ID of the blog to retrieve.
+	 * @return the blog with the specified ID, or null if blog could not be retrieved.
+	 */
+	public static Blog getBlog(Context context, int id) {
+		Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(context);
+		for (HashMap<String, Object> account : accounts) {
+			int accountId = (Integer) account.get("id");
+			if (accountId == id) {
+				try {
+					return new Blog(id, context);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
 }

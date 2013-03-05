@@ -3,6 +3,8 @@ package org.wordpress.android;
 import java.util.List;
 import java.util.Locale;
 
+import org.wordpress.android.models.Blog;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,10 +23,16 @@ public class Settings extends WPActionBarActivity {
 	protected static Intent svc = null;
 	private String originalUsername;
 
+	/** The blog this activity is managing settings for. */
+	private Blog blog;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createMenuDrawer(R.layout.settings);
+
+		Integer id = getIntent().getIntExtra("id", -1);
+		blog = WordPress.getBlog(this, id);
 
 		loadSettingsForBlog();
 	}
@@ -37,19 +45,19 @@ public class Settings extends WPActionBarActivity {
 	@Override
 	protected void onPause() {
 		EditText usernameET = (EditText) findViewById(R.id.username);
-		WordPress.currentBlog.setUsername(usernameET.getText().toString());
+		blog.setUsername(usernameET.getText().toString());
 		EditText passwordET = (EditText) findViewById(R.id.password);
-		WordPress.currentBlog.setPassword(passwordET.getText().toString());
+		blog.setPassword(passwordET.getText().toString());
 		EditText httpuserET = (EditText) findViewById(R.id.httpuser);
-		WordPress.currentBlog.setHttpuser(httpuserET.getText().toString());
+		blog.setHttpuser(httpuserET.getText().toString());
 		EditText httppasswordET = (EditText) findViewById(R.id.httppassword);
-		WordPress.currentBlog.setHttppassword(httppasswordET.getText().toString());
+		blog.setHttppassword(httppasswordET.getText().toString());
 
 		CheckBox fullSize = (CheckBox) findViewById(R.id.fullSizeImage);
-		WordPress.currentBlog.setFullSizeImage(fullSize.isChecked());
+		blog.setFullSizeImage(fullSize.isChecked());
 		CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
-		WordPress.currentBlog.setScaledImage(scaledImage.isChecked());
-		if (WordPress.currentBlog.isScaledImage()) {
+		blog.setScaledImage(scaledImage.isChecked());
+		if (blog.isScaledImage()) {
 			EditText scaledImgWidth = (EditText) findViewById(R.id.scaledImageWidth);
 
 			boolean error = false;
@@ -75,21 +83,21 @@ public class Settings extends WPActionBarActivity {
 				dialogBuilder.create().show();
 				return;
 			} else {
-				WordPress.currentBlog.setScaledImageWidth(width);
+				blog.setScaledImageWidth(width);
 			}
 		}
 		Spinner spinner = (Spinner) findViewById(R.id.maxImageWidth);
-		WordPress.currentBlog.setMaxImageWidth(spinner.getSelectedItem().toString());
+		blog.setMaxImageWidth(spinner.getSelectedItem().toString());
 
 		long maxImageWidthId = spinner.getSelectedItemId();
 		int maxImageWidthIdInt = (int) maxImageWidthId;
 
-		WordPress.currentBlog.setMaxImageWidthId(maxImageWidthIdInt);
+		blog.setMaxImageWidthId(maxImageWidthIdInt);
 
 		CheckBox locationCB = (CheckBox) findViewById(R.id.location);
-		WordPress.currentBlog.setLocation(locationCB.isChecked());
+		blog.setLocation(locationCB.isChecked());
 
-		WordPress.currentBlog.save(Settings.this, originalUsername);
+		blog.save(Settings.this, originalUsername);
 		// exit settings screen
 		Bundle bundle = new Bundle();
 
@@ -111,7 +119,8 @@ public class Settings extends WPActionBarActivity {
 	@Override
 	public void onBlogChanged() {
 		super.onBlogChanged();
-		// TODO: show settings for current blog
+		blog = WordPress.currentBlog;
+		loadSettingsForBlog();
 	}
 
 	private void loadSettingsForBlog() {
@@ -129,19 +138,19 @@ public class Settings extends WPActionBarActivity {
 		spinner.setAdapter(spinnerArrayAdapter);
 
 		EditText usernameET = (EditText) findViewById(R.id.username);
-		usernameET.setText(WordPress.currentBlog.getUsername());
-		originalUsername = WordPress.currentBlog.getUsername();
+		usernameET.setText(blog.getUsername());
+		originalUsername = blog.getUsername();
 
 		EditText passwordET = (EditText) findViewById(R.id.password);
-		passwordET.setText(WordPress.currentBlog.getPassword());
+		passwordET.setText(blog.getPassword());
 
 		EditText httpUserET = (EditText) findViewById(R.id.httpuser);
-		httpUserET.setText(WordPress.currentBlog.getHttpuser());
+		httpUserET.setText(blog.getHttpuser());
 
 		EditText httpPasswordET = (EditText) findViewById(R.id.httppassword);
-		httpPasswordET.setText(WordPress.currentBlog.getHttppassword());
+		httpPasswordET.setText(blog.getHttppassword());
 		TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
-		if (WordPress.currentBlog.isDotcomFlag()) {
+		if (blog.isDotcomFlag()) {
 			httpPasswordET.setVisibility(View.GONE);
 			httpUserLabel.setVisibility(View.GONE);
 			httpUserET.setVisibility(View.GONE);
@@ -152,12 +161,12 @@ public class Settings extends WPActionBarActivity {
 		}
 
 		CheckBox fullSize = (CheckBox) findViewById(R.id.fullSizeImage);
-		fullSize.setChecked(WordPress.currentBlog.isFullSizeImage());
+		fullSize.setChecked(blog.isFullSizeImage());
 		CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
-		scaledImage.setChecked(WordPress.currentBlog.isScaledImage());
+		scaledImage.setChecked(blog.isScaledImage());
 		EditText scaledImageWidth = (EditText) findViewById(R.id.scaledImageWidth);
-		scaledImageWidth.setText("" + WordPress.currentBlog.getScaledImageWidth());
-		showScaledSetting(WordPress.currentBlog.isScaledImage());
+		scaledImageWidth.setText("" + blog.getScaledImageWidth());
+		showScaledSetting(blog.isScaledImage());
 		// sets up a state listener for the scaled image checkbox
 		((CheckBox) findViewById(R.id.scaledImage)).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -196,14 +205,14 @@ public class Settings extends WPActionBarActivity {
 
 		CheckBox locationCB = (CheckBox) findViewById(R.id.location);
 		if (hasLocationProvider) {
-			locationCB.setChecked(WordPress.currentBlog.isLocation());
+			locationCB.setChecked(blog.isLocation());
 		} else {
 			locationCB.setChecked(false);
 			RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.section3);
 			locationLayout.setVisibility(View.GONE);
 		}
 
-		spinner.setSelection(WordPress.currentBlog.getMaxImageWidthId());
+		spinner.setSelection(blog.getMaxImageWidthId());
 	}
 
 	/**
