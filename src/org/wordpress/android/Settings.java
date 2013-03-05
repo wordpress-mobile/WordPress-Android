@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Settings extends WPActionBarActivity {
 	protected static Intent svc = null;
@@ -233,4 +234,40 @@ public class Settings extends WPActionBarActivity {
 		super.onConfigurationChanged(newConfig);
 	}
 
+	public void removeBlog(View view) {
+		final Settings activity = this;
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+		dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+		dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+		dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				boolean deleteSuccess = WordPress.wpDB.deleteAccount(Settings.this, blog.getBlogId());
+				if (deleteSuccess) {
+					Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
+							.show();
+					WordPress.wpDB.deleteLastBlogID();
+					WordPress.currentBlog = null;
+					activity.finish();
+				} else {
+					AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+					dialogBuilder.setTitle(getResources().getText(R.string.error));
+					dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
+					dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							// just close the dialog
+						}
+					});
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.create().show();
+				}
+			}
+		});
+		dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				// just close the window
+			}
+		});
+		dialogBuilder.setCancelable(false);
+		dialogBuilder.create().show();
+	}
 }

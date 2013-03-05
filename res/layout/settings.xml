@@ -150,6 +150,21 @@
                 android:layout_below="@id/l_section3"
                 android:text="@string/geotag" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/section4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/section3"
+            android:layout_marginTop="8dp" >
+
+            <Button
+                android:id="@+id/remove_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remove_account"
+                android:onClick="removeBlog" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </ScrollView>
