@@ -124,7 +124,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".About" />
+        <activity android:name=".About" >
+            <intent-filter>
+                <action android:name=".About" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="Comments"
             android:configChanges="orientation|keyboardHidden|screenSize"

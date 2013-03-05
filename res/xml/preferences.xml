@@ -2,7 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory
-        android:key="wp_pref_notification_settings"
         android:title="@string/comment_notifications" >
         <PreferenceScreen
             android:key="wp_pref_notification_blogs"
@@ -30,7 +29,6 @@
             android:title="@string/notification_blink" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="wp_pref_notification_settings"
         android:title="@string/post_signature" >
         <CheckBoxPreference
             android:defaultValue="false"
@@ -40,6 +38,12 @@
         <EditTextPreference
             android:key="wp_pref_post_signature"
             android:title="@string/post_signature" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/about">
+        <Preference android:title="@string/app_title" >
+            <intent android:action=".About" />
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>
