@@ -1,6 +1,7 @@
 * text=auto !eol
 /.classpath -text
 /.project -text
+.settings/org.eclipse.jdt.core.prefs -text
 .settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
 assets/webview.css -text
