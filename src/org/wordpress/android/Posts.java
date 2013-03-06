@@ -6,15 +6,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.wordpress.android.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.ViewPosts.OnPostActionListener;
-import org.wordpress.android.ViewPosts.OnPostSelectedListener;
-import org.wordpress.android.ViewPosts.OnRefreshListener;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,9 +16,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.widget.Toast;
+
+import org.wordpress.android.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.ViewPosts.OnPostActionListener;
+import org.wordpress.android.ViewPosts.OnPostSelectedListener;
+import org.wordpress.android.ViewPosts.OnRefreshListener;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -236,6 +235,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_refresh) {
 			postList.refreshPosts(false);
+			new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(true);
 			return true;
 		} else if (itemId == R.id.menu_new_post) {
 			Intent i = new Intent(this, EditPost.class);
@@ -661,5 +661,6 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 		popPostDetail();
 		attemptToSelectPost();
 		postList.loadPosts(false);
+		new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
 	}
 }

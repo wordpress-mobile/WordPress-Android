@@ -149,6 +149,100 @@ public class ApiHelper {
 
 	}
 
+    /**
+     * Task to refresh blog level information (WP version number) and stuff
+     * related to the active theme (available post types, recent comments, etc).
+     */
+    public static class RefreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
+        /** Blog being refresh. */
+        private Blog blog;
+
+        /** Application context. */
+        private Context context;
+
+        public RefreshBlogContentTask(Context context, Blog blog) {
+            this.blog = blog;
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(Boolean... params) {
+            boolean commentsOnly = params[0];
+            XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            if (!commentsOnly) {
+                // check the WP number if self-hosted
+                HashMap<String, String> hPost = new HashMap<String, String>();
+                hPost.put("software_version", "software_version");
+                hPost.put("post_thumbnail", "post_thumbnail");
+                hPost.put("jetpack_client_id", "jetpack_client_id");
+                hPost.put("blog_public", "blog_public");
+                Object[] vParams = {
+                        blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost
+                };
+                Object versionResult = new Object();
+                try {
+                    versionResult = (Object) client.call("wp.getOptions", vParams);
+                } catch (XMLRPCException e) {
+                }
+
+                if (versionResult != null) {
+                    try {
+                        HashMap<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
+                        Gson gson = new Gson();
+                        String blogOptionsJson = gson.toJson(blogOptions);
+                        if (blogOptionsJson != null)
+                            blog.setBlogOptions(blogOptionsJson);
+
+                        // Software version
+                        if (!blog.isDotcomFlag()) {
+                            HashMap<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
+                            String wpVersion = sv.get("value").toString();
+                            if (wpVersion.length() > 0) {
+                                blog.setWpVersion(wpVersion);
+                            }
+                        }
+                        // Featured image support
+                        HashMap<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions
+                                .get("post_thumbnail");
+                        if (featuredImageHash != null) {
+                            boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash
+                                    .get("value").toString());
+                            blog.setFeaturedImageCapable(featuredImageCapable);
+                        } else {
+                            blog.setFeaturedImageCapable(false);
+                        }
+                        blog.save(context, "");
+                    } catch (Exception e) {
+                    }
+                }
+
+                // get theme post formats
+                Vector<Object> args = new Vector<Object>();
+                args.add(blog);
+                args.add(context);
+                new ApiHelper.getPostFormatsTask().execute(args);
+            }
+
+            // refresh the comments
+            HashMap<String, Object> hPost = new HashMap<String, Object>();
+            hPost.put("number", 30);
+            Object[] commentParams = {
+                    blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost
+            };
+
+            try {
+                ApiHelper.refreshComments(context, commentParams);
+            } catch (XMLRPCException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+    }
+
 	public static HashMap<Integer, HashMap<?, ?>> refreshComments(Context ctx,
 			Object[] commentParams) throws XMLRPCException {
 		Blog blog = WordPress.currentBlog;
