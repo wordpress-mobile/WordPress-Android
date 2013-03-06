@@ -952,7 +952,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 		} else {
 			// no account, load main view to load new account view
 			Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-			startActivity(new Intent(this, Dashboard.class));
+			startActivity(new Intent(this, NewAccount.class));
 			finish();
 			return false;
 		}

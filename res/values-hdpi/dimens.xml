@@ -1,5 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="comment_badge_image_top_margin">0px</dimen>
-    <dimen name="comment_badge_image_right_margin">0px</dimen>
 </resources>
