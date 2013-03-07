@@ -126,7 +126,10 @@ public class WordPressDB {
 
     public String defaultBlog = "";
 
+    private Context context;
+
     public WordPressDB(Context ctx) {
+        context = ctx;
 
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
@@ -920,37 +923,32 @@ public class WordPressDB {
         return thisHash;
     }
 
-    public void updateLastBlogID(int blogID) {
-
-        ContentValues values = new ContentValues();
-        values.put("last_blog_id", blogID);
-
-        db.update("eula", values, null, null);
+    /**
+     * Set the ID of the most recently active blog. This value will persist
+     * between application launches.
+     *
+     * @param id ID of the most recently active blog.
+     */
+    public void updateLastBlogId(int id) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("last_blog_id", id);
+        editor.commit();
     }
 
-    public void deleteLastBlogID() {
-        ContentValues values = new ContentValues();
-        values.put("last_blog_id", "-1");
-
-        db.update("eula", values, null, null);
-
+    /**
+     * Delete the ID for the most recently active blog.
+     */
+    public void deleteLastBlogId() {
+        updateLastBlogId(-1);
     }
 
-    public int getLastBlogID(Context ctx) {
-
-        int returnValue = -1;
-        Cursor c = db.query("eula", new String[] { "last_blog_id" }, "id=0",
-                null, null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        if (numRows == 1) {
-            if (c.getString(0) != null) {
-                returnValue = c.getInt(0);
-            }
-        }
-        c.close();
-
-        return returnValue;
+    /**
+     * Get the ID of the most recently active blog.
+     */
+    public int getLastBlogId() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getInt("last_blog_id", -1);
     }
 
     public Vector<HashMap<String, Object>> loadDrafts(int blogID,

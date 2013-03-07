@@ -864,7 +864,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
     private void initBlog() {
         if (WordPress.currentBlog == null) {
             try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId(), this);
             } catch (Exception e) {
                 showBlogErrorAndFinish();
             }
@@ -927,7 +927,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                             showBlogErrorAndFinish();
                         }
                         WordPress.currentBlog = mBlog;
-                        WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
+                        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
                         mAccountName = blogNames[item];
                         setTitle(EscapeUtils.unescapeHtml(mAccountName) + " - "
                                 + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
@@ -944,7 +944,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                     return false;
                 }
                 WordPress.currentBlog = mBlog;
-                WordPress.wpDB.updateLastBlogID(WordPress.currentBlog.getId());
+                WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
                 mAccountName = blogNames[0];
                 setTitle(EscapeUtils.unescapeHtml(mAccountName) + " - "
                         + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));

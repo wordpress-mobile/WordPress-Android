@@ -37,7 +37,7 @@ public class Preferences extends SherlockPreferenceActivity {
 
         if (WordPress.currentBlog == null) {
             try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId(), this);
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();

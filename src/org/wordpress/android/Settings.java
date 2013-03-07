@@ -239,7 +239,7 @@ public class Settings extends SherlockFragmentActivity {
                 if (deleteSuccess) {
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
                             .show();
-                    WordPress.wpDB.deleteLastBlogID();
+                    WordPress.wpDB.deleteLastBlogId();
                     WordPress.currentBlog = null;
                     activity.finish();
                 } else {

@@ -75,7 +75,7 @@ public class WebViewActivity extends SherlockActivity {
         if (WordPress.currentBlog == null) {
             try {
                 WordPress.currentBlog = new Blog(
-                        WordPress.wpDB.getLastBlogID(this), this);
+                        WordPress.wpDB.getLastBlogId(), this);
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
@@ -286,7 +286,7 @@ public class WebViewActivity extends SherlockActivity {
             if (WordPress.currentBlog == null) {
                 try {
                     WordPress.currentBlog = new Blog(
-                            WordPress.wpDB.getLastBlogID(WebViewActivity.this), WebViewActivity.this);
+                            WordPress.wpDB.getLastBlogId(), WebViewActivity.this);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

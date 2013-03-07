@@ -339,7 +339,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         }
 
         // attempt to restore the last active blog
-        int lastBlogID = WordPress.wpDB.getLastBlogID(this);
+        int lastBlogID = WordPress.wpDB.getLastBlogId();
         if (lastBlogID != -1) {
             try {
                 for (int i = 0; i < blogIDs.length; i++) {
@@ -384,7 +384,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         } else {
             try {
                 WordPress.currentBlog = new Blog(blogIDs[pos], this);
-                WordPress.wpDB.updateLastBlogID(blogIDs[pos]);
+                WordPress.wpDB.updateLastBlogId(blogIDs[pos]);
                 onBlogChanged();
             } catch (Exception e) {
                 e.printStackTrace();

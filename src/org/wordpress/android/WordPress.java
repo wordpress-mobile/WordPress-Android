@@ -95,7 +95,7 @@ public class WordPress extends Application {
 
         }
 
-        int lastBlogID = WordPress.wpDB.getLastBlogID(context);
+        int lastBlogID = WordPress.wpDB.getLastBlogId();
         if (lastBlogID != -1) {
             try {
                 boolean matchedID = false;

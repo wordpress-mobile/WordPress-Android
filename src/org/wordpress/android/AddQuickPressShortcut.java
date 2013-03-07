@@ -163,7 +163,7 @@ public class AddQuickPressShortcut extends ListActivity {
                     if (WordPress.currentBlog == null) {
                         try {
                             WordPress.currentBlog = new Blog(accountIDs[position], AddQuickPressShortcut.this);
-                            WordPress.wpDB.updateLastBlogID(accountIDs[position]);
+                            WordPress.wpDB.updateLastBlogId(accountIDs[position]);
                         } catch (Exception e) {
                         }
                     }

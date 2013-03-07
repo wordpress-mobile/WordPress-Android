@@ -50,8 +50,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
         if (WordPress.currentBlog == null) {
             try {
                 WordPress.currentBlog = new Blog(
-                        WordPress.wpDB.getLastBlogID(getActivity()
-                                .getApplicationContext()), getActivity()
+                        WordPress.wpDB.getLastBlogId(), getActivity()
                                 .getApplicationContext());
             } catch (Exception e) {
                 Toast.makeText(getActivity().getApplicationContext(),
@@ -207,8 +206,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
             if (WordPress.currentBlog == null) {
                 try {
                     WordPress.currentBlog = new Blog(
-                            WordPress.wpDB.getLastBlogID(getActivity()
-                                    .getApplicationContext()), getActivity()
+                            WordPress.wpDB.getLastBlogId(), getActivity()
                                     .getApplicationContext());
                 } catch (Exception e) {
                     e.printStackTrace();
