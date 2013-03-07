@@ -105,7 +105,7 @@ public class Comments extends WPActionBarActivity implements
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        // TODO: load comments for current blog
+        commentList.refreshComments(false, false, false);
     }
 
     @Override
