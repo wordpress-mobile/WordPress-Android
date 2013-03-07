@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wordpress.android"
     android:installLocation="auto"
-    android:versionCode="66"
-    android:versionName="2.2.7" >
+    android:versionCode="67"
+    android:versionName="2.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -45,7 +45,8 @@
             android:name="Settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+             />
         <activity
             android:name="Link"
             android:label="@string/create_a_link"
