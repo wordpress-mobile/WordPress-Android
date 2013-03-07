@@ -18,8 +18,6 @@ libs/tagsoup-1.2.1.jar -text
 /project.properties -text
 /readme.md -text
 res/anim/cycle_5.xml -text
-res/anim/dashboard_hide.xml -text
-res/anim/dashboard_show.xml -text
 res/anim/disappear.xml -text
 res/anim/rail.xml -text
 res/anim/shake.xml -text
@@ -110,8 +108,6 @@ res/drawable-mdpi/tab_unselected_focused_wordpress.9.png -text
 res/drawable-mdpi/tab_unselected_pressed_wordpress.9.png -text
 res/drawable-v11/list_highlight_bg.xml -text
 res/drawable-v11/menu_button_bg.9.png -text
-res/drawable-v12/dashboard_btn_bottom_left.xml -text
-res/drawable-v12/dashboard_btn_bottom_right.xml -text
 res/drawable-xhdpi-v11/notification_icon.png -text
 res/drawable-xhdpi/ab_bottom_solid_wordpress.9.png -text
 res/drawable-xhdpi/ab_icon_navigation_down.png -text
@@ -259,7 +255,6 @@ res/layout/view_web_stats.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
 res/menu/categories.xml -text
-res/menu/dashboard.xml -text
 res/menu/edit.xml -text
 res/menu/posts.xml -text
 res/menu/refresh_only.xml -text
