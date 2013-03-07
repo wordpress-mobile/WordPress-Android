@@ -9,23 +9,23 @@ import android.widget.EditText;
 
 
 public class AddAcountSettings extends Activity {
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.add_account_settings);
-		
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.add_account_settings);
+
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-        	EditText httpuserET = (EditText)findViewById(R.id.httpuser);
+            EditText httpuserET = (EditText)findViewById(R.id.httpuser);
             httpuserET.setText(extras.getString("httpuser"));
             EditText httppasswordET = (EditText)findViewById(R.id.httppassword);
             httppasswordET.setText(extras.getString("httppassword"));
         }
-        
+
         final Button cancelButton = (Button) findViewById(R.id.cancel);
         final Button saveButton = (Button) findViewById(R.id.save);
-        
+
         saveButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 //capture the entered fields *needs validation*
@@ -33,8 +33,8 @@ public class AddAcountSettings extends Activity {
                 String httpuser = httpuserET.getText().toString();
                 EditText httppasswordET = (EditText)findViewById(R.id.httppassword);
                 String httppassword = httppasswordET.getText().toString();
-                
-        		//exit settings screen
+
+                //exit settings screen
                 Bundle bundle = new Bundle();
                 bundle.putString("httpuser", httpuser);
                 bundle.putString("httppassword", httppassword);
@@ -43,8 +43,8 @@ public class AddAcountSettings extends Activity {
                 setResult(RESULT_OK, mIntent);
                 finish();
             }
-        });   
-        
+        });
+
         cancelButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                  Intent mIntent = new Intent();
@@ -52,13 +52,13 @@ public class AddAcountSettings extends Activity {
                  finish();
             }
         });
-     
-	}
-	
-	@Override
+
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
       //ignore orientation change
       super.onConfigurationChanged(newConfig);
-    } 
-	
+    }
+
 }

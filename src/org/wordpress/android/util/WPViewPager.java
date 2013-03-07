@@ -19,7 +19,7 @@ public class WPViewPager extends ViewPager {
         if (this.enabled) {
             return super.onTouchEvent(event);
         }
-  
+
         return false;
     }
 
@@ -28,10 +28,10 @@ public class WPViewPager extends ViewPager {
         if (this.enabled) {
             return super.onInterceptTouchEvent(event);
         }
- 
+
         return false;
     }
- 
+
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
     }

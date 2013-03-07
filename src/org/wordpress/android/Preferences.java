@@ -26,196 +26,196 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 public class Preferences extends SherlockPreferenceActivity {
 
-	ListPreference notificationIntervalPreference;
-	EditTextPreference taglineTextPreference;
-	OnPreferenceChangeListener preferenceChangeListener;
+    ListPreference notificationIntervalPreference;
+    EditTextPreference taglineTextPreference;
+    OnPreferenceChangeListener preferenceChangeListener;
 
-	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
 
-		setTitle(getResources().getText(R.string.preferences));
+        setTitle(getResources().getText(R.string.preferences));
 
-		if (WordPress.currentBlog == null) {
-			try {
-				WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
-			} catch (Exception e) {
-				Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-				finish();
-			}
-		}
-		addPreferencesFromResource(R.xml.preferences);
+        if (WordPress.currentBlog == null) {
+            try {
+                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogID(this), this);
+            } catch (Exception e) {
+                Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+        addPreferencesFromResource(R.xml.preferences);
 
-		preferenceChangeListener = new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				// Set summary to changed value
-				preference.setSummary(newValue.toString());
-				return true;
-			}
-		};
+        preferenceChangeListener = new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                // Set summary to changed value
+                preference.setSummary(newValue.toString());
+                return true;
+            }
+        };
 
-		notificationIntervalPreference = (ListPreference) findPreference("wp_pref_notifications_interval");
-		notificationIntervalPreference.setOnPreferenceChangeListener(preferenceChangeListener);
-		taglineTextPreference = (EditTextPreference) findPreference("wp_pref_post_signature");
-		taglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
+        notificationIntervalPreference = (ListPreference) findPreference("wp_pref_notifications_interval");
+        notificationIntervalPreference.setOnPreferenceChangeListener(preferenceChangeListener);
+        taglineTextPreference = (EditTextPreference) findPreference("wp_pref_post_signature");
+        taglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
 
-		displayPreferences();
-	}
+        displayPreferences();
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
+    @Override
+    public void onResume() {
+        super.onResume();
 
-		// the set of blogs may have changed while we were away
-		updateBlogsPreferenceCategory();
-	}
+        // the set of blogs may have changed while we were away
+        updateBlogsPreferenceCategory();
+    }
 
-	/**
-	 * Update the "blogs" preference category to contain a preference for each blog to configure
-	 * blog-specific settings. This also adds an "add blog" preference for setting up new blogs.
-	 */
-	protected void updateBlogsPreferenceCategory() {
-		PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
-		blogsCategory.removeAll();
+    /**
+     * Update the "blogs" preference category to contain a preference for each blog to configure
+     * blog-specific settings. This also adds an "add blog" preference for setting up new blogs.
+     */
+    protected void updateBlogsPreferenceCategory() {
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
+        blogsCategory.removeAll();
 
-		Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(this);
-		for (HashMap<String, Object> account : accounts) {
-			String blogName = account.get("blogName").toString();
-			int accountId = (Integer) account.get("id");
+        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(this);
+        for (HashMap<String, Object> account : accounts) {
+            String blogName = account.get("blogName").toString();
+            int accountId = (Integer) account.get("id");
 
-			Preference blogSettingsPreference = new Preference(this);
-			blogSettingsPreference.setTitle(blogName);
-			Intent intent = new Intent(this, Settings.class);
-			intent.putExtra("id", accountId);
-			blogSettingsPreference.setIntent(intent);
-			blogSettingsPreference.setOrder(0);
-			blogsCategory.addPreference(blogSettingsPreference);
-		}
+            Preference blogSettingsPreference = new Preference(this);
+            blogSettingsPreference.setTitle(blogName);
+            Intent intent = new Intent(this, Settings.class);
+            intent.putExtra("id", accountId);
+            blogSettingsPreference.setIntent(intent);
+            blogSettingsPreference.setOrder(0);
+            blogsCategory.addPreference(blogSettingsPreference);
+        }
 
-		Preference addBlogPreference = new Preference(this);
-		addBlogPreference.setTitle(R.string.add_account);
-		Intent intent = new Intent(this, NewAccount.class);
-		addBlogPreference.setIntent(intent);
-		addBlogPreference.setOrder(1);
-		blogsCategory.addPreference(addBlogPreference);
-	}
+        Preference addBlogPreference = new Preference(this);
+        addBlogPreference.setTitle(R.string.add_account);
+        Intent intent = new Intent(this, NewAccount.class);
+        addBlogPreference.setIntent(intent);
+        addBlogPreference.setOrder(1);
+        blogsCategory.addPreference(addBlogPreference);
+    }
 
-	protected int getEnabledBlogsCount() {
-		PreferenceScreen selectBlogsCategory = (PreferenceScreen) findPreference("wp_pref_notification_blogs");
-		int enabledBlogCtr = 0;
-		for (int i = 0; i < selectBlogsCategory.getPreferenceCount(); i++) {
-			CheckBoxPreference blogPreference = (CheckBoxPreference) selectBlogsCategory.getPreference(i);
-			if (blogPreference.isChecked())
-				enabledBlogCtr++;
-		}
-		return enabledBlogCtr;
-	}
+    protected int getEnabledBlogsCount() {
+        PreferenceScreen selectBlogsCategory = (PreferenceScreen) findPreference("wp_pref_notification_blogs");
+        int enabledBlogCtr = 0;
+        for (int i = 0; i < selectBlogsCategory.getPreferenceCount(); i++) {
+            CheckBoxPreference blogPreference = (CheckBoxPreference) selectBlogsCategory.getPreference(i);
+            if (blogPreference.isChecked())
+                enabledBlogCtr++;
+        }
+        return enabledBlogCtr;
+    }
 
-	public void displayPreferences() {
-		Vector<?> accounts = WordPress.wpDB.getAccounts(this);
-		if (accounts.size() > 0) {
+    public void displayPreferences() {
+        Vector<?> accounts = WordPress.wpDB.getAccounts(this);
+        if (accounts.size() > 0) {
 
-			for (int i = 0; i < accounts.size(); i++) {
+            for (int i = 0; i < accounts.size(); i++) {
 
-				HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
-				String curBlogName = curHash.get("blogName").toString();
-				String accountID = curHash.get("id").toString();
-				int runService = Integer.valueOf(curHash.get("runService").toString());
+                HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
+                String curBlogName = curHash.get("blogName").toString();
+                String accountID = curHash.get("id").toString();
+                int runService = Integer.valueOf(curHash.get("runService").toString());
 
-				PreferenceScreen selectBlogsCategory = (PreferenceScreen) findPreference("wp_pref_notification_blogs");
+                PreferenceScreen selectBlogsCategory = (PreferenceScreen) findPreference("wp_pref_notification_blogs");
 
-				CheckBoxPreference blogNotificationPreference = new CheckBoxPreference(this);
-				blogNotificationPreference.setKey(accountID);
-				blogNotificationPreference.setTitle(EscapeUtils.unescapeHtml(curBlogName));
-				blogNotificationPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-					@Override
-					public boolean onPreferenceChange(Preference preference, Object newValue) {
-						int blogID;
-						try {
-							blogID = Integer.valueOf(preference.getKey());
-							WordPress.wpDB.updateNotificationFlag(blogID, (Boolean) newValue);
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
-						}
-						return true;
-					}
-				});
-				if (runService == 1)
-					blogNotificationPreference.setChecked(true);
-				else
-					blogNotificationPreference.setChecked(false);
+                CheckBoxPreference blogNotificationPreference = new CheckBoxPreference(this);
+                blogNotificationPreference.setKey(accountID);
+                blogNotificationPreference.setTitle(EscapeUtils.unescapeHtml(curBlogName));
+                blogNotificationPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        int blogID;
+                        try {
+                            blogID = Integer.valueOf(preference.getKey());
+                            WordPress.wpDB.updateNotificationFlag(blogID, (Boolean) newValue);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                });
+                if (runService == 1)
+                    blogNotificationPreference.setChecked(true);
+                else
+                    blogNotificationPreference.setChecked(false);
 
-				selectBlogsCategory.addPreference(blogNotificationPreference);
-			}
-		}
+                selectBlogsCategory.addPreference(blogNotificationPreference);
+            }
+        }
 
-		if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
-			if (DeviceUtils.getInstance().isBlackBerry()) {
-				taglineTextPreference.setSummary(R.string.posted_from_blackberry);
-				taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
-			} else {
-				taglineTextPreference.setSummary(R.string.posted_from);
-				taglineTextPreference.setText(getString(R.string.posted_from));
-			}
-		} else {
-			taglineTextPreference.setSummary(taglineTextPreference.getText());
-		}
+        if (taglineTextPreference.getText() == null || taglineTextPreference.getText().equals("")) {
+            if (DeviceUtils.getInstance().isBlackBerry()) {
+                taglineTextPreference.setSummary(R.string.posted_from_blackberry);
+                taglineTextPreference.setText(getString(R.string.posted_from_blackberry));
+            } else {
+                taglineTextPreference.setSummary(R.string.posted_from);
+                taglineTextPreference.setText(getString(R.string.posted_from));
+            }
+        } else {
+            taglineTextPreference.setSummary(taglineTextPreference.getText());
+        }
 
-		if (notificationIntervalPreference.getValue() == null || notificationIntervalPreference.getValue().equals("")) {
-			notificationIntervalPreference.setValue("10 Minutes");
-			notificationIntervalPreference.setSummary("10 Minutes");
-		} else {
-			notificationIntervalPreference.setSummary(notificationIntervalPreference.getValue());
-		}
-	}
+        if (notificationIntervalPreference.getValue() == null || notificationIntervalPreference.getValue().equals("")) {
+            notificationIntervalPreference.setValue("10 Minutes");
+            notificationIntervalPreference.setSummary("10 Minutes");
+        } else {
+            notificationIntervalPreference.setSummary(notificationIntervalPreference.getValue());
+        }
+    }
 
-	@Override
-	protected void onPause() {
-		if (getEnabledBlogsCount() > 0) {
+    @Override
+    protected void onPause() {
+        if (getEnabledBlogsCount() > 0) {
 
-			int UPDATE_INTERVAL = 3600000;
-			ListPreference notificationIntervalPreference = (ListPreference) findPreference("wp_pref_notifications_interval");
-			String notificationInterval = notificationIntervalPreference.getValue();
-			// configure time interval
-			if (notificationInterval.equals("5 Minutes")) {
-				UPDATE_INTERVAL = 300000;
-			} else if (notificationInterval.equals("10 Minutes")) {
-				UPDATE_INTERVAL = 600000;
-			} else if (notificationInterval.equals("15 Minutes")) {
-				UPDATE_INTERVAL = 900000;
-			} else if (notificationInterval.equals("30 Minutes")) {
-				UPDATE_INTERVAL = 1800000;
-			} else if (notificationInterval.equals("1 Hour")) {
-				UPDATE_INTERVAL = 3600000;
-			} else if (notificationInterval.equals("3 Hours")) {
-				UPDATE_INTERVAL = 10800000;
-			} else if (notificationInterval.equals("6 Hours")) {
-				UPDATE_INTERVAL = 21600000;
-			} else if (notificationInterval.equals("12 Hours")) {
-				UPDATE_INTERVAL = 43200000;
-			} else if (notificationInterval.equals("Daily")) {
-				UPDATE_INTERVAL = 86400000;
-			}
+            int UPDATE_INTERVAL = 3600000;
+            ListPreference notificationIntervalPreference = (ListPreference) findPreference("wp_pref_notifications_interval");
+            String notificationInterval = notificationIntervalPreference.getValue();
+            // configure time interval
+            if (notificationInterval.equals("5 Minutes")) {
+                UPDATE_INTERVAL = 300000;
+            } else if (notificationInterval.equals("10 Minutes")) {
+                UPDATE_INTERVAL = 600000;
+            } else if (notificationInterval.equals("15 Minutes")) {
+                UPDATE_INTERVAL = 900000;
+            } else if (notificationInterval.equals("30 Minutes")) {
+                UPDATE_INTERVAL = 1800000;
+            } else if (notificationInterval.equals("1 Hour")) {
+                UPDATE_INTERVAL = 3600000;
+            } else if (notificationInterval.equals("3 Hours")) {
+                UPDATE_INTERVAL = 10800000;
+            } else if (notificationInterval.equals("6 Hours")) {
+                UPDATE_INTERVAL = 21600000;
+            } else if (notificationInterval.equals("12 Hours")) {
+                UPDATE_INTERVAL = 43200000;
+            } else if (notificationInterval.equals("Daily")) {
+                UPDATE_INTERVAL = 86400000;
+            }
 
-			// TODO: start service after reboot?
-			Intent intent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
-			PendingIntent pIntent = PendingIntent.getBroadcast(Preferences.this, 0, intent, 0);
+            // TODO: start service after reboot?
+            Intent intent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
+            PendingIntent pIntent = PendingIntent.getBroadcast(Preferences.this, 0, intent, 0);
 
-			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (5 * 1000), UPDATE_INTERVAL, pIntent);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (5 * 1000), UPDATE_INTERVAL, pIntent);
 
-		} else {
-			Intent stopIntent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
-			PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
-			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-			alarmManager.cancel(stopPIntent);
+        } else {
+            Intent stopIntent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
+            PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(stopPIntent);
 
-			Intent service = new Intent(Preferences.this, CommentService.class);
-			stopService(service);
-		}
-		super.onPause();
-	}
+            Intent service = new Intent(Preferences.this, CommentService.class);
+            stopService(service);
+        }
+        super.onPause();
+    }
 
 }

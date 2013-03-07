@@ -14,21 +14,21 @@ import android.support.v4.app.DialogFragment;
 
 public class WPAlertDialogFragment extends SherlockDialogFragment implements
     DialogInterface.OnClickListener {
-	private static boolean isXMLRPC = false;
-	private static boolean isLoadMore = false;
-	
+    private static boolean isXMLRPC = false;
+    private static boolean isLoadMore = false;
+
   public static WPAlertDialogFragment newInstance(String message) {
-	  WPAlertDialogFragment adf = new WPAlertDialogFragment();
+      WPAlertDialogFragment adf = new WPAlertDialogFragment();
     Bundle bundle = new Bundle();
     bundle.putString("alert-message", message);
     adf.setArguments(bundle);
 
     return adf;
   }
-  
+
   // XMLRPC Error
   public static WPAlertDialogFragment newInstance(String message, String error) {
-	  WPAlertDialogFragment adf = new WPAlertDialogFragment();
+      WPAlertDialogFragment adf = new WPAlertDialogFragment();
     Bundle bundle = new Bundle();
     bundle.putString("alert-message", message);
     bundle.putString("alert-error", error);
@@ -36,18 +36,18 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
     isXMLRPC = true;
     return adf;
   }
-  
+
   // Load More Posts Override Warning
   public static WPAlertDialogFragment newInstance(String message, String error, boolean loadMore) {
-	  WPAlertDialogFragment adf = new WPAlertDialogFragment();
-	  Bundle bundle = new Bundle();
-	  bundle.putString("alert-message", message);
-	  bundle.putString("alert-error", error);
-	  adf.setArguments(bundle);
-	  isLoadMore = true;
-	  return adf;
+      WPAlertDialogFragment adf = new WPAlertDialogFragment();
+      Bundle bundle = new Bundle();
+      bundle.putString("alert-message", message);
+      bundle.putString("alert-error", error);
+      adf.setArguments(bundle);
+      isLoadMore = true;
+      return adf;
   }
-  
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -58,93 +58,93 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
-	  AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-	if (isXMLRPC) {
-		String error = this.getArguments().getString("alert-error");
-		if (error == null)
-			error = getString(R.string.error_generic);
-		String message = this.getArguments().getString("alert-message");
-		if (message == null)
-			message = getString(R.string.error_generic);
-		if (error.contains("code 403") || error.contains("code 503")) {
-    		//invalid credentials
+      AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+    if (isXMLRPC) {
+        String error = this.getArguments().getString("alert-error");
+        if (error == null)
+            error = getString(R.string.error_generic);
+        String message = this.getArguments().getString("alert-message");
+        if (message == null)
+            message = getString(R.string.error_generic);
+        if (error.contains("code 403") || error.contains("code 503")) {
+            //invalid credentials
             b.setIcon(android.R.drawable.ic_dialog_alert);
             b.setTitle(R.string.connection_error);
             if (error.contains("code 503"))
-            	b.setMessage(getResources().getText(R.string.login_limit) + " " + getResources().getText(R.string.load_settings));
+                b.setMessage(getResources().getText(R.string.login_limit) + " " + getResources().getText(R.string.load_settings));
             else
-            	b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.load_settings));
+                b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.load_settings));
             b.setCancelable(true);
             b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					Intent settingsIntent = new Intent(getActivity(), Settings.class);
-					getActivity().startActivity(settingsIntent);	
-				}
-			});
-			b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-						
-				}
-			});
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent settingsIntent = new Intent(getActivity(), Settings.class);
+                    getActivity().startActivity(settingsIntent);
+                }
+            });
+            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
             return b.create();
-    	} else {
+        } else {
             b.setIcon(android.R.drawable.ic_dialog_alert);
             b.setTitle(R.string.connection_error);
             b.setMessage((error.contains("code 405")) ? error : message);
             b.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			});
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
             b.setCancelable(true);
             return b.create();
-    	}
-	} else if (isLoadMore) {
-		String error = this.getArguments().getString("alert-error");
-		String message = this.getArguments().getString("alert-message");
-    		//invalid credentials
+        }
+    } else if (isLoadMore) {
+        String error = this.getArguments().getString("alert-error");
+        String message = this.getArguments().getString("alert-message");
+            //invalid credentials
             b.setIcon(android.R.drawable.ic_dialog_alert);
             b.setTitle(error);
             b.setMessage(message);
             b.setCancelable(true);
             b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					OnDialogConfirmListener act = (OnDialogConfirmListener) getActivity();
-				    act.onDialogConfirm();
-				}
-			});
-			b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-						
-				}
-			});
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    OnDialogConfirmListener act = (OnDialogConfirmListener) getActivity();
+                    act.onDialogConfirm();
+                }
+            });
+            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
             return b.create();
-	}
-	else {
-		b.setTitle(R.string.error);
-		b.setPositiveButton("OK", this);
-		//b.setNegativeButton("Cancel", this);
-		b.setMessage(this.getArguments().getString("alert-message"));
-		return b.create();
-	}
+    }
+    else {
+        b.setTitle(R.string.error);
+        b.setPositiveButton("OK", this);
+        //b.setNegativeButton("Cancel", this);
+        b.setMessage(this.getArguments().getString("alert-message"));
+        return b.create();
+    }
   }
-  
+
   public interface OnDialogConfirmListener {
-	  public void onDialogConfirm();
+      public void onDialogConfirm();
 }
 
 @Override
 public void onClick(DialogInterface dialog, int which) {
-	// TODO Auto-generated method stub
-	
+    // TODO Auto-generated method stub
+
 }
 }
 

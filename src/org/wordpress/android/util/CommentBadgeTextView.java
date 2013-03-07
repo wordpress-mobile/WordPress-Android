@@ -23,14 +23,14 @@ public class CommentBadgeTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
-        
+
         //calculate the center position based on the device's screen density
         float centerPos = 20.0f;
         float scale = getResources().getDisplayMetrics().density;
         int fCenter = (int) (centerPos * scale + 0.5f);
-        
+
         canvas.rotate(45, fCenter, fCenter);
-        
+
         super.onDraw(canvas);
         canvas.restore();
 

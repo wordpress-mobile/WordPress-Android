@@ -2,6 +2,6 @@ package org.wordpress.android;
 
 public interface ServiceUpdateUIListener {
 
-	public void updateUI(String accountID, String accountName);
+    public void updateUI(String accountID, String accountName);
 
-	}//end interface ServiceUpdateUIListener
+    }//end interface ServiceUpdateUIListener

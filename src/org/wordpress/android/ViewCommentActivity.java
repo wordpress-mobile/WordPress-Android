@@ -11,18 +11,18 @@ public class ViewCommentActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
-        	ViewCommentFragment commentFragment = new ViewCommentFragment();
+            ViewCommentFragment commentFragment = new ViewCommentFragment();
             getSupportFragmentManager().beginTransaction().add(
-            		android.R.id.content, commentFragment).commit();
-        	//commentFragment.loadComment(WordPress.currentComment);
+                    android.R.id.content, commentFragment).commit();
+            //commentFragment.loadComment(WordPress.currentComment);
         }
     }
-    
+
     @Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (outState.isEmpty()) {
-			outState.putBoolean("bug_19917_fix", true);
-		}
-		super.onSaveInstanceState(outState);
-	}
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
 }

@@ -36,10 +36,10 @@ public class AlertUtil {
             .setPositiveButton(android.R.string.ok, null)
             .setMessage(messageId)
             .create();
-        
+
         dlg.show();
     }
-    
+
     /**
      * Show Alert Dialog
      * @param context
@@ -53,7 +53,7 @@ public class AlertUtil {
             .setPositiveButton(android.R.string.ok, null)
             .setMessage(message)
             .create();
-        
+
         dlg.show();
     }
 
@@ -78,10 +78,10 @@ public class AlertUtil {
             .setMessage(messageId)
             .setCancelable(false)
             .create();
-        
+
         dlg.show();
     }
-    
+
     /**
      * Show Alert Dialog
      * @param context
@@ -99,7 +99,7 @@ public class AlertUtil {
             .setMessage(message)
             .setCancelable(false)
             .create();
-        
+
         dlg.show();
     }
 }

@@ -11,17 +11,17 @@ public class ViewPostActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
-        	ViewPostFragment postFragment = new ViewPostFragment();
+            ViewPostFragment postFragment = new ViewPostFragment();
             getSupportFragmentManager().beginTransaction().add(
-            		android.R.id.content, postFragment).commit();
+                    android.R.id.content, postFragment).commit();
         }
     }
-    
+
     @Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (outState.isEmpty()) {
-			outState.putBoolean("bug_19917_fix", true);
-		}
-		super.onSaveInstanceState(outState);
-	}
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
 }

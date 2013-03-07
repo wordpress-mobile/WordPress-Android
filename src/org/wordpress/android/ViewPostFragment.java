@@ -17,177 +17,177 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class ViewPostFragment extends Fragment {
-	/** Called when the activity is first created. */
+    /** Called when the activity is first created. */
 
-	private OnDetailPostActionListener onDetailPostActionListener;
-	Posts parentActivity;
+    private OnDetailPostActionListener onDetailPostActionListener;
+    Posts parentActivity;
 
-	@Override
-	public void onActivityCreated(Bundle bundle) {
-		super.onActivityCreated(bundle);
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
 
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		
-		if (WordPress.currentPost != null)
-			loadPost(WordPress.currentPost);
-		
-		parentActivity = (Posts) getActivity();
-	}
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+    @Override
+    public void onResume() {
+        super.onResume();
 
-		View v = inflater.inflate(R.layout.viewpost, container, false);
-		
-		// button listeners here
-		ImageButton editPostButton = (ImageButton) v
-				.findViewById(R.id.editPost);
-		editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-				if (WordPress.currentPost != null && !parentActivity.isRefreshing) {
-					onDetailPostActionListener.onDetailPostAction(
-							Posts.POST_EDIT, WordPress.currentPost);
-					Intent i = new Intent(
-							getActivity().getApplicationContext(),
-							EditPost.class);
-					i.putExtra("isPage", WordPress.currentPost.isPage());
-					i.putExtra("postID", WordPress.currentPost.getId());
-					i.putExtra("localDraft", WordPress.currentPost.isLocalDraft());
-					startActivityForResult(i, 0);
-				}
+        if (WordPress.currentPost != null)
+            loadPost(WordPress.currentPost);
 
-			}
-		});
-		
-		ImageButton shareURLButton = (ImageButton) v
-				.findViewById(R.id.sharePostLink);
-		shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
+        parentActivity = (Posts) getActivity();
+    }
 
-				if (!parentActivity.isRefreshing)
-					onDetailPostActionListener.onDetailPostAction(Posts.POST_SHARE, WordPress.currentPost);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
 
-			}
-		});
+        View v = inflater.inflate(R.layout.viewpost, container, false);
 
-		ImageButton deletePostButton = (ImageButton) v
-				.findViewById(R.id.deletePost);
-		deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-				
-				if (!parentActivity.isRefreshing)
-					onDetailPostActionListener.onDetailPostAction(Posts.POST_DELETE, WordPress.currentPost);
+        // button listeners here
+        ImageButton editPostButton = (ImageButton) v
+                .findViewById(R.id.editPost);
+        editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+                if (WordPress.currentPost != null && !parentActivity.isRefreshing) {
+                    onDetailPostActionListener.onDetailPostAction(
+                            Posts.POST_EDIT, WordPress.currentPost);
+                    Intent i = new Intent(
+                            getActivity().getApplicationContext(),
+                            EditPost.class);
+                    i.putExtra("isPage", WordPress.currentPost.isPage());
+                    i.putExtra("postID", WordPress.currentPost.getId());
+                    i.putExtra("localDraft", WordPress.currentPost.isLocalDraft());
+                    startActivityForResult(i, 0);
+                }
 
-			}
-		});
+            }
+        });
 
-		ImageButton viewPostButton = (ImageButton) v
-				.findViewById(R.id.viewPost);
-		viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
-			public void onClick(View v) {
-				
-				if (!parentActivity.isRefreshing)
-					loadPostPreview();
+        ImageButton shareURLButton = (ImageButton) v
+                .findViewById(R.id.sharePostLink);
+        shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
 
-			}
-		});
+                if (!parentActivity.isRefreshing)
+                    onDetailPostActionListener.onDetailPostAction(Posts.POST_SHARE, WordPress.currentPost);
 
-		return v;
+            }
+        });
 
-	}
+        ImageButton deletePostButton = (ImageButton) v
+                .findViewById(R.id.deletePost);
+        deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
 
-	protected void loadPostPreview() {
+                if (!parentActivity.isRefreshing)
+                    onDetailPostActionListener.onDetailPostAction(Posts.POST_DELETE, WordPress.currentPost);
 
-		if (WordPress.currentPost != null) {
-			if (!WordPress.currentPost.getPermaLink().equals("")) {
-				Intent i = new Intent(getActivity(), WebViewActivity.class);
-				startActivity(i);
-			}
-		}
+            }
+        });
 
-	}
+        ImageButton viewPostButton = (ImageButton) v
+                .findViewById(R.id.viewPost);
+        viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
 
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			// check that the containing activity implements our callback
-			onDetailPostActionListener = (OnDetailPostActionListener) activity;
-		} catch (ClassCastException e) {
-			activity.finish();
-			throw new ClassCastException(activity.toString()
-					+ " must implement Callback");
-		}
-	}
+                if (!parentActivity.isRefreshing)
+                    loadPostPreview();
 
-	public void loadPost(Post post) {
+            }
+        });
 
-		// Don't load if the Post object of title are null, see #395
-		if (post == null || post.getTitle() == null)
-			return;
-		
-		TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
-		if (post.getTitle().equals(""))
-			title.setText("(" + getResources().getText(R.string.untitled) + ")");
-		else
-			title.setText(EscapeUtils.unescapeHtml(post.getTitle()));
+        return v;
 
-		WebView webView = (WebView) getActivity().findViewById(
-				R.id.viewPostWebView);
-		TextView tv = (TextView) getActivity().findViewById(
-				R.id.viewPostTextView);
-		ImageButton shareURLButton = (ImageButton) getActivity().findViewById(
-				R.id.sharePostLink);
-		ImageButton viewPostButton = (ImageButton) getActivity().findViewById(
-				R.id.viewPost);
+    }
 
-		tv.setVisibility(View.GONE);
-		webView.setVisibility(View.VISIBLE);
-		String html = StringHelper.addPTags(post.getDescription()
-				+ "\n\n" + post.getMt_text_more());
+    protected void loadPostPreview() {
 
-		String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
-				+ html + "</div></body></html>";
-		webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
-				"text/html", "utf-8", null);
+        if (WordPress.currentPost != null) {
+            if (!WordPress.currentPost.getPermaLink().equals("")) {
+                Intent i = new Intent(getActivity(), WebViewActivity.class);
+                startActivity(i);
+            }
+        }
 
-		if (post.isLocalDraft()) {
-			shareURLButton.setVisibility(View.GONE);
-			viewPostButton.setVisibility(View.GONE);
-		} else {
-			shareURLButton.setVisibility(View.VISIBLE);
-			viewPostButton.setVisibility(View.VISIBLE);
-		}
+    }
 
-	}
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            // check that the containing activity implements our callback
+            onDetailPostActionListener = (OnDetailPostActionListener) activity;
+        } catch (ClassCastException e) {
+            activity.finish();
+            throw new ClassCastException(activity.toString()
+                    + " must implement Callback");
+        }
+    }
 
-	public interface OnDetailPostActionListener {
-		public void onDetailPostAction(int action, Post post);
-	}
+    public void loadPost(Post post) {
 
-	public void clearContent() {
-		TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
-		title.setText("");
-		WebView webView = (WebView) getActivity().findViewById(
-				R.id.viewPostWebView);
-		TextView tv = (TextView) getActivity().findViewById(
-				R.id.viewPostTextView);
-		tv.setText("");
-		String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\"></div></body></html>";
-		webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
-				"text/html", "utf-8", null);
-	}
-	
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		if (outState.isEmpty()) {
-			outState.putBoolean("bug_19917_fix", true);
-		}
-		super.onSaveInstanceState(outState);
-	}
+        // Don't load if the Post object of title are null, see #395
+        if (post == null || post.getTitle() == null)
+            return;
+
+        TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
+        if (post.getTitle().equals(""))
+            title.setText("(" + getResources().getText(R.string.untitled) + ")");
+        else
+            title.setText(EscapeUtils.unescapeHtml(post.getTitle()));
+
+        WebView webView = (WebView) getActivity().findViewById(
+                R.id.viewPostWebView);
+        TextView tv = (TextView) getActivity().findViewById(
+                R.id.viewPostTextView);
+        ImageButton shareURLButton = (ImageButton) getActivity().findViewById(
+                R.id.sharePostLink);
+        ImageButton viewPostButton = (ImageButton) getActivity().findViewById(
+                R.id.viewPost);
+
+        tv.setVisibility(View.GONE);
+        webView.setVisibility(View.VISIBLE);
+        String html = StringHelper.addPTags(post.getDescription()
+                + "\n\n" + post.getMt_text_more());
+
+        String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
+                + html + "</div></body></html>";
+        webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
+                "text/html", "utf-8", null);
+
+        if (post.isLocalDraft()) {
+            shareURLButton.setVisibility(View.GONE);
+            viewPostButton.setVisibility(View.GONE);
+        } else {
+            shareURLButton.setVisibility(View.VISIBLE);
+            viewPostButton.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public interface OnDetailPostActionListener {
+        public void onDetailPostAction(int action, Post post);
+    }
+
+    public void clearContent() {
+        TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
+        title.setText("");
+        WebView webView = (WebView) getActivity().findViewById(
+                R.id.viewPostWebView);
+        TextView tv = (TextView) getActivity().findViewById(
+                R.id.viewPostTextView);
+        tv.setText("");
+        String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\"></div></body></html>";
+        webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
+                "text/html", "utf-8", null);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
 
 }
