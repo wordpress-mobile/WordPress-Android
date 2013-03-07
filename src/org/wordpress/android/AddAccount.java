@@ -6,16 +6,6 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.AlertUtil;
-import org.wordpress.android.util.EscapeUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -43,6 +33,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import org.apache.http.conn.HttpHostConnectException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFault;
+
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.EscapeUtils;
 
 public class AddAccount extends Activity implements OnClickListener {
 

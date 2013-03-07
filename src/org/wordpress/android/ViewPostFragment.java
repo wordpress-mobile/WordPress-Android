@@ -1,10 +1,5 @@
 package org.wordpress.android;
 
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.StringHelper;
-import org.wordpress.android.util.WPHtml;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +10,10 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringHelper;
 
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */

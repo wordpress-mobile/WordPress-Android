@@ -2,15 +2,6 @@ package org.wordpress.android;
 
 import java.util.HashMap;
 
-import org.wordpress.android.ViewCommentFragment.OnCommentStatusChangeListener;
-import org.wordpress.android.ViewComments.OnAnimateRefreshButtonListener;
-import org.wordpress.android.ViewComments.OnCommentSelectedListener;
-import org.wordpress.android.ViewComments.OnContextCommentStatusChangeListener;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -28,6 +19,16 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import org.wordpress.android.ViewCommentFragment.OnCommentStatusChangeListener;
+import org.wordpress.android.ViewComments.OnAnimateRefreshButtonListener;
+import org.wordpress.android.ViewComments.OnCommentSelectedListener;
+import org.wordpress.android.ViewComments.OnContextCommentStatusChangeListener;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
 
 public class Comments extends WPActionBarActivity implements
         OnCommentSelectedListener, OnCommentStatusChangeListener,

@@ -53,6 +53,6 @@ cleanup_settings_version=2
 eclipse.preferences.version=1
 formatter_settings_version=12
 org.eclipse.jdt.ui.ignorelowercasenames=true
-org.eclipse.jdt.ui.importorder=java;javax;android;org;com;
+org.eclipse.jdt.ui.importorder=java;javax;android;com;net;org;org.wordpress.android;
 org.eclipse.jdt.ui.ondemandthreshold=99
 org.eclipse.jdt.ui.staticondemandthreshold=99

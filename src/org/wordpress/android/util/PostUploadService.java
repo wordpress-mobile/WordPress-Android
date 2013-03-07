@@ -13,16 +13,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.wordpress.android.Posts;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Post;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -40,6 +30,17 @@ import android.provider.MediaStore.Video;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import org.wordpress.android.Posts;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Post;
 
 public class PostUploadService extends Service {
 

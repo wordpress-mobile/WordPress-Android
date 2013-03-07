@@ -1,8 +1,8 @@
 package org.wordpress.android.models;
 
-import org.wordpress.android.WordPress;
-
 import android.content.Context;
+
+import org.wordpress.android.WordPress;
 
 public class MediaFile {
 

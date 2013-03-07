@@ -1,11 +1,5 @@
 package org.xmlrpc.android;
 
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.util.Base64;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -23,6 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.Base64;
 
 class XMLRPCSerializer {
     static final String TAG_NAME = "name";

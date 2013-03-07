@@ -3,11 +3,6 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.CommentService;
-import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.EscapeUtils;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -19,10 +14,14 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.CommentService;
+import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.EscapeUtils;
 
 public class Preferences extends SherlockPreferenceActivity {
 

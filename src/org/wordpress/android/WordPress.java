@@ -3,17 +3,16 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.widget.SpinnerAdapter;
+
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.EscapeUtils;
 
 public class WordPress extends Application {
 

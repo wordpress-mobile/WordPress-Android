@@ -16,17 +16,9 @@ package org.wordpress.android.util;
  * limitations under the License.
  */
 
-import org.ccil.cowan.tagsoup.HTMLSchema;
-import org.ccil.cowan.tagsoup.Parser;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Post;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -61,9 +53,18 @@ import android.text.style.URLSpan;
 import android.view.Display;
 import android.view.WindowManager;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
+import org.ccil.cowan.tagsoup.HTMLSchema;
+import org.ccil.cowan.tagsoup.Parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Post;
 
 /**
  * This class processes HTML strings into displayable styled text. Not all HTML

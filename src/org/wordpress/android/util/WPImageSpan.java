@@ -5,7 +5,8 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.text.style.ImageSpan; //import android.util.Log;
+import android.text.style.ImageSpan;
+//import android.util.Log;
 
 public class WPImageSpan extends ImageSpan {
 

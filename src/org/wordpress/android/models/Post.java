@@ -2,11 +2,12 @@ package org.wordpress.android.models;
 
 import java.util.Vector;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.WordPress;
 
-import android.content.Context;
+import org.wordpress.android.WordPress;
 
 public class Post {
 

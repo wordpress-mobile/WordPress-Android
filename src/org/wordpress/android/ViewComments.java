@@ -8,14 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.WPAlertDialogFragment;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -57,6 +49,15 @@ import com.commonsware.cwac.cache.SimpleWebImageCache;
 import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
+
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFault;
+
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewComments extends ListFragment {
     private static final int[] IMAGE_IDS = { R.id.avatar };

@@ -2,12 +2,11 @@
 
 package org.wordpress.android.models;
 
-import org.json.JSONObject;
-import org.wordpress.android.WordPress;
+import java.util.Vector;
 
 import android.content.Context;
 
-import java.util.Vector;
+import org.wordpress.android.WordPress;
 
 public class Blog {
 

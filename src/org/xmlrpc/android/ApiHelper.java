@@ -8,16 +8,16 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.text.format.DateUtils;
+
+import com.google.gson.Gson;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
-
-import com.google.gson.Gson;
-
-import android.content.Context;
-import android.os.AsyncTask;
-import android.text.format.DateUtils;
 
 public class ApiHelper {
     /** Called when the activity is first created. */

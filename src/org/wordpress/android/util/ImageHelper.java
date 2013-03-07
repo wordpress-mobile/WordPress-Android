@@ -10,12 +10,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -31,6 +25,12 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.util.FloatMath;
 import android.widget.ImageView;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class ImageHelper {
 

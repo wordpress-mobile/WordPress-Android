@@ -1,16 +1,16 @@
 package org.wordpress.android.util;
 
-import org.wordpress.android.R;
-import org.wordpress.android.Settings;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import com.actionbarsherlock.app.SherlockDialogFragment;
+
+import org.wordpress.android.R;
+import org.wordpress.android.Settings;
 
 public class WPAlertDialogFragment extends SherlockDialogFragment implements
     DialogInterface.OnClickListener {

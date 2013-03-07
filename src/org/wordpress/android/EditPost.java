@@ -12,23 +12,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.LocationHelper;
-import org.wordpress.android.util.LocationHelper.LocationResult;
-import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.StringHelper;
-import org.wordpress.android.util.WPEditText;
-import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPUnderlineSpan;
-import org.xmlrpc.android.ApiHelper;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -100,6 +83,24 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.xmlrpc.android.ApiHelper;
+
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.WPEditText;
+import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
 
 public class EditPost extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener {

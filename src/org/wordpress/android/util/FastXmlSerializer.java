@@ -16,8 +16,6 @@
 
 package org.wordpress.android.util;
 
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -30,6 +28,8 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
+
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * This is a quick and dirty implementation of XmlSerializer that isn't horribly

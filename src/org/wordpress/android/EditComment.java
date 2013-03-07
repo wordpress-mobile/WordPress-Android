@@ -2,10 +2,6 @@ package org.wordpress.android;
 
 import java.util.HashMap;
 
-import org.wordpress.android.models.Comment;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import org.wordpress.android.models.Comment;
 
 public class EditComment extends Activity {
 

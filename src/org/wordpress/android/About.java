@@ -1,8 +1,5 @@
 package org.wordpress.android;
 
-import org.wordpress.android.R;
-import org.wordpress.android.util.DeviceUtils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +8,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.wordpress.android.util.DeviceUtils;
 
 public class About extends Activity implements OnClickListener {
 

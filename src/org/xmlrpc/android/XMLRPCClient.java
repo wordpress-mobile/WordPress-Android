@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Xml;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -27,14 +29,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.DeviceUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.util.Log;
-import android.util.Xml;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.DeviceUtils;
 
 public class XMLRPCClient {
     private static final String TAG_METHOD_CALL = "methodCall";

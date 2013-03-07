@@ -1,13 +1,8 @@
 package org.wordpress.android.util;
 
-import org.wordpress.android.Comments;
-import org.wordpress.android.R;
-import org.wordpress.android.ServiceUpdateUIListener;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFault;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.Vector;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -21,9 +16,15 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.Vector;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFault;
+
+import org.wordpress.android.Comments;
+import org.wordpress.android.R;
+import org.wordpress.android.ServiceUpdateUIListener;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 
 public class CommentService extends Service {
 

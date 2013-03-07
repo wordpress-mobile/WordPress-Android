@@ -3,11 +3,6 @@ package org.wordpress.android;
 import java.util.HashMap;
 import java.util.Vector;
 
-import net.simonvt.menudrawer.MenuDrawer;
-
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.EscapeUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,6 +22,11 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+
+import net.simonvt.menudrawer.MenuDrawer;
+
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.EscapeUtils;
 
 /**
  * Base class for Activities that include a standard action bar and menu drawer.

@@ -10,14 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.StringHelper;
-import org.wordpress.android.util.WPAlertDialogFragment;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -31,13 +23,11 @@ import android.support.v4.app.ListFragment;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -45,6 +35,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
+
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
+
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewPosts extends ListFragment {
     /** Called when the activity is first created. */

@@ -3,8 +3,6 @@ package org.wordpress.android;
 import java.util.List;
 import java.util.Locale;
 
-import org.wordpress.android.models.Blog;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import org.wordpress.android.models.Blog;
 
 public class Settings extends SherlockFragmentActivity {
     protected static Intent svc = null;

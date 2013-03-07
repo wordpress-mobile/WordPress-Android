@@ -1,10 +1,10 @@
 package org.wordpress.android;
 
-import org.wordpress.android.util.CommentService;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import org.wordpress.android.util.CommentService;
 
 public class CommentBroadcastReceiver extends BroadcastReceiver {
 

@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +9,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.actionbarsherlock.app.SherlockFragment;
 
 public abstract class WPCOMReaderBase extends SherlockFragment {
 
