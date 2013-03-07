@@ -12,9 +12,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
 
 public class WordPress extends Application {
+
+    private static final String TAG = "WordPress";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -66,59 +67,43 @@ public class WordPress extends Application {
 
     }
 
+    /**
+     * Get the currently active blog.
+     * <p>
+     * If the current blog is not already set, try and determine the last active blog from the last
+     * time the application was used. If we're not able to determine the last active blog, just
+     * select the first one.
+     */
     public static Blog getCurrentBlog(Context context) {
-        if (currentBlog != null)
-            return currentBlog;
+        if (currentBlog == null) {
+            Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(context);
 
-        Vector<?> accounts = WordPress.wpDB.getAccounts(context);
-
-        int[] blogIDs = new int[accounts.size()];
-
-        int blogCount = accounts.size();
-        if (accounts.size() >= 1)
-            blogCount++;
-        CharSequence[] blogNames = new CharSequence[blogCount];
-        blogIDs = new int[blogCount];
-        for (int i = 0; i < blogCount; i++) {
-            if ((blogCount - 1) == i) {
-                blogNames[i] = "+ " + context.getResources().getText(R.string.add_account);
-                blogIDs[i] = -1;
-            } else {
-                HashMap<?, ?> accountHash = (HashMap<?, ?>) accounts.get(i);
-                String curBlogName = accountHash.get("url").toString();
-                if (accountHash.get("blogName") != null)
-                    curBlogName = EscapeUtils.unescapeHtml(accountHash.get("blogName").toString());
-                blogNames[i] = curBlogName;
-                blogIDs[i] = Integer.valueOf(accountHash.get("id").toString());
-                //blogTitleTextView = (TextView) findViewById(R.id.blog_title);
-            }
-
-        }
-
-        int lastBlogID = WordPress.wpDB.getLastBlogId();
-        if (lastBlogID != -1) {
-            try {
-                boolean matchedID = false;
-                for (int i = 0; i < blogIDs.length; i++) {
-                    if (blogIDs[i] == lastBlogID) {
-                        matchedID = true;
-                        currentBlog = new Blog(blogIDs[i], context);
-                    }
-                }
-                if (!matchedID) {
-                    currentBlog = new Blog(blogIDs[0], context);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            if (blogIDs.length > 0)
+            // attempt to restore the last active blog
+            int lastBlogId = WordPress.wpDB.getLastBlogId();
+            if (lastBlogId != -1) {
                 try {
-                    currentBlog = new Blog(blogIDs[0], context);
+                    for (HashMap<String, Object> account : accounts) {
+                        int id = Integer.valueOf(account.get("id").toString());
+                        if (id == lastBlogId) {
+                            currentBlog = new Blog(id, context);
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+
+            // fallback to just using the first blog
+            if (currentBlog == null && accounts.size() > 0) {
+                try {
+                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                    WordPress.currentBlog = new Blog(id, context);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
         return currentBlog;
     }
 

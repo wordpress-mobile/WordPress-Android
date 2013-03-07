@@ -924,9 +924,9 @@ public class WordPressDB {
     }
 
     /**
-     * Set the ID of the most recently active blog. This value will persist
-     * between application launches.
-     *
+     * Set the ID of the most recently active blog. This value will persist between application
+     * launches.
+     * 
      * @param id ID of the most recently active blog.
      */
     public void updateLastBlogId(int id) {
@@ -944,7 +944,8 @@ public class WordPressDB {
     }
 
     /**
-     * Get the ID of the most recently active blog.
+     * Get the ID of the most recently active blog. -1 is returned if there is no recently active
+     * blog.
      */
     public int getLastBlogId() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

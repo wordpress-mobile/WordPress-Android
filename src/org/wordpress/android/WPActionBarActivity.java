@@ -288,30 +288,32 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         super.onBackPressed();
     }
 
+    /**
+     * Get the names of all the blogs configured within the application. If a
+     * blog does not have a specific name, the blog URL is returned.
+     * 
+     * @param context application context
+     * @return array of blog names
+     */
     private static String[] getBlogNames(Context context) {
-        Vector<?> accounts = WordPress.wpDB.getAccounts(context);
-
-        blogIDs = new int[accounts.size()];
+        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(context);
 
         int blogCount = accounts.size();
-        if (accounts.size() >= 1)
-            blogCount++;
-        String[] blogNames = new String[blogCount];
         blogIDs = new int[blogCount];
+        String[] blogNames = new String[blogCount];
+
         for (int i = 0; i < blogCount; i++) {
-            if ((blogCount - 1) == i) {
-                blogNames[i] = "+ " + context.getResources().getText(R.string.add_account);
-                blogIDs[i] = -1;
+            HashMap<String, Object> account = accounts.get(i);
+            String name;
+            if (account.get("blogName") != null) {
+                name = EscapeUtils.unescapeHtml(account.get("blogName").toString());
             } else {
-                HashMap<?, ?> accountHash = (HashMap<?, ?>) accounts.get(i);
-                String curBlogName = accountHash.get("url").toString();
-                if (accountHash.get("blogName") != null)
-                    curBlogName = EscapeUtils.unescapeHtml(accountHash.get("blogName").toString());
-                blogNames[i] = curBlogName;
-                blogIDs[i] = Integer.valueOf(accountHash.get("id").toString());
-                // blogTitleTextView = (TextView) findViewById(R.id.blog_title);
+                name = account.get("url").toString();
             }
+            blogNames[i] = name;
+            blogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
+
         return blogNames;
     }
 
@@ -326,39 +328,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      * blog.
      */
     public void setupCurrentBlog() {
-        if (WordPress.currentBlog != null) {
-            return;
-        }
+        Blog currentBlog = WordPress.getCurrentBlog(this);
 
         // no blogs are configured, so display new account activity
-        if (blogIDs.length == 0) {
+        if (currentBlog == null) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             Intent i = new Intent(this, NewAccount.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
-        }
-
-        // attempt to restore the last active blog
-        int lastBlogID = WordPress.wpDB.getLastBlogId();
-        if (lastBlogID != -1) {
-            try {
-                for (int i = 0; i < blogIDs.length; i++) {
-                    if (blogIDs[i] == lastBlogID) {
-                        WordPress.currentBlog = new Blog(blogIDs[i], this);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        // fallback to just using the first blog
-        if (WordPress.currentBlog == null) {
-            try {
-                WordPress.currentBlog = new Blog(blogIDs[0], this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -378,17 +355,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
     @Override
     public boolean onNavigationItemSelected(int pos, long itemId) {
-        if (blogIDs[pos] == -1) {
-            Intent i = new Intent(this, NewAccount.class);
-            startActivityForResult(i, 0);
-        } else {
-            try {
-                WordPress.currentBlog = new Blog(blogIDs[pos], this);
-                WordPress.wpDB.updateLastBlogId(blogIDs[pos]);
-                onBlogChanged();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            WordPress.currentBlog = new Blog(blogIDs[pos], this);
+            onBlogChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return true;
     }
@@ -408,6 +379,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      * This method is called when the user changes the active blog.
      */
     public void onBlogChanged() {
+        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
         updateMenuDrawer();
     }
 
