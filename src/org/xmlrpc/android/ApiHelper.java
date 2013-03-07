@@ -235,7 +235,6 @@ public class ApiHelper {
             try {
                 ApiHelper.refreshComments(context, commentParams);
             } catch (XMLRPCException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

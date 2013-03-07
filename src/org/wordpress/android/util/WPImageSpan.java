@@ -52,7 +52,6 @@ public class WPImageSpan extends ImageSpan {
         public WPImageSpan(Context context, Bitmap b, Uri src) {
         super(context, b);
         this.imageSource = src;
-        // TODO Auto-generated constructor stub
     }
 
         public Uri getImageSource() {

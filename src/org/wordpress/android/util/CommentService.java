@@ -193,7 +193,6 @@ public class CommentService extends Service {
                         result = (Object[]) client.call("wp.getComments", params);
                         callBack.callFinished(result);
                     } catch (XMLRPCException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
 
