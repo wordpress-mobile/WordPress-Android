@@ -34,6 +34,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 
 public class AddQuickPressShortcut extends ListActivity {
+    static final int ADD_ACCOUNT_REQUEST = 0;
+
     public Vector<?> accounts;
     public String[] blogNames;
     public int[] accountIDs;
@@ -121,7 +123,7 @@ public class AddQuickPressShortcut extends ListActivity {
         } else {
             // no account, load new account view
             Intent i = new Intent(AddQuickPressShortcut.this, NewAccount.class);
-            startActivityForResult(i, 0);
+            startActivityForResult(i, ADD_ACCOUNT_REQUEST);
         }
     }
 
@@ -184,21 +186,17 @@ public class AddQuickPressShortcut extends ListActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            switch (requestCode) {
-            case 0:
-                accounts = WordPress.wpDB.getAccounts(this);
-
-                if (accounts.size() == 0) {
-                    finish();
-                } else {
-                    displayAccounts();
+        switch (requestCode) {
+            case ADD_ACCOUNT_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    accounts = WordPress.wpDB.getAccounts(this);
+                    if (accounts.size() > 0) {
+                        displayAccounts();
+                        break;
+                    }
                 }
+                finish();
                 break;
-            }
-        }// end null check
-        else {
-            displayAccounts();
         }
     }
 

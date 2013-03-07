@@ -1,105 +1,76 @@
 package org.wordpress.android;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
 public class NewAccount extends Activity {
-    public boolean success = false;
-    public String blogURL, xmlrpcURL;
-    public ProgressDialog pd;
+    static final int CREATE_ACCOUNT_REQUEST = 0;
+    static final int EXISTING_COM_ACCOUNT_REQUEST = 1;
+    static final int EXISTING_ORG_ACCOUNT_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_account);
 
         Button createAccountButton = (Button) findViewById(R.id.createWPAccount);
-        Button dotComButton = (Button) findViewById(R.id.dotcomExisting);
-        Button dotOrgButton = (Button) findViewById(R.id.dotorgExisting);
-
         createAccountButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 Intent signupIntent = new Intent(NewAccount.this, Signup.class);
-                startActivityForResult(signupIntent, 1);
+                startActivityForResult(signupIntent, CREATE_ACCOUNT_REQUEST);
             }
         });
 
+        Button dotComButton = (Button) findViewById(R.id.dotcomExisting);
         dotComButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 Intent i = new Intent(NewAccount.this, AddAccount.class);
                 i.putExtra("wpcom", true);
-                startActivityForResult(i, 0);
-
+                startActivityForResult(i, EXISTING_COM_ACCOUNT_REQUEST);
             }
         });
 
+        Button dotOrgButton = (Button) findViewById(R.id.dotorgExisting);
         dotOrgButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 Intent i = new Intent(NewAccount.this, AddAccount.class);
-                startActivityForResult(i, 0);
-
+                startActivityForResult(i, EXISTING_ORG_ACCOUNT_REQUEST);
             }
         });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
 
-            Bundle extras = data.getExtras();
-
-            switch (requestCode) {
-            case 0:
-                String action = extras.getString("returnStatus");
-                if (action.equals("SAVE")) {
-                    Bundle bundle = new Bundle();
-
-                    bundle.putString("returnStatus", action);
-                    Intent mIntent = new Intent();
-                    mIntent.putExtras(bundle);
-                    setResult(RESULT_OK, mIntent);
+        switch (requestCode) {
+            case CREATE_ACCOUNT_REQUEST:
+                if (resultCode == RESULT_OK && data != null) {
+                    String username = data.getStringExtra("username");
+                    if (username != null) {
+                        Intent i = new Intent(NewAccount.this, AddAccount.class);
+                        i.putExtra("wpcom", true);
+                        i.putExtra("username", username);
+                        startActivityForResult(i, EXISTING_COM_ACCOUNT_REQUEST);
+                    }
+                }
+                break;
+            case EXISTING_COM_ACCOUNT_REQUEST:
+            case EXISTING_ORG_ACCOUNT_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
                     finish();
                 }
                 break;
-            case 1:
-                String username = extras.getString("username");
-                if (username != null) {
-                    Intent i = new Intent(NewAccount.this, AddAccount.class);
-                    i.putExtra("wpcom", true);
-                    i.putExtra("username", username);
-                    startActivityForResult(i, 0);
-                }
-                break;
-            }
-        }// end null check
-
+        }
     }
 
     @Override
-    public boolean onKeyDown(int i, KeyEvent event) {
-
-        // only intercept back button press
-        if (i == KeyEvent.KEYCODE_BACK) {
-            Bundle bundle = new Bundle();
-
-            bundle.putString("returnStatus", "CANCEL");
-            Intent mIntent = new Intent();
-            mIntent.putExtras(bundle);
-            setResult(RESULT_OK, mIntent);
-            finish();
-        }
-
-        return false;
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
-
 }

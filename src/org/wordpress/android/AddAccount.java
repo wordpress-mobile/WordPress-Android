@@ -122,11 +122,7 @@ public class AddAccount extends Activity implements OnClickListener {
 
     @Override
     public void onBackPressed() {
-        Bundle bundle = new Bundle();
-        bundle.putString("returnStatus", "CANCEL");
-        Intent mIntent = new Intent();
-        mIntent.putExtras(bundle);
-        setResult(RESULT_OK, mIntent);
+        setResult(RESULT_CANCELED);
         finish();
     }
 
@@ -325,11 +321,7 @@ public class AddAccount extends Activity implements OnClickListener {
                                         }
                                     }
 
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("returnStatus", "SAVE");
-                                    Intent mIntent = new Intent();
-                                    mIntent.putExtras(bundle);
-                                    setResult(RESULT_OK, mIntent);
+                                    setResult(RESULT_OK);
                                     finish();
 
                                 }
@@ -352,11 +344,7 @@ public class AddAccount extends Activity implements OnClickListener {
                                         }
                                     }
 
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("returnStatus", "SAVE");
-                                    Intent mIntent = new Intent();
-                                    mIntent.putExtras(bundle);
-                                    setResult(RESULT_OK, mIntent);
+                                    setResult(RESULT_OK);
                                     finish();
                                 }
                             });
@@ -394,11 +382,7 @@ public class AddAccount extends Activity implements OnClickListener {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Bundle bundle = new Bundle();
-                            bundle.putString("returnStatus", "SAVE");
-                            Intent mIntent = new Intent();
-                            mIntent.putExtras(bundle);
-                            setResult(RESULT_OK, mIntent);
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }
@@ -604,11 +588,7 @@ public class AddAccount extends Activity implements OnClickListener {
                 action.start();
             }
         } else if (id == R.id.cancel) {
-            Bundle bundle = new Bundle();
-            bundle.putString("returnStatus", "CANCEL");
-            Intent mIntent = new Intent();
-            mIntent.putExtras(bundle);
-            setResult(RESULT_OK, mIntent);
+            setResult(RESULT_CANCELED);
             finish();
         } else if (id == R.id.settingsButton) {
             Intent settings = new Intent(AddAccount.this, AddAcountSettings.class);

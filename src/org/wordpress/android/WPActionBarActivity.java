@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,6 +34,11 @@ import org.wordpress.android.util.EscapeUtils;
  */
 public abstract class WPActionBarActivity extends SherlockFragmentActivity implements ActionBar.OnNavigationListener {
 
+    private static final String TAG = "WPActionBarActivity";
+
+    /** Request code used when no accounts exist, and user is prompted to add an account. */
+    static final int ADD_ACCOUNT_REQUEST = 100;
+
     protected MenuDrawer menuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
@@ -48,24 +54,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar().getThemedContext(),
                 R.layout.sherlock_spinner_dropdown_item, blogNames);
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
-        setupCurrentBlog();
-        Blog currentBlog = WordPress.getCurrentBlog(this);
-        if (currentBlog != null) {
-            for (int i = 0; i < blogIDs.length; i++) {
-                if (blogIDs[i] == currentBlog.getId()) {
-                    actionBar.setSelectedNavigationItem(i);
-                    return;
-                }
-            }
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
-        if (isAnimatingRefreshButton)
+        if (isAnimatingRefreshButton) {
             isAnimatingRefreshButton = false;
+        }
     }
 
     @Override
@@ -77,6 +74,17 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         if (menuDrawer != null) {
             updateMenuDrawer();
         }
+
+        Blog currentBlog = WordPress.getCurrentBlog(this);
+        if (currentBlog != null) {
+            for (int i = 0; i < blogIDs.length; i++) {
+                if (blogIDs[i] == currentBlog.getId()) {
+                    getSupportActionBar().setSelectedNavigationItem(i);
+                    return;
+                }
+            }
+        }
+
     }
 
     /**
@@ -324,8 +332,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
         // no blogs are configured, so display new account activity
         if (blogIDs.length == 0) {
+            Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             Intent i = new Intent(this, NewAccount.class);
-            startActivityForResult(i, 0);
+            startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
         }
 
@@ -350,6 +359,20 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case ADD_ACCOUNT_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    // new blog has been added, so rebuild cache of blogs and setup current blog
+                    getBlogNames(this);
+                    setupCurrentBlog();
+                }
         }
     }
 
