@@ -18,12 +18,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
 
+import android.util.Base64;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.util.Base64;
 
 class XMLRPCSerializer {
     static final String TAG_NAME = "name";
@@ -73,7 +74,7 @@ class XMLRPCSerializer {
             serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
         } else
         if (object instanceof byte[] ){
-            String value = Base64.encodeBytes((byte[])object);
+            String value = Base64.encodeToString((byte[])object, Base64.DEFAULT);
             serializer.startTag(null, TYPE_BASE64).text(value).endTag(null, TYPE_BASE64);
         }
         else if( object instanceof MediaFile ) {
@@ -87,7 +88,7 @@ class XMLRPCSerializer {
             //int ctr = 0;
             //Log.i("WordPress", "converting media file to base64");
             while ((length = inStream.read(buffer)) > 0) {
-                chunk = Base64.encodeBytes(buffer, 0, length);
+                chunk = Base64.encodeToString(buffer, 0, length, Base64.DEFAULT);
                 serializer.text(chunk);
                 //ctr+=3600;
                 //Log.i("WordPress", "chunk " + ctr);
@@ -186,7 +187,7 @@ class XMLRPCSerializer {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
-            obj = Base64.decode(sb.toString());
+            obj = Base64.decode(sb.toString(), Base64.DEFAULT);
         } else
         if (typeNodeName.equals(TYPE_ARRAY)) {
             parser.nextTag(); // TAG_DATA (<data>)
