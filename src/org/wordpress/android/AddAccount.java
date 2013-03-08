@@ -311,11 +311,8 @@ public class AddAccount extends Activity implements OnClickListener {
                                                     wpcoms[rowID], wpVersions[rowID]);
                                             //Set the first blog in the list to the currentBlog
                                             if (i == 0) {
-                                                try {
-                                                    if (blogID >= 0)
-                                                        WordPress.currentBlog = new Blog((int)blogID);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
+                                                if (blogID >= 0) {
+                                                    WordPress.setCurrentBlog((int) blogID);
                                                 }
                                             }
                                         }
@@ -335,11 +332,8 @@ public class AddAccount extends Activity implements OnClickListener {
                                                 "Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
                                         //Set the first blog in the list to the currentBlog
                                         if (i == 0) {
-                                            try {
-                                                if (blogID >= 0)
-                                                    WordPress.currentBlog = new Blog((int)blogID);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+                                            if (blogID >= 0) {
+                                                WordPress.setCurrentBlog((int) blogID);
                                             }
                                         }
                                     }
@@ -376,11 +370,8 @@ public class AddAccount extends Activity implements OnClickListener {
                         } else {
                             long blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
                                     false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
-                            try {
-                                if (blogID >= 0)
-                                    WordPress.currentBlog = new Blog((int)blogID);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if (blogID >= 0) {
+                                WordPress.setCurrentBlog((int) blogID);
                             }
                             setResult(RESULT_OK);
                             finish();

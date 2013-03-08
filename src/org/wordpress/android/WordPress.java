@@ -75,31 +75,14 @@ public class WordPress extends Application {
      */
     public static Blog getCurrentBlog() {
         if (currentBlog == null) {
-            Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
-
             // attempt to restore the last active blog
-            int lastBlogId = WordPress.wpDB.getLastBlogId();
-            if (lastBlogId != -1) {
-                try {
-                    for (HashMap<String, Object> account : accounts) {
-                        int id = Integer.valueOf(account.get("id").toString());
-                        if (id == lastBlogId) {
-                            currentBlog = new Blog(id);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
+            Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
             if (currentBlog == null && accounts.size() > 0) {
-                try {
-                    int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                    WordPress.currentBlog = new Blog(id);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                int id = Integer.valueOf(accounts.get(0).get("id").toString());
+                setCurrentBlog(id);
             }
         }
 
@@ -125,5 +108,42 @@ public class WordPress extends Application {
             }
         }
         return null;
+    }
+
+    /**
+     * Set the last active blog as the current blog.
+     * 
+     * @return the current blog
+     */
+    public static Blog setCurrentBlogToLastActive() {
+        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
+
+        int lastBlogId = WordPress.wpDB.getLastBlogId();
+        if (lastBlogId != -1) {
+            for (HashMap<String, Object> account : accounts) {
+                int id = Integer.valueOf(account.get("id").toString());
+                if (id == lastBlogId) {
+                    setCurrentBlog(id);
+                }
+            }
+        }
+
+        return currentBlog;
+    }
+
+    /**
+     * Set the blog with the specified id as the current blog.
+     * 
+     * @param id id of the blog to set as current
+     * @return the current blog
+     */
+    public static Blog setCurrentBlog(int id) {
+        try {
+            currentBlog = new Blog(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return currentBlog;
     }
 }

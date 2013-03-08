@@ -863,9 +863,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
     private void initBlog() {
         if (WordPress.currentBlog == null) {
-            try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
-            } catch (Exception e) {
+            if (WordPress.setCurrentBlogToLastActive() == null) {
                 showBlogErrorAndFinish();
             }
         }

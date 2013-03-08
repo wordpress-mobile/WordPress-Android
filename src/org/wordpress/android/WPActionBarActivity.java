@@ -354,12 +354,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
     @Override
     public boolean onNavigationItemSelected(int pos, long itemId) {
-        try {
-            WordPress.currentBlog = new Blog(blogIDs[pos]);
-            onBlogChanged();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        WordPress.setCurrentBlog(blogIDs[pos]);
+        onBlogChanged();
         return true;
     }
 

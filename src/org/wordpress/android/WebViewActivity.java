@@ -73,9 +73,7 @@ public class WebViewActivity extends SherlockActivity {
         }
 
         if (WordPress.currentBlog == null) {
-            try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
-            } catch (Exception e) {
+            if (WordPress.setCurrentBlogToLastActive() == null) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -283,11 +281,7 @@ public class WebViewActivity extends SherlockActivity {
         protected Vector<?> doInBackground(String... args) {
 
             if (WordPress.currentBlog == null) {
-                try {
-                    WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                WordPress.setCurrentBlogToLastActive();
             }
 
             loginURL = WordPress.currentBlog.getUrl()
