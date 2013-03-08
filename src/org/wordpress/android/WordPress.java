@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -74,9 +73,9 @@ public class WordPress extends Application {
      * time the application was used. If we're not able to determine the last active blog, just
      * select the first one.
      */
-    public static Blog getCurrentBlog(Context context) {
+    public static Blog getCurrentBlog() {
         if (currentBlog == null) {
-            Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(context);
+            Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
             // attempt to restore the last active blog
             int lastBlogId = WordPress.wpDB.getLastBlogId();
@@ -85,7 +84,7 @@ public class WordPress extends Application {
                     for (HashMap<String, Object> account : accounts) {
                         int id = Integer.valueOf(account.get("id").toString());
                         if (id == lastBlogId) {
-                            currentBlog = new Blog(id, context);
+                            currentBlog = new Blog(id);
                         }
                     }
                 } catch (Exception e) {
@@ -97,7 +96,7 @@ public class WordPress extends Application {
             if (currentBlog == null && accounts.size() > 0) {
                 try {
                     int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                    WordPress.currentBlog = new Blog(id, context);
+                    WordPress.currentBlog = new Blog(id);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -110,17 +109,16 @@ public class WordPress extends Application {
     /**
      * Get the blog with the specified ID.
      *
-     * @param context application context.
      * @param id ID of the blog to retrieve.
      * @return the blog with the specified ID, or null if blog could not be retrieved.
      */
-    public static Blog getBlog(Context context, int id) {
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(context);
+    public static Blog getBlog(int id) {
+        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
         for (HashMap<String, Object> account : accounts) {
             int accountId = (Integer) account.get("id");
             if (accountId == id) {
                 try {
-                    return new Blog(id, context);
+                    return new Blog(id);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

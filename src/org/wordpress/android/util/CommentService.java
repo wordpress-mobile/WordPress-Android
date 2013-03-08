@@ -78,7 +78,7 @@ public class CommentService extends Service {
     /** dont forget to fire update to the ui listener */
     private void _getUpdatedComments() {
 
-        Vector<?> notificationAccounts = WordPress.wpDB.getNotificationAccounts(this);
+        Vector<?> notificationAccounts = WordPress.wpDB.getNotificationAccounts();
 
         if (notificationAccounts != null) {
 
@@ -91,7 +91,7 @@ public class CommentService extends Service {
                     accountID = (Integer) notificationAccounts.get(i);
                     Blog blog;
                     try {
-                        blog = new Blog(accountID, CommentService.this);
+                        blog = new Blog(accountID);
                     } catch (Exception e1) {
                         return;
                     }

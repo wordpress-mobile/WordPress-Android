@@ -132,7 +132,7 @@ public class ViewWebStats extends WPActionBarActivity {
                 } else {
                     WordPress.currentBlog.setDotcom_username(dcUsername);
                     WordPress.currentBlog.setDotcom_password(dcPassword);
-                    WordPress.currentBlog.save(ViewWebStats.this, WordPress.currentBlog.getUsername());
+                    WordPress.currentBlog.save(WordPress.currentBlog.getUsername());
                     hideLoginForm();
 
                     initStats(); // start over again now that we have the login
@@ -614,7 +614,7 @@ public class ViewWebStats extends WPActionBarActivity {
                     url = homePageLink;
                     //home url was added in 2.2.2, it may need to be set if the user upgraded
                     WordPress.currentBlog.setHomeURL(url);
-                    WordPress.currentBlog.save(ViewWebStats.this, "");
+                    WordPress.currentBlog.save("");
                 } else {
                     url = url.replace("xmlrpc.php", "");
                 }
@@ -777,7 +777,7 @@ public class ViewWebStats extends WPActionBarActivity {
                 final String apiBlogID = result.get(1).toString();
                 WordPress.currentBlog.setApi_blogid(apiBlogID);
                 WordPress.currentBlog.setApi_key(apiKey);
-                WordPress.currentBlog.save(ViewWebStats.this, "");
+                WordPress.currentBlog.save("");
 
                 if (!isFinishing())
                     authStats();

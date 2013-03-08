@@ -2,8 +2,6 @@ package org.wordpress.android.models;
 
 import java.util.Vector;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -45,18 +43,16 @@ public class Post {
     private String quickPostType;
 
     private Blog blog;
-    static Context context;
 
     public Vector<String> imageUrl = new Vector<String>();
     Vector<String> selectedCategories = new Vector<String>();
 
-    public Post(int blog_id, long post_id, boolean isPage, Context ctx) {
+    public Post(int blog_id, long post_id, boolean isPage) {
         // load an existing post
-        context = ctx;
         Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
         if (postVals != null) {
             try {
-                this.blog = new Blog(blog_id, ctx);
+                this.blog = new Blog(blog_id);
             } catch (Exception e) {
             }
             this.id = (Long) postVals.get(0);
@@ -99,13 +95,12 @@ public class Post {
     }
 
     public Post(int blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status,
-            String password, double latitude, double longitude, boolean isPage, String postFormat, Context ctx,
+            String password, double latitude, double longitude, boolean isPage, String postFormat,
             boolean createBlogReference, boolean isLocalChange) {
         // create a new post
-        context = ctx;
         if (createBlogReference) {
             try {
-                this.blog = new Blog(blog_id, ctx);
+                this.blog = new Blog(blog_id);
             } catch (Exception e) {
                 e.printStackTrace();
             }

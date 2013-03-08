@@ -211,7 +211,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 }
 
                 try {
-                    mBlog = new Blog(mBlogID, this);
+                    mBlog = new Blog(mBlogID);
                     WordPress.currentBlog = mBlog;
                 } catch (Exception e) {
                     showBlogErrorAndFinish();
@@ -220,7 +220,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
                 if (!mIsNew) {
                     try {
-                        mPost = new Post(mBlogID, mPostID, mIsPage, this);
+                        mPost = new Post(mBlogID, mPostID, mIsPage);
                         if (mPost == null) {
                             // big oopsie
                             Toast.makeText(this, getResources().getText(R.string.post_not_found), Toast.LENGTH_LONG).show();
@@ -864,7 +864,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
     private void initBlog() {
         if (WordPress.currentBlog == null) {
             try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId(), this);
+                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
             } catch (Exception e) {
                 showBlogErrorAndFinish();
             }
@@ -889,7 +889,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
         mIsNew = true;
 
-        Vector<?> accounts = WordPress.wpDB.getAccounts(this);
+        Vector<?> accounts = WordPress.wpDB.getAccounts();
 
         if (accounts.size() > 0) {
 
@@ -906,7 +906,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 }
                 accountIDs[i] = (Integer) curHash.get("id");
                 try {
-                    mBlog = new Blog(accountIDs[i], EditPost.this);
+                    mBlog = new Blog(accountIDs[i]);
                 } catch (Exception e) {
                     showBlogErrorAndFinish();
                     return false;
@@ -922,7 +922,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                     public void onClick(DialogInterface dialog, int item) {
                         mBlogID = accountIDs[item];
                         try {
-                            mBlog = new Blog(mBlogID, EditPost.this);
+                            mBlog = new Blog(mBlogID);
                         } catch (Exception e) {
                             showBlogErrorAndFinish();
                         }
@@ -938,7 +938,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
             } else {
                 mBlogID = accountIDs[0];
                 try {
-                    mBlog = new Blog(mBlogID, EditPost.this);
+                    mBlog = new Blog(mBlogID);
                 } catch (Exception e) {
                     showBlogErrorAndFinish();
                     return false;
@@ -1460,7 +1460,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                         mf.setFileName(wpIS.getImageSource().toString());
                         mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
                         mf.setWidth(wpIS.getWidth());
-                        mf.save(EditPost.this);
+                        mf.save();
 
                         int tagStart = s.getSpanStart(wpIS);
                         if (!autoSave) {
@@ -1512,7 +1512,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
             if (mIsNew) {
                 mPost = new Post(mBlogID, title, content, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
-                        latitude, longitude, mIsPage, postFormat, EditPost.this, true, false);
+                        latitude, longitude, mIsPage, postFormat, true, false);
                 mPost.setLocalDraft(true);
 
                 // split up the post content if there's a more tag
@@ -1551,7 +1551,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                         mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
                         mf.setWidth(wpIS.getWidth());
                         mf.setVideo(wpIS.isVideo());
-                        mf.save(EditPost.this);
+                        mf.save();
                     }
                 }
 

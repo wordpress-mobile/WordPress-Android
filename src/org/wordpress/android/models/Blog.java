@@ -4,8 +4,6 @@ package org.wordpress.android.models;
 
 import java.util.Vector;
 
-import android.content.Context;
-
 import org.wordpress.android.WordPress;
 
 public class Blog {
@@ -38,7 +36,7 @@ public class Blog {
     private String postFormats;
     private String blogOptions;
 
-    public Blog(int blog_id, Context ctx) throws Exception{
+    public Blog(int blog_id) throws Exception{
         //instantiate a new blog
         Vector<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
 
@@ -270,7 +268,7 @@ public class Blog {
         this.httppassword = httppassword;
     }
 
-    public void save(Context ctx, String originalUsername) {
+    public void save(String originalUsername) {
         //save blog to db
         WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions );
     }
@@ -283,7 +281,7 @@ public class Blog {
         this.postFormats = postFormats;
     }
 
-    public int getUnmoderatedCommentCount(Context ctx) {
+    public int getUnmoderatedCommentCount() {
         return WordPress.wpDB.getUnmoderatedCommentCount(this.id);
     }
 

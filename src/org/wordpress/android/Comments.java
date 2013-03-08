@@ -58,8 +58,7 @@ public class Comments extends WPActionBarActivity implements
             fromNotification = extras.getBoolean("fromNotification");
             if (fromNotification) {
                 try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"),
-                            Comments.this);
+                    WordPress.currentBlog = new Blog(extras.getInt("id"));
                 } catch (Exception e) {
                     Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                     finish();
@@ -171,8 +170,7 @@ public class Comments extends WPActionBarActivity implements
             fromNotification = extras.getBoolean("fromNotification");
             if (fromNotification) {
                 try {
-                    WordPress.currentBlog = new Blog(extras.getInt("id"),
-                            Comments.this);
+                    WordPress.currentBlog = new Blog(extras.getInt("id"));
                 } catch (Exception e) {
                     Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                     finish();

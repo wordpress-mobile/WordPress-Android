@@ -28,7 +28,7 @@ public class ApiHelper {
 
         Blog blog;
         try {
-            blog = new Blog(id, ctx);
+            blog = new Blog(id);
         } catch (Exception e1) {
             return;
         }
@@ -117,7 +117,7 @@ public class ApiHelper {
                     String postFormatsJson = gson.toJson(postFormats);
                     if (postFormatsJson != null) {
                         blog.setPostFormats(postFormatsJson);
-                        blog.save(ctx, null);
+                        blog.save(null);
                     }
                 }
             } catch (Exception e) {
@@ -213,7 +213,7 @@ public class ApiHelper {
                         } else {
                             blog.setFeaturedImageCapable(false);
                         }
-                        blog.save(context, "");
+                        blog.save("");
                     } catch (Exception e) {
                     }
                 }

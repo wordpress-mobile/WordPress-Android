@@ -64,7 +64,7 @@ public class SelectCategories extends SherlockListActivity {
         if (extras != null) {
             id = extras.getInt("id");
             try {
-                blog = new Blog(id, this);
+                blog = new Blog(id);
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();

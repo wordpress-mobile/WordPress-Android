@@ -35,7 +35,7 @@ public class Settings extends SherlockFragmentActivity {
         setContentView(R.layout.settings);
 
         Integer id = getIntent().getIntExtra("id", -1);
-        blog = WordPress.getBlog(this, id);
+        blog = WordPress.getBlog(id);
 
         getSupportActionBar().setTitle(blog.getBlogName());
         loadSettingsForBlog();
@@ -96,7 +96,7 @@ public class Settings extends SherlockFragmentActivity {
         CheckBox locationCB = (CheckBox) findViewById(R.id.location);
         blog.setLocation(locationCB.isChecked());
 
-        blog.save(Settings.this, originalUsername);
+        blog.save(originalUsername);
         // exit settings screen
         Bundle bundle = new Bundle();
 

@@ -169,12 +169,9 @@ public class ViewPosts extends ListFragment {
         Vector<?> loadedPosts;
         try {
             if (isPage) {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
-                        .getApplicationContext(), WordPress.currentBlog.getId(),
-                        true);
+                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), true);
             } else {
-                loadedPosts = WordPress.wpDB.loadUploadedPosts(getActivity()
-                        .getApplicationContext(), WordPress.currentBlog.getId(),
+                loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(),
                         false);
             }
         } catch (Exception e1) {
@@ -355,8 +352,7 @@ public class ViewPosts extends ListFragment {
                                 selectedPosition = position;
                                 selectedID = v.getId();
                                 Post post = new Post(WordPress.currentBlog
-                                        .getId(), selectedID, isPage,
-                                        getActivity().getApplicationContext());
+                                        .getId(), selectedID, isPage);
                                 if (post.getId() >= 0) {
                                     WordPress.currentPost = post;
                                     onPostSelectedListener.onPostSelected(post);
@@ -480,8 +476,7 @@ public class ViewPosts extends ListFragment {
                     if (postIDs.length >= 1) {
 
                         Post post = new Post(WordPress.currentBlog.getId(),
-                                Integer.valueOf(postIDs[1]), isPage,
-                                getActivity().getApplicationContext());
+                                Integer.valueOf(postIDs[1]), isPage);
                         if (post.getId() >= 0) {
                             WordPress.currentPost = post;
                             onPostSelectedListener.onPostSelected(post);
@@ -685,8 +680,7 @@ public class ViewPosts extends ListFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage,
-                getActivity().getApplicationContext());
+        Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage);
 
         if (post.getId() < 0) {
             if (!getActivity().isFinishing()) {

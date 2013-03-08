@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -56,7 +55,7 @@ public class AddQuickPressShortcut extends ListActivity {
     }
 
     private void displayAccounts() {
-        accounts = WordPress.wpDB.getAccounts(this);
+        accounts = WordPress.wpDB.getAccounts();
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
@@ -100,11 +99,11 @@ public class AddQuickPressShortcut extends ListActivity {
             }
 
             if (validBlogCtr < accounts.size()){
-                accounts = WordPress.wpDB.getAccounts(this);
+                accounts = WordPress.wpDB.getAccounts();
             }
 
             ThumbnailBus bus = new ThumbnailBus();
-            thumbs = new ThumbnailAdapter(this, new HomeListAdapter(this),
+            thumbs = new ThumbnailAdapter(this, new HomeListAdapter(),
                     new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(
                             null, null, 101, bus), IMAGE_IDS);
 
@@ -162,7 +161,7 @@ public class AddQuickPressShortcut extends ListActivity {
 
                     if (WordPress.currentBlog == null) {
                         try {
-                            WordPress.currentBlog = new Blog(accountIDs[position], AddQuickPressShortcut.this);
+                            WordPress.currentBlog = new Blog(accountIDs[position]);
                             WordPress.wpDB.updateLastBlogId(accountIDs[position]);
                         } catch (Exception e) {
                         }
@@ -189,7 +188,7 @@ public class AddQuickPressShortcut extends ListActivity {
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    accounts = WordPress.wpDB.getAccounts(this);
+                    accounts = WordPress.wpDB.getAccounts();
                     if (accounts.size() > 0) {
                         displayAccounts();
                         break;
@@ -202,7 +201,7 @@ public class AddQuickPressShortcut extends ListActivity {
 
     protected class HomeListAdapter extends BaseAdapter {
 
-        public HomeListAdapter(Context context) {
+        public HomeListAdapter() {
         }
 
         public int getCount() {

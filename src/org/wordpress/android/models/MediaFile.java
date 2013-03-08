@@ -1,7 +1,5 @@
 package org.wordpress.android.models;
 
-import android.content.Context;
-
 import org.wordpress.android.WordPress;
 
 public class MediaFile {
@@ -159,7 +157,7 @@ public class MediaFile {
         this.featuredInPost = featuredInPost;
     }
 
-    public void save(Context ctx) {
+    public void save() {
         WordPress.wpDB.saveMediaFile(this);
     }
 

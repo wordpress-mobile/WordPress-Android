@@ -313,7 +313,7 @@ public class AddAccount extends Activity implements OnClickListener {
                                             if (i == 0) {
                                                 try {
                                                     if (blogID >= 0)
-                                                        WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
+                                                        WordPress.currentBlog = new Blog((int)blogID);
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -337,7 +337,7 @@ public class AddAccount extends Activity implements OnClickListener {
                                         if (i == 0) {
                                             try {
                                                 if (blogID >= 0)
-                                                    WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
+                                                    WordPress.currentBlog = new Blog((int)blogID);
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
@@ -378,7 +378,7 @@ public class AddAccount extends Activity implements OnClickListener {
                                     false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
                             try {
                                 if (blogID >= 0)
-                                    WordPress.currentBlog = new Blog((int)blogID, AddAccount.this);
+                                    WordPress.currentBlog = new Blog((int)blogID);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

@@ -129,7 +129,7 @@ public class WordPressDB {
     private Context context;
 
     public WordPressDB(Context ctx) {
-        context = ctx;
+        this.context = ctx;
 
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
@@ -171,7 +171,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
                 db.delete(POSTS_TABLE, null, null);
@@ -203,7 +203,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 2) {
                 db.delete(POSTS_TABLE, null, null);
@@ -233,7 +233,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 3) {
                 db.delete(POSTS_TABLE, null, null);
@@ -260,7 +260,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 4) {
                 db.delete(POSTS_TABLE, null, null);
@@ -287,7 +287,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 5) {
                 db.delete(POSTS_TABLE, null, null);
@@ -313,7 +313,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 6) {
                 db.delete(POSTS_TABLE, null, null);
@@ -337,7 +337,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 7) {
                 db.delete(POSTS_TABLE, null, null);
@@ -353,7 +353,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 8) {
                 db.delete(POSTS_TABLE, null, null);
@@ -368,7 +368,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 9) {
                 db.delete(POSTS_TABLE, null, null);
@@ -383,7 +383,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords(ctx);
+                migratePasswords();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 10) {
                 db.delete(POSTS_TABLE, null, null);
@@ -407,7 +407,7 @@ public class WordPressDB {
                                     c.getLong(4), c.getString(5),
                                     c.getString(6), c.getString(7),
                                     c.getString(8), c.getDouble(9),
-                                    c.getDouble(10), false, "", ctx, false, false);
+                                    c.getDouble(10), false, "", false, false);
                             post.setLocalDraft(true);
                             post.setPost_status("localdraft");
                             savePost(post, c.getInt(0));
@@ -431,7 +431,7 @@ public class WordPressDB {
                             Post post = new Post(c.getInt(0), c.getString(1),
                                     c.getString(2), c.getString(3),
                                     c.getLong(4), c.getString(5), "", "",
-                                    c.getString(6), 0, 0, true, "", ctx, false, false);
+                                    c.getString(6), 0, 0, true, "", false, false);
                             post.setLocalDraft(true);
                             post.setPost_status("localdraft");
                             post.setPage(true);
@@ -476,11 +476,11 @@ public class WordPressDB {
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 15) {
                 // Migrate preferences out of the db
-                HashMap<?, ?> notificationOptions = getNotificationOptions(ctx);
+                HashMap<?, ?> notificationOptions = getNotificationOptions();
                 if (notificationOptions != null) {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     SharedPreferences.Editor editor = settings.edit();
-                    String interval = getInterval(ctx);
+                    String interval = getInterval();
                     if (interval != "") {
                         editor.putString("wp_pref_notifications_interval", interval);
                     }
@@ -530,7 +530,7 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values);
     }
 
-    public Vector<HashMap<String, Object>> getAccounts(Context ctx) {
+    public Vector<HashMap<String, Object>> getAccounts() {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
                 "username", "runService", "blogId", "url" }, null, null, null,
@@ -675,8 +675,7 @@ public class WordPressDB {
         }
 
         // delete QuickPress homescreen shortcuts connected with this account
-        Vector<HashMap<String, Object>> shortcuts = this
-                .getQuickPressShortcuts(ctx, id);
+        Vector<HashMap<String, Object>> shortcuts = getQuickPressShortcuts(id);
         for (int i = 0; i < shortcuts.size(); i++) {
             HashMap<String, Object> shortcutHash = shortcuts.get(i);
 
@@ -696,7 +695,7 @@ public class WordPressDB {
                     .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
             ctx.sendBroadcast(broadcastShortcutIntent);
 
-            deleteQuickPressShortcut(ctx, shortcutHash.get("id").toString());
+            deleteQuickPressShortcut(shortcutHash.get("id").toString());
         }
 
         return (returnValue);
@@ -797,7 +796,7 @@ public class WordPressDB {
 
     }
 
-    public Vector<Integer> getNotificationAccounts(Context ctx) {
+    public Vector<Integer> getNotificationAccounts() {
 
         Cursor c = null;
         try {
@@ -870,7 +869,7 @@ public class WordPressDB {
 
     }
 
-    public String getInterval(Context ctx) {
+    public String getInterval() {
 
         Cursor c = db.query("eula", new String[] { "interval" }, "id=0", null,
                 null, null, null);
@@ -888,7 +887,7 @@ public class WordPressDB {
 
     }
 
-    public HashMap<String, Object> getNotificationOptions(Context ctx) {
+    public HashMap<String, Object> getNotificationOptions() {
 
         Cursor c = db.query(EULA_TABLE, new String[] { "id", "sound", "vibrate",
                 "light", "tagline_flag", "tagline" }, "id=0", null, null, null,
@@ -1215,8 +1214,7 @@ public class WordPressDB {
         return (success);
     }
 
-    public Vector<HashMap<String, Object>> loadUploadedPosts(Context ctx,
-            int blogID, boolean loadPages) {
+    public Vector<HashMap<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
 
         Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
         Cursor c;
@@ -1442,7 +1440,7 @@ public class WordPressDB {
 
     // eula table
 
-    public void setStatsDate(Context ctx) {
+    public void setStatsDate() {
 
         ContentValues values = new ContentValues();
         values.put("statsdate", System.currentTimeMillis()); // set to current
@@ -1453,7 +1451,7 @@ public class WordPressDB {
 
     }
 
-    public long getStatsDate(Context ctx) {
+    public long getStatsDate() {
 
         Cursor c = db.query(EULA_TABLE, new String[] { "statsdate" }, "id=0",
                 null, null, null, null);
@@ -1534,7 +1532,7 @@ public class WordPressDB {
 
     }
 
-    public String getUUID(Context ctx) {
+    public String getUUID() {
 
         Cursor c = db.query("eula", new String[] { "uuid" }, "id=0", null,
                 null, null, null);
@@ -1565,8 +1563,7 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public Vector<HashMap<String, Object>> getQuickPressShortcuts(Context ctx,
-            int accountId) {
+    public Vector<HashMap<String, Object>> getQuickPressShortcuts(int accountId) {
 
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
                 "accountId", "name" }, "accountId = " + accountId, null, null,
@@ -1593,7 +1590,7 @@ public class WordPressDB {
         return accounts;
     }
 
-    public boolean deleteQuickPressShortcut(Context ctx, String id) {
+    public boolean deleteQuickPressShortcut(String id) {
 
         int rowsAffected = db.delete(QUICKPRESS_SHORTCUTS_TABLE, "id=" + id,
                 null);
@@ -1640,7 +1637,7 @@ public class WordPressDB {
         return encryptedPwd;
     }
 
-    private void migratePasswords(Context ctx) {
+    private void migratePasswords() {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "password",
                 "httppassword", "dotcom_password" }, null, null, null, null,

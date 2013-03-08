@@ -50,7 +50,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        String[] blogNames = getBlogNames(this);
+        String[] blogNames = getBlogNames();
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar().getThemedContext(),
                 R.layout.sherlock_spinner_dropdown_item, blogNames);
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
@@ -75,7 +75,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
             updateMenuDrawer();
         }
 
-        Blog currentBlog = WordPress.getCurrentBlog(this);
+        Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog != null) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getId()) {
@@ -244,7 +244,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      */
     protected void updateMenuCommentBadge() {
         if (WordPress.currentBlog != null) {
-            int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount(this);
+            int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
             TextView commentBadge = (TextView) findViewById(R.id.comment_badge);
             if (commentCount > 0) {
                 commentBadge.setVisibility(View.VISIBLE);
@@ -292,11 +292,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      * Get the names of all the blogs configured within the application. If a
      * blog does not have a specific name, the blog URL is returned.
      * 
-     * @param context application context
      * @return array of blog names
      */
-    private static String[] getBlogNames(Context context) {
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(context);
+    private static String[] getBlogNames() {
+        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         int blogCount = accounts.size();
         blogIDs = new int[blogCount];
@@ -328,7 +327,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      * blog.
      */
     public void setupCurrentBlog() {
-        Blog currentBlog = WordPress.getCurrentBlog(this);
+        Blog currentBlog = WordPress.getCurrentBlog();
 
         // no blogs are configured, so display new account activity
         if (currentBlog == null) {
@@ -347,7 +346,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
             case ADD_ACCOUNT_REQUEST:
                 if (resultCode == RESULT_OK) {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
-                    getBlogNames(this);
+                    getBlogNames();
                     setupCurrentBlog();
                 }
         }
@@ -356,7 +355,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
     @Override
     public boolean onNavigationItemSelected(int pos, long itemId) {
         try {
-            WordPress.currentBlog = new Blog(blogIDs[pos], this);
+            WordPress.currentBlog = new Blog(blogIDs[pos]);
             onBlogChanged();
         } catch (Exception e) {
             e.printStackTrace();

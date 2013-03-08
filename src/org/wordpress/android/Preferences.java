@@ -39,7 +39,7 @@ public class Preferences extends SherlockPreferenceActivity {
 
         if (WordPress.currentBlog == null) {
             try {
-                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId(), this);
+                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
@@ -80,7 +80,7 @@ public class Preferences extends SherlockPreferenceActivity {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
         blogsCategory.removeAll();
 
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts(this);
+        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
         for (HashMap<String, Object> account : accounts) {
             String blogName = account.get("blogName").toString();
             int accountId = (Integer) account.get("id");
@@ -125,7 +125,7 @@ public class Preferences extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        Vector<?> accounts = WordPress.wpDB.getAccounts(this);
+        Vector<?> accounts = WordPress.wpDB.getAccounts();
         if (accounts.size() > 0) {
 
             for (int i = 0; i < accounts.size(); i++) {

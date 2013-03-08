@@ -49,9 +49,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
         View v = inflater.inflate(R.layout.reader_wpcom, container, false);
         if (WordPress.currentBlog == null) {
             try {
-                WordPress.currentBlog = new Blog(
-                        WordPress.wpDB.getLastBlogId(), getActivity()
-                                .getApplicationContext());
+                WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
             } catch (Exception e) {
                 Toast.makeText(getActivity().getApplicationContext(),
                         getResources().getText(R.string.blog_not_found),
@@ -205,9 +203,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
             if (WordPress.currentBlog == null) {
                 try {
-                    WordPress.currentBlog = new Blog(
-                            WordPress.wpDB.getLastBlogId(), getActivity()
-                                    .getApplicationContext());
+                    WordPress.currentBlog = new Blog(WordPress.wpDB.getLastBlogId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
