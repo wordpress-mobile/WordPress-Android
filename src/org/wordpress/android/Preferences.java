@@ -1,5 +1,7 @@
 package org.wordpress.android;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -85,6 +87,17 @@ public class Preferences extends SherlockPreferenceActivity {
 
             Preference blogSettingsPreference = new Preference(this);
             blogSettingsPreference.setTitle(blogName);
+
+            try {
+                // set blog hostname as preference summary if it differs from the blog name
+                URL blogUrl = new URL(account.get("url").toString());
+                if (!blogName.equals(blogUrl.getHost())) {
+                    blogSettingsPreference.setSummary(blogUrl.getHost());
+                }
+            } catch (MalformedURLException e) {
+                // do nothing
+            }
+
             Intent intent = new Intent(this, Settings.class);
             intent.putExtra("id", accountId);
             blogSettingsPreference.setIntent(intent);
