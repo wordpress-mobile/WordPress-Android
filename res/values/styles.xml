@@ -24,6 +24,8 @@
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
                 <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
+        
+        <item name="menuDrawerStyle">@style/MenuDrawer</item>
     </style>
     
     <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -139,8 +141,8 @@
         <item name="android:textColor">#FF464646</item>
     </style>
 
-    <style name="MenuDrawer">
-        <item name="android:background">#333333</item>
+    <style name="MenuDrawer" parent="Widget.MenuDrawer">
+        <item name="mdMenuSize">250dp</item>
     </style>
 
     <style name="MenuDrawer.Button">
