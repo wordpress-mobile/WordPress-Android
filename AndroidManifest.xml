@@ -42,7 +42,7 @@
         android:label="WordPress"
         android:theme="@style/WordPress" >
         <activity
-            android:name="Settings"
+            android:name="BlogPreferences"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden"

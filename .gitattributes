@@ -219,6 +219,7 @@ res/layout/add_account_settings.xml -text
 res/layout/add_category.xml -text
 res/layout/add_quickpress_shortcut.xml -text
 res/layout/alert_image_options.xml -text
+res/layout/blog_preferences.xml -text
 res/layout/blogs_row.xml -text
 res/layout/categories_row.xml -text
 res/layout/comment_row.xml -text
@@ -246,7 +247,6 @@ res/layout/reply.xml -text
 res/layout/row_post_page.xml -text
 res/layout/select_blogs_list.xml -text
 res/layout/select_categories.xml -text
-res/layout/settings.xml -text
 res/layout/spinner_textview.xml -text
 res/layout/table_row.xml -text
 res/layout/table_row_header.xml -text
@@ -326,6 +326,7 @@ src/org/wordpress/android/AddAccount.java -text
 src/org/wordpress/android/AddAcountSettings.java -text
 src/org/wordpress/android/AddCategory.java -text
 src/org/wordpress/android/AddQuickPressShortcut.java -text
+src/org/wordpress/android/BlogPreferences.java -text
 src/org/wordpress/android/CommentBroadcastReceiver.java -text
 src/org/wordpress/android/Comments.java -text
 src/org/wordpress/android/Constants.java -text
@@ -338,7 +339,6 @@ src/org/wordpress/android/Preferences.java -text
 src/org/wordpress/android/ReplyToComment.java -text
 src/org/wordpress/android/SelectCategories.java -text
 src/org/wordpress/android/ServiceUpdateUIListener.java -text
-src/org/wordpress/android/Settings.java -text
 src/org/wordpress/android/Signup.java -text
 src/org/wordpress/android/ViewCommentActivity.java -text
 src/org/wordpress/android/ViewCommentFragment.java -text

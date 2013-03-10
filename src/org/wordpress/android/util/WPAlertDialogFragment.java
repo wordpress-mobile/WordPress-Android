@@ -10,7 +10,7 @@ import android.support.v4.app.DialogFragment;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import org.wordpress.android.R;
-import org.wordpress.android.Settings;
+import org.wordpress.android.BlogPreferences;
 
 public class WPAlertDialogFragment extends SherlockDialogFragment implements
     DialogInterface.OnClickListener {
@@ -79,7 +79,7 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent settingsIntent = new Intent(getActivity(), Settings.class);
+                    Intent settingsIntent = new Intent(getActivity(), BlogPreferences.class);
                     getActivity().startActivity(settingsIntent);
                 }
             });

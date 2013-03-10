@@ -98,7 +98,7 @@ public class Preferences extends SherlockPreferenceActivity {
                 // do nothing
             }
 
-            Intent intent = new Intent(this, Settings.class);
+            Intent intent = new Intent(this, BlogPreferences.class);
             intent.putExtra("id", accountId);
             blogSettingsPreference.setIntent(intent);
             blogSettingsPreference.setOrder(0);
