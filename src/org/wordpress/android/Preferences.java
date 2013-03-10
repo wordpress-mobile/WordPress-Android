@@ -35,7 +35,7 @@ public class Preferences extends SherlockPreferenceActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        setTitle(getResources().getText(R.string.preferences));
+        setTitle(getResources().getText(R.string.settings));
 
         if (WordPress.currentBlog == null) {
             try {
