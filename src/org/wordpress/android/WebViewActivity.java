@@ -2,8 +2,8 @@ package org.wordpress.android;
 
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -38,7 +38,6 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EncodingUtils;
 
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 
@@ -201,8 +200,8 @@ public class WebViewActivity extends SherlockActivity {
             boolean isPrivate = false;
             try {
                 Gson gson = new Gson();
-                Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
-                HashMap<String, Object> blogOptions = gson.fromJson(WordPress.currentBlog.getBlogOptions(), type);
+                Type type = new TypeToken<Map<String, Object>>(){}.getType();
+                Map<String, Object> blogOptions = gson.fromJson(WordPress.currentBlog.getBlogOptions(), type);
                 StringMap<?> blogPublicOption = (StringMap<?>)blogOptions.get("blog_public");
                 String blogPublicOptionValue = blogPublicOption.get("value").toString();
                 if (blogPublicOptionValue.equals("-1")) {
@@ -255,9 +254,9 @@ public class WebViewActivity extends SherlockActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
+    private class loadReaderTask extends AsyncTask<String, Void, List<?>> {
 
-        protected void onPostExecute(Vector<?> result) {
+        protected void onPostExecute(List<?> result) {
             new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -278,7 +277,7 @@ public class WebViewActivity extends SherlockActivity {
         }
 
         @Override
-        protected Vector<?> doInBackground(String... args) {
+        protected List<?> doInBackground(String... args) {
 
             if (WordPress.currentBlog == null) {
                 WordPress.setCurrentBlogToLastActive();

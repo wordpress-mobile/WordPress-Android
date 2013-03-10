@@ -1,7 +1,7 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -295,14 +295,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      * @return array of blog names
      */
     private static String[] getBlogNames() {
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         int blogCount = accounts.size();
         blogIDs = new int[blogCount];
         String[] blogNames = new String[blogCount];
 
         for (int i = 0; i < blogCount; i++) {
-            HashMap<String, Object> account = accounts.get(i);
+            Map<String, Object> account = accounts.get(i);
             String name;
             if (account.get("blogName") != null) {
                 name = EscapeUtils.unescapeHtml(account.get("blogName").toString());

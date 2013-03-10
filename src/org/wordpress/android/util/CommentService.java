@@ -1,8 +1,9 @@
 package org.wordpress.android.util;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
-import java.util.Vector;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -78,7 +79,7 @@ public class CommentService extends Service {
     /** dont forget to fire update to the ui listener */
     private void _getUpdatedComments() {
 
-        Vector<?> notificationAccounts = WordPress.wpDB.getNotificationAccounts();
+        List<Integer> notificationAccounts = WordPress.wpDB.getNotificationAccounts();
 
         if (notificationAccounts != null) {
 
@@ -88,7 +89,7 @@ public class CommentService extends Service {
             } else {
                 for (int i = 0; i < notificationAccounts.size(); i++) {
 
-                    accountID = (Integer) notificationAccounts.get(i);
+                    accountID = notificationAccounts.get(i);
                     Blog blog;
                     try {
                         blog = new Blog(accountID);
@@ -114,7 +115,7 @@ public class CommentService extends Service {
 
                     client = new XMLRPCClient(sURL, sHttpuser, sHttppassword);
 
-                    HashMap<String, Object> hPost = new HashMap<String, Object>();
+                    Map<String, Object> hPost = new HashMap<String, Object>();
                     hPost.put("status", "");
                     hPost.put("post_id", "");
                     hPost.put("number", 1);
@@ -133,10 +134,10 @@ public class CommentService extends Service {
                             vibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
                             light = prefs.getBoolean("wp_pref_notification_light", false);
 
-                            HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
+                            Map<Object, Object> contentHash = new HashMap<Object, Object>();
 
                             for (int ctr = 0; ctr < result.length; ctr++) {
-                                contentHash = (HashMap<Object, Object>) result[ctr];
+                                contentHash = (Map<Object, Object>) result[ctr];
                                 ctr++;
                             }
 

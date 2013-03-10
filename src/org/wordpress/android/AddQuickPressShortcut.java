@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import android.app.AlertDialog;
@@ -35,12 +36,12 @@ import org.wordpress.android.util.EscapeUtils;
 public class AddQuickPressShortcut extends ListActivity {
     static final int ADD_ACCOUNT_REQUEST = 0;
 
-    public Vector<?> accounts;
+    public List<Map<String, Object>> accounts;
     public String[] blogNames;
     public int[] accountIDs;
     public String[] accountUsers;
     public String[] blavatars;
-    public Vector<String> accountNames = new Vector<String>();
+    public List<String> accountNames = new Vector<String>();
     protected ThumbnailAdapter thumbs = null;
     protected static final int[] IMAGE_IDS = { R.id.blavatar };
 
@@ -81,7 +82,7 @@ public class AddQuickPressShortcut extends ListActivity {
             int validBlogCtr = 0;
             for (int i = 0; i < accounts.size(); i++) {
 
-                HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
+                Map<String, Object> curHash = accounts.get(i);
                 blogNames[validBlogCtr] = curHash.get("blogName").toString();
                 accountUsers[validBlogCtr] = curHash.get("username").toString();
                 accountIDs[validBlogCtr] = (Integer)curHash.get("id");

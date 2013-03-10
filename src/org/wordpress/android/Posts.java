@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -468,7 +468,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 
             if (versionResult != null) {
                 try {
-                    HashMap<?, ?> contentHash = (HashMap<?, ?>) versionResult;
+                    Map<?, ?> contentHash = (Map<?, ?>) versionResult;
 
                     if ((isPage && !"publish".equals(contentHash.get(
                             "page_status").toString()))

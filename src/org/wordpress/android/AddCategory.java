@@ -1,7 +1,7 @@
 package org.wordpress.android;
 
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -103,7 +103,7 @@ public class AddCategory extends Activity {
     private void loadCategories() {
         ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
         loadTextArray.clear();
-        Vector<?> categoriesVector = WordPress.wpDB.loadCategories(id);
+        List<?> categoriesVector = WordPress.wpDB.loadCategories(id);
         if (categoriesVector.size() > 0)
         {
 

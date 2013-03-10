@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -66,7 +68,7 @@ public class ViewComments extends ListFragment {
     private XMLRPCClient client;
     private String accountName = "", moderateErrorMsg = "";
     public int[] changedStatuses;
-    public HashMap<Integer, HashMap<?, ?>> allComments = new HashMap<Integer, HashMap<?, ?>>();
+    public Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
     public int ID_DIALOG_MODERATING = 1;
     public int ID_DIALOG_REPLYING = 2;
     public int ID_DIALOG_DELETING = 3;
@@ -77,7 +79,7 @@ public class ViewComments extends ListFragment {
     public ProgressDialog pd;
     private ViewSwitcher switcher;
     boolean loadMore = false, doInBackground = false, refreshOnly = false;
-    private Vector<String> checkedComments;
+    private List<String> checkedComments;
     Object[] commentParams;
     boolean dualView;
     private OnCommentSelectedListener onCommentSelectedListener;
@@ -213,9 +215,8 @@ public class ViewComments extends ListFragment {
                 Comment listRow = (Comment) getListView().getItemAtPosition(i);
                 int curCommentID = listRow.commentID;
 
-                HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
-                contentHash = (HashMap<String, String>) allComments
-                        .get(curCommentID);
+                Map<String, String> contentHash, postHash = new HashMap<String, String>();
+                contentHash = (Map<String, String>) allComments.get(curCommentID);
                 postHash.put("status", newStatus);
                 postHash.put("content", contentHash.get("comment"));
                 postHash.put("author", contentHash.get("author"));
@@ -343,7 +344,7 @@ public class ViewComments extends ListFragment {
         String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
         int commentID;
 
-        Vector<?> loadedPosts = WordPress.wpDB
+        List<Map<String, Object>> loadedPosts = WordPress.wpDB
                 .loadComments(WordPress.currentBlog.getId());
         if (loadedPosts != null) {
             numRecords = loadedPosts.size();
@@ -358,7 +359,7 @@ public class ViewComments extends ListFragment {
             checkedComments = new Vector<String>();
             for (int i = 0; i < loadedPosts.size(); i++) {
                 checkedComments.add(i, "false");
-                HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
+                Map<String, Object> contentHash = loadedPosts.get(i);
                 allComments.put((Integer)contentHash.get("commentID"),
                         contentHash);
                 author = EscapeUtils.unescapeHtml(contentHash.get("author")
@@ -520,7 +521,7 @@ public class ViewComments extends ListFragment {
                 WordPress.currentBlog.getHttpuser(),
                 WordPress.currentBlog.getHttppassword());
 
-        HashMap<String, Object> hPost = new HashMap<String, Object>();
+        Map<String, Object> hPost = new HashMap<String, Object>();
         if (loadMore) {
             ListView listView = this.getListView();
             scrollPosition = listView.getFirstVisiblePosition();
@@ -860,12 +861,12 @@ public class ViewComments extends ListFragment {
         public void run() {
             try {
                 // get the total comments
-                HashMap<Object, Object> countResult = new HashMap<Object, Object>();
+                Map<Object, Object> countResult = new HashMap<Object, Object>();
                 Object[] countParams = { WordPress.currentBlog.getBlogId(),
                         WordPress.currentBlog.getUsername(),
                         WordPress.currentBlog.getPassword(), 0 };
                 try {
-                    countResult = (HashMap<Object, Object>) client.call(
+                    countResult = (Map<Object, Object>) client.call(
                             "wp.getCommentCount", countParams);
                     totalComments = Integer.valueOf(countResult.get(
                             "awaiting_moderation").toString())
@@ -1023,10 +1024,10 @@ public class ViewComments extends ListFragment {
     }
 
     class getRecentCommentsTask extends
-            AsyncTask<Void, Void, HashMap<Integer, HashMap<?, ?>>> {
+            AsyncTask<Void, Void, Map<Integer, Map<?, ?>>> {
 
         protected void onPostExecute(
-                HashMap<Integer, HashMap<?, ?>> commentsResult) {
+                Map<Integer, Map<?, ?>> commentsResult) {
 
             if (isCancelled())
                 return;
@@ -1086,9 +1087,9 @@ public class ViewComments extends ListFragment {
         }
 
         @Override
-        protected HashMap<Integer, HashMap<?, ?>> doInBackground(Void... args) {
+        protected Map<Integer, Map<?, ?>> doInBackground(Void... args) {
 
-            HashMap<Integer, HashMap<?, ?>> commentsResult;
+            Map<Integer, Map<?, ?>> commentsResult;
             try {
                 commentsResult = ApiHelper.refreshComments(getActivity()
                         .getApplicationContext(), commentParams);

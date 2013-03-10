@@ -3,6 +3,7 @@ package org.wordpress.android;
 import java.text.StringCharacterIterator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -476,7 +477,7 @@ public class WordPressDB {
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 15) {
                 // Migrate preferences out of the db
-                HashMap<?, ?> notificationOptions = getNotificationOptions();
+                Map<?, ?> notificationOptions = getNotificationOptions();
                 if (notificationOptions != null) {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
                     SharedPreferences.Editor editor = settings.edit();
@@ -530,7 +531,7 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values);
     }
 
-    public Vector<HashMap<String, Object>> getAccounts() {
+    public List<Map<String, Object>> getAccounts() {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
                 "username", "runService", "blogId", "url" }, null, null, null,
@@ -541,7 +542,7 @@ public class WordPressDB {
         int runService;
         int numRows = c.getCount();
         c.moveToFirst();
-        Vector<HashMap<String, Object>> accounts = new Vector<HashMap<String, Object>>();
+        List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
 
             id = c.getInt(0);
@@ -551,7 +552,7 @@ public class WordPressDB {
             blogId = c.getInt(4);
             url = c.getString(5);
             if (id > 0) {
-                HashMap<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);
                 thisHash.put("username", username);
@@ -675,9 +676,9 @@ public class WordPressDB {
         }
 
         // delete QuickPress homescreen shortcuts connected with this account
-        Vector<HashMap<String, Object>> shortcuts = getQuickPressShortcuts(id);
+        List<Map<String, Object>> shortcuts = getQuickPressShortcuts(id);
         for (int i = 0; i < shortcuts.size(); i++) {
-            HashMap<String, Object> shortcutHash = shortcuts.get(i);
+            Map<String, Object> shortcutHash = shortcuts.get(i);
 
             Intent shortcutIntent = new Intent();
             shortcutIntent.setClassName(EditPost.class.getPackage().getName(),
@@ -701,7 +702,7 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public Vector<Object> loadSettings(int id) {
+    public List<Object> loadSettings(int id) {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "url", "blogName",
                 "username", "password", "httpuser", "httppassword",
@@ -714,7 +715,7 @@ public class WordPressDB {
         int numRows = c.getCount();
         c.moveToFirst();
 
-        Vector<Object> returnVector = new Vector<Object>();
+        List<Object> returnVector = new Vector<Object>();
         if (numRows > 0) {
             if (c.getString(0) != null) {
                 returnVector.add(c.getString(0));
@@ -762,14 +763,14 @@ public class WordPressDB {
         return returnVector;
     }
 
-    public Vector<String> loadStatsLogin(int id) {
+    public List<String> loadStatsLogin(int id) {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username",
                 "dotcom_password" }, "id=" + id, null, null, null, null);
 
         c.moveToFirst();
 
-        Vector<String> returnVector = new Vector<String>();
+        List<String> returnVector = new Vector<String>();
         if (c.getString(0) != null) {
             returnVector.add(c.getString(0));
             returnVector.add(decryptPassword(c.getString(1)));
@@ -796,7 +797,7 @@ public class WordPressDB {
 
     }
 
-    public Vector<Integer> getNotificationAccounts() {
+    public List<Integer> getNotificationAccounts() {
 
         Cursor c = null;
         try {
@@ -809,7 +810,7 @@ public class WordPressDB {
         int numRows = c.getCount();
         c.moveToFirst();
 
-        Vector<Integer> returnVector = new Vector<Integer>();
+        List<Integer> returnVector = new Vector<Integer>();
         for (int i = 0; i < numRows; ++i) {
             int tempID = c.getInt(0);
             returnVector.add(tempID);
@@ -887,14 +888,14 @@ public class WordPressDB {
 
     }
 
-    public HashMap<String, Object> getNotificationOptions() {
+    public Map<String, Object> getNotificationOptions() {
 
         Cursor c = db.query(EULA_TABLE, new String[] { "id", "sound", "vibrate",
                 "light", "tagline_flag", "tagline" }, "id=0", null, null, null,
                 null);
         int sound, vibrate, light;
         String tagline;
-        HashMap<String, Object> thisHash = new HashMap<String, Object>();
+        Map<String, Object> thisHash = new HashMap<String, Object>();
         int numRows = c.getCount();
         if (numRows >= 1) {
             c.moveToFirst();
@@ -951,10 +952,10 @@ public class WordPressDB {
         return preferences.getInt("last_blog_id", -1);
     }
 
-    public Vector<HashMap<String, Object>> loadDrafts(int blogID,
+    public List<Map<String, Object>> loadDrafts(int blogID,
             boolean loadPages) {
 
-        Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
+        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c;
         if (loadPages)
             c = db.query(POSTS_TABLE, new String[] { "id", "title",
@@ -974,7 +975,7 @@ public class WordPressDB {
 
         for (int i = 0; i < numRows; ++i) {
             if (c.getString(0) != null) {
-                HashMap<String, Object> returnHash = new HashMap<String, Object>();
+                Map<String, Object> returnHash = new HashMap<String, Object>();
                 returnHash.put("id", c.getString(0));
                 returnHash.put("title", c.getString(1));
                 returnHash.put("status", c.getString(2));
@@ -1009,13 +1010,13 @@ public class WordPressDB {
         return returnValue;
     }
 
-    public boolean savePosts(Vector<?> postValues, int blogID, boolean isPage) {
+    public boolean savePosts(List<?> postValues, int blogID, boolean isPage) {
         boolean returnValue = false;
         if (postValues.size() != 0) {
             for (int i = 0; i < postValues.size(); i++) {
                 try {
                     ContentValues values = new ContentValues();
-                    HashMap<?, ?> thisHash = (HashMap<?, ?>) postValues.get(i);
+                    Map<?, ?> thisHash = (Map<?, ?>) postValues.get(i);
                     values.put("blogID", blogID);
                     if (thisHash.get((isPage) ? "page_id" : "postid") == null)
                         return false;
@@ -1214,9 +1215,9 @@ public class WordPressDB {
         return (success);
     }
 
-    public Vector<HashMap<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
+    public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
 
-        Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
+        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c;
         if (loadPages)
             c = db.query(POSTS_TABLE,
@@ -1236,7 +1237,7 @@ public class WordPressDB {
 
         for (int i = 0; i < numRows; ++i) {
             if (c.getString(0) != null) {
-                HashMap<String, Object> returnHash = new HashMap<String, Object>();
+                Map<String, Object> returnHash = new HashMap<String, Object>();
                 returnHash.put("id", c.getInt(0));
                 returnHash.put("blogID", c.getString(1));
                 returnHash.put("postID", c.getString(2));
@@ -1268,8 +1269,8 @@ public class WordPressDB {
 
     }
 
-    public Vector<Object> loadPost(int blogID, boolean isPage, long id) {
-        Vector<Object> values = null;
+    public List<Object> loadPost(int blogID, boolean isPage, long id) {
+        List<Object> values = null;
 
         int pageInt = 0;
         if (isPage)
@@ -1318,9 +1319,9 @@ public class WordPressDB {
         return values;
     }
 
-    public Vector<HashMap<String, Object>> loadComments(int blogID) {
+    public List<Map<String, Object>> loadComments(int blogID) {
 
-        Vector<HashMap<String, Object>> returnVector = new Vector<HashMap<String, Object>>();
+        List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c = db.query(COMMENTS_TABLE,
                 new String[] { "blogID", "postID", "iCommentID", "author",
                         "comment", "commentDate", "commentDateFormatted",
@@ -1332,7 +1333,7 @@ public class WordPressDB {
 
         for (int i = 0; i < numRows; i++) {
             if (c.getString(0) != null) {
-                HashMap<String, Object> returnHash = new HashMap<String, Object>();
+                Map<String, Object> returnHash = new HashMap<String, Object>();
                 returnHash.put("blogID", c.getString(0));
                 returnHash.put("postID", c.getInt(1));
                 returnHash.put("commentID", c.getInt(2));
@@ -1357,10 +1358,10 @@ public class WordPressDB {
         return returnVector;
     }
 
-    public boolean saveComments(Vector<?> commentValues) {
+    public boolean saveComments(List<?> commentValues) {
         boolean returnValue = false;
 
-        HashMap<?, ?> firstHash = (HashMap<?, ?>) commentValues.get(0);
+        Map<?, ?> firstHash = (Map<?, ?>) commentValues.get(0);
         String blogID = firstHash.get("blogID").toString();
         // delete existing values, if user hit refresh button
 
@@ -1374,7 +1375,7 @@ public class WordPressDB {
         for (int i = 0; i < commentValues.size(); i++) {
             try {
                 ContentValues values = new ContentValues();
-                HashMap<?, ?> thisHash = (HashMap<?, ?>) commentValues.get(i);
+                Map<?, ?> thisHash = (Map<?, ?>) commentValues.get(i);
                 values.put("blogID", thisHash.get("blogID").toString());
                 values.put("postID", thisHash.get("postID").toString());
                 values.put("iCommentID", thisHash.get("commentID").toString());
@@ -1404,7 +1405,7 @@ public class WordPressDB {
 
     }
 
-    public void updateComment(int blogID, int id, HashMap<?, ?> commentHash) {
+    public void updateComment(int blogID, int id, Map<?, ?> commentHash) {
 
         ContentValues values = new ContentValues();
         values.put("author", commentHash.get("author").toString());
@@ -1481,13 +1482,13 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public Vector<String> loadCategories(int id) {
+    public List<String> loadCategories(int id) {
 
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
                 "category_name" }, "blog_id=" + id, null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
-        Vector<String> returnVector = new Vector<String>();
+        List<String> returnVector = new Vector<String>();
         for (int i = 0; i < numRows; ++i) {
             String category_name = c.getString(2);
             if (category_name != null) {
@@ -1563,7 +1564,7 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public Vector<HashMap<String, Object>> getQuickPressShortcuts(int accountId) {
+    public List<Map<String, Object>> getQuickPressShortcuts(int accountId) {
 
         Cursor c = db.query(QUICKPRESS_SHORTCUTS_TABLE, new String[] { "id",
                 "accountId", "name" }, "accountId = " + accountId, null, null,
@@ -1571,13 +1572,13 @@ public class WordPressDB {
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        Vector<HashMap<String, Object>> accounts = new Vector<HashMap<String, Object>>();
+        List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
 
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
-                HashMap<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<String, Object>();
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);

@@ -54,7 +54,7 @@ public class ViewPosts extends ListFragment {
     int rowID = 0;
     long selectedID;
     public boolean inDrafts = false;
-    public Vector<String> imageUrl = new Vector<String>();
+    public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
     public int totalDrafts = 0, selectedPosition;
     public boolean isPage = false, vpUpgrade = false, shouldSelectAfterLoad = false;
@@ -149,7 +149,7 @@ public class ViewPosts extends ListFragment {
             onRefreshListener.onRefresh(true);
             numRecords = 20;
         }
-        Vector<Object> apiArgs = new Vector<Object>();
+        List<Object> apiArgs = new Vector<Object>();
         apiArgs.add(WordPress.currentBlog);
         apiArgs.add(isPage);
         apiArgs.add(numRecords);
@@ -166,7 +166,7 @@ public class ViewPosts extends ListFragment {
     }
 
     public boolean loadPosts(boolean loadMore) { // loads posts from the db
-        Vector<?> loadedPosts;
+        List<Map<String, Object>> loadedPosts;
         try {
             if (isPage) {
                 loadedPosts = WordPress.wpDB.loadUploadedPosts(WordPress.currentBlog.getId(), true);
@@ -198,7 +198,7 @@ public class ViewPosts extends ListFragment {
         if (loadedPosts != null) {
             Date d = new Date();
             for (int i = 0; i < loadedPosts.size(); i++) {
-                HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
+                Map<String, Object> contentHash = loadedPosts.get(i);
                 titles[i] = EscapeUtils.unescapeHtml(contentHash.get("title")
                         .toString());
 
@@ -538,7 +538,7 @@ public class ViewPosts extends ListFragment {
 
     private boolean loadDrafts() { // loads drafts from the db
 
-        Vector<?> loadedPosts;
+        List<Map<String, Object>> loadedPosts;
         if (isPage) {
             loadedPosts = WordPress.wpDB.loadDrafts(
                     WordPress.currentBlog.getId(), true);
@@ -555,7 +555,7 @@ public class ViewPosts extends ListFragment {
             draftStatuses = new String[loadedPosts.size()];
 
             for (int i = 0; i < loadedPosts.size(); i++) {
-                HashMap<?, ?> contentHash = (HashMap<?, ?>) loadedPosts.get(i);
+                Map<String, Object> contentHash = loadedPosts.get(i);
                 draftIDs[i] = contentHash.get("id").toString();
                 draftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
                         "title").toString());
@@ -753,7 +753,7 @@ public class ViewPosts extends ListFragment {
     }
 
     public class getRecentPostsTask extends
-            AsyncTask<Vector<?>, Void, Boolean> {
+            AsyncTask<List<?>, Void, Boolean> {
 
         Context ctx;
         boolean isPage, loadMore;
@@ -779,9 +779,9 @@ public class ViewPosts extends ListFragment {
         }
 
         @Override
-        protected Boolean doInBackground(Vector<?>... args) {
+        protected Boolean doInBackground(List<?>... args) {
             boolean success = false;
-            Vector<?> arguments = args[0];
+            List<?> arguments = args[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             isPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
@@ -800,8 +800,8 @@ public class ViewPosts extends ListFragment {
                 if (result != null) {
                     if (result.length > 0) {
                         success = true;
-                        HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-                        Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+                        Map<?, ?> contentHash = new HashMap<Object, Object>();
+                        List<Map<?, ?>> dbVector = new Vector<Map<?, ?>>();
 
                         if (!loadMore) {
                             WordPress.wpDB.deleteUploadedPosts(
@@ -809,8 +809,8 @@ public class ViewPosts extends ListFragment {
                         }
 
                         for (int ctr = 0; ctr < result.length; ctr++) {
-                            HashMap<String, Object> dbValues = new HashMap<String, Object>();
-                            contentHash = (HashMap<?, ?>) result[ctr];
+                            Map<String, Object> dbValues = new HashMap<String, Object>();
+                            contentHash = (Map<?, ?>) result[ctr];
                             dbValues.put("blogID",
                                     WordPress.currentBlog.getBlogId());
                             dbVector.add(ctr, contentHash);

@@ -2,6 +2,7 @@ package org.wordpress.android;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -79,7 +80,7 @@ public class SelectCategories extends SherlockListActivity {
     private void loadCategories() {
         loadTextArray.clear();
         formattedTextArray.clear();
-        Vector<?> categoriesVector = WordPress.wpDB.loadCategories(id);
+        List<?> categoriesVector = WordPress.wpDB.loadCategories(id);
         if (categoriesVector.size() > 0) {
 
             for (int i = 0; i < categoriesVector.size(); i++) {
@@ -198,7 +199,7 @@ public class SelectCategories extends SherlockListActivity {
             WordPress.wpDB.clearCategories(id);
 
             for (int i = 0; i < size; i++) {
-                HashMap<?, ?> curHash = (HashMap<?, ?>) result[i];
+                Map<?, ?> curHash = (Map<?, ?>) result[i];
 
                 String categoryName = curHash.get("categoryName").toString();
                 String categoryID = curHash.get("categoryId").toString();
@@ -368,7 +369,7 @@ public class SelectCategories extends SherlockListActivity {
         String selectedCategories = "";
 
         SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-        Vector<Integer> rCheckedItems = new Vector<Integer>();
+        List<Integer> rCheckedItems = new Vector<Integer>();
 
         for (int i = 0; i < selectedItems.size(); i++) {
             if (selectedItems.get(selectedItems.keyAt(i)) == true) {

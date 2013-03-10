@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +38,7 @@ public class ApiHelper {
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
                 blog.getHttppassword());
 
-        HashMap<String, Object> hPost = new HashMap<String, Object>();
+        Map<String, Object> hPost = new HashMap<String, Object>();
         hPost.put("status", "");
         hPost.put("post_id", "");
         hPost.put("number", 30);
@@ -53,14 +55,14 @@ public class ApiHelper {
             if (result.length > 0) {
                 String author, postID, commentID, comment, status, authorEmail, authorURL, postTitle;
 
-                HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
-                Vector<HashMap<String, String>> dbVector = new Vector<HashMap<String, String>>();
+                Map<Object, Object> contentHash = new HashMap<Object, Object>();
+                List<Map<String, String>> dbVector = new Vector<Map<String, String>>();
 
                 Date d = new Date();
                 // loop this!
                 for (int ctr = 0; ctr < result.length; ctr++) {
-                    HashMap<String, String> dbValues = new HashMap<String, String>();
-                    contentHash = (HashMap<Object, Object>) result[ctr];
+                    Map<String, String> dbValues = new HashMap<String, String>();
+                    contentHash = (Map<Object, Object>) result[ctr];
                     comment = contentHash.get("content").toString();
                     author = contentHash.get("author").toString();
                     status = contentHash.get("status").toString();
@@ -103,7 +105,7 @@ public class ApiHelper {
     }
 
     public static class getPostFormatsTask extends
-            AsyncTask<Vector<?>, Void, Object> {
+            AsyncTask<List<?>, Void, Object> {
 
         Context ctx;
         Blog blog;
@@ -111,7 +113,7 @@ public class ApiHelper {
 
         protected void onPostExecute(Object result) {
             try {
-                HashMap<?, ?> postFormats = (HashMap<?, ?>) result;
+                Map<?, ?> postFormats = (HashMap<?, ?>) result;
                 if (postFormats.size() > 0) {
                     Gson gson = new Gson();
                     String postFormatsJson = gson.toJson(postFormats);
@@ -126,9 +128,9 @@ public class ApiHelper {
         }
 
         @Override
-        protected Object doInBackground(Vector<?>... args) {
+        protected Object doInBackground(List<?>... args) {
 
-            Vector<?> arguments = args[0];
+            List<?> arguments = args[0];
             blog = (Blog) arguments.get(0);
             ctx = (Context) arguments.get(1);
             client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
@@ -173,7 +175,7 @@ public class ApiHelper {
 
             if (!commentsOnly) {
                 // check the WP number if self-hosted
-                HashMap<String, String> hPost = new HashMap<String, String>();
+                Map<String, String> hPost = new HashMap<String, String>();
                 hPost.put("software_version", "software_version");
                 hPost.put("post_thumbnail", "post_thumbnail");
                 hPost.put("jetpack_client_id", "jetpack_client_id");
@@ -189,7 +191,7 @@ public class ApiHelper {
 
                 if (versionResult != null) {
                     try {
-                        HashMap<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
+                        Map<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
                         Gson gson = new Gson();
                         String blogOptionsJson = gson.toJson(blogOptions);
                         if (blogOptionsJson != null)
@@ -197,14 +199,14 @@ public class ApiHelper {
 
                         // Software version
                         if (!blog.isDotcomFlag()) {
-                            HashMap<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
+                            Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
                             String wpVersion = sv.get("value").toString();
                             if (wpVersion.length() > 0) {
                                 blog.setWpVersion(wpVersion);
                             }
                         }
                         // Featured image support
-                        HashMap<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions
+                        Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions
                                 .get("post_thumbnail");
                         if (featuredImageHash != null) {
                             boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash
@@ -219,14 +221,14 @@ public class ApiHelper {
                 }
 
                 // get theme post formats
-                Vector<Object> args = new Vector<Object>();
+                List<Object> args = new Vector<Object>();
                 args.add(blog);
                 args.add(context);
                 new ApiHelper.getPostFormatsTask().execute(args);
             }
 
             // refresh the comments
-            HashMap<String, Object> hPost = new HashMap<String, Object>();
+            Map<String, Object> hPost = new HashMap<String, Object>();
             hPost.put("number", 30);
             Object[] commentParams = {
                     blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost
@@ -242,16 +244,16 @@ public class ApiHelper {
         }
     }
 
-    public static HashMap<Integer, HashMap<?, ?>> refreshComments(Context ctx,
+    public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,
             Object[] commentParams) throws XMLRPCException {
         Blog blog = WordPress.currentBlog;
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
                 blog.getHttppassword());
         String author, postID, comment, status, authorEmail, authorURL, postTitle;
         int commentID;
-        HashMap<Integer, HashMap<?, ?>> allComments = new HashMap<Integer, HashMap<?, ?>>();
-        HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-        Vector<HashMap<?, ?>> dbVector = new Vector<HashMap<?, ?>>();
+        Map<Integer, Map<?, ?>> allComments = new HashMap<Integer, Map<?, ?>>();
+        Map<?, ?> contentHash = new HashMap<Object, Object>();
+        List<Map<?, ?>> dbVector = new Vector<Map<?, ?>>();
 
         Date d = new Date();
         Object[] result;
@@ -265,8 +267,8 @@ public class ApiHelper {
             return null;
         // loop this!
         for (int ctr = 0; ctr < result.length; ctr++) {
-            HashMap<Object, Object> dbValues = new HashMap<Object, Object>();
-            contentHash = (HashMap<?, ?>) result[ctr];
+            Map<Object, Object> dbValues = new HashMap<Object, Object>();
+            contentHash = (Map<?, ?>) result[ctr];
             allComments.put(Integer.parseInt(contentHash.get("comment_id").toString()),
                     contentHash);
             comment = contentHash.get("content").toString();

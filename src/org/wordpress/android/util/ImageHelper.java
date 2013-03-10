@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -216,10 +217,10 @@ public class ImageHelper {
         return null;
     }
 
-    public HashMap<String, Object> getImageBytesForPath(String filePath, Context ctx) {
+    public Map<String, Object> getImageBytesForPath(String filePath, Context ctx) {
         Uri curStream = null;
         String[] projection;
-        HashMap<String, Object> mediaData = new HashMap<String, Object>();
+        Map<String, Object> mediaData = new HashMap<String, Object>();
         String title = "", orientation = "";
         byte[] bytes;
         if (filePath != null) {

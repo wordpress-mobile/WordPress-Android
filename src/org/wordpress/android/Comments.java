@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -261,9 +262,8 @@ public class Comments extends WPActionBarActivity implements
                 WordPress.currentBlog.getHttpuser(),
                 WordPress.currentBlog.getHttppassword());
 
-        HashMap<String, String> contentHash, postHash = new HashMap<String, String>();
-        contentHash = (HashMap<String, String>) commentList.allComments
-                .get(selCommentID);
+        Map<String, String> contentHash, postHash = new HashMap<String, String>();
+        contentHash = (Map<String, String>) commentList.allComments.get(selCommentID);
         postHash.put("status", newStatus);
         postHash.put("content", contentHash.get("comment"));
         postHash.put("author", contentHash.get("author"));
@@ -393,7 +393,7 @@ public class Comments extends WPActionBarActivity implements
                 WordPress.currentBlog.getHttpuser(),
                 WordPress.currentBlog.getHttppassword());
 
-        HashMap<String, Object> replyHash = new HashMap<String, Object>();
+        Map<String, Object> replyHash = new HashMap<String, Object>();
         replyHash.put("comment_parent", commentID);
         replyHash.put("content", comment);
         replyHash.put("author", "");

@@ -2,7 +2,7 @@
 
 package org.wordpress.android.models;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.wordpress.android.WordPress;
 
@@ -38,7 +38,7 @@ public class Blog {
 
     public Blog(int blog_id) throws Exception{
         //instantiate a new blog
-        Vector<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
+        List<Object> blogVals = WordPress.wpDB.loadSettings(blog_id);
 
         if (blogVals != null) {
             this.id = blog_id;

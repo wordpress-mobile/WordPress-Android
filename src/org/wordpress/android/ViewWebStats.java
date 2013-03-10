@@ -12,8 +12,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
@@ -88,7 +88,7 @@ public class ViewWebStats extends WPActionBarActivity {
     boolean loginShowing = false;
     boolean authed = false;
     boolean isRetrying = false;
-    private AsyncTask<String, Void, Vector<?>> currentTask = null;
+    private AsyncTask<String, Void, List<?>> currentTask = null;
     private MenuItem refreshMenuItem;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -483,13 +483,13 @@ public class ViewWebStats extends WPActionBarActivity {
      * Call to authenticate so we can display stats.  If auth fails prompt
      * for updated wp.com credentials.
      */
-    private class AuthStatsAsyncTask extends AsyncTask<String, Void, Vector<?>> {
+    private class AuthStatsAsyncTask extends AsyncTask<String, Void, List<?>> {
 
         int statusCode = 0;
 
         @Override
-        protected Vector<?> doInBackground(String... args) {
-            Vector<String> result = null;
+        protected List<?> doInBackground(String... args) {
+            List<String> result = null;
 
             String sUsername = args[0];
             String sPassword = args[1];
@@ -561,7 +561,7 @@ public class ViewWebStats extends WPActionBarActivity {
         }
 
 
-        protected void onPostExecute(Vector<?> result) {
+        protected void onPostExecute(List<?> result) {
             currentTask = null;
             stopAnimatingRefreshButton(refreshMenuItem);
             if(authed) {
@@ -592,12 +592,12 @@ public class ViewWebStats extends WPActionBarActivity {
     /*
      * AsyncTask for retrieving a blog's key and id from the API
      */
-    private class StatsAPIBlogInfoAsyncTask extends AsyncTask<String, Void, Vector<?>> {
+    private class StatsAPIBlogInfoAsyncTask extends AsyncTask<String, Void, List<?>> {
 
         int statusCode = 0;
 
         @Override
-        protected Vector<?> doInBackground(String... args) {
+        protected List<?> doInBackground(String... args) {
 
             String username = args[0];
             String password = args[1];
@@ -605,7 +605,7 @@ public class ViewWebStats extends WPActionBarActivity {
             String homeURL = WordPress.currentBlog.getHomeURL();
             String storedBlogID = String.valueOf(WordPress.currentBlog.getBlogId());
             String wwwURL = "";
-            Vector<String> apiInfo = null;
+            List<String> apiInfo = null;
 
             if (homeURL.equals("")) {
                 //get the 'homePageLink' url from RSD to match with the stats api
@@ -715,8 +715,8 @@ public class ViewWebStats extends WPActionBarActivity {
                                 StringMap<?> jetpackClientIDOption = null;
                                 try {
                                     Gson gson = new Gson();
-                                    Type type = new TypeToken<HashMap<?, ?>>(){}.getType();
-                                    HashMap<?, ?> blogOptions = gson.fromJson(WordPress.currentBlog.getBlogOptions(), type);
+                                    Type type = new TypeToken<Map<?, ?>>(){}.getType();
+                                    Map<?, ?> blogOptions = gson.fromJson(WordPress.currentBlog.getBlogOptions(), type);
                                     jetpackClientIDOption = blogOptions != null ? (StringMap<?>) blogOptions.get("jetpack_client_id") : null;
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -768,7 +768,7 @@ public class ViewWebStats extends WPActionBarActivity {
         }
 
 
-        protected void onPostExecute(Vector<?> result) {
+        protected void onPostExecute(List<?> result) {
             currentTask = null;
             stopAnimatingRefreshButton(refreshMenuItem);
             if (result != null) {

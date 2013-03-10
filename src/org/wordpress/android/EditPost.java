@@ -7,9 +7,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -144,7 +144,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
     private boolean mScrollDetected = false;
     private boolean mIsNewDraft = false;
 
-    private Vector<String> mSelectedCategories;
+    private List<String> mSelectedCategories;
     private String mAccountName = "";
     private String mOption = "";
     private String mMediaCapturePath = "";
@@ -278,7 +278,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
             ((Spinner) findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
             if (mBlog.getPostFormats().equals("")) {
-                Vector<Object> args = new Vector<Object>();
+                List<Object> args = new Vector<Object>();
                 args.add(mBlog);
                 args.add(this);
                 new ApiHelper.getPostFormatsTask().execute(args);
@@ -289,12 +289,12 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
             } else {
                 try {
                     Gson gson = new Gson();
-                    Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-                    HashMap<String, String> jsonPostFormats = gson.fromJson(mBlog.getPostFormats(), type);
+                    Type type = new TypeToken<Map<String, String>>(){}.getType();
+                    Map<String, String> jsonPostFormats = gson.fromJson(mBlog.getPostFormats(), type);
                     mPostFormats = new String[jsonPostFormats.size()];
                     mPostFormatTitles = new String[jsonPostFormats.size()];
                     int i = 0;
-                    for (HashMap.Entry<String, String> entry : jsonPostFormats.entrySet()) {
+                    for (Map.Entry<String, String> entry : jsonPostFormats.entrySet()) {
                         String key = entry.getKey();
                         String val = entry.getValue();
                         mPostFormats[i] = key;
@@ -887,7 +887,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
         mIsNew = true;
 
-        Vector<?> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         if (accounts.size() > 0) {
 
@@ -896,7 +896,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
             for (int i = 0; i < accounts.size(); i++) {
 
-                HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
+                Map<String, Object> curHash = accounts.get(i);
                 try {
                     blogNames[i] = EscapeUtils.unescapeHtml(curHash.get("blogName").toString());
                 } catch (Exception e) {
@@ -1661,21 +1661,21 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
             }
 
-            Vector<Serializable> params = new Vector<Serializable>();
+            List<Serializable> params = new Vector<Serializable>();
             params.add(multi_stream);
             params.add(type);
             new processAttachmentsTask().execute(params);
         }
     }
 
-    private class processAttachmentsTask extends AsyncTask<Vector<?>, Void, SpannableStringBuilder> {
+    private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
 
         protected void onPreExecute() {
             showDialog(ID_DIALOG_LOADING);
         }
 
         @Override
-        protected SpannableStringBuilder doInBackground(Vector<?>... args) {
+        protected SpannableStringBuilder doInBackground(List<?>... args) {
             ArrayList<?> multi_stream = (ArrayList<?>) args[0].get(0);
             String type = (String) args[0].get(1);
             SpannableStringBuilder ssb = new SpannableStringBuilder();
@@ -1709,7 +1709,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         if (width > height)
             width = height;
 
-        HashMap<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
 
         if (mediaData == null) {
             // data stream not returned
@@ -1806,7 +1806,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
-        HashMap<?, ?> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
 
         if (mediaData == null) {
             // data stream not returned

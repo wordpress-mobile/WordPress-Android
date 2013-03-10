@@ -324,15 +324,15 @@ public class PostUploadService extends Service {
                 longitude = (Double) post.getLongitude();
 
                 if (latitude > 0) {
-                    HashMap<Object, Object> hLatitude = new HashMap<Object, Object>();
+                    Map<Object, Object> hLatitude = new HashMap<Object, Object>();
                     hLatitude.put("key", "geo_latitude");
                     hLatitude.put("value", latitude);
 
-                    HashMap<Object, Object> hLongitude = new HashMap<Object, Object>();
+                    Map<Object, Object> hLongitude = new HashMap<Object, Object>();
                     hLongitude.put("key", "geo_longitude");
                     hLongitude.put("value", longitude);
 
-                    HashMap<Object, Object> hPublic = new HashMap<Object, Object>();
+                    Map<Object, Object> hPublic = new HashMap<Object, Object>();
                     hPublic.put("key", "geo_public");
                     hPublic.put("value", 1);
 
@@ -471,7 +471,7 @@ public class PostUploadService extends Service {
                     String imageTitle = fVideo.getName();
 
                     // try to upload the video
-                    HashMap<String, Object> m = new HashMap<String, Object>();
+                    Map<String, Object> m = new HashMap<String, Object>();
 
                     m.put("name", imageTitle);
                     m.put("type", mimeType);
@@ -489,9 +489,7 @@ public class PostUploadService extends Service {
                         return null;
                     }
 
-                    HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-
-                    contentHash = (HashMap<?, ?>) result;
+                    Map<?, ?> contentHash = (HashMap<?, ?>) result;
 
                     String resultURL = contentHash.get("url").toString();
                     if (contentHash.containsKey("videopress_shortcode")) {
@@ -642,9 +640,7 @@ public class PostUploadService extends Service {
                                 return null;
                             }
 
-                            HashMap<?, ?> contentHash = new HashMap<Object, Object>();
-
-                            contentHash = (HashMap<?, ?>) result;
+                            Map<?, ?> contentHash = (HashMap<?, ?>) result;
 
                             String resultURL = contentHash.get("url").toString();
 

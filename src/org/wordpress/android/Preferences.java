@@ -2,8 +2,8 @@ package org.wordpress.android;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -80,8 +80,8 @@ public class Preferences extends SherlockPreferenceActivity {
         PreferenceCategory blogsCategory = (PreferenceCategory) findPreference("wp_pref_category_blogs");
         blogsCategory.removeAll();
 
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
-        for (HashMap<String, Object> account : accounts) {
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        for (Map<String, Object> account : accounts) {
             String blogName = account.get("blogName").toString();
             int accountId = (Integer) account.get("id");
 
@@ -125,12 +125,12 @@ public class Preferences extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
-        Vector<?> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         if (accounts.size() > 0) {
 
             for (int i = 0; i < accounts.size(); i++) {
 
-                HashMap<?, ?> curHash = (HashMap<?, ?>) accounts.get(i);
+                Map<String, Object> curHash = accounts.get(i);
                 String curBlogName = curHash.get("blogName").toString();
                 String accountID = curHash.get("id").toString();
                 int runService = Integer.valueOf(curHash.get("runService").toString());

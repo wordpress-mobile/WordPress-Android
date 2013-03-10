@@ -1,7 +1,7 @@
 package org.wordpress.android;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
@@ -79,7 +79,7 @@ public class WordPress extends Application {
             setCurrentBlogToLastActive();
 
             // fallback to just using the first blog
-            Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
+            List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
@@ -96,8 +96,8 @@ public class WordPress extends Application {
      * @return the blog with the specified ID, or null if blog could not be retrieved.
      */
     public static Blog getBlog(int id) {
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
-        for (HashMap<String, Object> account : accounts) {
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        for (Map<String, Object> account : accounts) {
             int accountId = (Integer) account.get("id");
             if (accountId == id) {
                 try {
@@ -116,11 +116,11 @@ public class WordPress extends Application {
      * @return the current blog
      */
     public static Blog setCurrentBlogToLastActive() {
-        Vector<HashMap<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         int lastBlogId = WordPress.wpDB.getLastBlogId();
         if (lastBlogId != -1) {
-            for (HashMap<String, Object> account : accounts) {
+            for (Map<String, Object> account : accounts) {
                 int id = Integer.valueOf(account.get("id").toString());
                 if (id == lastBlogId) {
                     setCurrentBlog(id);

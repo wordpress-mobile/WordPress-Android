@@ -1,6 +1,6 @@
 package org.wordpress.android;
 
-import java.util.Vector;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -23,8 +23,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-
-import org.wordpress.android.models.Blog;
 
 public class WPCOMReaderImpl extends WPCOMReaderBase {
     /** Called when the activity is first created. */
@@ -161,14 +159,14 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
         }).start();
     }
 
-    private class loadReaderTask extends AsyncTask<String, Void, Vector<?>> {
+    private class loadReaderTask extends AsyncTask<String, Void, List<?>> {
 
         @Override
         protected void onPreExecute() {
             ((WPCOMReaderPager) getActivity()).startAnimatingButton();
         }
 
-        protected void onPostExecute(Vector<?> result) {
+        protected void onPostExecute(List<?> result) {
 
             // Read the WordPress.com cookies from the wv and pass them to the
             // connections below!
@@ -197,7 +195,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
         }
 
         @Override
-        protected Vector<?> doInBackground(String... args) {
+        protected List<?> doInBackground(String... args) {
 
             if (WordPress.currentBlog == null) {
                 WordPress.setCurrentBlogToLastActive();

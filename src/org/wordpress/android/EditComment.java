@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -174,7 +175,7 @@ public class EditComment extends Activity {
             return true;
         }
 
-        final HashMap<String, String> postHash = new HashMap<String, String>();
+        final Map<String, String> postHash = new HashMap<String, String>();
         postHash.put("status", status);
         postHash.put("content", content);
         postHash.put("author", authorName);
@@ -194,7 +195,7 @@ public class EditComment extends Activity {
     }
 
 
-    public void updateComment(HashMap<String, String> postHash){
+    public void updateComment(Map<String, String> postHash){
 
         // Update the comment on the user's blog.
         XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),

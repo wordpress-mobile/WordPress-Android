@@ -19,6 +19,7 @@ package org.wordpress.android.util;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -713,7 +714,7 @@ class HtmlToSpannedConverter implements ContentHandler {
             width = height;
         ImageHelper ih = new ImageHelper();
 
-        HashMap<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
 
         if (mediaData != null) {
 

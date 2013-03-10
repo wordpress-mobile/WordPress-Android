@@ -3,6 +3,7 @@ package org.wordpress.android;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +42,6 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 
@@ -207,11 +207,11 @@ public class AddAccount extends Activity implements OnClickListener {
                     final int[] blogIds = new int[result.length];
                     final boolean[] wpcoms = new boolean[result.length];
                     final String[] wpVersions = new String[result.length];
-                    HashMap<Object, Object> contentHash = new HashMap<Object, Object>();
+                    Map<Object, Object> contentHash = new HashMap<Object, Object>();
                     blogCtr = 0;
                     // loop this!
                     for (int ctr = 0; ctr < result.length; ctr++) {
-                        contentHash = (HashMap<Object, Object>) result[ctr];
+                        contentHash = (Map<Object, Object>) result[ctr];
                         // check if this blog is already set up
                         boolean match = false;
                         String matchBlogName = contentHash.get("blogName").toString();
@@ -241,7 +241,7 @@ public class AddAccount extends Activity implements OnClickListener {
                             // attempt to get the software version
                             String wpVersion = "";
                             if (!wpcomFlag) {
-                                HashMap<String, String> hPost = new HashMap<String, String>();
+                                Map<String, String> hPost = new HashMap<String, String>();
                                 hPost.put("software_version", "software_version");
                                 Object[] vParams = { 1, username, password, hPost };
                                 Object versionResult = new Object();
@@ -252,8 +252,8 @@ public class AddAccount extends Activity implements OnClickListener {
 
                                 if (versionResult != null) {
                                     try {
-                                        contentHash = (HashMap<Object, Object>) versionResult;
-                                        HashMap<?, ?> sv = (HashMap<?, ?>) contentHash.get("software_version");
+                                        contentHash = (Map<Object, Object>) versionResult;
+                                        Map<?, ?> sv = (Map<?, ?>) contentHash.get("software_version");
                                         wpVersion = sv.get("value").toString();
                                     } catch (Exception e) {
                                     }

@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.json.JSONArray;
@@ -44,12 +45,12 @@ public class Post {
 
     private Blog blog;
 
-    public Vector<String> imageUrl = new Vector<String>();
-    Vector<String> selectedCategories = new Vector<String>();
+    public List<String> imageUrl = new Vector<String>();
+    List<String> selectedCategories = new Vector<String>();
 
     public Post(int blog_id, long post_id, boolean isPage) {
         // load an existing post
-        Vector<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
+        List<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
         if (postVals != null) {
             try {
                 this.blog = new Blog(blog_id);
