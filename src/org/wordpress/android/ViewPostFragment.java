@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.posts.PreviewPostActivity;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringHelper;
 
@@ -104,7 +105,7 @@ public class ViewPostFragment extends Fragment {
 
         if (WordPress.currentPost != null) {
             if (!WordPress.currentPost.getPermaLink().equals("")) {
-                Intent i = new Intent(getActivity(), WebViewActivity.class);
+                Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 startActivity(i);
             }
         }

@@ -71,7 +71,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".WebViewActivity"
+            android:name="org.wordpress.android.ui.WebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name="org.wordpress.android.ui.posts.PreviewPostActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name="org.wordpress.android.ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="Preferences"

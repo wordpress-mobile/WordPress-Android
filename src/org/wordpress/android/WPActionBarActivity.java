@@ -27,6 +27,7 @@ import com.actionbarsherlock.view.MenuItem;
 import net.simonvt.menudrawer.MenuDrawer;
 
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -76,7 +77,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         }
 
         Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog != null) {
+
+        if (currentBlog != null
+                && getSupportActionBar().getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getId()) {
                     getSupportActionBar().setSelectedNavigationItem(i);
@@ -184,7 +187,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout dashboardButton = (LinearLayout) findViewById(R.id.menu_dashboard_btn);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(WPActionBarActivity.this, WebViewActivity.class);
+                Intent i = new Intent(WPActionBarActivity.this, DashboardActivity.class);
                 i.putExtra("loadAdmin", true);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 menuDrawer.closeMenu();

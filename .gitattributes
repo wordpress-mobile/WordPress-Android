@@ -354,13 +354,16 @@ src/org/wordpress/android/WPCOMReaderImpl.java -text
 src/org/wordpress/android/WPCOMReaderPager.java -text
 src/org/wordpress/android/WPCOMReaderTopicsSelector.java -text
 src/org/wordpress/android/WPCOMReaderWebPage.java -text
-src/org/wordpress/android/WebViewActivity.java -text
 src/org/wordpress/android/WordPress.java -text
 src/org/wordpress/android/WordPressDB.java -text
 src/org/wordpress/android/models/Blog.java -text
 src/org/wordpress/android/models/Comment.java -text
 src/org/wordpress/android/models/MediaFile.java -text
 src/org/wordpress/android/models/Post.java -text
+src/org/wordpress/android/ui/AuthenticatedWebViewActivity.java -text
+src/org/wordpress/android/ui/DashboardActivity.java -text
+src/org/wordpress/android/ui/WebViewActivity.java -text
+src/org/wordpress/android/ui/posts/PreviewPostActivity.java -text
 src/org/wordpress/android/util/AlertUtil.java -text
 src/org/wordpress/android/util/CommentBadgeTextView.java -text
 src/org/wordpress/android/util/CommentService.java -text
