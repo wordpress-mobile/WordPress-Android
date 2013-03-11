@@ -264,6 +264,7 @@
 
   <!-- preferences -->
   <string name="preferences">Preferences</string>
+  <string name="open_source_licenses">Open Source Licenses</string>
 
   <!-- stats -->
   <string name="username_password_required">Username and Password are required fields.</string>

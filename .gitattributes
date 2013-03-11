@@ -4,6 +4,7 @@
 .settings/org.eclipse.jdt.core.prefs -text
 .settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
+assets/licenses.html -text
 assets/webview.css -text
 /build.xml -text
 /default.properties -text
@@ -364,6 +365,7 @@ src/org/wordpress/android/ui/AuthenticatedWebViewActivity.java -text
 src/org/wordpress/android/ui/DashboardActivity.java -text
 src/org/wordpress/android/ui/WebViewActivity.java -text
 src/org/wordpress/android/ui/posts/PreviewPostActivity.java -text
+src/org/wordpress/android/ui/prefs/LicensesActivity.java -text
 src/org/wordpress/android/util/AlertUtil.java -text
 src/org/wordpress/android/util/CommentBadgeTextView.java -text
 src/org/wordpress/android/util/CommentService.java -text

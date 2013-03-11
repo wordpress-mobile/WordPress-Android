@@ -52,6 +52,10 @@
             <intent android:targetClass="org.wordpress.android.About"
                 android:targetPackage="org.wordpress.android"/>
         </Preference>
+        <Preference android:title="@string/open_source_licenses" >
+            <intent android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
+                android:targetPackage="org.wordpress.android"/>
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

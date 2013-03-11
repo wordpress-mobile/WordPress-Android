@@ -123,6 +123,7 @@
         </activity>
         <activity android:name="AddAcountSettings" />
         <activity android:name=".About" />
+        <activity android:name="org.wordpress.android.ui.prefs.LicensesActivity" />
         <activity
             android:name="Comments"
             android:configChanges="orientation|keyboardHidden|screenSize"
