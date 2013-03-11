@@ -237,7 +237,6 @@ res/layout/menu_refresh_view.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/new_account.xml -text
 res/layout/posts.xml -text
-res/layout/reader.xml -text
 res/layout/reader_detail.xml -text
 res/layout/reader_topics.xml -text
 res/layout/reader_web_page.xml -text
@@ -254,6 +253,7 @@ res/layout/view_comment.xml -text
 res/layout/view_web_stats.xml -text
 res/layout/viewpost.xml -text
 res/layout/viewposts.xml -text
+res/layout/webview.xml -text
 res/menu/categories.xml -text
 res/menu/edit.xml -text
 res/menu/posts.xml -text

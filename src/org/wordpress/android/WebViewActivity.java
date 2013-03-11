@@ -61,7 +61,7 @@ public class WebViewActivity extends SherlockActivity {
         getWindow().setFormat(PixelFormat.RGBA_8888);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
         requestWindowFeature(Window.FEATURE_PROGRESS);
-        setContentView(R.layout.reader);
+        setContentView(R.layout.webview);
 
         // setProgressBarIndeterminateVisibility(true);
 
