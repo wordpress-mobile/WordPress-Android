@@ -107,7 +107,7 @@
         <activity
             android:name="org.wordpress.android.ui.posts.PostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
