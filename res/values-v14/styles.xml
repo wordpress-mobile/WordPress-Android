@@ -35,6 +35,8 @@
     </style>
     
     <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:icon">@drawable/ab_icon_wp</item>
+        <item name="icon">@drawable/ab_icon_wp</item>
         <item name="android:background">@drawable/ab_solid_wordpress</item>
         <item name="background">@drawable/ab_solid_wordpress</item>
         

@@ -134,7 +134,8 @@
         </activity>
         <activity
             android:name="org.wordpress.android.ui.DashboardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
         <activity
             android:name="org.wordpress.android.ui.reader.ReaderPagerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />

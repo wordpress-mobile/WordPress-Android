@@ -101,10 +101,9 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
 
     @Override
     protected void onPause() {
+        super.onPause();
         if (refreshMenuItem != null && isAnimatingRefreshButton)
             this.stopAnimatingButton();
-
-        super.onPause();
     }
 
     @Override

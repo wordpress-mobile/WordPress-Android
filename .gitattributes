@@ -29,6 +29,7 @@ res/drawable-hdpi/ab_icon_navigation_down.png -text
 res/drawable-hdpi/ab_icon_navigation_up.png -text
 res/drawable-hdpi/ab_icon_save.png -text
 res/drawable-hdpi/ab_icon_share.png -text
+res/drawable-hdpi/ab_icon_wp.png -text
 res/drawable-hdpi/ab_solid_wordpress.9.png -text
 res/drawable-hdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-hdpi/ab_transparent_wordpress.9.png -text
@@ -77,6 +78,7 @@ res/drawable-hdpi/wp_small_toggle.9.png -text
 res/drawable-hdpi/wp_statusbar_icon.png -text
 res/drawable-large-mdpi/wp_logo_actionbar.png -text
 res/drawable-ldpi-v11/notification_icon.png -text
+res/drawable-ldpi/ab_icon_wp.png -text
 res/drawable-ldpi/app_icon.png -text
 res/drawable-ldpi/notification_icon.png -text
 res/drawable-mdpi-v11/notification_icon.png -text
@@ -86,6 +88,7 @@ res/drawable-mdpi/ab_icon_navigation_up.png -text
 res/drawable-mdpi/ab_icon_save.png -text
 res/drawable-mdpi/ab_icon_share.png -text
 res/drawable-mdpi/ab_icon_web.png -text
+res/drawable-mdpi/ab_icon_wp.png -text
 res/drawable-mdpi/ab_solid_wordpress.9.png -text
 res/drawable-mdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-mdpi/ab_transparent_wordpress.9.png -text
@@ -116,6 +119,7 @@ res/drawable-xhdpi/ab_icon_navigation_up.png -text
 res/drawable-xhdpi/ab_icon_save.png -text
 res/drawable-xhdpi/ab_icon_share.png -text
 res/drawable-xhdpi/ab_icon_web.png -text
+res/drawable-xhdpi/ab_icon_wp.png -text
 res/drawable-xhdpi/ab_solid_wordpress.9.png -text
 res/drawable-xhdpi/ab_stacked_solid_wordpress.9.png -text
 res/drawable-xhdpi/ab_transparent_wordpress.9.png -text

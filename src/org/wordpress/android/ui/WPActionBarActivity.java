@@ -50,6 +50,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
     protected MenuDrawer menuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
+    protected boolean mShouldFinish;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
     @Override
     protected void onPause() {
         super.onPause();
-        overridePendingTransition(0, 0);
+        
         if (isAnimatingRefreshButton) {
             isAnimatingRefreshButton = false;
+        }
+        if (mShouldFinish) {
+            overridePendingTransition(0, 0);
+            finish();
         }
     }
 
@@ -115,9 +120,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout postsButton = (LinearLayout) findViewById(R.id.menu_posts_btn);
         postsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                menuDrawer.closeMenu();
+                if (!(WPActionBarActivity.this instanceof PostsActivity))
+                    mShouldFinish = true;
                 Intent i = new Intent(WPActionBarActivity.this, PostsActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                menuDrawer.closeMenu();
                 startActivityWithDelay(i);
             }
         });
@@ -125,6 +132,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout pagesButton = (LinearLayout) findViewById(R.id.menu_pages_btn);
         pagesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (!(WPActionBarActivity.this instanceof PostsActivity))
+                    mShouldFinish = true;
                 Intent i = new Intent(WPActionBarActivity.this, PostsActivity.class);
                 i.putExtra("id", WordPress.currentBlog.getId());
                 i.putExtra("isNew", true);
@@ -138,6 +147,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout commentsButton = (LinearLayout) findViewById(R.id.menu_comments_btn);
         commentsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (!(WPActionBarActivity.this instanceof CommentsActivity))
+                    mShouldFinish = true;
                 Intent i = new Intent(WPActionBarActivity.this, CommentsActivity.class);
                 i.putExtra("id", WordPress.currentBlog.getId());
                 i.putExtra("isNew", true);
@@ -150,6 +161,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout picButton = (LinearLayout) findViewById(R.id.menu_quickphoto_btn);
         picButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                mShouldFinish = false;
                 PackageManager pm = WPActionBarActivity.this.getPackageManager();
                 Intent i = new Intent(WPActionBarActivity.this, EditPostActivity.class);
                 if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -166,6 +178,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout videoButton = (LinearLayout) findViewById(R.id.menu_quickvideo_btn);
         videoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                mShouldFinish = false;
                 PackageManager pm = WPActionBarActivity.this.getPackageManager();
                 Intent i = new Intent(WPActionBarActivity.this, EditPostActivity.class);
                 if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -182,6 +195,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout statsButton = (LinearLayout) findViewById(R.id.menu_stats_btn);
         statsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (!(WPActionBarActivity.this instanceof ViewWebStatsActivity))
+                    mShouldFinish = true;
                 Intent i = new Intent(WPActionBarActivity.this, ViewWebStatsActivity.class);
                 i.putExtra("id", WordPress.currentBlog.getId());
                 i.putExtra("isNew", true);
@@ -194,6 +209,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout dashboardButton = (LinearLayout) findViewById(R.id.menu_dashboard_btn);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                mShouldFinish = false;
                 Intent i = new Intent(WPActionBarActivity.this, DashboardActivity.class);
                 i.putExtra("loadAdmin", true);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -205,8 +221,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout settingsButton = (LinearLayout) findViewById(R.id.menu_settings_btn);
         settingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                mShouldFinish = false;
                 Intent i = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 menuDrawer.closeMenu();
                 startActivityWithDelay(i);
             }
@@ -215,6 +231,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout readButton = (LinearLayout) findViewById(R.id.menu_reader_btn);
         readButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (!(WPActionBarActivity.this instanceof ReaderPagerActivity))
+                    mShouldFinish = true;
                 int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
                 if (WordPress.currentBlog.isDotcomFlag()) {
                     Intent i = new Intent(WPActionBarActivity.this, ReaderPagerActivity.class);
@@ -342,6 +360,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         // no blogs are configured, so display new account activity
         if (currentBlog == null) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
+            mShouldFinish = false;
             Intent i = new Intent(this, NewAccountActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
