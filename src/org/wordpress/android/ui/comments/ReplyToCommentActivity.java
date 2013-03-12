@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,9 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.wordpress.android.R;
 
 
-public class ReplyToComment extends Activity {
+
+public class ReplyToCommentActivity extends Activity {
     String accountName, postID = "", comment;
     int commentID = 0;
 
@@ -46,7 +48,7 @@ public class ReplyToComment extends Activity {
                 String replyText = replyTextET.getText().toString();
 
                 if (replyText.equals("")){
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ReplyToComment.this);
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ReplyToCommentActivity.this);
                       dialogBuilder.setTitle(getResources().getText(R.string.reply_required));
                       dialogBuilder.setMessage(getResources().getText(R.string.reply_please_enter));
                       dialogBuilder.setPositiveButton("OK",  new

@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class Link extends Activity {
+import org.wordpress.android.R;
+
+public class EditLinkActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

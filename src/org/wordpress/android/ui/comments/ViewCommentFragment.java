@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.comments;
 
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 
 public class ViewCommentFragment extends Fragment {
@@ -144,7 +146,7 @@ public class ViewCommentFragment extends Fragment {
                 if (WordPress.currentComment != null) {
                     Intent i = new Intent(
                             getActivity().getApplicationContext(),
-                            EditComment.class);
+                            EditCommentActivity.class);
                     startActivityForResult(i, 0);
                 }
 

@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.comments;
 
 import java.math.BigInteger;
 import java.net.URI;
@@ -57,11 +57,13 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
-public class ViewComments extends ListFragment {
+public class ViewCommentsFragment extends ListFragment {
     private static final int[] IMAGE_IDS = { R.id.avatar };
     public ThumbnailAdapter thumbs = null;
     public ArrayList<Comment> model = null;
@@ -1015,7 +1017,7 @@ public class ViewComments extends ListFragment {
 //            onCommentSelectedListener.onCommentSelected(comment);
             Intent i = new Intent(
                     getActivity().getApplicationContext(),
-                    EditComment.class);
+                    EditCommentActivity.class);
             startActivityForResult(i, 0);
             return true;
 

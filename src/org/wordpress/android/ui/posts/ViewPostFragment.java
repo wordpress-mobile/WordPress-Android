@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,8 +11,9 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.posts.PreviewPostActivity;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringHelper;
 
@@ -20,7 +21,7 @@ public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
 
     private OnDetailPostActionListener onDetailPostActionListener;
-    Posts parentActivity;
+    PostsActivity parentActivity;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -35,7 +36,7 @@ public class ViewPostFragment extends Fragment {
         if (WordPress.currentPost != null)
             loadPost(WordPress.currentPost);
 
-        parentActivity = (Posts) getActivity();
+        parentActivity = (PostsActivity) getActivity();
     }
 
     @Override
@@ -51,10 +52,10 @@ public class ViewPostFragment extends Fragment {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !parentActivity.isRefreshing) {
                     onDetailPostActionListener.onDetailPostAction(
-                            Posts.POST_EDIT, WordPress.currentPost);
+                            PostsActivity.POST_EDIT, WordPress.currentPost);
                     Intent i = new Intent(
                             getActivity().getApplicationContext(),
-                            EditPost.class);
+                            EditPostActivity.class);
                     i.putExtra("isPage", WordPress.currentPost.isPage());
                     i.putExtra("postID", WordPress.currentPost.getId());
                     i.putExtra("localDraft", WordPress.currentPost.isLocalDraft());
@@ -70,7 +71,7 @@ public class ViewPostFragment extends Fragment {
             public void onClick(View v) {
 
                 if (!parentActivity.isRefreshing)
-                    onDetailPostActionListener.onDetailPostAction(Posts.POST_SHARE, WordPress.currentPost);
+                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
 
             }
         });
@@ -81,7 +82,7 @@ public class ViewPostFragment extends Fragment {
             public void onClick(View v) {
 
                 if (!parentActivity.isRefreshing)
-                    onDetailPostActionListener.onDetailPostAction(Posts.POST_DELETE, WordPress.currentPost);
+                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_DELETE, WordPress.currentPost);
 
             }
         });

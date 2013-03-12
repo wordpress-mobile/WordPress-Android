@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.comments;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +22,11 @@ import android.widget.Spinner;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 
-public class EditComment extends Activity {
+public class EditCommentActivity extends Activity {
 
     private int ID_DIALOG_SAVING = 0;
     private String xmlErrorMessage;
@@ -148,7 +150,7 @@ public class EditComment extends Activity {
 //            dialogMsg = getResources().getText(R.string.author_email_required);
         }
         if (!dialogMsg.equals("")) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditComment.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
             dialogBuilder.setTitle(getResources()
                          .getText(R.string.required_field));
             dialogBuilder.setMessage(dialogMsg);
@@ -248,7 +250,7 @@ public class EditComment extends Activity {
 
             Thread dialogThread = new Thread() {
                 public void run() {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditComment.this);
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
                     dialogBuilder.setTitle(getResources().getText(R.string.error));
                     dialogBuilder.setMessage(xmlErrorMessage);
                     dialogBuilder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
@@ -276,7 +278,7 @@ public class EditComment extends Activity {
         if (i == KeyEvent.KEYCODE_BACK) {
 
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    EditComment.this);
+                    EditCommentActivity.this);
             dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
             dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),

@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.wordpress.android;
+package org.wordpress.android.ui;
 
 import java.io.IOException;
 import java.io.PushbackInputStream;
@@ -69,6 +69,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ConnectionClient;
 
+import org.wordpress.android.Constants;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
 /**

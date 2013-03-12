@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.reader;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -12,14 +12,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-public class WPCOMReaderWebPage extends WPCOMReaderBase {
+import org.wordpress.android.R;
+
+public class ReaderWebPageFragment extends ReaderBaseFragment {
 
     // private String cachedPage = null;
     public WebView wv;
     public ProgressBar progressBar;
 
-    public static WPCOMReaderWebPage newInstance() {
-        WPCOMReaderWebPage f = new WPCOMReaderWebPage();
+    public static ReaderWebPageFragment newInstance() {
+        ReaderWebPageFragment f = new ReaderWebPageFragment();
         return f;
     }
 

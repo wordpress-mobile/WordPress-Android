@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.comments;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +24,17 @@ import com.actionbarsherlock.view.MenuItem;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.ViewCommentFragment.OnCommentStatusChangeListener;
-import org.wordpress.android.ViewComments.OnAnimateRefreshButtonListener;
-import org.wordpress.android.ViewComments.OnCommentSelectedListener;
-import org.wordpress.android.ViewComments.OnContextCommentStatusChangeListener;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.ViewCommentFragment.OnCommentStatusChangeListener;
+import org.wordpress.android.ui.comments.ViewCommentsFragment.OnAnimateRefreshButtonListener;
+import org.wordpress.android.ui.comments.ViewCommentsFragment.OnCommentSelectedListener;
+import org.wordpress.android.ui.comments.ViewCommentsFragment.OnContextCommentStatusChangeListener;
 
-public class Comments extends WPActionBarActivity implements
+public class CommentsActivity extends WPActionBarActivity implements
         OnCommentSelectedListener, OnCommentStatusChangeListener,
         OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
 
@@ -41,7 +44,7 @@ public class Comments extends WPActionBarActivity implements
     public int ID_DIALOG_DELETING = 3;
     private XMLRPCClient client;
     public ProgressDialog pd;
-    private ViewComments commentList;
+    private ViewCommentsFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;
 
@@ -68,7 +71,7 @@ public class Comments extends WPActionBarActivity implements
         }
 
         FragmentManager fm = getSupportFragmentManager();
-        commentList = (ViewComments) fm.findFragmentById(R.id.commentList);
+        commentList = (ViewCommentsFragment) fm.findFragmentById(R.id.commentList);
 
         WordPress.currentComment = null;
 
@@ -238,7 +241,7 @@ public class Comments extends WPActionBarActivity implements
                 }.start();
             } else if (status.equals("reply")) {
 
-                Intent i = new Intent(Comments.this, ReplyToComment.class);
+                Intent i = new Intent(CommentsActivity.this, ReplyToCommentActivity.class);
                 i.putExtra("commentID", commentID);
                 i.putExtra("postID", WordPress.currentComment.postID);
                 startActivityForResult(i, 0);
@@ -288,7 +291,7 @@ public class Comments extends WPActionBarActivity implements
             dismissDialog(ID_DIALOG_MODERATING);
             Thread action = new Thread() {
                 public void run() {
-                    Toast.makeText(Comments.this,
+                    Toast.makeText(CommentsActivity.this,
                             getResources().getText(R.string.comment_moderated),
                             Toast.LENGTH_SHORT).show();
                 }
@@ -306,7 +309,7 @@ public class Comments extends WPActionBarActivity implements
             Thread action3 = new Thread() {
                 public void run() {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            Comments.this);
+                            CommentsActivity.this);
                     dialogBuilder.setTitle(getResources().getText(
                             R.string.connection_error));
                     dialogBuilder.setMessage(getResources().getText(R.string.error_moderate_comment));
@@ -345,7 +348,7 @@ public class Comments extends WPActionBarActivity implements
             attemptToSelectComment();
             Thread action = new Thread() {
                 public void run() {
-                    Toast.makeText(Comments.this,
+                    Toast.makeText(CommentsActivity.this,
                             getResources().getText(R.string.comment_moderated),
                             Toast.LENGTH_SHORT).show();
                 }
@@ -353,7 +356,7 @@ public class Comments extends WPActionBarActivity implements
             runOnUiThread(action);
             Thread action2 = new Thread() {
                 public void run() {
-                    pd = new ProgressDialog(Comments.this);
+                    pd = new ProgressDialog(CommentsActivity.this);
                     commentList.refreshComments(false, true, false);
                 }
             };
@@ -364,7 +367,7 @@ public class Comments extends WPActionBarActivity implements
             Thread action3 = new Thread() {
                 public void run() {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            Comments.this);
+                            CommentsActivity.this);
                     dialogBuilder.setTitle(getResources().getText(
                             R.string.connection_error));
                     dialogBuilder.setMessage(getResources().getText(R.string.error_moderate_comment));
@@ -414,7 +417,7 @@ public class Comments extends WPActionBarActivity implements
             dismissDialog(ID_DIALOG_REPLYING);
             Thread action = new Thread() {
                 public void run() {
-                    Toast.makeText(Comments.this,
+                    Toast.makeText(CommentsActivity.this,
                             getResources().getText(R.string.reply_added),
                             Toast.LENGTH_SHORT).show();
                 }
@@ -422,7 +425,7 @@ public class Comments extends WPActionBarActivity implements
             runOnUiThread(action);
             Thread action2 = new Thread() {
                 public void run() {
-                    pd = new ProgressDialog(Comments.this); // to avoid
+                    pd = new ProgressDialog(CommentsActivity.this); // to avoid
                     // crash
                     commentList.refreshComments(false, true, false);
                 }
@@ -434,9 +437,9 @@ public class Comments extends WPActionBarActivity implements
             Thread action3 = new Thread() {
                 public void run() {
 
-                    Toast.makeText(Comments.this, getResources().getText(R.string.connection_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommentsActivity.this, getResources().getText(R.string.connection_error), Toast.LENGTH_SHORT).show();
 
-                    Intent i = new Intent(Comments.this, ReplyToComment.class);
+                    Intent i = new Intent(CommentsActivity.this, ReplyToCommentActivity.class);
                     i.putExtra("commentID", commentID);
                     i.putExtra("postID", WordPress.currentComment.postID);
                     i.putExtra("comment", comment);
@@ -468,7 +471,7 @@ public class Comments extends WPActionBarActivity implements
                     new Thread(new Runnable() {
                         public void run() {
                             Looper.prepare();
-                            pd = new ProgressDialog(Comments.this);
+                            pd = new ProgressDialog(CommentsActivity.this);
                             replyToComment(postID, commentID, returnText);
                         }
                     }).start();
@@ -482,7 +485,7 @@ public class Comments extends WPActionBarActivity implements
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == ID_DIALOG_MODERATING) {
-            ProgressDialog loadingDialog = new ProgressDialog(Comments.this);
+            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
             if (commentList.checkedCommentTotal <= 1) {
                 loadingDialog.setMessage(getResources().getText(
                         R.string.moderating_comment));
@@ -494,14 +497,14 @@ public class Comments extends WPActionBarActivity implements
             loadingDialog.setCancelable(false);
             return loadingDialog;
         } else if (id == ID_DIALOG_REPLYING) {
-            ProgressDialog loadingDialog = new ProgressDialog(Comments.this);
+            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
             loadingDialog.setMessage(getResources().getText(
                     R.string.replying_comment));
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(false);
             return loadingDialog;
         } else if (id == ID_DIALOG_DELETING) {
-            ProgressDialog loadingDialog = new ProgressDialog(Comments.this);
+            ProgressDialog loadingDialog = new ProgressDialog(CommentsActivity.this);
             if (commentList.checkedCommentTotal <= 1) {
                 loadingDialog.setMessage(getResources().getText(
                         R.string.deleting_comment));

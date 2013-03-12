@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.prefs;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,12 +20,14 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferences extends SherlockFragmentActivity {
+public class BlogPreferencesActivity extends SherlockFragmentActivity {
     protected static Intent svc = null;
     private String originalUsername;
 
@@ -74,7 +76,7 @@ public class BlogPreferences extends SherlockFragmentActivity {
                 error = true;
 
             if (error) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(BlogPreferences.this);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(BlogPreferencesActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.error));
                 dialogBuilder.setMessage(getResources().getText(R.string.scaled_image_error));
                 dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -232,13 +234,13 @@ public class BlogPreferences extends SherlockFragmentActivity {
      * Remove the blog this activity is managing settings for.
      */
     public void removeBlog(View view) {
-        final BlogPreferences activity = this;
+        final BlogPreferencesActivity activity = this;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferences.this, blog.getId());
+                boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getId());
                 if (deleteSuccess) {
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
                             .show();

@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class NewAccount extends Activity {
+import org.wordpress.android.R;
+
+public class NewAccountActivity extends Activity {
     static final int CREATE_ACCOUNT_REQUEST = 0;
     static final int EXISTING_COM_ACCOUNT_REQUEST = 1;
     static final int EXISTING_ORG_ACCOUNT_REQUEST = 2;
@@ -19,7 +21,7 @@ public class NewAccount extends Activity {
         Button createAccountButton = (Button) findViewById(R.id.createWPAccount);
         createAccountButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent signupIntent = new Intent(NewAccount.this, Signup.class);
+                Intent signupIntent = new Intent(NewAccountActivity.this, SignupActivity.class);
                 startActivityForResult(signupIntent, CREATE_ACCOUNT_REQUEST);
             }
         });
@@ -27,7 +29,7 @@ public class NewAccount extends Activity {
         Button dotComButton = (Button) findViewById(R.id.dotcomExisting);
         dotComButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(NewAccount.this, AddAccount.class);
+                Intent i = new Intent(NewAccountActivity.this, AddAccountActivity.class);
                 i.putExtra("wpcom", true);
                 startActivityForResult(i, EXISTING_COM_ACCOUNT_REQUEST);
             }
@@ -36,7 +38,7 @@ public class NewAccount extends Activity {
         Button dotOrgButton = (Button) findViewById(R.id.dotorgExisting);
         dotOrgButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(NewAccount.this, AddAccount.class);
+                Intent i = new Intent(NewAccountActivity.this, AddAccountActivity.class);
                 startActivityForResult(i, EXISTING_ORG_ACCOUNT_REQUEST);
             }
         });
@@ -51,7 +53,7 @@ public class NewAccount extends Activity {
                 if (resultCode == RESULT_OK && data != null) {
                     String username = data.getStringExtra("username");
                     if (username != null) {
-                        Intent i = new Intent(NewAccount.this, AddAccount.class);
+                        Intent i = new Intent(NewAccountActivity.this, AddAccountActivity.class);
                         i.putExtra("wpcom", true);
                         i.putExtra("username", username);
                         startActivityForResult(i, EXISTING_COM_ACCOUNT_REQUEST);

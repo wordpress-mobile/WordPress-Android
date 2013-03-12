@@ -36,11 +36,11 @@ import org.json.JSONException;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.Posts;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.posts.PostsActivity;
 
 public class PostUploadService extends Service {
 
@@ -91,7 +91,7 @@ public class PostUploadService extends Service {
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
-                Intent notificationIntent = new Intent(context, Posts.class);
+                Intent notificationIntent = new Intent(context, PostsActivity.class);
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
                 notificationIntent.putExtra("fromNotification", true);
                 notificationIntent.putExtra("errorMessage", error);
@@ -122,7 +122,7 @@ public class PostUploadService extends Service {
             String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
-            Intent notificationIntent = new Intent(context, Posts.class);
+            Intent notificationIntent = new Intent(context, PostsActivity.class);
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
             notificationIntent.putExtra("fromNotification", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);

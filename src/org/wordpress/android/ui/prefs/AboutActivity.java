@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.prefs;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,9 +9,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DeviceUtils;
 
-public class About extends Activity implements OnClickListener {
+public class AboutActivity extends Activity implements OnClickListener {
 
     private static final String URL_TOS = "http://en.wordpress.com/tos";
     private static final String URL_AUTOMATTIC = "http://automattic.com";

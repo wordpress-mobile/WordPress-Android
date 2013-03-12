@@ -37,26 +37,60 @@
 
     <application
         android:name="WordPress"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="WordPress"
         android:theme="@style/WordPress" >
+
+        <!-- Account activities -->
         <activity
-            android:name="BlogPreferences"
+            android:name="org.wordpress.android.ui.accounts.AddAccountActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="org.wordpress.android.ui.accounts.AddAcountSettingsActivity" />
+        <activity android:name="org.wordpress.android.ui.accounts.NewAccountActivity" />
+        <activity
+            android:name="org.wordpress.android.ui.accounts.SignupActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
+        <!-- Preferences activities -->
+        <activity android:name="org.wordpress.android.ui.prefs.AboutActivity" />
+        <activity
+            android:name="org.wordpress.android.ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden"
-             />
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name="org.wordpress.android.ui.prefs.LicensesActivity" />
         <activity
-            android:name="Link"
+            android:name="org.wordpress.android.ui.prefs.PreferencesActivity"
+            android:windowSoftInputMode="stateHidden" />
+
+        <!-- Comments activities -->
+        <activity
+            android:name="org.wordpress.android.ui.comments.CommentsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="org.wordpress.android.ui.comments.EditCommentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name="org.wordpress.android.ui.comments.ReplyToCommentActivity"
+            android:theme="@style/WordPress.Dialog" />
+        <activity android:name="ViewCommentActivity" />
+
+        <!-- Posts activities -->
+        <activity
+            android:name="org.wordpress.android.ui.posts.AddCategoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/add_new_category"
+            android:theme="@style/WordPress.Dialog" />
+        <activity
+            android:name="org.wordpress.android.ui.posts.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/WordPress.Dialog" />
         <activity
-            android:name="AddAccount"
-            android:configChanges="orientation|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="EditPost"
+            android:name="org.wordpress.android.ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <intent-filter>
@@ -71,66 +105,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.wordpress.android.ui.WebViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name="org.wordpress.android.ui.posts.PreviewPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name="org.wordpress.android.ui.DashboardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name="Preferences"
-            android:windowSoftInputMode="stateHidden" />
-
-        <service
-            android:name=".util.PostUploadService"
-            android:label="Post Upload Service" >
-        </service>
-        <service
-            android:name=".util.CommentService"
-            android:label="Comment Service" />
-
-        <receiver android:name="CommentBroadcastReceiver" />
-
-        <activity
-            android:name="ReplyToComment"
-            android:theme="@style/WordPress.Dialog" />
-        <activity
-            android:name="SelectCategories"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".AddCategory"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/add_new_category"
-            android:theme="@style/WordPress.Dialog" />
-        <activity
-            android:name="Signup"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name="NewAccount" />
-        <activity
-            android:name="ViewWebStats"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".AddQuickPressShortcut"
-            android:label="QuickPress" >
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name="AddAcountSettings" />
-        <activity android:name=".About" />
-        <activity android:name="org.wordpress.android.ui.prefs.LicensesActivity" />
-        <activity
-            android:name="Comments"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
-        <activity android:name="ViewCommentActivity" />
-        <activity
-            android:name="Posts"
+            android:name="org.wordpress.android.ui.posts.PostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" >
             <intent-filter>
@@ -139,13 +114,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ViewPostActivity" />
         <activity
-            android:name="WPCOMReaderPager"
+            android:name="org.wordpress.android.ui.posts.PreviewPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name="EditComment"
+            android:name="org.wordpress.android.ui.posts.SelectCategoriesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name="org.wordpress.android.ui.posts.ViewPostActivity" />
+
+        <!-- Other activities -->
+        <activity
+            android:name="org.wordpress.android.ui.AddQuickPressShortcut"
+            android:label="QuickPress" >
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.wordpress.android.ui.DashboardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name="org.wordpress.android.ui.reader.ReaderPagerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name="org.wordpress.android.ui.ViewWebStats"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+
+        <!-- Services -->
+        <service
+            android:name="org.wordpress.android.util.PostUploadService"
+            android:label="Post Upload Service" >
+        </service>
+        <service
+            android:name="org.wordpress.android.util.CommentService"
+            android:label="Comment Service" />
+
+        <receiver android:name="org.wordpress.android.CommentBroadcastReceiver" />
     </application>
 
 </manifest>

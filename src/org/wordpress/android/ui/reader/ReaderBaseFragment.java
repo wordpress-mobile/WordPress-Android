@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.webkit.WebViewClient;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-public abstract class WPCOMReaderBase extends SherlockFragment {
+public abstract class ReaderBaseFragment extends SherlockFragment {
 
     protected final String interfaceNameForJS = "Android";
 

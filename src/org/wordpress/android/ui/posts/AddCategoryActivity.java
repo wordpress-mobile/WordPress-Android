@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public class AddCategory extends Activity {
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+
+public class AddCategoryActivity extends Activity {
     private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,7 @@ public class AddCategory extends Activity {
                 if (category_name.replaceAll(" ", "").equals("")) {
                     //    Name field cannot be empty
 
-                  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddCategory.this);
+                  AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddCategoryActivity.this);
                     dialogBuilder.setTitle(getResources().getText(R.string.required_field));
                     dialogBuilder.setMessage(getResources().getText(R.string.cat_name_required));
                     dialogBuilder.setPositiveButton("OK",  new

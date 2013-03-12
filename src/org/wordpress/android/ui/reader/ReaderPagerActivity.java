@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.reader;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -21,20 +21,23 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.wordpress.android.WPCOMReaderBase.ChangeTopicListener;
-import org.wordpress.android.WPCOMReaderBase.GetLastSelectedItemListener;
-import org.wordpress.android.WPCOMReaderBase.GetLoadedItemsListener;
-import org.wordpress.android.WPCOMReaderBase.GetPermalinkListener;
-import org.wordpress.android.WPCOMReaderBase.UpdateButtonStatusListener;
-import org.wordpress.android.WPCOMReaderBase.UpdateTopicIDListener;
-import org.wordpress.android.WPCOMReaderBase.UpdateTopicTitleListener;
-import org.wordpress.android.WPCOMReaderDetailPage.LoadExternalURLListener;
-import org.wordpress.android.WPCOMReaderImpl.LoadDetailListener;
-import org.wordpress.android.WPCOMReaderImpl.PostSelectedListener;
-import org.wordpress.android.WPCOMReaderImpl.ShowTopicsListener;
+import org.wordpress.android.Constants;
+import org.wordpress.android.R;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.ChangeTopicListener;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.GetLastSelectedItemListener;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.GetLoadedItemsListener;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.GetPermalinkListener;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.UpdateButtonStatusListener;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.UpdateTopicIDListener;
+import org.wordpress.android.ui.reader.ReaderBaseFragment.UpdateTopicTitleListener;
+import org.wordpress.android.ui.reader.ReaderDetailPageFragment.LoadExternalURLListener;
+import org.wordpress.android.ui.reader.ReaderImplFragment.LoadDetailListener;
+import org.wordpress.android.ui.reader.ReaderImplFragment.PostSelectedListener;
+import org.wordpress.android.ui.reader.ReaderImplFragment.ShowTopicsListener;
 import org.wordpress.android.util.WPViewPager;
 
-public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
+public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
         UpdateTopicTitleListener, GetLoadedItemsListener, UpdateButtonStatusListener, ShowTopicsListener, LoadExternalURLListener,
         GetPermalinkListener, GetLastSelectedItemListener, LoadDetailListener, OnNavigationListener {
 
@@ -58,13 +61,13 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
         if (savedInstanceState != null) {
             // Restore fragments
             readerPage = getSupportFragmentManager().getFragment(
-                    savedInstanceState, WPCOMReaderImpl.class.getName());
+                    savedInstanceState, ReaderImplFragment.class.getName());
             topicPage = getSupportFragmentManager().getFragment(
-                    savedInstanceState, WPCOMReaderTopicsSelector.class.getName());
+                    savedInstanceState, ReaderTopicsSelectorFragment.class.getName());
             detailPage = getSupportFragmentManager().getFragment(
-                    savedInstanceState, WPCOMReaderDetailPage.class.getName());
+                    savedInstanceState, ReaderDetailPageFragment.class.getName());
             webPage = getSupportFragmentManager().getFragment(
-                    savedInstanceState, WPCOMReaderWebPage.class.getName());
+                    savedInstanceState, ReaderWebPageFragment.class.getName());
         }
 
         createMenuDrawer(R.layout.reader_wpcom_pager);
@@ -109,10 +112,10 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
-        getSupportFragmentManager().putFragment(outState, WPCOMReaderImpl.class.getName(), readerPage);
-        getSupportFragmentManager().putFragment(outState, WPCOMReaderTopicsSelector.class.getName(), topicPage);
-        getSupportFragmentManager().putFragment(outState, WPCOMReaderDetailPage.class.getName(), detailPage);
-        getSupportFragmentManager().putFragment(outState, WPCOMReaderWebPage.class.getName(), webPage);
+        getSupportFragmentManager().putFragment(outState, ReaderImplFragment.class.getName(), readerPage);
+        getSupportFragmentManager().putFragment(outState, ReaderTopicsSelectorFragment.class.getName(), topicPage);
+        getSupportFragmentManager().putFragment(outState, ReaderDetailPageFragment.class.getName(), detailPage);
+        getSupportFragmentManager().putFragment(outState, ReaderWebPageFragment.class.getName(), webPage);
         super.onSaveInstanceState(outState);
     }
 
@@ -132,19 +135,19 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
             switch (location) {
             case 0:
-                f = WPCOMReaderTopicsSelector.newInstance();
+                f = ReaderTopicsSelectorFragment.newInstance();
                 topicPage = f;
                 break;
             case 1:
-                f = WPCOMReaderImpl.newInstance();
+                f = ReaderImplFragment.newInstance();
                 readerPage = f;
                 break;
             case 2:
-                f = WPCOMReaderDetailPage.newInstance();
+                f = ReaderDetailPageFragment.newInstance();
                 detailPage = f;
                 break;
             case 3:
-                f = WPCOMReaderWebPage.newInstance();
+                f = ReaderWebPageFragment.newInstance();
                 webPage = f;
                 break;
             }
@@ -178,12 +181,12 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
     }
 
     public boolean onOptionsItemSelected(final MenuItem item) {
-        final WPCOMReaderWebPage readerWebPageFragment = (WPCOMReaderWebPage) webPage;
-        final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+        final ReaderWebPageFragment readerWebPageFragment = (ReaderWebPageFragment) webPage;
+        final ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
 
         int itemId = item.getItemId();
         if (itemId == 0) {
-            WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
+            ReaderImplFragment readerPageFragment = (ReaderImplFragment) readerPage;
             readerPageFragment.refreshReader();
             return true;
         } else if (itemId == 1) {
@@ -243,7 +246,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
     public void onChangeTopic(final String topicID, final String topicName) {
 
         try {
-            final WPCOMReaderImpl readerPageFragment = (WPCOMReaderImpl) readerPage;
+            final ReaderImplFragment readerPageFragment = (ReaderImplFragment) readerPage;
             readerPageFragment.topicsID = topicID;
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -270,7 +273,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
     public void onBackPressed() {
         if (readerPager.getCurrentItem() > 1) {
             if (readerPager.getCurrentItem() == 2) {
-                WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+                ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
                 readerPageDetailFragment.wv.loadUrl("javascript:Reader2.clear_article_details();");
             }
             readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
@@ -300,7 +303,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
     public void onUpdateTopicID(String topicID) {
         if (topicPage == null)
             topicPage = readerAdapter.getItem(0);
-        final WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
+        final ReaderTopicsSelectorFragment topicsFragment = (ReaderTopicsSelectorFragment) topicPage;
         final String methodCall = "document.setSelectedTopic('" + topicID + "')";
         runOnUiThread(new Runnable() {
             public void run() {
@@ -315,7 +318,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
         if (items == null)
             return;
         if (!items.equals("[]")) {
-            final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+            final ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
             readerPageDetailFragment.readerItems = items;
             final String method = "Reader2.set_loaded_items(" + readerPageDetailFragment.readerItems + ")";
             runOnUiThread(new Runnable() {
@@ -328,7 +331,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
     @Override
     public void updateButtonStatus(final int button, final boolean enabled) {
-        final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+        final ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
         runOnUiThread(new Runnable() {
             public void run() {
                 readerPageDetailFragment.updateButtonStatus(button, enabled);
@@ -339,7 +342,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
     @Override
     public void showTopics() {
-        WPCOMReaderTopicsSelector topicsFragment = (WPCOMReaderTopicsSelector) topicPage;
+        ReaderTopicsSelectorFragment topicsFragment = (ReaderTopicsSelectorFragment) topicPage;
         ((ViewGroup) topicsFragment.getView().getParent()).removeView(topicsFragment.getView());
         topicsDialog = new Dialog(this);
         topicsDialog.setContentView(topicsFragment.getView());
@@ -356,7 +359,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
     @Override
     public void loadExternalURL(String url) {
-        WPCOMReaderWebPage readerWebPageFragment = (WPCOMReaderWebPage) webPage;
+        ReaderWebPageFragment readerWebPageFragment = (ReaderWebPageFragment) webPage;
         readerWebPageFragment.wv.clearView();
         readerWebPageFragment.wv.loadUrl(url);
         readerPager.setCurrentItem(3, true);
@@ -385,7 +388,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
     @Override
     public void getLastSelectedItem(final String lastSelectedItem) {
-        final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+        final ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
         runOnUiThread(new Runnable() {
             public void run() {
                 String methodCall = "Reader2.show_article_details(" + lastSelectedItem + ")";
@@ -400,7 +403,7 @@ public class WPCOMReaderPager extends WPActionBarActivity implements ChangeTopic
 
     @Override
     public void onLoadDetail() {
-        final WPCOMReaderDetailPage readerPageDetailFragment = (WPCOMReaderDetailPage) detailPage;
+        final ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
         runOnUiThread(new Runnable() {
             public void run() {
                 readerPageDetailFragment.wv.loadUrl(Constants.readerDetailURL);

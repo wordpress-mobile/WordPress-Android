@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.reader;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -7,15 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-public class WPCOMReaderTopicsSelector extends WPCOMReaderBase{
+import org.wordpress.android.Constants;
+import org.wordpress.android.R;
+
+public class ReaderTopicsSelectorFragment extends ReaderBaseFragment{
 
     public static int activityRequestCode = 1234322;
 
     //private String topicID = null;
     public WebView wv;
 
-    public static WPCOMReaderTopicsSelector newInstance() {
-        WPCOMReaderTopicsSelector f = new WPCOMReaderTopicsSelector();
+    public static ReaderTopicsSelectorFragment newInstance() {
+        ReaderTopicsSelectorFragment f = new ReaderTopicsSelectorFragment();
         return f;
     }
 

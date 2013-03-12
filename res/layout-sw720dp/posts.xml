@@ -17,7 +17,7 @@
       android:layout_width="0dp"
       android:layout_height="match_parent">
       <fragment
-        android:name="org.wordpress.android.ViewPosts"
+        android:name="org.wordpress.android.ui.posts.ViewPostsFragment"
         android:id="@+id/postList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -28,7 +28,7 @@
         android:background="@drawable/right_shadow"/>
     </FrameLayout>
     <fragment
-      android:name="org.wordpress.android.ViewPostFragment"
+      android:name="org.wordpress.android.ui.posts.ViewPostFragment"
       android:id="@+id/postDetail"
       android:layout_weight="2"
       android:layout_width="0dp"

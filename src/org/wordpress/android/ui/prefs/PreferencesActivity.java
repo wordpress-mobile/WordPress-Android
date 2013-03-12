@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.prefs;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,12 +20,16 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
+import org.wordpress.android.CommentBroadcastReceiver;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.CommentService;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 
-public class Preferences extends SherlockPreferenceActivity {
+public class PreferencesActivity extends SherlockPreferenceActivity {
 
     ListPreference notificationIntervalPreference;
     EditTextPreference taglineTextPreference;
@@ -98,7 +102,7 @@ public class Preferences extends SherlockPreferenceActivity {
                 // do nothing
             }
 
-            Intent intent = new Intent(this, BlogPreferences.class);
+            Intent intent = new Intent(this, BlogPreferencesActivity.class);
             intent.putExtra("id", accountId);
             blogSettingsPreference.setIntent(intent);
             blogSettingsPreference.setOrder(0);
@@ -107,7 +111,7 @@ public class Preferences extends SherlockPreferenceActivity {
 
         Preference addBlogPreference = new Preference(this);
         addBlogPreference.setTitle(R.string.add_account);
-        Intent intent = new Intent(this, NewAccount.class);
+        Intent intent = new Intent(this, NewAccountActivity.class);
         addBlogPreference.setIntent(intent);
         addBlogPreference.setOrder(1);
         blogsCategory.addPreference(addBlogPreference);
@@ -211,20 +215,20 @@ public class Preferences extends SherlockPreferenceActivity {
             }
 
             // TODO: start service after reboot?
-            Intent intent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
-            PendingIntent pIntent = PendingIntent.getBroadcast(Preferences.this, 0, intent, 0);
+            Intent intent = new Intent(PreferencesActivity.this, CommentBroadcastReceiver.class);
+            PendingIntent pIntent = PendingIntent.getBroadcast(PreferencesActivity.this, 0, intent, 0);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (5 * 1000), UPDATE_INTERVAL, pIntent);
 
         } else {
-            Intent stopIntent = new Intent(Preferences.this, CommentBroadcastReceiver.class);
-            PendingIntent stopPIntent = PendingIntent.getBroadcast(Preferences.this, 0, stopIntent, 0);
+            Intent stopIntent = new Intent(PreferencesActivity.this, CommentBroadcastReceiver.class);
+            PendingIntent stopPIntent = PendingIntent.getBroadcast(PreferencesActivity.this, 0, stopIntent, 0);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.cancel(stopPIntent);
 
-            Intent service = new Intent(Preferences.this, CommentService.class);
+            Intent service = new Intent(PreferencesActivity.this, CommentService.class);
             stopService(service);
         }
         super.onPause();

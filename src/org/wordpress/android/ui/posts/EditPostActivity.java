@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,9 +88,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.xmlrpc.android.ApiHelper;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
@@ -102,7 +105,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
 
-public class EditPost extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
+public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener {
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
@@ -370,7 +373,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
             try {
                 if (mPost.isLocalDraft())
-                    mContentEditText.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""), EditPost.this, mPost));
+                    mContentEditText.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""), EditPostActivity.this, mPost));
                 else
                     mContentEditText.setText(contentHTML.replaceAll("\uFFFC", ""));
             } catch (Exception e) {
@@ -385,7 +388,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                     flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
                     flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
                     flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                    String formattedDate = DateUtils.formatDateTime(EditPost.this, pubDate, flags);
+                    String formattedDate = DateUtils.formatDateTime(EditPostActivity.this, pubDate, flags);
                     mPubDateText.setText(formattedDate);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -598,7 +601,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 mSelectionEnd = mSelectionStart;
                 mSelectionStart = temp;
             }
-            Intent i = new Intent(EditPost.this, Link.class);
+            Intent i = new Intent(EditPostActivity.this, EditLinkActivity.class);
             if (mSelectionEnd > mSelectionStart) {
                 String selectedText = mContentEditText.getText().subSequence(mSelectionStart, mSelectionEnd).toString();
                 i.putExtra("selectedText", selectedText);
@@ -614,7 +617,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
             if (mCategories.length() > 0) {
                 bundle.putString("categoriesCSV", getCategoriesCSV());
             }
-            Intent i1 = new Intent(EditPost.this, SelectCategories.class);
+            Intent i1 = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
             i1.putExtras(bundle);
             startActivityForResult(i1, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.post) {
@@ -644,10 +647,10 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
                 startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
             } else {
-                Toast.makeText(EditPost.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.updateLocation) {
-            mLocationHelper.getLocation(EditPost.this, locationResult);
+            mLocationHelper.getLocation(EditPostActivity.this, locationResult);
         } else if (id == R.id.removeLocation) {
             if (mCurrentLocation != null) {
                 mCurrentLocation.setLatitude(0.0);
@@ -711,7 +714,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 if (image_spans.length != 0) {
                     final WPImageSpan span = image_spans[0];
                     if (!span.isVideo()) {
-                        LayoutInflater factory = LayoutInflater.from(EditPost.this);
+                        LayoutInflater factory = LayoutInflater.from(EditPostActivity.this);
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
                         final TextView imageWidthText = (TextView) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
@@ -741,7 +744,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
                         final SeekBar seekBar = (SeekBar) alertView.findViewById(R.id.imageWidth);
                         final Spinner alignmentSpinner = (Spinner) alertView.findViewById(R.id.alignment_spinner);
-                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditPost.this, R.array.alignment_array,
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditPostActivity.this, R.array.alignment_array,
                                 android.R.layout.simple_spinner_item);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         alignmentSpinner.setAdapter(adapter);
@@ -783,7 +786,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                             }
                         });
 
-                        AlertDialog ad = new AlertDialog.Builder(EditPost.this).setTitle(getString(R.string.image_settings))
+                        AlertDialog ad = new AlertDialog.Builder(EditPostActivity.this).setTitle(getString(R.string.image_settings))
                                 .setView(alertView).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -837,7 +840,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
     }
 
     private void showCancelAlert() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
         dialogBuilder.setMessage(getResources().getText((mIsPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
@@ -913,7 +916,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
             // Don't prompt if they have one blog only
             if (accounts.size() != 1) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditPost.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditPostActivity.this);
                 builder.setCancelable(false);
                 builder.setTitle(getResources().getText(R.string.select_a_blog));
                 builder.setItems(blogNames, new DialogInterface.OnClickListener() {
@@ -951,7 +954,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         } else {
             // no account, load main view to load new account view
             Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, NewAccount.class));
+            startActivity(new Intent(this, NewAccountActivity.class));
             finish();
             return false;
         }
@@ -1156,7 +1159,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
     private void launchCamera() {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
             dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
             dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
             dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -1234,7 +1237,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         removeLocation.setOnClickListener(this);
         viewMap.setOnClickListener(this);
         if (mIsNew)
-            mLocationHelper.getLocation(EditPost.this, locationResult);
+            mLocationHelper.getLocation(EditPostActivity.this, locationResult);
     }
 
     @Override
@@ -1424,7 +1427,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         boolean success = false;
 
         if (content.equals("") && !autoSave) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPost.this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
             dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
             dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
             dialogBuilder.setPositiveButton(getString(R.id.ok), new DialogInterface.OnClickListener() {
@@ -1592,7 +1595,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
 
         @Override
         protected String doInBackground(Double... args) {
-            Geocoder gcd = new Geocoder(EditPost.this, Locale.getDefault());
+            Geocoder gcd = new Geocoder(EditPostActivity.this, Locale.getDefault());
             String finalText = "";
             List<Address> addresses;
             try {
@@ -1648,7 +1651,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
             } else {
                 // add link tag around URLs, trac #64
                 text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(WPHtml.fromHtml(StringHelper.addPTags(text), EditPost.this, mPost));
+                mContentEditText.setText(WPHtml.fromHtml(StringHelper.addPTags(text), EditPostActivity.this, mPost));
             }
         } else {
             String action = intent.getAction();
@@ -1709,11 +1712,11 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         if (width > height)
             width = height;
 
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPostActivity.this);
 
         if (mediaData == null) {
             // data stream not returned
-            Toast.makeText(EditPost.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1731,7 +1734,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 (String) mediaData.get("orientation"), true);
 
         if (finalBytes == null) {
-            Toast.makeText(EditPost.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1748,7 +1751,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         }
 
         Editable s = mContentEditText.getText();
-        WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap, curStream);
+        WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
 
         String imageWidth = WordPress.currentBlog.getMaxImageWidth();
         if (!imageWidth.equals("Original Size")) {
@@ -1806,11 +1809,11 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPost.this);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPostActivity.this);
 
         if (mediaData == null) {
             // data stream not returned
-            Toast.makeText(EditPost.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -1828,13 +1831,13 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 (String) mediaData.get("orientation"), true);
 
         if (finalBytes == null) {
-            Toast.makeText(EditPost.this, getResources().getText(R.string.file_error_encountered), Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.file_error_encountered), Toast.LENGTH_SHORT).show();
             return null;
         }
 
         resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
 
-        WPImageSpan is = new WPImageSpan(EditPost.this, resizedBitmap, curStream);
+        WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
 
         String imageWidth = WordPress.currentBlog.getMaxImageWidth();
         if (!imageWidth.equals("Original Size")) {
@@ -1895,7 +1898,7 @@ public class EditPost extends SherlockActivity implements OnClickListener, OnTou
                 flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                String formattedDate = DateUtils.formatDateTime(EditPost.this, timestamp, flags);
+                String formattedDate = DateUtils.formatDateTime(EditPostActivity.this, timestamp, flags);
                 mCustomPubDate = timestamp;
                 mPubDateText.setText(formattedDate);
                 mIsCustomPubDate = true;

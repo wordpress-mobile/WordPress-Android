@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.posts;
 
 import java.lang.reflect.Type;

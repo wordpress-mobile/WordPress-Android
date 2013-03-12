@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -27,17 +27,20 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.wordpress.android.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.ViewPosts.OnPostActionListener;
-import org.wordpress.android.ViewPosts.OnPostSelectedListener;
-import org.wordpress.android.ViewPosts.OnRefreshListener;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
+import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
+import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 
-public class Posts extends WPActionBarActivity implements OnPostSelectedListener,
+public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
 
-    private ViewPosts postList;
+    private ViewPostsFragment postList;
     private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
     public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3;
     public ProgressDialog loadingDialog;
@@ -56,7 +59,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
-        postList = (ViewPosts) fm.findFragmentById(R.id.postList);
+        postList = (ViewPostsFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
 
         Bundle extras = getIntent().getExtras();
@@ -65,7 +68,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
             String errorMessage = extras.getString("errorMessage");
             if (errorMessage != null) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        Posts.this);
+                        PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.error));
                 dialogBuilder.setMessage(errorMessage);
@@ -106,7 +109,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
             if (!shouldPrompt)
                 return;
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    Posts.this);
+                    PostsActivity.this);
             dialogBuilder.setTitle(getResources().getText(
                     R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
@@ -186,7 +189,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
             String errorMessage = extras.getString("errorMessage");
             if (errorMessage != null) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        Posts.this);
+                        PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.error));
                 dialogBuilder.setMessage(errorMessage);
@@ -239,7 +242,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
             new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(true);
             return true;
         } else if (itemId == R.id.menu_new_post) {
-            Intent i = new Intent(this, EditPost.class);
+            Intent i = new Intent(this, EditPostActivity.class);
             i.putExtra("id", WordPress.currentBlog.getId());
             i.putExtra("isNew", true);
             if (isPage)
@@ -337,7 +340,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
             attemptToSelectPost();
             if (result) {
                 Toast.makeText(
-                        Posts.this,
+                        PostsActivity.this,
                         getResources().getText(
                                 (isPage) ? R.string.page_deleted
                                         : R.string.post_deleted),
@@ -345,7 +348,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
                 checkForLocalChanges(false);
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        Posts.this);
+                        PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.connection_error));
                 dialogBuilder.setMessage(errorMsg);
@@ -408,7 +411,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
             dismissDialog(ID_DIALOG_SHARE);
             if (shareURL == null) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        Posts.this);
+                        PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.connection_error));
                 dialogBuilder.setMessage(errorMsg);
@@ -550,7 +553,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
         if (action == POST_DELETE) {
             if (post.isLocalDraft()) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        Posts.this);
+                        PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.delete_draft));
                 dialogBuilder.setMessage(getResources().getText(
@@ -582,7 +585,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        Posts.this);
+                        PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         (post.isPage()) ? R.string.delete_page
                                 : R.string.delete_post));
@@ -595,7 +598,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
-                                new Posts.deletePostTask().execute(post);
+                                new PostsActivity.deletePostTask().execute(post);
                             }
                         });
                 dialogBuilder.setNegativeButton(
@@ -614,7 +617,7 @@ public class Posts extends WPActionBarActivity implements OnPostSelectedListener
 
             }
         } else if (action == POST_SHARE) {
-            new Posts.shareURLTask().execute(post);
+            new PostsActivity.shareURLTask().execute(post);
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm

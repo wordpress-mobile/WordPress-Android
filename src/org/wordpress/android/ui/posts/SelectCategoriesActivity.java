@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +27,12 @@ import com.actionbarsherlock.view.MenuItem;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.EscapeUtils;
 
-public class SelectCategories extends SherlockListActivity {
+public class SelectCategoriesActivity extends SherlockListActivity {
     /** Called when the activity is first created. */
     String categoriesCSV = "";
     long[] checkedCategories;
@@ -127,14 +129,14 @@ public class SelectCategories extends SherlockListActivity {
 
                 loadCategories();
 
-                Toast.makeText(SelectCategories.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
             }
             if (finalResult.equals("addCategory_failed")) {
                 if (pd.isShowing()) {
                     pd.dismiss();
                 }
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategories.this);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.adding_cat_failed));
                 dialogBuilder.setMessage(getResources().getText(R.string.adding_cat_failed_check));
                 dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -151,13 +153,13 @@ public class SelectCategories extends SherlockListActivity {
                     pd.dismiss();
                 }
                 loadCategories();
-                Toast.makeText(SelectCategories.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
             } else if (finalResult.equals("FAIL")) {
                 if (pd.isShowing()) {
                     pd.dismiss();
                 }
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategories.this);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
                 dialogBuilder.setTitle(getResources().getText(R.string.category_refresh_error));
                 dialogBuilder.setMessage(categoryErrorMsg);
                 dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -290,7 +292,7 @@ public class SelectCategories extends SherlockListActivity {
                         // A category with the specified name already exists
                     } else {
                         // Add the category
-                        pd = ProgressDialog.show(SelectCategories.this, getResources().getText(R.string.cat_adding_category),
+                        pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.cat_adding_category),
                                 getResources().getText(R.string.cat_attempt_add_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
@@ -327,7 +329,7 @@ public class SelectCategories extends SherlockListActivity {
         } else if (itemId == R.id.menu_new_category) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", id);
-            Intent i = new Intent(SelectCategories.this, AddCategory.class);
+            Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
             i.putExtras(bundle);
             startActivityForResult(i, 0);
             return true;
@@ -340,7 +342,7 @@ public class SelectCategories extends SherlockListActivity {
     }
 
     private void refreshCategories() {
-        pd = ProgressDialog.show(SelectCategories.this, getResources().getText(R.string.refreshing_categories),
+        pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
                 getResources().getText(R.string.attempting_categories_refresh), true, true);
         Thread th = new Thread() {
             public void run() {

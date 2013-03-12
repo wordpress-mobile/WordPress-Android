@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +11,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class Signup extends Activity {
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+
+public class SignupActivity extends Activity {
     public Activity activity = this;
 
     @Override

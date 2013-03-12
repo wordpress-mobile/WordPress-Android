@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.posts;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -39,13 +39,15 @@ import android.widget.ViewSwitcher;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringHelper;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
-public class ViewPosts extends ListFragment {
+public class ViewPostsFragment extends ListFragment {
     /** Called when the activity is first created. */
     private XMLRPCClient client;
     private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
@@ -65,7 +67,7 @@ public class ViewPosts extends ListFragment {
     private OnRefreshListener onRefreshListener;
     private OnPostActionListener onPostActionListener;
     public getRecentPostsTask getPostsTask;
-    private Posts parentActivity;
+    private PostsActivity parentActivity;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -102,7 +104,7 @@ public class ViewPosts extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        parentActivity = (Posts) getActivity();
+        parentActivity = (PostsActivity) getActivity();
 
     }
 
@@ -698,16 +700,16 @@ public class ViewPosts extends ListFragment {
             switch (item.getItemId()) {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPost.class);
+                        EditPostActivity.class);
                 i2.putExtra("postID", selectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 startActivityForResult(i2, 0);
                 return true;
             case 1:
-                onPostActionListener.onPostAction(Posts.POST_DELETE, post);
+                onPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case 2:
-                onPostActionListener.onPostAction(Posts.POST_SHARE, post);
+                onPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
             }
 
@@ -715,17 +717,17 @@ public class ViewPosts extends ListFragment {
             switch (item.getItemId()) {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPost.class);
+                        EditPostActivity.class);
                 i2.putExtra("postID", selectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 i2.putExtra("isPage", true);
                 startActivityForResult(i2, 0);
                 return true;
             case 1:
-                onPostActionListener.onPostAction(Posts.POST_DELETE, post);
+                onPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case 2:
-                onPostActionListener.onPostAction(Posts.POST_SHARE, post);
+                onPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
             }
 
@@ -733,7 +735,7 @@ public class ViewPosts extends ListFragment {
             switch (item.getItemId()) {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPost.class);
+                        EditPostActivity.class);
                 i2.putExtra("postID", selectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 if (isPage) {
@@ -744,7 +746,7 @@ public class ViewPosts extends ListFragment {
                 return true;
             case 1:
 
-                onPostActionListener.onPostAction(Posts.POST_DELETE, post);
+                onPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             }
         }
@@ -826,7 +828,7 @@ public class ViewPosts extends ListFragment {
                                             WordPress.currentBlog.getId(),
                                             WordPress.currentPost.isPage());
                                     onPostActionListener
-                                    .onPostAction(Posts.POST_CLEAR,
+                                    .onPostAction(PostsActivity.POST_CLEAR,
                                             WordPress.currentPost);
                                 } catch (Exception e) {
                                     e.printStackTrace();

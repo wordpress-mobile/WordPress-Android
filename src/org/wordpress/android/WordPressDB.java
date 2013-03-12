@@ -27,6 +27,7 @@ import org.json.JSONException;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WordPressDB {
 
@@ -681,8 +682,8 @@ public class WordPressDB {
             Map<String, Object> shortcutHash = shortcuts.get(i);
 
             Intent shortcutIntent = new Intent();
-            shortcutIntent.setClassName(EditPost.class.getPackage().getName(),
-                    EditPost.class.getName());
+            shortcutIntent.setClassName(EditPostActivity.class.getPackage().getName(),
+                    EditPostActivity.class.getName());
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             shortcutIntent.setAction(Intent.ACTION_VIEW);

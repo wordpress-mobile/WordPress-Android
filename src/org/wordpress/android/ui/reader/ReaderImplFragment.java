@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.reader;
 
 import java.util.List;
 
@@ -24,7 +24,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-public class WPCOMReaderImpl extends WPCOMReaderBase {
+import org.wordpress.android.Constants;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+
+public class ReaderImplFragment extends ReaderBaseFragment {
     /** Called when the activity is first created. */
     private String loginURL = "";
     public WebView wv;
@@ -33,8 +37,8 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
     private LoadDetailListener loadDetailListener;
     public TextView topicTV;
 
-    public static WPCOMReaderImpl newInstance() {
-        WPCOMReaderImpl f = new WPCOMReaderImpl();
+    public static ReaderImplFragment newInstance() {
+        ReaderImplFragment f = new ReaderImplFragment();
         return f;
     }
 
@@ -71,7 +75,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
                         wv.loadUrl("javascript:Reader2.get_last_selected_item();");
                         onPostSelectedListener.onPostSelected(url);
                     } else {
-                        ((WPCOMReaderPager) getActivity()).startAnimatingButton();
+                        ((ReaderPagerActivity) getActivity()).startAnimatingButton();
                     }
 
                     if (url.contains("chrome=no")) {
@@ -83,7 +87,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (getActivity() != null && !getActivity().isFinishing())
-                    ((WPCOMReaderPager) getActivity()).stopAnimatingButton();
+                    ((ReaderPagerActivity) getActivity()).stopAnimatingButton();
             }
 
             @Override
@@ -163,7 +167,7 @@ public class WPCOMReaderImpl extends WPCOMReaderBase {
 
         @Override
         protected void onPreExecute() {
-            ((WPCOMReaderPager) getActivity()).startAnimatingButton();
+            ((ReaderPagerActivity) getActivity()).startAnimatingButton();
         }
 
         protected void onPostExecute(List<?> result) {

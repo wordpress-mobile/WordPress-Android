@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,12 @@ import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.comments.ViewCommentsFragment;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 public class AddQuickPressShortcut extends ListActivity {
@@ -92,7 +97,7 @@ public class AddQuickPressShortcut extends ListActivity {
                 String[] urlSplit = url.split("/");
                 url = urlSplit[0];
                 url = "http://gravatar.com/blavatar/"
-                        + ViewComments.getMd5Hash(url.trim())
+                        + ViewCommentsFragment.getMd5Hash(url.trim())
                         + "?s=60&d=404";
                 blavatars[validBlogCtr] = url;
                 accountNames.add(validBlogCtr, blogNames[i]);
@@ -122,7 +127,7 @@ public class AddQuickPressShortcut extends ListActivity {
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcut.this, NewAccount.class);
+            Intent i = new Intent(AddQuickPressShortcut.this, NewAccountActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
         }
     }
@@ -145,7 +150,7 @@ public class AddQuickPressShortcut extends ListActivity {
                     t.show();
                 } else {
                     Intent shortcutIntent = new Intent();
-                    shortcutIntent.setClassName(EditPost.class.getPackage().getName(), EditPost.class.getName());
+                    shortcutIntent.setClassName(EditPostActivity.class.getPackage().getName(), EditPostActivity.class.getName());
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     shortcutIntent.putExtra("id", accountIDs[position]);

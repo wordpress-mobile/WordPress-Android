@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,15 @@ import com.actionbarsherlock.view.MenuItem;
 
 import net.simonvt.menudrawer.MenuDrawer;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.DashboardActivity;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.prefs.PreferencesActivity;
+import org.wordpress.android.ui.reader.ReaderPagerActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -109,7 +116,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         postsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 menuDrawer.closeMenu();
-                Intent i = new Intent(WPActionBarActivity.this, Posts.class);
+                Intent i = new Intent(WPActionBarActivity.this, PostsActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivityWithDelay(i);
             }
@@ -118,7 +125,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout pagesButton = (LinearLayout) findViewById(R.id.menu_pages_btn);
         pagesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(WPActionBarActivity.this, Posts.class);
+                Intent i = new Intent(WPActionBarActivity.this, PostsActivity.class);
                 i.putExtra("id", WordPress.currentBlog.getId());
                 i.putExtra("isNew", true);
                 i.putExtra("viewPages", true);
@@ -131,7 +138,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout commentsButton = (LinearLayout) findViewById(R.id.menu_comments_btn);
         commentsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(WPActionBarActivity.this, Comments.class);
+                Intent i = new Intent(WPActionBarActivity.this, CommentsActivity.class);
                 i.putExtra("id", WordPress.currentBlog.getId());
                 i.putExtra("isNew", true);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -144,7 +151,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         picButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 PackageManager pm = WPActionBarActivity.this.getPackageManager();
-                Intent i = new Intent(WPActionBarActivity.this, EditPost.class);
+                Intent i = new Intent(WPActionBarActivity.this, EditPostActivity.class);
                 if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                     i.putExtra("option", "newphoto");
                 } else {
@@ -160,7 +167,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         videoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 PackageManager pm = WPActionBarActivity.this.getPackageManager();
-                Intent i = new Intent(WPActionBarActivity.this, EditPost.class);
+                Intent i = new Intent(WPActionBarActivity.this, EditPostActivity.class);
                 if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                     i.putExtra("option", "newvideo");
                 } else {
@@ -198,7 +205,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout settingsButton = (LinearLayout) findViewById(R.id.menu_settings_btn);
         settingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(WPActionBarActivity.this, Preferences.class);
+                Intent i = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 menuDrawer.closeMenu();
                 startActivityWithDelay(i);
@@ -210,7 +217,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
             public void onClick(View v) {
                 int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
                 if (WordPress.currentBlog.isDotcomFlag()) {
-                    Intent i = new Intent(WPActionBarActivity.this, WPCOMReaderPager.class);
+                    Intent i = new Intent(WPActionBarActivity.this, ReaderPagerActivity.class);
                     i.putExtra("id", readerBlogID);
                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     menuDrawer.closeMenu();
@@ -335,7 +342,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         // no blogs are configured, so display new account activity
         if (currentBlog == null) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
-            Intent i = new Intent(this, NewAccount.class);
+            Intent i = new Intent(this, NewAccountActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
         }

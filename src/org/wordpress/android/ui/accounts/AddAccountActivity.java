@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.accounts;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,10 +42,12 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 
-public class AddAccount extends Activity implements OnClickListener {
+public class AddAccountActivity extends Activity implements OnClickListener {
 
     private static final String URL_WORDPRESS = "http://wordpress.com";
 
@@ -138,7 +140,7 @@ public class AddAccount extends Activity implements OnClickListener {
 
         if (blogURL.equals("") || username.equals("") || password.equals("")) {
             pd.dismiss();
-            AlertUtil.showAlert(AddAccount.this, R.string.required_fields, R.string.url_username_password_required);
+            AlertUtil.showAlert(AddAccountActivity.this, R.string.required_fields, R.string.url_username_password_required);
             return;
         }
 
@@ -149,7 +151,7 @@ public class AddAccount extends Activity implements OnClickListener {
 
         if (!URLUtil.isValidUrl(blogURL)) {
             pd.dismiss();
-            AlertUtil.showAlert(AddAccount.this, R.string.invalid_url, R.string.invalid_url_message);
+            AlertUtil.showAlert(AddAccountActivity.this, R.string.invalid_url, R.string.invalid_url_message);
             return;
         }
 
@@ -192,7 +194,7 @@ public class AddAccount extends Activity implements OnClickListener {
 
         if (xmlrpcURL == null) {
             pd.dismiss();
-            AlertUtil.showAlert(AddAccount.this, R.string.error, R.string.no_site_error);
+            AlertUtil.showAlert(AddAccountActivity.this, R.string.error, R.string.no_site_error);
         } else {
             // verify settings
             client = new XMLRPCClient(xmlrpcURL, httpuser, httppassword);
@@ -273,7 +275,7 @@ public class AddAccount extends Activity implements OnClickListener {
                         if (result.length > 0) {
                             additionalText = getString(R.string.additional);
                         }
-                        AlertUtil.showAlert(AddAccount.this, R.string.no_blogs_found,
+                        AlertUtil.showAlert(AddAccountActivity.this, R.string.no_blogs_found,
                                 String.format(getString(R.string.no_blogs_message), additionalText), getString(R.string.ok),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -285,17 +287,17 @@ public class AddAccount extends Activity implements OnClickListener {
                         // there's more than one blog
                         if (blogCtr > 1) {
 
-                            LayoutInflater inflater = (LayoutInflater) AddAccount.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            LayoutInflater inflater = (LayoutInflater) AddAccountActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
                             lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                             lv.setItemsCanFocus(false);
 
-                            ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(AddAccount.this, R.layout.blogs_row,
+                            ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(AddAccountActivity.this, R.layout.blogs_row,
                                     aBlogNames);
 
                             lv.setAdapter(blogs);
 
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccountActivity.this);
                             dialogBuilder.setTitle(R.string.select_blogs);
                             dialogBuilder.setView(lv);
                             dialogBuilder.setNegativeButton(R.string.add_selected, new DialogInterface.OnClickListener() {
@@ -432,14 +434,14 @@ public class AddAccount extends Activity implements OnClickListener {
                             // invalid login
                             Thread shake = new Thread() {
                                 public void run() {
-                                    Animation shake = AnimationUtils.loadAnimation(AddAccount.this, R.anim.shake);
+                                    Animation shake = AnimationUtils.loadAnimation(AddAccountActivity.this, R.anim.shake);
                                     findViewById(R.id.section1).startAnimation(shake);
-                                    Toast.makeText(AddAccount.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddAccountActivity.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
                                 }
                             };
                             runOnUiThread(shake);
                         } else {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccountActivity.this);
                             dialogBuilder.setTitle(getString(R.string.connection_error));
                             if (message.contains("404"))
                                 message = getString(R.string.xmlrpc_error);
@@ -466,7 +468,7 @@ public class AddAccount extends Activity implements OnClickListener {
                         if (couse instanceof HttpHostConnectException) {
 
                         } else {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccount.this);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccountActivity.this);
                             dialogBuilder.setTitle(getString(R.string.connection_error));
                             if (message.contains("404"))
                                 message = getString(R.string.xmlrpc_error);
@@ -564,9 +566,9 @@ public class AddAccount extends Activity implements OnClickListener {
         int id = v.getId();
         if (id == R.id.save) {
             if (mSystemService.getActiveNetworkInfo() == null) {
-                AlertUtil.showAlert(AddAccount.this, R.string.no_network_title, R.string.no_network_message);
+                AlertUtil.showAlert(AddAccountActivity.this, R.string.no_network_title, R.string.no_network_message);
             } else {
-                pd = ProgressDialog.show(AddAccount.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
+                pd = ProgressDialog.show(AddAccountActivity.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
                         true, false);
 
                 Thread action = new Thread() {
@@ -582,12 +584,12 @@ public class AddAccount extends Activity implements OnClickListener {
             setResult(RESULT_CANCELED);
             finish();
         } else if (id == R.id.settingsButton) {
-            Intent settings = new Intent(AddAccount.this, AddAcountSettings.class);
+            Intent settings = new Intent(AddAccountActivity.this, AddAcountSettingsActivity.class);
             settings.putExtra("httpuser", httpuser);
             settings.putExtra("httppassword", httppassword);
             startActivityForResult(settings, R.id.settingsButton);
         } else if (id == R.id.wordpressdotcom) {
-            startActivity(new Intent(AddAccount.this, Signup.class));
+            startActivity(new Intent(AddAccountActivity.this, SignupActivity.class));
         }
     }
 }

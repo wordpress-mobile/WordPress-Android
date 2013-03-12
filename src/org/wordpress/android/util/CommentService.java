@@ -21,11 +21,11 @@ import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFault;
 
-import org.wordpress.android.Comments;
 import org.wordpress.android.R;
 import org.wordpress.android.ServiceUpdateUIListener;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.comments.CommentsActivity;
 
 public class CommentService extends Service {
 
@@ -148,7 +148,7 @@ public class CommentService extends Service {
                                 // "comment was zero");
                             } else if (Integer.valueOf(commentID) > latestCommentID) {
                                 final NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                Intent notificationIntent = new Intent(CommentService.this, Comments.class);
+                                Intent notificationIntent = new Intent(CommentService.this, CommentsActivity.class);
                                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + accountID)));
                                 notificationIntent.putExtra("id", accountID);
                                 notificationIntent.putExtra("fromNotification", true);

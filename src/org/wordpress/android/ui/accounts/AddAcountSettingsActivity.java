@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.wordpress.android.R;
 
-public class AddAcountSettings extends Activity {
+
+public class AddAcountSettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

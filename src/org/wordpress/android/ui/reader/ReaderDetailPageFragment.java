@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -14,7 +14,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 
-public class WPCOMReaderDetailPage extends WPCOMReaderBase {
+import org.wordpress.android.Constants;
+import org.wordpress.android.R;
+
+public class ReaderDetailPageFragment extends ReaderBaseFragment {
 
     public WebView wv;
     public String readerItems;
@@ -23,8 +26,8 @@ public class WPCOMReaderDetailPage extends WPCOMReaderBase {
     private int navButtonEnabled = 200;
     private int navButtonDisabled = 70;
 
-    public static WPCOMReaderDetailPage newInstance() {
-        WPCOMReaderDetailPage f = new WPCOMReaderDetailPage();
+    public static ReaderDetailPageFragment newInstance() {
+        ReaderDetailPageFragment f = new ReaderDetailPageFragment();
         return f;
     }
 

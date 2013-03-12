@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.prefs;
 
 import android.os.Bundle;
