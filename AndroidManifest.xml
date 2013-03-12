@@ -124,7 +124,7 @@
 
         <!-- Other activities -->
         <activity
-            android:name="org.wordpress.android.ui.AddQuickPressShortcut"
+            android:name="org.wordpress.android.ui.AddQuickPressShortcutActivity"
             android:label="QuickPress" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -139,7 +139,7 @@
             android:name="org.wordpress.android.ui.reader.ReaderPagerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name="org.wordpress.android.ui.ViewWebStats"
+            android:name="org.wordpress.android.ui.ViewWebStatsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
 

@@ -182,7 +182,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         LinearLayout statsButton = (LinearLayout) findViewById(R.id.menu_stats_btn);
         statsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(WPActionBarActivity.this, ViewWebStats.class);
+                Intent i = new Intent(WPActionBarActivity.this, ViewWebStatsActivity.class);
                 i.putExtra("id", WordPress.currentBlog.getId());
                 i.putExtra("isNew", true);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

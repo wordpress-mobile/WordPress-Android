@@ -38,7 +38,7 @@ import org.wordpress.android.ui.comments.ViewCommentsFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.EscapeUtils;
 
-public class AddQuickPressShortcut extends ListActivity {
+public class AddQuickPressShortcutActivity extends ListActivity {
     static final int ADD_ACCOUNT_REQUEST = 0;
 
     public List<Map<String, Object>> accounts;
@@ -117,17 +117,17 @@ public class AddQuickPressShortcut extends ListActivity {
 
             listView.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> arg0, View row, int position, long id) {
-                    AddQuickPressShortcut.this.buildDialog(position);
+                    AddQuickPressShortcutActivity.this.buildDialog(position);
                 }
             });
 
             if(accounts.size() == 1) {
-                AddQuickPressShortcut.this.buildDialog(0);
+                AddQuickPressShortcutActivity.this.buildDialog(0);
             }
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcut.this, NewAccountActivity.class);
+            Intent i = new Intent(AddQuickPressShortcutActivity.this, NewAccountActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
         }
     }
@@ -135,10 +135,10 @@ public class AddQuickPressShortcut extends ListActivity {
     private void buildDialog(int positionParam) {
         final int position = positionParam;
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddQuickPressShortcut.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddQuickPressShortcutActivity.this);
         dialogBuilder.setTitle(R.string.quickpress_add_alert_title);
 
-        final EditText quickPressShortcutName = new EditText(AddQuickPressShortcut.this);
+        final EditText quickPressShortcutName = new EditText(AddQuickPressShortcutActivity.this);
         quickPressShortcutName.setText("QP " + EscapeUtils.unescapeHtml(accountNames.get(position)));
         dialogBuilder.setView(quickPressShortcutName);
 
@@ -146,7 +146,7 @@ public class AddQuickPressShortcut extends ListActivity {
 
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
-                    Toast t = Toast.makeText(AddQuickPressShortcut.this, R.string.quickpress_add_error, Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error, Toast.LENGTH_LONG);
                     t.show();
                 } else {
                     Intent shortcutIntent = new Intent();
@@ -161,7 +161,7 @@ public class AddQuickPressShortcut extends ListActivity {
                     Intent addIntent = new Intent();
                     addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
                     addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcut.this, R.drawable.app_icon));
+                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(AddQuickPressShortcutActivity.this, R.drawable.app_icon));
 
                     WordPress.wpDB.addQuickPressShortcut(accountIDs[position], quickPressShortcutName.getText().toString());
 
@@ -174,8 +174,8 @@ public class AddQuickPressShortcut extends ListActivity {
                     }
 
                     addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                    AddQuickPressShortcut.this.sendBroadcast(addIntent);
-                    AddQuickPressShortcut.this.finish();
+                    AddQuickPressShortcutActivity.this.sendBroadcast(addIntent);
+                    AddQuickPressShortcutActivity.this.finish();
                 }
             }
         });

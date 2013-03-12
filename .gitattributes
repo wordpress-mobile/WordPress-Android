@@ -331,10 +331,10 @@ src/org/wordpress/android/models/Blog.java -text
 src/org/wordpress/android/models/Comment.java -text
 src/org/wordpress/android/models/MediaFile.java -text
 src/org/wordpress/android/models/Post.java -text
-src/org/wordpress/android/ui/AddQuickPressShortcut.java -text
+src/org/wordpress/android/ui/AddQuickPressShortcutActivity.java -text
 src/org/wordpress/android/ui/AuthenticatedWebViewActivity.java -text
 src/org/wordpress/android/ui/DashboardActivity.java -text
-src/org/wordpress/android/ui/ViewWebStats.java -text
+src/org/wordpress/android/ui/ViewWebStatsActivity.java -text
 src/org/wordpress/android/ui/WPActionBarActivity.java -text
 src/org/wordpress/android/ui/WebViewActivity.java -text
 src/org/wordpress/android/ui/accounts/AddAccountActivity.java -text
