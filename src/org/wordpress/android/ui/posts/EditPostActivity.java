@@ -1635,18 +1635,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mTitleEditText.setText(title);
             }
 
-            // It's a youtube video link! need to strip some parameters so the
-            // embed will work
             if (text.contains("youtube_gdata")) {
-                text = text.replace("feature=youtube_gdata", "");
-                text = text.replace("&", "");
-                text = text.replace("_player", "");
-                text = text.replace("watch?v=", "v/");
-                text = "<object width=\"480\" height=\"385\"><param name=\"movie\" value=\""
-                        + text
-                        + "\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\""
-                        + text
-                        + "\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"480\" height=\"385\"></embed></object>";
+                // Just use the URL for YouTube links for oEmbed support
                 mContentEditText.setText(text);
             } else {
                 // add link tag around URLs, trac #64
