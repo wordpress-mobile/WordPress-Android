@@ -322,20 +322,24 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     intent.putExtra("isNew", true);
                     break;
                 case 7:
-                    mShouldFinish = false;
+                    if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
+                        mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
                 case 8:
-                    mShouldFinish = false;
+                    if (!(WPActionBarActivity.this instanceof DashboardActivity))
+                        mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
                     intent.putExtra("loadAdmin", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
                 case 9:
+                    // Settings shouldn't be launched with a delay, or close the drawer
                     mShouldFinish = false;
-                    intent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
-                    break;
+                    Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
+                    startActivity(settingsIntent);
+                    return;
             }
 
             if (intent != null) {

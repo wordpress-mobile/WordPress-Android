@@ -18,7 +18,9 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.CommentBroadcastReceiver;
 import org.wordpress.android.R;
@@ -40,6 +42,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         super.onCreate(icicle);
 
         setTitle(getResources().getText(R.string.settings));
+        
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         if (WordPress.currentBlog == null) {
             try {
@@ -74,6 +79,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         // the set of blogs may have changed while we were away
         updateBlogsPreferenceCategory();
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

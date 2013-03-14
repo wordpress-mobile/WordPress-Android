@@ -175,7 +175,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onPause();
         if (isRefreshing)
             stopAnimatingRefreshButton(refreshMenuItem);
-         overridePendingTransition(0, 0);
     }
 
     @Override
