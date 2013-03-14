@@ -8,4 +8,5 @@
 
     <!-- Colors for menu drawer. -->
     <color name="md__itemBackground">#CC2EA2CC</color>
+    <color name="md__iconTintColor">#CCFFFFFF</color>
 </resources>

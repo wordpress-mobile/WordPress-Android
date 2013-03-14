@@ -181,6 +181,7 @@ res/drawable/list_highlight_bg.xml -text
 res/drawable/md_list_selector.xml -text
 res/drawable/menu_button_bg.9.png -text
 res/drawable/menu_button_selector.xml -text
+res/drawable/menu_drawer_selected.xml -text
 res/drawable/new_account_logo.png -text
 res/drawable/placeholder.png -text
 res/drawable/pressed_background_wordpress.xml -text
@@ -237,7 +238,7 @@ res/layout/image_view.xml -text
 res/layout/link.xml -text
 res/layout/list_footer_btn.xml -text
 res/layout/list_footer_progress.xml -text
-res/layout/menu_drawer.xml -text
+res/layout/menu_drawer_row.xml -text
 res/layout/menu_refresh_view.xml -text
 res/layout/moderatecomments.xml -text
 res/layout/new_account.xml -text
@@ -354,6 +355,7 @@ src/org/wordpress/android/ui/comments/ViewCommentsFragment.java -text
 src/org/wordpress/android/ui/posts/AddCategoryActivity.java -text
 src/org/wordpress/android/ui/posts/EditLinkActivity.java -text
 src/org/wordpress/android/ui/posts/EditPostActivity.java -text
+src/org/wordpress/android/ui/posts/PagesActivity.java -text
 src/org/wordpress/android/ui/posts/PostsActivity.java -text
 src/org/wordpress/android/ui/posts/PreviewPostActivity.java -text
 src/org/wordpress/android/ui/posts/SelectCategoriesActivity.java -text

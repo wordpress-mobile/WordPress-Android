@@ -149,7 +149,7 @@
     <style name="MenuDrawer.Button">
         <item name="android:background">@drawable/md_list_selector</item>
         <item name="android:padding">10dp</item>
-        <item name="android:drawablePadding">16dp</item>
+        <item name="android:drawablePadding">18dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 

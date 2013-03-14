@@ -154,6 +154,7 @@
             android:label="Comment Service" />
 
         <receiver android:name="org.wordpress.android.CommentBroadcastReceiver" />
+        <activity android:name=".ui.posts.PagesActivity"></activity>
     </application>
 
 </manifest>
