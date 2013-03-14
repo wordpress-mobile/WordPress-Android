@@ -155,6 +155,7 @@
 
         <receiver android:name="org.wordpress.android.CommentBroadcastReceiver" />
         <activity android:name=".ui.posts.PagesActivity"></activity>
+        <activity android:name=".ui.ViewSiteActivity"></activity>
     </application>
 
 </manifest>

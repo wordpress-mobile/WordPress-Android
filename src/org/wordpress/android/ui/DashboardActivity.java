@@ -2,6 +2,9 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
+import android.view.Window;
+
+import com.actionbarsherlock.app.ActionBar;
 
 import org.wordpress.android.R;
 
@@ -14,6 +17,8 @@ public class DashboardActivity extends AuthenticatedWebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        createMenuDrawer(this.findViewById(R.id.webview_wrapper));
+        
         this.setTitle(getResources().getText(R.string.wp_admin));
 
         // configure webview

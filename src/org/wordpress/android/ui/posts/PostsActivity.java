@@ -637,14 +637,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        //titleBar.switchDashboardLayout(newConfig.orientation);
-
-    }
-
-    @Override
     public void onDialogConfirm() {
         postList.switcher.showNext();
         postList.numRecords += 30;

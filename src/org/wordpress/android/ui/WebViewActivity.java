@@ -1,14 +1,11 @@
 
 package org.wordpress.android.ui;
 
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebView;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.ActionBar;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -16,18 +13,19 @@ import org.wordpress.android.R;
 /**
  * Basic activity for displaying a WebView.
  */
-public class WebViewActivity extends SherlockActivity {
+public class WebViewActivity extends WPActionBarActivity {
     /** Primary webview used to display content. */
     protected WebView mWebView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getWindow().setFormat(PixelFormat.RGBA_8888);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-        requestWindowFeature(Window.FEATURE_PROGRESS);
+        
         setContentView(R.layout.webview);
+        
+        ActionBar ab = getSupportActionBar();
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        ab.setDisplayShowTitleEnabled(true);
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);

@@ -4,6 +4,7 @@ package org.wordpress.android.ui;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 import net.simonvt.menudrawer.MenuDrawer;
 
@@ -72,7 +73,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (this instanceof WebViewActivity)
+            requestWindowFeature(Window.FEATURE_PROGRESS);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -122,9 +124,23 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
     /**
      * Create a menu drawer and attach it to the activity.
      * 
+     * @param contentViewID {@link View} of the main content for the activity.
+     */
+    protected void createMenuDrawer(int contentViewID) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+        mMenuDrawer.setContentView(contentViewID);
+
+        updateMenuDrawer();
+    }
+    
+    /**
+     * Create a menu drawer and attach it to the activity.
+     * 
      * @param contentView {@link View} of the main content for the activity.
      */
-    protected void createMenuDrawer(int contentView) {
+    protected void createMenuDrawer(View contentView) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
@@ -168,6 +184,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                 R.drawable.dashboard_icon_photo));
         items.add(new MenuDrawerItem(resources.getString(R.string.quick_video),
                 R.drawable.dashboard_icon_video));
+        items.add(new MenuDrawerItem(resources.getString(R.string.view_site),
+                R.drawable.preview_icon));
         items.add(new MenuDrawerItem(resources.getString(R.string.wp_admin),
                 R.drawable.dashboard_icon_wp));
         items.add(new MenuDrawerItem(resources.getString(R.string.settings),
@@ -184,6 +202,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
             mActivePosition = 3;
         else if ((WPActionBarActivity.this instanceof ReaderPagerActivity))
             mActivePosition = 4;
+        else if ((WPActionBarActivity.this instanceof ViewSiteActivity))
+            mActivePosition = 7;
+        else if ((WPActionBarActivity.this instanceof DashboardActivity))
+            mActivePosition = 8;
+            
+        if (!mIsDotComBlog && mActivePosition > 4)
+            mActivePosition--;
 
         mListView = new ListView(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -298,11 +323,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     break;
                 case 7:
                     mShouldFinish = false;
+                    intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    break;
+                case 8:
+                    mShouldFinish = false;
                     intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
                     intent.putExtra("loadAdmin", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 8:
+                case 9:
                     mShouldFinish = false;
                     intent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
                     break;
