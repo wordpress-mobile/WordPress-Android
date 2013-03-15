@@ -75,30 +75,6 @@ public class CommentsActivity extends WPActionBarActivity implements
 
         WordPress.currentComment = null;
 
-        /*titleBar.refreshButton
-                .setOnClickListener(new ImageButton.OnClickListener() {
-                    public void onClick(View v) {
-                        popCommentDetail();
-                        attemptToSelectComment();
-                        commentList.refreshComments(false, false, false);
-
-                    }
-                });
-
-        titleBar.setOnBlogChangedListener(new OnBlogChangedListener() {
-            // user selected new blog in the title bar
-            @Override
-            public void OnBlogChanged() {
-
-                popCommentDetail();
-                attemptToSelectComment();
-                boolean commentsLoaded = commentList.loadComments(false, false);
-                if (!commentsLoaded)
-                    commentList.refreshComments(false, false, false);
-
-            }
-        });*/
-
         attemptToSelectComment();
         if (fromNotification)
             commentList.refreshComments(false, false, false);

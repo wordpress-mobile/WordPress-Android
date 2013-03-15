@@ -28,7 +28,7 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         this.setTitle(getResources().getText(R.string.view_site));
 
         // configure webview
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this, getTitle()));
+        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setPluginsEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);

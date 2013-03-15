@@ -34,7 +34,7 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
                     + " - " + getResources().getText(R.string.preview_post));
         }
 
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this, getTitle()));
+        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
 
         loadPostPreview(WordPress.currentPost);

@@ -95,6 +95,7 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            
         }
 
         @Override
@@ -110,21 +111,21 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
      */
     protected class WordPressWebChromeClient extends WebChromeClient {
         private Context context;
-        private CharSequence title;
 
-        public WordPressWebChromeClient(Context context, CharSequence title) {
+        public WordPressWebChromeClient(Context context) {
             this.context = context;
-            this.title = title;
         }
 
-        public void onProgressChanged(WebView view, int progress) {
+        public void onProgressChanged(WebView webView, int progress) {
             AuthenticatedWebViewActivity.this.setTitle(
                     context.getResources().getText(R.string.loading));
             AuthenticatedWebViewActivity.this.setProgress(progress * 100);
 
             if (progress == 100) {
-                AuthenticatedWebViewActivity.this.setTitle(title);
+                setTitle(webView.getTitle());
             }
         }
+        
+        
     }
 }
