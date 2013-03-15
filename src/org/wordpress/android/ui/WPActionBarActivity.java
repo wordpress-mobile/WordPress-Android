@@ -8,6 +8,7 @@ import com.actionbarsherlock.view.Window;
 
 import net.simonvt.menudrawer.MenuDrawer;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -303,10 +304,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
                     if
                     (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        intent.putExtra("option", "newphoto");
+                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_CAMERA);
                     } else {
-                        intent.putExtra("option",
-                                "photolibrary");
+                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_LIBRARY);
                     }
                     intent.putExtra("isNew", true);
                     break;
@@ -315,9 +315,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     PackageManager vpm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
                     if (vpm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        intent.putExtra("option", "newvideo");
+                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_CAMERA);
                     } else {
-                        intent.putExtra("option", "videolibrary");
+                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_LIBRARY);
                     }
                     intent.putExtra("isNew", true);
                     break;

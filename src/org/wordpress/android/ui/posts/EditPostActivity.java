@@ -88,6 +88,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.xmlrpc.android.ApiHelper;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -149,7 +150,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private List<String> mSelectedCategories;
     private String mAccountName = "";
-    private String mOption = "";
+    private int mQuickMediaType = -1;
     private String mMediaCapturePath = "";
 
     private String[] mPostFormats = null;
@@ -204,7 +205,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     if (savedInstanceState.getString("mediaCapturePath") != null)
                         mMediaCapturePath = savedInstanceState.getString("mediaCapturePath");
                 } else {
-                    mOption = extras.getString("option");
+                    mQuickMediaType = extras.getInt("quick-media");
                 }
 
                 if (extras.getBoolean("isQuickPress")) {
@@ -337,27 +338,34 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mStatusSpinner.setAdapter(adapter);
-        mStatusSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                //evaluateSaveButtonText();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
-        });
 
         getLocationProvider();
 
-        if (!mIsNew) {
-
+        if (mIsNew) {
+            if (mQuickMediaType >= 0) {
+                // User selected a 'Quick (media type)' option in the menu drawer
+                if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA)
+                    launchCamera();
+                else if (mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+                    launchPictureLibrary();
+                else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA)
+                    launchVideoCamera();
+                else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+                    launchVideoLibrary();
+                mLocalDraft = extras.getBoolean("localDraft");
+            }
+        } else {
             mTitleEditText.setText(mPost.getTitle());
 
             if (mPost.isUploaded()) {
-                items = new String[] { getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                        getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private) };
-                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
+                items = new String[] {
+                        getResources().getString(R.string.publish_post),
+                        getResources().getString(R.string.draft),
+                        getResources().getString(R.string.pending_review),
+                        getResources().getString(R.string.post_private)
+                };
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+                        items);
                 mStatusSpinner.setAdapter(adapter);
             }
 
@@ -365,15 +373,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
             if (!mPost.getMt_text_more().equals("")) {
                 if (mPost.isLocalDraft())
-                    contentHTML = mPost.getDescription() + "\n&lt;!--more--&gt;\n" + mPost.getMt_text_more();
+                    contentHTML = mPost.getDescription() + "\n&lt;!--more--&gt;\n"
+                            + mPost.getMt_text_more();
                 else
-                    contentHTML = mPost.getDescription() + "\n<!--more-->\n" + mPost.getMt_text_more();
+                    contentHTML = mPost.getDescription() + "\n<!--more-->\n"
+                            + mPost.getMt_text_more();
             } else
                 contentHTML = mPost.getDescription();
 
             try {
                 if (mPost.isLocalDraft())
-                    mContentEditText.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""), EditPostActivity.this, mPost));
+                    mContentEditText.setText(WPHtml.fromHtml(contentHTML.replaceAll("\uFFFC", ""),
+                            EditPostActivity.this, mPost));
                 else
                     mContentEditText.setText(contentHTML.replaceAll("\uFFFC", ""));
             } catch (Exception e) {
@@ -388,7 +399,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
                     flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
                     flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                    String formattedDate = DateUtils.formatDateTime(EditPostActivity.this, pubDate, flags);
+                    String formattedDate = DateUtils.formatDateTime(EditPostActivity.this, pubDate,
+                            flags);
                     mPubDateText.setText(formattedDate);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -412,8 +424,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 } else if (status.equals("localdraft")) {
                     mStatusSpinner.setSelection(4, true);
                 }
-
-                //evaluateSaveButtonText();
             }
 
             if (!mIsPage) {
@@ -429,7 +439,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             }
                         }
                         mCategoriesText.setVisibility(View.VISIBLE);
-                        mCategoriesText.setText(getString(R.string.selected_categories) + " " + getCategoriesCSV());
+                        mCategoriesText.setText(getString(R.string.selected_categories) + " "
+                                + getCategoriesCSV());
                     }
                 }
 
@@ -541,10 +552,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
             if (savePost(false)) {
                 if (mPost.isUploaded() || !mPost.getPost_status().equals("localdraft")) {
-                    if (mOption != null) {
-                        if (mOption.equals("newphoto") || mOption.equals("photolibrary"))
+                    if (mQuickMediaType >= 0) {
+                        if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
                             mPost.setQuickPostType("QuickPhoto");
-                        else if (mOption.equals("newvideo") || mOption.equals("videolibrary"))
+                        else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                             mPost.setQuickPostType("QuickVideo");
                     }
                     WordPress.currentPost = mPost;
@@ -625,12 +636,13 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
             if (savePost(false)) {
                 if (mPost.isUploaded() || !mPost.getPost_status().equals("localdraft")) {
-                    if (mOption != null) {
-                        if (mOption.equals("newphoto") || mOption.equals("photolibrary"))
+                    if (mQuickMediaType >= 0) {
+                        if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
                             mPost.setQuickPostType("QuickPhoto");
-                        else if (mOption.equals("newvideo") || mOption.equals("videolibrary"))
+                        else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                             mPost.setQuickPostType("QuickVideo");
                     }
+                    
                     WordPress.currentPost = mPost;
                     startService(new Intent(this, PostUploadService.class));
                 }
@@ -677,24 +689,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }
 
         mLastYPos = pos;
-
-        /*
-         * if (!mIsFullScreenEditing && event.getAction() == 1) {
-         * mIsFullScreenEditing = true;
-         * mContentEditText.setFocusableInTouchMode(true);
-         * mContentEditText.setHint(""); try { ((LinearLayout)
-         * findViewById(R.id.
-         * postContentEditorSmallWrapper)).removeView(mContentEditText);
-         * ((ScrollView)
-         * findViewById(R.id.scrollView)).setVisibility(View.GONE); LinearLayout
-         * contentEditorWrap = (LinearLayout)
-         * findViewById(R.id.postContentEditorWrapper);
-         * contentEditorWrap.addView(mContentEditText);
-         * contentEditorWrap.setVisibility(View.VISIBLE); ((RelativeLayout)
-         * findViewById(R.id.formatBar)).setVisibility(View.VISIBLE); } catch
-         * (Exception e) { e.printStackTrace(); }
-         * mContentEditText.requestFocus(); return false; }
-         */
 
         if (event.getAction() == 1 && !mScrollDetected) {
             Layout layout = ((TextView) v).getLayout();
@@ -1133,22 +1127,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }
     }
 
-    /*
-     * private void finishEditing() {
-     * mContentEditText.setHint(R.string.content); if (mIsFullScreenEditing) {
-     * mIsFullScreenEditing = false; try { ((RelativeLayout)
-     * findViewById(R.id.formatBar)).setVisibility(View.GONE); LinearLayout
-     * contentEditorWrap = (LinearLayout)
-     * findViewById(R.id.postContentEditorWrapper);
-     * contentEditorWrap.removeView(mContentEditText);
-     * contentEditorWrap.setVisibility(View.GONE); LinearLayout smallEditorWrap
-     * = (LinearLayout) findViewById(R.id.postContentEditorSmallWrapper);
-     * smallEditorWrap.addView(mContentEditText);
-     * smallEditorWrap.setVisibility(View.VISIBLE); ((ScrollView)
-     * findViewById(R.id.scrollView)).setVisibility(View.VISIBLE); } catch
-     * (Exception e) { e.printStackTrace(); } } }
-     */
-
     private void launchPictureLibrary() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -1204,13 +1182,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         startActivityForResult(new Intent(MediaStore.ACTION_VIDEO_CAPTURE), ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
     }
 
-    /*private void evaluateSaveButtonText() {
-        if (mStatusSpinner.getSelectedItemPosition() == 0)
-            mSaveButton.setText(getString(R.string.publish_post));
-        else
-            mSaveButton.setText(getString(R.string.save));
-    }*/
-
     private LocationResult locationResult = new LocationResult() {
         @Override
         public void gotLocation(Location location) {
@@ -1245,7 +1216,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_CANCELED) {
-            if (mOption != null) {
+            if (mQuickMediaType >= 0) {
                 setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
             }
