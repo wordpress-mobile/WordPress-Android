@@ -47,7 +47,7 @@ public class LineGraphView extends GraphView {
 
 				if (i > 0) {
 					// fill space between last and current point
-					int numSpace = (int) ((endX - lastEndX) / 3f) +1;
+					double numSpace = ((endX - lastEndX) / 3f) +1;
 					for (int xi=0; xi<numSpace; xi++) {
 						float spaceX = (float) (lastEndX + ((endX-lastEndX)*xi/(numSpace-1)));
 						float spaceY = (float) (lastEndY + ((endY-lastEndY)*xi/(numSpace-1)));
