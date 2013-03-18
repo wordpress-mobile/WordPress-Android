@@ -483,12 +483,10 @@ public class ViewCommentsFragment extends ListFragment {
             if (this.shouldSelectAfterLoad) {
                 if (model != null) {
                     if (model.size() > 0) {
-
                         selectedPosition = 0;
                         Comment aComment = model.get((int) 0);
                         onCommentSelectedListener.onCommentSelected(aComment);
-                        thumbs.notifyDataSetChanged();
-
+                        getListView().setItemChecked(0, true);
                     }
                 }
                 shouldSelectAfterLoad = false;
@@ -614,7 +612,6 @@ public class ViewCommentsFragment extends ListFragment {
 
         CommentEntryWrapper(View row) {
             this.row = row;
-
         }
 
         void populateFrom(Comment s, final int position) {
