@@ -49,7 +49,7 @@
     <PreferenceCategory
         android:title="@string/about">
         <Preference android:title="@string/app_title" >
-            <intent android:targetClass="org.wordpress.android.About"
+            <intent android:targetClass="org.wordpress.android.ui.prefs.AboutActivity"
                 android:targetPackage="org.wordpress.android"/>
         </Preference>
         <Preference android:title="@string/open_source_licenses" >
