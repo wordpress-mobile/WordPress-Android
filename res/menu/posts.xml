@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/menu_refresh"
-        android:icon="@drawable/refresh_icon"
+        android:icon="@drawable/ab_icon_refresh"
         android:showAsAction="always"
         android:title="@string/refresh"/>
     <item
         android:id="@+id/menu_new_post"
-        android:icon="@drawable/new_post_icon"
+        android:icon="@drawable/ab_icon_new"
         android:showAsAction="ifRoom"
         android:title="@string/new_post"/>
 </menu>

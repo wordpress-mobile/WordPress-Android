@@ -163,7 +163,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
         menu.add(0, 0, 0, getResources().getText(R.string.refresh));
         refreshMenuItem = menu.findItem(0);
         refreshMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        refreshMenuItem.setIcon(R.drawable.refresh_icon);
+        refreshMenuItem.setIcon(R.drawable.ab_icon_refresh);
         if (readerPager.getCurrentItem() > 1) {
             menu.removeItem(0);
             menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
