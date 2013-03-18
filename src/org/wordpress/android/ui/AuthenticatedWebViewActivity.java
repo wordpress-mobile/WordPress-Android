@@ -5,6 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
@@ -12,6 +14,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -124,8 +130,45 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
             if (progress == 100) {
                 setTitle(webView.getTitle());
             }
+        } 
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.webview, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (mWebView == null)
+            return false;
+        
+        int itemID = item.getItemId();
+        if (itemID == R.id.menu_refresh) {
+            mWebView.reload();
+            return true;
+        } else if (itemID == R.id.menu_share) {
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
+            startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
+            return true;
+        } else if (itemID == R.id.menu_browser) {
+            String url = mWebView.getUrl();
+            if (url != null) {
+                Uri uri = Uri.parse(url);
+                if (uri != null) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(uri);
+                    startActivity(i);
+                }
+            }
+            return true;
         }
-        
-        
+
+        return super.onOptionsItemSelected(item);
     }
 }

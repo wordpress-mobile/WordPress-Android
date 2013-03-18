@@ -32,6 +32,9 @@
         <item name="actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
         
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
+        
+        <item name="android:activatedBackgroundIndicator">@drawable/list_bg_selector</item>
+        <item name="activatedBackgroundIndicator">@drawable/list_bg_selector</item>
     </style>
     
     <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">

@@ -25,6 +25,8 @@
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
         
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/list_bg_selector</item>
+        <item name="activatedBackgroundIndicator">@drawable/list_bg_selector</item>
     </style>
     
     <style name="WordPressButtonAppearance" parent="@android:style/Widget.Holo.Light.Button">

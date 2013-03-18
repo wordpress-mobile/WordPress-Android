@@ -141,6 +141,10 @@
     <style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
         <item name="android:textColor">#FF464646</item>
     </style>
+    
+    <style name="WordPressListRowBackground">
+        <item name="android:background">@null</item>
+    </style>
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
         <item name="mdMenuSize">250dp</item>

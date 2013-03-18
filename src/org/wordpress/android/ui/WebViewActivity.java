@@ -54,45 +54,6 @@ public class WebViewActivity extends WPActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.webview, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (mWebView == null)
-            return false;
-        
-        int itemID = item.getItemId();
-        if (itemID == R.id.menu_refresh) {
-            mWebView.reload();
-            return true;
-        } else if (itemID == R.id.menu_share) {
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("text/plain");
-            share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
-            startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
-            return true;
-        } else if (itemID == R.id.menu_browser) {
-            String url = mWebView.getUrl();
-            if (url != null) {
-                Uri uri = Uri.parse(url);
-                if (uri != null) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(uri);
-                    startActivity(i);
-                }
-            }
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onBackPressed() {
 
         if (mWebView != null && mWebView.canGoBack())

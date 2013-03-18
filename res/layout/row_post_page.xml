@@ -2,37 +2,36 @@
     android:id="@+id/row_post_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    style="@style/WordPressListRowBackground" >
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
         android:textColor="#464646"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingTop="6dp" >
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dip"
-            android:paddingLeft="8dip"
-            android:paddingRight="8dip"
             android:textColor="#777777"
             android:textSize="12sp" />
         <TextView
             android:id="@+id/status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dip"
-            android:paddingRight="8dip"
             android:textColor="#777777"
             android:textSize="12sp"
             android:text="@string/publish"

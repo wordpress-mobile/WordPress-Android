@@ -2,8 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +11,6 @@ import java.util.Vector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -49,30 +45,29 @@ import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewPostsFragment extends ListFragment {
     /** Called when the activity is first created. */
-    private XMLRPCClient client;
-    private String[] postIDs, titles, dateCreated, dateCreatedFormatted,
-            draftIDs, draftTitles, draftDateCreated, statuses, draftStatuses;
-    private Integer[] uploaded;
-    int rowID = 0;
-    long selectedID;
+    private String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
+            mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;
+    private int[] mUploaded;
+    private int mRowID = 0;
+    private long mSelectedID;
+    private PostListAdapter mPostListAdapter;
+    private OnPostSelectedListener mOnPostSelectedListener;
+    private OnRefreshListener mOnRefreshListener;
+    private OnPostActionListener mOnPostActionListener;
+    private PostsActivity mParentActivity;
+    
     public boolean inDrafts = false;
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
-    public int totalDrafts = 0, selectedPosition;
-    public boolean isPage = false, vpUpgrade = false, shouldSelectAfterLoad = false;
+    public int totalDrafts = 0;
+    public boolean isPage = false, shouldSelectAfterLoad = false;
     public int numRecords = 20;
     public ViewSwitcher switcher;
-    private PostListAdapter pla;
-    private OnPostSelectedListener onPostSelectedListener;
-    private OnRefreshListener onRefreshListener;
-    private OnPostActionListener onPostActionListener;
     public getRecentPostsTask getPostsTask;
-    private PostsActivity parentActivity;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        // setContentView(R.layout.viewposts);
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
@@ -91,9 +86,9 @@ public class ViewPostsFragment extends ListFragment {
         super.onAttach(activity);
         try {
             // check that the containing activity implements our callback
-            onPostSelectedListener = (OnPostSelectedListener) activity;
-            onRefreshListener = (OnRefreshListener) activity;
-            onPostActionListener = (OnPostActionListener) activity;
+            mOnPostSelectedListener = (OnPostSelectedListener) activity;
+            mOnRefreshListener = (OnRefreshListener) activity;
+            mOnPostActionListener = (OnPostActionListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -104,7 +99,7 @@ public class ViewPostsFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        parentActivity = (PostsActivity) getActivity();
+        mParentActivity = (PostsActivity) getActivity();
 
     }
 
@@ -148,7 +143,7 @@ public class ViewPostsFragment extends ListFragment {
     public void refreshPosts(final boolean loadMore) {
 
         if (!loadMore) {
-            onRefreshListener.onRefresh(true);
+            mOnRefreshListener.onRefresh(true);
             numRecords = 20;
         }
         List<Object> apiArgs = new Vector<Object>();
@@ -182,152 +177,78 @@ public class ViewPostsFragment extends ListFragment {
 
         if (loadedPosts != null) {
             numRecords = loadedPosts.size();
-            titles = new String[loadedPosts.size()];
-            postIDs = new String[loadedPosts.size()];
-            dateCreated = new String[loadedPosts.size()];
-            dateCreatedFormatted = new String[loadedPosts.size()];
-            statuses = new String[loadedPosts.size()];
+            mTitles = new String[loadedPosts.size()];
+            mPostIDs = new String[loadedPosts.size()];
+            mDateCreated = new String[loadedPosts.size()];
+            mDateCreatedFormatted = new String[loadedPosts.size()];
+            mStatuses = new String[loadedPosts.size()];
         } else {
-            titles = new String[0];
-            postIDs = new String[0];
-            dateCreated = new String[0];
-            dateCreatedFormatted = new String[0];
-            statuses = new String[0];
-            if (pla != null) {
-                pla.notifyDataSetChanged();
+            mTitles = new String[0];
+            mPostIDs = new String[0];
+            mDateCreated = new String[0];
+            mDateCreatedFormatted = new String[0];
+            mStatuses = new String[0];
+            if (mPostListAdapter != null) {
+                mPostListAdapter.notifyDataSetChanged();
             }
         }
         if (loadedPosts != null) {
             Date d = new Date();
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
-                titles[i] = EscapeUtils.unescapeHtml(contentHash.get("title")
+                mTitles[i] = EscapeUtils.unescapeHtml(contentHash.get("title")
                         .toString());
 
-                postIDs[i] = contentHash.get("id").toString();
-                dateCreated[i] = contentHash.get("date_created_gmt").toString();
+                mPostIDs[i] = contentHash.get("id").toString();
+                mDateCreated[i] = contentHash.get("date_created_gmt").toString();
 
                 if (contentHash.get("post_status") != null) {
                     String api_status = contentHash.get("post_status")
                             .toString();
                     if (api_status.equals("publish")) {
-                        statuses[i] = getResources()
+                        mStatuses[i] = getResources()
                                 .getText(R.string.published).toString();
                     } else if (api_status.equals("draft")) {
-                        statuses[i] = getResources().getText(R.string.draft)
+                        mStatuses[i] = getResources().getText(R.string.draft)
                                 .toString();
                     } else if (api_status.equals("pending")) {
-                        statuses[i] = getResources().getText(
+                        mStatuses[i] = getResources().getText(
                                 R.string.pending_review).toString();
                     } else if (api_status.equals("private")) {
-                        statuses[i] = getResources().getText(
+                        mStatuses[i] = getResources().getText(
                                 R.string.post_private).toString();
                     }
 
                     if ((Long) contentHash.get("date_created_gmt") > d
                             .getTime() && api_status.equals("publish")) {
-                        statuses[i] = getResources()
+                        mStatuses[i] = getResources()
                                 .getText(R.string.scheduled).toString();
                     }
                 }
 
-                // dateCreatedFormatted[i] =
-                // contentHash.get("postDateFormatted").toString();
-                int flags = 0;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
                 long localTime = (Long) contentHash.get("date_created_gmt");
-                dateCreatedFormatted[i] = DateUtils
-                        .formatDateTime(getActivity().getApplicationContext(),
-                                localTime, flags);
+                mDateCreatedFormatted[i] = getFormattedDate(localTime);
             }
-
-            // add the header
-            List<String> postIDList = Arrays.asList(postIDs);
-            List<String> newPostIDList = new ArrayList<String>();
-            newPostIDList.add("postsHeader");
-            newPostIDList.addAll(postIDList);
-            postIDs = (String[]) newPostIDList.toArray(new String[newPostIDList
-                    .size()]);
-
-            List<String> postTitleList = Arrays.asList(titles);
-            List<CharSequence> newPostTitleList = new ArrayList<CharSequence>();
-            newPostTitleList.add(getResources().getText(
-                    (isPage) ? R.string.tab_pages : R.string.tab_posts));
-            newPostTitleList.addAll(postTitleList);
-            titles = (String[]) newPostTitleList
-                    .toArray(new String[newPostTitleList.size()]);
-
-            List<String> dateList = Arrays.asList(dateCreated);
-            List<String> newDateList = new ArrayList<String>();
-            newDateList.add("postsHeader");
-            newDateList.addAll(dateList);
-            dateCreated = (String[]) newDateList.toArray(new String[newDateList
-                    .size()]);
-
-            List<String> dateFormattedList = Arrays
-                    .asList(dateCreatedFormatted);
-            List<String> newDateFormattedList = new ArrayList<String>();
-            newDateFormattedList.add("postsHeader");
-            newDateFormattedList.addAll(dateFormattedList);
-            dateCreatedFormatted = (String[]) newDateFormattedList
-                    .toArray(new String[newDateFormattedList.size()]);
-
-            List<String> statusList = Arrays.asList(statuses);
-            List<String> newStatusList = new ArrayList<String>();
-            newStatusList.add("postsHeader");
-            newStatusList.addAll(statusList);
-            statuses = (String[]) newStatusList
-                    .toArray(new String[newStatusList.size()]);
         }
         // load drafts
         boolean drafts = loadDrafts();
 
         if (drafts) {
-
-            List<String> draftIDList = Arrays.asList(draftIDs);
-            List<String> newDraftIDList = new ArrayList<String>();
-            newDraftIDList.add("draftsHeader");
-            newDraftIDList.addAll(draftIDList);
-            draftIDs = (String[]) newDraftIDList
-                    .toArray(new String[newDraftIDList.size()]);
-
-            List<String> titleList = Arrays.asList(draftTitles);
-            List<CharSequence> newTitleList = new ArrayList<CharSequence>();
-            newTitleList.add(getResources().getText(R.string.local_drafts));
-            newTitleList.addAll(titleList);
-            draftTitles = (String[]) newTitleList
-                    .toArray(new String[newTitleList.size()]);
-
-            List<String> draftDateList = Arrays.asList(draftDateCreated);
-            List<String> newDraftDateList = new ArrayList<String>();
-            newDraftDateList.add("draftsHeader");
-            newDraftDateList.addAll(draftDateList);
-            draftDateCreated = (String[]) newDraftDateList
-                    .toArray(new String[newDraftDateList.size()]);
-
-            List<String> draftStatusList = Arrays.asList(draftStatuses);
-            List<String> newDraftStatusList = new ArrayList<String>();
-            newDraftStatusList.add("draftsHeader");
-            newDraftStatusList.addAll(draftStatusList);
-            draftStatuses = (String[]) newDraftStatusList
-                    .toArray(new String[newDraftStatusList.size()]);
-
-            postIDs = StringHelper.mergeStringArrays(draftIDs, postIDs);
-            titles = StringHelper.mergeStringArrays(draftTitles, titles);
-            dateCreatedFormatted = StringHelper.mergeStringArrays(
-                    draftDateCreated, dateCreatedFormatted);
-            statuses = StringHelper.mergeStringArrays(draftStatuses, statuses);
+            mPostIDs = StringHelper.mergeStringArrays(mDraftIDs, mPostIDs);
+            mTitles = StringHelper.mergeStringArrays(mDraftTitles, mTitles);
+            mDateCreatedFormatted = StringHelper.mergeStringArrays(
+                    mDraftDateCreated, mDateCreatedFormatted);
+            mStatuses = StringHelper.mergeStringArrays(mDraftStatuses, mStatuses);
         } else {
-            if (pla != null) {
-                pla.notifyDataSetChanged();
+            if (mPostListAdapter != null) {
+                mPostListAdapter.notifyDataSetChanged();
             }
         }
 
         if (loadedPosts != null || drafts == true) {
             ListView listView = getListView();
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
             listView.removeFooterView(switcher);
             if (loadedPosts != null) {
                 if (loadedPosts.size() >= 20) {
@@ -336,29 +257,24 @@ public class ViewPostsFragment extends ListFragment {
             }
 
             if (loadMore) {
-                pla.notifyDataSetChanged();
+                mPostListAdapter.notifyDataSetChanged();
             } else {
-                pla = new PostListAdapter(getActivity().getApplicationContext());
-                listView.setAdapter(pla);
+                mPostListAdapter = new PostListAdapter(getActivity().getBaseContext());
+                listView.setAdapter(mPostListAdapter);
 
                 listView.setOnItemClickListener(new OnItemClickListener() {
 
                     public void onItemClick(AdapterView<?> arg0, View v,
                             int position, long id) {
-                        if (position < postIDs.length) {
-                            if (v != null
-                                    && !postIDs[position]
-                                            .equals("draftsHeader")
-                                    && !postIDs[position].equals("postsHeader")
-                                    && !parentActivity.isRefreshing) {
-                                selectedPosition = position;
-                                selectedID = v.getId();
+                        if (position < mPostIDs.length) {
+                            if (v != null && !mParentActivity.isRefreshing) {
+                                mSelectedID = v.getId();
                                 Post post = new Post(WordPress.currentBlog
-                                        .getId(), selectedID, isPage);
+                                        .getId(), mSelectedID, isPage);
                                 if (post.getId() >= 0) {
                                     WordPress.currentPost = post;
-                                    onPostSelectedListener.onPostSelected(post);
-                                    pla.notifyDataSetChanged();
+                                    mOnPostSelectedListener.onPostSelected(post);
+                                    mPostListAdapter.notifyDataSetChanged();
                                 } else {
                                     if (!getActivity().isFinishing()) {
                                         FragmentTransaction ft = getFragmentManager()
@@ -371,7 +287,6 @@ public class ViewPostsFragment extends ListFragment {
                             }
                         }
                     }
-
                 });
 
                 listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
@@ -386,7 +301,7 @@ public class ViewPostsFragment extends ListFragment {
                             return;
                         }
 
-                        if (parentActivity.isRefreshing)
+                        if (mParentActivity.isRefreshing)
                             return;
 
                         Object[] args = { R.id.row_post_id };
@@ -394,22 +309,22 @@ public class ViewPostsFragment extends ListFragment {
                         try {
                             Method m = android.view.View.class
                                     .getMethod("getTag");
-                            m.invoke(selectedID, args);
+                            m.invoke(mSelectedID, args);
                         } catch (NoSuchMethodException e) {
-                            selectedID = info.targetView.getId();
+                            mSelectedID = info.targetView.getId();
                         } catch (IllegalArgumentException e) {
-                            selectedID = info.targetView.getId();
+                            mSelectedID = info.targetView.getId();
                         } catch (IllegalAccessException e) {
-                            selectedID = info.targetView.getId();
+                            mSelectedID = info.targetView.getId();
                         } catch (InvocationTargetException e) {
-                            selectedID = info.targetView.getId();
+                            mSelectedID = info.targetView.getId();
                         }
                         // selectedID = (String)
                         // info.targetView.getTag(R.id.row_post_id);
-                        rowID = info.position;
+                        mRowID = info.position;
 
-                        if (totalDrafts > 0 && rowID <= totalDrafts
-                                && rowID != 0) {
+                        if (totalDrafts > 0 && mRowID <= totalDrafts
+                                && mRowID != 0) {
                             menu.clear();
                             menu.setHeaderTitle(getResources().getText(
                                     R.string.draft_actions));
@@ -421,8 +336,8 @@ public class ViewPostsFragment extends ListFragment {
                                     0,
                                     getResources().getText(
                                             R.string.delete_draft));
-                        } else if (rowID == 1
-                                || ((rowID != (totalDrafts + 1)) && rowID != 0)) {
+                        } else if (mRowID == 1
+                                || ((mRowID != (totalDrafts + 1)) && mRowID != 0)) {
                             menu.clear();
 
                             if (isPage) {
@@ -474,16 +389,19 @@ public class ViewPostsFragment extends ListFragment {
             }
 
             if (this.shouldSelectAfterLoad) {
-                if (postIDs != null) {
-                    if (postIDs.length >= 1) {
+                if (mPostIDs != null) {
+                    if (mPostIDs.length >= 1) {
 
                         Post post = new Post(WordPress.currentBlog.getId(),
-                                Integer.valueOf(postIDs[1]), isPage);
+                                Integer.valueOf(mPostIDs[0]), isPage);
                         if (post.getId() >= 0) {
                             WordPress.currentPost = post;
-                            onPostSelectedListener.onPostSelected(post);
-                            selectedPosition = 1;
-                            pla.notifyDataSetChanged();
+                            mOnPostSelectedListener.onPostSelected(post);
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            ViewPostFragment f = (ViewPostFragment) fm
+                                    .findFragmentById(R.id.postDetail);
+                            if (f != null && f.isInLayout())
+                                getListView().setItemChecked(0, true);
                         }
                     }
                 }
@@ -504,6 +422,18 @@ public class ViewPostsFragment extends ListFragment {
             return false;
         }
 
+    }
+
+    private String getFormattedDate(long localTime) {
+        int flags = 0;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+        String formattedDate = DateUtils
+                .formatDateTime(getActivity().getApplicationContext(),
+                        localTime, flags);
+        return formattedDate;
     }
 
     class ViewWrapper {
@@ -549,24 +479,21 @@ public class ViewPostsFragment extends ListFragment {
                     WordPress.currentBlog.getId(), false);
         }
         if (loadedPosts != null) {
-            draftIDs = new String[loadedPosts.size()];
-            draftTitles = new String[loadedPosts.size()];
-            draftDateCreated = new String[loadedPosts.size()];
-            uploaded = new Integer[loadedPosts.size()];
+            mDraftIDs = new String[loadedPosts.size()];
+            mDraftTitles = new String[loadedPosts.size()];
+            mDraftDateCreated = new String[loadedPosts.size()];
+            mUploaded = new int[loadedPosts.size()];
             totalDrafts = loadedPosts.size();
-            draftStatuses = new String[loadedPosts.size()];
+            mDraftStatuses = new String[loadedPosts.size()];
 
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
-                draftIDs[i] = contentHash.get("id").toString();
-                draftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
+                mDraftIDs[i] = contentHash.get("id").toString();
+                mDraftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
                         "title").toString());
-                // drafts won't show the date in the list
-                draftDateCreated[i] = "";
-                uploaded[i] = (Integer) contentHash.get("uploaded");
-                // leaving status blank for local drafts since it's pretty clear
-                // that they are already local drafts
-                draftStatuses[i] = "";
+                mDraftDateCreated[i] = "";
+                mUploaded[i] = (Integer) contentHash.get("uploaded");
+                mDraftStatuses[i] = getString(R.string.local_draft);
             }
 
             return true;
@@ -578,20 +505,11 @@ public class ViewPostsFragment extends ListFragment {
 
     private class PostListAdapter extends BaseAdapter {
 
-        int sdk_version = 7;
-        boolean detailViewVisible = false;
-
         public PostListAdapter(Context context) {
-            sdk_version = android.os.Build.VERSION.SDK_INT;
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            ViewPostFragment f = (ViewPostFragment) fm
-                    .findFragmentById(R.id.postDetail);
-            if (f != null && f.isInLayout())
-                detailViewVisible = true;
         }
 
         public int getCount() {
-            return postIDs.length;
+            return mPostIDs.length;
         }
 
         public Object getItem(int position) {
@@ -602,16 +520,13 @@ public class ViewPostsFragment extends ListFragment {
             return position;
         }
 
-        public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
             View pv = convertView;
             ViewWrapper wrapper = null;
             if (pv == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 pv = inflater.inflate(R.layout.row_post_page, parent, false);
                 wrapper = new ViewWrapper(pv);
-                if (position == 0) {
-                    // dateHeight = wrapper.getDate().getHeight();
-                }
                 pv.setTag(wrapper);
                 wrapper = new ViewWrapper(pv);
                 pv.setTag(wrapper);
@@ -619,70 +534,26 @@ public class ViewPostsFragment extends ListFragment {
                 wrapper = (ViewWrapper) pv.getTag();
             }
 
-            String date = dateCreatedFormatted[position];
-            String status_text = statuses[position];
-            if (date.equals("postsHeader") || date.equals("draftsHeader")) {
+            String date = mDateCreatedFormatted[position];
+            String status_text = mStatuses[position];
 
-                //pv.setBackground(getResources().getDrawable(
-                //        R.drawable.title_text_bg));
-                wrapper.getTitle().setTextColor(Color.parseColor("#464646"));
-                wrapper.getTitle().setPadding(20, 0, 20, 3);
-                wrapper.getTitle().setTextSize(17);
-                wrapper.getTitle().setTypeface(null, Typeface.BOLD);
-                wrapper.getDate().setHeight(0);
-                wrapper.getStatus().setHeight(0);
-
-                if (date.equals("draftsHeader")) {
-                    inDrafts = true;
-                    date = "";
-                    status_text = "";
-                } else if (date.equals("postsHeader")) {
-                    inDrafts = false;
-                    date = "";
-                    status_text = "";
-                }
-            } else {
-                if (position == selectedPosition && sdk_version >= 11
-                        && detailViewVisible) {
-                    pv.setBackgroundDrawable(getResources().getDrawable(
-                            R.drawable.list_highlight_bg));
-                } else {
-                    pv.setBackgroundDrawable(getResources().getDrawable(
-                            R.drawable.list_bg_selector));
-                }
-                wrapper.getTitle().setPadding(12, 12, 12, 0);
-
-                wrapper.getTitle().setTextColor(Color.parseColor("#444444"));
-                wrapper.getTitle().setShadowLayer(0, 0, 0,
-                        Color.parseColor("#444444"));
-                wrapper.getTitle().setTextScaleX(1.0f);
-                wrapper.getTitle().setTextSize(18);
-                wrapper.getTitle().setTypeface(null, Typeface.NORMAL);
-                wrapper.getDate().setTextColor(Color.parseColor("#888888"));
-
-                pv.setTag(R.id.row_post_id, postIDs[position]);
-                pv.setId(Integer.valueOf(postIDs[position]));
-
-                wrapper.getDate().setHeight((int) wrapper.getTitle().getTextSize() + wrapper.getDate().getPaddingBottom());
-                wrapper.getStatus().setHeight((int) wrapper.getTitle().getTextSize() + wrapper.getStatus().getPaddingBottom());
-            }
-            String titleText = titles[position];
+            pv.setTag(R.id.row_post_id, mPostIDs[position]);
+            pv.setId(Integer.valueOf(mPostIDs[position]));
+            String titleText = mTitles[position];
             if (titleText == "")
-                titleText = "(" + getResources().getText(R.string.untitled)
-                        + ")";
+                titleText = "(" + getResources().getText(R.string.untitled) + ")";
             wrapper.getTitle().setText(titleText);
             wrapper.getDate().setText(date);
             wrapper.getStatus().setText(status_text);
 
             return pv;
-
         }
 
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Post post = new Post(WordPress.currentBlog.getId(), selectedID, isPage);
+        Post post = new Post(WordPress.currentBlog.getId(), mSelectedID, isPage);
 
         if (post.getId() < 0) {
             if (!getActivity().isFinishing()) {
@@ -701,15 +572,15 @@ public class ViewPostsFragment extends ListFragment {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
                         EditPostActivity.class);
-                i2.putExtra("postID", selectedID);
+                i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 startActivityForResult(i2, 0);
                 return true;
             case 1:
-                onPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
+                mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case 2:
-                onPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
+                mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
             }
 
@@ -718,16 +589,16 @@ public class ViewPostsFragment extends ListFragment {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
                         EditPostActivity.class);
-                i2.putExtra("postID", selectedID);
+                i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 i2.putExtra("isPage", true);
                 startActivityForResult(i2, 0);
                 return true;
             case 1:
-                onPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
+                mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             case 2:
-                onPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
+                mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
             }
 
@@ -736,7 +607,7 @@ public class ViewPostsFragment extends ListFragment {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
                         EditPostActivity.class);
-                i2.putExtra("postID", selectedID);
+                i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 if (isPage) {
                     i2.putExtra("isPage", true);
@@ -746,7 +617,7 @@ public class ViewPostsFragment extends ListFragment {
                 return true;
             case 1:
 
-                onPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
+                mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
             }
         }
@@ -762,7 +633,7 @@ public class ViewPostsFragment extends ListFragment {
 
         protected void onPostExecute(Boolean result) {
             if (isCancelled() || !result) {
-                onRefreshListener.onRefresh(false);
+                mOnRefreshListener.onRefresh(false);
                 if (errorMsg != "" && !getActivity().isFinishing()) {
                     FragmentTransaction ft = getFragmentManager()
                             .beginTransaction();
@@ -776,7 +647,7 @@ public class ViewPostsFragment extends ListFragment {
 
             if (loadMore)
                 switcher.showPrevious();
-            onRefreshListener.onRefresh(false);
+            mOnRefreshListener.onRefresh(false);
             loadPosts(loadMore);
         }
 
@@ -788,7 +659,7 @@ public class ViewPostsFragment extends ListFragment {
             isPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
             loadMore = (Boolean) arguments.get(3);
-            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+            XMLRPCClient client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
                     WordPress.currentBlog.getHttpuser(),
                     WordPress.currentBlog.getHttppassword());
 
@@ -821,13 +692,13 @@ public class ViewPostsFragment extends ListFragment {
                         WordPress.wpDB.savePosts(dbVector,
                                 WordPress.currentBlog.getId(), isPage);
                     } else {
-                        if (pla != null) {
-                            if (postIDs.length == 2) {
+                        if (mPostListAdapter != null) {
+                            if (mPostIDs.length == 2) {
                                 try {
                                     WordPress.wpDB.deleteUploadedPosts(
                                             WordPress.currentBlog.getId(),
                                             WordPress.currentPost.isPage());
-                                    onPostActionListener
+                                    mOnPostActionListener
                                     .onPostAction(PostsActivity.POST_CLEAR,
                                             WordPress.currentPost);
                                 } catch (Exception e) {
