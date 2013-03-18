@@ -112,7 +112,7 @@ public class ViewCommentsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.moderatecomments, container, false);
+        View v = inflater.inflate(R.layout.view_comments_fragment, container, false);
 
         // create the ViewSwitcher in the current context
         switcher = new ViewSwitcher(getActivity().getApplicationContext());
@@ -595,19 +595,6 @@ public class ViewCommentsFragment extends ListFragment {
                 wrapper = (CommentEntryWrapper) row.getTag();
             }
             Comment commentEntry = getItem(position);
-
-            if (position == selectedPosition && sdk_version >= 11
-                    && detailViewVisible) {
-                row.setBackgroundDrawable(getResources().getDrawable(
-                        R.drawable.list_highlight_bg));
-            } else if ("hold".equals(commentEntry.status)) {
-                row.setBackgroundDrawable(getResources().getDrawable(
-                        R.drawable.comment_pending_bg_selector));
-            } else {
-                row.setBackgroundDrawable(getResources().getDrawable(
-                        R.drawable.list_bg_selector));
-            }
-
             wrapper.populateFrom(commentEntry, position);
 
             return (row);
@@ -724,7 +711,7 @@ public class ViewCommentsFragment extends ListFragment {
                 status = (TextView) row.findViewById(R.id.status);
             }
 
-            status.setTextSize(10);
+            status.setTextSize(12);
 
             return (status);
         }
