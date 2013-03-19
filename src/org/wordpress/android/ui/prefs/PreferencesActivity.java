@@ -99,7 +99,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         for (Map<String, Object> account : accounts) {
-            String blogName = account.get("blogName").toString();
+            String blogName = EscapeUtils.unescapeHtml(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
 
             Preference blogSettingsPreference = new Preference(this);

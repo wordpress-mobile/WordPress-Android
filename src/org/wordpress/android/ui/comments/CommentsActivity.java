@@ -56,6 +56,8 @@ public class CommentsActivity extends WPActionBarActivity implements
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        setTitle(getString(R.string.tab_comments));
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

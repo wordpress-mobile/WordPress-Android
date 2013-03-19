@@ -17,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -39,7 +38,7 @@ import org.wordpress.android.util.WPViewPager;
 
 public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
         UpdateTopicTitleListener, GetLoadedItemsListener, UpdateButtonStatusListener, ShowTopicsListener, LoadExternalURLListener,
-        GetPermalinkListener, GetLastSelectedItemListener, LoadDetailListener, OnNavigationListener {
+        GetPermalinkListener, GetLastSelectedItemListener, LoadDetailListener {
 
     private WPViewPager readerPager;
     private ReaderPagerAdapter readerAdapter;
@@ -255,7 +254,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
                         topicText.setText(topicName);
                     }
                     readerPager.setCurrentItem(1, true);
-                    invalidateOptionsMenu();
+                    //invalidateOptionsMenu();
                 }
             });
         } catch (Exception e) {
@@ -265,7 +264,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
     @Override
     public void onPostSelected(String requestedURL) {
         readerPager.setCurrentItem(2, true);
-        invalidateOptionsMenu();
+        //invalidateOptionsMenu();
     }
 
     @Override
@@ -276,7 +275,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
                 readerPageDetailFragment.wv.loadUrl("javascript:Reader2.clear_article_details();");
             }
             readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
-            invalidateOptionsMenu();
+            //invalidateOptionsMenu();
         } else
             super.onBackPressed();
     }

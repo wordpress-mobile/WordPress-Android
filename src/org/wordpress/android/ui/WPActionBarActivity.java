@@ -1,25 +1,9 @@
 
 package org.wordpress.android.ui;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-
-import net.simonvt.menudrawer.MenuDrawer;
-
-import org.wordpress.android.Constants;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
-import org.wordpress.android.ui.comments.CommentsActivity;
-import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PagesActivity;
-import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.PreferencesActivity;
-import org.wordpress.android.ui.reader.ReaderPagerActivity;
-import org.wordpress.android.util.EscapeUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,18 +24,33 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
+
+import net.simonvt.menudrawer.MenuDrawer;
+
+import org.wordpress.android.Constants;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PagesActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.prefs.PreferencesActivity;
+import org.wordpress.android.ui.reader.ReaderPagerActivity;
+import org.wordpress.android.util.EscapeUtils;
 
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends SherlockFragmentActivity implements
-        ActionBar.OnNavigationListener {
+public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private static final String TAG = "WPActionBarActivity";
 
@@ -70,20 +69,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
     private MenuAdapter mAdapter;
     private ListView mListView;
+    private Spinner mBlogSpinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (this instanceof WebViewActivity)
             requestWindowFeature(Window.FEATURE_PROGRESS);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        String[] blogNames = getBlogNames();
-        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
-                .getThemedContext(),
-                R.layout.sherlock_spinner_dropdown_item, blogNames);
-        actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override
@@ -111,12 +104,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
         Blog currentBlog = WordPress.getCurrentBlog();
 
-        if (currentBlog != null
-                && getSupportActionBar().getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD) {
+        if (currentBlog != null && mListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getId()) {
-                    getSupportActionBar().setSelectedNavigationItem(i);
-                    return;
+                    mBlogSpinner.setSelection(i);
                 }
             }
         }
@@ -132,8 +123,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
         mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
         mMenuDrawer.setContentView(contentViewID);
-
-        updateMenuDrawer();
+        
+        initMenuDrawer();
     }
     
     /**
@@ -146,6 +137,46 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
         mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
         mMenuDrawer.setContentView(contentView);
+
+        initMenuDrawer();
+    }
+    
+    /**
+     * Create menu drawer ListView and listeners
+     */
+    private void initMenuDrawer() {
+        mListView = new ListView(this);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mListView.setDivider(null);
+        mListView.setDividerHeight(0);
+        mListView.setCacheColorHint(android.R.color.transparent);
+        
+        String[] blogNames = getBlogNames();
+        if (blogNames.length > 1) {
+            LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mBlogSpinner = (Spinner) layoutInflater.inflate(R.layout.blog_spinner, null);
+            mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
+            SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
+                    .getThemedContext(),
+                    R.layout.sherlock_spinner_dropdown_item, blogNames);
+            mBlogSpinner.setAdapter(mSpinnerAdapter);
+            mListView.addHeaderView(mBlogSpinner);
+        }
+        
+        mListView.setOnItemClickListener(mItemClickListener);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                    int totalItemCount) {
+                mMenuDrawer.invalidate();
+            }
+        });
+        
+        mMenuDrawer.setMenuView(mListView);
 
         updateMenuDrawer();
     }
@@ -193,50 +224,37 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                 R.drawable.dashboard_icon_settings));
 
         if ((WPActionBarActivity.this instanceof PostsActivity))
-            mActivePosition = 0;
+            mActivePosition = 1;
 
         if ((WPActionBarActivity.this instanceof PagesActivity))
-            mActivePosition = 1;
-        else if ((WPActionBarActivity.this instanceof CommentsActivity))
             mActivePosition = 2;
-        else if ((WPActionBarActivity.this instanceof ViewWebStatsActivity))
+        else if ((WPActionBarActivity.this instanceof CommentsActivity))
             mActivePosition = 3;
-        else if ((WPActionBarActivity.this instanceof ReaderPagerActivity))
+        else if ((WPActionBarActivity.this instanceof ViewWebStatsActivity))
             mActivePosition = 4;
+        else if ((WPActionBarActivity.this instanceof ReaderPagerActivity))
+            mActivePosition = 5;
         else if ((WPActionBarActivity.this instanceof ViewSiteActivity))
-            mActivePosition = 7;
-        else if ((WPActionBarActivity.this instanceof DashboardActivity))
             mActivePosition = 8;
+        else if ((WPActionBarActivity.this instanceof DashboardActivity))
+            mActivePosition = 9;
             
         if (!mIsDotComBlog && mActivePosition > 4)
             mActivePosition--;
-
-        mListView = new ListView(this);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(0);
-        mListView.setCacheColorHint(android.R.color.transparent);
+        
         mAdapter = new MenuAdapter(items);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(mItemClickListener);
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                    int totalItemCount) {
-                mMenuDrawer.invalidate();
-            }
-        });
-
-        mMenuDrawer.setMenuView(mListView);
     }
 
     private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // Adjust position if only one blog is in the app
+            if (mListView.getHeaderViewsCount() == 0)
+                position++;
+            // Adjust position if blog isn't on WP.com (No Reader)
+            if (!mIsDotComBlog && position > 4)
+                position++;
             if (position == mActivePosition) {
                 // Same row selected
                 mMenuDrawer.closeMenu();
@@ -247,12 +265,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
             mAdapter.notifyDataSetChanged();
             Intent intent = null;
 
-            // Adjust position if blog isn't .com
-            if (!mIsDotComBlog && position > 3)
-                position++;
-
             switch (position) {
-                case 0:
+                case 1:
                     if (!(WPActionBarActivity.this instanceof PostsActivity)
                             || (WPActionBarActivity.this instanceof PagesActivity))
                         mShouldFinish = true;
@@ -260,7 +274,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                             Intent(WPActionBarActivity.this, PostsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 1:
+                case 2:
                     if (!(WPActionBarActivity.this instanceof PagesActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
@@ -270,7 +284,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     intent.putExtra("viewPages", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 2:
+                case 3:
                     if (!(WPActionBarActivity.this instanceof CommentsActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
@@ -279,7 +293,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                             true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 3:
+                case 4:
                     if (!(WPActionBarActivity.this instanceof ViewWebStatsActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, ViewWebStatsActivity.class);
@@ -288,7 +302,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                             true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 4:
+                case 5:
                     if (!(WPActionBarActivity.this instanceof ReaderPagerActivity))
                         mShouldFinish = true;
                     int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
@@ -299,7 +313,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     }
                     break;
-                case 5:
+                case 6:
                     mShouldFinish = false;
                     PackageManager pm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
@@ -311,7 +325,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     }
                     intent.putExtra("isNew", true);
                     break;
-                case 6:
+                case 7:
                     mShouldFinish = false;
                     PackageManager vpm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
@@ -322,20 +336,20 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                     }
                     intent.putExtra("isNew", true);
                     break;
-                case 7:
+                case 8:
                     if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 8:
+                case 9:
                     if (!(WPActionBarActivity.this instanceof DashboardActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
                     intent.putExtra("loadAdmin", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     break;
-                case 9:
+                case 10:
                     // Settings shouldn't be launched with a delay, or close the drawer
                     mShouldFinish = false;
                     Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
@@ -400,7 +414,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
 
             v.setTag(R.id.mdActiveViewPosition, position);
 
-            if (position == mActivePosition) {
+            if ((position + 1) == mActivePosition) {
                 // http://stackoverflow.com/questions/5890379/setbackgroundresource-discards-my-xml-layout-attributes
                 int bottom = v.getPaddingBottom();
                 int top = v.getPaddingTop();
@@ -526,13 +540,23 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
                 }
         }
     }
+    
+    private AdapterView.OnItemSelectedListener mItemSelectedListener = new AdapterView.OnItemSelectedListener() {
 
-    @Override
-    public boolean onNavigationItemSelected(int pos, long itemId) {
-        WordPress.setCurrentBlog(blogIDs[pos]);
-        onBlogChanged();
-        return true;
-    }
+        @Override
+        public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+            WordPress.setCurrentBlog(blogIDs[position]);
+            updateMenuDrawer();
+            onBlogChanged();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> arg0) {
+            // TODO Auto-generated method stub
+            
+        }
+    
+    };
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -550,7 +574,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
      */
     public void onBlogChanged() {
         WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-        updateMenuDrawer();
     }
 
     public void startAnimatingRefreshButton(MenuItem refreshItem) {

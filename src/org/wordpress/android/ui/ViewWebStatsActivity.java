@@ -103,6 +103,8 @@ public class ViewWebStatsActivity extends WPActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        setTitle(getString(R.string.tab_stats));
 
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new StatsWebViewClient());

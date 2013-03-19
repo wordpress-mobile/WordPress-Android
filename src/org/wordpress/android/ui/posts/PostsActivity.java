@@ -57,6 +57,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
         postList = (ViewPostsFragment) fm.findFragmentById(R.id.postList);
@@ -85,6 +86,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 }
             }
         }
+        
+        if (isPage)
+            setTitle(getString(R.string.pages));
+        else
+            setTitle(getString(R.string.posts));
 
         WordPress.currentPost = null;
 
@@ -625,7 +631,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 f.clearContent();
             }
         }
-
     }
 
     @Override
