@@ -244,6 +244,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             Intent service = new Intent(PreferencesActivity.this, CommentService.class);
             stopService(service);
         }
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
         super.onPause();
     }
 

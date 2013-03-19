@@ -59,6 +59,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * account.
      */
     static final int ADD_ACCOUNT_REQUEST = 100;
+    /**
+     * Request code for reloading menu after returning from  the PreferencesActivity.
+     */
+    static final int SETTINGS_REQUEST = 200;
 
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
@@ -134,7 +138,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      */
     protected void createMenuDrawer(View contentView) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        
         mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
         mMenuDrawer.setContentView(contentView);
 
@@ -153,14 +157,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
-            LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mBlogSpinner = (Spinner) layoutInflater.inflate(R.layout.blog_spinner, null);
-            mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
-            SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
-                    .getThemedContext(),
-                    R.layout.sherlock_spinner_dropdown_item, blogNames);
-            mBlogSpinner.setAdapter(mSpinnerAdapter);
-            mListView.addHeaderView(mBlogSpinner);
+            addBlogSpinner(blogNames);
         }
         
         mListView.setOnItemClickListener(mItemClickListener);
@@ -179,6 +176,17 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuDrawer.setMenuView(mListView);
 
         updateMenuDrawer();
+    }
+
+    private void addBlogSpinner(String[] blogNames) {
+        LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mBlogSpinner = (Spinner) layoutInflater.inflate(R.layout.blog_spinner, null);
+        mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
+        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
+                .getThemedContext(),
+                R.layout.sherlock_spinner_dropdown_item, blogNames);
+        mBlogSpinner.setAdapter(mSpinnerAdapter);
+        mListView.addHeaderView(mBlogSpinner);  
     }
 
     protected void startActivityWithDelay(final Intent i) {
@@ -255,6 +263,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             // Adjust position if blog isn't on WP.com (No Reader)
             if (!mIsDotComBlog && position > 4)
                 position++;
+            
             if (position == mActivePosition) {
                 // Same row selected
                 mMenuDrawer.closeMenu();
@@ -353,7 +362,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     // Settings shouldn't be launched with a delay, or close the drawer
                     mShouldFinish = false;
                     Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
-                    startActivity(settingsIntent);
+                    startActivityForResult(settingsIntent, SETTINGS_REQUEST);
                     return;
             }
 
@@ -537,7 +546,23 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     // setup current blog
                     getBlogNames();
                     setupCurrentBlog();
+                    initMenuDrawer();
+                } else {
+                    finish();
                 }
+                break;
+            case SETTINGS_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    setupCurrentBlog();
+                    if (mMenuDrawer != null) {
+                        updateMenuDrawer();
+                        String[] blogNames = getBlogNames();
+                        // If we need to add or remove the blog spinner, init the drawer again
+                        if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0) || blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
+                            this.initMenuDrawer();
+                    }
+                }
+                break;
         }
     }
     
