@@ -215,6 +215,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity imple
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setDivider(null);
         mListView.setDividerHeight(0);
+        mListView.setCacheColorHint(android.R.color.transparent);
         mAdapter = new MenuAdapter(items);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mItemClickListener);
