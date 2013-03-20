@@ -106,6 +106,12 @@ public class CommentsActivity extends WPActionBarActivity implements
             attemptToSelectComment();
             commentList.refreshComments(false, false, false);
             return true;
+        } else if (itemId == android.R.id.home) {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                popCommentDetail();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

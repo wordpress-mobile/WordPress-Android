@@ -251,10 +251,6 @@ public class ViewCommentFragment extends Fragment {
 
         getGravatar(gravatarURL);
 
-        getActivity().setTitle(
-                getResources().getText(R.string.view_comment_from) + " "
-                        + comment.name);
-
         TextView tvName = (TextView) getActivity().findViewById(
                 R.id.commentDetailName);
 

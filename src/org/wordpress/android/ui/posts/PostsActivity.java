@@ -254,6 +254,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 i.putExtra("isPage", true);
             startActivity(i);
             return true;
+        } else if (itemId == android.R.id.home) {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                popPostDetail();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
