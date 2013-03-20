@@ -30,6 +30,7 @@ import android.provider.MediaStore.Video;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -558,6 +559,13 @@ public class PostUploadService extends Service {
                             } else { // file is not in media library
                                 path = imageUri.toString().replace("file://", "");
                                 jpeg = new File(path);
+                                String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+                                if (extension != null) {
+                                    MimeTypeMap mime = MimeTypeMap.getSingleton();
+                                    mimeType = mime.getMimeTypeFromExtension(extension);
+                                    if (mimeType == null)
+                                        mimeType = "image/jpeg";
+                                }
                                 mf.setFilePath(path);
                             }
 
