@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.webkit.HttpAuthHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
@@ -42,6 +43,9 @@ public class ReaderDetailPageFragment extends ReaderBaseFragment {
 
         wv.addJavascriptInterface( new JavaScriptInterface(getActivity().getBaseContext()), "Android" );
         wv.setWebViewClient(new DetailWebViewClient());
+        
+        // Needed to support playing video
+        wv.setWebChromeClient(new WebChromeClient() {});
 
         wv.loadUrl(Constants.readerDetailURL);
 
