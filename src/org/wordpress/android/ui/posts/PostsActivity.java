@@ -303,6 +303,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public void onRefresh(boolean start) {
         if (start) {
+            attemptToSelectPost();
             startAnimatingRefreshButton(refreshMenuItem);
             isRefreshing = true;
         } else {
