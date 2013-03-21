@@ -254,7 +254,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
                         topicText.setText(topicName);
                     }
                     readerPager.setCurrentItem(1, true);
-                    //invalidateOptionsMenu();
+                    supportInvalidateOptionsMenu();
                 }
             });
         } catch (Exception e) {
@@ -264,7 +264,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
     @Override
     public void onPostSelected(String requestedURL) {
         readerPager.setCurrentItem(2, true);
-        //invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -275,7 +275,7 @@ public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTo
                 readerPageDetailFragment.wv.loadUrl("javascript:Reader2.clear_article_details();");
             }
             readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
-            //invalidateOptionsMenu();
+            supportInvalidateOptionsMenu();
         } else
             super.onBackPressed();
     }
