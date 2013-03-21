@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" 
-    android:background="@color/list_row_bg">
+    android:background="#F4F4F4">
 
     <LinearLayout
         android:id="@+id/about"
@@ -13,10 +13,11 @@
 
         <ImageView
             android:id="@+id/about_wp_logo"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dip"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerInside"
             android:src="@drawable/new_account_logo" />
 
         <TextView
@@ -29,7 +30,7 @@
             android:shadowDy="1"
             android:shadowRadius="1"
             android:text="@string/app_title"
-            android:textSize="25dip" />
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/about_version"
@@ -37,16 +38,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/version"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/about_second_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dip"
+            android:layout_marginTop="30dp"
             android:text="@string/publisher"
-            android:textSize="18dip" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/about_third_line"
@@ -54,35 +55,35 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/copyright"
-            android:textSize="18dip" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/about_tos"
-            android:layout_width="220dip"
-            android:layout_height="40dip"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dip"
+            android:layout_marginTop="30dp"
             android:text="@string/tos"
-            android:textSize="18dip" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/about_privacy"
-            android:layout_width="220dip"
-            android:layout_height="40dip"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/privacy_policy"
-            android:textSize="18dip" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/about_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dip"
+            android:layout_marginTop="30dp"
             android:clickable="true"
             android:onClick="onClick"
             android:text="@string/automattic_url"
-            android:textSize="18dip" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </ScrollView>
