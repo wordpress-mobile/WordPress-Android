@@ -116,7 +116,6 @@
              android:id="@+id/post"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:background="@drawable/wp_button"
              android:text="@string/comment_update"
              android:textSize="20dip" android:layout_gravity="left"/>
      </LinearLayout>

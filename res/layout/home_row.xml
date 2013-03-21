@@ -7,7 +7,7 @@
     android:id="@+id/blavatar"
     android:layout_width="42dip"
     android:layout_height="42dip"
-    android:src="@drawable/wp_logo_home"
+    android:src="@drawable/app_icon"
     android:scaleType="centerCrop"
     android:gravity="center|center"
     android:layout_marginLeft="8dip"

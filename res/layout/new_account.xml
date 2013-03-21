@@ -3,7 +3,7 @@
   android:id="@+id/main"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:background="@drawable/home_gradient">
+  android:background="#F4F4F4">
   <LinearLayout
     android:id="@+id/LinearLayout01"
     android:layout_width="fill_parent"
@@ -13,9 +13,8 @@
     android:layout_gravity="center">
     <ImageView
       android:scaleType="centerInside"
-      android:layout_width="280dp"
-      android:layout_height="280dp"
-      android:layout_marginTop="10dp"
+      android:layout_width="200dp"
+      android:layout_height="200dp"
       android:id="@+id/wordpress_logo"
       android:src="@drawable/new_account_logo">
     </ImageView>
@@ -23,9 +22,8 @@
       android:id="@+id/welcome"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:typeface="serif"
-      android:paddingRight="20dp"
-      android:paddingLeft="20dp"
+      android:paddingRight="18dp"
+      android:paddingLeft="18dp"
       android:maxLines="2"
       android:ellipsize="end"
       android:gravity="center"
@@ -41,40 +39,26 @@
       android:id="@+id/createWPAccount"
       android:layout_width="280dp"
       android:layout_height="wrap_content"
-      android:textSize="14dp"
-      android:shadowColor="#FFFFFFFF"
+      android:textSize="14sp"
       android:singleLine="true"
-      android:shadowDx="0"
-      android:shadowDy="2"
-      android:shadowRadius="1"
       android:textStyle="bold"
-      android:background="@drawable/wp_button"
       android:text="@string/new_to_wp" />
     <Button
       android:id="@+id/dotcomExisting"
       android:layout_width="280dp"
       android:layout_height="wrap_content"
-      android:textSize="14dp"
-      android:shadowColor="#FFFFFFFF"
+      android:textSize="14sp"
       android:singleLine="true"
-      android:shadowDx="0"
-      android:shadowDy="2"
-      android:shadowRadius="1"
       android:textStyle="bold"
-      android:background="@drawable/wp_button"
       android:text="@string/i_have_wp_blog" />
     <Button
       android:id="@+id/dotorgExisting"
       android:layout_width="280dp"
       android:layout_height="wrap_content"
-      android:textSize="14dp"
-      android:shadowColor="#FFFFFFFF"
+      android:textSize="14sp"
       android:singleLine="true"
-      android:shadowDx="0"
-      android:shadowDy="2"
       android:shadowRadius="1"
       android:textStyle="bold"
-      android:background="@drawable/wp_button"
       android:text="@string/i_have_blog" />
   </LinearLayout>
 </ScrollView>

@@ -13,11 +13,11 @@
 
         <ImageView
             android:id="@+id/about_wp_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dip"
-            android:src="@drawable/wp_logo_home" />
+            android:src="@drawable/new_account_logo" />
 
         <TextView
             android:id="@+id/about_first_line"
@@ -62,7 +62,6 @@
             android:layout_height="40dip"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dip"
-            android:background="@drawable/wp_button"
             android:text="@string/tos"
             android:textSize="18dip" />
 
@@ -71,7 +70,6 @@
             android:layout_width="220dip"
             android:layout_height="40dip"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/wp_button"
             android:text="@string/privacy_policy"
             android:textSize="18dip" />
 
