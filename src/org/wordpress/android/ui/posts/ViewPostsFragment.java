@@ -323,65 +323,23 @@ public class ViewPostsFragment extends ListFragment {
                         // info.targetView.getTag(R.id.row_post_id);
                         mRowID = info.position;
 
-                        if (totalDrafts > 0 && mRowID <= totalDrafts
-                                && mRowID != 0) {
+                        if (totalDrafts > 0 && mRowID < totalDrafts) {
                             menu.clear();
-                            menu.setHeaderTitle(getResources().getText(
-                                    R.string.draft_actions));
-                            menu.add(1, 0, 0,
-                                    getResources().getText(R.string.edit_draft));
-                            menu.add(
-                                    1,
-                                    1,
-                                    0,
-                                    getResources().getText(
-                                            R.string.delete_draft));
-                        } else if (mRowID == 1
-                                || ((mRowID != (totalDrafts + 1)) && mRowID != 0)) {
+                            menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
+                            menu.add(1, 0, 0, getResources().getText(R.string.edit_draft));
+                            menu.add(1, 1, 0, getResources().getText(R.string.delete_draft));
+                        } else {
                             menu.clear();
-
                             if (isPage) {
-                                menu.setHeaderTitle(getResources().getText(
-                                        R.string.page_actions));
-                                menu.add(
-                                        2,
-                                        0,
-                                        0,
-                                        getResources().getText(
-                                                R.string.edit_page));
-                                menu.add(
-                                        2,
-                                        1,
-                                        0,
-                                        getResources().getText(
-                                                R.string.delete_page));
-                                menu.add(
-                                        2,
-                                        2,
-                                        0,
-                                        getResources().getText(
-                                                R.string.share_url));
+                                menu.setHeaderTitle(getResources().getText(R.string.page_actions));
+                                menu.add(2, 0, 0, getResources().getText(R.string.edit_page));
+                                menu.add(2, 1, 0, getResources().getText( R.string.delete_page));
+                                menu.add(2, 2, 0, getResources().getText(R.string.share_url));
                             } else {
-                                menu.setHeaderTitle(getResources().getText(
-                                        R.string.post_actions));
-                                menu.add(
-                                        0,
-                                        0,
-                                        0,
-                                        getResources().getText(
-                                                R.string.edit_post));
-                                menu.add(
-                                        0,
-                                        1,
-                                        0,
-                                        getResources().getText(
-                                                R.string.delete_post));
-                                menu.add(
-                                        0,
-                                        2,
-                                        0,
-                                        getResources().getText(
-                                                R.string.share_url));
+                                menu.setHeaderTitle(getResources().getText(R.string.post_actions));
+                                menu.add(0, 0, 0, getResources().getText(R.string.edit_post));
+                                menu.add(0, 1, 0, getResources().getText(R.string.delete_post));
+                                menu.add(0, 2, 0, getResources().getText(R.string.share_url));
                             }
                         }
                     }
