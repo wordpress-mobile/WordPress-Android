@@ -565,7 +565,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
             return true;
         } else if (itemId == android.R.id.home) {
-            showCancelAlert();
+            showCancelAlert(true);
             return true;
         }
         return false;
@@ -830,10 +830,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     @Override
     public void onBackPressed() {
-        showCancelAlert();
+        showCancelAlert(false);
     }
 
-    private void showCancelAlert() {
+    private void showCancelAlert(final boolean isUpPress) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
         dialogBuilder.setMessage(getResources().getText((mIsPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
@@ -841,11 +841,17 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             public void onClick(DialogInterface dialog, int whichButton) {
                 if (mIsNewDraft)
                     mPost.delete();
-                Bundle bundle = new Bundle();
-                bundle.putString("returnStatus", "CANCEL");
-                Intent mIntent = new Intent();
-                mIntent.putExtras(bundle);
-                setResult(RESULT_OK, mIntent);
+                if (isUpPress) {
+                    Intent intent = new Intent(EditPostActivity.this, PostsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("returnStatus", "CANCEL");
+                    Intent mIntent = new Intent();
+                    mIntent.putExtras(bundle);
+                    setResult(RESULT_OK, mIntent);
+                }
                 finish();
             }
         });
@@ -909,7 +915,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             // Don't prompt if they have one blog only
-            if (accounts.size() != 1) {
+            if (accounts.size() > 1) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditPostActivity.this);
                 builder.setCancelable(false);
                 builder.setTitle(getResources().getText(R.string.select_a_blog));
