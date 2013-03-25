@@ -1,3 +1,4 @@
+
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,14 +18,15 @@ import org.wordpress.android.WordPress;
 
 public class SignupActivity extends Activity {
     public Activity activity = this;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        WebView webview = new WebView(this);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        webView = new WebView(this);
 
-        setContentView(webview);
+        setContentView(webView);
         setTitle(getResources().getText(R.string.new_account));
 
         setProgressBarIndeterminateVisibility(true);
@@ -32,11 +35,12 @@ public class SignupActivity extends Activity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
 
-        webview.getSettings().setUserAgentString("wp-android/" + WordPress.versionName);
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webview.setWebViewClient(new WordPressWebViewClient());
-        webview.loadUrl("https://en.wordpress.com/signup/?ref=wp-android");
+        webView.getSettings().setUserAgentString("wp-android/" + WordPress.versionName);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.setWebViewClient(new WordPressWebViewClient());
+        webView.setWebChromeClient(new SignupWebChromeClient());
+        webView.loadUrl("https://en.wordpress.com/signup/?ref=wp-android");
 
     }
 
@@ -60,8 +64,17 @@ public class SignupActivity extends Activity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            setProgressBarIndeterminateVisibility(false);
             view.clearCache(true);
+        }
+    }
+
+    /**
+     * Updates progress loader
+     */
+    protected class SignupWebChromeClient extends WebChromeClient {
+
+        public void onProgressChanged(WebView webView, int progress) {
+            SignupActivity.this.setProgress(progress * 100);
         }
     }
 
@@ -71,4 +84,12 @@ public class SignupActivity extends Activity {
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (webView.canGoBack())
+            webView.goBack();
+        else
+            super.onBackPressed();
+    }
 }
