@@ -75,7 +75,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
                         wv.loadUrl("javascript:Reader2.get_last_selected_item();");
                         onPostSelectedListener.onPostSelected(url);
                     } else {
-                        ((ReaderPagerActivity) getActivity()).startAnimatingButton();
+                        ((ReaderActivity) getActivity()).startAnimatingButton();
                     }
 
                     if (url.contains("chrome=no")) {
@@ -87,7 +87,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (getActivity() != null && !getActivity().isFinishing())
-                    ((ReaderPagerActivity) getActivity()).stopAnimatingButton();
+                    ((ReaderActivity) getActivity()).stopAnimatingButton();
             }
 
             @Override
@@ -167,7 +167,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
 
         @Override
         protected void onPreExecute() {
-            ((ReaderPagerActivity) getActivity()).startAnimatingButton();
+            ((ReaderActivity) getActivity()).startAnimatingButton();
         }
 
         protected void onPostExecute(List<?> result) {

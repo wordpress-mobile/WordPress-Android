@@ -29,10 +29,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.ViewCommentFragment.OnCommentStatusChangeListener;
-import org.wordpress.android.ui.comments.ViewCommentsFragment.OnAnimateRefreshButtonListener;
-import org.wordpress.android.ui.comments.ViewCommentsFragment.OnCommentSelectedListener;
-import org.wordpress.android.ui.comments.ViewCommentsFragment.OnContextCommentStatusChangeListener;
+import org.wordpress.android.ui.comments.CommentFragment.OnCommentStatusChangeListener;
+import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshButtonListener;
+import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
+import org.wordpress.android.ui.comments.CommentsListFragment.OnContextCommentStatusChangeListener;
 
 public class CommentsActivity extends WPActionBarActivity implements
         OnCommentSelectedListener, OnCommentStatusChangeListener,
@@ -44,7 +44,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     public int ID_DIALOG_DELETING = 3;
     private XMLRPCClient client;
     public ProgressDialog pd;
-    private ViewCommentsFragment commentList;
+    private CommentsListFragment commentList;
     private boolean fromNotification = false;
     private MenuItem refreshMenuItem;
 
@@ -73,7 +73,7 @@ public class CommentsActivity extends WPActionBarActivity implements
         }
 
         FragmentManager fm = getSupportFragmentManager();
-        commentList = (ViewCommentsFragment) fm.findFragmentById(R.id.commentList);
+        commentList = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
 
         WordPress.currentComment = null;
 
@@ -119,7 +119,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
     protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();
-        ViewCommentFragment f = (ViewCommentFragment) fm
+        CommentFragment f = (CommentFragment) fm
                 .findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
@@ -129,16 +129,16 @@ public class CommentsActivity extends WPActionBarActivity implements
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        boolean commentsLoaded = commentList.loadComments(false, false);
-        if (!commentsLoaded)
-            commentList.refreshComments(false, false, false);
+        if (WordPress.currentBlog != null) {
+            boolean commentsLoaded = commentList.loadComments(false, false);
+            if (!commentsLoaded)
+                commentList.refreshComments(false, false, false);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        /*if (titleBar != null)
-            titleBar.stopRotatingRefreshIcon();*/
 
     }
 
@@ -173,7 +173,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     public void onCommentSelected(Comment comment) {
 
         FragmentManager fm = getSupportFragmentManager();
-        ViewCommentFragment f = (ViewCommentFragment) fm
+        CommentFragment f = (CommentFragment) fm
                 .findFragmentById(R.id.commentDetail);
 
         if (comment != null) {
@@ -182,7 +182,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                 WordPress.currentComment = comment;
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(commentList);
-                f = new ViewCommentFragment();
+                f = new CommentFragment();
                 ft.add(R.id.commentDetailFragmentContainer, f);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
@@ -213,7 +213,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                 showDialog(ID_DIALOG_DELETING);
                 // pop out of the detail view if on a smaller screen
                 FragmentManager fm = getSupportFragmentManager();
-                ViewCommentFragment f = (ViewCommentFragment) fm
+                CommentFragment f = (CommentFragment) fm
                         .findFragmentById(R.id.commentDetail);
                 if (f == null) {
                     fm.popBackStack();
@@ -231,7 +231,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                 startActivityForResult(i, 0);
             } else if (status.equals("clear")) {
                 FragmentManager fm = getSupportFragmentManager();
-                ViewCommentFragment f = (ViewCommentFragment) fm
+                CommentFragment f = (CommentFragment) fm
                         .findFragmentById(R.id.commentDetail);
                 if (f != null) {
                     f.clearContent();
@@ -528,7 +528,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     private void attemptToSelectComment() {
 
         FragmentManager fm = getSupportFragmentManager();
-        ViewCommentFragment f = (ViewCommentFragment) fm
+        CommentFragment f = (CommentFragment) fm
                 .findFragmentById(R.id.commentDetail);
 
         if (f != null && f.isInLayout()) {

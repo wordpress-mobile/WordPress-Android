@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.conn.HttpHostConnectException;
@@ -61,7 +62,6 @@ public class AddAccountActivity extends Activity implements OnClickListener {
     private ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
     private boolean isCustomURL = false;
     private ConnectivityManager mSystemService;
-    private EditText mUserNameEdit;
     private EditText mUrlEdit;
     private EditText mUsernameEdit;
     private EditText mPasswordEdit;
@@ -74,7 +74,6 @@ public class AddAccountActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_account);
-        mUserNameEdit = (EditText) findViewById(R.id.username);
         mSettingsButton = (Button) findViewById(R.id.settingsButton);
         mCancelButton = (Button) findViewById(R.id.cancel);
         mSaveButton = (Button) findViewById(R.id.save);
@@ -82,6 +81,8 @@ public class AddAccountActivity extends Activity implements OnClickListener {
         mUrlEdit = (EditText) findViewById(R.id.url);
         mUsernameEdit = (EditText) findViewById(R.id.username);
         mPasswordEdit = (EditText) findViewById(R.id.password);
+        
+        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.account_details).toUpperCase());
 
         mSystemService = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -90,7 +91,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
             wpcom = extras.getBoolean("wpcom", false);
             String username = extras.getString("username");
             if (username != null) {
-                mUserNameEdit.setText(username);
+                mUsernameEdit.setText(username);
             }
         }
 

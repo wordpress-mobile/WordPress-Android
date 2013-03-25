@@ -63,7 +63,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
-public class ViewCommentsFragment extends ListFragment {
+public class CommentsListFragment extends ListFragment {
     private static final int[] IMAGE_IDS = { R.id.avatar };
     public ThumbnailAdapter thumbs = null;
     public ArrayList<Comment> model = null;
@@ -573,7 +573,7 @@ public class ViewCommentsFragment extends ListFragment {
 
             sdk_version = android.os.Build.VERSION.SDK_INT;
             FragmentManager fm = getActivity().getSupportFragmentManager();
-            ViewCommentFragment f = (ViewCommentFragment) fm
+            CommentFragment f = (CommentFragment) fm
                     .findFragmentById(R.id.commentDetail);
             if (f != null && f.isInLayout())
                 detailViewVisible = true;

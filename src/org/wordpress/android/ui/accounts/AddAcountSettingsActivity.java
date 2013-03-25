@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 
@@ -16,6 +17,8 @@ public class AddAcountSettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.add_account_settings);
+        
+        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.optional_settings).toUpperCase());
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {

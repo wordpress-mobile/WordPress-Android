@@ -135,7 +135,7 @@
   </string>
 
   <!-- reload drop down -->
-  <string name="loading">Loading...</string>
+  <string name="loading">Loading&#8230;</string>
 
   <!-- comment view -->
   <string name="on">on</string>
@@ -210,7 +210,7 @@
 
   <!-- new account view -->
   <string name="account_setup">Account Setup</string>
-  <string name="attempting_configure">Attempting to configure account</string>
+  <string name="attempting_configure">Logging in&#8230;</string>
   <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
 
   <!-- drafts -->

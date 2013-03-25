@@ -17,7 +17,7 @@
       android:layout_width="0dp"
       android:layout_height="match_parent">
     <fragment
-      android:name="org.wordpress.android.ui.comments.ViewCommentsFragment"
+      android:name="org.wordpress.android.ui.comments.CommentsListFragment"
       android:id="@+id/commentList"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -29,7 +29,7 @@
         android:background="@drawable/right_shadow"/>
       </FrameLayout>
     <fragment
-      android:name="org.wordpress.android.ui.comments.ViewCommentFragment"
+      android:name="org.wordpress.android.ui.comments.CommentFragment"
       android:id="@+id/commentDetail"
       android:layout_weight="0.6"
       android:layout_width="0dp"

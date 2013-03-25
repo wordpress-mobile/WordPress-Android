@@ -34,7 +34,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
-import org.wordpress.android.ui.comments.ViewCommentsFragment;
+import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.EscapeUtils;
 
@@ -97,7 +97,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 String[] urlSplit = url.split("/");
                 url = urlSplit[0];
                 url = "http://gravatar.com/blavatar/"
-                        + ViewCommentsFragment.getMd5Hash(url.trim())
+                        + CommentsListFragment.getMd5Hash(url.trim())
                         + "?s=60&d=404";
                 blavatars[validBlogCtr] = url;
                 accountNames.add(validBlogCtr, blogNames[i]);

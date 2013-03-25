@@ -137,10 +137,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
         <activity
-            android:name="org.wordpress.android.ui.reader.ReaderPagerActivity"
+            android:name="org.wordpress.android.ui.reader.ReaderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name="org.wordpress.android.ui.ViewWebStatsActivity"
+            android:name="org.wordpress.android.ui.StatsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
 

@@ -7,10 +7,12 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +46,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
-import org.wordpress.android.ui.reader.ReaderPagerActivity;
+import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -63,7 +65,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Request code for reloading menu after returning from  the PreferencesActivity.
      */
     static final int SETTINGS_REQUEST = 200;
-
+    
+    /**
+     * Used to restore active activity on app creation
+     */
+    protected static final int POSTS_ACTIVITY = 0;
+    protected static final int PAGES_ACTIVITY = 1;
+    protected static final int COMMENTS_ACTIVITY = 2;
+    protected static final int STATS_ACTIVITY = 3;
+    protected static final int READER_ACTIVITY = 4;
+    protected static final int VIEW_SITE_ACTIVITY = 5;
+    protected static final int DASHBOARD_ACTIVITY = 6;
+    
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
@@ -93,6 +106,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (mShouldFinish) {
             overridePendingTransition(0, 0);
             finish();
+        } else {
+            WordPress.shouldRestoreSelectedActivity = true;
         }
     }
 
@@ -238,9 +253,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mActivePosition = 2;
         else if ((WPActionBarActivity.this instanceof CommentsActivity))
             mActivePosition = 3;
-        else if ((WPActionBarActivity.this instanceof ViewWebStatsActivity))
+        else if ((WPActionBarActivity.this instanceof StatsActivity))
             mActivePosition = 4;
-        else if ((WPActionBarActivity.this instanceof ReaderPagerActivity))
+        else if ((WPActionBarActivity.this instanceof ReaderActivity))
             mActivePosition = 5;
         else if ((WPActionBarActivity.this instanceof ViewSiteActivity))
             mActivePosition = 8;
@@ -274,6 +289,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mAdapter.notifyDataSetChanged();
             Intent intent = null;
 
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+            SharedPreferences.Editor editor = settings.edit();
+            
             switch (position) {
                 case 1:
                     if (!(WPActionBarActivity.this instanceof PostsActivity)
@@ -282,6 +300,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     intent = new
                             Intent(WPActionBarActivity.this, PostsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", POSTS_ACTIVITY);
                     break;
                 case 2:
                     if (!(WPActionBarActivity.this instanceof PagesActivity))
@@ -292,6 +311,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                             true);
                     intent.putExtra("viewPages", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", PAGES_ACTIVITY);
                     break;
                 case 3:
                     if (!(WPActionBarActivity.this instanceof CommentsActivity))
@@ -301,25 +321,28 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     intent.putExtra("isNew",
                             true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", COMMENTS_ACTIVITY);
                     break;
                 case 4:
-                    if (!(WPActionBarActivity.this instanceof ViewWebStatsActivity))
+                    if (!(WPActionBarActivity.this instanceof StatsActivity))
                         mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, ViewWebStatsActivity.class);
+                    intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
                     intent.putExtra("id", WordPress.currentBlog.getId());
                     intent.putExtra("isNew",
                             true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", STATS_ACTIVITY);
                     break;
                 case 5:
-                    if (!(WPActionBarActivity.this instanceof ReaderPagerActivity))
+                    if (!(WPActionBarActivity.this instanceof ReaderActivity))
                         mShouldFinish = true;
                     int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
                     if
                     (WordPress.currentBlog.isDotcomFlag()) {
-                        intent = new Intent(WPActionBarActivity.this, ReaderPagerActivity.class);
+                        intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
                         intent.putExtra("id", readerBlogID);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        editor.putInt("wp_pref_last_activity", READER_ACTIVITY);
                     }
                     break;
                 case 6:
@@ -350,6 +373,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", VIEW_SITE_ACTIVITY);
                     break;
                 case 9:
                     if (!(WPActionBarActivity.this instanceof DashboardActivity))
@@ -357,6 +381,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
                     intent.putExtra("loadAdmin", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", DASHBOARD_ACTIVITY);
                     break;
                 case 10:
                     // Settings shouldn't be launched with a delay, or close the drawer
@@ -366,6 +391,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     return;
             }
 
+            editor.commit();
             if (intent != null) {
                 mMenuDrawer.closeMenu();
                 startActivityWithDelay(intent);
@@ -553,13 +579,20 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
             case SETTINGS_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    setupCurrentBlog();
                     if (mMenuDrawer != null) {
                         updateMenuDrawer();
                         String[] blogNames = getBlogNames();
                         // If we need to add or remove the blog spinner, init the drawer again
-                        if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0) || blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
+                        if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0)
+                                || blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
                             this.initMenuDrawer();
+                        else if (blogNames.length > 1 && mBlogSpinner != null) {
+                            SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
+                                    getSupportActionBar()
+                                            .getThemedContext(),
+                                    R.layout.sherlock_spinner_dropdown_item, blogNames);
+                            mBlogSpinner.setAdapter(mSpinnerAdapter);
+                        }
                     }
                 }
                 break;

@@ -13,7 +13,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
     <fragment
-      android:name="org.wordpress.android.ui.comments.ViewCommentsFragment"
+      android:name="org.wordpress.android.ui.comments.CommentsListFragment"
       android:id="@+id/commentList"
       android:layout_weight="1"
       android:layout_width="0dp"

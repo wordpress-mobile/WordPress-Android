@@ -29,7 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 
-public class ViewCommentFragment extends Fragment {
+public class CommentFragment extends Fragment {
 
     private Drawable d;
     private OnCommentStatusChangeListener onCommentStatusChangeListener;

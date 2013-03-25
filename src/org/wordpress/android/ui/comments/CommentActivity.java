@@ -3,7 +3,7 @@ package org.wordpress.android.ui.comments;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-public class ViewCommentActivity extends FragmentActivity {
+public class CommentActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -11,7 +11,7 @@ public class ViewCommentActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
-            ViewCommentFragment commentFragment = new ViewCommentFragment();
+            CommentFragment commentFragment = new CommentFragment();
             getSupportFragmentManager().beginTransaction().add(
                     android.R.id.content, commentFragment).commit();
             //commentFragment.loadComment(WordPress.currentComment);

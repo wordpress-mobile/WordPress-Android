@@ -36,7 +36,7 @@ import org.wordpress.android.ui.reader.ReaderImplFragment.PostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderImplFragment.ShowTopicsListener;
 import org.wordpress.android.util.WPViewPager;
 
-public class ReaderPagerActivity extends WPActionBarActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
+public class ReaderActivity extends WPActionBarActivity implements ChangeTopicListener, PostSelectedListener, UpdateTopicIDListener,
         UpdateTopicTitleListener, GetLoadedItemsListener, UpdateButtonStatusListener, ShowTopicsListener, LoadExternalURLListener,
         GetPermalinkListener, GetLastSelectedItemListener, LoadDetailListener {
 

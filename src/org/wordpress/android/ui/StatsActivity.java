@@ -78,7 +78,7 @@ import org.wordpress.android.models.Blog;
  * @author Eric
  *
  */
-public class ViewWebStatsActivity extends WPActionBarActivity {
+public class StatsActivity extends WPActionBarActivity {
 
     static String lastAuthedName = "";
 
@@ -238,7 +238,7 @@ public class ViewWebStatsActivity extends WPActionBarActivity {
 
     private void clearCookies() {
         //get rid of old auth cookie
-        CookieSyncManager.createInstance(ViewWebStatsActivity.this);
+        CookieSyncManager.createInstance(StatsActivity.this);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
     }
@@ -410,7 +410,7 @@ public class ViewWebStatsActivity extends WPActionBarActivity {
     public void showErrorDialog(String title, String msg) {
         if(isFinishing()) return;
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ViewWebStatsActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(StatsActivity.this);
         dialogBuilder.setTitle(title);
         dialogBuilder.setMessage(msg);
         dialogBuilder.setPositiveButton("OK",
@@ -578,14 +578,14 @@ public class ViewWebStatsActivity extends WPActionBarActivity {
                     // Either there wasn't an error and the auth cookie wasn't set, or
                     // we received a 401 error.
                     Toast.makeText(
-                            ViewWebStatsActivity.this,
+                            StatsActivity.this,
                             getResources().getText(R.string.invalid_login),
                             Toast.LENGTH_SHORT).show();
                     showLoginForm();
                 } else {
                     // server error of some kind.
                     Toast.makeText(
-                            ViewWebStatsActivity.this,
+                            StatsActivity.this,
                             getResources().getText(R.string.stats_service_error),
                             Toast.LENGTH_SHORT).show();
                 }
@@ -795,14 +795,14 @@ public class ViewWebStatsActivity extends WPActionBarActivity {
                     if (errorMsg.equals("") || statusCode == 401) {
 
                         Toast.makeText(
-                                ViewWebStatsActivity.this,
+                                StatsActivity.this,
                                 getResources().getText(R.string.invalid_jp_login),
                                 Toast.LENGTH_SHORT).show();
 
                     } else {
 
                         Toast.makeText(
-                                ViewWebStatsActivity.this,
+                                StatsActivity.this,
                                 getResources().getText(R.string.invalid_login)
                                         + " "
                                         + getResources().getText(

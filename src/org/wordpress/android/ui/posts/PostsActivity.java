@@ -11,9 +11,11 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
@@ -30,11 +32,16 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.DashboardActivity;
+import org.wordpress.android.ui.ViewSiteActivity;
+import org.wordpress.android.ui.StatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
+import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
@@ -52,6 +59,42 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Restore last selection on app creation
+        if (WordPress.shouldRestoreSelectedActivity && WordPress.currentBlog != null) {
+            WordPress.shouldRestoreSelectedActivity = false;
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            int lastActivitySelection = settings.getInt("wp_pref_last_activity", -1);
+            if (lastActivitySelection >= 1) {
+                Intent i = null;
+                switch (lastActivitySelection) {
+                    case PAGES_ACTIVITY:
+                        i = new Intent(this, PagesActivity.class);
+                        i.putExtra("viewPages", true);
+                        break;
+                    case COMMENTS_ACTIVITY:
+                        i = new Intent(this, CommentsActivity.class);
+                        break;
+                    case STATS_ACTIVITY:
+                        i = new Intent(this, StatsActivity.class);
+                        break;
+                    case READER_ACTIVITY:
+                        i = new Intent(this, ReaderActivity.class);
+                        break;
+                    case VIEW_SITE_ACTIVITY:
+                        i = new Intent(this, ViewSiteActivity.class);
+                        break;
+                    case DASHBOARD_ACTIVITY:
+                        i = new Intent(this, DashboardActivity.class);
+                        break;
+                }
+                if (i != null) {
+                    startActivity(i);
+                    finish();
+                }
+            }
+        }
+        
         createMenuDrawer(R.layout.posts);
 
         ActionBar actionBar = getSupportActionBar();

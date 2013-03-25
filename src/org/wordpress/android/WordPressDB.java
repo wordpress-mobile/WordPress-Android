@@ -27,6 +27,7 @@ import org.json.JSONException;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WordPressDB {
@@ -942,6 +943,11 @@ public class WordPressDB {
      */
     public void deleteLastBlogId() {
         updateLastBlogId(-1);
+        // Clear the last selected activity
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("wp_pref_last_activity", -1);
+        editor.commit();
     }
 
     /**

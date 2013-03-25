@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.preference.PreferenceManager;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -23,14 +25,20 @@ public class WordPress extends Application {
     public static WordPressDB wpDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
+    public static boolean shouldRestoreSelectedActivity;
 
     @Override
     public void onCreate() {
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
+        if (settings.getInt("wp_pref_last_activity", -1) >= 0)
+            shouldRestoreSelectedActivity = true;
+        
         super.onCreate();
     }
-
+    
     /**
      * Get versionName from Manifest.xml
      * @return versionName
