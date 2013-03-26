@@ -98,8 +98,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         createMenuDrawer(R.layout.posts);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();

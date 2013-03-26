@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import net.simonvt.menudrawer.MenuDrawer;
+import net.simonvt.menudrawer.Position;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -82,6 +84,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean isAnimatingRefreshButton;
     protected boolean mShouldFinish;
     private boolean mIsDotComBlog;
+    private boolean mIsXLargeDevice;
     private int mActivePosition;
 
     private MenuAdapter mAdapter;
@@ -91,9 +94,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         if (this instanceof WebViewActivity)
             requestWindowFeature(Window.FEATURE_PROGRESS);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        
+        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
+            mIsXLargeDevice = true;    
     }
 
     @Override
@@ -140,12 +147,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected void createMenuDrawer(int contentViewID) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+        mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentViewID);
         
         initMenuDrawer();
     }
-    
+
     /**
      * Create a menu drawer and attach it to the activity.
      * 
@@ -154,10 +161,31 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected void createMenuDrawer(View contentView) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+        mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentView);
 
         initMenuDrawer();
+    }
+    
+    /**
+     * Attach a menu drawer to the Activity
+     * Set to be a static drawer if on a landscape x-large device
+     */
+    private MenuDrawer attachMenuDrawer() {
+        MenuDrawer menuDrawer = null;
+        if (mIsXLargeDevice) {
+            // on a x-large screen device
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT, Position.LEFT, true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else {
+                menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        } else {
+            menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+        }
+        return menuDrawer;
     }
     
     /**
@@ -205,13 +233,19 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     protected void startActivityWithDelay(final Intent i) {
-        // Let the menu animation finish before starting a new activity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(i);
-            }
-        }, 400);
+
+        if (mIsXLargeDevice && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Tablets in landscape don't need a delay because the menu drawer doesn't close
+            startActivity(i);
+        } else {
+            // Let the menu animation finish before starting a new activity
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(i);
+                }
+            }, 400);
+        }
     }
 
     /**
@@ -656,5 +690,20 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             refreshItem.getActionView().clearAnimation();
             refreshItem.setActionView(null);
         }
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+ 
+        if (mIsXLargeDevice) {
+            // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
+            View content = mMenuDrawer.getContentContainer().getChildAt(0);
+            mMenuDrawer.getContentContainer().removeView(content);
+            mMenuDrawer = attachMenuDrawer();
+            mMenuDrawer.setContentView(content);
+            initMenuDrawer();
+        }
+ 
+        super.onConfigurationChanged(newConfig);
     }
 }

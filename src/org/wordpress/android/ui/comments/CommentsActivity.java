@@ -54,8 +54,6 @@ public class CommentsActivity extends WPActionBarActivity implements
         createMenuDrawer(R.layout.comments);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_comments));
 

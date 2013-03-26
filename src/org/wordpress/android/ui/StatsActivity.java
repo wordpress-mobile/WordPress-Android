@@ -101,8 +101,6 @@ public class StatsActivity extends WPActionBarActivity {
         createMenuDrawer(R.layout.view_web_stats);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_stats));
 
