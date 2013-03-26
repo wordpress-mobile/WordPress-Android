@@ -74,7 +74,7 @@
             android:background="@drawable/menu_button_selector"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_menu_delete"
-            android:text="@string/delete_post" />
+            android:contentDescription="@string/delete_post" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_view"
-                android:text="@string/preview_post" />
+                android:contentDescription="@string/preview_post" />
 
             <ImageButton
                 android:id="@+id/sharePostLink"
@@ -98,7 +98,7 @@
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_share"
-                android:text="@string/share_url" />
+                android:contentDescription="@string/share_url" />
 
             <ImageButton
                 android:id="@+id/editPost"
@@ -107,7 +107,7 @@
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_menu_compose"
-                android:text="@string/edit_post" />
+                android:contentDescription="@string/edit_post" />
         </LinearLayout>
     </RelativeLayout>
 
