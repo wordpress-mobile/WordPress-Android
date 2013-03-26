@@ -130,6 +130,7 @@
             android:scaleType="fitCenter"
             android:background="@drawable/menu_button_selector"
             android:src="@drawable/ic_menu_delete"
+            android:contentDescription="@string/delete"
             android:layout_marginTop="2dp" />
 
         <LinearLayout
