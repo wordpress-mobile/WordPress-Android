@@ -368,7 +368,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             loadingDialog.setCancelable(false);
             return loadingDialog;
         } else if (id == ID_DIALOG_SHARE) {
-            loadingDialog.setTitle(getResources().getText(R.string.share_url));
+            loadingDialog.setTitle(isPage ? getString(R.string.share_url_page) : getString(R.string.share_url));
             loadingDialog.setMessage(getResources().getText(
                     R.string.attempting_fetch_url));
             loadingDialog.setCancelable(false);

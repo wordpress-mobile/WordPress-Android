@@ -334,7 +334,7 @@ public class ViewPostsFragment extends ListFragment {
                                 menu.setHeaderTitle(getResources().getText(R.string.page_actions));
                                 menu.add(2, 0, 0, getResources().getText(R.string.edit_page));
                                 menu.add(2, 1, 0, getResources().getText( R.string.delete_page));
-                                menu.add(2, 2, 0, getResources().getText(R.string.share_url));
+                                menu.add(2, 2, 0, getResources().getText(R.string.share_url_page));
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(0, 0, 0, getResources().getText(R.string.edit_post));

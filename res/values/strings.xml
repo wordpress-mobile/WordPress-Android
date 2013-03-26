@@ -187,6 +187,7 @@
   <string name="delete_sure_post">Are you sure you want to delete the post</string>
   <string name="attempt_delete_post">Attempting to delete post</string>
   <string name="share_url">Share Post</string>
+  <string name="share_url_page">Share Page</string>
   <string name="share_link">Share Link</string>
   <string name="attempting_fetch_url">Attempting to fetch URL</string>
   <string name="post_not_published">Post status is not published</string>
