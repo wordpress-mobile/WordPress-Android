@@ -61,7 +61,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onCreate(savedInstanceState);
         
         // Restore last selection on app creation
-        if (WordPress.shouldRestoreSelectedActivity && WordPress.currentBlog != null) {
+        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null) {
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt("wp_pref_last_activity", -1);
