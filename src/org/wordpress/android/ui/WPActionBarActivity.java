@@ -34,6 +34,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -75,13 +76,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     /**
      * Used to restore active activity on app creation
      */
-    protected static final int POSTS_ACTIVITY = 0;
-    protected static final int PAGES_ACTIVITY = 1;
-    protected static final int COMMENTS_ACTIVITY = 2;
-    protected static final int STATS_ACTIVITY = 3;
-    protected static final int READER_ACTIVITY = 4;
-    protected static final int VIEW_SITE_ACTIVITY = 5;
-    protected static final int DASHBOARD_ACTIVITY = 6;
+    protected static final int READER_ACTIVITY = 0;
+    protected static final int POSTS_ACTIVITY = 1;
+    protected static final int PAGES_ACTIVITY = 2;
+    protected static final int COMMENTS_ACTIVITY = 3;
+    protected static final int STATS_ACTIVITY = 4;
+    protected static final int QUICK_PHOTO_ACTIVITY = 5;
+    protected static final int QUICK_VIDEO_ACTIVITY = 6;
+    protected static final int VIEW_SITE_ACTIVITY = 7;
+    protected static final int DASHBOARD_ACTIVITY = 8;
+    protected static final int SETTINGS_ACTIVITY = 9;
     
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
@@ -277,6 +281,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         List<Object> items = new ArrayList<Object>();
         Resources resources = getResources();
+        if (mIsDotComBlog)
+            items.add(new MenuDrawerItem(resources.getString(R.string.reader),
+                    R.drawable.dashboard_icon_subs));
         items.add(new MenuDrawerItem(resources.getString(R.string.posts),
                 R.drawable.dashboard_icon_posts));
         items.add(new MenuDrawerItem(resources.getString(R.string.pages),
@@ -285,9 +292,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 R.drawable.dashboard_icon_comments));
         items.add(new MenuDrawerItem(resources.getString(R.string.tab_stats),
                 R.drawable.dashboard_icon_stats));
-        if (mIsDotComBlog)
-            items.add(new MenuDrawerItem(resources.getString(R.string.reader),
-                    R.drawable.dashboard_icon_subs));
         items.add(new MenuDrawerItem(resources.getString(R.string.quick_photo),
                 R.drawable.dashboard_icon_photo));
         items.add(new MenuDrawerItem(resources.getString(R.string.quick_video),
@@ -299,6 +303,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         items.add(new MenuDrawerItem(resources.getString(R.string.settings),
                 R.drawable.dashboard_icon_settings));
 
+        if ((WPActionBarActivity.this instanceof ReaderActivity))
+            mActivePosition = 0;
+        
         if ((WPActionBarActivity.this instanceof PostsActivity))
             mActivePosition = 1;
 
@@ -308,15 +315,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mActivePosition = 3;
         else if ((WPActionBarActivity.this instanceof StatsActivity))
             mActivePosition = 4;
-        else if ((WPActionBarActivity.this instanceof ReaderActivity))
-            mActivePosition = 5;
         else if ((WPActionBarActivity.this instanceof ViewSiteActivity))
-            mActivePosition = 8;
+            mActivePosition = 7;
         else if ((WPActionBarActivity.this instanceof DashboardActivity))
-            mActivePosition = 9;
-            
-        if (!mIsDotComBlog && mActivePosition > 4)
-            mActivePosition--;
+            mActivePosition = 8;
         
         mAdapter = new MenuAdapter(items);
         mListView.setAdapter(mAdapter);
@@ -326,10 +328,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // Adjust position if only one blog is in the app
-            if (mListView.getHeaderViewsCount() == 0)
-                position++;
-            // Adjust position if blog isn't on WP.com (No Reader)
-            if (!mIsDotComBlog && position > 4)
+            if (mListView.getHeaderViewsCount() > 0 && position > 0)
+                position--;
+            
+            if (!mIsDotComBlog)
                 position++;
             
             if (position == mActivePosition) {
@@ -337,6 +339,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mMenuDrawer.closeMenu();
                 return;
             }
+            
+            int activityTag = (Integer) view.getTag();
 
             mActivePosition = position;
             mAdapter.notifyDataSetChanged();
@@ -345,48 +349,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
             SharedPreferences.Editor editor = settings.edit();
             
-            switch (position) {
-                case 1:
-                    if (!(WPActionBarActivity.this instanceof PostsActivity)
-                            || (WPActionBarActivity.this instanceof PagesActivity))
-                        mShouldFinish = true;
-                    intent = new
-                            Intent(WPActionBarActivity.this, PostsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", POSTS_ACTIVITY);
-                    break;
-                case 2:
-                    if (!(WPActionBarActivity.this instanceof PagesActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-                    intent.putExtra("id", WordPress.currentBlog.getId());
-                    intent.putExtra("isNew",
-                            true);
-                    intent.putExtra("viewPages", true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", PAGES_ACTIVITY);
-                    break;
-                case 3:
-                    if (!(WPActionBarActivity.this instanceof CommentsActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-                    intent.putExtra("id", WordPress.currentBlog.getId());
-                    intent.putExtra("isNew",
-                            true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", COMMENTS_ACTIVITY);
-                    break;
-                case 4:
-                    if (!(WPActionBarActivity.this instanceof StatsActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-                    intent.putExtra("id", WordPress.currentBlog.getId());
-                    intent.putExtra("isNew",
-                            true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", STATS_ACTIVITY);
-                    break;
-                case 5:
+            switch (activityTag) {
+                case READER_ACTIVITY:
                     if (!(WPActionBarActivity.this instanceof ReaderActivity))
                         mShouldFinish = true;
                     int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
@@ -398,7 +362,47 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                         editor.putInt("wp_pref_last_activity", READER_ACTIVITY);
                     }
                     break;
-                case 6:
+                case POSTS_ACTIVITY:
+                    if (!(WPActionBarActivity.this instanceof PostsActivity)
+                            || (WPActionBarActivity.this instanceof PagesActivity))
+                        mShouldFinish = true;
+                    intent = new
+                            Intent(WPActionBarActivity.this, PostsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", POSTS_ACTIVITY);
+                    break;
+                case PAGES_ACTIVITY:
+                    if (!(WPActionBarActivity.this instanceof PagesActivity))
+                        mShouldFinish = true;
+                    intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
+                    intent.putExtra("id", WordPress.currentBlog.getId());
+                    intent.putExtra("isNew",
+                            true);
+                    intent.putExtra("viewPages", true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", PAGES_ACTIVITY);
+                    break;
+                case COMMENTS_ACTIVITY:
+                    if (!(WPActionBarActivity.this instanceof CommentsActivity))
+                        mShouldFinish = true;
+                    intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
+                    intent.putExtra("id", WordPress.currentBlog.getId());
+                    intent.putExtra("isNew",
+                            true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", COMMENTS_ACTIVITY);
+                    break;
+                case STATS_ACTIVITY:
+                    if (!(WPActionBarActivity.this instanceof StatsActivity))
+                        mShouldFinish = true;
+                    intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
+                    intent.putExtra("id", WordPress.currentBlog.getId());
+                    intent.putExtra("isNew",
+                            true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    editor.putInt("wp_pref_last_activity", STATS_ACTIVITY);
+                    break;
+                case QUICK_PHOTO_ACTIVITY:
                     mShouldFinish = false;
                     PackageManager pm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
@@ -410,7 +414,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     }
                     intent.putExtra("isNew", true);
                     break;
-                case 7:
+                case QUICK_VIDEO_ACTIVITY:
                     mShouldFinish = false;
                     PackageManager vpm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
@@ -421,14 +425,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     }
                     intent.putExtra("isNew", true);
                     break;
-                case 8:
+                case VIEW_SITE_ACTIVITY:
                     if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     editor.putInt("wp_pref_last_activity", VIEW_SITE_ACTIVITY);
                     break;
-                case 9:
+                case DASHBOARD_ACTIVITY:
                     if (!(WPActionBarActivity.this instanceof DashboardActivity))
                         mShouldFinish = true;
                     intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
@@ -436,7 +440,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     editor.putInt("wp_pref_last_activity", DASHBOARD_ACTIVITY);
                     break;
-                case 10:
+                case SETTINGS_ACTIVITY:
                     // Settings shouldn't be launched with a delay, or close the drawer
                     mShouldFinish = false;
                     Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
@@ -499,10 +503,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
             ImageView iconImageView = (ImageView) v.findViewById(R.id.menu_row_icon);
             iconImageView.setImageResource(((MenuDrawerItem) item).mIconRes);
+           
+            v.setTag((mIsDotComBlog) ? position : position + 1);
 
-            v.setTag(R.id.mdActiveViewPosition, position);
-
-            if ((position + 1) == mActivePosition) {
+            int positionCheck = mActivePosition;
+            if (!mIsDotComBlog)
+                positionCheck--;
+            if ((position) == positionCheck) {
                 // http://stackoverflow.com/questions/5890379/setbackgroundresource-discards-my-xml-layout-attributes
                 int bottom = v.getPaddingBottom();
                 int top = v.getPaddingTop();
@@ -516,7 +523,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
 
             TextView bagdeTextView = (TextView) v.findViewById(R.id.menu_row_badge);
-            if (position == 2 && WordPress.currentBlog != null) {
+            if (position == 3 && WordPress.currentBlog != null) {
                 int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
                 if (commentCount > 0) {
                     bagdeTextView.setVisibility(View.VISIBLE);
