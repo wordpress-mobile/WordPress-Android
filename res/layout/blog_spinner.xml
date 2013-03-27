@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Spinner xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/blog_spinner"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    style="@style/wordpress_DropDownNav" >
-</Spinner>
+    android:paddingLeft="8dp"
+    android:paddingRight="14dp"
+    android:clickable="true"
+    android:background="@drawable/md_list_selector" >
+
+    <Spinner
+        android:id="@+id/blog_spinner"
+        style="@style/wordpress_DropDownNav"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="0dp"
+        android:clickable="false" >
+    </Spinner>
+
+</LinearLayout>

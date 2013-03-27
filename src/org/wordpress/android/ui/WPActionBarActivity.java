@@ -14,9 +14,12 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -26,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -185,6 +189,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         } else {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
         }
+        int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
+        menuDrawer.setDropShadowSize(shadowSizeInPixels);
+        menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
         return menuDrawer;
     }
     
@@ -223,13 +230,25 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private void addBlogSpinner(String[] blogNames) {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mBlogSpinner = (Spinner) layoutInflater.inflate(R.layout.blog_spinner, null);
+        LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
+        
+        spinnerWrapper.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (mBlogSpinner != null) {
+                    mBlogSpinner.performClick();
+                }
+            }
+        });
+        
+        mBlogSpinner = (Spinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
                 .getThemedContext(),
                 R.layout.sherlock_spinner_dropdown_item, blogNames);
         mBlogSpinner.setAdapter(mSpinnerAdapter);
-        mListView.addHeaderView(mBlogSpinner);  
+        mListView.addHeaderView(spinnerWrapper);
     }
 
     protected void startActivityWithDelay(final Intent i) {
@@ -274,7 +293,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         items.add(new MenuDrawerItem(resources.getString(R.string.quick_video),
                 R.drawable.dashboard_icon_video));
         items.add(new MenuDrawerItem(resources.getString(R.string.view_site),
-                R.drawable.preview_icon));
+                R.drawable.dashboard_icon_view));
         items.add(new MenuDrawerItem(resources.getString(R.string.wp_admin),
                 R.drawable.dashboard_icon_wp));
         items.add(new MenuDrawerItem(resources.getString(R.string.settings),
