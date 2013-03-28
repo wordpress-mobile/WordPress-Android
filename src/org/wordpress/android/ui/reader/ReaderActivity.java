@@ -3,9 +3,11 @@ package org.wordpress.android.ui.reader;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -22,7 +24,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.reader.ReaderBaseFragment.ChangeTopicListener;
 import org.wordpress.android.ui.reader.ReaderBaseFragment.GetLastSelectedItemListener;
 import org.wordpress.android.ui.reader.ReaderBaseFragment.GetLoadedItemsListener;
@@ -416,4 +420,29 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
     public void stopAnimatingButton() {
         stopAnimatingRefreshButton(refreshMenuItem);
     }
+
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        
+        if (WordPress.currentBlog.isDotcomFlag()) {
+            ReaderImplFragment readerPageFragment = (ReaderImplFragment) readerPage;
+            readerPageFragment.refreshReader();
+        } else {
+            // Self-hosted blogs do not have Reader access, send to posts instead
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ReaderActivity.this);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("wp_pref_last_activity", POSTS_ACTIVITY);
+            editor.commit();
+            mShouldFinish = true;
+            Intent i = new Intent(ReaderActivity.this, PostsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            mMenuDrawer.closeMenu();
+            startActivityWithDelay(i);
+        }
+        
+    }
+    
+    
+    
 }

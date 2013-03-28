@@ -14,9 +14,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +32,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -93,6 +90,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean mShouldFinish;
     private boolean mIsDotComBlog;
     private boolean mIsXLargeDevice;
+    private boolean mBlogSpinnerInitialized = false;
     private int mActivePosition;
 
     private MenuAdapter mAdapter;
@@ -663,9 +661,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         @Override
         public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-            WordPress.setCurrentBlog(blogIDs[position]);
-            updateMenuDrawer();
-            onBlogChanged();
+            // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
+            if (!mBlogSpinnerInitialized) {
+                mBlogSpinnerInitialized = true;
+            } else {
+                WordPress.setCurrentBlog(blogIDs[position]);
+                updateMenuDrawer();
+                onBlogChanged();
+            }
         }
 
         @Override
