@@ -87,6 +87,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
+    protected boolean shouldAnimateRefreshButton;
     protected boolean mShouldFinish;
     private boolean mIsDotComBlog;
     private boolean mIsXLargeDevice;

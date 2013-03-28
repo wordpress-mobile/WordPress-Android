@@ -93,6 +93,10 @@ public class CommentsActivity extends WPActionBarActivity implements
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.refresh_only, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
+        if (shouldAnimateRefreshButton) {
+            shouldAnimateRefreshButton = false;
+            startAnimatingRefreshButton(refreshMenuItem);
+        }
         return true;
     }
 
@@ -516,6 +520,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     public void onAnimateRefreshButton(boolean start) {
 
         if (start) {
+            shouldAnimateRefreshButton = true;
             this.startAnimatingRefreshButton(refreshMenuItem);
         } else {
             this.stopAnimatingRefreshButton(refreshMenuItem);

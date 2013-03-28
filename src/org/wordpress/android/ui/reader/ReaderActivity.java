@@ -167,6 +167,12 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
         refreshMenuItem = menu.findItem(0);
         refreshMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         refreshMenuItem.setIcon(R.drawable.ab_icon_refresh);
+        
+        if (shouldAnimateRefreshButton) {
+            shouldAnimateRefreshButton = false;
+            startAnimatingRefreshButton(refreshMenuItem);
+        }
+        
         if (readerPager.getCurrentItem() > 1) {
             menu.removeItem(0);
             menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
@@ -414,6 +420,7 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
     }
 
     public void startAnimatingButton() {
+        shouldAnimateRefreshButton = true;
         startAnimatingRefreshButton(refreshMenuItem);
     }
 

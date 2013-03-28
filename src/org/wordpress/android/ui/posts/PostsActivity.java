@@ -12,7 +12,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,8 +32,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.DashboardActivity;
-import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.ui.StatsActivity;
+import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
@@ -183,6 +182,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         } else {
             popPostDetail();
             attemptToSelectPost();
+            shouldAnimateRefreshButton = true;
             postList.refreshPosts(false);
         }
     }
@@ -277,6 +277,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
+        if (shouldAnimateRefreshButton) {
+            shouldAnimateRefreshButton = false;
+            startAnimatingRefreshButton(refreshMenuItem);
+        }
         return true;
     }
 
@@ -345,6 +349,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public void onRefresh(boolean start) {
         if (start) {
             attemptToSelectPost();
+            shouldAnimateRefreshButton = true;
             startAnimatingRefreshButton(refreshMenuItem);
             isRefreshing = true;
         } else {
