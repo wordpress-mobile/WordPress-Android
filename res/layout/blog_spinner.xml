@@ -7,13 +7,12 @@
     android:clickable="true"
     android:background="@drawable/md_list_selector" >
 
-    <Spinner
+    <com.actionbarsherlock.internal.widget.IcsSpinner
         android:id="@+id/blog_spinner"
         style="@style/wordpress_DropDownNav"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:paddingLeft="0dp"
-        android:clickable="false" >
-    </Spinner>
+        android:clickable="false" />
 
 </LinearLayout>

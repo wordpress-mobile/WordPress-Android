@@ -29,11 +29,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.internal.widget.IcsAdapterView;
+import com.actionbarsherlock.internal.widget.IcsSpinner;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
@@ -96,7 +97,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private MenuAdapter mAdapter;
     private ListView mListView;
-    private Spinner mBlogSpinner;
+    private IcsSpinner mBlogSpinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -245,7 +246,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         });
         
-        mBlogSpinner = (Spinner) spinnerWrapper.findViewById(R.id.blog_spinner);
+        mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
                 .getThemedContext(),
@@ -659,10 +660,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
     }
     
-    private AdapterView.OnItemSelectedListener mItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+    private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
 
         @Override
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+        public void onItemSelected(IcsAdapterView<?> arg0, View arg1, int position, long arg3) {
             // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
             if (!mBlogSpinnerInitialized) {
                 mBlogSpinnerInitialized = true;
@@ -674,11 +675,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        public void onNothingSelected(AdapterView<?> arg0) {
-            // TODO Auto-generated method stub
-            
+        public void onNothingSelected(IcsAdapterView<?> arg0) { 
         }
-    
     };
 
     public boolean onOptionsItemSelected(MenuItem item) {
