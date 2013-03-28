@@ -27,7 +27,6 @@ import org.json.JSONException;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WordPressDB {
@@ -207,7 +206,8 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
-                db.setVersion(DATABASE_VERSION); // set to latest revision
+                migratePreferences(ctx);
+                db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 2) {
                 db.delete(POSTS_TABLE, null, null);
                 db.execSQL(CREATE_TABLE_POSTS);
@@ -237,6 +237,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 3) {
                 db.delete(POSTS_TABLE, null, null);
@@ -264,6 +265,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 4) {
                 db.delete(POSTS_TABLE, null, null);
@@ -291,6 +293,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 5) {
                 db.delete(POSTS_TABLE, null, null);
@@ -317,6 +320,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 6) {
                 db.delete(POSTS_TABLE, null, null);
@@ -341,6 +345,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 7) {
                 db.delete(POSTS_TABLE, null, null);
@@ -357,6 +362,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 8) {
                 db.delete(POSTS_TABLE, null, null);
@@ -372,6 +378,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 9) {
                 db.delete(POSTS_TABLE, null, null);
@@ -387,6 +394,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 10) {
                 db.delete(POSTS_TABLE, null, null);
@@ -456,6 +464,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 11) {
                 db.execSQL(ADD_SCALED_IMAGE);
@@ -464,47 +473,54 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 12) {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 13) {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 14) {
                 db.execSQL(ADD_BLOG_OPTIONS);
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 15) {
-                // Migrate preferences out of the db
-                Map<?, ?> notificationOptions = getNotificationOptions();
-                if (notificationOptions != null) {
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-                    SharedPreferences.Editor editor = settings.edit();
-                    String interval = getInterval();
-                    if (interval != "") {
-                        editor.putString("wp_pref_notifications_interval", interval);
-                    }
-                    editor.putBoolean("wp_pref_notification_sound", (notificationOptions.get("sound").toString().equals("1")) ? true : false);
-                    editor.putBoolean("wp_pref_notification_vibrate", (notificationOptions.get("vibrate").toString().equals("1")) ? true : false);
-                    editor.putBoolean("wp_pref_notification_light", (notificationOptions.get("light").toString().equals("1")) ? true : false);
-                    editor.putBoolean("wp_pref_signature_enabled", (notificationOptions.get("tagline_flag").toString().equals("1")) ? true : false);
-
-                    String tagline = notificationOptions.get("tagline").toString();
-                    if (tagline != "") {
-                        editor.putString("wp_pref_post_signature", tagline);
-                    }
-                    editor.commit();
-                }
-
+                migratePreferences(ctx);
                 db.setVersion(DATABASE_VERSION);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+    
+    private void migratePreferences(Context ctx) {
+        // Migrate preferences out of the db
+        Map<?, ?> notificationOptions = getNotificationOptions();
+        if (notificationOptions != null) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            String interval = getInterval();
+            if (interval != "") {
+                editor.putString("wp_pref_notifications_interval", interval);
+            }
+            editor.putBoolean("wp_pref_notification_sound", (notificationOptions.get("sound").toString().equals("1")) ? true : false);
+            editor.putBoolean("wp_pref_notification_vibrate", (notificationOptions.get("vibrate").toString().equals("1")) ? true : false);
+            editor.putBoolean("wp_pref_notification_light", (notificationOptions.get("light").toString().equals("1")) ? true : false);
+            editor.putBoolean("wp_pref_signature_enabled", (notificationOptions.get("tagline_flag").toString().equals("1")) ? true : false);
+
+            String tagline = notificationOptions.get("tagline").toString();
+            if (tagline != "") {
+                editor.putString("wp_pref_post_signature", tagline);
+            }
+            editor.commit();
+        }
     }
 
     public long addAccount(String url, String homeURL, String blogName, String username,
