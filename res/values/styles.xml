@@ -98,6 +98,7 @@
     <style name="WordPressSettingsSectionHeader" parent="WordPressSectionHeader">
         <item name="android:background">@drawable/section_header</item>
         <item name="android:textColor">#323232</item>
+        <item name="android:paddingBottom">6dp</item>
     </style>
     
     <style name="WordPressSubHeader">

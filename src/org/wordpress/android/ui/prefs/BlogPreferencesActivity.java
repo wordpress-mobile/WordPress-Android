@@ -23,6 +23,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.EscapeUtils;
 
 /**
  * Activity for configuring blog specific settings.
@@ -42,7 +43,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         Integer id = getIntent().getIntExtra("id", -1);
         blog = WordPress.getBlog(id);
 
-        getSupportActionBar().setTitle(blog.getBlogName());
+        getSupportActionBar().setTitle(EscapeUtils.unescapeHtml(blog.getBlogName()));
         loadSettingsForBlog();
     }
 
