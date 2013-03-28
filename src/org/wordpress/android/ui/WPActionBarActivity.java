@@ -631,6 +631,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     getBlogNames();
                     setupCurrentBlog();
                     initMenuDrawer();
+                    mMenuDrawer.peekDrawer(0);
                 } else {
                     finish();
                 }
