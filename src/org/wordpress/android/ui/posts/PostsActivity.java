@@ -65,9 +65,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt("wp_pref_last_activity", -1);
-            if (lastActivitySelection >= 1) {
+            if (lastActivitySelection >= 0) {
                 Intent i = null;
                 switch (lastActivitySelection) {
+                    case READER_ACTIVITY:
+                        i = new Intent(this, ReaderActivity.class);
+                        break;
                     case PAGES_ACTIVITY:
                         i = new Intent(this, PagesActivity.class);
                         i.putExtra("viewPages", true);
@@ -77,9 +80,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         break;
                     case STATS_ACTIVITY:
                         i = new Intent(this, StatsActivity.class);
-                        break;
-                    case READER_ACTIVITY:
-                        i = new Intent(this, ReaderActivity.class);
                         break;
                     case VIEW_SITE_ACTIVITY:
                         i = new Intent(this, ViewSiteActivity.class);
