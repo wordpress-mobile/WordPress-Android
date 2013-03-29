@@ -263,8 +263,10 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
                     if (topicName != null) {
                         topicText.setText(topicName);
                     }
-                    readerPager.setCurrentItem(1, true);
-                    supportInvalidateOptionsMenu();
+                    if (readerPager.getCurrentItem() != 1) {
+                        readerPager.setCurrentItem(1, true);
+                        supportInvalidateOptionsMenu();
+                    }
                 }
             });
         } catch (Exception e) {

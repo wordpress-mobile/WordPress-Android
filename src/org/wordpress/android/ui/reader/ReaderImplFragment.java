@@ -64,7 +64,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
                 .getApplicationContext()), interfaceNameForJS);
 
         wv.setWebViewClient(new WebViewClient() {
-
+            
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
@@ -88,6 +88,12 @@ public class ReaderImplFragment extends ReaderBaseFragment {
             public void onPageFinished(WebView view, String url) {
                 if (getActivity() != null && !getActivity().isFinishing())
                     ((ReaderActivity) getActivity()).stopAnimatingButton();
+            }
+            
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                ((ReaderActivity) getActivity()).stopAnimatingButton();
+                super.onReceivedError(view, errorCode, description, failingUrl);
             }
 
             @Override
@@ -172,6 +178,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
 
         protected void onPostExecute(List<?> result) {
 
+            ((ReaderActivity) getActivity()).stopAnimatingButton();
             // Read the WordPress.com cookies from the wv and pass them to the
             // connections below!
             CookieManager cookieManager = CookieManager.getInstance();
