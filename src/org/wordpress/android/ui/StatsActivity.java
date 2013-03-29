@@ -436,8 +436,7 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        // TODO: switch stats to current blog if possible.  If the blog does not have stats on
-        // wordpress.com, display a helpful message (maybe directing them at jetpack?)
+        initStats();
     }
 
     /*

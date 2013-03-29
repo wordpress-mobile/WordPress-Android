@@ -16,8 +16,6 @@ import org.wordpress.android.models.Post;
 
 public class WordPress extends Application {
 
-    private static final String TAG = "WordPress";
-
     public static String versionName;
     public static Blog currentBlog;
     public static Comment currentComment;

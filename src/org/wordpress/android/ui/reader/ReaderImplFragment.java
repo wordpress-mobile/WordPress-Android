@@ -108,8 +108,12 @@ public class ReaderImplFragment extends ReaderBaseFragment {
         });
 
         this.setDefaultWebViewSettings(wv);
-        new loadReaderTask().execute(null, null, null, null);
+        reloadReader();
         return v;
+    }
+
+    public void reloadReader() {
+        new loadReaderTask().execute(null, null, null, null);
     }
 
     public void onAttach(Activity activity) {

@@ -5,9 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import android.os.Bundle;
-import android.view.Window;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -33,6 +31,10 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         mWebView.getSettings().setPluginsEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
+        loadSiteURL();
+    }
+
+    private void loadSiteURL() {
         String siteURL = null;
         Gson gson = new Gson();
         Type type = new TypeToken<Map<?, ?>>() {}.getType();
@@ -47,6 +49,13 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
             siteURL = mBlog.getUrl().replace("/xmlrpc.php", "");
         }
         loadAuthenticatedUrl(siteURL);
+    }
+    
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        mBlog = WordPress.currentBlog;
+        loadSiteURL();
     }
 
 }

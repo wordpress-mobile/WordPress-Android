@@ -2,11 +2,9 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
-import android.view.Window;
-
-import com.actionbarsherlock.app.ActionBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 
 /**
  * Activity to view the WordPress admin dashboard (/wp-admin) for the current blog.
@@ -27,7 +25,11 @@ public class DashboardActivity extends AuthenticatedWebViewActivity {
         mWebView.getSettings().setPluginsEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        // load dashboard
+        loadDashboard();
+    }
+
+    public void loadDashboard() {
+     // load dashboard
         String dashboardUrl;
         if (mBlog.getUrl().lastIndexOf("/") != -1) {
             dashboardUrl = mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
@@ -38,4 +40,10 @@ public class DashboardActivity extends AuthenticatedWebViewActivity {
         loadAuthenticatedUrl(dashboardUrl);
     }
 
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        mBlog = WordPress.currentBlog;
+        loadDashboard();
+    }
 }

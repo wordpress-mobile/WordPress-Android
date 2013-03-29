@@ -436,7 +436,7 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
         
         if (WordPress.currentBlog.isDotcomFlag()) {
             ReaderImplFragment readerPageFragment = (ReaderImplFragment) readerPage;
-            readerPageFragment.refreshReader();
+            readerPageFragment.reloadReader();
         } else {
             // Self-hosted blogs do not have Reader access, send to posts instead
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ReaderActivity.this);
