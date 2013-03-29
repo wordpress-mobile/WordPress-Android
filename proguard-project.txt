@@ -6,8 +6,8 @@
 
 # Allow JS Bridge for WordPress.com reader
 -keepattributes JavascriptInterface
--keep public class org.wordpress.android.WPCOMReaderBase$JavaScriptInterface
--keepclassmembers class org.wordpress.android.WPCOMReaderBase$JavaScriptInterface { 
+-keep public class org.wordpress.android.ui.reader.ReaderBaseFragment$JavaScriptInterface
+-keepclassmembers class org.wordpress.android.ui.reader.ReaderBaseFragment$JavaScriptInterface { 
     <methods>; 
 }
 -keep class android.support.v4.app.** { *; }
