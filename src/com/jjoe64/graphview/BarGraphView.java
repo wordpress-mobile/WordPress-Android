@@ -2,6 +2,7 @@ package com.jjoe64.graphview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.AttributeSet;
 
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
@@ -10,6 +11,10 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
  * @author Muhammad Shahab Hameed
  */
 public class BarGraphView extends GraphView {
+	public BarGraphView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+	
 	public BarGraphView(Context context, String title) {
 		super(context, title);
 	}

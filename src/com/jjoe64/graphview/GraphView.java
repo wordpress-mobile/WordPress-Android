@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -252,6 +253,14 @@ abstract public class GraphView extends LinearLayout {
 	private double manualMaxYValue;
 	private double manualMinYValue;
 	private GraphViewStyle graphViewStyle;
+
+	public GraphView(Context context, AttributeSet attrs) {
+		this(context, attrs.getAttributeValue(null, "title"));
+
+		int width = attrs.getAttributeIntValue("android", "layout_width", LayoutParams.MATCH_PARENT);
+		int height = attrs.getAttributeIntValue("android", "layout_height", LayoutParams.MATCH_PARENT);
+		setLayoutParams(new LayoutParams(width, height));
+	}
 
 	/**
 	 *
