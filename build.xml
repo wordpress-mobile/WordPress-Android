@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="wordpress-rest-android">
+  <description>
+    WordPress.com Oauth and Rest libraries for Android
+  </description>
+  <property name="src"   location="src" />
+  <property name="build" location="build" />
+  <property name="dist"  location="dist" />
+
+  <target name="init">
+    <tstamp/>
+    
+    <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="unknown">
+        <arg value="describe"/>
+        <arg value="--tags"/>
+        <arg value="--always"/>
+        <arg value="HEAD"/>
+    </exec>
+    
+    <mkdir dir="${build}"></mkdir>
+  </target>
+
+  <target name="compile" depends="init" description="compile source">
+    <javac srcdir="${src}" destdir="${build}" />
+  </target>
+
+  <target name="dist" depends="compile" description="Build jar files">
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/WordPress-${git.revision}.jar" basedir="${build}" />
+  </target>
+
+  <target name="clean" description="Remove build artifacts">
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
+  </target>
+</project>
