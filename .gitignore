@@ -1,0 +1,8 @@
+local.properties
+bin/*
+build/*
+dist/*
+test/build/*
+gen/*
+build.num
+libs/*
