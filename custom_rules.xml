@@ -9,6 +9,12 @@
     <!-- Get git commit -->
     <available file=".git" type="dir" property="git.present"/>
 
+    <target name="-pre-build">
+      <get skipexisting="true"
+        src="https://github.com/loopj/android-async-http/raw/master/releases/android-async-http-1.4.3.jar"
+        dest="${libs.dir}" />
+    </target>
+    
     <target name="git-details">
         <exec executable="git" outputproperty="git.status">
             <arg value="status" />
@@ -81,8 +87,8 @@
             <attribute name="Built-By" value="${user.name}" />
             <attribute name="Implementation-Version" value="${package.versionname}"/> 
         </manifest>
-
-        <jar destfile="${dist.dir}/${package.name}-${package.versionname}.jar" basedir="build/classes" includes="com/wordpress/**/*.class" manifest="MANIFEST.MF" />
+        
+        <jar destfile="${dist.dir}/${package.name}-${package.versionname}.jar" basedir="${build.dir}/classes" includes="com/wordpress/**/*.class" manifest="MANIFEST.MF" />
         <jar id="files" destfile="${dist.dir}/${package.name}-${package.versionname}-http.jar">
             <zipfileset src="${libs.dir}/android-async-http-1.4.3.jar" includes="**/*.java **/*.class"/>
             <zipfileset src="${dist.dir}/${package.name}-${package.versionname}.jar" includes="**/*.java **/*.class"/>
@@ -100,12 +106,6 @@
         </delete>
     </target>
     
-    <!-- download anroid-async-http library and place it in libs -->
-    <target name="download-libs">
-      <get src="https://github.com/loopj/android-async-http/raw/master/releases/android-async-http-1.4.3.jar"
-        dest="${libs.dir}" />
-    </target>
-
     <!-- Compile and package a jar -->
     <target name="package" depends="compile,jar" />
 </project>
