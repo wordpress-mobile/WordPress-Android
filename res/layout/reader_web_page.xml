@@ -19,7 +19,7 @@
             android:indeterminate="false"
             android:progress="50"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/progress_color" />
+            android:progressDrawable="@drawable/progress_horizontal_wordpress" />
     </FrameLayout>
 
 </LinearLayout>
