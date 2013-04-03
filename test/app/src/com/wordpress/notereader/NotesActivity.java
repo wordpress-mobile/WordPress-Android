@@ -22,6 +22,5 @@ public class NotesActivity extends Activity
     public void onStart(){
         super.onStart();
         Log.d(TAG, "Starting");
-        Oauth oauth = new Oauth();
     }
 }
