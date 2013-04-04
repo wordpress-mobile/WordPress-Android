@@ -103,6 +103,9 @@ public class StatsActivity extends WPActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_stats));
+        
+        EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
+        EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
 
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new StatsWebViewClient());
