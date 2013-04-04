@@ -152,6 +152,7 @@ public class ReaderDetailPageFragment extends ReaderBaseFragment {
                 nextPost.setEnabled(true);
                 prevPost.setEnabled(true);
             }
+            view.clearCache(true);
         }
 
         @Override

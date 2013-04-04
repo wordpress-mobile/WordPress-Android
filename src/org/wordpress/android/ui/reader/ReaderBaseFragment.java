@@ -66,12 +66,6 @@ public abstract class ReaderBaseFragment extends SherlockFragment {
         }
 
         @Override
-        public void onPageFinished(WebView view, String url) {
-            // setProgressBarIndeterminateVisibility(false);
-            view.clearCache(true);
-        }
-
-        @Override
         public void onReceivedHttpAuthRequest(WebView view,
                 HttpAuthHandler handler, String host, String realm) {
             handler.proceed(httpuser, httppassword);

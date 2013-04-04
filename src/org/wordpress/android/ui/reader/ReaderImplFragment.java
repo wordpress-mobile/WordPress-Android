@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -108,6 +109,15 @@ public class ReaderImplFragment extends ReaderBaseFragment {
         });
 
         this.setDefaultWebViewSettings(wv);
+        
+        WebSettings webSettings = wv.getSettings();
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setAppCacheMaxSize(1024*1024*10);
+        webSettings.setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath());
+        
         reloadReader();
         return v;
     }
