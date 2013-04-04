@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -18,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockActivity;
 
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
@@ -26,7 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 
-public class EditCommentActivity extends Activity {
+public class EditCommentActivity extends SherlockActivity {
 
     private int ID_DIALOG_SAVING = 0;
     private String xmlErrorMessage;
@@ -36,6 +38,12 @@ public class EditCommentActivity extends Activity {
         super.onCreate(icicle);
 
         setContentView(R.layout.edit_comment);
+        
+        setTitle(getString(R.string.edit_comment));
+        
+        // Capitalize headers
+        ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.comment_content).toUpperCase());
+        ((TextView) findViewById(R.id.l_status)).setText(getResources().getString(R.string.status).toUpperCase());
 
         // Retrieve a reference to the current comment.
         Comment comment = WordPress.currentComment;

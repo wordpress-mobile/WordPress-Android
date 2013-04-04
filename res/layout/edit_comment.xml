@@ -1,122 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
+    android:orientation="vertical"
+    android:scrollbars="none" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp" >
 
- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	 android:layout_width="match_parent"
-	 android:layout_height="match_parent"
-	 android:background="#FFFFFFFF"
-	 android:orientation="vertical"
-     android:scrollbars="none" >
+        <RelativeLayout
+            android:id="@+id/section1"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="8dp" >
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_gravity="center_horizontal"
-         android:orientation="vertical"
-         android:padding="10dip" >
+            <TextView
+                android:id="@+id/l_section1"
+                style="@style/WordPressSectionHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/comment_content" />
 
-         <RelativeLayout
-             android:id="@+id/section1"
-             android:layout_width="fill_parent"
-             android:layout_height="0dp"
-             android:layout_weight="1"
-             android:paddingBottom="10dp" >
+            <EditText
+                android:id="@+id/author_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/l_section1"
+                android:layout_marginBottom="8dp"
+                android:autoText="true"
+                android:capitalize="words"
+                android:hint="@string/author_name"
+                android:singleLine="true" />
 
-             <TextView
-                 android:id="@+id/l_section1"
-                 style="@style/WordPressSectionHeader"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:text="@string/comment_content" />
+            <EditText
+                android:id="@+id/author_email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/author_name"
+                android:layout_marginBottom="8dp"
+                android:autoText="true"
+                android:capitalize="none"
+                android:hint="@string/author_email"
+                android:singleLine="true" />
 
-             <EditText
-                 android:id="@+id/author_name"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@id/l_section1"
-                 android:layout_margin="4dp"
-                 android:autoText="true"
-                 android:capitalize="words"
-                 android:hint="@string/author_name"
-                 android:singleLine="true"
-                 android:minHeight="40dip" />
-             
-             <EditText
-                 android:id="@+id/author_email"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@id/author_name"
-                 android:layout_margin="4dp"
-                 android:autoText="true"
-                 android:capitalize="none"
-                 android:hint="@string/author_email"
-                 android:singleLine="true"
-                 android:minHeight="40dip" />
-             
-             <EditText
-                 android:id="@+id/author_url"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@id/author_email"
-                 android:layout_margin="4dp"
-                 android:autoText="true"
-                 android:capitalize="none"
-                 android:hint="@string/author_url"
-                 android:singleLine="true"
-                 android:minHeight="40dip" />
+            <EditText
+                android:id="@+id/author_url"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/author_email"
+                android:layout_marginBottom="8dp"
+                android:autoText="true"
+                android:capitalize="none"
+                android:hint="@string/author_url"
+                android:singleLine="true" />
 
-             <EditText
-                 android:id="@+id/comment_content"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@id/author_url"
-                 android:layout_margin="4dp"
-                 android:autoText="true"
-                 android:capitalize="sentences"
-                 android:gravity="top"
-                 android:hint="@string/content"
-                 android:minLines="2"
-                 android:textColorLink="#21759b" />
-         </RelativeLayout>
+            <EditText
+                android:id="@+id/comment_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/author_url"
+                android:autoText="true"
+                android:capitalize="sentences"
+                android:gravity="top"
+                android:hint="@string/content"
+                android:minLines="2"
+                android:textColorLink="#21759b" />
+        </RelativeLayout>
 
-         <RelativeLayout
-             android:id="@+id/section5"
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginBottom="10dip"
-             android:layout_marginTop="10dip"
-             android:paddingBottom="10dp" >
+        <RelativeLayout
+            android:id="@+id/section5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="8dp" >
 
-             <TextView
-                 android:id="@+id/l_status"
-                 style="@style/WordPressSectionHeader"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:text="@string/settings" />
+            <TextView
+                android:id="@+id/l_status"
+                style="@style/WordPressSectionHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings" />
 
-             <TextView
-                 android:id="@+id/statusLabel"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@id/l_status"
-                 android:layout_marginTop="4dp"
-                 android:layout_marginRight="4dp"
-                 android:layout_marginLeft="8dp"
-                 android:text="@string/l_status" />
+            <Spinner
+                android:id="@+id/status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/l_status" />
+        </RelativeLayout>
 
-             <Spinner
-                 android:id="@+id/status"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@id/statusLabel" />
+        <Button
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment_update"
+            android:textSize="20sp" />
+    </LinearLayout>
 
-         </RelativeLayout>
-
-         <Button
-             android:id="@+id/post"
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:text="@string/comment_update"
-             android:textSize="20sp" />
-     </LinearLayout>
 </ScrollView>

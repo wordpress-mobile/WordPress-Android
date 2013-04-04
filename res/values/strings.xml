@@ -151,6 +151,7 @@
   <string name="comments_moderated">Comments Moderated Successfully</string>
   <string name="reply_added">Reply Added Successfully</string>
   <string name="view_comment_from">Comment from</string>
+  <string name="edit_comment">Edit Comment</string>
 
   <!-- edit comment view -->
   <string name="author_name">Name</string>
