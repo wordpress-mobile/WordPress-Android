@@ -46,7 +46,7 @@
         <!-- Account activities -->
         <activity
             android:name="org.wordpress.android.ui.accounts.AddAccountActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="org.wordpress.android.ui.accounts.AddAcountSettingsActivity" />
         <activity android:name="org.wordpress.android.ui.accounts.NewAccountActivity" />
