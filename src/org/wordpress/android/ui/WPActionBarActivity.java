@@ -523,7 +523,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
 
             TextView bagdeTextView = (TextView) v.findViewById(R.id.menu_row_badge);
-            if (position == 3 && WordPress.currentBlog != null) {
+            int commentRow = (mIsDotComBlog) ? 3 : 2; 
+            if (position == commentRow && WordPress.currentBlog != null) {
                 int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
                 if (commentCount > 0) {
                     bagdeTextView.setVisibility(View.VISIBLE);
