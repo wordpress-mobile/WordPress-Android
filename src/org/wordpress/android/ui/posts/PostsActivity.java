@@ -203,18 +203,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     protected void onResume() {
         super.onResume();
-        //titleBar.setupCurrentBlog();
-        attemptToSelectPost();
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        postList.loadPosts(false);
+        if (postList.getListView().getCount() == 0)
+            postList.loadPosts(false);
         if (WordPress.postsShouldRefresh) {
             checkForLocalChanges(false);
             WordPress.postsShouldRefresh = false;
         }
+        attemptToSelectPost();
     }
 
     @Override
