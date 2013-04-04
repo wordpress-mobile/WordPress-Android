@@ -92,7 +92,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean mShouldFinish;
     private boolean mIsDotComBlog;
     private boolean mIsXLargeDevice;
-    private boolean mBlogSpinnerInitialized = false;
+    private boolean mBlogSpinnerInitialized;
     private int mActivePosition;
 
     private MenuAdapter mAdapter;
@@ -655,6 +655,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                                     R.layout.sherlock_spinner_dropdown_item, blogNames);
                             mBlogSpinner.setAdapter(mSpinnerAdapter);
                         }
+                        onBlogChanged();
                     }
                 }
                 break;
