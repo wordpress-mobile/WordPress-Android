@@ -105,7 +105,7 @@ import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
-        WPEditText.OnSelectionChangedListener, OnFocusChangeListener {
+        WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
@@ -463,6 +463,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         registerForContextMenu(mAddPictureButton);
         mContentEditText.setOnSelectionChangedListener(this);
+        mContentEditText.setOnEditTextImeBackListener(this);
         mContentEditText.setOnTouchListener(this);
         mContentEditText.addTextChangedListener(this);
         mContentEditText.setOnFocusChangeListener(this);
@@ -571,17 +572,30 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE) {
-            mFormatBar.setVisibility(View.VISIBLE);
-            AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-            fadeInAnimation.setDuration(500);
-            mFormatBar.startAnimation(fadeInAnimation);
-        } else if (mFormatBar.getVisibility() == View.VISIBLE) {
-            AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
-            fadeOutAnimation.setDuration(500);
-            mFormatBar.startAnimation(fadeOutAnimation);
-            mFormatBar.setVisibility(View.GONE);
-        }
+        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE)
+            showFormatBar();
+        else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE)
+            hideFormatBar();
+    }
+    
+    @Override
+    public void onImeBack(WPEditText ctrl, String text) {
+        if (mFormatBar.getVisibility() == View.VISIBLE)
+            hideFormatBar();
+    }
+    
+    private void showFormatBar() {
+        mFormatBar.setVisibility(View.VISIBLE);
+        AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+        fadeInAnimation.setDuration(500);
+        mFormatBar.startAnimation(fadeInAnimation);
+    }
+    
+    private void hideFormatBar() {
+        AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
+        fadeOutAnimation.setDuration(500);
+        mFormatBar.startAnimation(fadeOutAnimation);
+        mFormatBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -676,6 +690,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        
+        if (mFormatBar.getVisibility() != View.VISIBLE)
+            showFormatBar();
+        
         float pos = event.getY();
 
         if (event.getAction() == 0)
