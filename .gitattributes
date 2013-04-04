@@ -5,6 +5,7 @@
 .settings/org.eclipse.jdt.ui.prefs -text
 /AndroidManifest.xml -text
 assets/licenses.html -text
+assets/licenses_bb.html -text
 assets/webview.css -text
 /build.xml -text
 /default.properties -text

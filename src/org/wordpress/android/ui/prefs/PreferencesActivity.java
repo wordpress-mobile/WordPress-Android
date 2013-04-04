@@ -197,6 +197,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         } else {
             notificationIntervalPreference.setSummary(notificationIntervalPreference.getValue());
         }
+         
+        if (DeviceUtils.getInstance().isBlackBerry()) {
+            PreferenceCategory appAboutSectionName = (PreferenceCategory) findPreference("wp_pref_app_about_section");
+            appAboutSectionName.setTitle(getString(R.string.app_title_blackberry));
+            Preference appName = (Preference) findPreference("wp_pref_app_title");
+            appName.setTitle(getString(R.string.app_title_blackberry));
+        }
     }
 
     @Override
