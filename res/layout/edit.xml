@@ -98,15 +98,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/locationText"
-                    android:text="@string/view_map" />
-
+                    android:text="@string/view_map"
+                    android:lines="1"
+                    android:maxWidth="110dp"
+                    android:ellipsize="end" />
                 <Button
                     android:id="@+id/updateLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/viewMap"
                     android:layout_toRightOf="@id/viewMap"
-                    android:text="@string/update_location" />
+                    android:text="@string/update_location"
+                    android:lines="1"
+                    android:maxWidth="110dp"
+                    android:ellipsize="end" />
 
                 <Button
                     android:id="@+id/removeLocation"
@@ -114,7 +119,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/updateLocation"
                     android:layout_toRightOf="@id/updateLocation"
-                    android:text="@string/remove_location" />
+                    android:text="@string/remove_location"
+                    android:lines="1"
+                    android:maxWidth="110dp"
+                    android:ellipsize="end" />
             </RelativeLayout>
 
             <LinearLayout
