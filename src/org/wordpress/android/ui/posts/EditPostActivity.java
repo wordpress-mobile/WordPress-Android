@@ -145,6 +145,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private boolean mIsBackspace = false;
     private boolean mScrollDetected = false;
     private boolean mIsNewDraft = false;
+    private boolean mIsExternalInstance = false;
 
     private List<String> mSelectedCategories;
     private String mAccountName = "";
@@ -187,6 +188,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // we arrived here from a share action
+            mIsExternalInstance = true;
             if (!selectBlogForShareAction())
                 return;
         } else {
@@ -207,6 +209,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 if (extras.getBoolean("isQuickPress")) {
+                    mIsExternalInstance = true;
                     mBlogID = extras.getInt("id");
                 } else {
                     mBlogID = WordPress.currentBlog.getId();
@@ -857,8 +860,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             public void onClick(DialogInterface dialog, int whichButton) {
                 if (mIsNewDraft)
                     mPost.delete();
-                if (isUpPress) {
-                    Intent intent = new Intent(EditPostActivity.this, PostsActivity.class);
+                if (isUpPress && mIsExternalInstance) {
+                    Intent intent = new Intent(EditPostActivity.this, (mIsPage) ? PagesActivity.class : PostsActivity.class);
+                    if (mIsPage)
+                        intent.putExtra("viewPages", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
