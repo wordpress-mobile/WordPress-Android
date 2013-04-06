@@ -115,6 +115,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.posts.PagesActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" />
+        <activity
             android:name="org.wordpress.android.ui.posts.PreviewPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
@@ -143,6 +147,10 @@
             android:name="org.wordpress.android.ui.StatsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" />
+        <activity android:name=".ui.ViewSiteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" >
+        </activity>
 
         <!-- Services -->
         <service
@@ -154,15 +162,6 @@
             android:label="Comment Service" />
 
         <receiver android:name="org.wordpress.android.CommentBroadcastReceiver" />
-
-        <activity
-            android:name=".ui.posts.PagesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop" />
-        <activity android:name=".ui.ViewSiteActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" >
-        </activity>
     </application>
 
 </manifest>

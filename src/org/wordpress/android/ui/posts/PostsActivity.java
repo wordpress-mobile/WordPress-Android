@@ -60,7 +60,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onCreate(savedInstanceState);
         
         // Restore last selection on app creation
-        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null) {
+        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
+                && !(this instanceof PagesActivity)) {
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt("wp_pref_last_activity", -1);
@@ -217,46 +218,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onPause();
         if (isRefreshing)
             stopAnimatingRefreshButton(refreshMenuItem);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            isPage = extras.getBoolean("viewPages");
-            postList.isPage = isPage;
-            String errorMessage = extras.getString("errorMessage");
-            if (errorMessage != null) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsActivity.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.error));
-                dialogBuilder.setMessage(errorMessage);
-                dialogBuilder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int whichButton) {
-                                // Just close the window.
-                            }
-                        });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-            }
-        }
-        else {
-            isPage = false;
-            postList.isPage = isPage;
-        }
-
-        attemptToSelectPost();
-        postList.getListView().removeFooterView(postList.switcher);
-        postList.createSwitcher();
-        postList.loadPosts(false);
-
     }
 
     @Override
