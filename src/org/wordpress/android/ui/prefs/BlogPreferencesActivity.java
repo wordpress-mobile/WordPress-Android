@@ -118,7 +118,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         loadSettingsForBlog();
-
     }
 
     private void loadSettingsForBlog() {

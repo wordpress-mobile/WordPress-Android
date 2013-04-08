@@ -652,8 +652,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                             mBlogSpinner.setAdapter(mSpinnerAdapter);
                         }
                         
-                        if (blogNames.length >= 1)
+                        if (blogNames.length >= 1) {
+                            setupCurrentBlog();
                             onBlogChanged();
+                        }
                     }
                 }
                 break;
