@@ -114,12 +114,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         finish();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        loadSettingsForBlog();
-    }
-
     private void loadSettingsForBlog() {
         // Set header labels to upper case
         ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.account_details).toUpperCase(Locale.getDefault()));

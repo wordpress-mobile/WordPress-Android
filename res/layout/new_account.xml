@@ -10,7 +10,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:layout_gravity="center">
+    style="@style/WordPressWelcomeStyle">
     <ImageView
       android:scaleType="centerInside"
       android:layout_width="200dp"

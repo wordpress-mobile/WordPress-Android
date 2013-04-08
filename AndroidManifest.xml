@@ -59,7 +59,6 @@
         <activity
             android:name="org.wordpress.android.ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name="org.wordpress.android.ui.prefs.LicensesActivity" />
         <activity
