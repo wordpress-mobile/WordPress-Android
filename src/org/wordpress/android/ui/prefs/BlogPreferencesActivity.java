@@ -34,6 +34,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
     /** The blog this activity is managing settings for. */
     private Blog blog;
+    private boolean mBlogDeleted;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,10 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        
+        if (mBlogDeleted)
+            return;
+        
         EditText usernameET = (EditText) findViewById(R.id.username);
         blog.setUsername(usernameET.getText().toString());
         EditText passwordET = (EditText) findViewById(R.id.password);
@@ -104,6 +109,10 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         blog.setLocation(locationCB.isChecked());
 
         blog.save(originalUsername);
+        
+        if (WordPress.currentBlog.getId() == blog.getId())
+            WordPress.currentBlog = blog;
+        
         // exit settings screen
         Bundle bundle = new Bundle();
 
@@ -244,6 +253,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
                             .show();
                     WordPress.wpDB.deleteLastBlogId();
                     WordPress.currentBlog = null;
+                    mBlogDeleted = true;
                     activity.finish();
                 } else {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
