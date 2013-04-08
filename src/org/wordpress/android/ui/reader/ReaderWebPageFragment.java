@@ -18,7 +18,6 @@ public class ReaderWebPageFragment extends ReaderBaseFragment {
 
     // private String cachedPage = null;
     public WebView wv;
-    public ProgressBar progressBar;
 
     public static ReaderWebPageFragment newInstance() {
         ReaderWebPageFragment f = new ReaderWebPageFragment();
@@ -30,7 +29,6 @@ public class ReaderWebPageFragment extends ReaderBaseFragment {
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.reader_web_page, container, false);
-        progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         wv = (WebView) v.findViewById(R.id.webView);
         this.setDefaultWebViewSettings(wv);
         wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -40,9 +38,7 @@ public class ReaderWebPageFragment extends ReaderBaseFragment {
         wv.setWebViewClient(new DetailWebViewClient());
         wv.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                progressBar.setProgress(progress);
-                if (progress == 100)
-                    progressBar.setVisibility(View.GONE);
+                ((ReaderActivity)getActivity()).setSupportProgress(progress * 100);
             }
         });
 
@@ -67,8 +63,9 @@ public class ReaderWebPageFragment extends ReaderBaseFragment {
     protected class DetailWebViewClient extends WebViewClient {
 
         @Override
-        public void onPageStarted (WebView view, String url, Bitmap favicon) {
-            progressBar.setVisibility(View.VISIBLE);
+        public void onPageFinished(WebView view, String url) {
+            wv.requestLayout();
+            super.onPageFinished(view, url);
         }
     }
 }

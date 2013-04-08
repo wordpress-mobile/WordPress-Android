@@ -125,7 +125,7 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
         public void onProgressChanged(WebView webView, int progress) {
             AuthenticatedWebViewActivity.this.setTitle(
                     context.getResources().getText(R.string.loading));
-            AuthenticatedWebViewActivity.this.setProgress(progress * 100);
+            AuthenticatedWebViewActivity.this.setSupportProgress(progress * 100);
 
             if (progress == 100) {
                 setTitle(webView.getTitle());

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -59,7 +60,12 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        
         super.onCreate(savedInstanceState);
+        
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setSupportProgressBarVisibility(false);
 
         if (savedInstanceState != null) {
             // Restore fragments
@@ -72,7 +78,7 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
             webPage = getSupportFragmentManager().getFragment(
                     savedInstanceState, ReaderWebPageFragment.class.getName());
         }
-
+        
         createMenuDrawer(R.layout.reader_wpcom_pager);
         readerPager = (WPViewPager) findViewById(R.id.pager);
         readerPager.setOffscreenPageLimit(3);
@@ -240,6 +246,12 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
                 }
             }
             return true;
+        } else if (itemId == android.R.id.home) {
+            if (readerPager.getCurrentItem() > 1) {
+                readerPager.setCurrentItem(readerPager.getCurrentItem() - 1);
+                supportInvalidateOptionsMenu();
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

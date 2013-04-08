@@ -4,22 +4,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <FrameLayout
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-        </WebView>
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="fill_parent"
-            android:layout_height="4dp"
-            android:indeterminate="false"
-            android:progress="50"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/progress_horizontal_wordpress" />
-    </FrameLayout>
+    </WebView>
 
 </LinearLayout>

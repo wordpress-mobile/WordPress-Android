@@ -79,7 +79,7 @@ public class ReaderDetailPageFragment extends ReaderBaseFragment {
 
     private void fadeInWebView() {
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-        fadeInAnimation.setDuration(600);
+        fadeInAnimation.setDuration(800);
         wv.scrollTo(0, 0);
         wv.startAnimation(fadeInAnimation);
     }
@@ -151,6 +151,7 @@ public class ReaderDetailPageFragment extends ReaderBaseFragment {
                 wv.loadUrl("javascript:" + method);
                 nextPost.setEnabled(true);
                 prevPost.setEnabled(true);
+                wv.requestLayout();
             }
             view.clearCache(true);
         }

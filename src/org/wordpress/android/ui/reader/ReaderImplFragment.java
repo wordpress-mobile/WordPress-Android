@@ -47,7 +47,9 @@ public class ReaderImplFragment extends ReaderBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
+        // Make sure WP.com auth cookie is cleared out
         CookieSyncManager.createInstance(this.getActivity().getApplicationContext());
+        CookieManager.getInstance().removeAllCookie();
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.reader_wpcom, container, false);
         if (WordPress.currentBlog == null) {
@@ -89,6 +91,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
             public void onPageFinished(WebView view, String url) {
                 if (getActivity() != null && !getActivity().isFinishing())
                     ((ReaderActivity) getActivity()).stopAnimatingButton();
+                wv.requestLayout();
             }
             
             @Override
@@ -150,7 +153,6 @@ public class ReaderImplFragment extends ReaderBaseFragment {
         CookieSyncManager.getInstance().stopSync();
         if (wv != null) {
             wv.stopLoading();
-            wv.clearCache(true);
         }
     }
 

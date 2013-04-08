@@ -6,6 +6,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -19,8 +20,11 @@ public class WebViewActivity extends WPActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        
+        super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.webview);
 
         ActionBar ab = getSupportActionBar();

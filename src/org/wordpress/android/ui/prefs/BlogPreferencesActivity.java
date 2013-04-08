@@ -49,6 +49,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
     @Override
     protected void onPause() {
+        super.onPause();
         EditText usernameET = (EditText) findViewById(R.id.username);
         blog.setUsername(usernameET.getText().toString());
         EditText passwordET = (EditText) findViewById(R.id.password);
@@ -111,7 +112,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
         finish();
-        super.onPause();
     }
 
     @Override

@@ -103,10 +103,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        if (this instanceof WebViewActivity)
-            requestWindowFeature(Window.FEATURE_PROGRESS);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
             mIsXLargeDevice = true;    
     }
@@ -655,7 +651,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                                     R.layout.sherlock_spinner_dropdown_item, blogNames);
                             mBlogSpinner.setAdapter(mSpinnerAdapter);
                         }
-                        onBlogChanged();
+                        
+                        if (blogNames.length >= 1)
+                            onBlogChanged();
                     }
                 }
                 break;
