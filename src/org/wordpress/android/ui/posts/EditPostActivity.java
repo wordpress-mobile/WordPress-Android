@@ -1686,11 +1686,16 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 if (result.length() > 0) {
                     mContentEditText.setText(result);
                 }
+            } else {
+                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void addMedia(String imgPath, Uri curStream) {
+        
+        if (mFormatBar.getVisibility() == View.VISIBLE)
+            hideFormatBar();
 
         Bitmap resizedBitmap = null;
         ImageHelper ih = new ImageHelper();
@@ -1801,7 +1806,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         if (mediaData == null) {
             // data stream not returned
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
             return null;
         }
 

@@ -203,7 +203,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/post_password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:layout_marginBottom="@dimen/format_bar_height" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
