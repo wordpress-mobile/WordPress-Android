@@ -14,6 +14,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 
+import com.wordpress.rest.Oauth;
+
 public class WordPress extends Application {
 
     public static String versionName;
@@ -24,6 +26,7 @@ public class WordPress extends Application {
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
+    public static Oauth oauth;
 
     @Override
     public void onCreate() {
@@ -153,4 +156,18 @@ public class WordPress extends Application {
 
         return currentBlog;
     }
+    
+	protected Properties getConfigProperties(){
+		if (mConfig == null) {
+			mConfig = new Properties();
+			InputStream stream = getResources().openRawResource(R.raw.config);
+			try {
+				mConfig.load(stream);				
+			} catch(java.io.IOException e){
+				mConfig = null;
+				Log.e(TAG, "Could not load config", e);
+			}
+		}
+		return mConfig;
+	}
 }
