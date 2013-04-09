@@ -69,26 +69,39 @@ public class Oauth {
         mClient.post(TOKEN_ENDPOINT, params, new JsonHttpResponseHandler(){
             @Override
             public void onStart(){
+                Log.d(TAG, "Started");
                 handler.onStart();
             }
             @Override
             public void onSuccess(int statusCode, JSONObject response){
+                Log.d(TAG, "Success?");
                 try {
                     OauthToken token = OauthToken.fromJSONObject(response);
-                    handler.onSuccess(token);                    
+                    handler.onSuccess(token);
                 } catch (JSONException e) {
+                    Log.e(TAG, "Couldn't build token", e);
                     handler.onFailure(e, response);
                 }
+            }
+            @Override
+            public void onSuccess(int statusCode, String response){
+                Log.d(TAG, String.format("WTF? %s", response));
             }
             @Override
             public void onFailure(Throwable e, JSONObject content){
                 handler.onFailure(e, content);
             }
             @Override
+            public void onFailure(Throwable e, String content){
+                Log.d(TAG, String.format("Failure: %s", content));
+            }
+            @Override
             public void onFinish(){
                 handler.onFinish();
             }
         });
+        Log.d(TAG, String.format("Requesting token from %s", TOKEN_ENDPOINT));
+        Log.d(TAG, String.format("Requesting params %s", params));
     }
     
     public AsyncHttpClient getClient(){
