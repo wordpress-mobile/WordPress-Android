@@ -1247,6 +1247,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
             }
+            if (mFormatBar.getVisibility() == View.VISIBLE)
+                hideFormatBar();
             return;
         }
 
