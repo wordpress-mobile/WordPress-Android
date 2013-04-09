@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    >
+    <EditText android:id="@+id/username"
+              android:hint="@string/username_hint"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content" />
+    <EditText android:id="@+id/password"
+              android:hint="@string/password_hint"
+              android:password="true"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="10dp" />
+    <Button android:id="@+id/signin_button"
+            android:text="@string/signin_label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+</LinearLayout>
+
