@@ -563,6 +563,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     WordPress.currentPost = mPost;
                     startService(new Intent(this, PostUploadService.class));
                 }
+                Intent i = new Intent();
+                i.putExtra("shouldRefresh", true);
+                setResult(RESULT_OK, i);
                 finish();
             }
             return true;

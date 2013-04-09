@@ -54,6 +54,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public String errorMsg = "";
     public boolean isRefreshing = false;
     private MenuItem refreshMenuItem;
+    private int ACTIVITY_EDIT_POST = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -253,7 +254,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             i.putExtra("isNew", true);
             if (isPage)
                 i.putExtra("isPage", true);
-            startActivity(i);
+            startActivityForResult(i, ACTIVITY_EDIT_POST);
             return true;
         } else if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
@@ -264,6 +265,15 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTIVITY_EDIT_POST && resultCode == RESULT_OK && data != null) {
+            if (data.getBooleanExtra("shouldRefresh", false))
+                postList.loadPosts(false);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void attemptToSelectPost() {
