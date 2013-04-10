@@ -449,17 +449,6 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
         if (WordPress.currentBlog.isDotcomFlag()) {
             ReaderImplFragment readerPageFragment = (ReaderImplFragment) readerPage;
             readerPageFragment.reloadReader();
-        } else {
-            // Self-hosted blogs do not have Reader access, send to posts instead
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ReaderActivity.this);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putInt("wp_pref_last_activity", POSTS_ACTIVITY);
-            editor.commit();
-            mShouldFinish = true;
-            Intent i = new Intent(ReaderActivity.this, PostsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            mMenuDrawer.closeMenu();
-            startActivityWithDelay(i);
         }
         
     }
