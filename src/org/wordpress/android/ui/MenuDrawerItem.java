@@ -6,7 +6,6 @@
 package org.wordpress.android.ui;
 
 import android.view.View;
-import android.content.Intent;
 
 abstract class MenuDrawerItem {
     /**
