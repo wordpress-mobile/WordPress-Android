@@ -53,6 +53,7 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -85,6 +86,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int VIEW_SITE_ACTIVITY = 7;
     protected static final int DASHBOARD_ACTIVITY = 8;
     protected static final int SETTINGS_ACTIVITY = 9;
+    protected static final int NOTIFICATIONS_ACTIVITY = 10;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
     
@@ -110,6 +112,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mIsXLargeDevice = true;
         
         // configure all the available menu items
+        mMenuItems.add(new NotificationsMenuItem());
         mMenuItems.add(new ReaderMenuItem());
         mMenuItems.add(new PostsMenuItem());
         mMenuItems.add(new PagesMenuItem());
@@ -805,6 +808,27 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mShouldFinish = false;
             Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
             startActivityForResult(settingsIntent, SETTINGS_REQUEST);
+        }
+    }
+    private class NotificationsMenuItem extends MenuDrawerItem {
+        NotificationsMenuItem(){
+            super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_comments);
+        }
+        @Override
+        public Boolean isVisible(){
+            return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof NotificationsActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof NotificationsActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, NotificationsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
         }
     }
 }
