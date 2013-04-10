@@ -216,23 +216,26 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
-                SharedPreferences.Editor editor = settings.edit();
-                MenuDrawerItem item = mAdapter.getItem(position);
+                // account for header views
+                int menuPosition = position - mListView.getHeaderViewsCount();
+                // bail if the adjusted position is out of bounds for the adapter
+                if (menuPosition < 0 || menuPosition >= mAdapter.getCount())
+                    return;
+                MenuDrawerItem item = mAdapter.getItem(menuPosition);
                 // if the item has an id, remember it for launch
-                if (item.hasItemId())
+                if (item.hasItemId()){
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+                    SharedPreferences.Editor editor = settings.edit();
                     editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
+                    editor.commit();
+                }
                 // only perform selection if the item isn't already selected
-                Intent intent = null;
                 if (!item.isSelected())
-                    intent = item.selectItem();
+                    item.selectItem();
                 // save the last activity preference
-                editor.commit();
                 // close the menu drawer
                 mMenuDrawer.closeMenu();
                 // if we have an intent, start the new activity
-                if (intent != null)
-                    startActivityWithDelay(intent);
             }
         });
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -251,26 +254,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mListView.setAdapter(mAdapter);
         
         // configure all the available menu items
-        mMenuItems.add(new MenuDrawerItem(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs){
-            @Override
-            public Boolean isVisible(){
-                return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
-            }
-            @Override
-            public Boolean isSelected(){
-                return WPActionBarActivity.this instanceof ReaderActivity;
-            }
-            @Override
-            public Intent onSelectItem(){
-                if (!(WPActionBarActivity.this instanceof ReaderActivity))
-                    mShouldFinish = true;
-                int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
-                Intent intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
-                intent.putExtra("id", readerBlogID);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                return intent;
-            }
-        });
+        // mMenuItems.add(new NotificationsMenuItem());
+        mMenuItems.add(new ReaderMenuItem());
+        mMenuItems.add(new PostsMenuItem());
+        mMenuItems.add(new PagesMenuItem());
+        mMenuItems.add(new CommentsMenuItem());
+        mMenuItems.add(new StatsMenuItem());
+        mMenuItems.add(new QuickPhotoMenuItem());
+        mMenuItems.add(new QuickVideoMenuItem());
+        mMenuItems.add(new ViewSiteMenuItem());
+        mMenuItems.add(new AdminMenuItem());
+        mMenuItems.add(new SettingsMenuItem());
+        
         updateMenuDrawer();
     }
 
@@ -339,31 +334,32 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View v = super.getView(position, convertView, parent);
+            View view = super.getView(position, convertView, parent);
             MenuDrawerItem item = getItem(position);
 
-            TextView titleTextView = (TextView) v.findViewById(R.id.menu_row_title);
+            TextView titleTextView = (TextView) view.findViewById(R.id.menu_row_title);
             titleTextView.setText(item.getTitleRes());
 
-            ImageView iconImageView = (ImageView) v.findViewById(R.id.menu_row_icon);
+            ImageView iconImageView = (ImageView) view.findViewById(R.id.menu_row_icon);
             iconImageView.setImageResource(item.getIconRes());
+            // Hide the badge always
+            view.findViewById(R.id.menu_row_badge).setVisibility(View.GONE);
 
             if (item.isSelected()) {
                 // http://stackoverflow.com/questions/5890379/setbackgroundresource-discards-my-xml-layout-attributes
-                int bottom = v.getPaddingBottom();
-                int top = v.getPaddingTop();
-                int right = v.getPaddingRight();
-                int left = v.getPaddingLeft();
-                v.setBackgroundResource(R.drawable.menu_drawer_selected);
-                v.setPadding(left, top, right, bottom);
+                int bottom = view.getPaddingBottom();
+                int top = view.getPaddingTop();
+                int right = view.getPaddingRight();
+                int left = view.getPaddingLeft();
+                view.setBackgroundResource(R.drawable.menu_drawer_selected);
+                view.setPadding(left, top, right, bottom);
             } else {
-                v.setBackgroundResource(R.drawable.md_list_selector);
+                view.setBackgroundResource(R.drawable.md_list_selector);
             }
-
             // allow the menudrawer item to configure the view
-            item.configureView(v);
+            item.configureView(view);
 
-            return v;
+            return view;
         }
     }
 
@@ -542,7 +538,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             refreshItem.setActionView(null);
         }
     }
-    
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
  
@@ -556,5 +552,215 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
  
         super.onConfigurationChanged(newConfig);
+    }
+
+    private class ReaderMenuItem extends MenuDrawerItem {
+        
+        ReaderMenuItem(){
+            super(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs);
+        }
+        
+        @Override
+        public Boolean isVisible(){
+            return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
+        }
+        
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof ReaderActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof ReaderActivity))
+                mShouldFinish = true;
+            int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
+            Intent intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
+            intent.putExtra("id", readerBlogID);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+        
+    }
+
+    private class PostsMenuItem extends MenuDrawerItem {
+        PostsMenuItem(){
+            super(POSTS_ACTIVITY, R.string.posts, R.drawable.dashboard_icon_posts);
+        }
+        @Override
+        public Boolean isSelected(){
+            WPActionBarActivity activity = WPActionBarActivity.this;
+            return (activity instanceof PostsActivity) && !(activity instanceof PagesActivity);
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof PostsActivity)
+                    || (WPActionBarActivity.this instanceof PagesActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, PostsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+
+    private class PagesMenuItem extends MenuDrawerItem {
+        PagesMenuItem(){
+            super(PAGES_ACTIVITY, R.string.pages, R.drawable.dashboard_icon_pages);
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof PagesActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof PagesActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
+            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("isNew",
+                    true);
+            intent.putExtra("viewPages", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+
+    private class CommentsMenuItem extends MenuDrawerItem {
+        CommentsMenuItem(){
+            super(COMMENTS_ACTIVITY, R.string.tab_comments, R.drawable.dashboard_icon_comments);
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof CommentsActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof CommentsActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
+            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("isNew",
+                    true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+        @Override
+        public void configureView(View view){
+            TextView bagdeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
+            int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
+            if (commentCount > 0) {
+                bagdeTextView.setVisibility(View.VISIBLE);
+            } else
+            {
+                bagdeTextView.setVisibility(View.GONE);
+            }
+            bagdeTextView.setText(String.valueOf(commentCount));
+        }
+    }
+
+    private class StatsMenuItem extends MenuDrawerItem {
+        StatsMenuItem(){
+            super(STATS_ACTIVITY, R.string.tab_stats, R.drawable.dashboard_icon_stats);
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof StatsActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof StatsActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
+            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("isNew",
+                    true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+
+    private class QuickPhotoMenuItem extends MenuDrawerItem {
+        QuickPhotoMenuItem(){
+            super(R.string.quick_photo, R.drawable.dashboard_icon_photo);
+        }
+        @Override
+        public void onSelectItem(){
+            mShouldFinish = false;
+            PackageManager pm = WPActionBarActivity.this.getPackageManager();
+            Intent intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
+            if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_CAMERA);
+            } else {
+                intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_LIBRARY);
+            }
+            intent.putExtra("isNew", true);
+            startActivityWithDelay(intent);
+        }
+    }
+
+    private class QuickVideoMenuItem extends MenuDrawerItem {
+        QuickVideoMenuItem(){
+            super(R.string.quick_video, R.drawable.dashboard_icon_video);
+        }
+        @Override
+        public void onSelectItem(){
+            mShouldFinish = false;
+            PackageManager pm = WPActionBarActivity.this.getPackageManager();
+            Intent intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
+            if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_CAMERA);
+            } else {
+                intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_LIBRARY);
+            }
+            intent.putExtra("isNew", true);
+            startActivityWithDelay(intent);
+        }
+    }
+
+    private class ViewSiteMenuItem extends MenuDrawerItem {
+        ViewSiteMenuItem(){
+            super(VIEW_SITE_ACTIVITY, R.string.view_site, R.drawable.dashboard_icon_view);
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof ViewSiteActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+
+    private class AdminMenuItem extends MenuDrawerItem {
+        AdminMenuItem(){
+            super(DASHBOARD_ACTIVITY, R.string.wp_admin, R.drawable.dashboard_icon_wp);
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof DashboardActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof DashboardActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
+            intent.putExtra("loadAdmin", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+    private class SettingsMenuItem extends MenuDrawerItem {
+        SettingsMenuItem(){
+            super(SETTINGS_ACTIVITY, R.string.settings, R.drawable.dashboard_icon_settings);
+        }
+        @Override
+        public void onSelectItem(){
+            mShouldFinish = false;
+            Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
+            startActivityForResult(settingsIntent, SETTINGS_REQUEST);
+        }
     }
 }
