@@ -1,7 +1,9 @@
 package org.wordpress.android;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -9,12 +11,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-
-import com.wordpress.rest.Oauth;
+import org.wordpress.android.util.WPRestClient;
 
 public class WordPress extends Application {
 
@@ -26,17 +28,22 @@ public class WordPress extends Application {
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
-    public static Oauth oauth;
+    public static WPRestClient restClient;
+    public static Properties config;
+
+    public static final String TAG="WordPress";
 
     @Override
     public void onCreate() {
+        loadProperties();
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
-        
+
+        restClient = new WPRestClient(config, settings);
         super.onCreate();
     }
     
@@ -156,18 +163,17 @@ public class WordPress extends Application {
 
         return currentBlog;
     }
-    
-	protected Properties getConfigProperties(){
-		if (mConfig == null) {
-			mConfig = new Properties();
-			InputStream stream = getResources().openRawResource(R.raw.config);
-			try {
-				mConfig.load(stream);				
-			} catch(java.io.IOException e){
-				mConfig = null;
-				Log.e(TAG, "Could not load config", e);
-			}
-		}
-		return mConfig;
-	}
+    /**
+     * Load res/raw/config.properties into a Properties object
+     */
+    private void loadProperties(){
+        config = new Properties();
+        InputStream stream = getResources().openRawResource(R.raw.config);
+        try {
+            config.load(stream);               
+        } catch(java.io.IOException error){
+            config = null;
+            Log.e(TAG, "Could not load config.properties", error);
+        }
+    }
 }

@@ -3,6 +3,8 @@
  */
 package org.wordpress.android.models;
 
+import org.json.JSONObject;
+
 public class Note {
     /**
      * Create a note using JSON from REST API
