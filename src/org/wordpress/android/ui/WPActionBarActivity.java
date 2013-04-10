@@ -4,6 +4,7 @@ package org.wordpress.android.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -84,6 +86,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int DASHBOARD_ACTIVITY = 8;
     protected static final int SETTINGS_ACTIVITY = 9;
     
+    protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
+    
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
@@ -95,15 +99,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private int mActivePosition;
 
     private MenuAdapter mAdapter;
+    private List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mListView;
     private IcsSpinner mBlogSpinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
-            mIsXLargeDevice = true;    
+            mIsXLargeDevice = true;
+        
     }
 
     @Override
@@ -203,13 +208,33 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mListView.setDivider(null);
         mListView.setDividerHeight(0);
         mListView.setCacheColorHint(android.R.color.transparent);
-        
+        mAdapter = new MenuAdapter(this);
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
             addBlogSpinner(blogNames);
         }
-        
-        mListView.setOnItemClickListener(mItemClickListener);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+                SharedPreferences.Editor editor = settings.edit();
+                MenuDrawerItem item = mAdapter.getItem(position);
+                // if the item has an id, remember it for launch
+                if (item.hasItemId())
+                    editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
+                // only perform selection if the item isn't already selected
+                Intent intent = null;
+                if (!item.isSelected())
+                    intent = item.selectItem();
+                // save the last activity preference
+                editor.commit();
+                // close the menu drawer
+                mMenuDrawer.closeMenu();
+                // if we have an intent, start the new activity
+                if (intent != null)
+                    startActivityWithDelay(intent);
+            }
+        });
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -223,7 +248,29 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         });
         
         mMenuDrawer.setMenuView(mListView);
-
+        mListView.setAdapter(mAdapter);
+        
+        // configure all the available menu items
+        mMenuItems.add(new MenuDrawerItem(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs){
+            @Override
+            public Boolean isVisible(){
+                return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
+            }
+            @Override
+            public Boolean isSelected(){
+                return WPActionBarActivity.this instanceof ReaderActivity;
+            }
+            @Override
+            public Intent onSelectItem(){
+                if (!(WPActionBarActivity.this instanceof ReaderActivity))
+                    mShouldFinish = true;
+                int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
+                Intent intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
+                intent.putExtra("id", readerBlogID);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                return intent;
+            }
+        });
         updateMenuDrawer();
     }
 
@@ -271,240 +318,37 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * blog.
      */
     protected void updateMenuDrawer() {
+        mAdapter.clear();
+        // iterate over the available menu items and only show the ones that should be visible
+        Iterator<MenuDrawerItem> availableItems = mMenuItems.iterator();
+        while(availableItems.hasNext()){
+            MenuDrawerItem item = availableItems.next();
+            if (item.isVisible()) {
+                mAdapter.add(item);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
 
-        mIsDotComBlog = WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
-
-        List<Object> items = new ArrayList<Object>();
-        Resources resources = getResources();
-        if (mIsDotComBlog)
-            items.add(new MenuDrawerItem(resources.getString(R.string.reader),
-                    R.drawable.dashboard_icon_subs));
-        items.add(new MenuDrawerItem(resources.getString(R.string.posts),
-                R.drawable.dashboard_icon_posts));
-        items.add(new MenuDrawerItem(resources.getString(R.string.pages),
-                R.drawable.dashboard_icon_pages));
-        items.add(new MenuDrawerItem(resources.getString(R.string.tab_comments),
-                R.drawable.dashboard_icon_comments));
-        items.add(new MenuDrawerItem(resources.getString(R.string.tab_stats),
-                R.drawable.dashboard_icon_stats));
-        items.add(new MenuDrawerItem(resources.getString(R.string.quick_photo),
-                R.drawable.dashboard_icon_photo));
-        items.add(new MenuDrawerItem(resources.getString(R.string.quick_video),
-                R.drawable.dashboard_icon_video));
-        items.add(new MenuDrawerItem(resources.getString(R.string.view_site),
-                R.drawable.dashboard_icon_view));
-        items.add(new MenuDrawerItem(resources.getString(R.string.wp_admin),
-                R.drawable.dashboard_icon_wp));
-        items.add(new MenuDrawerItem(resources.getString(R.string.settings),
-                R.drawable.dashboard_icon_settings));
-
-        if ((WPActionBarActivity.this instanceof ReaderActivity))
-            mActivePosition = 0;
-        
-        if ((WPActionBarActivity.this instanceof PostsActivity))
-            mActivePosition = 1;
-
-        if ((WPActionBarActivity.this instanceof PagesActivity))
-            mActivePosition = 2;
-        else if ((WPActionBarActivity.this instanceof CommentsActivity))
-            mActivePosition = 3;
-        else if ((WPActionBarActivity.this instanceof StatsActivity))
-            mActivePosition = 4;
-        else if ((WPActionBarActivity.this instanceof ViewSiteActivity))
-            mActivePosition = 7;
-        else if ((WPActionBarActivity.this instanceof DashboardActivity))
-            mActivePosition = 8;
-        
-        mAdapter = new MenuAdapter(items);
-        mListView.setAdapter(mAdapter);
     }
+        
+    public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
 
-    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // Adjust position if only one blog is in the app
-            if (mListView.getHeaderViewsCount() > 0 && position > 0)
-                position--;
-            
-            if (!mIsDotComBlog)
-                position++;
-            
-            if (position == mActivePosition) {
-                // Same row selected
-                mMenuDrawer.closeMenu();
-                return;
-            }
-            
-            int activityTag = (Integer) view.getTag();
-
-            mActivePosition = position;
-            mAdapter.notifyDataSetChanged();
-            Intent intent = null;
-
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
-            SharedPreferences.Editor editor = settings.edit();
-            
-            switch (activityTag) {
-                case READER_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof ReaderActivity))
-                        mShouldFinish = true;
-                    int readerBlogID = WordPress.wpDB.getWPCOMBlogID();
-                    if
-                    (WordPress.currentBlog.isDotcomFlag()) {
-                        intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
-                        intent.putExtra("id", readerBlogID);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        editor.putInt("wp_pref_last_activity", READER_ACTIVITY);
-                    }
-                    break;
-                case POSTS_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof PostsActivity)
-                            || (WPActionBarActivity.this instanceof PagesActivity))
-                        mShouldFinish = true;
-                    intent = new
-                            Intent(WPActionBarActivity.this, PostsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", POSTS_ACTIVITY);
-                    break;
-                case PAGES_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof PagesActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
-                    intent.putExtra("id", WordPress.currentBlog.getId());
-                    intent.putExtra("isNew",
-                            true);
-                    intent.putExtra("viewPages", true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", PAGES_ACTIVITY);
-                    break;
-                case COMMENTS_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof CommentsActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
-                    intent.putExtra("id", WordPress.currentBlog.getId());
-                    intent.putExtra("isNew",
-                            true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", COMMENTS_ACTIVITY);
-                    break;
-                case STATS_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof StatsActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-                    intent.putExtra("id", WordPress.currentBlog.getId());
-                    intent.putExtra("isNew",
-                            true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", STATS_ACTIVITY);
-                    break;
-                case QUICK_PHOTO_ACTIVITY:
-                    mShouldFinish = false;
-                    PackageManager pm = WPActionBarActivity.this.getPackageManager();
-                    intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-                    if
-                    (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_CAMERA);
-                    } else {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_LIBRARY);
-                    }
-                    intent.putExtra("isNew", true);
-                    break;
-                case QUICK_VIDEO_ACTIVITY:
-                    mShouldFinish = false;
-                    PackageManager vpm = WPActionBarActivity.this.getPackageManager();
-                    intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-                    if (vpm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_CAMERA);
-                    } else {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_LIBRARY);
-                    }
-                    intent.putExtra("isNew", true);
-                    break;
-                case VIEW_SITE_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", VIEW_SITE_ACTIVITY);
-                    break;
-                case DASHBOARD_ACTIVITY:
-                    if (!(WPActionBarActivity.this instanceof DashboardActivity))
-                        mShouldFinish = true;
-                    intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
-                    intent.putExtra("loadAdmin", true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    editor.putInt("wp_pref_last_activity", DASHBOARD_ACTIVITY);
-                    break;
-                case SETTINGS_ACTIVITY:
-                    // Settings shouldn't be launched with a delay, or close the drawer
-                    mShouldFinish = false;
-                    Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
-                    startActivityForResult(settingsIntent, SETTINGS_REQUEST);
-                    return;
-            }
-
-            editor.commit();
-            if (intent != null) {
-                mMenuDrawer.closeMenu();
-                startActivityWithDelay(intent);
-            }
-        }
-    };
-    
-    private class MenuAdapter extends BaseAdapter {
-
-        private List<Object> mItems;
-
-        MenuAdapter(List<Object> items) {
-            mItems = items;
-        }
-
-        @Override
-        public int getCount() {
-            return mItems.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return getItem(position) instanceof MenuItem ? 0 : 1;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 2;
+        MenuAdapter(Context context) {
+            super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            Object item = getItem(position);
-
-            if (v == null) {
-                v = getLayoutInflater().inflate(R.layout.menu_drawer_row, parent, false);
-            }
+            View v = super.getView(position, convertView, parent);
+            MenuDrawerItem item = getItem(position);
 
             TextView titleTextView = (TextView) v.findViewById(R.id.menu_row_title);
-            titleTextView.setText(((MenuDrawerItem) item).mTitle);
+            titleTextView.setText(item.getTitleRes());
 
             ImageView iconImageView = (ImageView) v.findViewById(R.id.menu_row_icon);
-            iconImageView.setImageResource(((MenuDrawerItem) item).mIconRes);
-           
-            v.setTag((mIsDotComBlog) ? position : position + 1);
+            iconImageView.setImageResource(item.getIconRes());
 
-            int positionCheck = mActivePosition;
-            if (!mIsDotComBlog)
-                positionCheck--;
-            if ((position) == positionCheck) {
+            if (item.isSelected()) {
                 // http://stackoverflow.com/questions/5890379/setbackgroundresource-discards-my-xml-layout-attributes
                 int bottom = v.getPaddingBottom();
                 int top = v.getPaddingTop();
@@ -516,36 +360,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 v.setBackgroundResource(R.drawable.md_list_selector);
             }
 
-
-            TextView bagdeTextView = (TextView) v.findViewById(R.id.menu_row_badge);
-            int commentRow = (mIsDotComBlog) ? 3 : 2; 
-            if (position == commentRow && WordPress.currentBlog != null) {
-                int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
-                if (commentCount > 0) {
-                    bagdeTextView.setVisibility(View.VISIBLE);
-                } else
-                {
-                    bagdeTextView.setVisibility(View.GONE);
-                }
-                bagdeTextView.setText(String.valueOf(commentCount));
-            } else {
-                bagdeTextView.setVisibility(View.GONE);
-            }
+            // allow the menudrawer item to configure the view
+            item.configureView(v);
 
             return v;
         }
     }
 
-    private static class MenuDrawerItem {
-
-        String mTitle;
-        int mIconRes;
-
-        MenuDrawerItem(String title, int iconRes) {
-            mTitle = title;
-            mIconRes = iconRes;
-        }
-    }
 
     /**
      * Called when the activity has detected the user's press of the back key.
