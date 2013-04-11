@@ -52,14 +52,6 @@ public class ReaderImplFragment extends ReaderBaseFragment {
         CookieManager.getInstance().removeAllCookie();
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.reader_wpcom, container, false);
-        if (WordPress.currentBlog == null) {
-            if (WordPress.setCurrentBlogToLastActive() == null) {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        getResources().getText(R.string.blog_not_found),
-                        Toast.LENGTH_SHORT).show();
-                getActivity().finish();
-            }
-        }
 
         wv = (WebView) v.findViewById(R.id.webView);
         wv.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -225,7 +217,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
         protected List<?> doInBackground(String... args) {
 
             if (WordPress.currentBlog == null) {
-                WordPress.setCurrentBlogToLastActive();
+                WordPress.getCurrentBlog();
             }
 
             loginURL = WordPress.currentBlog.getUrl().replace("xmlrpc.php",
