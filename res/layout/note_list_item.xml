@@ -12,7 +12,6 @@
       android:id="@+id/note_icon"
       android:layout_width="48dp"
       android:layout_height="48dp"
-      android:background="#FF0000"
       android:layout_alignParentTop="true"
       android:layout_marginRight="8dp" />
     <TextView

@@ -3,6 +3,8 @@ package org.wordpress.android.ui.notifications;
 import java.util.List;
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -33,7 +36,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 
 public class NotificationsActivity extends WPActionBarActivity {
     public final String TAG="WPNotifications";
@@ -74,7 +76,6 @@ public class NotificationsActivity extends WPActionBarActivity {
                 Log.d(TAG, "Done requesting token");
             }
         });
-        Log.d(TAG, "Created");
     }
     
     public void refreshNotes(){
@@ -115,8 +116,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             View view = super.getView(position, convertView, parent);
-            Note note = getItem(position);
-            Log.d(TAG, String.format("Display note %s", note.toJSONObject()));
+            final Note note = getItem(position);
             TextView detailText = (TextView) view.findViewById(R.id.note_detail);
             if (note.isCommentType()) {
                 detailText.setText(Html.fromHtml(note.queryJSON("body.items[last].html", "Couldn't find note body")).toString().trim());
@@ -124,6 +124,9 @@ public class NotificationsActivity extends WPActionBarActivity {
             } else {
                 detailText.setVisibility(View.GONE);
             }
+            final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
+            iconView.setImageResource(R.drawable.placeholder);
+            iconView.setTag(note.getIconURL());
             return view;
         }
     }
