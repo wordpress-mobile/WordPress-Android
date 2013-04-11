@@ -89,6 +89,7 @@ public class WordPress extends Application {
             if (currentBlog == null && accounts.size() > 0) {
                 int id = Integer.valueOf(accounts.get(0).get("id").toString());
                 setCurrentBlog(id);
+                wpDB.updateLastBlogId(id);
             }
         }
 

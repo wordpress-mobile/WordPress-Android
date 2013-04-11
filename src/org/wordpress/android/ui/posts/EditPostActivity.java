@@ -889,11 +889,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     private void initBlog() {
-        if (WordPress.currentBlog == null) {
-            if (WordPress.setCurrentBlogToLastActive() == null) {
-                showBlogErrorAndFinish();
-            }
-        }
+        if (WordPress.getCurrentBlog() == null)
+            showBlogErrorAndFinish();
     }
 
     private void getLocationProvider() {
