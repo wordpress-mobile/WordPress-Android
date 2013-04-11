@@ -10,6 +10,9 @@ import com.wordpress.rest.RestClient;
 
 import android.content.SharedPreferences;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import java.util.Properties;
 
 import org.json.JSONObject;
@@ -37,28 +40,51 @@ public class WPRestClient {
     /**
      * Authenticate the user using WordPress.com Oauth
      */
-    public void requestAccessToken(String username, String password, OauthTokenResponseHandler handler){
+    public void requestAccessToken(String username, String password, final OauthTokenResponseHandler handler){
         mOauth.requestAccessToken(username, password, new OauthTokenResponseHandler() {
             @Override
-            public void onStart(){}
+            public void onStart(){
+                handler.onStart();
+            }
             /**
              * Save the token to a preference
              */
             @Override
             public void onSuccess(OauthToken token){
-                
+                mRestClient.setAccessToken(token.toString());
+                handler.onSuccess(token);
             }
             
             @Override
-            public void onFailure(Throwable e, JSONObject respose){
-                
+            public void onFailure(Throwable e, JSONObject response){
+                handler.onFailure(e, response);
             }
             
             @Override
             public void onFinish(){
-                
+                handler.onFinish();
             }
         });
+    }
+    /**
+     * Get notifications
+     */
+    public void getNotifications(AsyncHttpResponseHandler handler){
+        RequestParams params = new RequestParams();
+        params.put("number", "20");
+        get("notifications", params, handler);
+    }
+    /**
+     * Make GET request
+     */
+    public void get(String path, AsyncHttpResponseHandler handler){
+        get(path, null, handler);
+    }
+    /**
+     * Make GET request with params
+     */
+    public void get(String path, RequestParams params, AsyncHttpResponseHandler handler){
+        mRestClient.get(path, params, handler);
     }
     
 }

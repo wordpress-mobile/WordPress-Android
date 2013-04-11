@@ -1,0 +1,5 @@
+# Add your WordPress App credentials here
+# Get you App ID from http://developer.wordpress.com
+oauth.app_id=
+oauth.app_secret=
+oauth.redirect_uri=
