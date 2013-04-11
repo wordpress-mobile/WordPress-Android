@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:paddingLeft="18dp"
-    android:paddingRight="18dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     style="@style/WordPressListRowBackground" >
+    <ImageView
+      android:id="@+id/note_icon"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:background="#FF0000"
+      android:layout_alignParentTop="true"
+      android:layout_marginRight="8dp" />
     <TextView
       android:id="@+id/note_label"
       android:layout_width="fill_parent"
-      android:layout_height="wrap_content" />
-</LinearLayout>
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@+id/note_icon" />
+    <TextView
+      android:id="@+id/note_detail"
+      android:visibility="gone"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/note_label"
+      android:layout_alignLeft="@+id/note_label"
+      android:layout_marginTop="8dp"
+      android:maxLines="3"
+      android:textColor="#999999"
+      android:text="Hello World" />
+</RelativeLayout>

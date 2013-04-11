@@ -8,7 +8,12 @@ import android.util.Log;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -99,7 +104,27 @@ public class NotificationsActivity extends WPActionBarActivity {
     
     public void displayNotes(List<Note> notes){
         // create a new ListAdapter and set it on the fragment
-        ArrayAdapter<Note> adapter = new ArrayAdapter<Note>(this, R.layout.note_list_item, R.id.note_label, notes);
+        ListAdapter adapter = new NotesAdapter(notes);
         mNotesList.setListAdapter(adapter);
+    }
+    
+    private class NotesAdapter extends ArrayAdapter<Note> {
+        NotesAdapter(List<Note> notes){
+            super(NotificationsActivity.this, R.layout.note_list_item, R.id.note_label, notes);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            View view = super.getView(position, convertView, parent);
+            Note note = getItem(position);
+            Log.d(TAG, String.format("Display note %s", note.toJSONObject()));
+            TextView detailText = (TextView) view.findViewById(R.id.note_detail);
+            if (note.isCommentType()) {
+                detailText.setText(Html.fromHtml(note.queryJSON("body.items[last].html", "Couldn't find note body")).toString().trim());
+                detailText.setVisibility(View.VISIBLE);
+            } else {
+                detailText.setVisibility(View.GONE);
+            }
+            return view;
+        }
     }
 }
