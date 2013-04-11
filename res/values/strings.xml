@@ -317,6 +317,9 @@
   <!-- reader -->
   <string name="reader">Reader</string>
   <string name="topics">Topics</string>
+  
+  <!-- notifications -->
+  <string name="notifications">Notifications</string>
 
   <!-- Post Formats -->
   <string-array name="post_formats_array">

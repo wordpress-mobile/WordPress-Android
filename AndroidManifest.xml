@@ -150,6 +150,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask" >
         </activity>
+        
+        <!-- Notifications activities -->
+        <activity
+            android:name="org.wordpress.android.ui.notifications.NotificationsActivity" />
 
         <!-- Services -->
         <service

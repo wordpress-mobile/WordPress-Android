@@ -53,6 +53,7 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -85,6 +86,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int VIEW_SITE_ACTIVITY = 7;
     protected static final int DASHBOARD_ACTIVITY = 8;
     protected static final int SETTINGS_ACTIVITY = 9;
+    protected static final int NOTIFICATIONS_ACTIVITY = 10;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
     
@@ -102,13 +104,48 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mListView;
     private IcsSpinner mBlogSpinner;
-
+    private boolean mFirstLaunch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
             mIsXLargeDevice = true;
         
+        // configure all the available menu items
+        mMenuItems.add(new NotificationsMenuItem());
+        mMenuItems.add(new ReaderMenuItem());
+        mMenuItems.add(new PostsMenuItem());
+        mMenuItems.add(new PagesMenuItem());
+        mMenuItems.add(new CommentsMenuItem());
+        mMenuItems.add(new StatsMenuItem());
+        mMenuItems.add(new QuickPhotoMenuItem());
+        mMenuItems.add(new QuickVideoMenuItem());
+        mMenuItems.add(new ViewSiteMenuItem());
+        mMenuItems.add(new AdminMenuItem());
+        mMenuItems.add(new SettingsMenuItem());
+
+        // Restore last selection on app creation
+        // TODO: This more likely belongs in WPActionBarActivity
+        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
+                && !(this instanceof PagesActivity)) {
+            WordPress.shouldRestoreSelectedActivity = false;
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
+            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID) {
+                Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
+                while(itemIterator.hasNext()){
+                    MenuDrawerItem item = itemIterator.next();
+                    // if we have a matching item id, and it's not selected and it's visible, call it
+                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
+                        mFirstLaunch = true;
+                        Log.d(TAG, String.format("Switch to %d", item.getItemId()));
+                        item.selectItem();
+                        finish();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -252,20 +289,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         mMenuDrawer.setMenuView(mListView);
         mListView.setAdapter(mAdapter);
-        
-        // configure all the available menu items
-        // mMenuItems.add(new NotificationsMenuItem());
-        mMenuItems.add(new ReaderMenuItem());
-        mMenuItems.add(new PostsMenuItem());
-        mMenuItems.add(new PagesMenuItem());
-        mMenuItems.add(new CommentsMenuItem());
-        mMenuItems.add(new StatsMenuItem());
-        mMenuItems.add(new QuickPhotoMenuItem());
-        mMenuItems.add(new QuickVideoMenuItem());
-        mMenuItems.add(new ViewSiteMenuItem());
-        mMenuItems.add(new AdminMenuItem());
-        mMenuItems.add(new SettingsMenuItem());
-        
         updateMenuDrawer();
     }
 
@@ -298,6 +321,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             // Tablets in landscape don't need a delay because the menu drawer doesn't close
             startActivity(i);
         } else {
+            // When switching to LAST_ACTIVITY_PREFERENCE onCreate we don't need to delay
+            if (mFirstLaunch) {
+                startActivity(i);
+                return;
+            }
             // Let the menu animation finish before starting a new activity
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -513,6 +541,26 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      */
     public void onBlogChanged() {
         WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
+        // the menu may have changed, we need to change the selection if the selected item
+        // is not available in the menu anymore
+        Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
+        while(itemIterator.hasNext()){
+            MenuDrawerItem item = itemIterator.next();
+            // if the item is selected, but it's no longer visible we need to
+            // select the first available item from the adapter
+            if (item.isSelected() && !item.isVisible()) {
+                // then select the first item and activate it
+                mAdapter.getItem(0).selectItem();
+                // if it has an item id save it to the preferences
+                if (item.hasItemId()){
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
+                    editor.commit();
+                }
+                break;
+            }
+        }
     }
 
     public void startAnimatingRefreshButton(MenuItem refreshItem) {
@@ -760,6 +808,27 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mShouldFinish = false;
             Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
             startActivityForResult(settingsIntent, SETTINGS_REQUEST);
+        }
+    }
+    private class NotificationsMenuItem extends MenuDrawerItem {
+        NotificationsMenuItem(){
+            super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_comments);
+        }
+        @Override
+        public Boolean isVisible(){
+            return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof NotificationsActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof NotificationsActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, NotificationsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
         }
     }
 }
