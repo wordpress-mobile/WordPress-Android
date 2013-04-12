@@ -205,8 +205,10 @@ public class StatsActivity extends WPActionBarActivity {
 
     private void initStats() {
         this.startAnimatingRefreshButton(refreshMenuItem);
-        Blog blog = WordPress.currentBlog;
-
+        Blog blog = WordPress.getCurrentBlog();
+        if (blog == null) {
+            setupCurrentBlog();
+        }
         if (!blog.isDotcomFlag() && blog.getApi_blogid() == null) {
             // first run or was deleted.
             this.checkAPIBlogInfo();
