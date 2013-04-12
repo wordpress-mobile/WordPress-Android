@@ -98,10 +98,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private int mActivePosition;
 
     private MenuAdapter mAdapter;
-    private List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
+    protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mListView;
     private IcsSpinner mBlogSpinner;
-    private boolean mFirstLaunch = false;
+    protected boolean mFirstLaunch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,28 +121,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new AdminMenuItem());
         mMenuItems.add(new SettingsMenuItem());
 
-        // Restore last selection on app creation
-        // TODO: This more likely belongs in WPActionBarActivity
-        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
-                && !(this instanceof PagesActivity)) {
-            WordPress.shouldRestoreSelectedActivity = false;
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-            int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
-            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID) {
-                Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-                while(itemIterator.hasNext()){
-                    MenuDrawerItem item = itemIterator.next();
-                    // if we have a matching item id, and it's not selected and it's visible, call it
-                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
-                        mFirstLaunch = true;
-                        Log.d(TAG, String.format("Switch to %d", item.getItemId()));
-                        item.selectItem();
-                        finish();
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -798,7 +776,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
     private class SettingsMenuItem extends MenuDrawerItem {
         SettingsMenuItem(){
-            super(SETTINGS_ACTIVITY, R.string.settings, R.drawable.dashboard_icon_settings);
+            super(R.string.settings, R.drawable.dashboard_icon_settings);
         }
         @Override
         public void onSelectItem(){

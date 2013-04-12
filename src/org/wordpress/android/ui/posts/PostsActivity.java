@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Iterator;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
+import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
@@ -74,7 +76,27 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         } catch (Exception e) {
             Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
         }
-        
+        // Restore last selection on app creation
+        if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
+                && !(this instanceof PagesActivity)) {
+            WordPress.shouldRestoreSelectedActivity = false;
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
+            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID) {
+                Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
+                while(itemIterator.hasNext()){
+                    MenuDrawerItem item = itemIterator.next();
+                    // if we have a matching item id, and it's not selected and it's visible, call it
+                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
+                        mFirstLaunch = true;
+                        item.selectItem();
+                        finish();
+                        break;
+                    }
+                }
+            }
+        }
+
         createMenuDrawer(R.layout.posts);
 
         ActionBar actionBar = getSupportActionBar();

@@ -7,7 +7,7 @@ package org.wordpress.android.ui;
 
 import android.view.View;
 
-abstract class MenuDrawerItem {
+public abstract class MenuDrawerItem {
     /**
      * Signifies that the item has no unique ID so should not be tracked in the last selected
      * item preference.
