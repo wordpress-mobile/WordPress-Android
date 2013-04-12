@@ -15,6 +15,7 @@
   <string name="enable_blogs">Enable blogs</string>
   <string name="no_network_title">No network available</string>
   <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
+  <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
   
   <!-- form labels -->
   <string name="select_categories">Select Categories</string>
@@ -87,7 +88,10 @@
   <string name="more_tag">More</string>
   <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
   <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
-
+  <string name="wpcom">WordPress.com</string>
+  <string name="sign_in">Sign in</string>
+  <string name="sign_out">Sign out</string>
+  
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
   <string name="tab_posts">Posts</string>
@@ -212,7 +216,7 @@
 
   <!-- new account view -->
   <string name="account_setup">Account Setup</string>
-  <string name="attempting_configure">Logging in&#8230;</string>
+  <string name="attempting_configure">Signing in&#8230;</string>
   <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
 
   <!-- drafts -->
@@ -312,14 +316,14 @@
   <string name="publish_date">Publish</string>
   <string name="edit">Edit</string>
   <string name="post_format">Post Format</string>
-  <string name="log_in">Log In</string>
+  <string name="log_in">Sign In</string>
 
+  <!-- notifications -->
+  <string name="notifications">Notifications</string>
+  
   <!-- reader -->
   <string name="reader">Reader</string>
   <string name="topics">Topics</string>
-  
-  <!-- notifications -->
-  <string name="notifications">Notifications</string>
 
   <!-- Post Formats -->
   <string-array name="post_formats_array">

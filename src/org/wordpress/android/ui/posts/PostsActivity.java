@@ -17,12 +17,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gcm.GCMRegistrar;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -54,6 +56,24 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // TODO remove try/catch with debug check for emulators
+        try {
+            if (WordPress.hasValidWPComCredentials(this)) {
+                // Register for Google Cloud Messaging
+                GCMRegistrar.checkDevice(this);
+                GCMRegistrar.checkManifest(this);
+                String regId = GCMRegistrar.getRegistrationId(this);
+                String gcmId = WordPress.config.getProperty("gcm.id").toString();
+                if (gcmId != null && regId.equals("")) {
+                    GCMRegistrar.register(this, gcmId);
+                } else {
+                    Log.v("WORDPRESS", "Already registered for GCM");
+                }
+            }
+        } catch (Exception e) {
+            Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
+        }
         
         createMenuDrawer(R.layout.posts);
 

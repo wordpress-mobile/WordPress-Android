@@ -24,6 +24,16 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    
+    <!-- GCM configuration -->
+    <permission
+        android:name="org.wordpress.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -165,6 +175,19 @@
             android:label="Comment Service" />
 
         <receiver android:name="org.wordpress.android.CommentBroadcastReceiver" />
+        
+        <service android:name=".GCMIntentService" />
+        <receiver android:name="org.wordpress.android.CommentBroadcastReceiver" />
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="org.wordpress.android" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -2,16 +2,15 @@
 package org.wordpress.android.ui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -26,7 +25,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -45,15 +43,14 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -610,7 +607,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         @Override
         public Boolean isVisible(){
-            return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
+            return WordPress.hasValidWPComCredentials(WPActionBarActivity.this);
         }
         
         @Override
@@ -816,7 +813,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isVisible(){
-            return WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag();
+            return WordPress.hasValidWPComCredentials(WPActionBarActivity.this);
         }
         @Override
         public Boolean isSelected(){

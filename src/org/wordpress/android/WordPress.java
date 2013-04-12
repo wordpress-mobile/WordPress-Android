@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.Properties;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -175,5 +177,21 @@ public class WordPress extends Application {
             config = null;
             Log.e(TAG, "Could not load config.properties", error);
         }
+    }
+    
+    /**
+     * Checks for WordPress.com credentials
+     * 
+     * @return true if we have credentials or false if not
+     */
+    public static boolean hasValidWPComCredentials(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        String username = settings.getString("wp_pref_wpcom_username", null);
+        String password = settings.getString("wp_pref_wpcom_password", null);
+        
+        if (username != null && password != null)
+            return true;
+        else 
+            return false;
     }
 }

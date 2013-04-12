@@ -6,13 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
@@ -26,6 +31,7 @@ import org.wordpress.android.CommentBroadcastReceiver;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.AddAccountActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.CommentService;
 import org.wordpress.android.util.DeviceUtils;
@@ -142,6 +148,11 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     }
 
     public void displayPreferences() {
+        
+        // WordPress.com auth area
+        refreshWPComAuthCategory();
+        
+        // Notifications
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         if (accounts.size() > 0) {
 
@@ -206,6 +217,76 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
     }
 
+    private void refreshWPComAuthCategory() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceCategory wpcomCategory = (PreferenceCategory) findPreference("wp_pref_wpcom_auth");
+        wpcomCategory.removeAll();
+        
+        if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
+            String username = settings.getString("wp_pref_wpcom_username", null);
+            Preference usernamePref = new Preference(this);
+            usernamePref.setTitle(getString(R.string.username));
+            usernamePref.setSummary(username);
+            usernamePref.setSelectable(false);
+            
+            Preference signOutPref = new Preference(this);
+            signOutPref.setTitle(getString(R.string.sign_out));
+            signOutPref.setOnPreferenceClickListener(signOutPreferenceClickListener);
+            
+            wpcomCategory.addPreference(usernamePref);
+            wpcomCategory.addPreference(signOutPref);
+        } else {
+            Preference signInPref = new Preference(this);
+            signInPref.setTitle(getString(R.string.sign_in));
+            signInPref.setOnPreferenceClickListener(signInPreferenceClickListener);
+            wpcomCategory.addPreference(signInPref);
+        }
+        
+    }
+    
+    private OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            Intent i = new Intent(PreferencesActivity.this, AddAccountActivity.class);
+            i.putExtra("wpcom", true);
+            i.putExtra("auth-only", true);
+            startActivityForResult(i, 0);
+            return true;
+        }
+    };
+    
+    private OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(PreferencesActivity.this);
+            builder.setMessage(getString(R.string.sure_sign_out))
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SharedPreferences settings = PreferenceManager
+                                    .getDefaultSharedPreferences(PreferencesActivity.this);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.remove("wp_pref_wpcom_username");
+                            editor.remove("wp_pref_wpcom_password");
+                            editor.commit();
+                            refreshWPComAuthCategory();
+                        }
+                    })
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Dismiss dialog
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+            return true;
+        }
+    };
+
     @Override
     protected void onPause() {
         if (getEnabledBlogsCount() > 0) {
@@ -255,5 +336,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         setResult(RESULT_OK, intent);
         super.onPause();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        refreshWPComAuthCategory();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    
 
 }

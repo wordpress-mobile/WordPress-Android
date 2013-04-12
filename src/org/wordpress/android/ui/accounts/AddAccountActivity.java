@@ -13,11 +13,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.SparseBooleanArray;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -45,6 +47,7 @@ import org.xmlrpc.android.XMLRPCFault;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 
@@ -57,7 +60,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
     private ProgressDialog pd;
     private String httpuser = "";
     private String httppassword = "";
-    private boolean wpcom = false;
+    private boolean wpcom = false, mAuthOnly = false;
     private int blogCtr = 0;
     private ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
     private boolean isCustomURL = false;
@@ -66,7 +69,6 @@ public class AddAccountActivity extends Activity implements OnClickListener {
     private EditText mUsernameEdit;
     private EditText mPasswordEdit;
     private Button mSettingsButton;
-    private Button mCancelButton;
     private Button mSaveButton;
     private Button mSignUpButton;
 
@@ -75,7 +77,6 @@ public class AddAccountActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_account);
         mSettingsButton = (Button) findViewById(R.id.settingsButton);
-        mCancelButton = (Button) findViewById(R.id.cancel);
         mSaveButton = (Button) findViewById(R.id.save);
         mSignUpButton = (Button) findViewById(R.id.wordpressdotcom);
         mUrlEdit = (EditText) findViewById(R.id.url);
@@ -89,6 +90,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             wpcom = extras.getBoolean("wpcom", false);
+            mAuthOnly = extras.getBoolean("auth-only", false);
             String username = extras.getString("username");
             if (username != null) {
                 mUsernameEdit.setText(username);
@@ -108,7 +110,6 @@ public class AddAccountActivity extends Activity implements OnClickListener {
             mSettingsButton.setOnClickListener(this);
 
         mSaveButton.setOnClickListener(this);
-        mCancelButton.setOnClickListener(this);
         mSignUpButton.setOnClickListener(this);
     }
 
@@ -203,6 +204,17 @@ public class AddAccountActivity extends Activity implements OnClickListener {
             XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 
                 public void callFinished(Object[] result) {
+                    
+                    if (mAuthOnly) {
+                        // If only auth requested, save credentials and finish
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AddAccountActivity.this);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("wp_pref_wpcom_username", username);
+                        editor.putString("wp_pref_wpcom_password", WordPressDB.encryptPassword(password));
+                        editor.commit();
+                        finish();
+                        return;
+                    }
 
                     final String[] blogNames = new String[result.length];
                     final String[] urls = new String[result.length];
@@ -581,9 +593,6 @@ public class AddAccountActivity extends Activity implements OnClickListener {
                 };
                 action.start();
             }
-        } else if (id == R.id.cancel) {
-            setResult(RESULT_CANCELED);
-            finish();
         } else if (id == R.id.settingsButton) {
             Intent settings = new Intent(AddAccountActivity.this, AddAcountSettingsActivity.class);
             settings.putExtra("httpuser", httpuser);
