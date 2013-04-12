@@ -2,6 +2,7 @@ package org.wordpress.android.ui.notifications;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -32,16 +34,19 @@ import static org.wordpress.android.WordPress.*;
 import com.wordpress.rest.OauthTokenResponseHandler;
 import com.wordpress.rest.OauthToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 public class NotificationsActivity extends WPActionBarActivity {
-    public final String TAG="WPNotifications";
+    public static final String TAG="WPNotifications";
 
     private NotificationsListFragment mNotesList;
     private MenuItem mRefreshMenuItem;
+    private List<Note> mNotes;
+    private boolean mLoadingMore = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -51,9 +56,13 @@ public class NotificationsActivity extends WPActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.notifications));
-        
+                
         FragmentManager fm = getSupportFragmentManager();
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
+        mNotesList.setNoteProvider(new NoteProvider());
+        ListView notesList = mNotesList.getListView();
+        View progress = View.inflate(this, R.layout.list_footer_progress, null);
+        notesList.addFooterView(progress);
         
         Blog blog = getCurrentBlog();
         
@@ -103,43 +112,62 @@ public class NotificationsActivity extends WPActionBarActivity {
     
     
     public void refreshNotes(){
-        restClient.getNotifications(new JsonHttpResponseHandler(){
+        restClient.getNotifications(new NotesResponseHandler(){
             @Override
             public void onStart(){
                 startAnimatingRefreshButton(mRefreshMenuItem);
             }
             @Override
-            public void onSuccess(int responseCode, JSONObject response) {
-                try {
-                    JSONArray notesJSON = response.getJSONArray("notes");
-                    final List<Note> notesList = new ArrayList<Note>(notesJSON.length());
-                    for (int i=0; i<notesJSON.length(); i++) {
-                        Note n = new Note(notesJSON.getJSONObject(i));
-                        notesList.add(n);
-                    }
-                    runOnUiThread(new Runnable(){
-                       @Override
-                       public void run(){
-                           displayNotes(notesList);
-                       }
-                    });
-               } catch (JSONException e) {
-                   Log.e(TAG, "Did not receive any notes", e);
-               }
-           }
-           public void onFinish(){
+            public void onSuccess(List<Note> notes){
+                mNotes = notes;
+                runOnUiThread(new Runnable(){
+                   @Override
+                   public void run(){
+                       displayNotes();
+                   }
+                });
+            }
+            public void onFinish(){
                stopAnimatingRefreshButton(mRefreshMenuItem);
-           }
+            }
         });
     }
-    
-    public void displayNotes(List<Note> notes){
+    public void requestNotesBefore(Note note){
+        RequestParams params = new RequestParams();
+        params.put("before", note.queryJSON("timestamp", ""));
+        restClient.getNotifications(params, new NotesResponseHandler(){
+            @Override
+            public void onStart(){
+                mLoadingMore = true;
+            }
+            @Override
+            public void onFinish(){
+                mLoadingMore = false;
+            }
+            @Override
+            public void onSuccess(List<Note> notes){
+                List<Note> newNotes = new ArrayList<Note>(mNotes);
+                newNotes.addAll(notes);
+                mNotes = newNotes;
+                runOnUiThread(new Runnable(){
+                   @Override
+                   public void run(){
+                       displayNotes();
+                   }
+                });
+            }
+        });
+    }
+
+    public void displayNotes(){
         // create a new ListAdapter and set it on the fragment
-        ListAdapter adapter = new NotesAdapter(notes);
-        mNotesList.setListAdapter(adapter);
+        mNotesList.setListAdapter(new NotesAdapter(mNotes));
     }
     
     private class NotesAdapter extends ArrayAdapter<Note> {
+        NotesAdapter(){
+            this(new ArrayList<Note>());
+        }
         NotesAdapter(List<Note> notes){
             super(NotificationsActivity.this, R.layout.note_list_item, R.id.note_label, notes);
         }
@@ -149,7 +177,7 @@ public class NotificationsActivity extends WPActionBarActivity {
             final Note note = getItem(position);
             TextView detailText = (TextView) view.findViewById(R.id.note_detail);
             if (note.isCommentType()) {
-                detailText.setText(Html.fromHtml(note.queryJSON("body.items[last].html", "Couldn't find note body")).toString().trim());
+                detailText.setText(note.getCommentPreview());
                 detailText.setVisibility(View.VISIBLE);
             } else {
                 detailText.setVisibility(View.GONE);
@@ -158,6 +186,41 @@ public class NotificationsActivity extends WPActionBarActivity {
             iconView.setImageResource(R.drawable.placeholder);
             iconView.setTag(note.getIconURL());
             return view;
+        }
+        public Note getLastNote(){
+            return getItem(getCount()-1);
+        }
+    }
+    
+    private class NoteProvider implements NotificationsListFragment.NoteProvider {
+        @Override
+        public void onRequestMoreNotifications(ListView notesList, ListAdapter notesAdapter){
+            if (!mLoadingMore && mNotes != null) {
+                Log.d(TAG, "Requesting more notifications");
+                Note lastNote = mNotes.get(mNotes.size()-1);
+                requestNotesBefore(lastNote);
+            }
+        }
+    }
+    
+    public abstract static class NotesResponseHandler extends JsonHttpResponseHandler {
+        abstract void onSuccess(List<Note> notes);
+        @Override
+        public void onSuccess(int statusCode, JSONObject response){
+            List<Note> notes;
+            try {
+                JSONArray notesJSON = response.getJSONArray("notes");
+                notes = new ArrayList<Note>(notesJSON.length());
+                for (int i=0; i<notesJSON.length(); i++) {
+                    Note n = new Note(notesJSON.getJSONObject(i));
+                    notes.add(n);
+                }
+           } catch (JSONException e) {
+               Log.e(TAG, "Did not receive any notes", e);
+               onFailure(e);
+               return;
+           }
+           onSuccess(notes);
         }
     }
 }
