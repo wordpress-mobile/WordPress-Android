@@ -4,6 +4,7 @@
 package org.wordpress.android.models;
 
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -52,6 +53,12 @@ public class Note {
     }
     public String getIconURL(){
         return (String) queryJSON("subject.icon", "");
+    }
+    public String getCommentPreview(){
+        return getCommentBody().toString().replace("\n", "").trim();
+    }
+    public Spanned getCommentBody(){
+        return Html.fromHtml(queryJSON("body.items[last].html", ""));
     }
     protected Object queryJSON(String query){
         Object defaultObject = "";
