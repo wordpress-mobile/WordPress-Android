@@ -68,7 +68,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         NotificationManager mNotificationManager =
             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
+        // TODO: .getNotification() is deprecated but .build() is not available on 2.3.3
+        mNotificationManager.notify(0, mBuilder.getNotification());
 
     }
 
