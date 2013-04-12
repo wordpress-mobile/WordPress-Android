@@ -126,13 +126,16 @@
   <!-- page view -->
   <string name="page_id">Page</string>
 
-  <!-- reply view -->
+  <!-- add comment view -->
+  <string name="add_comment_enter">Enter comment:</string>
+  <string name="add_comment_send">Send Comment</string>
+  <string name="write_comment">Write Comment</string>
+  <string name="add_comment_required">Required Field</string>
+  <string name="add_comment_please_enter">Please enter something in the comment field.</string>
   <string name="reply_enter">Enter a reply:</string>
   <string name="reply_send">Send Reply</string>
   <string name="reply_to_comment">Reply to Comment</string>
-  <string name="reply_required">Required Field</string>
-  <string name="reply_please_enter">Please enter something in the reply field.
-  </string>
+  <string name="reply_please_enter">Please enter something in the reply field.</string>
 
   <!-- reload drop down -->
   <string name="loading">Loading&#8230;</string>
@@ -184,7 +187,10 @@
   <string name="post_actions">Post Actions</string>
   <string name="preview_post">View Post</string>
   <string name="delete_post">Delete Post</string>
+  <string name="comment_post">Comment</string>
   <string name="post_deleted">Post Deleted Successfully</string>
+  <string name="comment_added">Comment Added Successfully</string>
+  <string name="attempting_add_comment">Attempting to add comment</string>
   <string name="delete_sure_post">Are you sure you want to delete the post</string>
   <string name="attempt_delete_post">Attempting to delete post</string>
   <string name="share_url">Share Post</string>

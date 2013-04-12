@@ -340,6 +340,8 @@ public class ViewPostsFragment extends ListFragment {
                                 menu.add(0, 0, 0, getResources().getText(R.string.edit_post));
                                 menu.add(0, 1, 0, getResources().getText(R.string.delete_post));
                                 menu.add(0, 2, 0, getResources().getText(R.string.share_url));
+                                // TODO: Check if post allows comments.
+                                menu.add(0, 3, 0, getResources().getText(R.string.comment_post));
                             }
                         }
                     }
@@ -539,6 +541,9 @@ public class ViewPostsFragment extends ListFragment {
                 return true;
             case 2:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
+                return true;
+            case 3:
+                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
                 return true;
             }
 
