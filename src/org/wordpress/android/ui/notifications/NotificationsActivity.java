@@ -41,6 +41,7 @@ public class NotificationsActivity extends WPActionBarActivity {
     public final String TAG="WPNotifications";
 
     private NotificationsListFragment mNotesList;
+    private MenuItem mRefreshMenuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -61,7 +62,8 @@ public class NotificationsActivity extends WPActionBarActivity {
         restClient.requestAccessToken(blog.getUsername(), blog.getPassword(), new OauthTokenResponseHandler(){
             @Override
             public void onStart(){
-                Log.d(TAG, "Requesting token");
+                startAnimatingRefreshButton(mRefreshMenuItem);
+                shouldAnimateRefreshButton = true;
             }
             @Override
             public void onSuccess(OauthToken token){
@@ -73,32 +75,60 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
             @Override
             public void onFinish(){
-                Log.d(TAG, "Done requesting token");
             }
         });
     }
     
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.equals(mRefreshMenuItem)) {
+            refreshNotes();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.notifications, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
+        if (shouldAnimateRefreshButton) {
+            shouldAnimateRefreshButton = false;
+            startAnimatingRefreshButton(mRefreshMenuItem);
+        }
+        return true;
+    }
+    
+    
     public void refreshNotes(){
         restClient.getNotifications(new JsonHttpResponseHandler(){
-           @Override
-           public void onSuccess(int responseCode, JSONObject response) {
-               try {
-                   JSONArray notesJSON = response.getJSONArray("notes");
-                   final List<Note> notesList = new ArrayList<Note>(notesJSON.length());
-                   for (int i=0; i<notesJSON.length(); i++) {
-                       Note n = new Note(notesJSON.getJSONObject(i));
-                       notesList.add(n);
-                   }
-                   runOnUiThread(new Runnable(){
+            @Override
+            public void onStart(){
+                startAnimatingRefreshButton(mRefreshMenuItem);
+            }
+            @Override
+            public void onSuccess(int responseCode, JSONObject response) {
+                try {
+                    JSONArray notesJSON = response.getJSONArray("notes");
+                    final List<Note> notesList = new ArrayList<Note>(notesJSON.length());
+                    for (int i=0; i<notesJSON.length(); i++) {
+                        Note n = new Note(notesJSON.getJSONObject(i));
+                        notesList.add(n);
+                    }
+                    runOnUiThread(new Runnable(){
                        @Override
                        public void run(){
                            displayNotes(notesList);
                        }
-                   });
-                   
+                    });
                } catch (JSONException e) {
                    Log.e(TAG, "Did not receive any notes", e);
                }
+           }
+           public void onFinish(){
+               stopAnimatingRefreshButton(mRefreshMenuItem);
            }
         });
     }
