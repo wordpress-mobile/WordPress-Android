@@ -24,6 +24,8 @@ public class WPRestClient {
     private static final String APP_SECRET_PROPERTY="oauth.app_secret";
     private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
     
+    private static final String NOTIFICATION_FIELDS="id,type,unread,body,subject,timestamp";
+    
     private Oauth mOauth;
     private RestClient mRestClient;
     private SharedPreferences mPrefs;
@@ -69,10 +71,13 @@ public class WPRestClient {
     /**
      * Get notifications
      */
-    public void getNotifications(AsyncHttpResponseHandler handler){
-        RequestParams params = new RequestParams();
+    public void getNotifications(RequestParams params, AsyncHttpResponseHandler handler){
         params.put("number", "20");
+        params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, handler);
+    }
+    public void getNotifications(AsyncHttpResponseHandler handler){
+        getNotifications(new RequestParams(), handler);
     }
     /**
      * Make GET request
