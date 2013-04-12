@@ -57,8 +57,6 @@ public class NotificationsListFragment extends ListFragment {
     private class ListScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
-            // ask for more if we're close to the end of the list
-            Log.d(TAG, String.format("First: %d Count: %d Total: %d", firstVisibleItem, visibleItemCount, totalItemCount));
             // if we're within 5 from the last item we should ask for more items
             if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
                 requestMoreNotifications();
