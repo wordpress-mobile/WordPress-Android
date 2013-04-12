@@ -76,6 +76,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         } catch (Exception e) {
             Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
         }
+        
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {

@@ -16,6 +16,7 @@
   <string name="no_network_title">No network available</string>
   <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
   <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
+  <string name="please_sign_in">Please sign in again.</string>
   
   <!-- form labels -->
   <string name="select_categories">Select Categories</string>

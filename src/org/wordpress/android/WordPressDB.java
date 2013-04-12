@@ -703,16 +703,20 @@ public class WordPressDB {
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
                 null) > 0;
         if (isWPCom) {
-            // update the login for other wordpress.com accounts
-            ContentValues userPass = new ContentValues();
-            userPass.put("username", username);
-            userPass.put("password", encryptPassword(password));
-            returnValue = db.update(SETTINGS_TABLE, userPass, "username=\""
-                    + originalUsername + "\" AND dotcomFlag=1", null) > 0;
+            returnValue = updateWPComCredentials(username, password);
         }
 
 
         return (returnValue);
+    }
+    
+    public boolean updateWPComCredentials(String username, String password) {
+        // update the login for wordpress.com blogs
+        ContentValues userPass = new ContentValues();
+        userPass.put("username", username);
+        userPass.put("password", encryptPassword(password));
+        return db.update(SETTINGS_TABLE, userPass, "username=\""
+                + username + "\" AND dotcomFlag=1", null) > 0;
     }
 
     public boolean deleteAccount(Context ctx, int id) {
@@ -1680,7 +1684,7 @@ public class WordPressDB {
         return clearText;
     }
 
-    protected String decryptPassword(String encryptedPwd) {
+    public static String decryptPassword(String encryptedPwd) {
         try {
             DESKeySpec keySpec = new DESKeySpec(
                     PASSWORD_SECRET.getBytes("UTF-8"));

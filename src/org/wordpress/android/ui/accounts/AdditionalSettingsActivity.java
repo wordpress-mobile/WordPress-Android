@@ -11,7 +11,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 
 
-public class AddAcountSettingsActivity extends Activity {
+public class AdditionalSettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

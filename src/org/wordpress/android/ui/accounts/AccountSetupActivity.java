@@ -51,7 +51,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
 
-public class AddAccountActivity extends Activity implements OnClickListener {
+public class AccountSetupActivity extends Activity implements OnClickListener {
 
     private static final String URL_WORDPRESS = "http://wordpress.com";
 
@@ -104,10 +104,20 @@ public class AddAccountActivity extends Activity implements OnClickListener {
             logo.setImageDrawable(getResources().getDrawable(R.drawable.wplogo));
         }
 
-        if (wpcom)
+        if (wpcom) {
             mSettingsButton.setVisibility(View.GONE);
-        else
+            if (!mAuthOnly && WordPress.hasValidWPComCredentials(this)) {
+                setupBlogs();
+            } else if (mAuthOnly) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
+                String username = settings.getString("wp_pref_wpcom_username", null);
+                if (username != null)
+                    mUsernameEdit.setText(username);
+            }
+        }
+        else {
             mSettingsButton.setOnClickListener(this);
+        }
 
         mSaveButton.setOnClickListener(this);
         mSignUpButton.setOnClickListener(this);
@@ -134,6 +144,11 @@ public class AddAccountActivity extends Activity implements OnClickListener {
 
         if (wpcom) {
             blogURL = URL_WORDPRESS;
+            if (WordPress.hasValidWPComCredentials(AccountSetupActivity.this)) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
+                mUsernameEdit.setText(settings.getString("wp_pref_wpcom_username", ""));
+                mPasswordEdit.setText(WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")));
+            }
         } else {
             blogURL = mUrlEdit.getText().toString().trim();
         }
@@ -142,7 +157,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
 
         if (blogURL.equals("") || username.equals("") || password.equals("")) {
             pd.dismiss();
-            AlertUtil.showAlert(AddAccountActivity.this, R.string.required_fields, R.string.url_username_password_required);
+            AlertUtil.showAlert(AccountSetupActivity.this, R.string.required_fields, R.string.url_username_password_required);
             return;
         }
 
@@ -153,7 +168,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
 
         if (!URLUtil.isValidUrl(blogURL)) {
             pd.dismiss();
-            AlertUtil.showAlert(AddAccountActivity.this, R.string.invalid_url, R.string.invalid_url_message);
+            AlertUtil.showAlert(AccountSetupActivity.this, R.string.invalid_url, R.string.invalid_url_message);
             return;
         }
 
@@ -196,7 +211,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
 
         if (xmlrpcURL == null) {
             pd.dismiss();
-            AlertUtil.showAlert(AddAccountActivity.this, R.string.error, R.string.no_site_error);
+            AlertUtil.showAlert(AccountSetupActivity.this, R.string.error, R.string.no_site_error);
         } else {
             // verify settings
             client = new XMLRPCClient(xmlrpcURL, httpuser, httppassword);
@@ -205,13 +220,20 @@ public class AddAccountActivity extends Activity implements OnClickListener {
 
                 public void callFinished(Object[] result) {
                     
-                    if (mAuthOnly) {
-                        // If only auth requested, save credentials and finish
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AddAccountActivity.this);
+                    if (wpcom) {
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString("wp_pref_wpcom_username", username);
                         editor.putString("wp_pref_wpcom_password", WordPressDB.encryptPassword(password));
                         editor.commit();
+                    }
+                    
+                    if (mAuthOnly) {
+                        WordPress.wpDB.updateWPComCredentials(username, password);
+                        if (WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag()) {
+                            WordPress.currentBlog.setUsername(username);
+                            WordPress.currentBlog.setPassword(password);
+                        }
                         finish();
                         return;
                     }
@@ -274,7 +296,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
                                     }
                                 }
                             } else {
-                                wpVersion = "3.4";
+                                wpVersion = "3.5";
                             }
 
                             wpVersions[blogCtr] = wpVersion;
@@ -288,7 +310,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
                         if (result.length > 0) {
                             additionalText = getString(R.string.additional);
                         }
-                        AlertUtil.showAlert(AddAccountActivity.this, R.string.no_blogs_found,
+                        AlertUtil.showAlert(AccountSetupActivity.this, R.string.no_blogs_found,
                                 String.format(getString(R.string.no_blogs_message), additionalText), getString(R.string.ok),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -300,17 +322,17 @@ public class AddAccountActivity extends Activity implements OnClickListener {
                         // there's more than one blog
                         if (blogCtr > 1) {
 
-                            LayoutInflater inflater = (LayoutInflater) AddAccountActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            LayoutInflater inflater = (LayoutInflater) AccountSetupActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
                             lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                             lv.setItemsCanFocus(false);
 
-                            ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(AddAccountActivity.this, R.layout.blogs_row,
+                            ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(AccountSetupActivity.this, R.layout.blogs_row,
                                     aBlogNames);
 
                             lv.setAdapter(blogs);
 
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccountActivity.this);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AccountSetupActivity.this);
                             dialogBuilder.setTitle(R.string.select_blogs);
                             dialogBuilder.setView(lv);
                             dialogBuilder.setNegativeButton(R.string.add_selected, new DialogInterface.OnClickListener() {
@@ -447,14 +469,14 @@ public class AddAccountActivity extends Activity implements OnClickListener {
                             // invalid login
                             Thread shake = new Thread() {
                                 public void run() {
-                                    Animation shake = AnimationUtils.loadAnimation(AddAccountActivity.this, R.anim.shake);
+                                    Animation shake = AnimationUtils.loadAnimation(AccountSetupActivity.this, R.anim.shake);
                                     findViewById(R.id.section1).startAnimation(shake);
-                                    Toast.makeText(AddAccountActivity.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AccountSetupActivity.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
                                 }
                             };
                             runOnUiThread(shake);
                         } else {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccountActivity.this);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AccountSetupActivity.this);
                             dialogBuilder.setTitle(getString(R.string.connection_error));
                             if (message.contains("404"))
                                 message = getString(R.string.xmlrpc_error);
@@ -481,7 +503,7 @@ public class AddAccountActivity extends Activity implements OnClickListener {
                         if (couse instanceof HttpHostConnectException) {
 
                         } else {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddAccountActivity.this);
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AccountSetupActivity.this);
                             dialogBuilder.setTitle(getString(R.string.connection_error));
                             if (message.contains("404"))
                                 message = getString(R.string.xmlrpc_error);
@@ -578,28 +600,32 @@ public class AddAccountActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.save) {
-            if (mSystemService.getActiveNetworkInfo() == null) {
-                AlertUtil.showAlert(AddAccountActivity.this, R.string.no_network_title, R.string.no_network_message);
-            } else {
-                pd = ProgressDialog.show(AddAccountActivity.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
-                        true, false);
-
-                Thread action = new Thread() {
-                    public void run() {
-                        Looper.prepare();
-                        configureAccount();
-                        Looper.loop();
-                    }
-                };
-                action.start();
-            }
+            setupBlogs();
         } else if (id == R.id.settingsButton) {
-            Intent settings = new Intent(AddAccountActivity.this, AddAcountSettingsActivity.class);
+            Intent settings = new Intent(AccountSetupActivity.this, AdditionalSettingsActivity.class);
             settings.putExtra("httpuser", httpuser);
             settings.putExtra("httppassword", httppassword);
             startActivityForResult(settings, R.id.settingsButton);
         } else if (id == R.id.wordpressdotcom) {
-            startActivity(new Intent(AddAccountActivity.this, SignupActivity.class));
+            startActivity(new Intent(AccountSetupActivity.this, SignupActivity.class));
+        }
+    }
+
+    private void setupBlogs() {
+        if (mSystemService.getActiveNetworkInfo() == null) {
+            AlertUtil.showAlert(AccountSetupActivity.this, R.string.no_network_title, R.string.no_network_message);
+        } else {
+            pd = ProgressDialog.show(AccountSetupActivity.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
+                    true, false);
+
+            Thread action = new Thread() {
+                public void run() {
+                    Looper.prepare();
+                    configureAccount();
+                    Looper.loop();
+                }
+            };
+            action.start();
         }
     }
 }

@@ -31,7 +31,7 @@ import org.wordpress.android.CommentBroadcastReceiver;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.AddAccountActivity;
+import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.CommentService;
 import org.wordpress.android.util.DeviceUtils;
@@ -248,7 +248,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent i = new Intent(PreferencesActivity.this, AddAccountActivity.class);
+            Intent i = new Intent(PreferencesActivity.this, AccountSetupActivity.class);
             i.putExtra("wpcom", true);
             i.putExtra("auth-only", true);
             startActivityForResult(i, 0);
@@ -266,9 +266,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     .setCancelable(false)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            SharedPreferences settings = PreferenceManager
-                                    .getDefaultSharedPreferences(PreferencesActivity.this);
-                            SharedPreferences.Editor editor = settings.edit();
+                            SharedPreferences.Editor editor = PreferenceManager
+                                    .getDefaultSharedPreferences(PreferencesActivity.this).edit();
                             editor.remove("wp_pref_wpcom_username");
                             editor.remove("wp_pref_wpcom_password");
                             editor.commit();
