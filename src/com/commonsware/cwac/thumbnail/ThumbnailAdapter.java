@@ -4,6 +4,7 @@ import com.commonsware.cwac.adapter.AdapterWrapper;
 import com.commonsware.cwac.cache.SimpleWebImageCache;
 
 import android.app.Activity;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -108,6 +109,14 @@ public class ThumbnailAdapter extends AdapterWrapper {
 			});
 		}
 	};
+	@Override
+	public void registerDataSetObserver(DataSetObserver observer){
+		getWrappedAdapter().registerDataSetObserver(observer);
+	}
+	@Override
+	public void unregisterDataSetObserver(DataSetObserver observer){
+		getWrappedAdapter().unregisterDataSetObserver(observer);
+	}
 	
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
 		
@@ -137,4 +146,4 @@ public class ThumbnailAdapter extends AdapterWrapper {
 			return bitmap;
 		}
 	  }
-}
+  }
