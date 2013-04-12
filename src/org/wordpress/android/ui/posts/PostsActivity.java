@@ -283,6 +283,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 final String returnText = extras.getString("commentText");
 
                 if (!returnText.equals("CANCEL")) {
+                    // Add comment to the server if user didn't cancel.
                     final String postID = extras.getString("postID");
                     new PostsActivity.addCommentTask().execute(postID, returnText);
                 }
@@ -461,7 +462,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         PostsActivity.this,
                         getResources().getText(R.string.comment_added),
                         Toast.LENGTH_SHORT).show();
-                checkForLocalChanges(false);
+                // If successful, attempt to refresh comments
+                refreshComments();
             } else {
                 Toast.makeText(
                         PostsActivity.this,
@@ -509,6 +511,25 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 result = false;
             }
             return result;
+        }
+
+    }
+    
+    public class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            Object[] commentParams = { WordPress.currentBlog.getBlogId(),
+                    WordPress.currentBlog.getUsername(),
+                    WordPress.currentBlog.getPassword() };
+
+            try {
+                ApiHelper.refreshComments(PostsActivity.this, commentParams);
+            } catch (final XMLRPCException e) {
+                errorMsg = getResources().getText(R.string.error_generic).toString();
+            }
+            return null;
         }
 
     }
@@ -621,6 +642,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
     }
 
+    private void refreshComments() {
+        new PostsActivity.refreshCommentsTask().execute();
+    }
+    
     private String getShortlinkTagHref(String urlString) {
         String html = getHTML(urlString);
 
