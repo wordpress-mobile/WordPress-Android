@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -44,7 +42,6 @@ public class NotificationsActivity extends WPActionBarActivity {
     public static final String TAG="WPNotifications";
 
     private NotificationsListFragment mNotesList;
-    private NotesAdapter mNotesAdapter;
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
@@ -57,18 +54,13 @@ public class NotificationsActivity extends WPActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.notifications));
-
-        mNotesAdapter = new NotesAdapter();
-
+        
+        Blog blog = getCurrentBlog();
         FragmentManager fm = getSupportFragmentManager();
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
-        ListView notesList = mNotesList.getListView();
-        View progress = View.inflate(this, R.layout.list_footer_progress, null);
-        notesList.addFooterView(progress);
-        mNotesList.setListAdapter(mNotesAdapter);
-        
-        Blog blog = getCurrentBlog();
+        mNotesList.setOnNoteClickListener(new NoteClickListener());
+        Log.d(TAG, "Setting notes adapter");
         
         // ok it's time to request notifications
         // TODO: access token should be stored in preferences, not fetched each time
@@ -91,7 +83,6 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
         });
     }
-    
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.equals(mRefreshMenuItem)) {
@@ -113,8 +104,33 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
         return true;
     }
-    
-    
+
+    /**
+     *  Open a note fragment based on the type of note
+     */
+    public void openNote(Note note){
+        if (note == null)
+            return;
+        FragmentManager fm = getSupportFragmentManager();
+        NotificationsDetailFragment f = (NotificationsDetailFragment) fm
+                .findFragmentById(R.id.commentDetail);
+
+        if (f == null || !f.isInLayout()) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.hide(mNotesList);
+            f = new NotificationsDetailFragment();
+            Bundle args = new Bundle();
+            args.putBoolean("LOL", true);
+            f.setArguments(args);
+            ft.add(R.id.note_fragment_container, f);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else {
+            f.loadNote(note);
+        }
+    }
+
     public void refreshNotes(){
         restClient.getNotifications(new NotesResponseHandler(){
             @Override
@@ -125,12 +141,13 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
             @Override
             public void onSuccess(List<Note> notes){
-                mNotesAdapter.clear();
-                mNotesAdapter.addAll(notes);
+                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                adapter.clear();
+                adapter.addAll(notes);
                 runOnUiThread(new Runnable(){
                    @Override
                    public void run(){
-                       displayNotes();
+                       adapter.notifyDataSetChanged();
                    }
                 });
             }
@@ -148,66 +165,34 @@ public class NotificationsActivity extends WPActionBarActivity {
         restClient.getNotifications(params, new NotesResponseHandler(){
             @Override
             public void onSuccess(List<Note> notes){
-                mNotesAdapter.addAll(notes);
+                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                adapter.addAll(notes);
                 runOnUiThread(new Runnable(){
                    @Override
                    public void run(){
-                       displayNotes();
+                       adapter.notifyDataSetChanged();
                    }
                 });
             }
         });
     }
 
-    public void displayNotes(){
-        // create a new ListAdapter and set it on the fragment
-        // mNotesList.setListAdapter(new NotesAdapter(mNotes));
-        Log.d(TAG, String.format("Data set changed! %d", mNotesAdapter.getCount()));
-        mNotesAdapter.notifyDataSetChanged();
-    }
-    
-    private class NotesAdapter extends ArrayAdapter<Note> {
-        NotesAdapter(){
-            this(new ArrayList<Note>());
-        }
-        NotesAdapter(List<Note> notes){
-            super(NotificationsActivity.this, R.layout.note_list_item, R.id.note_label, notes);
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent){
-            View view = super.getView(position, convertView, parent);
-            final Note note = getItem(position);
-            TextView detailText = (TextView) view.findViewById(R.id.note_detail);
-            if (note.isCommentType()) {
-                detailText.setText(note.getCommentPreview());
-                detailText.setVisibility(View.VISIBLE);
-            } else {
-                detailText.setVisibility(View.GONE);
-            }
-            final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
-            iconView.setImageResource(R.drawable.placeholder);
-            iconView.setTag(note.getIconURL());
-            return view;
-        }
-        public Note getLastNote(){
-            return getItem(getCount()-1);
-        }
-        public void addAll(List<Note> notes){
-            Iterator<Note> noteIterator = notes.iterator();
-            while(noteIterator.hasNext()){
-                add(noteIterator.next());
-            }
-        }
-    }
-    
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
         @Override
         public void onRequestMoreNotifications(ListView notesList, ListAdapter notesAdapter){
             if (mFirstLoadComplete && !mLoadingMore) {
-                Log.d(TAG, "Requesting more notifications");
-                Note lastNote = mNotesAdapter.getItem(mNotesAdapter.getCount()-1);
+                NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                Note lastNote = adapter.getItem(adapter.getCount()-1);
                 requestNotesBefore(lastNote);
             }
+        }
+    }
+    
+    private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
+        @Override
+        public void onClickNote(Note note){
+            Log.d(TAG, String.format("Clicked unread %b", note.isUnread()));
+            openNote(note);
         }
     }
     

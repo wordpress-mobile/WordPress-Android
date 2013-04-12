@@ -60,6 +60,9 @@ public class Note {
     public Spanned getCommentBody(){
         return Html.fromHtml(queryJSON("body.items[last].html", ""));
     }
+    public Boolean isUnread(){
+        return queryJSON("unread", "0").equals("1");
+    }
     protected Object queryJSON(String query){
         Object defaultObject = "";
         return queryJSON(query, defaultObject);

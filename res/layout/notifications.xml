@@ -5,8 +5,9 @@
   android:layout_height="fill_parent"
   android:orientation="vertical" >
   <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:id="@+id/note_fragment_container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
     <fragment
       android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
       android:id="@+id/notes_list"
