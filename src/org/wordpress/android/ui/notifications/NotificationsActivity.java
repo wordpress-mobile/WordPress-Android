@@ -112,6 +112,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (note == null)
             return;
         FragmentManager fm = getSupportFragmentManager();
+        // TODO: change to note detail id
         NotificationsDetailFragment f = (NotificationsDetailFragment) fm
                 .findFragmentById(R.id.commentDetail);
 
@@ -120,7 +121,7 @@ public class NotificationsActivity extends WPActionBarActivity {
             ft.hide(mNotesList);
             f = new NotificationsDetailFragment();
             Bundle args = new Bundle();
-            args.putBoolean("LOL", true);
+            args.putString(NotificationsDetailFragment.NOTE_ID_ARGUMENT, note.getId());
             f.setArguments(args);
             ft.add(R.id.note_fragment_container, f);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -191,7 +192,6 @@ public class NotificationsActivity extends WPActionBarActivity {
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
-            Log.d(TAG, String.format("Clicked unread %b", note.isUnread()));
             openNote(note);
         }
     }

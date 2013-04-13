@@ -41,7 +41,9 @@ public class Note {
     public JSONObject toJSONObject(){
         return mNoteJSON;
     }
-    
+    public String getId(){
+        return queryJSON("id", "0");
+    }
     public String getType(){
         return queryJSON("type", UNKNOWN_TYPE);
     }
