@@ -60,7 +60,6 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
-        Log.d(TAG, "Setting notes adapter");
         
         // ok it's time to request notifications
         // TODO: access token should be stored in preferences, not fetched each time
@@ -88,6 +87,12 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (item.equals(mRefreshMenuItem)) {
             refreshNotes();
             return true;
+        } else if (item.getItemId() == android.R.id.home){
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                popNoteDetail();
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -103,6 +108,16 @@ public class NotificationsActivity extends WPActionBarActivity {
             startAnimatingRefreshButton(mRefreshMenuItem);
         }
         return true;
+    }
+
+    public void popNoteDetail(){
+        FragmentManager fm = getSupportFragmentManager();
+        // TODO: change to note detail id
+        NotificationsDetailFragment f;
+        f = (NotificationsDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        if (f == null) {
+            fm.popBackStack();
+        }
     }
 
     /**
