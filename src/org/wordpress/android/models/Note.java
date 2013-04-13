@@ -147,11 +147,8 @@ public class Note {
                     return defaultObject;
                 }
             }
-            Log.d(TAG, String.format("We need to remove the key from %s", query.substring(offset, next_seperator)));
-            key = query.substring(offset, next_seperator);
-            
-            if(true) return defaultObject;
-            
+            Log.d(TAG, String.format("Invalid query: %s", query));
+            offset = -1;
         } while(offset > 0);
         return defaultObject;
     }
