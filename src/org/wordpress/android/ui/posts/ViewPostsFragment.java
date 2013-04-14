@@ -572,6 +572,9 @@ public class ViewPostsFragment extends ListFragment {
             case 2:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
+            case 3:
+                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
+                return true;
             }
 
         } else {
