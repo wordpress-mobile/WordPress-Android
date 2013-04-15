@@ -109,24 +109,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
             String errorMessage = extras.getString("errorMessage");
-            if (errorMessage != null) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                        PostsActivity.this);
-                dialogBuilder.setTitle(getResources().getText(
-                        R.string.error));
-                dialogBuilder.setMessage(errorMessage);
-                dialogBuilder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                    int whichButton) {
-                                // Just close the window.
-                            }
-                        });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing()) {
-                    dialogBuilder.create().show();
-                }
-            }
+            if (errorMessage != null)
+                showPostUploadErrorAlert(errorMessage);
         }
         
         if (isPage)
@@ -150,6 +134,44 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         attemptToSelectPost();
     }
+    
+    
+
+    private void showPostUploadErrorAlert(String errorMessage) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                PostsActivity.this);
+        dialogBuilder.setTitle(getResources().getText(
+                R.string.error));
+        dialogBuilder.setMessage(errorMessage);
+        dialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                            int whichButton) {
+                        // Just close the window.
+                    }
+                });
+        dialogBuilder.setCancelable(true);
+        if (!isFinishing())
+            dialogBuilder.create().show();
+    }
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            String errorMessage = extras.getString("errorMessage");
+            if (errorMessage != null)
+                showPostUploadErrorAlert(errorMessage);
+        }
+        
+    }
+
+
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
