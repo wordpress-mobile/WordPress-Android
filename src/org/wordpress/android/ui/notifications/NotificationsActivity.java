@@ -160,12 +160,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.clear();
                 adapter.addAll(notes);
-                runOnUiThread(new Runnable(){
-                   @Override
-                   public void run(){
-                       adapter.notifyDataSetChanged();
-                   }
-                });
+                adapter.notifyDataSetChanged();
             }
             public void onFinish(){
                 super.onFinish();
@@ -181,14 +176,9 @@ public class NotificationsActivity extends WPActionBarActivity {
         restClient.getNotifications(params, new NotesResponseHandler(){
             @Override
             public void onSuccess(List<Note> notes){
-                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.addAll(notes);
-                runOnUiThread(new Runnable(){
-                   @Override
-                   public void run(){
-                       adapter.notifyDataSetChanged();
-                   }
-                });
+                adapter.notifyDataSetChanged();
             }
         });
     }
