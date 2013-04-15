@@ -359,7 +359,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             loadingDialog.setCancelable(false);
             return loadingDialog;
         } else if (id == ID_DIALOG_COMMENT) {
-            loadingDialog.setTitle(getResources().getText(R.string.comment_post));
+            loadingDialog.setTitle(getResources().getText(R.string.add_comment));
             loadingDialog.setMessage(getResources().getText(
                     R.string.attempting_add_comment));
             loadingDialog.setCancelable(false);

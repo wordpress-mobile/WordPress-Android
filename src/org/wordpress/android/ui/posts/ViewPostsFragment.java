@@ -344,13 +344,13 @@ public class ViewPostsFragment extends ListFragment {
                                 menu.add(2, 0, 0, getResources().getText(R.string.edit_page));
                                 menu.add(2, 1, 0, getResources().getText( R.string.delete_page));
                                 menu.add(2, 2, 0, getResources().getText(R.string.share_url_page));
-                                if (allowComments) menu.add(2, 3, 0, getResources().getText(R.string.comment_post));
+                                if (allowComments) menu.add(2, 3, 0, getResources().getText(R.string.add_comment));
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(0, 0, 0, getResources().getText(R.string.edit_post));
                                 menu.add(0, 1, 0, getResources().getText(R.string.delete_post));
                                 menu.add(0, 2, 0, getResources().getText(R.string.share_url));
-                                if (allowComments) menu.add(0, 3, 0, getResources().getText(R.string.comment_post));
+                                if (allowComments) menu.add(0, 3, 0, getResources().getText(R.string.add_comment));
                             }
                         }
                     }
