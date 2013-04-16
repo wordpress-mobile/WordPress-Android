@@ -39,6 +39,7 @@ import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {

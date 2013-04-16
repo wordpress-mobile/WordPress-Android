@@ -3,6 +3,8 @@ package org.wordpress.android.ui.notifications;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.content.Intent;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -40,11 +43,15 @@ import org.json.JSONException;
 
 public class NotificationsActivity extends WPActionBarActivity {
     public static final String TAG="WPNotifications";
+    public static final String NOTE_ID_EXTRA="noteId";
+    
+    Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
     private NotificationsListFragment mNotesList;
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
+    private Fragment detailFragment = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -71,6 +78,7 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
             @Override
             public void onSuccess(OauthToken token){
+                launchWithNoteId();
                 refreshNotes();
             }
             @Override
@@ -81,6 +89,40 @@ public class NotificationsActivity extends WPActionBarActivity {
             public void onFinish(){
             }
         });
+
+        fragmentDetectors.add(new FragmentDetector(){
+            @Override
+            public Fragment getFragment(Note note){
+                if (note.isCommentType()) {
+                    Fragment fragment = new NotificationsCommentFragment();
+                    return fragment;
+                }
+                return null;
+            }
+        });
+    }
+    /**
+     * Detect if Intent has a noteId extra and display that specific note detail fragment
+     */
+    private void launchWithNoteId(){
+        Intent intent = getIntent();
+        if (intent.hasExtra(NOTE_ID_EXTRA)) {
+            // find it/load it etc
+            RequestParams params = new RequestParams();
+            params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
+            restClient.getNotifications(params, new NotesResponseHandler(){
+                @Override
+                public void onStart(){
+                    Log.d(TAG, "Finding note to display!");
+                }
+                @Override
+                public void onSuccess(List<Note> notes){
+                    // there should only be one note!
+                    Note note = notes.get(0);
+                    openNote(note);
+                }
+            });
+        }
     }
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -119,7 +161,19 @@ public class NotificationsActivity extends WPActionBarActivity {
             fm.popBackStack();
         }
     }
-
+    
+    private Fragment fragmentForNote(Note note){
+        Iterator<FragmentDetector> templates = fragmentDetectors.iterator();
+        while(templates.hasNext()){
+            FragmentDetector detector = templates.next();
+            Fragment fragment = detector.getFragment(note);
+            if (fragment != null){
+                return fragment;
+            }
+        }
+        // by default return plain detail fragment
+        return new NotificationsDetailFragment();
+    }
     /**
      *  Open a note fragment based on the type of note
      */
@@ -127,24 +181,17 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (note == null)
             return;
         FragmentManager fm = getSupportFragmentManager();
-        // TODO: change to note detail id
-        NotificationsDetailFragment f = (NotificationsDetailFragment) fm
-                .findFragmentById(R.id.commentDetail);
-
-        if (f == null || !f.isInLayout()) {
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mNotesList);
-            f = new NotificationsDetailFragment();
-            Bundle args = new Bundle();
-            args.putString(NotificationsDetailFragment.NOTE_ID_ARGUMENT, note.getId());
-            f.setArguments(args);
-            ft.add(R.id.note_fragment_container, f);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack(null);
-            ft.commit();
-        } else {
-            f.loadNote(note);
+        // remove the note detail if it's already on there
+        if (fm.getBackStackEntryCount() > 0){
+            fm.popBackStack();
         }
+        Fragment fragment = fragmentForNote(note);
+        // swap the gragment
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.note_fragment_container, fragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void refreshNotes(){
@@ -223,10 +270,14 @@ public class NotificationsActivity extends WPActionBarActivity {
                 }
            } catch (JSONException e) {
                Log.e(TAG, "Did not receive any notes", e);
-               onFailure(e);
+               onFailure(e, response);
                return;
            }
            onSuccess(notes);
         }
+    }
+    
+    private abstract class FragmentDetector {
+        abstract public Fragment getFragment(Note note);
     }
 }

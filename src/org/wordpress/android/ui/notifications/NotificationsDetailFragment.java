@@ -26,22 +26,6 @@ class NotificationsDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
-        // if we have a noteID
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            if (arguments.containsKey(NOTE_ID_ARGUMENT)) {
-                String noteId = arguments.getString(NOTE_ID_ARGUMENT);
-                RequestParams params = new RequestParams();
-                params.put("ids", noteId);
-                restClient.getNotifications(params, new NoteResponseHandler(){
-                    @Override
-                    public void onSuccess(Note note){
-                        loadNote(note);
-                    }
-                });
-            }
-        }
-        
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
@@ -53,23 +37,5 @@ class NotificationsDetailFragment extends Fragment {
      */
     public void loadNote(Note note){
         Log.d(TAG, String.format("You should load the note bro: %s", Thread.currentThread().getName()));
-    }
-    
-    private class NoteResponseHandler extends JsonHttpResponseHandler {
-        public void onSuccess(Note note){}
-        @Override
-        public void onSuccess(JSONObject response){
-            Note note = null;
-            try {
-                JSONArray notesJson = response.getJSONArray("notes");
-                JSONObject noteData = notesJson.getJSONObject(0);
-                note = new Note(noteData);
-            } catch (JSONException e) {
-                Log.e(TAG, String.format("Failed to get a note %s", response), e);
-                onFailure(e, response);
-                return;
-            }
-            onSuccess(note);
-        }
     }
 }

@@ -69,6 +69,12 @@ public class WPRestClient {
         });
     }
     /**
+     * Get a single notification
+     */
+    public void getNotification(String noteId, AsyncHttpResponseHandler handler){
+        get(String.format("notifications/%s", noteId), handler);
+    }
+    /**
      * Get notifications
      */
     public void getNotifications(RequestParams params, AsyncHttpResponseHandler handler){
