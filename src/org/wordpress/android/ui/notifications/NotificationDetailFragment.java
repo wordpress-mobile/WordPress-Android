@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +18,7 @@ import org.json.JSONException;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-class NotificationsDetailFragment extends Fragment {
+class NotificationDetailFragment extends NotificationFragment {
     public static final String TAG="NoteDetail";
     public static final String NOTE_ID_ARGUMENT="note_id";
     public static final String NOTE_JSON_ARGUMENT="note_json";
@@ -31,11 +30,5 @@ class NotificationsDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
         View view = inflater.inflate(R.layout.notifications_detail, parent, false);
         return view;
-    }
-    /**
-     * Display the note in the provided view
-     */
-    public void loadNote(Note note){
-        Log.d(TAG, String.format("You should load the note bro: %s", Thread.currentThread().getName()));
     }
 }

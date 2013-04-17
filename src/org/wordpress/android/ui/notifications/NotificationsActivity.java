@@ -92,9 +92,9 @@ public class NotificationsActivity extends WPActionBarActivity {
 
         fragmentDetectors.add(new FragmentDetector(){
             @Override
-            public Fragment getFragment(Note note){
+            public NotificationFragment getFragment(Note note){
                 if (note.isCommentType()) {
-                    Fragment fragment = new NotificationsCommentFragment();
+                    NotificationFragment fragment = new NotificationsCommentFragment();
                     return fragment;
                 }
                 return null;
@@ -155,24 +155,24 @@ public class NotificationsActivity extends WPActionBarActivity {
     public void popNoteDetail(){
         FragmentManager fm = getSupportFragmentManager();
         // TODO: change to note detail id
-        NotificationsDetailFragment f;
-        f = (NotificationsDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        NotificationDetailFragment f;
+        f = (NotificationDetailFragment) fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
         }
     }
     
-    private Fragment fragmentForNote(Note note){
+    private NotificationFragment fragmentForNote(Note note){
         Iterator<FragmentDetector> templates = fragmentDetectors.iterator();
         while(templates.hasNext()){
             FragmentDetector detector = templates.next();
-            Fragment fragment = detector.getFragment(note);
+            NotificationFragment fragment = detector.getFragment(note);
             if (fragment != null){
                 return fragment;
             }
         }
         // by default return plain detail fragment
-        return new NotificationsDetailFragment();
+        return new NotificationDetailFragment();
     }
     /**
      *  Open a note fragment based on the type of note
@@ -185,8 +185,9 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (fm.getBackStackEntryCount() > 0){
             fm.popBackStack();
         }
-        Fragment fragment = fragmentForNote(note);
+        NotificationFragment fragment = fragmentForNote(note);
         // swap the gragment
+        fragment.setNote(note);
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.note_fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -278,6 +279,6 @@ public class NotificationsActivity extends WPActionBarActivity {
     }
     
     private abstract class FragmentDetector {
-        abstract public Fragment getFragment(Note note);
+        abstract public NotificationFragment getFragment(Note note);
     }
 }
