@@ -51,7 +51,7 @@ public class NotificationsListFragment extends ListFragment {
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
         // setup the initial notes adapter
-        mNotesAdapter = new NotesAdapter(getActivity());
+        mNotesAdapter = new NotesAdapter();
     }
     @Override
     public void onActivityCreated(Bundle bundle){
@@ -99,7 +99,10 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
-    public static class NotesAdapter extends ArrayAdapter<Note> {
+    class NotesAdapter extends ArrayAdapter<Note> {
+        NotesAdapter(){
+            this(getActivity());
+        }
         NotesAdapter(Context context){
             this(context, new ArrayList<Note>());
         }
