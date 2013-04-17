@@ -60,7 +60,10 @@ public class Note {
         return getCommentBody().toString().replace("\n", "").trim();
     }
     public Spanned getCommentBody(){
-        return Html.fromHtml(queryJSON("body.items[last].html", ""));
+        return Html.fromHtml(getCommentText());
+    }
+    public String getCommentText(){
+        return queryJSON("body.items[last].html", "");
     }
     public Boolean isUnread(){
         return queryJSON("unread", "0").equals("1");
