@@ -910,7 +910,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private boolean selectBlogForShareAction() {
 
         mIsNew = true;
-
+        mLocalDraft = true;
+        
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         if (accounts.size() > 0) {

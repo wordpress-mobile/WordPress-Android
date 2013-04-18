@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,14 +18,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.gcm.GCMRegistrar;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -34,12 +32,12 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
-import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
@@ -58,24 +56,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // TODO remove try/catch with debug check for emulators
-        try {
-            if (WordPress.hasValidWPComCredentials(this)) {
-                // Register for Google Cloud Messaging
-                GCMRegistrar.checkDevice(this);
-                GCMRegistrar.checkManifest(this);
-                String regId = GCMRegistrar.getRegistrationId(this);
-                String gcmId = WordPress.config.getProperty("gcm.id").toString();
-                if (gcmId != null && regId.equals("")) {
-                    GCMRegistrar.register(this, gcmId);
-                } else {
-                    Log.v("WORDPRESS", "Already registered for GCM");
-                }
-            }
-        } catch (Exception e) {
-            Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
-        }
         
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null

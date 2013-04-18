@@ -223,10 +223,6 @@
   <!-- drafts -->
   <string name="cancel_draft">Cancel Draft</string>
 
-  <!-- comment notifications -->
-  <string name="comment_notifications">Comment Notifications</string>
-  <string name="notifications_interval">Update interval</string>
-
   <!-- media selection -->
   <string name="select_photo">Select a photo from gallery</string>
   <string name="take_photo">Take a new photo</string>
@@ -321,6 +317,13 @@
 
   <!-- notifications -->
   <string name="notifications">Notifications</string>
+  <string name="manage_notifications">Manage notifications</string>
+  <string name="enable_notifications">Enable notifications</string>
+  <string name="types">Types</string>
+  <string name="options">Options</string>
+  <string name="notifications_turn_off">Turn off</string>
+  <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
+  <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
   
   <!-- reader -->
   <string name="reader">Reader</string>

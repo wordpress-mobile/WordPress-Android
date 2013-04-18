@@ -484,7 +484,7 @@ public class PostUploadService extends Service {
                     Object result = null;
 
                     try {
-                        result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
+                        result = (Object) client.call("wp.uploadFile", params, tempFile);
                     } catch (XMLRPCException e) {
                         error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
                         return null;
@@ -641,7 +641,7 @@ public class PostUploadService extends Service {
                             Object result = null;
 
                             try {
-                                result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
+                                result = (Object) client.call("wp.uploadFile", params, tempFile);
                             } catch (XMLRPCException e) {
                                 error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
                                 mediaError = true;

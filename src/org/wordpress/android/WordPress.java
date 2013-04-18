@@ -1,9 +1,11 @@
 package org.wordpress.android;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import android.app.Application;
 import android.content.Context;
@@ -11,9 +13,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.google.android.gcm.GCMRegistrar;
+
+import org.xmlrpc.android.WPComXMLRPCApi;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
@@ -46,9 +54,69 @@ public class WordPress extends Application {
             shouldRestoreSelectedActivity = true;
 
         restClient = new WPRestClient(config, settings);
+        
+        registerForCloudMessaging();
+        
         super.onCreate();
     }
     
+    private void registerForCloudMessaging() {
+        
+        if (WordPress.hasValidWPComCredentials(this)) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this); 
+            String notificationId = null;
+            // TODO remove try/catch with debug check for emulators
+            try {
+                // Register for Google Cloud Messaging
+                GCMRegistrar.checkDevice(this);
+                GCMRegistrar.checkManifest(this);
+                notificationId = GCMRegistrar.getRegistrationId(this);
+                String gcmId = WordPress.config.getProperty("gcm.id").toString();
+                if (gcmId != null && notificationId.equals("")) {
+                    GCMRegistrar.register(this, gcmId);
+                    notificationId = GCMRegistrar.getRegistrationId(this);
+                } else {
+                    Log.v("WORDPRESS", "Already registered for GCM");
+                }
+            } catch (Exception e) {
+                Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
+            }
+            
+            if (notificationId != null && notificationId.length() > 0) {
+                // Get or create UUID for WP.com notes api
+                String uuid = settings.getString("wp_pref_notifications_uuid", null);
+                if (uuid == null) {
+                    uuid = UUID.randomUUID().toString();
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("wp_pref_notifications_uuid", uuid);
+                    editor.commit();
+                }
+
+                Object[] params = {
+                        settings.getString("wp_pref_wpcom_username", ""),
+                        WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                        notificationId,
+                        uuid,
+                        "android",
+                        false
+                };
+
+                XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+                client.callAsync(new XMLRPCCallback() {
+                    public void onSuccess(long id, Object result) {
+                        Log.v("WORDPRESS", "Succesfully registered device on WP.com");
+                    }
+
+                    public void onFailure(long id, XMLRPCException error) {
+                        Log.v("WORDPRESS", error.getMessage());
+                    }
+                }, "wpcom.mobile_push_register_token", params);
+                
+                new WPComXMLRPCApi().getNotificationSettings(null, getApplicationContext());
+            }
+        }
+    }
+
     /**
      * Get versionName from Manifest.xml
      * @return versionName

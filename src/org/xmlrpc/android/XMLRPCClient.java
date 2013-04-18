@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,12 @@ import org.xmlpull.v1.XmlSerializer;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DeviceUtils;
 
+/**
+ * A WordPress XMLRPC Client. 
+ * Based on android-xmlrpc: code.google.com/p/android-xmlrpc/
+ * Async support based on aXMLRPC: https://github.com/timroes/aXMLRPC
+ */
+
 public class XMLRPCClient {
     private static final String TAG_METHOD_CALL = "methodCall";
     private static final String TAG_METHOD_NAME = "methodName";
@@ -45,12 +52,14 @@ public class XMLRPCClient {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
+    
+    private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
     private ConnectionClient client;
     private HttpPost postMethod;
     private XmlSerializer serializer;
     private HttpParams httpParams;
-
+    
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
      * @param XMLRPC server URI
@@ -131,6 +140,14 @@ public class XMLRPCClient {
     public XMLRPCClient(URL url, String httpuser, String httppasswd) {
         this(URI.create(url.toExternalForm()), httpuser, httppasswd);
     }
+    
+    /**
+     * Set WP.com auth header
+     * @param String authorization token
+     */
+    public void setAuthorizationHeader(String authToken) {
+        postMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
+    }
 
     /**
      * Call method with optional parameters. This is general method.
@@ -143,7 +160,7 @@ public class XMLRPCClient {
      * @throws XMLRPCException
      */
     public Object call(String method, Object[] params) throws XMLRPCException {
-        return callXMLRPC(method, params, null);
+        return call(method, params, null);
     }
 
     /**
@@ -154,161 +171,112 @@ public class XMLRPCClient {
      * @throws XMLRPCException
      */
     public Object call(String method) throws XMLRPCException {
-        return callXMLRPC(method, null, null);
+        return call(method, null, null);
     }
-
+    
+    
+    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException {
+        return new Caller().callXMLRPC(method, params, tempFile);
+    }
+    
     /**
-     * Convenience method call with one parameter
+     * Convenience call for callAsync with two paramaters
      *
-     * @param method name of method to call
-     * @param p0 method's parameter
-     * @return deserialized method return value
+     * @param XMLRPCCallback listener, XMLRPC methodName, XMLRPC parameters
+     * @return unique id of this async call
      * @throws XMLRPCException
      */
-    public Object call(String method, Object p0) throws XMLRPCException {
-        Object[] params = {
-            p0,
-        };
-        return callXMLRPC(method, params, null);
+    public long callAsync(XMLRPCCallback listener, String methodName, Object[] params) {
+        return callAsync(listener, methodName, params, null);
     }
-
+    
     /**
-     * Convenience method call with two parameters
+     * Asynchronous XMLRPC call
      *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @return deserialized method return value
+     * @param XMLRPCCallback listener, XMLRPC methodName, XMLRPC parameters, File for large uploads
+     * @return unique id of this async call
      * @throws XMLRPCException
      */
-    public Object call(String method, Object p0, Object p1) throws XMLRPCException {
-        Object[] params = {
-            p0, p1,
-        };
-        return callXMLRPC(method, params, null);
+    public long callAsync(XMLRPCCallback listener, String methodName, Object[] params, File tempFile) {
+        long id = System.currentTimeMillis();
+        new Caller(listener, id, methodName, params, tempFile).start();
+        return id;
     }
-
+    
     /**
-     * Convenience method call with three parameters
-     *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @param p2 method's 3rd parameter
-     * @return deserialized method return value
-     * @throws XMLRPCException
+     * The Caller class is used to make asynchronous calls to the server.
+     * For synchronous calls the Thread function of this class isn't used.
      */
-    public Object call(String method, Object p0, Object p1, Object p2) throws XMLRPCException {
-        Object[] params = {
-            p0, p1, p2,
-        };
-        return callXMLRPC(method, params, null);
-    }
+    private class Caller extends Thread {
 
-    /**
-     * Convenience method call with four parameters
-     *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @param p2 method's 3rd parameter
-     * @param p3 method's 4th parameter
-     * @return deserialized method return value
-     * @throws XMLRPCException
-     */
-    public Object call(String method, Object p0, Object p1, Object p2, Object p3) throws XMLRPCException {
-        Object[] params = {
-            p0, p1, p2, p3,
-        };
-        return callXMLRPC(method, params, null);
-    }
+        private XMLRPCCallback listener;
+        private long threadId;
+        private String methodName;
+        private Object[] params;
+        private File tempFile;
 
-    /**
-     * Convenience method call with five parameters
-     *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @param p2 method's 3rd parameter
-     * @param p3 method's 4th parameter
-     * @param p4 method's 5th parameter
-     * @return deserialized method return value
-     * @throws XMLRPCException
-     */
-    public Object call(String method, Object p0, Object p1, Object p2, Object p3, Object p4) throws XMLRPCException {
-        Object[] params = {
-            p0, p1, p2, p3, p4,
-        };
-        return callXMLRPC(method, params, null);
-    }
+        private volatile boolean canceled;
+        private ConnectionClient http;
 
-    /**
-     * Convenience method call with six parameters
-     *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @param p2 method's 3rd parameter
-     * @param p3 method's 4th parameter
-     * @param p4 method's 5th parameter
-     * @param p5 method's 6th parameter
-     * @return deserialized method return value
-     * @throws XMLRPCException
-     */
-    public Object call(String method, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5) throws XMLRPCException {
-        Object[] params = {
-            p0, p1, p2, p3, p4, p5,
-        };
-        return callXMLRPC(method, params, null);
-    }
+        /**
+         * Create a new Caller for asynchronous use.
+         *
+         * @param listener The listener to notice about the response or an error.
+         * @param threadId An id that will be send to the listener.
+         * @param methodName The method name to call.
+         * @param params The parameters of the call or null.
+         */
+        public Caller(XMLRPCCallback listener, long threadId, String methodName, Object[] params, File tempFile) {
+            this.listener = listener;
+            this.threadId = threadId;
+            this.methodName = methodName;
+            this.params = params;
+            this.tempFile = tempFile;
+        }
 
-    /**
-     * Convenience method call with seven parameters
-     *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @param p2 method's 3rd parameter
-     * @param p3 method's 4th parameter
-     * @param p4 method's 5th parameter
-     * @param p5 method's 6th parameter
-     * @param p6 method's 7th parameter
-     * @return deserialized method return value
-     * @throws XMLRPCException
-     */
-    public Object call(String method, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6) throws XMLRPCException {
-        Object[] params = {
-            p0, p1, p2, p3, p4, p5, p6,
-        };
-        return callXMLRPC(method, params, null);
-    }
+        /**
+         * Create a new Caller for synchronous use.
+         * If the caller has been created with this constructor you cannot use the
+         * start method to start it as a thread. But you can call the call method
+         * on it for synchronous use.
+         */
+        public Caller() { }
 
-    /**
-     * Convenience method call with eight parameters
-     *
-     * @param method name of method to call
-     * @param p0 method's 1st parameter
-     * @param p1 method's 2nd parameter
-     * @param p2 method's 3rd parameter
-     * @param p3 method's 4th parameter
-     * @param p4 method's 5th parameter
-     * @param p5 method's 6th parameter
-     * @param p6 method's 7th parameter
-     * @param p7 method's 8th parameter
-     * @return deserialized method return value
-     * @throws XMLRPCException
-     */
-    public Object call(String method, Object p0, Object p1, Object p2, Object p3, Object p4, Object p5, Object p6, Object p7) throws XMLRPCException {
-        Object[] params = {
-            p0, p1, p2, p3, p4, p5, p6, p7,
-        };
-        return callXMLRPC(method, params, null);
-    }
+        /**
+         * The run method is invoked when the thread gets started.
+         * This will only work, if the Caller has been created with parameters.
+         * It execute the call method and notify the listener about the result.
+         */
+        @Override
+        public void run() {
 
-    public Object callUploadFile(String method, Object[] params, File tempFile) throws XMLRPCException {
+            if(listener == null)
+                return;
 
-        return callXMLRPC(method, params, tempFile);
-    }
+            try {
+                backgroundCalls.put(threadId, this);
+                Object o = this.callXMLRPC(methodName, params, tempFile);
+                listener.onSuccess(threadId, o);
+            } catch(CancelException ex) {
+                // Don't notify the listener, if the call has been canceled.
+            } catch (XMLRPCException ex) {
+                listener.onFailure(threadId, ex);
+            } finally {
+                backgroundCalls.remove(threadId);
+            }
+
+        }
+
+        /**
+         * Cancel this call. This will abort the network communication.
+         */
+        public void cancel() {
+            // TODO this doesn't work
+            // Set the flag, that this thread has been canceled
+            canceled = true;
+            // Disconnect the connection to the server
+            http.getHttpRequestRetryHandler();
+        }
 
     /**
      * Call method with optional parameters
@@ -488,6 +456,7 @@ public class XMLRPCClient {
             throw new XMLRPCException(e);
         }
     }
+    }
 
     private void deleteTempFile(String method, File tempFile) {
         if (tempFile != null) {
@@ -497,4 +466,6 @@ public class XMLRPCClient {
         }
 
     }
+    
+    private class CancelException extends RuntimeException { }
 }

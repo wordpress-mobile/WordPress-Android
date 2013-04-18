@@ -1,12 +1,16 @@
 
 package org.wordpress.android;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.RingtoneManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -14,9 +18,13 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
-import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.util.ImageHelper;
 
 public class GCMIntentService extends GCMBaseIntentService {
+    
+    private static int noteCounter = 0;
+    private static Map<String, Integer> activeNotificationsMap = new HashMap<String, Integer>();
 
     @Override
     protected void onError(Context context, String errorId) {
@@ -26,16 +34,51 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onMessage(Context context, Intent intent) {
-        // TODO Auto-generated method stub
         Log.v("WORDPRESS", "Received Message");
         
         Bundle extras = intent.getExtras();
         
-        if (extras == null)
+        if (extras == null) {
+            Log.v("WORDPRESS", "Hrm. No notification message content received. Aborting.");
             return;
+        }
         
-        String message = extras.getString("message");
-
+        String title = extras.getString("title");
+        if (title == null)
+            title = "WordPress";
+        String message = extras.getString("msg");
+        
+        String note_id = extras.getString("from");
+        int notificationId = 0;
+        
+        if (note_id != null) {
+            if (activeNotificationsMap.containsKey(note_id)) {
+                notificationId = activeNotificationsMap.get(note_id);
+            } else {
+                notificationId = noteCounter;
+                activeNotificationsMap.put(note_id, notificationId);
+                noteCounter++;
+            }
+        }
+        
+        String iconURL = extras.getString("icon");
+        Bitmap largeIconBitmap = null;
+        if (iconURL != null) {
+            float screenDensity = getResources().getDisplayMetrics().densityDpi;
+            int size = Math.round(64 * (screenDensity / 160));
+            String resizedURL = iconURL.replaceAll("(?<=[?&;])s=[0-9]*", "s=" + size);
+            largeIconBitmap = ImageHelper.downloadBitmap(resizedURL);
+        }
+        
+        // It'd be cool to set the small icon, but it looks like it doesn't accept a bitmap. 
+        // We could add noticons to the app resources though (like in WPiOS)
+        /*String noticonURL = extras.getString("noticon");
+        Bitmap smallIconBitmap = null;
+        if (noticonURL != null) {
+            int size = 16 * (screenDensity / 160);
+            smallIconBitmap = ImageHelper.downloadBitmap(String.format("http://i0.wp.com/%s?w=%d", noticonURL, size));
+        }*/
+        
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean sound, vibrate, light;
 
@@ -46,30 +89,43 @@ public class GCMIntentService extends GCMBaseIntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("New Notification")
+                .setContentTitle(title)
                 .setContentText(message)
-                .setAutoCancel(true);
+                .setTicker(message)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         
+        // Add some actions if this is a comment notification
+        String noteType = extras.getString("type");
+        if (noteType != null && noteType.equals("c")) {
+            // TODO pass whatever's needed to go directly to comment reply
+            // TODO use intent service for handling actions http://udinic.wordpress.com/2012/07/24/adding-more-actions-to-jellybean-notifications/
+            Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
+            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            mBuilder.addAction(R.drawable.ab_icon_reply, getResources().getText(R.string.reply), commentReplyPendingIntent);
+        }
+        
+        if (largeIconBitmap != null) {
+            mBuilder.setLargeIcon(largeIconBitmap);
+        }
         
         if (sound)
-            mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            mBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification));
         if (vibrate)
             mBuilder.setVibrate(new long[]{ 500, 500, 500 });
         if (light)
             mBuilder.setLights(0xff0000ff, 1000, 5000);
         
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, CommentsActivity.class);
-
-
+        Intent resultIntent = new Intent(this, NotificationsActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
-                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent.FLAG_ACTIVITY_NEW_TASK);
         mBuilder.setContentIntent(pendingIntent);
         NotificationManager mNotificationManager =
             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         // TODO: .getNotification() is deprecated but .build() is not available on 2.3.3
-        mNotificationManager.notify(0, mBuilder.getNotification());
+        mNotificationManager.notify(notificationId, mBuilder.build());
 
     }
 
