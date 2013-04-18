@@ -7,6 +7,9 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +25,8 @@ public class Note {
     private static String QUERY_ARRAY_INDEX_END="]";
     private static String QUERY_ARRAY_FIRST="first";
     private static String QUERY_ARRAY_LAST="last";
+    
+    private Map<String,JSONObject> mActions;
 
     private JSONObject mNoteJSON;
     /**
@@ -29,7 +34,6 @@ public class Note {
      */
     public Note(JSONObject noteJSON){
         mNoteJSON = noteJSON;
-        Log.d(TAG, String.format("Built note of type: %s", getType()));
     }
 
     public String toString(){
@@ -68,6 +72,25 @@ public class Note {
     public Boolean isUnread(){
         return queryJSON("unread", "0").equals("1");
     }
+    public Map<String,JSONObject> getActions(){
+        if (mActions == null) {
+            try {
+                JSONArray actions = queryJSON("body.actions", new JSONArray());
+                mActions = new HashMap<String,JSONObject>(actions.length());
+                for (int i=0; i<actions.length(); i++) {
+                    JSONObject action = actions.getJSONObject(i);
+                    String actionType = queryJSON(action, "type", "");
+                    if (!actionType.equals("")) {
+                        mActions.put(actionType, action);
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Could not find actions", e);
+                mActions = new HashMap<String,JSONObject>();
+            }
+        }
+        return mActions;
+    }
     protected Object queryJSON(String query){
         Object defaultObject = "";
         return queryJSON(query, defaultObject);
@@ -76,84 +99,83 @@ public class Note {
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
     public <U extends Object> U queryJSON(String query, U defaultObject){
-        int offset = 0;
-        JSONObject queryJSON = mNoteJSON;
-        do {
-            // find the next . or [
-            int next_seperator = query.indexOf(QUERY_SEPERATOR, offset);
-            boolean has_next_seperator = next_seperator > -1;
-            int start_array = query.indexOf(QUERY_ARRAY_INDEX_START, offset);
-            // pull out the key up to the seperator
-            if (next_seperator == -1 && start_array == -1) {
-                try {
-                    return (U) queryJSON.get(query.substring(offset));
-                } catch (JSONException e) {
-                    Log.e(TAG, String.format("Failed to query %s", query), e);
-                    return defaultObject;
-                }
-            }
-            String key;
-            if (start_array == -1 || (next_seperator > -1 && start_array > next_seperator )) {
-                try {
-                    queryJSON = queryJSON.getJSONObject(query.substring(offset, next_seperator));
-                } catch (JSONException e) {
-                    Log.e(TAG, String.format("Failed to query key %s", query), e);
-                    return defaultObject;
-                }
-                offset = next_seperator+1;
-                continue;
-            }
-            if (next_seperator == -1 || start_array == -1) {
-                key = query.substring(offset, Math.max(next_seperator, start_array));
-            } else {
-                key = query.substring(offset, Math.min(next_seperator, start_array));
-            }
-            if (start_array > -1 && (start_array < next_seperator || !has_next_seperator)) {
-                // time to pull off arrays
-                try {
-                    JSONArray arrayJSON = queryJSON.getJSONArray(key);
-                    do {
-                        int end_array = query.indexOf(QUERY_ARRAY_INDEX_END, start_array);
-                        if (end_array <= start_array) break;
-                        offset = end_array;
-                        String index = query.substring(start_array+1, end_array);
-                        int i;
-                        if (index.equals(QUERY_ARRAY_FIRST)) {
-                            i = 0;
-                        } else if (index.equals(QUERY_ARRAY_LAST)) {
-                            i = -1;
-                        } else {
-                            i = Integer.parseInt(index);
-                        }
-                        if (i < 0)
-                            i = arrayJSON.length() + i;
-                        start_array = query.indexOf(QUERY_ARRAY_INDEX_START, end_array);
-                        // no more arrays and no seperator, end of query, return object at index
-                        // e.g. key[0][0]
-                        if (start_array == -1 && !has_next_seperator) {
-                            return (U) arrayJSON.get(i);
-                        }
-                        // no more arrays but there's a seperator, we must have a JSONObject
-                        if (start_array == -1 && has_next_seperator) {
-                            queryJSON = arrayJSON.getJSONObject(i);
-                            break;
-                        }
-                        // theres more query but this is the last array in this section
-                        // eg key[0][0][0].something[0]
-                        arrayJSON = arrayJSON.getJSONArray(i);
-                        // the next item is an array, so pull the array off and continue
-                    } while(start_array < next_seperator);
-                    offset = next_seperator + 1;
-                    continue;
-                } catch (JSONException e) {
-                    Log.e(TAG, String.format("Failed to query array %s", query), e);
-                    return defaultObject;
-                }
-            }
-            Log.d(TAG, String.format("Invalid query: %s", query));
-            offset = -1;
-        } while(offset > 0);
-        return defaultObject;
+        return queryJSON(this.toJSONObject(), query, defaultObject);
     }
     
+    public static <U extends Object> U queryJSON(JSONObject source, String query, U defaultObject){
+        int nextSeperator = query.indexOf(QUERY_SEPERATOR);
+        int nextIndexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
+        if (nextSeperator == -1 && nextIndexStart == -1) {
+            // last item let's get it
+            try {
+                return (U) source.get(query);
+            } catch (JSONException e) {
+                Log.e(TAG, String.format("Could not complete query %s", query), e);
+            }
+        }
+        int endQuery;
+        if (nextSeperator == -1 || nextIndexStart == -1) {
+            endQuery = Math.max(nextSeperator, nextIndexStart);
+        } else {
+            endQuery = Math.min(nextSeperator, nextIndexStart);
+        }
+        String nextQuery = query.substring(endQuery);
+        String key = query.substring(0, endQuery);
+        try {
+            if (nextQuery.indexOf(QUERY_SEPERATOR) == 0) {
+                return queryJSON(source.getJSONObject(key), nextQuery.substring(1), defaultObject);
+            } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0){
+                return queryJSON(source.getJSONArray(key), nextQuery, defaultObject);
+            } else if (!nextQuery.equals("")){
+                Log.d(TAG, String.format("Incorrect query for next object %s %d %d", nextQuery, nextQuery.indexOf(QUERY_ARRAY_INDEX_START), nextQuery.indexOf(QUERY_SEPERATOR)));
+                return defaultObject;
+            }
+            return (U) source.get(key);
+        } catch (JSONException e) {
+            Log.e(TAG, String.format("Could not complete query %s", query), e);
+            return defaultObject;
+        }
+    }
+    
+    public static <U extends Object> U queryJSON(JSONArray source, String query, U defaultObject){
+        // query must start with [ have an index and then have ]
+        int indexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
+        int indexEnd = query.indexOf(QUERY_ARRAY_INDEX_END);
+        if (indexStart == -1 || indexEnd == -1 || indexStart > indexEnd) {
+            Log.d(TAG, String.format("Incorrect query for array index %s", query));
+            return defaultObject;
+        }
+        // get "index" from "[index]"
+        String indexStr = query.substring(indexStart + 1, indexEnd);
+        int index;
+        if (indexStr.equals(QUERY_ARRAY_FIRST)) {
+            index = 0;
+        } else if (indexStr.equals(QUERY_ARRAY_LAST)){
+            index = -1;
+        } else {
+            index = Integer.parseInt(indexStr);
+        }
+        if(index < 0){
+            index = source.length() + index;
+        }
+        // copy remaining query
+        String remainingQuery = query.substring(indexEnd + 1);
+        try {
+            if (remainingQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0) {
+                return queryJSON(source.getJSONArray(index), remainingQuery, defaultObject);
+            } else if(remainingQuery.indexOf(QUERY_SEPERATOR) == 0){
+                return queryJSON(source.getJSONObject(index), remainingQuery.substring(1), defaultObject);
+            } else if(!remainingQuery.equals("")){
+                // TODO throw an exception since the query isn't valid?
+                Log.d(TAG, String.format("Incorrect query for next object %s", remainingQuery));
+                return defaultObject;
+            }
+            return (U) source.get(index);
+        } catch (JSONException e) {
+            Log.e(TAG, String.format("Could not complete query %s", query), e);
+            return defaultObject;
+        }
+
+    }
+
 }
