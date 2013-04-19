@@ -105,8 +105,7 @@
         </activity>
         <activity
             android:name="org.wordpress.android.ui.posts.PostsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
