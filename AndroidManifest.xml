@@ -68,8 +68,7 @@
         <!-- Comments activities -->
         <activity
             android:name="org.wordpress.android.ui.comments.CommentsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.comments.EditCommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -114,8 +113,7 @@
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.posts.PreviewPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -136,19 +134,15 @@
         </activity>
         <activity
             android:name="org.wordpress.android.ui.DashboardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.reader.ReaderActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.StatsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
 
         <!-- Services -->
