@@ -186,7 +186,8 @@ public class ReaderImplFragment extends ReaderBaseFragment {
 
         protected void onPostExecute(List<?> result) {
 
-            ((ReaderActivity) getActivity()).stopAnimatingButton();
+            if (getActivity() != null)
+                ((ReaderActivity) getActivity()).stopAnimatingButton();
             // Read the WordPress.com cookies from the wv and pass them to the
             // connections below!
             CookieManager cookieManager = CookieManager.getInstance();
