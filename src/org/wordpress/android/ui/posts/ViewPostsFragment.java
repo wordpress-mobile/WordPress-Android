@@ -592,6 +592,8 @@ public class ViewPostsFragment extends ListFragment {
         protected void onPostExecute(Boolean result) {
             if (isCancelled() || !result) {
                 mOnRefreshListener.onRefresh(false);
+                if (getActivity() == null)
+                    return;
                 if (errorMsg != "" && !getActivity().isFinishing()) {
                     FragmentTransaction ft = getFragmentManager()
                             .beginTransaction();
