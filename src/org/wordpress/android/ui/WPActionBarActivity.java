@@ -109,8 +109,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mIsXLargeDevice = true;
         
         // configure all the available menu items
-        mMenuItems.add(new NotificationsMenuItem());
         mMenuItems.add(new ReaderMenuItem());
+        mMenuItems.add(new NotificationsMenuItem());
         mMenuItems.add(new PostsMenuItem());
         mMenuItems.add(new PagesMenuItem());
         mMenuItems.add(new CommentsMenuItem());

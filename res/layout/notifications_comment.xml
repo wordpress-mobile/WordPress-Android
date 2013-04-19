@@ -13,15 +13,30 @@
       android:layout_width="match_parent"
       android:id="@+id/content">
       <TextView
-        android:text="Hello World"
         android:id="@+id/note_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:textSize="18sp" />
     </LinearLayout>
   </ScrollView>
   <org.wordpress.android.ui.notifications.ReplyField
-    android:layout_height="64dp"
+    android:background="#CCCCCC"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:id="@+id/replyField" />
+    android:id="@+id/replyField">
+    <EditText
+      android:id="@+id/note_reply_field"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:inputType="text|textMultiLine"
+      android:maxLines="4"
+      android:hint="@+string/tap_to_reply" />
+    <Button
+      android:id="@+id/note_reply_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@+string/reply" />
+  </org.wordpress.android.ui.notifications.ReplyField>
 </LinearLayout>

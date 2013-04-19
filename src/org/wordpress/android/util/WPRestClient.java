@@ -25,6 +25,7 @@ public class WPRestClient {
     private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
     
     private static final String NOTIFICATION_FIELDS="id,type,unread,body,subject,timestamp";
+    private static final String COMMENT_REPLY_CONTENT_FIELD="content";
     
     private Oauth mOauth;
     private RestClient mRestClient;
@@ -68,6 +69,12 @@ public class WPRestClient {
             }
         });
     }
+    public void replyToComment(String siteId, String commentId, String content, AsyncHttpResponseHandler h){
+        RequestParams params = new RequestParams();
+        params.put(COMMENT_REPLY_CONTENT_FIELD, content);
+        String path = String.format("sites/%s/comments/%s/replies/new", siteId, commentId);
+        post(path, params, h);
+    }
     /**
      * Get a single notification
      */
@@ -97,5 +104,10 @@ public class WPRestClient {
     public void get(String path, RequestParams params, AsyncHttpResponseHandler handler){
         mRestClient.get(path, params, handler);
     }
-    
+    /**
+     * Make POST request with params
+     */
+    public void post(String path, RequestParams params, AsyncHttpResponseHandler h){
+        mRestClient.post(path, params, h);
+    }
 }
