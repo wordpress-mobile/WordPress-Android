@@ -380,6 +380,7 @@
   <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
   <string name="error_media_upload">An error occurred while uploading media</string>
   <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
+  <string name="fatal_db_error">So sorry, but an error occurred while attempting to create the app database. Please try reinstalling the app.</string>
   
   <!--  Image Descriptions for Accessibility -->
   <string name="content_description_add_media">Add media</string>

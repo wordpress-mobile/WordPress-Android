@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
@@ -133,7 +134,12 @@ public class WordPressDB {
     public WordPressDB(Context ctx) {
         this.context = ctx;
 
-        db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+        try {
+            db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+        } catch (SQLiteException e) {
+            db = null;
+            return;
+        }
 
         // db.execSQL("DROP TABLE IF EXISTS "+ SETTINGS_TABLE);
         db.execSQL(CREATE_TABLE_SETTINGS);

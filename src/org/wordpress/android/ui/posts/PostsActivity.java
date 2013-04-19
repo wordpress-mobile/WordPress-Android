@@ -60,6 +60,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // Special check for a null database (see #507)
+        if (WordPress.wpDB == null) {
+            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
