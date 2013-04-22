@@ -56,7 +56,6 @@ public class NotificationsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
-        Log.d(TAG, "Activity created, adding footer");
         ListView listView = getListView();
         listView.setOnScrollListener(new ListScrollListener());
         View progress = View.inflate(getActivity(), R.layout.list_footer_progress, null);
@@ -78,7 +77,6 @@ public class NotificationsListFragment extends ListFragment {
         cache = new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus);
         ThumbnailAdapter thumbAdapter = new ThumbnailAdapter( getActivity(), adapter, cache, IMAGE_IDS);
         super.setListAdapter(thumbAdapter);
-
     }
     public void setNotesAdapter(NotesAdapter adapter){
         mNotesAdapter = adapter;

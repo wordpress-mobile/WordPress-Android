@@ -326,6 +326,8 @@
   <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
   <string name="tap_to_reply">Tap to Reply</string>
   <string name="notification_replying">Publishing reply</string>
+  <string name="follow">Follow</string>
+  <string name="unfollow">Unfollow</string>
   
   <!-- reader -->
   <string name="reader">Reader</string>
