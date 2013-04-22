@@ -55,64 +55,28 @@ public class WordPress extends Application {
 
         restClient = new WPRestClient(config, settings);
         
-        registerForCloudMessaging();
+        registerForCloudMessaging(this);
         
         super.onCreate();
     }
     
-    private void registerForCloudMessaging() {
+    public static void registerForCloudMessaging(Context ctx) {
         
-        if (WordPress.hasValidWPComCredentials(this)) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this); 
+        if (WordPress.hasValidWPComCredentials(ctx)) {
             String notificationId = null;
-            // TODO remove try/catch with debug check for emulators
             try {
                 // Register for Google Cloud Messaging
-                GCMRegistrar.checkDevice(this);
-                GCMRegistrar.checkManifest(this);
-                notificationId = GCMRegistrar.getRegistrationId(this);
+                GCMRegistrar.checkDevice(ctx);
+                GCMRegistrar.checkManifest(ctx);
+                notificationId = GCMRegistrar.getRegistrationId(ctx);
                 String gcmId = WordPress.config.getProperty("gcm.id").toString();
                 if (gcmId != null && notificationId.equals("")) {
-                    GCMRegistrar.register(this, gcmId);
-                    notificationId = GCMRegistrar.getRegistrationId(this);
+                    GCMRegistrar.register(ctx, gcmId);
                 } else {
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
                 Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
-            }
-            
-            if (notificationId != null && notificationId.length() > 0) {
-                // Get or create UUID for WP.com notes api
-                String uuid = settings.getString("wp_pref_notifications_uuid", null);
-                if (uuid == null) {
-                    uuid = UUID.randomUUID().toString();
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("wp_pref_notifications_uuid", uuid);
-                    editor.commit();
-                }
-
-                Object[] params = {
-                        settings.getString("wp_pref_wpcom_username", ""),
-                        WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
-                        notificationId,
-                        uuid,
-                        "android",
-                        false
-                };
-
-                XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
-                client.callAsync(new XMLRPCCallback() {
-                    public void onSuccess(long id, Object result) {
-                        Log.v("WORDPRESS", "Succesfully registered device on WP.com");
-                    }
-
-                    public void onFailure(long id, XMLRPCException error) {
-                        Log.v("WORDPRESS", error.getMessage());
-                    }
-                }, "wpcom.mobile_push_register_token", params);
-                
-                new WPComXMLRPCApi().getNotificationSettings(null, getApplicationContext());
             }
         }
     }

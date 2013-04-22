@@ -450,6 +450,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     setupCurrentBlog();
                     initMenuDrawer();
                     mMenuDrawer.peekDrawer(0);
+                    WordPress.registerForCloudMessaging(this);
                 } else {
                     finish();
                 }
@@ -475,6 +476,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                             setupCurrentBlog();
                             onBlogChanged();
                         }
+                        WordPress.registerForCloudMessaging(this);
                     }
                 }
                 break;

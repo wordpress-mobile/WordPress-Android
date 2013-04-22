@@ -1,8 +1,10 @@
 
 package org.wordpress.android;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +19,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
+
+import org.xmlrpc.android.WPComXMLRPCApi;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.util.ImageHelper;
@@ -131,14 +138,45 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onRegistered(Context context, String regId) {
-        // Send id to WP.com
-        Log.v("WORDPRESS", "GCM Registered ID: " + regId);
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context); 
+        if (regId != null && regId.length() > 0) {
+            // Get or create UUID for WP.com notes api
+            String uuid = settings.getString("wp_pref_notifications_uuid", null);
+            if (uuid == null) {
+                uuid = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("wp_pref_notifications_uuid", uuid);
+                editor.commit();
+            }
 
+            Object[] params = {
+                    settings.getString("wp_pref_wpcom_username", ""),
+                    WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                    regId,
+                    uuid,
+                    "android",
+                    false
+            };
+
+            XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+            client.callAsync(new XMLRPCCallback() {
+                public void onSuccess(long id, Object result) {
+                    Log.v("WORDPRESS", "Succesfully registered device on WP.com");
+                }
+
+                public void onFailure(long id, XMLRPCException error) {
+                    Log.v("WORDPRESS", error.getMessage());
+                }
+            }, "wpcom.mobile_push_register_token", params);
+            
+            new WPComXMLRPCApi().getNotificationSettings(null, context);
+        }
     }
 
     @Override
     protected void onUnregistered(Context context, String regId) {
-        // Remove id from WP.com
+        // TODO Remove id from WP.com?
         Log.v("WORDPRESS", "GCM Unregistered ID: " + regId);
 
     }
