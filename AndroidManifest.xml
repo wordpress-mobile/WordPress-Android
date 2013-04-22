@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wordpress.android"
     android:installLocation="auto"
-    android:versionCode="67"
-    android:versionName="2.3" >
+    android:versionCode="68"
+    android:versionName="2.3.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -42,6 +42,12 @@
         android:name="android.hardware.location"
         android:required="false" />
     <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
@@ -78,8 +84,7 @@
         <!-- Comments activities -->
         <activity
             android:name="org.wordpress.android.ui.comments.CommentsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.comments.EditCommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -115,8 +120,7 @@
         </activity>
         <activity
             android:name="org.wordpress.android.ui.posts.PostsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -125,8 +129,7 @@
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.posts.PreviewPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -147,18 +150,15 @@
         </activity>
         <activity
             android:name="org.wordpress.android.ui.DashboardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.reader.ReaderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="org.wordpress.android.ui.StatsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         
         <!-- Notifications activities -->

@@ -82,7 +82,7 @@
         <item name="dropDownListViewStyle">@style/wordpress_DropDownListView</item>
     </style>
     
-    <style name="WordPress.Dialog" parent="Theme.Sherlock.Light.Dialog"></style>
+    <style name="WordPress.Dialog" parent="@android:style/Theme.Dialog"></style>
     
     <style name="WordPressSectionHeader">
         <item name="android:layout_marginTop">8dp</item>

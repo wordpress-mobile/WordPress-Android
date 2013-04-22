@@ -41,6 +41,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 
 public class PostUploadService extends Service {
@@ -92,10 +93,11 @@ public class PostUploadService extends Service {
             } else {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
-                Intent notificationIntent = new Intent(context, PostsActivity.class);
+                Intent notificationIntent = new Intent(context, (post.isPage()) ? PagesActivity.class : PostsActivity.class);
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
                 notificationIntent.putExtra("fromNotification", true);
                 notificationIntent.putExtra("errorMessage", error);
+                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 n.flags |= Notification.FLAG_AUTO_CANCEL;
                 String errorText = context.getResources().getText(R.string.upload_failed).toString();

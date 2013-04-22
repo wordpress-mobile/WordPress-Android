@@ -543,7 +543,7 @@ public class HttpRequest {
     /**
      * @param cause
      */
-    protected HttpRequestException(final IOException cause) {
+    protected HttpRequestException(final Throwable cause) {
       super(cause);
     }
 
@@ -1374,12 +1374,14 @@ public class HttpRequest {
    * @throws HttpRequestException
    */
   public int code() throws HttpRequestException {
-    try {
-      closeOutput();
-      return connection.getResponseCode();
-    } catch (IOException e) {
-      throw new HttpRequestException(e);
-    }
+      try {
+          closeOutput();
+          return connection.getResponseCode();
+      } catch (IOException e) {
+          throw new HttpRequestException(e);
+      } catch (NullPointerException e) { //See #506
+          throw new HttpRequestException(e);
+      }
   }
 
   /**

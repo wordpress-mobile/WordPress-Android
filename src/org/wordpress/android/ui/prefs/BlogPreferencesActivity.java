@@ -129,7 +129,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
         blog.save(originalUsername);
         
-        if (WordPress.currentBlog.getId() == blog.getId())
+        if (WordPress.getCurrentBlog().getId() == blog.getId())
             WordPress.currentBlog = blog;
         
         // exit settings screen

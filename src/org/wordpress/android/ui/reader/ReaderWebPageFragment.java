@@ -38,7 +38,8 @@ public class ReaderWebPageFragment extends ReaderBaseFragment {
         wv.setWebViewClient(new DetailWebViewClient());
         wv.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                ((ReaderActivity)getActivity()).setSupportProgress(progress * 100);
+                if (getActivity() != null)
+                    ((ReaderActivity)getActivity()).setSupportProgress(progress * 100);
             }
         });
 

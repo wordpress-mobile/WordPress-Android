@@ -36,6 +36,7 @@
                     android:id="@+id/postContent"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/content_edit_padding"
                     android:gravity="top"
                     android:hint="@string/post_content"
                     android:inputType="textMultiLine|textCapSentences|textAutoCorrect"

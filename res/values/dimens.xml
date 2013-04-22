@@ -7,6 +7,7 @@
     <dimen name="format_bar_font_size">17dp</dimen>
     <dimen name="format_bar_button_padding">4dp</dimen>
     <dimen name="format_bar_height">40dp</dimen>
+    <dimen name="content_edit_padding">46dp</dimen>
     <dimen name="menu_image_size">40dp</dimen>
     <dimen name="menu_shadow_width">10dp</dimen>
     <dimen name="add_account_width">-1dp</dimen>
