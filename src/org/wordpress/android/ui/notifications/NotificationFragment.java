@@ -7,24 +7,9 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.os.Bundle;
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.ListAdapter;
-import android.view.View;
-import android.view.ViewGroup;
-
-import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 
-public abstract class NotificationFragment extends Fragment {
-    protected Note mNote;
-    public Note getNote(){
-        return mNote;
-    }
-    public void setNote(Note note){
-        mNote = note;
-    }
+interface NotificationFragment {
+    public Note getNote();
+    public void setNote(Note note);
 }

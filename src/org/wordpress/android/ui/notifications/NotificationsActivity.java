@@ -92,9 +92,9 @@ public class NotificationsActivity extends WPActionBarActivity {
 
         fragmentDetectors.add(new FragmentDetector(){
             @Override
-            public NotificationFragment getFragment(Note note){
+            public Fragment getFragment(Note note){
                 if (note.isCommentType()) {
-                    NotificationFragment fragment = new NotificationsCommentFragment();
+                    Fragment fragment = new NotificationsCommentFragment();
                     return fragment;
                 }
                 return null;
@@ -162,11 +162,11 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
     }
     
-    private NotificationFragment fragmentForNote(Note note){
+    private Fragment fragmentForNote(Note note){
         Iterator<FragmentDetector> templates = fragmentDetectors.iterator();
         while(templates.hasNext()){
             FragmentDetector detector = templates.next();
-            NotificationFragment fragment = detector.getFragment(note);
+            Fragment fragment = detector.getFragment(note);
             if (fragment != null){
                 return fragment;
             }
@@ -185,9 +185,10 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (fm.getBackStackEntryCount() > 0){
             fm.popBackStack();
         }
-        NotificationFragment fragment = fragmentForNote(note);
-        // swap the gragment
-        fragment.setNote(note);
+        Fragment fragment = fragmentForNote(note);
+        // swap the fragment
+        NotificationFragment noteFragment = (NotificationFragment) fragment;
+        noteFragment.setNote(note);
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(R.id.note_fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -279,6 +280,6 @@ public class NotificationsActivity extends WPActionBarActivity {
     }
     
     private abstract class FragmentDetector {
-        abstract public NotificationFragment getFragment(Note note);
+        abstract public Fragment getFragment(Note note);
     }
 }

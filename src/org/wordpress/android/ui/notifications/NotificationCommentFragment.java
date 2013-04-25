@@ -12,6 +12,7 @@ import android.text.Html;
 import android.text.Editable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.RemoteViews;
@@ -33,13 +34,14 @@ import org.wordpress.android.WordPress;
 
 import org.json.JSONObject;
 
-class NotificationsCommentFragment extends NotificationFragment {
+class NotificationsCommentFragment extends Fragment implements NotificationFragment {
     private static final String TAG="NoteComment";
     private static final String NOTE_ACTION_REPLY="replyto-comment";
     private static final String REPLY_CONTENT_PARAM_KEY="content";
     private static String LOREM="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\n";
     private TextView mCommentText;
     private ReplyField mReplyField;
+    private Note mNote;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
@@ -111,6 +113,14 @@ class NotificationsCommentFragment extends NotificationFragment {
             // nm.cancel("reply", 0xFF);
         }
         
+    }
+    
+    public void setNote(Note note){
+        mNote = note;
+    }
+    
+    public Note getNote(){
+        return mNote;
     }
 
 }
