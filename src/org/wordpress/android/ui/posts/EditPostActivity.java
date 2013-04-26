@@ -20,7 +20,6 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -93,6 +92,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
@@ -509,11 +509,11 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+        if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
         }
         menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+        if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 3, 0, getResources().getText(R.string.take_video));
         }
     }
@@ -583,20 +583,20 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
     }
-    
+
     @Override
     public void onImeBack(WPEditText ctrl, String text) {
         if (mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
     }
-    
+
     private void showFormatBar() {
         mFormatBar.setVisibility(View.VISIBLE);
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
         fadeInAnimation.setDuration(500);
         mFormatBar.startAnimation(fadeInAnimation);
     }
-    
+
     private void hideFormatBar() {
         AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
         fadeOutAnimation.setDuration(500);
@@ -660,7 +660,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                             mPost.setQuickPostType("QuickVideo");
                     }
-                    
+
                     WordPress.currentPost = mPost;
                     startService(new Intent(this, PostUploadService.class));
                 }
@@ -696,10 +696,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        
+
         if (mFormatBar.getVisibility() != View.VISIBLE)
             showFormatBar();
-        
+
         float pos = event.getY();
 
         if (event.getAction() == 0)
@@ -911,7 +911,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         mIsNew = true;
         mLocalDraft = true;
-        
+
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         if (accounts.size() > 0) {
@@ -1008,7 +1008,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                         boolean exists = false;
                         for (int i = 0; i < ss.length; i++) {
-                            int style = ((StyleSpan) ss[i]).getStyle();
+                            int style = ss[i].getStyle();
                             if (style == android.graphics.Typeface.BOLD) {
                                 str.removeSpan(ss[i]);
                                 exists = true;
@@ -1025,7 +1025,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                         boolean exists = false;
                         for (int i = 0; i < ss.length; i++) {
-                            int style = ((StyleSpan) ss[i]).getStyle();
+                            int style = ss[i].getStyle();
                             if (style == android.graphics.Typeface.ITALIC) {
                                 str.removeSpan(ss[i]);
                                 exists = true;
@@ -1696,7 +1696,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     private void addMedia(String imgPath, Uri curStream) {
-        
+
         if (mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
 
