@@ -1,5 +1,9 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 import org.wordpress.android.WordPress;
 
 /**
@@ -69,5 +73,29 @@ public class DeviceUtils {
 
     public static String getBlackBerryUserAgent() {
         return "wp-blackberry/"+WordPress.versionName;
+    }
+    
+    /**
+     * Checks camera availability recursively based on API level.
+     *
+     * TODO: change "android.hardware.camera.front" and "android.hardware.camera.any" to
+     *     {@link PackageManager#FEATURE_CAMERA_FRONT} and {@link PackageManager#FEATURE_CAMERA_ANY},
+     *     respectively, once they become accessible or minSdk version is incremented.
+     *
+     * @param context The context.
+     * @return Whether camera is available.
+     */
+    public boolean hasCamera(Context context) {
+        final PackageManager pm = context.getPackageManager();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+            return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
+                    || pm.hasSystemFeature("android.hardware.camera.front");
+        }
+
+        return pm.hasSystemFeature("android.hardware.camera.any");
     }
 }

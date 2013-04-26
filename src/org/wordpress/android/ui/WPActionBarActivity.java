@@ -51,6 +51,7 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -399,25 +400,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     break;
                 case QUICK_PHOTO_ACTIVITY:
                     mShouldFinish = false;
-                    PackageManager pm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-                    if
-                    (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_CAMERA);
-                    } else {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_LIBRARY);
-                    }
+                    intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                            ? Constants.QUICK_POST_PHOTO_CAMERA
+                            : Constants.QUICK_POST_PHOTO_LIBRARY);
                     intent.putExtra("isNew", true);
                     break;
                 case QUICK_VIDEO_ACTIVITY:
                     mShouldFinish = false;
-                    PackageManager vpm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-                    if (vpm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_CAMERA);
-                    } else {
-                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_LIBRARY);
-                    }
+                    intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                            ? Constants.QUICK_POST_VIDEO_CAMERA
+                            : Constants.QUICK_POST_VIDEO_LIBRARY);
                     intent.putExtra("isNew", true);
                     break;
                 case VIEW_SITE_ACTIVITY:

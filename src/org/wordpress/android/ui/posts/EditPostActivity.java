@@ -93,6 +93,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
@@ -509,11 +510,11 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+        if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
         }
         menu.add(0, 2, 0, getResources().getText(R.string.select_video));
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+        if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 3, 0, getResources().getText(R.string.take_video));
         }
     }
