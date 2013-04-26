@@ -4,8 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="#FFFFFF" >
-  <ListView
-    android:id="@+id/list"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+  <include
+    layout="@layout/notifications_detail_header"
+    android:id="@+id/header"/>
 </LinearLayout>

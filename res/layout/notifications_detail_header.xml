@@ -9,12 +9,14 @@
   android:layout_width="match_parent"
   android:padding="10dp">
   <TextView
+    android:id="@+id/label"
     android:layout_weight="1"
     android:layout_height="wrap_content"
     android:layout_width="0dp"
     android:layout_gravity="center_vertical"
-    android:textSize="18dp"
-    android:text="Header text goes here" />
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:textSize="18dp" />
   <ImageView
     android:src="@drawable/dashboard_icon_wp" 
     android:layout_width="wrap_content"

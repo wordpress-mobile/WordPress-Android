@@ -19,6 +19,11 @@ public class Note {
     public static final String UNKNOWN_TYPE="unknown";
     public static final String COMMENT_TYPE="comment";
     public static final String LIKE_TYPE="like";
+    // Notes have different types of "templates" for displaying differently
+    // this is not a canonical list but covers all the types currently in use
+    public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
+    public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
+    public static final String BIG_BADGE_TEMPLATE="big-badge";
     
     private static String QUERY_SEPERATOR=".";
     private static String QUERY_ARRAY_INDEX_START="[";
@@ -37,9 +42,7 @@ public class Note {
     }
 
     public String toString(){
-        String labelText = queryJSON("subject.text", "");
-        String label = Html.fromHtml(labelText.trim()).toString();
-        return label;
+        return getSubject();
     }
     
     public JSONObject toJSONObject(){
@@ -57,8 +60,12 @@ public class Note {
     public Boolean isCommentType(){
         return isType(COMMENT_TYPE);
     }
+    public String getSubject(){
+        String text = queryJSON("subject.text", "").trim();
+        return Html.fromHtml(text).toString();
+    }
     public String getIconURL(){
-        return (String) queryJSON("subject.icon", "");
+        return queryJSON("subject.icon", "");
     }
     public String getCommentPreview(){
         return getCommentBody().toString().replace("\n", "").trim();
@@ -71,6 +78,18 @@ public class Note {
     }
     public Boolean isUnread(){
         return queryJSON("unread", "0").equals("1");
+    }
+    public String getTemplate(){
+        return queryJSON("body.template", "");
+    }
+    public Boolean isMultiLineListTemplate(){
+        return getTemplate().equals(MULTI_LINE_LIST_TEMPLATE);
+    }
+    public Boolean isSingleLineListTemplate(){
+        return getTemplate().equals(SINGLE_LINE_LIST_TEMPLATE);
+    }
+    public Boolean isBigBadgeTemplate(){
+        return getTemplate().equals(BIG_BADGE_TEMPLATE);
     }
     public Map<String,JSONObject> getActions(){
         if (mActions == null) {

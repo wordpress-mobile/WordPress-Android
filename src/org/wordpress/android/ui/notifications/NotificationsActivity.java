@@ -96,7 +96,28 @@ public class NotificationsActivity extends WPActionBarActivity {
             @Override
             public Fragment getFragment(Note note){
                 if (note.isCommentType()) {
-                    Fragment fragment = new NotificationsCommentFragment();
+                    Fragment fragment = new NoteCommentFragment();
+                    return fragment;
+                }
+                return null;
+            }
+        });
+        fragmentDetectors.add(new FragmentDetector(){
+           @Override
+           public Fragment getFragment(Note note){
+               if (note.isSingleLineListTemplate()) {
+                   Fragment fragment = new SingleLineListFragment();
+                   return fragment;
+               }
+               return null;
+           } 
+        });
+        fragmentDetectors.add(new FragmentDetector(){
+            @Override
+            public Fragment getFragment(Note note){
+                Log.d(TAG, String.format("Is it a big badge template? %b", note.isBigBadgeTemplate()));
+                if (note.isBigBadgeTemplate()) {
+                    Fragment fragment = new BigBadgeFragment();
                     return fragment;
                 }
                 return null;
@@ -171,14 +192,15 @@ public class NotificationsActivity extends WPActionBarActivity {
 
     public void popNoteDetail(){
         FragmentManager fm = getSupportFragmentManager();
-        // TODO: change to note detail id
-        NotificationDetailFragment f;
-        f = (NotificationDetailFragment) fm.findFragmentById(R.id.commentDetail);
+        Fragment f = fm.findFragmentById(R.id.commentDetail);
         if (f == null) {
             fm.popBackStack();
         }
     }
-    
+    /**
+     * Tries to pick the correct fragment detail type for a given note using the
+     * fragment detectors
+     */
     private Fragment fragmentForNote(Note note){
         Iterator<FragmentDetector> templates = fragmentDetectors.iterator();
         while(templates.hasNext()){
@@ -188,8 +210,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 return fragment;
             }
         }
-        // by default return plain detail fragment
-        return new NotificationDetailFragment();
+        return null;
     }
     /**
      *  Open a note fragment based on the type of note
@@ -203,6 +224,10 @@ public class NotificationsActivity extends WPActionBarActivity {
             fm.popBackStack();
         }
         Fragment fragment = fragmentForNote(note);
+        if (fragment == null) {
+            Log.d(TAG, String.format("No fragment found for %s", note.toJSONObject()));
+            return;
+        }
         // swap the fragment
         NotificationFragment noteFragment = (NotificationFragment) fragment;
         noteFragment.setNote(note);
