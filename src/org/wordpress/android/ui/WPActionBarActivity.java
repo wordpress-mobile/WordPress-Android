@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -70,7 +69,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Request code for reloading menu after returning from  the PreferencesActivity.
      */
     static final int SETTINGS_REQUEST = 200;
-
+    
     /**
      * Used to restore active activity on app creation
      */
@@ -84,7 +83,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int VIEW_SITE_ACTIVITY = 7;
     protected static final int DASHBOARD_ACTIVITY = 8;
     protected static final int SETTINGS_ACTIVITY = 9;
-
+    
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
@@ -102,9 +101,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4)
-            mIsXLargeDevice = true;
+            mIsXLargeDevice = true;    
     }
 
     @Override
@@ -145,7 +144,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     /**
      * Create a menu drawer and attach it to the activity.
-     *
+     * 
      * @param contentViewID {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewID) {
@@ -153,24 +152,24 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentViewID);
-
+        
         initMenuDrawer();
     }
 
     /**
      * Create a menu drawer and attach it to the activity.
-     *
+     * 
      * @param contentView {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(View contentView) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentView);
 
         initMenuDrawer();
     }
-
+    
     /**
      * Attach a menu drawer to the Activity
      * Set to be a static drawer if on a landscape x-large device
@@ -194,7 +193,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
         return menuDrawer;
     }
-
+    
     /**
      * Create menu drawer ListView and listeners
      */
@@ -204,12 +203,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mListView.setDivider(null);
         mListView.setDividerHeight(0);
         mListView.setCacheColorHint(android.R.color.transparent);
-
+        
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
             addBlogSpinner(blogNames);
         }
-
+        
         mListView.setOnItemClickListener(mItemClickListener);
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -222,7 +221,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mMenuDrawer.invalidate();
             }
         });
-
+        
         mMenuDrawer.setMenuView(mListView);
 
         updateMenuDrawer();
@@ -231,7 +230,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private void addBlogSpinner(String[] blogNames) {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
-
+        
         spinnerWrapper.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -241,7 +240,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 }
             }
         });
-
+        
         mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(getSupportActionBar()
@@ -301,7 +300,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
         if ((WPActionBarActivity.this instanceof ReaderActivity))
             mActivePosition = 0;
-
+        
         if ((WPActionBarActivity.this instanceof PostsActivity))
             mActivePosition = 1;
 
@@ -315,7 +314,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mActivePosition = 7;
         else if ((WPActionBarActivity.this instanceof DashboardActivity))
             mActivePosition = 8;
-
+        
         mAdapter = new MenuAdapter(items);
         mListView.setAdapter(mAdapter);
     }
@@ -326,16 +325,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             // Adjust position if only one blog is in the app
             if (mListView.getHeaderViewsCount() > 0 && position > 0)
                 position--;
-
+            
             if (!mIsDotComBlog)
                 position++;
-
+            
             if (position == mActivePosition) {
                 // Same row selected
                 mMenuDrawer.closeMenu();
                 return;
             }
-
+            
             int activityTag = (Integer) view.getTag();
 
             mActivePosition = position;
@@ -344,7 +343,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
             SharedPreferences.Editor editor = settings.edit();
-
+            
             switch (activityTag) {
                 case READER_ACTIVITY:
                     if (!(WPActionBarActivity.this instanceof ReaderActivity))
@@ -400,16 +399,25 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     break;
                 case QUICK_PHOTO_ACTIVITY:
                     mShouldFinish = false;
+                    PackageManager pm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-                    intent.putExtra("quick-media", hasCamera() ? Constants.QUICK_POST_PHOTO_CAMERA
-                            : Constants.QUICK_POST_PHOTO_LIBRARY);
+                    if
+                    (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_CAMERA);
+                    } else {
+                        intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_LIBRARY);
+                    }
                     intent.putExtra("isNew", true);
                     break;
                 case QUICK_VIDEO_ACTIVITY:
                     mShouldFinish = false;
+                    PackageManager vpm = WPActionBarActivity.this.getPackageManager();
                     intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-                    intent.putExtra("quick-media", hasCamera() ? Constants.QUICK_POST_VIDEO_CAMERA
-                            : Constants.QUICK_POST_VIDEO_LIBRARY);
+                    if (vpm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_CAMERA);
+                    } else {
+                        intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_LIBRARY);
+                    }
                     intent.putExtra("isNew", true);
                     break;
                 case VIEW_SITE_ACTIVITY:
@@ -442,21 +450,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
     };
-
-    private boolean hasCamera() {
-        PackageManager pm = getPackageManager();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-            return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        }
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
-                    || pm.hasSystemFeature("android.hardware.camera.front"/*PackageManager.FEATURE_CAMERA_FRONT*/);
-        }
-
-        return pm.hasSystemFeature("android.hardware.camera.any"/*PackageManager.FEATURE_CAMERA_ANY*/);
-    }
-
+    
     private class MenuAdapter extends BaseAdapter {
 
         private List<Object> mItems;
@@ -504,7 +498,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
             ImageView iconImageView = (ImageView) v.findViewById(R.id.menu_row_icon);
             iconImageView.setImageResource(((MenuDrawerItem) item).mIconRes);
-
+           
             v.setTag((mIsDotComBlog) ? position : position + 1);
 
             int positionCheck = mActivePosition;
@@ -524,7 +518,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
 
             TextView bagdeTextView = (TextView) v.findViewById(R.id.menu_row_badge);
-            int commentRow = (mIsDotComBlog) ? 3 : 2;
+            int commentRow = (mIsDotComBlog) ? 3 : 2; 
             if (position == commentRow && WordPress.currentBlog != null) {
                 int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
                 if (commentCount > 0) {
@@ -575,7 +569,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     /**
      * Get the names of all the blogs configured within the application. If a
      * blog does not have a specific name, the blog URL is returned.
-     *
+     * 
      * @return array of blog names
      */
     private static String[] getBlogNames() {
@@ -656,7 +650,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                                     R.layout.sherlock_spinner_dropdown_item, blogNames);
                             mBlogSpinner.setAdapter(mSpinnerAdapter);
                         }
-
+                        
                         if (blogNames.length >= 1) {
                             setupCurrentBlog();
                             onBlogChanged();
@@ -666,7 +660,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
         }
     }
-
+    
     private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
 
         @Override
@@ -682,7 +676,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        public void onNothingSelected(IcsAdapterView<?> arg0) {
+        public void onNothingSelected(IcsAdapterView<?> arg0) { 
         }
     };
 
@@ -727,10 +721,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             refreshItem.setActionView(null);
         }
     }
-
+    
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-
+ 
         if (mIsXLargeDevice) {
             // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
             View content = mMenuDrawer.getContentContainer().getChildAt(0);
@@ -739,7 +733,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mMenuDrawer.setContentView(content);
             initMenuDrawer();
         }
-
+ 
         super.onConfigurationChanged(newConfig);
     }
 }
