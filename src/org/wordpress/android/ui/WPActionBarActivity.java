@@ -724,16 +724,20 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
- 
+
         if (mIsXLargeDevice) {
-            // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
-            View content = mMenuDrawer.getContentContainer().getChildAt(0);
-            mMenuDrawer.getContentContainer().removeView(content);
-            mMenuDrawer = attachMenuDrawer();
-            mMenuDrawer.setContentView(content);
-            initMenuDrawer();
+            if (mMenuDrawer != null) {
+                // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
+                View content = mMenuDrawer.getContentContainer().getChildAt(0);
+                if (content != null) {
+                    mMenuDrawer.getContentContainer().removeView(content);
+                    mMenuDrawer = attachMenuDrawer();
+                    mMenuDrawer.setContentView(content);
+                    initMenuDrawer();
+                }
+            }
         }
- 
+
         super.onConfigurationChanged(newConfig);
     }
 }
