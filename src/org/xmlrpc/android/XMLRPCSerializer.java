@@ -74,8 +74,13 @@ class XMLRPCSerializer {
             serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
         } else
         if (object instanceof byte[] ){
-            String value = Base64.encodeToString((byte[])object, Base64.DEFAULT);
-            serializer.startTag(null, TYPE_BASE64).text(value).endTag(null, TYPE_BASE64);
+            String value;
+            try {
+                value = Base64.encodeToString((byte[])object, Base64.DEFAULT);
+                serializer.startTag(null, TYPE_BASE64).text(value).endTag(null, TYPE_BASE64);
+            } catch (OutOfMemoryError e) {
+                throw new IOException("Out of memory");
+            }
         }
         else if( object instanceof MediaFile ) {
             //convert media file binary to base64
