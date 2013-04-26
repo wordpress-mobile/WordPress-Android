@@ -603,6 +603,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             //titleBar.stopRotatingRefreshIcon();
             isRefreshing = false;
         }
+        
+        // No post? No service.
+        if (post == null) {
+            Toast.makeText(PostsActivity.this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
         if (action == POST_DELETE) {
             if (post.isLocalDraft()) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
