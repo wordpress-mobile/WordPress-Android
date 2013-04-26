@@ -2,3 +2,4 @@
 /gen
 local.properties
 res/raw/config.properties
+.jdbrc

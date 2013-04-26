@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.ui.notifications.DetailHeader
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:background="@drawable/list_bg_selector"
+  android:clickable="true"
+  android:focusable="true"
+  android:layout_height="wrap_content"
+  android:layout_width="match_parent"
+  android:padding="10dp">
+  <TextView
+    android:layout_weight="1"
+    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_gravity="center_vertical"
+    android:textSize="18dp"
+    android:text="Header text goes here" />
+  <ImageView
+    android:src="@drawable/dashboard_icon_wp" 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp" />
+</org.wordpress.android.ui.notifications.DetailHeader>

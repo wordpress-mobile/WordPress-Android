@@ -13,60 +13,13 @@
       android:layout_height="match_parent"
       android:layout_width="match_parent"
       android:id="@+id/content">
-      <LinearLayout
-        android:orientation="horizontal"
-        android:background="@drawable/list_bg_selector"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:padding="10dp">
-        <TextView
-          android:layout_weight="1"
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_gravity="center_vertical"
-          android:textSize="18dp"
-          android:text="Header text goes here" />
-        <ImageView
-          android:src="@drawable/dashboard_icon_wp" 
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="10dp" />
-      </LinearLayout>
+      <include layout="@layout/notifications_detail_header"/>
       <ImageView 
         android:layout_width="fill_parent"
         android:layout_height="1px"
         android:scaleType="fitXY"
         android:src="?android:attr/listDivider" />
-      <LinearLayout
-        android:orientation="horizontal"
-        android:background="@drawable/list_bg_selector"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:padding="10dp">
-        <ImageView
-          android:id="@+id/note_icon"
-          android:layout_height="48dp"
-          android:layout_width="48dp"
-          android:background="#CCCCCC"
-          android:layout_marginRight="10dp" />
-        <TextView
-          android:id="@+id/note_name"
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:textSize="18dp"
-          android:text="User Name" />
-        <Button
-          android:id="@+id/follow_button"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="10dp"
-          android:text="@+string/follow" />
-      </LinearLayout>
+      <include layout="@layout/notifications_follow_row"/>
       <ImageView 
         android:layout_width="fill_parent"
         android:layout_height="1px"
