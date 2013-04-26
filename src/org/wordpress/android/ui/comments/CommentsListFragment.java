@@ -61,6 +61,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class CommentsListFragment extends ListFragment {
@@ -389,7 +390,7 @@ public class CommentsListFragment extends ListFragment {
                         dateCreatedFormatted, comment, status, postTitle,
                         authorURL, authorEmail, URI
                                 .create("http://gravatar.com/avatar/"
-                                        + getMd5Hash(authorEmail.trim())
+                                        + StringUtils.getMd5Hash(authorEmail.trim())
                                         + "?s=140&d=404")));
             }
 
@@ -762,23 +763,6 @@ public class CommentsListFragment extends ListFragment {
 
             }
 
-        }
-    }
-
-    public static String getMd5Hash(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(input.getBytes());
-            BigInteger number = new BigInteger(1, messageDigest);
-            String md5 = number.toString(16);
-
-            while (md5.length() < 32)
-                md5 = "0" + md5;
-
-            return md5;
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("MD5", e.getLocalizedMessage());
-            return null;
         }
     }
 

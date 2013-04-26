@@ -40,7 +40,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewPostsFragment extends ListFragment {
@@ -234,11 +234,11 @@ public class ViewPostsFragment extends ListFragment {
         boolean drafts = loadDrafts();
 
         if (drafts) {
-            mPostIDs = StringHelper.mergeStringArrays(mDraftIDs, mPostIDs);
-            mTitles = StringHelper.mergeStringArrays(mDraftTitles, mTitles);
-            mDateCreatedFormatted = StringHelper.mergeStringArrays(
+            mPostIDs = StringUtils.mergeStringArrays(mDraftIDs, mPostIDs);
+            mTitles = StringUtils.mergeStringArrays(mDraftTitles, mTitles);
+            mDateCreatedFormatted = StringUtils.mergeStringArrays(
                     mDraftDateCreated, mDateCreatedFormatted);
-            mStatuses = StringHelper.mergeStringArrays(mDraftStatuses, mStatuses);
+            mStatuses = StringUtils.mergeStringArrays(mDraftStatuses, mStatuses);
         } else {
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();

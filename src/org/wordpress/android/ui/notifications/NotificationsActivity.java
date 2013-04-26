@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.models.Blog;
@@ -44,6 +45,7 @@ import org.json.JSONException;
 public class NotificationsActivity extends WPActionBarActivity {
     public static final String TAG="WPNotifications";
     public static final String NOTE_ID_EXTRA="noteId";
+    public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
     
     Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
@@ -100,7 +102,22 @@ public class NotificationsActivity extends WPActionBarActivity {
                 return null;
             }
         });
+        
+        GCMIntentService.activeNotificationsMap.clear();
     }
+    
+    
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        
+        GCMIntentService.activeNotificationsMap.clear();
+        
+    }
+
+
+
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */

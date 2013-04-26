@@ -1,10 +1,15 @@
 package org.wordpress.android.util;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StringHelper {
+import android.util.Log;
+
+public class StringUtils {
 
     public static String[] mergeStringArrays(String array1[], String array2[]) {
         if (array1 == null || array1.length == 0)
@@ -62,5 +67,22 @@ public class StringHelper {
         wrappedHTML = wrappedHTML.replace("<br />", "<br>").replace("<br/>", "<br>");
         wrappedHTML = wrappedHTML.replace("<br>\n", "<br>").replace("\n", "<br>");
         return wrappedHTML;
+    }
+    
+    public static String getMd5Hash(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String md5 = number.toString(16);
+
+            while (md5.length() < 32)
+                md5 = "0" + md5;
+
+            return md5;
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("MD5", e.getLocalizedMessage());
+            return null;
+        }
     }
 }

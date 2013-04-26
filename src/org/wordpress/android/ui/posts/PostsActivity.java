@@ -65,6 +65,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             return;
         }
         
+        // Check if we came from a notification, if so let's launch NotificationsActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
+            startNotificationsAcivity(extras);
+            return;
+        }
+        
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
@@ -95,7 +102,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         postList = (ViewPostsFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
 
-        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
             String errorMessage = extras.getString("errorMessage");
@@ -154,11 +160,26 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         
         Bundle extras = intent.getExtras();
         if (extras != null) {
+            // Check if we came from a notification, if so let's launch NotificationsActivity
+            if (extras.getBoolean("wp-notification")) {
+                startNotificationsAcivity(extras);
+                return;
+            }
+            
             String errorMessage = extras.getString("errorMessage");
             if (errorMessage != null)
                 showPostUploadErrorAlert(errorMessage);
         }
         
+    }
+
+
+
+    private void startNotificationsAcivity(Bundle extras) {
+        Intent i = new Intent(this, NotificationsActivity.class);
+        i.putExtras(extras);
+        startActivity(i);
+        finish();
     }
 
 
