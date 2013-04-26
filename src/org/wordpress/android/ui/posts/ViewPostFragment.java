@@ -105,7 +105,7 @@ public class ViewPostFragment extends Fragment {
     protected void loadPostPreview() {
 
         if (WordPress.currentPost != null) {
-            if (!WordPress.currentPost.getPermaLink().equals("")) {
+            if (WordPress.currentPost.getPermaLink() != null && !WordPress.currentPost.getPermaLink().equals("")) {
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 startActivity(i);
             }
