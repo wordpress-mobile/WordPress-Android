@@ -599,7 +599,11 @@ public class ViewPostsFragment extends ListFragment {
                             .beginTransaction();
                     WPAlertDialogFragment alert = WPAlertDialogFragment
                             .newInstance(String.format(getResources().getString(R.string.error_refresh), (isPage) ? getResources().getText(R.string.pages) : getResources().getText(R.string.posts)), errorMsg);
-                    alert.show(ft, "alert");
+                    try {
+                        alert.show(ft, "alert");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     errorMsg = "";
                 }
                 return;
