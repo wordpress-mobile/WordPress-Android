@@ -608,7 +608,8 @@ public class ViewPostsFragment extends ListFragment {
             if (loadMore)
                 switcher.showPrevious();
             mOnRefreshListener.onRefresh(false);
-            loadPosts(loadMore);
+            if (isAdded())
+                loadPosts(loadMore);
         }
 
         @Override
