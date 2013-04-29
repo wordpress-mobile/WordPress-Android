@@ -127,9 +127,18 @@ public class Note {
         if (nextSeperator == -1 && nextIndexStart == -1) {
             // last item let's get it
             try {
-                return (U) source.get(query);
+                Object result = source.get(query);
+                if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
+                    return (U) result;
+                } else {
+                    return defaultObject;
+                }
             } catch (JSONException e) {
                 Log.e(TAG, String.format("Could not complete query %s", query), e);
+                return defaultObject;
+            } catch (ClassCastException e) {
+                Log.e(TAG, String.format("Could not cast object %s", query), e);
+                return defaultObject;
             }
         }
         int endQuery;
@@ -146,10 +155,17 @@ public class Note {
             } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0){
                 return queryJSON(source.getJSONArray(key), nextQuery, defaultObject);
             } else if (!nextQuery.equals("")){
-                Log.d(TAG, String.format("Incorrect query for next object %s %d %d", nextQuery, nextQuery.indexOf(QUERY_ARRAY_INDEX_START), nextQuery.indexOf(QUERY_SEPERATOR)));
                 return defaultObject;
             }
-            return (U) source.get(key);
+            Object result = source.get(key);
+            if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
+                return (U) result;
+            } else {
+                return defaultObject;
+            }
+        } catch (java.lang.ClassCastException e) {
+            Log.e(TAG, String.format("Could not cast object at %s", query), e);
+            return defaultObject;
         } catch (JSONException e) {
             Log.e(TAG, String.format("Could not complete query %s", query), e);
             return defaultObject;
@@ -161,7 +177,6 @@ public class Note {
         int indexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
         int indexEnd = query.indexOf(QUERY_ARRAY_INDEX_END);
         if (indexStart == -1 || indexEnd == -1 || indexStart > indexEnd) {
-            Log.d(TAG, String.format("Incorrect query for array index %s", query));
             return defaultObject;
         }
         // get "index" from "[index]"
@@ -189,7 +204,15 @@ public class Note {
                 Log.d(TAG, String.format("Incorrect query for next object %s", remainingQuery));
                 return defaultObject;
             }
-            return (U) source.get(index);
+            Object result = source.get(index);
+            if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
+                return (U) result;
+            } else {
+                return defaultObject;
+            }
+        } catch(java.lang.ClassCastException e){
+            Log.e(TAG, String.format("Could not cast object at %s", query), e);
+            return defaultObject;
         } catch (JSONException e) {
             Log.e(TAG, String.format("Could not complete query %s", query), e);
             return defaultObject;
