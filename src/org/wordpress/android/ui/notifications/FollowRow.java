@@ -15,10 +15,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
+
+import org.json.JSONObject;
+import org.json.JSONException;
 
 import org.wordpress.android.R;
 
 public class FollowRow extends LinearLayout {
+    private static final String TAG="FollowRow";
+    private static String PARAMS_FIELD="params";
+    private static String TYPE_FIELD="type";
+    private static String ACTION_TYPE="follow";
+    private static String BLOG_ID_PARAM="blog_id";
+    private static String IS_FOLLOWING_PARAM="is_following";
+    
+    private boolean mFollowing = false;
+    private String mBlogId = null;
     public FollowRow(Context context){
         super(context);
     }
@@ -28,7 +41,23 @@ public class FollowRow extends LinearLayout {
     public FollowRow(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
-    
+    public void setAction(JSONObject actionJSON){
+        try {
+            if (actionJSON.getString(TYPE_FIELD).equals(ACTION_TYPE)) {
+                // get the parms for following
+                JSONObject params = actionJSON.getJSONObject(PARAMS_FIELD);
+                setBlogId(params.getString(BLOG_ID_PARAM));
+                setFollowing(params.getBoolean(IS_FOLLOWING_PARAM));
+                // show the button
+                getFollowButton().setVisibility(VISIBLE);
+            } else {
+                getFollowButton().setVisibility(GONE);
+            }
+        }catch (JSONException e) {
+            Log.e(TAG, String.format("Could not set action from %s", actionJSON), e);
+            getFollowButton().setVisibility(GONE);
+        }
+    }
     public ImageView getImageView(){
         return (ImageView) findViewById(R.id.note_icon);
     }
@@ -40,5 +69,17 @@ public class FollowRow extends LinearLayout {
     }
     public void setText(CharSequence text){
         getTextView().setText(text);
+    }
+    public void setFollowing(boolean following){
+        mFollowing = following;
+    }
+    public boolean isFollowing(){
+        return mFollowing;
+    }
+    public void setBlogId(String blogId){
+        mBlogId = blogId;
+    }
+    public String getBlogId(){
+        return mBlogId;
     }
 }
