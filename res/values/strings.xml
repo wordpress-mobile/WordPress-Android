@@ -338,13 +338,14 @@
     <item>Video</item>
   </string-array>
   
-  <!--  Dashboard Buttons -->
+  <!--  Menu Buttons -->
   <string name="new_post">New Post</string>
   <string name="new_page">New Page</string>
   <string name="quick_photo">Quick Photo</string>
   <string name="quick_video">Quick Video</string>
   <string name="wp_admin">Dashboard</string>
   <string name="view_site">View Site</string>
+  <string name="view_admin">View Admin</string>
   
   <!-- Image Alignment -->
   <string name="image_alignment">Alignment</string>

@@ -294,7 +294,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 R.drawable.dashboard_icon_video));
         items.add(new MenuDrawerItem(resources.getString(R.string.view_site),
                 R.drawable.dashboard_icon_view));
-        items.add(new MenuDrawerItem(resources.getString(R.string.wp_admin),
+        items.add(new MenuDrawerItem(resources.getString(R.string.view_admin),
                 R.drawable.dashboard_icon_wp));
         items.add(new MenuDrawerItem(resources.getString(R.string.settings),
                 R.drawable.dashboard_icon_settings));
