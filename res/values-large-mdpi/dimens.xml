@@ -10,4 +10,5 @@
     <dimen name="format_bar_height">50dp</dimen>
     <dimen name="content_edit_padding">56dp</dimen>
     <dimen name="add_account_width">480dp</dimen>
+    <dimen name="refresh_icon_padding">16dp</dimen>
 </resources>
