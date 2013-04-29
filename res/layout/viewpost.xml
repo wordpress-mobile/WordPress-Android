@@ -106,7 +106,9 @@
                 android:layout_height="38dp"
                 android:background="@drawable/menu_button_selector"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_menu_comment"
+                android:tint="#3f3f3f"
+                android:padding="3dp"
+                android:src="@drawable/dashboard_icon_comments"
                 android:contentDescription="@string/add_comment" />
             
             <ImageButton
