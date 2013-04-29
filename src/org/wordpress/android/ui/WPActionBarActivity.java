@@ -92,10 +92,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean isAnimatingRefreshButton;
     protected boolean shouldAnimateRefreshButton;
     protected boolean mShouldFinish;
-    private boolean mIsDotComBlog;
     private boolean mIsXLargeDevice;
     private boolean mBlogSpinnerInitialized;
-    private int mActivePosition;
 
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();

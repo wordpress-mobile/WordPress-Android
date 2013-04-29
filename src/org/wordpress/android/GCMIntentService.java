@@ -101,7 +101,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 // TODO use intent service for handling actions
                 // http://udinic.wordpress.com/2012/07/24/adding-more-actions-to-jellybean-notifications/
                 Intent commentReplyIntent = new Intent(this, PostsActivity.class);
-                commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
                 if (note_id != null)
@@ -166,6 +166,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         Intent resultIntent = new Intent(this, PostsActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                 | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        resultIntent.setAction("android.intent.action.MAIN");
+        resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
         if (note_id != null)
             resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);

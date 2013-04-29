@@ -87,7 +87,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                         mFirstLaunch = true;
                         item.selectItem();
                         finish();
-                        break;
+                        return;
                     }
                 }
             }
@@ -161,7 +161,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         Bundle extras = intent.getExtras();
         if (extras != null) {
             // Check if we came from a notification, if so let's launch NotificationsActivity
-            if (extras.getBoolean("wp-notification")) {
+            if (extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
                 startNotificationsAcivity(extras);
                 return;
             }
@@ -176,6 +176,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
 
     private void startNotificationsAcivity(Bundle extras) {
+        // Manually set last selection to notifications
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(LAST_ACTIVITY_PREFERENCE, NOTIFICATIONS_ACTIVITY);
+        editor.commit();
+        
         Intent i = new Intent(this, NotificationsActivity.class);
         i.putExtras(extras);
         startActivity(i);
