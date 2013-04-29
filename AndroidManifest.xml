@@ -79,8 +79,9 @@
             android:name="org.wordpress.android.ui.comments.EditCommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name="org.wordpress.android.ui.comments.ReplyToCommentActivity"
-            android:theme="@style/WordPress.Dialog" />
+            android:name="org.wordpress.android.ui.comments.AddCommentActivity"
+            android:theme="@style/WordPress.Dialog"
+            android:windowSoftInputMode="stateVisible" />
         <activity android:name="ViewCommentActivity" />
 
         <!-- Posts activities -->

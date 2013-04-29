@@ -8,13 +8,13 @@
 
 
   <TextView
-    android:id="@+id/replyLabel"
+    android:id="@+id/commentLabel"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:text="@string/reply_enter"
+    android:text="@string/add_comment_enter"
     android:textStyle="bold" />
   <EditText
-    android:id="@+id/replyText"
+    android:id="@+id/commentText"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:minHeight="40dip"
@@ -22,17 +22,17 @@
     android:maxLines="4"
     android:autoText="true"
     android:capitalize="sentences"
-    android:layout_below="@id/replyLabel"
+    android:layout_below="@id/commentLabel"
     android:layout_marginBottom="6dip" />
 
   <Button
     android:id="@+id/ok"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@id/replyText"
+    android:layout_below="@id/commentText"
     android:layout_alignParentRight="true"
     android:layout_marginLeft="10dip"
-    android:text="@string/reply_send" />
+    android:text="@string/add_comment_send" />
 
   <Button
     android:id="@+id/cancel"

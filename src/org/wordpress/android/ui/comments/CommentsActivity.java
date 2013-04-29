@@ -227,7 +227,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                 }.start();
             } else if (status.equals("reply")) {
 
-                Intent i = new Intent(CommentsActivity.this, ReplyToCommentActivity.class);
+                Intent i = new Intent(CommentsActivity.this, AddCommentActivity.class);
                 i.putExtra("commentID", commentID);
                 i.putExtra("postID", WordPress.currentComment.postID);
                 startActivityForResult(i, 0);
@@ -425,7 +425,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
                     Toast.makeText(CommentsActivity.this, getResources().getText(R.string.connection_error), Toast.LENGTH_SHORT).show();
 
-                    Intent i = new Intent(CommentsActivity.this, ReplyToCommentActivity.class);
+                    Intent i = new Intent(CommentsActivity.this, AddCommentActivity.class);
                     i.putExtra("commentID", commentID);
                     i.putExtra("postID", WordPress.currentComment.postID);
                     i.putExtra("comment", comment);
@@ -447,7 +447,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
             switch (requestCode) {
             case 0:
-                final String returnText = extras.getString("replyText");
+                final String returnText = extras.getString("commentText");
 
                 if (!returnText.equals("CANCEL")) {
                     final String postID = extras.getString("postID");

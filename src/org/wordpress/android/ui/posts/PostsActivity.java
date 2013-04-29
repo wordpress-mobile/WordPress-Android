@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.app.AlertDialog;
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.ui.StatsActivity;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.AddCommentActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
@@ -47,14 +49,15 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
 
     private ViewPostsFragment postList;
-    private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
-    public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3;
+    private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
+    public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
     public ProgressDialog loadingDialog;
     public boolean isPage = false;
     public String errorMsg = "";
     public boolean isRefreshing = false;
     private MenuItem refreshMenuItem;
     private int ACTIVITY_EDIT_POST = 0;
+    private int ACTIVITY_ADD_COMMENT = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -298,9 +301,22 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACTIVITY_EDIT_POST && resultCode == RESULT_OK && data != null) {
-            if (data.getBooleanExtra("shouldRefresh", false))
-                postList.loadPosts(false);
+        if (data != null) {
+            if (requestCode == ACTIVITY_EDIT_POST && resultCode == RESULT_OK) {
+                if (data.getBooleanExtra("shouldRefresh", false))
+                    postList.loadPosts(false);
+            } else if (requestCode == ACTIVITY_ADD_COMMENT) {
+                
+                Bundle extras = data.getExtras();
+                
+                final String returnText = extras.getString("commentText");
+
+                if (!returnText.equals("CANCEL")) {
+                    // Add comment to the server if user didn't cancel.
+                    final String postID = extras.getString("postID");
+                    new PostsActivity.addCommentTask().execute(postID, returnText);
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -369,6 +385,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             loadingDialog.setTitle(isPage ? getString(R.string.share_url_page) : getString(R.string.share_url));
             loadingDialog.setMessage(getResources().getText(
                     R.string.attempting_fetch_url));
+            loadingDialog.setCancelable(false);
+            return loadingDialog;
+        } else if (id == ID_DIALOG_COMMENT) {
+            loadingDialog.setTitle(getResources().getText(R.string.add_comment));
+            loadingDialog.setMessage(getResources().getText(
+                    R.string.attempting_add_comment));
             loadingDialog.setCancelable(false);
             return loadingDialog;
         }
@@ -446,6 +468,97 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 result = false;
             }
             return result;
+        }
+
+    }
+    
+    public class addCommentTask extends AsyncTask<String, Void, Boolean> {
+
+        String postid;
+        String comment;
+
+        @Override
+        protected void onPreExecute() {
+            showDialog(ID_DIALOG_COMMENT);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            dismissDialog(ID_DIALOG_COMMENT);
+            attemptToSelectPost();
+            if (result) {
+                Toast.makeText(
+                        PostsActivity.this,
+                        getResources().getText(R.string.comment_added),
+                        Toast.LENGTH_SHORT).show();
+                // If successful, attempt to refresh comments
+                refreshComments();
+            } else {
+                Toast.makeText(
+                        PostsActivity.this,
+                        getResources().getText(R.string.connection_error),
+                        Toast.LENGTH_SHORT).show();
+                
+                Intent i = new Intent(PostsActivity.this, AddCommentActivity.class);
+                i.putExtra("postID", postid);
+                i.putExtra("comment", comment);
+                startActivityForResult(i, ACTIVITY_ADD_COMMENT);
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            boolean result = false;
+            postid = params[0];
+            comment = params[1];
+            XMLRPCClient client = new XMLRPCClient(
+                    WordPress.currentBlog.getUrl(),
+                    WordPress.currentBlog.getHttpuser(),
+                    WordPress.currentBlog.getHttppassword());
+
+            Map<String, Object> commentHash = new HashMap<String, Object>();
+            commentHash.put("content", comment);
+            commentHash.put("author", "");
+            commentHash.put("author_url", "");
+            commentHash.put("author_email", "");
+            
+            Object[] commentParams = { WordPress.currentBlog.getBlogId(),
+                    WordPress.currentBlog.getUsername(),
+                    WordPress.currentBlog.getPassword(),
+                    Integer.valueOf(postid),
+                    commentHash };
+
+            try {
+                int newCommentID = (Integer) client.call("wp.newComment", commentParams);
+                if (newCommentID >= 0) {
+                    WordPress.wpDB.updateLatestCommentID(WordPress.currentBlog.getId(), newCommentID);
+                    result = true;
+                }
+            } catch (final XMLRPCException e) {
+                errorMsg = getResources().getText(R.string.error_generic).toString();
+                result = false;
+            }
+            return result;
+        }
+
+    }
+    
+    public class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            Object[] commentParams = { WordPress.currentBlog.getBlogId(),
+                    WordPress.currentBlog.getUsername(),
+                    WordPress.currentBlog.getPassword() };
+
+            try {
+                ApiHelper.refreshComments(PostsActivity.this, commentParams);
+            } catch (final XMLRPCException e) {
+                errorMsg = getResources().getText(R.string.error_generic).toString();
+            }
+            return null;
         }
 
     }
@@ -558,6 +671,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
     }
 
+    private void refreshComments() {
+        new PostsActivity.refreshCommentsTask().execute();
+    }
+    
     private String getShortlinkTagHref(String urlString) {
         String html = getHTML(urlString);
 
@@ -685,6 +802,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             if (f != null) {
                 f.clearContent();
             }
+        } else if (action == POST_COMMENT) {
+            Intent i = new Intent(PostsActivity.this, AddCommentActivity.class);
+            i.putExtra("postID", post.getPostid());
+            startActivityForResult(i, ACTIVITY_ADD_COMMENT);
         }
     }
 

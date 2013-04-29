@@ -321,6 +321,15 @@ public class ViewPostsFragment extends ListFragment {
                         }
                         // selectedID = (String)
                         // info.targetView.getTag(R.id.row_post_id);
+                        
+                        // Show comments menu option only if post allows commenting
+                        boolean allowComments = false;
+                        Post post = new Post(WordPress.currentBlog
+                                .getId(), mSelectedID, isPage);
+                        if (post.getId() >= 0) {
+                            allowComments = post.isMt_allow_comments();
+                        }
+                        
                         mRowID = info.position;
 
                         if (totalDrafts > 0 && mRowID < totalDrafts) {
@@ -335,11 +344,13 @@ public class ViewPostsFragment extends ListFragment {
                                 menu.add(2, 0, 0, getResources().getText(R.string.edit_page));
                                 menu.add(2, 1, 0, getResources().getText( R.string.delete_page));
                                 menu.add(2, 2, 0, getResources().getText(R.string.share_url_page));
+                                if (allowComments) menu.add(2, 3, 0, getResources().getText(R.string.add_comment));
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(0, 0, 0, getResources().getText(R.string.edit_post));
                                 menu.add(0, 1, 0, getResources().getText(R.string.delete_post));
                                 menu.add(0, 2, 0, getResources().getText(R.string.share_url));
+                                if (allowComments) menu.add(0, 3, 0, getResources().getText(R.string.add_comment));
                             }
                         }
                     }
@@ -540,6 +551,9 @@ public class ViewPostsFragment extends ListFragment {
             case 2:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
+            case 3:
+                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
+                return true;
             }
 
         } else if (item.getGroupId() == 2) {
@@ -557,6 +571,9 @@ public class ViewPostsFragment extends ListFragment {
                 return true;
             case 2:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
+                return true;
+            case 3:
+                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
                 return true;
             }
 
