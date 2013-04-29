@@ -17,6 +17,8 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
         View view = inflater.inflate(R.layout.notifications_big_badge, parent, false);
         DetailHeader header = (DetailHeader) view.findViewById(R.id.header);
         header.setText(getNote().getSubject());
+        header.setClickable(false);
+        header.setFocusable(false);
         return view;
     }
 

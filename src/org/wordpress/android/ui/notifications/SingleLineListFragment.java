@@ -14,6 +14,8 @@ import android.widget.ListAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.support.v4.app.ListFragment;
+import android.net.Uri;
+import android.content.Intent;
 
 import com.commonsware.cwac.cache.SimpleWebImageCache;
 import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
@@ -52,6 +54,14 @@ class SingleLineListFragment extends ListFragment implements NotificationFragmen
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
         noteHeader.setText(getNote().getSubject());
+        final String url = getNote().queryJSON("body.header_link", "");
+        noteHeader.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View v){
+               Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+               startActivity(intent);
+           }
+        });
         // LinearLayout noteFooter = (LinearLayout) inflater.inflate(R.layout.notifications_detail_footer, null);
         ListView list = getListView();
         list.addHeaderView(noteHeader);

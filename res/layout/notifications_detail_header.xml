@@ -18,6 +18,7 @@
     android:maxLines="1"
     android:textSize="18dp" />
   <ImageView
+    android:id="@+id/indicator"
     android:src="@drawable/dashboard_icon_wp" 
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

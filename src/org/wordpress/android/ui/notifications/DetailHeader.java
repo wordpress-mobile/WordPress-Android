@@ -3,6 +3,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.view.View;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.content.Context;
@@ -25,5 +26,14 @@ public class DetailHeader extends LinearLayout {
     }
     public void setText(CharSequence text){
         getTextView().setText(text);
+    }
+    public void setClickable(boolean clickable){
+        super.setClickable(clickable);
+        View indicator = findViewById(R.id.indicator);
+        int visibility = View.VISIBLE;
+        if (clickable == false) {
+            visibility = View.GONE;
+        }
+        indicator.setVisibility(visibility);
     }
 }

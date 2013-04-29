@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.content.Intent;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
+import android.net.Uri;
 
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -72,6 +74,14 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         mCommentText.setText(Html.fromHtml(getNote().getCommentText(), new AsyncImageGetter(mCommentText), null));
         mReplyField.setOnReplyListener(new ReplyListener());
         mDetailHeader.setText(getNote().getSubject());
+        final String url = getNote().queryJSON("body.items[last].header_link", "");
+        mDetailHeader.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        });
     }
     
     class ReplyListener implements ReplyField.OnReplyListener {
