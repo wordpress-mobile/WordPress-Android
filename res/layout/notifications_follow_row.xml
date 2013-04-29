@@ -19,8 +19,7 @@
     android:layout_height="wrap_content"
     android:layout_width="0dp"
     android:layout_weight="1"
-    android:textSize="18dp"
-    android:text="User Name" />
+    android:textSize="18dp" />
   <Button
     android:id="@+id/follow_button"
     android:layout_width="wrap_content"

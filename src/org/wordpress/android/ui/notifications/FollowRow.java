@@ -9,9 +9,14 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.content.Context;
 import android.util.AttributeSet;
+
+import org.wordpress.android.R;
 
 public class FollowRow extends LinearLayout {
     public FollowRow(Context context){
@@ -22,5 +27,18 @@ public class FollowRow extends LinearLayout {
     }
     public FollowRow(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
+    }
+    
+    public ImageView getImageView(){
+        return (ImageView) findViewById(R.id.note_icon);
+    }
+    public Button getFollowButton(){
+        return (Button) findViewById(R.id.follow_button);
+    }
+    public TextView getTextView(){
+        return (TextView) findViewById(R.id.note_name);
+    }
+    public void setText(CharSequence text){
+        getTextView().setText(text);
     }
 }

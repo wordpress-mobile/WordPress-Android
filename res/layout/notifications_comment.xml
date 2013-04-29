@@ -13,13 +13,17 @@
       android:layout_height="match_parent"
       android:layout_width="match_parent"
       android:id="@+id/content">
-      <include layout="@layout/notifications_detail_header"/>
+      <include
+        layout="@layout/notifications_detail_header"
+        android:id="@+id/header"/>
       <ImageView 
         android:layout_width="fill_parent"
         android:layout_height="1px"
         android:scaleType="fitXY"
         android:src="?android:attr/listDivider" />
-      <include layout="@layout/notifications_follow_row"/>
+      <include
+        layout="@layout/notifications_follow_row"
+        android:id="@+id/follow_row"/>
       <ImageView 
         android:layout_width="fill_parent"
         android:layout_height="1px"

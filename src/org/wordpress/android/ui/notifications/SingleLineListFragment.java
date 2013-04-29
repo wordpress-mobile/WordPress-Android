@@ -10,9 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.support.v4.app.ListFragment;
+import android.net.Uri;
+import android.content.Intent;
+
+import com.commonsware.cwac.cache.SimpleWebImageCache;
+import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
+import com.commonsware.cwac.thumbnail.ThumbnailBus;
+import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
@@ -26,10 +34,11 @@ import org.json.JSONException;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-class NotificationDetailFragment extends ListFragment implements NotificationFragment {
+class SingleLineListFragment extends ListFragment implements NotificationFragment {
     public static final String TAG="NoteDetail";
     public static final String NOTE_ID_ARGUMENT="note_id";
     public static final String NOTE_JSON_ARGUMENT="note_json";
+    private static final int[] IMAGE_IDS={ R.id.note_icon };
     
     protected Note mNote;
     
@@ -43,7 +52,16 @@ class NotificationDetailFragment extends ListFragment implements NotificationFra
         super.onActivityCreated(bundle);
         // set the header
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        LinearLayout noteHeader = (LinearLayout) inflater.inflate(R.layout.notifications_detail_header, null);
+        DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
+        noteHeader.setText(getNote().getSubject());
+        final String url = getNote().queryJSON("body.header_link", "");
+        noteHeader.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View v){
+               Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+               startActivity(intent);
+           }
+        });
         // LinearLayout noteFooter = (LinearLayout) inflater.inflate(R.layout.notifications_detail_footer, null);
         ListView list = getListView();
         list.addHeaderView(noteHeader);
@@ -52,6 +70,16 @@ class NotificationDetailFragment extends ListFragment implements NotificationFra
         setListAdapter(new NoteAdapter());
     }
     
+    @Override
+    public void setListAdapter(ListAdapter adapter) {
+        // Wrap the adapter in the thumbnail adapter
+        ThumbnailBus bus = new ThumbnailBus();
+        SimpleWebImageCache<ThumbnailBus, ThumbnailMessage> cache;
+        cache = new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus);
+        ThumbnailAdapter thumbAdapter = new ThumbnailAdapter( getActivity(), adapter, cache, IMAGE_IDS);
+        super.setListAdapter(thumbAdapter);
+    }
+        
     @Override
     public void setNote(Note note){
         mNote = note;
@@ -75,15 +103,19 @@ class NotificationDetailFragment extends ListFragment implements NotificationFra
             } else {
                 v = cachedView;
             }
+            JSONObject noteItem = getItem(position);
+            FollowRow row = (FollowRow) v;
+            row.setText(Note.queryJSON(noteItem, "header_text", ""));
+            row.getImageView().setTag(Note.queryJSON(noteItem, "icon", ""));
             return v;
         }
         
         public long getItemId(int position){
-            return (long) 0;
+            return (long) position;
         }
         
         public JSONObject getItem(int position){
-            return new JSONObject();
+            return Note.queryJSON(mItems, String.format("[%d]", position), new JSONObject());
         }
         
         public int getCount(){
