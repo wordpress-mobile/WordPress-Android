@@ -82,6 +82,8 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
                 startActivity(intent);
             }
         });
+        JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
+        mFollowRow.setAction(followAction);
     }
     
     class ReplyListener implements ReplyField.OnReplyListener {

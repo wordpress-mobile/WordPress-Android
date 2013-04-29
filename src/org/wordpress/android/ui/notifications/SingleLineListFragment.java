@@ -104,7 +104,9 @@ class SingleLineListFragment extends ListFragment implements NotificationFragmen
                 v = cachedView;
             }
             JSONObject noteItem = getItem(position);
+            JSONObject followAction = Note.queryJSON(noteItem, "action", new JSONObject());
             FollowRow row = (FollowRow) v;
+            row.setAction(followAction);
             row.setText(Note.queryJSON(noteItem, "header_text", ""));
             row.getImageView().setTag(Note.queryJSON(noteItem, "icon", ""));
             return v;
