@@ -30,10 +30,10 @@ public class DetailHeader extends LinearLayout {
     public void setClickable(boolean clickable){
         super.setClickable(clickable);
         View indicator = findViewById(R.id.indicator);
-        int visibility = View.VISIBLE;
         if (clickable == false) {
-            visibility = View.GONE;
+            indicator.setVisibility(GONE);
+        } else {
+            indicator.setVisibility(VISIBLE);
         }
-        indicator.setVisibility(visibility);
     }
 }
