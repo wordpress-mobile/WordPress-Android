@@ -76,6 +76,20 @@ public class WPRestClient {
         post(path, params, h);
     }
     /**
+     * Follow a site given an ID or domain
+     */
+    public void followSite(String siteId, AsyncHttpResponseHandler handler){
+        String path = String.format("sites/%s/follows/new", siteId);
+        post(path, handler);
+    }
+    /**
+     * Unfollow a site given an ID or domain
+     */
+    public void unfollowSite(String siteId, AsyncHttpResponseHandler handler){
+        String path = String.format("sites/%s/follows/mine/delete", siteId);
+        post(path, handler);
+    }
+    /**
      * Get a single notification
      */
     public void getNotification(String noteId, AsyncHttpResponseHandler handler){
@@ -103,6 +117,12 @@ public class WPRestClient {
      */
     public void get(String path, RequestParams params, AsyncHttpResponseHandler handler){
         mRestClient.get(path, params, handler);
+    }
+    /**
+     * Make POST request
+     */
+    public void post(String path, AsyncHttpResponseHandler handler){
+        post(path, null, handler);
     }
     /**
      * Make POST request with params
