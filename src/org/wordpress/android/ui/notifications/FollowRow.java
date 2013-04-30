@@ -25,7 +25,7 @@ import org.wordpress.android.R;
 
 public class FollowRow extends LinearLayout {
     
-    public static interface FollowListener {
+    public static interface OnFollowListener {
         public void onUnfollow( FollowRow row, String blogId);
         public void onFollow( FollowRow row, String blogId);
     }
@@ -41,7 +41,7 @@ public class FollowRow extends LinearLayout {
     
     private boolean mFollowing = false;
     private String mBlogId = null;
-    private FollowListener mListener = null;
+    private OnFollowListener mListener = null;
     private JSONObject mParams = null;
     private CharSequence mDefaultText = "";
     
@@ -150,10 +150,10 @@ public class FollowRow extends LinearLayout {
             return null;
         }
     }
-    public FollowListener getListener(){
+    public OnFollowListener getListener(){
         return mListener;
     }
-    public void setListener(FollowListener listener){
+    public void setListener(OnFollowListener listener){
         mListener = listener;
     }
     public boolean hasListener(){
@@ -173,7 +173,7 @@ public class FollowRow extends LinearLayout {
             if (!hasListener()) {
                 return;
             }
-            FollowListener listener = getListener();
+            OnFollowListener listener = getListener();
             if (isFollowing()) {
                 listener.onUnfollow(FollowRow.this, getSiteId());
             } else {

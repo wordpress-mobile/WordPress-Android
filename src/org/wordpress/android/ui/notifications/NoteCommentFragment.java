@@ -93,50 +93,7 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
                 }
             }
         });
-        mFollowRow.setListener(new FollowRow.FollowListener(){
-            @Override
-            public void onFollow(final FollowRow row, final String siteId){
-                WordPress.restClient.followSite(siteId, new JsonHttpResponseHandler(){
-                    @Override
-                    public void onStart(){
-                        if (row.isSiteId(siteId)) {
-                            row.getFollowButton().setEnabled(false);
-                        }
-                    }
-                    public void onSuccess(int status, JSONObject response){
-                        if (row.isSiteId(siteId)) {
-                            row.setFollowing(true);
-                        }
-                    }
-                    public void onFinish(){
-                        if (row.isSiteId(siteId)) {
-                            row.getFollowButton().setEnabled(true);
-                        }
-                    }
-                });
-            }
-            @Override
-            public void onUnfollow(final FollowRow row, final String siteId){
-                WordPress.restClient.unfollowSite(siteId, new JsonHttpResponseHandler(){
-                    @Override
-                    public void onStart(){
-                        if (row.isSiteId(siteId)) {
-                            row.getFollowButton().setEnabled(false);
-                        }
-                    }
-                    public void onSuccess(int status, JSONObject response){
-                        if (row.isSiteId(siteId)) {
-                            row.setFollowing(false);
-                        }
-                    }
-                    public void onFinish(){
-                        if (row.isSiteId(siteId)) {
-                            row.getFollowButton().setEnabled(true);
-                        }
-                    }
-                });
-            }
-        });
+        mFollowRow.setListener(new FollowListener());
     }
     
     class ReplyListener implements ReplyField.OnReplyListener {
