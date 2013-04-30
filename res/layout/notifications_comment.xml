@@ -33,15 +33,20 @@
         android:id="@+id/note_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="16dp"
         android:textSize="18sp" />
     </LinearLayout>
   </ScrollView>
+  <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:scaleType="fitXY"
+    android:src="?android:attr/listDivider" />
   <org.wordpress.android.ui.notifications.ReplyField
-    android:background="#CCCCCC"
+    android:background="#FFFFFF"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="10dp"
+    android:padding="8dp"
     android:id="@+id/replyField">
     <EditText
       android:id="@+id/note_reply_field"
