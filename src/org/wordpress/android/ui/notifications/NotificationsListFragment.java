@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
@@ -118,9 +119,24 @@ public class NotificationsListFragment extends ListFragment {
             } else {
                 detailText.setVisibility(View.GONE);
             }
-            final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
-            iconView.setImageResource(R.drawable.placeholder);
-            iconView.setTag(note.getIconURL());
+            final ImageView avatarView = (ImageView) view.findViewById(R.id.note_avatar);
+            avatarView.setImageResource(R.drawable.placeholder);
+            avatarView.setTag(note.getIconURL());
+            
+            int imageID = getResources().getIdentifier("note_icon_" + note.getType(),"drawable", getActivity().getPackageName());
+            if (imageID > 0) {
+                final ImageView iconView = (ImageView) view.findViewById(R.id.note_icon);
+                iconView.setImageResource(imageID);
+            }
+            
+            final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
+            if (note.isUnread()) {
+                unreadIndicator.setVisibility(View.VISIBLE);
+            }
+            else {
+                unreadIndicator.setVisibility(View.GONE);
+            }
+            
             return view;
         }
         public Note getLastNote(){
