@@ -232,9 +232,13 @@ public class NotificationsActivity extends WPActionBarActivity {
         NotificationFragment noteFragment = (NotificationFragment) fragment;
         noteFragment.setNote(note);
         FragmentTransaction transaction = fm.beginTransaction();
+        View container = findViewById(R.id.note_fragment_container);
         transaction.replace(R.id.note_fragment_container, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.addToBackStack(null);
+        // only add to backstack if we're removing the list view from the fragment container
+        if (container.findViewById(R.id.notes_list) != null) {
+            transaction.addToBackStack(null);
+        }
         transaction.commit();
     }
 
