@@ -5,14 +5,18 @@
   android:layout_height="fill_parent"
   android:background="#FFFFFF" >
   <LinearLayout
-    android:id="@+id/note_fragment_container"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     <fragment
       android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
       android:id="@+id/notes_list"
-      android:layout_weight="1"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent" />
+      android:layout_weight="0.4"
+      android:layout_width="0dp"
+      android:layout_height="match_parent" />
+    <FrameLayout
+      android:id="@+id/note_fragment_container"
+      android:layout_weight="0.6"
+      android:layout_width="0dp"
+      android:layout_height="match_parent" />
   </LinearLayout>
 </RelativeLayout>

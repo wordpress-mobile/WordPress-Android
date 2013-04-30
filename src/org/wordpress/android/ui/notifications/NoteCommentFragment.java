@@ -69,7 +69,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
                 mFollowRow.getImageView().setImageBitmap(bitmap);
             }
         });
-        mFollowRow.setText(getNote().queryJSON("body.items[-1].header_text", ""));
         // TODO: convert all <img> to links except for wp-smiley images which should be just text equivalents
         mCommentText.setText(Html.fromHtml(getNote().getCommentText(), new AsyncImageGetter(mCommentText), null));
         mReplyField.setOnReplyListener(new ReplyListener());
@@ -83,7 +82,61 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             }
         });
         JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
+        mFollowRow.setDefaultText(getNote().queryJSON("body.items[-1].header_text", ""));
         mFollowRow.setAction(followAction);
+        mFollowRow.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if (mFollowRow.hasParams()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mFollowRow.getSiteUrl()));
+                    startActivity(intent);
+                }
+            }
+        });
+        mFollowRow.setListener(new FollowRow.FollowListener(){
+            @Override
+            public void onFollow(final FollowRow row, final String siteId){
+                WordPress.restClient.followSite(siteId, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onStart(){
+                        if (row.isSiteId(siteId)) {
+                            row.getFollowButton().setEnabled(false);
+                        }
+                    }
+                    public void onSuccess(int status, JSONObject response){
+                        if (row.isSiteId(siteId)) {
+                            row.setFollowing(true);
+                        }
+                    }
+                    public void onFinish(){
+                        if (row.isSiteId(siteId)) {
+                            row.getFollowButton().setEnabled(true);
+                        }
+                    }
+                });
+            }
+            @Override
+            public void onUnfollow(final FollowRow row, final String siteId){
+                WordPress.restClient.unfollowSite(siteId, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onStart(){
+                        if (row.isSiteId(siteId)) {
+                            row.getFollowButton().setEnabled(false);
+                        }
+                    }
+                    public void onSuccess(int status, JSONObject response){
+                        if (row.isSiteId(siteId)) {
+                            row.setFollowing(false);
+                        }
+                    }
+                    public void onFinish(){
+                        if (row.isSiteId(siteId)) {
+                            row.getFollowButton().setEnabled(true);
+                        }
+                    }
+                });
+            }
+        });
     }
     
     class ReplyListener implements ReplyField.OnReplyListener {

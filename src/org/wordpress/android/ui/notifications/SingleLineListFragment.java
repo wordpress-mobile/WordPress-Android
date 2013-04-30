@@ -38,7 +38,7 @@ class SingleLineListFragment extends ListFragment implements NotificationFragmen
     public static final String TAG="NoteDetail";
     public static final String NOTE_ID_ARGUMENT="note_id";
     public static final String NOTE_JSON_ARGUMENT="note_json";
-    private static final int[] IMAGE_IDS={ R.id.note_icon };
+    private static final int[] IMAGE_IDS={ R.id.avatar };
     
     protected Note mNote;
     
