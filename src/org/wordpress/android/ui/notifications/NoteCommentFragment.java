@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Html;
 import android.text.Editable;
 import android.view.View;
@@ -21,7 +20,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
 import android.net.Uri;
@@ -34,6 +32,7 @@ import com.loopj.android.http.RequestParams;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.BitmapResponseHandler;
 
 import org.json.JSONObject;
 
@@ -219,42 +218,5 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         
     }
-    
-    private abstract class BitmapResponseHandler extends BinaryHttpResponseHandler {
-        public BitmapResponseHandler(){
-            super(new String[]{ "image/jpeg", "image/gif", "image/png"});
-        };
-        abstract void onSuccess(int statusCode, Bitmap bitmap);
-        protected void handleSuccessMessage(int statusCode, Bitmap bitmap){
-            onSuccess(statusCode, bitmap);
-        }
-        @Override
-        protected void sendSuccessMessage(int statusCode, byte[] responseBody) {
-            // turn this beast into a bitmap
-            Log.d(TAG, String.format("Decode the byte array, %d", responseBody.length));
-            Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
-            if (bitmap == null) {
-                super.sendSuccessMessage(statusCode, responseBody);
-            } else {
-                sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, bitmap}));
-            }
-            // sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, responseBody}));
-        }
-        // Methods which emulate android's Handler and Message methods
-        @Override
-        protected void handleMessage(Message msg) {
-            Object[] response;
-            switch(msg.what) {
-                case SUCCESS_MESSAGE:
-                    response = (Object[])msg.obj;
-                    handleSuccessMessage(((Integer) response[0]).intValue() , (Bitmap) response[1]);
-                    break;
-                default:
-                    super.handleMessage(msg);
-                    break;
-            }
-        }
-    }
-    
 
 }
