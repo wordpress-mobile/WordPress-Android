@@ -20,6 +20,8 @@ import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -31,6 +33,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.WordPressDB;
 import static org.wordpress.android.WordPress.*;
 
 import com.wordpress.rest.OauthTokenResponseHandler;
@@ -64,7 +67,10 @@ public class NotificationsActivity extends WPActionBarActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.notifications));
         
-        Blog blog = getCurrentBlog();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = settings.getString("wp_pref_wpcom_username", null);
+        String password = WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", null));
+        
         FragmentManager fm = getSupportFragmentManager();
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
@@ -72,7 +78,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         
         // ok it's time to request notifications
         // TODO: access token should be stored in preferences, not fetched each time
-        restClient.requestAccessToken(blog.getUsername(), blog.getPassword(), new OauthTokenResponseHandler(){
+        restClient.requestAccessToken(username, password, new OauthTokenResponseHandler(){
             @Override
             public void onStart(){
                 startAnimatingRefreshButton(mRefreshMenuItem);
@@ -85,10 +91,12 @@ public class NotificationsActivity extends WPActionBarActivity {
             }
             @Override
             public void onFailure(Throwable e, JSONObject response){
-                Log.e(TAG, String.format("Failed: %s", response), e);
+                stopAnimatingRefreshButton(mRefreshMenuItem);
+                // TODO: show error message
             }
             @Override
             public void onFinish(){
+                Log.d(TAG, String.format("Finished requesting access token"));
             }
         });
 
