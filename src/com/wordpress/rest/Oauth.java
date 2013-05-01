@@ -101,7 +101,6 @@ public class Oauth {
             }
         });
         Log.d(TAG, String.format("Requesting token from %s", TOKEN_ENDPOINT));
-        Log.d(TAG, String.format("Requesting params %s", params));
     }
     
     public AsyncHttpClient getClient(){
