@@ -4,8 +4,9 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:background="#FFFFFF" >
-  <LinearLayout
+  <FrameLayout
     android:id="@+id/note_fragment_container"
+    android:background="#FFFFFF"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     <fragment
@@ -14,5 +15,5 @@
       android:layout_weight="1"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent" />
-  </LinearLayout>
+  </FrameLayout>
 </RelativeLayout>

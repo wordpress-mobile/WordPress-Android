@@ -10,16 +10,13 @@
     <FrameLayout
       android:layout_height="match_parent"
       android:layout_weight="0.4"
+      android:foreground="@drawable/right_shadow"
       android:layout_width="0dp" >
       <fragment
         android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
         android:id="@+id/notes_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-      <ImageView 
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/right_shadow" />
     </FrameLayout>
     <FrameLayout
       android:id="@+id/note_fragment_container"
