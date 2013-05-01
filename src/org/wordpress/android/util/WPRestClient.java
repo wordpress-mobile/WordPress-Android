@@ -17,6 +17,8 @@ import java.util.Properties;
 
 import org.json.JSONObject;
 
+import org.wordpress.android.models.Note;
+
 public class WPRestClient {
     
     private static final String ACCESS_TOKEN_PREFERNCE="wpcom-access-token";
@@ -96,6 +98,15 @@ public class WPRestClient {
         get(String.format("notifications/%s", noteId), handler);
     }
     /**
+     * Mark a notification as read
+     */
+    public void markNoteAsRead(Note note, AsyncHttpResponseHandler handler){
+        String path = "notifications/read";
+        RequestParams params = new RequestParams();
+        params.put(String.format("counts[%s]", note.getId()), note.getUnreadCount());
+        post(path, params, handler);
+    }
+    /**
      * Get notifications
      */
     public void getNotifications(RequestParams params, AsyncHttpResponseHandler handler){
@@ -105,6 +116,11 @@ public class WPRestClient {
     }
     public void getNotifications(AsyncHttpResponseHandler handler){
         getNotifications(new RequestParams(), handler);
+    }
+    public void markNotificationsSeen(String timestamp, AsyncHttpResponseHandler handler){
+        RequestParams params = new RequestParams();
+        params.put("time", timestamp);
+        post("notifications/seen", params, handler);
     }
     /**
      * Make GET request

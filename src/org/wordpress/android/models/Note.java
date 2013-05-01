@@ -67,17 +67,61 @@ public class Note {
     public String getIconURL(){
         return queryJSON("subject.icon", "");
     }
+    /**
+     * Removes HTML and cleans up newlines and whitespace
+     */
     public String getCommentPreview(){
-        return getCommentBody().toString().replace("\n", "").trim();
+        return getCommentBody().toString().replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
     }
+    /**
+     * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
+     */
     public Spanned getCommentBody(){
         return Html.fromHtml(getCommentText());
     }
+    /**
+     * For a comment note the text is in the body object's last item. It currently
+     * is only provided in HTML format.
+     */
     public String getCommentText(){
         return queryJSON("body.items[last].html", "");
     }
+    /**
+     * The inverse of isRead
+     */
     public Boolean isUnread(){
-        return queryJSON("unread", "0").equals("1");
+        return !isRead();
+    }
+    /**
+     * A note can have an "unread" of 0 or more ("likes" can have unread of 2+) to indicate the
+     * quantity of likes that are "unread" within the single note. So for a note to be "read" it
+     * should have "0"
+     */
+    public Boolean isRead(){
+        return getUnreadCount().equals("0");
+    }
+    /**
+     * For some reason the unread count is a string in the JSON API but is truly representd
+     * by an Integer. We can handle a simple string.
+     */
+    public String getUnreadCount(){
+        return queryJSON("unread", "0");
+    }
+    /**
+     * 
+     */
+    public void setUnreadCount(String count){
+        try {
+            mNoteJSON.putOpt("unread", count);            
+        } catch (JSONException e){
+            Log.e(TAG, "Failed to set unread property", e);
+        }
+    }
+    /**
+     * Get the timestamp provided by the API for the note.
+     */
+    public String getTimestamp(){
+        return queryJSON("timestamp", "");
     }
     public String getTemplate(){
         return queryJSON("body.template", "");

@@ -223,9 +223,34 @@ public class NotificationsActivity extends WPActionBarActivity {
     /**
      *  Open a note fragment based on the type of note
      */
-    public void openNote(Note note){
+    public void openNote(final Note note){
         if (note == null)
             return;
+        // if note is "unread" set note to "read"
+        if (note.isUnread()) {
+            // send a request to mark note as read
+            restClient.markNoteAsRead(note, new JsonHttpResponseHandler(){
+                @Override
+                public void onStart(){
+                    Log.d(TAG, "Marking note as read");
+                }
+                @Override
+                public void onFailure(Throwable e, JSONObject response){
+                    Log.d(TAG, String.format("Failed to mark as read %s", response), e);
+                }
+                @Override
+                public void onSuccess(int status, JSONObject response){
+                    Log.d(TAG, String.format("Note is read: %s", response));
+                    note.setUnreadCount("0");
+                    mNotesList.getNotesAdapter().notifyDataSetChanged();
+                }
+                @Override
+                public void onFinish(){
+                    Log.d(TAG, "Completed mark as read request");
+                }
+            });
+        }
+        
         FragmentManager fm = getSupportFragmentManager();
         // remove the note detail if it's already on there
         if (fm.getBackStackEntryCount() > 0){
@@ -264,11 +289,23 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.clear();
                 adapter.addAll(notes);
                 adapter.notifyDataSetChanged();
+                // mark last seen timestampe
+                if (!notes.isEmpty()) {
+                    updateLastSeen(notes.get(0).getTimestamp());                    
+                }
             }
             public void onFinish(){
                 super.onFinish();
                 mFirstLoadComplete = true;
                 stopAnimatingRefreshButton(mRefreshMenuItem);
+            }
+        });
+    }
+    protected void updateLastSeen(String timestamp){
+        restClient.markNotificationsSeen(timestamp, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int status, JSONObject response){
+                Log.d(TAG, String.format("Set last seen time %s", response));
             }
         });
     }
