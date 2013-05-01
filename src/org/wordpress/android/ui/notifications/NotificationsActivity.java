@@ -92,11 +92,10 @@ public class NotificationsActivity extends WPActionBarActivity {
             @Override
             public void onFailure(Throwable e, JSONObject response){
                 stopAnimatingRefreshButton(mRefreshMenuItem);
-                // TODO: show error message
             }
             @Override
             public void onFinish(){
-                Log.d(TAG, String.format("Finished requesting access token"));
+                stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         });
 
