@@ -31,7 +31,7 @@ import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 public class NotificationsListFragment extends ListFragment {
     private static String TAG="WPNotifications";
-    private static final int[] IMAGE_IDS={ R.id.note_icon };
+    private static final int[] IMAGE_IDS={ R.id.note_avatar };
     private static final int LOAD_MORE_WITHIN_X_ROWS=5;
     private NoteProvider mNoteProvider;
     private NotesAdapter mNotesAdapter;
