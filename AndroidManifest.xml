@@ -54,8 +54,8 @@
             android:name=".ui.accounts.AddAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="org.wordpress.android.ui.accounts.AddAcountSettingsActivity" />
-        <activity android:name="org.wordpress.android.ui.accounts.NewAccountActivity" />
+        <activity android:name=".ui.accounts.AddAcountSettingsActivity" />
+        <activity android:name=".ui.accounts.NewAccountActivity" />
         <activity
             android:name=".ui.accounts.SignupActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -82,7 +82,6 @@
             android:name=".ui.comments.AddCommentActivity"
             android:theme="@style/WordPress.Dialog"
             android:windowSoftInputMode="stateVisible" />
-        <activity android:name="ViewCommentActivity" />
 
         <!-- Posts activities -->
         <activity
@@ -127,7 +126,7 @@
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name="org.wordpress.android.ui.posts.ViewPostActivity" />
+        <activity android:name=".ui.posts.ViewPostActivity" />
 
         <!-- Other activities -->
         <activity
