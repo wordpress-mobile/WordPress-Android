@@ -31,6 +31,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.BitmapResponseHandler;
 
@@ -38,9 +39,6 @@ import org.json.JSONObject;
 
 class NoteCommentFragment extends Fragment implements NotificationFragment {
     private static final String TAG="NoteComment";
-    private static final String NOTE_ACTION_REPLY="replyto-comment";
-    private static final String REPLY_CONTENT_PARAM_KEY="content";
-    private static String LOREM="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\n";
     private TextView mCommentText;
     private ReplyField mReplyField;
     private Note mNote;
