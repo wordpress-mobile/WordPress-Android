@@ -164,8 +164,12 @@ public class NotificationsActivity extends WPActionBarActivity {
                 @Override
                 public void onSuccess(List<Note> notes){
                     // there should only be one note!
-                    Note note = notes.get(0);
-                    openNote(note);
+                    if (notes.isEmpty()) {
+                        Note note = notes.get(0);
+                        openNote(note);
+                    } else {
+                        // TODO: Could not load note
+                    }
                 }
             });
         }
