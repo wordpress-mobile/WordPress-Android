@@ -58,6 +58,7 @@ public class NotificationsListFragment extends ListFragment {
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
         ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnScrollListener(new ListScrollListener());
         View progress = View.inflate(getActivity(), R.layout.list_footer_progress, null);
         listView.addFooterView(progress, null, false);
@@ -66,6 +67,7 @@ public class NotificationsListFragment extends ListFragment {
     @Override
     public void onListItemClick (ListView l, View v, int position, long id){
         Note note = mNotesAdapter.getItem(position);
+        l.setItemChecked(position, true);
         if (note != null && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
         }
