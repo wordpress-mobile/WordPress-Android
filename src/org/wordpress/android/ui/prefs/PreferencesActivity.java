@@ -486,7 +486,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                                     .getDefaultSharedPreferences(PreferencesActivity.this).edit();
                             editor.remove("wp_pref_wpcom_username");
                             editor.remove("wp_pref_wpcom_password");
+                            editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
                             editor.commit();
+                            WordPress.restClient.clearAccessToken();
                             refreshWPComAuthCategory();
                         }
                     })

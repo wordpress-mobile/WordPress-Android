@@ -73,38 +73,12 @@ public class NotificationsActivity extends WPActionBarActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.notifications));
         
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = settings.getString("wp_pref_wpcom_username", null);
-        String password = WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", null));
         
         FragmentManager fm = getSupportFragmentManager();
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
         
-        // ok it's time to request notifications
-        // TODO: access token should be stored in preferences, not fetched each time
-        restClient.requestAccessToken(username, password, new OauthTokenResponseHandler(){
-            @Override
-            public void onStart(){
-                startAnimatingRefreshButton(mRefreshMenuItem);
-                shouldAnimateRefreshButton = true;
-            }
-            @Override
-            public void onSuccess(OauthToken token){
-                launchWithNoteId();
-                refreshNotes();
-            }
-            @Override
-            public void onFailure(Throwable e, JSONObject response){
-                stopAnimatingRefreshButton(mRefreshMenuItem);
-            }
-            @Override
-            public void onFinish(){
-                stopAnimatingRefreshButton(mRefreshMenuItem);
-            }
-        });
-
         fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
@@ -138,6 +112,10 @@ public class NotificationsActivity extends WPActionBarActivity {
         });
         
         GCMIntentService.activeNotificationsMap.clear();
+        
+        launchWithNoteId();
+        refreshNotes();
+        
     }
     
     
