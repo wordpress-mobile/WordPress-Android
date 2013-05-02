@@ -28,6 +28,9 @@ public class ReplyField extends LinearLayout {
     public ReplyField(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
+    public void clearFocus(){
+        getTextField().clearFocus();
+    }
     public void setOnReplyListener(OnReplyListener l){
         mOnReplyListener = l;
     }
@@ -39,6 +42,9 @@ public class ReplyField extends LinearLayout {
     }
     public Editable getText(){
         return mTextField.getText();
+    }
+    public void setText(CharSequence text){
+        mTextField.setText(text);
     }
     protected void onFinishInflate(){
         mTextField = (EditText) findViewById(R.id.note_reply_field);

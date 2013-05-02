@@ -26,8 +26,12 @@ public class Note {
     public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
     public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
     public static final String BIG_BADGE_TEMPLATE="big-badge";
+    // JSON keys and values for looking up values
+    private static final String NOTE_ACTION_REPLY="replyto-comment";
+    private static final String REPLY_CONTENT_PARAM_KEY="content";
 
     private Map<String,JSONObject> mActions;
+    private Reply mReply;
     private JSONObject mNoteJSON;
     /**
      * Create a note using JSON from REST API
@@ -57,6 +61,9 @@ public class Note {
     }
     public String getSubject(){
         String text = queryJSON("subject.text", "").trim();
+        if (text.equals("")) {
+            text = queryJSON("subject.html", "");
+        }
         return Html.fromHtml(text).toString();
     }
     public String getIconURL(){
@@ -112,6 +119,13 @@ public class Note {
             Log.e(TAG, "Failed to set unread property", e);
         }
     }
+    public Reply buildReply(String content){
+        JSONObject replyAction = getActions().get(NOTE_ACTION_REPLY);
+        Integer siteId = JSONUtil.queryJSON(replyAction, "params.blog_id", (Integer) 0);
+        String commentId = JSONUtil.queryJSON(replyAction, "params.comment_id", "");
+        Reply reply = new Reply(this, siteId.toString(), commentId, content);
+        return reply;
+    }
     /**
      * Get the timestamp provided by the API for the note.
      */
@@ -158,6 +172,34 @@ public class Note {
      */
     public <U> U queryJSON(String query, U defaultObject){
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+    }
+    /**
+     * Represents a user replying to a note. Holds
+     */
+    public static class Reply {
+        private Note mNote;
+        private String mContent;
+        private String mSiteId;
+        private String mCommentId;
+        
+        Reply(Note note, String siteId, String commentId, String content){
+            mNote = note;
+            mSiteId = siteId;
+            mCommentId = commentId;
+            mContent = content;
+        }
+        public String getSiteId(){
+            return mSiteId;
+        }
+        public String getCommentId(){
+            return mCommentId;
+        }
+        public String getContent(){
+            return mContent;
+        }
+        public Note getNote(){
+            return mNote;
+        }
     }
 
 }

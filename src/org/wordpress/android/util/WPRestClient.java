@@ -71,6 +71,9 @@ public class WPRestClient {
             }
         });
     }
+    public void replyToComment(Note.Reply reply, AsyncHttpResponseHandler handler){
+        replyToComment(reply.getSiteId(), reply.getCommentId(), reply.getContent(), handler);
+    }
     public void replyToComment(String siteId, String commentId, String content, AsyncHttpResponseHandler h){
         RequestParams params = new RequestParams();
         params.put(COMMENT_REPLY_CONTENT_FIELD, content);
