@@ -23,12 +23,23 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
+import org.json.JSONObject;
+
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.WPRestClient;
 
+import com.wordpress.rest.Oauth;
+import com.wordpress.rest.OauthTokenResponseHandler;
+import com.wordpress.rest.OauthToken;
+
 public class WordPress extends Application {
+
+    public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
+    private static final String APP_ID_PROPERTY="oauth.app_id";
+    private static final String APP_SECRET_PROPERTY="oauth.app_secret";
+    private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -53,8 +64,7 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = new WPRestClient(config, settings);
-        
+        restClient = new WPRestClient(new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
         registerForCloudMessaging(this);
         
         super.onCreate();
@@ -225,5 +235,41 @@ public class WordPress extends Application {
             return true;
         else 
             return false;
+    }
+    
+    class OauthAuthenticator implements WPRestClient.Authenticator {
+        @Override
+        public void authenticate(WPRestClient.Request request){
+            // set the access token if we have one
+            if (!hasValidWPComCredentials(WordPress.this)) {
+                // For now just send it, let the original request maker handle the 403
+                request.abort(new Throwable("Missing WordPress.com Account"), "Missing WordPress.com Account");
+            } else {
+                requestAccessToken(request);
+            }
+        }
+        public void requestAccessToken(final WPRestClient.Request request){
+            final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
+            String username = settings.getString("wp_pref_wpcom_username", null);
+            String password = WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", null));
+            Oauth oauth = new Oauth(config.getProperty(APP_ID_PROPERTY),
+    	                                config.getProperty(APP_SECRET_PROPERTY),
+    	                                config.getProperty(APP_REDIRECT_PROPERTY));
+            oauth.requestAccessToken(username, password, new OauthTokenResponseHandler() {
+                @Override
+                public void onSuccess(OauthToken token){
+                    settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).apply();
+                    request.setAccessToken(token);
+                    request.send();
+                }
+            
+                @Override
+                public void onFailure(Throwable e, JSONObject response){
+                    // TODO: Notify invalid username/password for WordPress.com account
+                    request.abort(e, response.toString());
+                }
+                
+            });
+        }
     }
 }
