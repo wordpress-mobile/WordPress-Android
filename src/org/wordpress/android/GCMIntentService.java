@@ -193,28 +193,8 @@ public class GCMIntentService extends GCMBaseIntentService {
                 editor.putString("wp_pref_notifications_uuid", uuid);
                 editor.commit();
             }
-
-            Object[] params = {
-                    settings.getString("wp_pref_wpcom_username", ""),
-                    WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
-                    regId,
-                    uuid,
-                    "android",
-                    false
-            };
-
-            XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
-            client.callAsync(new XMLRPCCallback() {
-                public void onSuccess(long id, Object result) {
-                    Log.v("WORDPRESS", "Succesfully registered device on WP.com");
-                }
-
-                public void onFailure(long id, XMLRPCException error) {
-                    Log.v("WORDPRESS", error.getMessage());
-                }
-            }, "wpcom.mobile_push_register_token", params);
-
-            new WPComXMLRPCApi().getNotificationSettings(null, context);
+            
+            WordPress.registerWPComToken(context, regId);
         }
     }
 

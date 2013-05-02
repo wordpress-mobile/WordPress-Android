@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -25,6 +26,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -117,7 +119,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());
         mMenuItems.add(new AdminMenuItem());
-        mMenuItems.add(new SettingsMenuItem());
+        //mMenuItems.add(new SettingsMenuItem());
 
     }
 
@@ -223,6 +225,21 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (blogNames.length > 1) {
             addBlogSpinner(blogNames);
         }
+        
+        // Add Settings footer
+        LinearLayout settingsFooter = (LinearLayout) getLayoutInflater().inflate(getResources().getLayout(R.layout.menu_footer), null);
+        
+        settingsFooter.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
+                startActivityForResult(settingsIntent, SETTINGS_REQUEST);
+            }
+            
+        });
+        
+        mListView.addFooterView(settingsFooter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -774,7 +791,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             startActivityWithDelay(intent);
         }
     }
-    private class SettingsMenuItem extends MenuDrawerItem {
+    /*private class SettingsMenuItem extends MenuDrawerItem {
         SettingsMenuItem(){
             super(R.string.settings, R.drawable.dashboard_icon_settings);
         }
@@ -783,8 +800,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             mShouldFinish = false;
             Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
             startActivityForResult(settingsIntent, SETTINGS_REQUEST);
+            WPActionBarActivity.this.overridePendingTransition(R.anim.slide_up, 0);
         }
-    }
+    }*/
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
             super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_comments);

@@ -226,6 +226,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         editor.putString("wp_pref_wpcom_username", username);
                         editor.putString("wp_pref_wpcom_password", WordPressDB.encryptPassword(password));
                         editor.commit();
+                        WordPress.registerForCloudMessaging(AccountSetupActivity.this);
                     }
                     
                     if (mAuthOnly) {

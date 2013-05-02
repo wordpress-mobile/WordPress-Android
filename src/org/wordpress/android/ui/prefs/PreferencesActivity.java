@@ -65,6 +65,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        
+        overridePendingTransition(R.anim.slide_up, R.anim.do_nothing);
 
         setTitle(getResources().getText(R.string.settings));
         
@@ -124,6 +126,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         updateBlogsPreferenceCategory();
     }
     
+    
+    
+    @Override
+    protected void onPause() {
+        overridePendingTransition(R.anim.do_nothing, R.anim.slide_down);
+        super.onPause();
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

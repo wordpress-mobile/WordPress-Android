@@ -63,22 +63,53 @@ public class WordPress extends Application {
     public static void registerForCloudMessaging(Context ctx) {
         
         if (WordPress.hasValidWPComCredentials(ctx)) {
-            String notificationId = null;
+            String token = null;
             try {
                 // Register for Google Cloud Messaging
                 GCMRegistrar.checkDevice(ctx);
                 GCMRegistrar.checkManifest(ctx);
-                notificationId = GCMRegistrar.getRegistrationId(ctx);
+                token = GCMRegistrar.getRegistrationId(ctx);
                 String gcmId = WordPress.config.getProperty("gcm.id").toString();
-                if (gcmId != null && notificationId.equals("")) {
+                if (gcmId != null && token.equals("")) {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
+                    // Send the token to WP.com in case it was invalidated
+                    registerWPComToken(ctx, token);
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
                 Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
             }
         }
+    }
+    
+    public static void registerWPComToken(Context ctx, String token) {
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String uuid = settings.getString("wp_pref_notifications_uuid", null);
+        if (uuid == null)
+            return;
+        Object[] params = {
+                settings.getString("wp_pref_wpcom_username", ""),
+                WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                token,
+                uuid,
+                "android",
+                false
+        };
+
+        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+        client.callAsync(new XMLRPCCallback() {
+            public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Succesfully registered device on WP.com");
+            }
+
+            public void onFailure(long id, XMLRPCException error) {
+                Log.v("WORDPRESS", error.getMessage());
+            }
+        }, "wpcom.mobile_push_register_token", params);
+
+        new WPComXMLRPCApi().getNotificationSettings(null, ctx); 
     }
 
     /**

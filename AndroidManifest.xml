@@ -75,11 +75,13 @@
         <activity
             android:name="org.wordpress.android.ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/Theme.Sherlock.Light" />
         <activity android:name="org.wordpress.android.ui.prefs.LicensesActivity" />
         <activity
             android:name="org.wordpress.android.ui.prefs.PreferencesActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/Theme.Sherlock.Light" />
 
         <!-- Comments activities -->
         <activity
