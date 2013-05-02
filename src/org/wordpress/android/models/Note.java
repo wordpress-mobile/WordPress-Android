@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import org.wordpress.android.util.JSONUtil;
+
 public class Note {
     protected static final String TAG="NoteModel";
     public static final String UNKNOWN_TYPE="unknown";
@@ -24,15 +26,12 @@ public class Note {
     public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
     public static final String MULTI_LINE_LIST_TEMPLATE="multi-line-list";
     public static final String BIG_BADGE_TEMPLATE="big-badge";
-    
-    private static String QUERY_SEPERATOR=".";
-    private static String QUERY_ARRAY_INDEX_START="[";
-    private static String QUERY_ARRAY_INDEX_END="]";
-    private static String QUERY_ARRAY_FIRST="first";
-    private static String QUERY_ARRAY_LAST="last";
-    
-    private Map<String,JSONObject> mActions;
+    // JSON keys and values for looking up values
+    private static final String NOTE_ACTION_REPLY="replyto-comment";
+    private static final String REPLY_CONTENT_PARAM_KEY="content";
 
+    private Map<String,JSONObject> mActions;
+    private Reply mReply;
     private JSONObject mNoteJSON;
     /**
      * Create a note using JSON from REST API
@@ -62,6 +61,9 @@ public class Note {
     }
     public String getSubject(){
         String text = queryJSON("subject.text", "").trim();
+        if (text.equals("")) {
+            text = queryJSON("subject.html", "");
+        }
         return Html.fromHtml(text).toString();
     }
     public String getIconURL(){
@@ -117,6 +119,13 @@ public class Note {
             Log.e(TAG, "Failed to set unread property", e);
         }
     }
+    public Reply buildReply(String content){
+        JSONObject replyAction = getActions().get(NOTE_ACTION_REPLY);
+        Integer siteId = JSONUtil.queryJSON(replyAction, "params.blog_id", (Integer) 0);
+        String commentId = JSONUtil.queryJSON(replyAction, "params.comment_id", "");
+        Reply reply = new Reply(this, siteId.toString(), commentId, content);
+        return reply;
+    }
     /**
      * Get the timestamp provided by the API for the note.
      */
@@ -142,7 +151,7 @@ public class Note {
                 mActions = new HashMap<String,JSONObject>(actions.length());
                 for (int i=0; i<actions.length(); i++) {
                     JSONObject action = actions.getJSONObject(i);
-                    String actionType = queryJSON(action, "type", "");
+                    String actionType = JSONUtil.queryJSON(action, "type", "");
                     if (!actionType.equals("")) {
                         mActions.put(actionType, action);
                     }
@@ -156,112 +165,41 @@ public class Note {
     }
     protected Object queryJSON(String query){
         Object defaultObject = "";
-        return queryJSON(query, defaultObject);
+        return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
     }
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
-    public <U extends Object> U queryJSON(String query, U defaultObject){
-        return queryJSON(this.toJSONObject(), query, defaultObject);
+    public <U> U queryJSON(String query, U defaultObject){
+        return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
     }
-    
-    public static <U extends Object> U queryJSON(JSONObject source, String query, U defaultObject){
-        int nextSeperator = query.indexOf(QUERY_SEPERATOR);
-        int nextIndexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
-        if (nextSeperator == -1 && nextIndexStart == -1) {
-            // last item let's get it
-            try {
-                Object result = source.get(query);
-                if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
-                    return (U) result;
-                } else {
-                    return defaultObject;
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, String.format("Could not complete query %s", query), e);
-                return defaultObject;
-            } catch (ClassCastException e) {
-                Log.e(TAG, String.format("Could not cast object %s", query), e);
-                return defaultObject;
-            }
+    /**
+     * Represents a user replying to a note. Holds
+     */
+    public static class Reply {
+        private Note mNote;
+        private String mContent;
+        private String mSiteId;
+        private String mCommentId;
+        
+        Reply(Note note, String siteId, String commentId, String content){
+            mNote = note;
+            mSiteId = siteId;
+            mCommentId = commentId;
+            mContent = content;
         }
-        int endQuery;
-        if (nextSeperator == -1 || nextIndexStart == -1) {
-            endQuery = Math.max(nextSeperator, nextIndexStart);
-        } else {
-            endQuery = Math.min(nextSeperator, nextIndexStart);
+        public String getSiteId(){
+            return mSiteId;
         }
-        String nextQuery = query.substring(endQuery);
-        String key = query.substring(0, endQuery);
-        try {
-            if (nextQuery.indexOf(QUERY_SEPERATOR) == 0) {
-                return queryJSON(source.getJSONObject(key), nextQuery.substring(1), defaultObject);
-            } else if (nextQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0){
-                return queryJSON(source.getJSONArray(key), nextQuery, defaultObject);
-            } else if (!nextQuery.equals("")){
-                return defaultObject;
-            }
-            Object result = source.get(key);
-            if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
-                return (U) result;
-            } else {
-                return defaultObject;
-            }
-        } catch (java.lang.ClassCastException e) {
-            Log.e(TAG, String.format("Could not cast object at %s", query), e);
-            return defaultObject;
-        } catch (JSONException e) {
-            Log.e(TAG, String.format("Could not complete query %s", query), e);
-            return defaultObject;
+        public String getCommentId(){
+            return mCommentId;
         }
-    }
-    
-    public static <U extends Object> U queryJSON(JSONArray source, String query, U defaultObject){
-        // query must start with [ have an index and then have ]
-        int indexStart = query.indexOf(QUERY_ARRAY_INDEX_START);
-        int indexEnd = query.indexOf(QUERY_ARRAY_INDEX_END);
-        if (indexStart == -1 || indexEnd == -1 || indexStart > indexEnd) {
-            return defaultObject;
+        public String getContent(){
+            return mContent;
         }
-        // get "index" from "[index]"
-        String indexStr = query.substring(indexStart + 1, indexEnd);
-        int index;
-        if (indexStr.equals(QUERY_ARRAY_FIRST)) {
-            index = 0;
-        } else if (indexStr.equals(QUERY_ARRAY_LAST)){
-            index = -1;
-        } else {
-            index = Integer.parseInt(indexStr);
+        public Note getNote(){
+            return mNote;
         }
-        if(index < 0){
-            index = source.length() + index;
-        }
-        // copy remaining query
-        String remainingQuery = query.substring(indexEnd + 1);
-        try {
-            if (remainingQuery.indexOf(QUERY_ARRAY_INDEX_START) == 0) {
-                return queryJSON(source.getJSONArray(index), remainingQuery, defaultObject);
-            } else if(remainingQuery.indexOf(QUERY_SEPERATOR) == 0){
-                return queryJSON(source.getJSONObject(index), remainingQuery.substring(1), defaultObject);
-            } else if(!remainingQuery.equals("")){
-                // TODO throw an exception since the query isn't valid?
-                Log.d(TAG, String.format("Incorrect query for next object %s", remainingQuery));
-                return defaultObject;
-            }
-            Object result = source.get(index);
-            if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
-                return (U) result;
-            } else {
-                return defaultObject;
-            }
-        } catch(java.lang.ClassCastException e){
-            Log.e(TAG, String.format("Could not cast object at %s", query), e);
-            return defaultObject;
-        } catch (JSONException e) {
-            Log.e(TAG, String.format("Could not complete query %s", query), e);
-            return defaultObject;
-        }
-
     }
 
 }

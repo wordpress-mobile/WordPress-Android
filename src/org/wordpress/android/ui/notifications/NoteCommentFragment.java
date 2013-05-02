@@ -8,20 +8,20 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Html;
 import android.text.Editable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
 import android.net.Uri;
@@ -33,15 +33,15 @@ import com.loopj.android.http.RequestParams;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.BitmapResponseHandler;
+import org.wordpress.android.ui.posts.PostsActivity;
 
 import org.json.JSONObject;
 
 class NoteCommentFragment extends Fragment implements NotificationFragment {
     private static final String TAG="NoteComment";
-    private static final String NOTE_ACTION_REPLY="replyto-comment";
-    private static final String REPLY_CONTENT_PARAM_KEY="content";
-    private static String LOREM="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\n";
     private TextView mCommentText;
     private ReplyField mReplyField;
     private Note mNote;
@@ -65,7 +65,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         httpClient.get(getNote().getIconURL(), new BitmapResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Bitmap bitmap){
-                Log.d(TAG, String.format("Set the image bitmap on %s", mFollowRow));
                 mFollowRow.getImageView().setImageBitmap(bitmap);
             }
         });
@@ -94,26 +93,53 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             }
         });
         mFollowRow.setListener(new FollowListener());
+        Bundle arguments = getArguments();
+        if (arguments != null && arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA)) {
+            mReplyField.setText(arguments.getString(NotificationsActivity.NOTE_REPLY_EXTRA));
+            mReplyField.requestFocus();
+        }
+    }
+    
+    @Override
+    public void onPause(){
+        super.onPause();
+        dismissKeyboard();
+    }
+    
+    protected void dismissKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0x0);
     }
     
     class ReplyListener implements ReplyField.OnReplyListener {
         @Override
         public void onReply(ReplyField field, Editable replyText){
-            JSONObject replyAction = getNote().getActions().get(NOTE_ACTION_REPLY);
-            Integer siteId = Note.queryJSON(replyAction, "params.blog_id", (Integer) 0);
-            String commentId = Note.queryJSON(replyAction, "params.comment_id", "");
-            WordPress.restClient.replyToComment(siteId.toString(), commentId.toString(), replyText.toString(), new ReplyResponseHandler());
+            Note.Reply reply = getNote().buildReply(replyText.toString());
+            replyText.clear();
+            dismissKeyboard();
+            WordPress.restClient.replyToComment(reply, new ReplyResponseHandler(reply));
         }
     }
     
     class ReplyResponseHandler extends JsonHttpResponseHandler {
-        protected Notification mNotification;
-        ReplyResponseHandler(){
+        private Notification mNotification;
+        private Notification mFailureNotification;
+        private NotificationManager mNotificationManager;
+        private Toast mToast;
+        private Note.Reply mReply;
+        ReplyResponseHandler(Note.Reply reply){
             super();
-            Intent intent = new Intent(getActivity(), NotificationsActivity.class);
+            mReply = reply;
+            mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            prepareNotifications();
+        }
+        protected void prepareNotifications(){
+            // Create intent for the ongoing notification
+            Intent intent = new Intent(getActivity(), PostsActivity.class);
+            intent.addFlags(NotificationsActivity.FLAG_FROM_NOTE);
+            intent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
             intent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, getNote().getId());
             RemoteViews content = new RemoteViews(getActivity().getPackageName(), R.layout.notification_replying);
-            // content.setProgressBar(R.id.notification_progress, 0, 0, true);
             mNotification = new NotificationCompat.Builder(getActivity())
                 .setContentTitle("Replying")
                 .setContentText("Publishing your reply")
@@ -124,29 +150,48 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
                 .setContent(content)
                 .setContentIntent(PendingIntent.getActivity(getActivity(), 0x0, intent, 0x0))
                 .build();
-                    
+            // create intent for failure case
+            Intent failureIntent = new Intent(getActivity(), PostsActivity.class);
+            failureIntent.addFlags(NotificationsActivity.FLAG_FROM_NOTE);
+            failureIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, getNote().getId());
+            failureIntent.putExtra(NotificationsActivity.NOTE_REPLY_EXTRA, mReply.getContent());
+            failureIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
+            mFailureNotification = new NotificationCompat.Builder(getActivity())
+                .setContentTitle("Reply failed")
+                .setContentText("Tap to try again")
+                .setTicker("Reply failed")
+                .setWhen(0)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentIntent(PendingIntent.getActivity(getActivity(), 0x0, failureIntent, 0x0))
+                .build();
+            // Toast for notifying the user that comment was published successfully
+            mToast = Toast.makeText(getActivity(), R.string.note_reply_successful, Toast.LENGTH_SHORT);
+            
         }
         @Override
         public void onStart(){
-            NotificationManager nm = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.notify("reply", 0xFF, mNotification);
+            mNotificationManager.notify("reply", 0xFF, mNotification);
         }
         @Override
         public void onSuccess(int statusCode, JSONObject response){
-            Log.d(TAG, String.format("Comment successful! %s", response));
+            mNotificationManager.cancel("reply", 0xFF);
+            mToast.show();
         }
         @Override
         public void onFailure(Throwable e, JSONObject response){
             Log.e(TAG, String.format("Failed to reply: %s", response), e);
+            // TODO: show notification about failed reply
+            // the notification should open this note and
+            // add the reply text to the field
+            mNotificationManager.cancel("reply", 0xFF);
+            mNotificationManager.notify("reply", 0xFA, mFailureNotification);
         }
         @Override
         public void onFailure(Throwable e, String response){
-            Log.e(TAG, String.format("Failed to reply: %s", response), e);
         }
         @Override
         public void onFinish(){
-            NotificationManager nm = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            // nm.cancel("reply", 0xFF);
+            mNotificationManager.cancel("reply", 0xFF);
         }
         
     }
@@ -167,7 +212,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         @Override
         public Drawable getDrawable(final String source){
-            Log.d(TAG, String.format("Requesting image from: %s", source));
             Drawable loading = getResources().getDrawable(R.drawable.app_icon);
             final RemoteDrawable remote = new RemoteDrawable(loading);
             // Kick off the async task of downloading the image
@@ -181,9 +225,7 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
                     int newHeight = remote.getBounds().height();
                     mView.invalidate();
                     // For ICS
-                    Log.d(TAG, String.format("Height is changing by %d", newHeight - oldHeight));
                     mView.setHeight(mView.getHeight() + newHeight - oldHeight);
-                    
                     // Pre ICS
                     mView.setEllipsize(null);
                 }
@@ -192,7 +234,7 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         
     }
-    
+
     private class RemoteDrawable extends BitmapDrawable {
         protected Drawable remote;
         protected Drawable loading;
@@ -219,42 +261,5 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         
     }
-    
-    private abstract class BitmapResponseHandler extends BinaryHttpResponseHandler {
-        public BitmapResponseHandler(){
-            super(new String[]{ "image/jpeg", "image/gif", "image/png"});
-        };
-        abstract void onSuccess(int statusCode, Bitmap bitmap);
-        protected void handleSuccessMessage(int statusCode, Bitmap bitmap){
-            onSuccess(statusCode, bitmap);
-        }
-        @Override
-        protected void sendSuccessMessage(int statusCode, byte[] responseBody) {
-            // turn this beast into a bitmap
-            Log.d(TAG, String.format("Decode the byte array, %d", responseBody.length));
-            Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
-            if (bitmap == null) {
-                super.sendSuccessMessage(statusCode, responseBody);
-            } else {
-                sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, bitmap}));
-            }
-            // sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, responseBody}));
-        }
-        // Methods which emulate android's Handler and Message methods
-        @Override
-        protected void handleMessage(Message msg) {
-            Object[] response;
-            switch(msg.what) {
-                case SUCCESS_MESSAGE:
-                    response = (Object[])msg.obj;
-                    handleSuccessMessage(((Integer) response[0]).intValue() , (Bitmap) response[1]);
-                    break;
-                default:
-                    super.handleMessage(msg);
-                    break;
-            }
-        }
-    }
-    
 
 }

@@ -24,6 +24,7 @@ import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.JSONUtil;
 
 import static org.wordpress.android.WordPress.*;
 
@@ -104,12 +105,12 @@ class SingleLineListFragment extends ListFragment implements NotificationFragmen
                 v = cachedView;
             }
             JSONObject noteItem = getItem(position);
-            JSONObject followAction = Note.queryJSON(noteItem, "action", new JSONObject());
+            JSONObject followAction = JSONUtil.queryJSON(noteItem, "action", new JSONObject());
             FollowRow row = (FollowRow) v;
             row.setListener(new FollowListener());
             row.setAction(followAction);
-            row.setText(Note.queryJSON(noteItem, "header_text", ""));
-            row.getImageView().setTag(Note.queryJSON(noteItem, "icon", ""));
+            row.setText(JSONUtil.queryJSON(noteItem, "header_text", ""));
+            row.getImageView().setTag(JSONUtil.queryJSON(noteItem, "icon", ""));
             return v;
         }
         
@@ -118,7 +119,7 @@ class SingleLineListFragment extends ListFragment implements NotificationFragmen
         }
         
         public JSONObject getItem(int position){
-            return Note.queryJSON(mItems, String.format("[%d]", position), new JSONObject());
+            return JSONUtil.queryJSON(mItems, String.format("[%d]", position), new JSONObject());
         }
         
         public int getCount(){

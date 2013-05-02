@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.IntentCompat;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -49,7 +50,12 @@ public class NotificationsActivity extends WPActionBarActivity {
     public static final String TAG="WPNotifications";
     public static final String NOTE_ID_EXTRA="noteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
-    
+    public static final String NOTE_REPLY_EXTRA="replyContent";
+    public static final int FLAG_FROM_NOTE=Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                            Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                                            IntentCompat.FLAG_ACTIVITY_CLEAR_TASK;
+
     Set<FragmentDetector> fragmentDetectors = new HashSet<FragmentDetector>();
 
     private NotificationsListFragment mNotesList;
@@ -92,11 +98,10 @@ public class NotificationsActivity extends WPActionBarActivity {
             @Override
             public void onFailure(Throwable e, JSONObject response){
                 stopAnimatingRefreshButton(mRefreshMenuItem);
-                // TODO: show error message
             }
             @Override
             public void onFinish(){
-                Log.d(TAG, String.format("Finished requesting access token"));
+                stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         });
 
@@ -164,8 +169,12 @@ public class NotificationsActivity extends WPActionBarActivity {
                 @Override
                 public void onSuccess(List<Note> notes){
                     // there should only be one note!
-                    Note note = notes.get(0);
-                    openNote(note);
+                    if (!notes.isEmpty()) {
+                        Note note = notes.get(0);
+                        openNote(note);
+                    } else {
+                        // TODO: Could not load note
+                    }
                 }
             });
         }
@@ -263,6 +272,12 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
         // swap the fragment
         NotificationFragment noteFragment = (NotificationFragment) fragment;
+        Intent intent = getIntent();
+        if (intent.hasExtra(NOTE_ID_EXTRA) && intent.getStringExtra(NOTE_ID_EXTRA).equals(note.getId())) {
+            if (intent.hasExtra(NOTE_REPLY_EXTRA)) {
+                fragment.setArguments(intent.getExtras());
+            }
+        }
         noteFragment.setNote(note);
         FragmentTransaction transaction = fm.beginTransaction();
         View container = findViewById(R.id.note_fragment_container);
