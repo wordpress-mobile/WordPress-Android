@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
@@ -464,6 +465,13 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     .setCancelable(false)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            // Unregister for GCM so that we stop receiving notifications
+                            try {
+                                GCMRegistrar.checkDevice(PreferencesActivity.this);
+                                GCMRegistrar.unregister(PreferencesActivity.this);
+                            } catch (Exception e) {
+                                Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                            }
                             SharedPreferences.Editor editor = PreferenceManager
                                     .getDefaultSharedPreferences(PreferencesActivity.this).edit();
                             editor.remove("wp_pref_wpcom_username");
