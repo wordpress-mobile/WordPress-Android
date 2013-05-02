@@ -204,7 +204,9 @@ public class WPRestClient {
          * handler's onFailure method is called
          */
         public void abort(Throwable e, String body){
-            mHandler.onFailure(e, body);
+            if (mHandler != null) {
+                mHandler.onFailure(e, body);                
+            }
         }
         /**
          * Implement this method to perform the request that should be authenticated
