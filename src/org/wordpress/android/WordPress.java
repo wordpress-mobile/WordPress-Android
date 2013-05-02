@@ -289,7 +289,7 @@ public class WordPress extends Application {
             oauth.requestAccessToken(username, password, new OauthTokenResponseHandler() {
                 @Override
                 public void onSuccess(OauthToken token){
-                    settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).apply();
+                    settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).commit();
                     request.setAccessToken(token);
                     request.send();
                 }
