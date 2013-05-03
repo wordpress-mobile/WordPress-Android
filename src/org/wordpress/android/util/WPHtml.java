@@ -53,6 +53,9 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.view.Display;
 import android.view.WindowManager;
+import android.text.Layout;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
@@ -72,6 +75,35 @@ import org.wordpress.android.models.Post;
  * tags are supported.
  */
 public class WPHtml {
+    /**
+     * Customzed QuoteSpan for use in SpannableString's
+     */
+    public static class WPQuoteSpan extends QuoteSpan {
+        private static final int STRIPE_WIDTH=5;
+        private static final int GAP_WIDTH=20;
+        @Override
+        public int getLeadingMargin(boolean first){
+            int margin = GAP_WIDTH * 2 + STRIPE_WIDTH;
+            return margin;
+        }
+        @Override
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
+                                      int top, int baseline, int bottom,
+                                      CharSequence text, int start, int end,
+                                      boolean first, Layout layout) {
+            Paint.Style style = p.getStyle();
+            int color = p.getColor();
+
+            p.setStyle(Paint.Style.FILL);
+            p.setColor(0xFFCCCCCC);
+
+            c.drawRect(GAP_WIDTH + x, top, x + dir * STRIPE_WIDTH, bottom, p);
+
+            p.setStyle(style);
+            p.setColor(color);
+        }
+    }
+    
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
      */
@@ -1133,5 +1165,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 
         return Integer.parseInt(nm.substring(index), base) * sign;
     }
+
 
 }

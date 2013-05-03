@@ -32,6 +32,8 @@
         android:src="?android:attr/listDivider" />
       <TextView
         android:id="@+id/note_text"
+        android:linksClickable="true"
+        android:autoLink="web"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"

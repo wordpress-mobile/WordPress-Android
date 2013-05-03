@@ -8,8 +8,14 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.style.ImageSpan;
 import android.text.Html;
 import android.text.Editable;
+import android.text.Spanned;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.graphics.Canvas;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -18,7 +24,6 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Bitmap;
@@ -37,6 +42,7 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.BitmapResponseHandler;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.util.Emoticons;
 
 import org.json.JSONObject;
 
@@ -68,8 +74,18 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
                 mFollowRow.getImageView().setImageBitmap(bitmap);
             }
         });
-        // TODO: convert all <img> to links except for wp-smiley images which should be just text equivalents
-        mCommentText.setText(Html.fromHtml(getNote().getCommentText(), new AsyncImageGetter(mCommentText), null));
+        SpannableStringBuilder html = (SpannableStringBuilder) getNote().getCommentBody();
+        Html.ImageGetter imgGetter = new AsyncImageGetter(mCommentText);
+        ImageSpan imgs[] = html.getSpans(0, html.length(), ImageSpan.class);
+        for(ImageSpan img : imgs){
+            // create a new image span using the image getter
+            ImageSpan remote = new ImageSpan(imgGetter.getDrawable(img.getSource()), img.getSource());
+            // now replace
+            html.setSpan(remote, html.getSpanStart(img), html.getSpanEnd(img), html.getSpanFlags(img));
+            html.removeSpan(img);
+        }
+        mCommentText.setText(html);
+        mCommentText.setMovementMethod(LinkMovementMethod.getInstance());
         mReplyField.setOnReplyListener(new ReplyListener());
         mDetailHeader.setText(getNote().getSubject());
         final String url = getNote().queryJSON("body.items[last].header_link", "");
@@ -134,24 +150,9 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             prepareNotifications();
         }
         protected void prepareNotifications(){
-            // Create intent for the ongoing notification
-            Intent intent = new Intent(getActivity(), PostsActivity.class);
-            intent.addFlags(NotificationsActivity.FLAG_FROM_NOTE);
-            intent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
-            intent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, getNote().getId());
-            RemoteViews content = new RemoteViews(getActivity().getPackageName(), R.layout.notification_replying);
-            mNotification = new NotificationCompat.Builder(getActivity())
-                .setContentTitle("Replying")
-                .setContentText("Publishing your reply")
-                .setWhen(0)
-                .setTicker("Publishing your reply")
-                .setSmallIcon(R.drawable.notification_icon)
-                .setOngoing(true)
-                .setContent(content)
-                .setContentIntent(PendingIntent.getActivity(getActivity(), 0x0, intent, 0x0))
-                .build();
             // create intent for failure case
             Intent failureIntent = new Intent(getActivity(), PostsActivity.class);
+            failureIntent.setAction(Intent.ACTION_EDIT);
             failureIntent.addFlags(NotificationsActivity.FLAG_FROM_NOTE);
             failureIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, getNote().getId());
             failureIntent.putExtra(NotificationsActivity.NOTE_REPLY_EXTRA, mReply.getContent());
@@ -170,7 +171,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         @Override
         public void onStart(){
-            mNotificationManager.notify("reply", 0xFF, mNotification);
         }
         @Override
         public void onSuccess(int statusCode, JSONObject response){
@@ -183,7 +183,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             // TODO: show notification about failed reply
             // the notification should open this note and
             // add the reply text to the field
-            mNotificationManager.cancel("reply", 0xFF);
             mNotificationManager.notify("reply", 0xFA, mFailureNotification);
         }
         @Override
@@ -191,7 +190,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         @Override
         public void onFinish(){
-            mNotificationManager.cancel("reply", 0xFF);
         }
         
     }
@@ -261,5 +259,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         
     }
+    
 
 }

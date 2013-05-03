@@ -321,8 +321,10 @@ public class NotificationsActivity extends WPActionBarActivity {
         public void onRequestMoreNotifications(ListView notesList, ListAdapter notesAdapter){
             if (mFirstLoadComplete && !mLoadingMore) {
                 NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
-                Note lastNote = adapter.getItem(adapter.getCount()-1);
-                requestNotesBefore(lastNote);
+                if (adapter.getCount() > 0) {
+                    Note lastNote = adapter.getItem(adapter.getCount()-1);
+                    requestNotesBefore(lastNote);
+                }
             }
         }
     }

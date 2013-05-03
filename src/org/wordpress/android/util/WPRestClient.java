@@ -102,7 +102,7 @@ public class WPRestClient {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(RequestParams params, AsyncHttpResponseHandler handler){
-        params.put("number", "20");
+        params.put("number", "40");
         params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, handler);
     }

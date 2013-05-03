@@ -6,6 +6,9 @@ package org.wordpress.android.models;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.text.style.ImageSpan;
+import android.text.style.QuoteSpan;
+import android.text.SpannableStringBuilder;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -15,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.Emoticons;
+import org.wordpress.android.util.WPHtml;
 
 public class Note {
     protected static final String TAG="NoteModel";
@@ -33,11 +38,14 @@ public class Note {
     private Map<String,JSONObject> mActions;
     private Reply mReply;
     private JSONObject mNoteJSON;
+    private SpannableStringBuilder mComment = new SpannableStringBuilder();
     /**
      * Create a note using JSON from REST API
      */
     public Note(JSONObject noteJSON){
         mNoteJSON = noteJSON;
+        // get the comment ready if it's a comment type
+        cleanupComment();
     }
 
     public String toString(){
@@ -79,7 +87,7 @@ public class Note {
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
      */
     public Spanned getCommentBody(){
-        return Html.fromHtml(getCommentText());
+        return mComment;
     }
     /**
      * For a comment note the text is in the body object's last item. It currently
@@ -163,6 +171,33 @@ public class Note {
         }
         return mActions;
     }
+    /**
+     * Prepares the comment HTML for being displayed. Cleans up emoticons.
+     * 
+     * TODO: Caching comment images
+     */
+    protected void cleanupComment(){
+        if (isCommentType()) {
+            String commentRaw = getCommentText();
+            SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(commentRaw);
+            // replace the emoticons for now
+            ImageSpan imgs[] = html.getSpans(0, html.length(), ImageSpan.class);
+            for (ImageSpan img : imgs) {
+                String emoticon = Emoticons.lookupImageSmiley(img.getSource());
+                if (!emoticon.equals("")) {
+                    html.replace(html.getSpanStart(img), html.getSpanEnd(img), emoticon);
+                    html.removeSpan(img);
+                }
+            }
+            QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
+            for (QuoteSpan span : spans) {
+                html.setSpan(new WPHtml.WPQuoteSpan(), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(span));
+                html.removeSpan(span);
+            }
+            
+            mComment = html;
+        }
+    }
     protected Object queryJSON(String query){
         Object defaultObject = "";
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
@@ -201,5 +236,5 @@ public class Note {
             return mNote;
         }
     }
-
+    
 }
