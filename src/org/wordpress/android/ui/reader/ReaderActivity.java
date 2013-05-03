@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
@@ -162,36 +163,29 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
 
             return f;
         }
-
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        menu.clear();
-        menu.add(0, 0, 0, getResources().getText(R.string.refresh));
-        refreshMenuItem = menu.findItem(0);
-        refreshMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        refreshMenuItem.setIcon(R.drawable.ab_icon_refresh);
-        
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.reader, menu);
+        refreshMenuItem = menu.findItem(R.id.menu_refresh);
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(refreshMenuItem);
         }
-        
-        if (readerPager.getCurrentItem() > 1) {
-            menu.removeItem(0);
-            menu.add(0, 1, 0, getResources().getText(R.string.view_in_browser));
-            MenuItem viewMenuItem = menu.findItem(1);
-            viewMenuItem.setIcon(R.drawable.ab_icon_web);
-            viewMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            menu.add(0, 2, 0, getResources().getText(R.string.share_link));
-            MenuItem shareMenuItem = menu.findItem(2);
-            shareMenuItem.setIcon(R.drawable.ab_icon_share);
-            shareMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
 
-        return super.onPrepareOptionsMenu(menu);
+        if (readerPager.getCurrentItem() > 1) {
+            menu.findItem(R.id.menu_refresh).setVisible(false);
+            menu.findItem(R.id.menu_browser).setVisible(true);
+            menu.findItem(R.id.menu_share_link).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_refresh).setVisible(true);
+            menu.findItem(R.id.menu_browser).setVisible(false);
+            menu.findItem(R.id.menu_share_link).setVisible(false);
+        }
+        return true;
     }
 
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -199,11 +193,11 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
         final ReaderDetailPageFragment readerPageDetailFragment = (ReaderDetailPageFragment) detailPage;
 
         int itemId = item.getItemId();
-        if (itemId == 0) {
+        if (itemId == R.id.menu_refresh) {
             ReaderImplFragment readerPageFragment = (ReaderImplFragment) readerPage;
             readerPageFragment.refreshReader();
             return true;
-        } else if (itemId == 1) {
+        } else if (itemId == R.id.menu_browser) {
             if (readerPageDetailFragment != null && readerPageDetailFragment != null) {
                 if (readerPager.getCurrentItem() == 2) {
                     runOnUiThread(new Runnable() {
@@ -225,7 +219,7 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
                 }
             }
             return true;
-        } else if (itemId == 2) {
+        } else if (itemId == R.id.menu_share_link) {
             if (readerWebPageFragment != null && readerPageDetailFragment != null) {
                 if (readerPager.getCurrentItem() == 2) {
                     runOnUiThread(new Runnable() {

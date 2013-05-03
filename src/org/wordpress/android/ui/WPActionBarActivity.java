@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -26,7 +25,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -225,21 +223,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (blogNames.length > 1) {
             addBlogSpinner(blogNames);
         }
-        
-        // Add Settings footer
-        LinearLayout settingsFooter = (LinearLayout) getLayoutInflater().inflate(getResources().getLayout(R.layout.menu_footer), null);
-        
-        settingsFooter.setOnClickListener(new OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
-                startActivityForResult(settingsIntent, SETTINGS_REQUEST);
-            }
-            
-        });
-        
-        mListView.addFooterView(settingsFooter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -518,12 +501,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     };
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (mMenuDrawer != null) {
-                    mMenuDrawer.toggleMenu();
-                    return true;
-                }
+        if (item.getItemId() == android.R.id.home) {
+            if (mMenuDrawer != null) {
+                mMenuDrawer.toggleMenu();
+                return true;
+            }
+        } else if (item.getItemId() == R.id.menu_settings) {
+            Intent i = new Intent(this, PreferencesActivity.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -791,18 +776,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             startActivityWithDelay(intent);
         }
     }
-    /*private class SettingsMenuItem extends MenuDrawerItem {
-        SettingsMenuItem(){
-            super(R.string.settings, R.drawable.dashboard_icon_settings);
-        }
-        @Override
-        public void onSelectItem(){
-            mShouldFinish = false;
-            Intent settingsIntent = new Intent(WPActionBarActivity.this, PreferencesActivity.class);
-            startActivityForResult(settingsIntent, SETTINGS_REQUEST);
-            WPActionBarActivity.this.overridePendingTransition(R.anim.slide_up, 0);
-        }
-    }*/
+
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
             super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_comments);

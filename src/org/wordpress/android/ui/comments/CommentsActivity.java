@@ -91,7 +91,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.refresh_only, menu);
+        inflater.inflate(R.menu.refresh_and_settings, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;

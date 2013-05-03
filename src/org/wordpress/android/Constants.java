@@ -12,6 +12,7 @@ public class Constants {
     public static String readerDetailURL = "https://en.wordpress.com/wp-admin/admin-ajax.php?action=wpcom_load_mobile&template=details&v=2";
     
     public static String wpcomXMLRPCURL = "https://wordpress.com/xmlrpc.php";
+    public static String wpcomLoginURL = "https://wordpress.com/wp-login.php";
     
     public static int QUICK_POST_PHOTO_CAMERA = 0;
     public static int QUICK_POST_PHOTO_LIBRARY = 1;
