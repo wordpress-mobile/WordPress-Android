@@ -55,7 +55,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
-      android:inputType="text|textMultiLine"
+      android:inputType="text|textMultiLine|textCapSentences"
       android:maxLines="4"
       android:hint="@+string/tap_to_reply" />
     <ImageButton

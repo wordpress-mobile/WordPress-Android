@@ -101,7 +101,6 @@ public class SingleLineListFragment extends ListFragment implements Notification
             FollowRow row = (FollowRow) v;
             row.setListener(new FollowListener());
             row.setAction(followAction);
-            row.setSiteUrl(row.getSiteUrl());
             row.setText(JSONUtil.queryJSON(noteItem, "header_text", ""));
             row.getImageView().setTag(JSONUtil.queryJSON(noteItem, "icon", ""));
             

@@ -77,7 +77,6 @@ public class FollowRow extends LinearLayout {
                 followButton.setOnClickListener(null);
                 getSiteTextView().setText("");
                 setClickable(false);
-                this.setOnClickListener(null);
             }
             
             if (hasParams())
@@ -148,8 +147,8 @@ public class FollowRow extends LinearLayout {
         }
     }
     public void setSiteUrl(String url){
+        mBlogURL = url;
         if (url != null) {
-            mBlogURL = url;
             this.setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -164,7 +163,9 @@ public class FollowRow extends LinearLayout {
                     }
                 }
             });
-        }     
+        } else {
+            this.setOnClickListener(null);
+        }
     }
     public String getSiteUrl(){
         return mBlogURL;
