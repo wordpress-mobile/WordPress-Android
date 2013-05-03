@@ -10,11 +10,15 @@
 package org.wordpress.android.ui.notifications;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -44,6 +48,7 @@ public class FollowRow extends LinearLayout {
     private OnFollowListener mListener = null;
     private JSONObject mParams = null;
     private CharSequence mDefaultText = "";
+    private String mBlogURL = null;
     
     public FollowRow(Context context){
         super(context);
@@ -54,6 +59,7 @@ public class FollowRow extends LinearLayout {
     public FollowRow(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
+    
     public void setAction(JSONObject actionJSON){
         Button followButton = getFollowButton();
         try {
@@ -71,7 +77,12 @@ public class FollowRow extends LinearLayout {
                 followButton.setOnClickListener(null);
                 getSiteTextView().setText("");
                 setClickable(false);
+                this.setOnClickListener(null);
             }
+            
+            if (hasParams())
+                setSiteUrl(mParams.optString(BLOG_URL_PARAM, null));
+            
             updateLabel();
         }catch (JSONException e) {
             Log.e(TAG, String.format("Could not set action from %s", actionJSON), e);
@@ -136,12 +147,27 @@ public class FollowRow extends LinearLayout {
             return null;
         }
     }
+    public void setSiteUrl(String url){
+        if (url != null) {
+            mBlogURL = url;
+            this.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (mBlogURL != null) {
+                        try {
+                            Uri uri = Uri.parse(mBlogURL);
+                            getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }     
+    }
     public String getSiteUrl(){
-        if (hasParams()) {
-            return mParams.optString(BLOG_URL_PARAM, null);
-        } else {
-            return null;
-        }
+        return mBlogURL;
     }
     public String getSiteDomain(){
         if (hasParams()) {

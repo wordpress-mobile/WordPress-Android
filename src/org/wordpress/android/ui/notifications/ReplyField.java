@@ -3,8 +3,8 @@ package org.wordpress.android.ui.notifications;
 import android.view.View;
 import android.view.KeyEvent;
 import android.text.Editable;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Button;
 import android.widget.EditText;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -17,7 +17,7 @@ public class ReplyField extends LinearLayout {
     }
         
     EditText mTextField;
-    Button mReplyButton;
+    ImageButton mReplyButton;
     OnReplyListener mOnReplyListener;
     public ReplyField(Context context){
         super(context);
@@ -25,7 +25,7 @@ public class ReplyField extends LinearLayout {
     public ReplyField(Context context, AttributeSet attributes){
         super(context, attributes);
     }
-    public ReplyField(Context context, AttributeSet attributes, int defStyle){
+	public ReplyField(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
     public void clearFocus(){
@@ -34,7 +34,7 @@ public class ReplyField extends LinearLayout {
     public void setOnReplyListener(OnReplyListener l){
         mOnReplyListener = l;
     }
-    public Button getReplyButton(){
+    public ImageButton getReplyButton(){
         return mReplyButton;
     }
     public EditText getTextField(){
@@ -48,7 +48,7 @@ public class ReplyField extends LinearLayout {
     }
     protected void onFinishInflate(){
         mTextField = (EditText) findViewById(R.id.note_reply_field);
-        mReplyButton = (Button) findViewById(R.id.note_reply_button);
+        mReplyButton = (ImageButton) findViewById(R.id.note_reply_button);
         mReplyButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

@@ -3,39 +3,31 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.support.v4.app.ListFragment;
-import android.net.Uri;
-import android.content.Intent;
 
 import com.commonsware.cwac.cache.SimpleWebImageCache;
 import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
 import com.commonsware.cwac.thumbnail.ThumbnailBus;
 import com.commonsware.cwac.thumbnail.ThumbnailMessage;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
 
-import static org.wordpress.android.WordPress.*;
-
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-class SingleLineListFragment extends ListFragment implements NotificationFragment {
+public class SingleLineListFragment extends ListFragment implements NotificationFragment {
     public static final String TAG="NoteDetail";
     public static final String NOTE_ID_ARGUMENT="note_id";
     public static final String NOTE_JSON_ARGUMENT="note_json";
@@ -109,8 +101,10 @@ class SingleLineListFragment extends ListFragment implements NotificationFragmen
             FollowRow row = (FollowRow) v;
             row.setListener(new FollowListener());
             row.setAction(followAction);
+            row.setSiteUrl(row.getSiteUrl());
             row.setText(JSONUtil.queryJSON(noteItem, "header_text", ""));
             row.getImageView().setTag(JSONUtil.queryJSON(noteItem, "icon", ""));
+            
             return v;
         }
         
