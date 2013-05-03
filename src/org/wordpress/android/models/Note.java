@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.SpannableStringBuilder;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ public class Note {
     public static final String UNKNOWN_TYPE="unknown";
     public static final String COMMENT_TYPE="comment";
     public static final String LIKE_TYPE="like";
+    public static final int EMOTICON_COLOR=0xFF21759B;
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
     public static final String SINGLE_LINE_LIST_TEMPLATE="single-line-list";
@@ -185,7 +187,10 @@ public class Note {
             for (ImageSpan img : imgs) {
                 String emoticon = Emoticons.lookupImageSmiley(img.getSource());
                 if (!emoticon.equals("")) {
-                    html.replace(html.getSpanStart(img), html.getSpanEnd(img), emoticon);
+                    int start = html.getSpanStart(img);
+                    html.replace(start, html.getSpanEnd(img), emoticon);
+                    html.setSpan(new ForegroundColorSpan(EMOTICON_COLOR), start,
+                                 start + emoticon.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     html.removeSpan(img);
                 }
             }
@@ -236,5 +241,4 @@ public class Note {
             return mNote;
         }
     }
-    
 }

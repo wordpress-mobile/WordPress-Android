@@ -11,4 +11,6 @@
     <color name="md__itemBackground">#CC2EA2CC</color>
     <color name="md__iconTintColor">#DDFFFFFF</color>
     <color name="md__shadowColor">#44000000</color>
+    
+    <color name="wordpress_blue">#21759B</color>
 </resources>

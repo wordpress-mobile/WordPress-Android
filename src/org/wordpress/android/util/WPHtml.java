@@ -82,7 +82,7 @@ public class WPHtml {
     public static class WPQuoteSpan extends QuoteSpan {
         private static final int STRIPE_WIDTH=5;
         private static final int GAP_WIDTH=20;
-        public static final int STRIPE_COLOR=0xFFCCCCCC;
+        public static final int STRIPE_COLOR=0xFF21759B;
         private static final boolean IS_ICS= Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
         public WPQuoteSpan(){
