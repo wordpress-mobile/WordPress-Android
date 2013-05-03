@@ -188,6 +188,7 @@ public class ApiHelper {
                 try {
                     versionResult = (Object) client.call("wp.getOptions", vParams);
                 } catch (XMLRPCException e) {
+                    return false;
                 }
 
                 if (versionResult != null) {
@@ -238,7 +239,7 @@ public class ApiHelper {
             try {
                 ApiHelper.refreshComments(context, commentParams);
             } catch (XMLRPCException e) {
-                e.printStackTrace();
+                return false;
             }
 
             return true;
