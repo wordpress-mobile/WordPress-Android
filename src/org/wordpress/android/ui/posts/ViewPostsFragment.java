@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -386,6 +387,8 @@ public class ViewPostsFragment extends ListFragment {
 
             if (loadedPosts == null) {
                 refreshPosts(false);
+                if (!isPage)
+                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog()).execute(false);
             }
 
             return false;

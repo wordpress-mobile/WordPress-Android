@@ -311,7 +311,6 @@ public class ApiHelper {
         WordPress.wpDB.saveComments(dbVector);
 
         return allComments;
-
     }
 
     /**
@@ -380,7 +379,12 @@ public class ApiHelper {
     public static String getResponse(String urlString) {
         HttpRequest request = getHttpRequest(urlString);
         if (request != null) {
-            return request.body();
+            try {
+                String body = request.body();
+                return body;
+            } catch (HttpRequestException e) {
+                return null;
+            }
         } else {
             return null;
         }

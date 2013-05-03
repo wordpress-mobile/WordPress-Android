@@ -73,6 +73,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
+            // Refresh blog content when returning to the app
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog()).execute(false);
+            
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt("wp_pref_last_activity", -1);
@@ -145,8 +148,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         attemptToSelectPost();
     }
     
-    
-
     private void showPostUploadErrorAlert(String errorMessage) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
@@ -166,8 +167,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             dialogBuilder.create().show();
     }
 
-
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -180,8 +179,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
         
     }
-
-
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
