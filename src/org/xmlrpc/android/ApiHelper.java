@@ -397,6 +397,8 @@ public class ApiHelper {
      * @return the request / response object or null if the resource could not be retrieved.
      */
     public static HttpRequest getHttpRequest(String urlString) {
+        if (urlString == null)
+            return null;
         try {
             HttpRequest request = HttpRequest.get(urlString);
 

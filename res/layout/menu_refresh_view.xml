@@ -4,6 +4,6 @@
     android:layout_height="wrap_content"
     android:src="@drawable/ab_icon_refresh"
     android:gravity="center"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+    android:paddingLeft="@dimen/refresh_icon_padding"
+    android:paddingRight="@dimen/refresh_icon_padding"
     android:scaleType="center" />

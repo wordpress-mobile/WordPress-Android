@@ -101,7 +101,8 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
 
             @Override
             public void onClick(View v) {
-                showTopics();
+                if (!isFinishing())
+                    showTopics();
             }
 
         });

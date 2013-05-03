@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
@@ -36,8 +37,12 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
 
         mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
-
-        loadPostPreview(WordPress.currentPost);
+        
+        if (WordPress.currentPost != null)
+            loadPostPreview(WordPress.currentPost);
+        else {
+            Toast.makeText(this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

@@ -51,6 +51,7 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 
 /**
@@ -568,12 +569,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
  
         if (mIsXLargeDevice) {
-            // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
-            View content = mMenuDrawer.getContentContainer().getChildAt(0);
-            mMenuDrawer.getContentContainer().removeView(content);
-            mMenuDrawer = attachMenuDrawer();
-            mMenuDrawer.setContentView(content);
-            initMenuDrawer();
+            if (mMenuDrawer != null) {
+                // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
+                View content = mMenuDrawer.getContentContainer().getChildAt(0);
+                if (content != null) {
+                    mMenuDrawer.getContentContainer().removeView(content);
+                    mMenuDrawer = attachMenuDrawer();
+                    mMenuDrawer.setContentView(content);
+                    initMenuDrawer();
+                }
+            }
         }
  
         super.onConfigurationChanged(newConfig);
@@ -709,13 +714,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         @Override
         public void onSelectItem(){
             mShouldFinish = false;
-            PackageManager pm = WPActionBarActivity.this.getPackageManager();
             Intent intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-            if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_CAMERA);
-            } else {
-                intent.putExtra("quick-media", Constants.QUICK_POST_PHOTO_LIBRARY);
-            }
+            intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                    ? Constants.QUICK_POST_PHOTO_CAMERA
+                    : Constants.QUICK_POST_PHOTO_LIBRARY);
             intent.putExtra("isNew", true);
             startActivityWithDelay(intent);
         }
@@ -728,13 +730,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         @Override
         public void onSelectItem(){
             mShouldFinish = false;
-            PackageManager pm = WPActionBarActivity.this.getPackageManager();
             Intent intent = new Intent(WPActionBarActivity.this, EditPostActivity.class);
-            if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_CAMERA);
-            } else {
-                intent.putExtra("quick-media", Constants.QUICK_POST_VIDEO_LIBRARY);
-            }
+            intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                    ? Constants.QUICK_POST_VIDEO_CAMERA
+                    : Constants.QUICK_POST_VIDEO_LIBRARY);
             intent.putExtra("isNew", true);
             startActivityWithDelay(intent);
         }

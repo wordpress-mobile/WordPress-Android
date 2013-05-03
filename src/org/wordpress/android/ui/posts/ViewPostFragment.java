@@ -97,6 +97,17 @@ public class ViewPostFragment extends Fragment {
 
             }
         });
+        
+        ImageButton addCommentButton = (ImageButton) v
+                .findViewById(R.id.addComment);
+        addCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+
+                if (!parentActivity.isRefreshing)
+                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_COMMENT, WordPress.currentPost);
+
+            }
+        });
 
         return v;
 
@@ -105,7 +116,7 @@ public class ViewPostFragment extends Fragment {
     protected void loadPostPreview() {
 
         if (WordPress.currentPost != null) {
-            if (!WordPress.currentPost.getPermaLink().equals("")) {
+            if (WordPress.currentPost.getPermaLink() != null && !WordPress.currentPost.getPermaLink().equals("")) {
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
                 startActivity(i);
             }
@@ -145,6 +156,8 @@ public class ViewPostFragment extends Fragment {
                 R.id.sharePostLink);
         ImageButton viewPostButton = (ImageButton) getActivity().findViewById(
                 R.id.viewPost);
+        ImageButton addCommentButton = (ImageButton) getActivity().findViewById(
+                R.id.addComment);
 
         tv.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
@@ -159,9 +172,15 @@ public class ViewPostFragment extends Fragment {
         if (post.isLocalDraft()) {
             shareURLButton.setVisibility(View.GONE);
             viewPostButton.setVisibility(View.GONE);
+            addCommentButton.setVisibility(View.GONE);
         } else {
             shareURLButton.setVisibility(View.VISIBLE);
             viewPostButton.setVisibility(View.VISIBLE);
+            if (post.isMt_allow_comments()) {
+                addCommentButton.setVisibility(View.VISIBLE);
+            } else {
+                addCommentButton.setVisibility(View.GONE);
+            }
         }
 
     }
