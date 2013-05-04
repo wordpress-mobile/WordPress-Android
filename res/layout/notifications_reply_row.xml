@@ -8,7 +8,7 @@
   android:layout_marginBottom="1dp"
   android:orientation="horizontal"
   android:padding="0dp"
-  android:background="#CCC" >
+  android:background="@drawable/reply_row_background" >
   <ImageView
     android:id="@+id/avatar"
     android:visibility="gone"
@@ -29,6 +29,11 @@
     android:layout_height="wrap_content"
     android:layout_width="0dp"
     android:layout_weight="1.0"
+    android:ellipsize="end"
+    android:singleLine="true"
+    android:textSize="16dp"
+    android:textColor="@drawable/reply_row_textcolor"
+    android:duplicateParentState="true"
     android:layout_marginRight="8dp"
     android:layout_marginLeft="8dp"
     android:layout_gravity="center_vertical"

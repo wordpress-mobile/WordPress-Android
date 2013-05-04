@@ -7,8 +7,13 @@ import java.util.Collections;
 import android.util.Log;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES;
+import android.text.Spanned;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
+import android.text.style.ForegroundColorSpan;
 
 public class Emoticons {
+    public static final int EMOTICON_COLOR=0xFF21759B;
     private static final boolean HAS_EMOJI=SDK_INT >= VERSION_CODES.JELLY_BEAN;
     private static final Map<String, String> wpSmilies;
     static {
@@ -49,5 +54,18 @@ public class Emoticons {
         }
         return ifNone;
     }
-    
+    public static Spanned replaceEmoticonsWithEmoji(SpannableStringBuilder html){
+        ImageSpan imgs[] = html.getSpans(0, html.length(), ImageSpan.class);
+        for (ImageSpan img : imgs) {
+            String emoticon = Emoticons.lookupImageSmiley(img.getSource());
+            if (!emoticon.equals("")) {
+                int start = html.getSpanStart(img);
+                html.replace(start, html.getSpanEnd(img), emoticon);
+                html.setSpan(new ForegroundColorSpan(EMOTICON_COLOR), start,
+                             start + emoticon.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                html.removeSpan(img);
+            }
+        }
+        return html;
+    }
 }

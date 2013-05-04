@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.provider.Browser;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.Note;
 
 class ReplyRow extends LinearLayout {
     private ImageView mButton;
@@ -34,26 +33,45 @@ class ReplyRow extends LinearLayout {
         mAvatar = (ImageView) findViewById(R.id.avatar);
         mTextField = (TextView) findViewById(R.id.text);
         mProgress = (ProgressBar) findViewById(R.id.progress);
-        android.util.Log.d("NoteComment", String.format("%s %s %s %s", mButton, mAvatar, mTextField, mProgress));
     }
-    public void setReply(final Note.Reply reply){
-        if (reply.isComplete()) {
-            // update the row text and button
-            mButton.setVisibility(View.VISIBLE);
+    
+    public void setComplete(boolean complete){
+        if (complete) {
             mProgress.setVisibility(View.GONE);
             mAvatar.setVisibility(View.VISIBLE);
-            setOnClickListener(new View.OnClickListener(){
-               @Override
-               public void onClick(View view){
-                   Uri uri = Uri.parse(reply.getUrl());
-                   Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                   Context context = getContext();
-                   intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-                   context.startActivity(intent);
-               } 
-            });
+        } else {
+            mProgress.setVisibility(View.GONE);
+            mAvatar.setVisibility(View.VISIBLE);
         }
     }
+
+    public void setUrl(final String url){
+        if (url == null) {
+            mButton.setVisibility(View.GONE);
+            setOnClickListener(null);
+        } else {
+            mButton.setVisibility(View.VISIBLE);
+            setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Uri uri = Uri.parse(url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    Context context = getContext();
+                    intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+                    context.startActivity(intent);
+                } 
+            });
+        }                
+    }
+    
+    public void setText(CharSequence text){
+        mTextField.setText(text);
+    }
+    
+    public void setText(int stringRes){
+        mTextField.setText(stringRes);
+    }
+
     public ImageView getImageView(){
         return mAvatar;
     }

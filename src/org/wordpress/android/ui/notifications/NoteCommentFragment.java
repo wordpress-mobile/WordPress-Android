@@ -188,7 +188,9 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             Log.d(TAG, String.format("Apply response to note %s", response));
             if (getActivity() != null) {
                 mReply.setCommentJson(response);
-                mRow.setReply(mReply);
+                mRow.setComplete(true);
+                mRow.setUrl(mReply.getUrl());
+                mRow.setText(String.format("“%s”", mReply.getCommentPreview()));
                 httpClient.get(mReply.getAvatarUrl(), new BitmapResponseHandler(){
                     @Override
                     public void onSuccess(int status, Bitmap bitmap){

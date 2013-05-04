@@ -13,4 +13,5 @@
     <color name="md__shadowColor">#44000000</color>
     
     <color name="wordpress_blue">#21759B</color>
+    <color name="gray">#CCC</color>
 </resources>

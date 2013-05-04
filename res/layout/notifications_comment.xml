@@ -54,11 +54,10 @@
         android:orientation="vertical" />
     </LinearLayout>
   </ScrollView>
-  <ImageView
+  <View
     android:layout_width="match_parent"
     android:layout_height="1px"
-    android:scaleType="fitXY"
-    android:src="?android:attr/listDivider" />
+    android:background="#666" />
   <org.wordpress.android.ui.notifications.ReplyField
     android:background="#FFFFFF"
     android:layout_height="wrap_content"
