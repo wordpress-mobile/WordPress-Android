@@ -131,9 +131,9 @@ public class Note {
     }
     public Reply buildReply(String content){
         JSONObject replyAction = getActions().get(NOTE_ACTION_REPLY);
-        Integer siteId = JSONUtil.queryJSON(replyAction, "params.blog_id", (Integer) 0);
-        String commentId = JSONUtil.queryJSON(replyAction, "params.comment_id", "");
-        Reply reply = new Reply(this, siteId.toString(), commentId, content);
+        String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
+        Log.d(TAG, String.format("Search actions %s", restPath));
+        Reply reply = new Reply(this, String.format("%s/replies/new", restPath), content);
         return reply;
     }
     /**
@@ -219,26 +219,44 @@ public class Note {
     public static class Reply {
         private Note mNote;
         private String mContent;
-        private String mSiteId;
-        private String mCommentId;
+        private String mRestPath;
+        private JSONObject mCommentJson;
         
-        Reply(Note note, String siteId, String commentId, String content){
+        Reply(Note note, String restPath, String content){
             mNote = note;
-            mSiteId = siteId;
-            mCommentId = commentId;
+            mRestPath = restPath;
             mContent = content;
-        }
-        public String getSiteId(){
-            return mSiteId;
-        }
-        public String getCommentId(){
-            return mCommentId;
         }
         public String getContent(){
             return mContent;
         }
         public Note getNote(){
             return mNote;
+        }
+        public String getUrl(){
+            if (isComplete()) {
+                return JSONUtil.queryJSON(mCommentJson, "URL", "");
+            }
+            return "";
+        }
+        public String getAvatarUrl(){
+            if (isComplete()) {
+                return JSONUtil.queryJSON(mCommentJson, "author.avatar_URL", "");
+            } else {
+                return "";
+            }
+        }
+        public String getRestPath(){
+            return mRestPath;
+        }
+        public boolean isComplete(){
+            return mCommentJson != null;
+        }
+        public JSONObject getCommentJson(){
+            return mCommentJson;
+        }
+        public void setCommentJson(JSONObject commentJson){
+            mCommentJson = commentJson;
         }
     }
 }

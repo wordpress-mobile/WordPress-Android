@@ -6,9 +6,11 @@
   android:background="#FFFFFF"
   android:orientation="vertical">
   <ScrollView
+    android:id="@+id/scroll_view"
+    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
     android:layout_weight="1"
-    android:layout_height="0dp"
-    android:layout_width="match_parent">
+    android:fillViewport="true" >
     <LinearLayout
       android:orientation="vertical"
       android:layout_height="match_parent"
@@ -35,8 +37,21 @@
         android:linksClickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:layout_weight="1.0"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
         android:textSize="18sp" />
+      <org.wordpress.android.ui.notifications.ReplyList
+        android:id="@+id/replies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical" />
     </LinearLayout>
   </ScrollView>
   <ImageView

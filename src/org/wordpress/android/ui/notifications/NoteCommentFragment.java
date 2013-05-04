@@ -24,13 +24,13 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+import android.widget.ScrollView;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.Log;
 import android.net.Uri;
-
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.AsyncHttpClient;
@@ -54,6 +54,8 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
     private FollowRow mFollowRow;
     private DetailHeader mDetailHeader;
     private AsyncHttpClient httpClient = new AsyncHttpClient();
+    private ReplyList mReplyList;
+    private ScrollView mScrollView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
@@ -62,6 +64,8 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         mCommentText = (TextView) view.findViewById(R.id.note_text);
         mFollowRow = (FollowRow) view.findViewById(R.id.follow_row);
         mDetailHeader = (DetailHeader) view.findViewById(R.id.header);
+        mReplyList = (ReplyList) view.findViewById(R.id.replies);
+        mScrollView = (ScrollView) view.findViewById(R.id.scroll_view);
         return view;
     }
 
@@ -86,7 +90,7 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         mCommentText.setText(html);
         mCommentText.setMovementMethod(LinkMovementMethod.getInstance());
-        mReplyField.setOnReplyListener(new ReplyListener());
+        mReplyField.setOnReplyListener(mReplyListener);
         mDetailHeader.setText(getNote().getSubject());
         final String url = getNote().queryJSON("body.items[last].header_link", "");
         mDetailHeader.setOnClickListener(new View.OnClickListener(){
@@ -114,6 +118,7 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             mReplyField.setText(arguments.getString(NotificationsActivity.NOTE_REPLY_EXTRA));
             mReplyField.requestFocus();
         }
+        
     }
     
     @Override
@@ -127,15 +132,17 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0x0);
     }
     
-    class ReplyListener implements ReplyField.OnReplyListener {
+    private ReplyField.OnReplyListener mReplyListener = new ReplyField.OnReplyListener() {
         @Override
         public void onReply(ReplyField field, Editable replyText){
             Note.Reply reply = getNote().buildReply(replyText.toString());
             replyText.clear();
             dismissKeyboard();
-            WordPress.restClient.replyToComment(reply, new ReplyResponseHandler(reply));
+            ReplyRow row = mReplyList.addReply(reply);
+            WordPress.restClient.replyToComment(reply, new ReplyResponseHandler(reply, row));
+            mScrollView.scrollTo(0, mReplyList.getBottom());
         }
-    }
+    };
     
     class ReplyResponseHandler extends JsonHttpResponseHandler {
         private Notification mNotification;
@@ -143,9 +150,11 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         private NotificationManager mNotificationManager;
         private Toast mToast;
         private Note.Reply mReply;
-        ReplyResponseHandler(Note.Reply reply){
+        private ReplyRow mRow;
+        ReplyResponseHandler(Note.Reply reply, ReplyRow row){
             super();
             mReply = reply;
+            mRow = row;
             mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             prepareNotifications();
         }
@@ -157,6 +166,8 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
             failureIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, getNote().getId());
             failureIntent.putExtra(NotificationsActivity.NOTE_REPLY_EXTRA, mReply.getContent());
             failureIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
+            // TODO: Improve failure text. Who was it they tried to reply to and a better
+            // reason why it failed. Need to make sure id's are unique.
             mFailureNotification = new NotificationCompat.Builder(getActivity())
                 .setContentTitle("Reply failed")
                 .setContentText("Tap to try again")
@@ -174,8 +185,19 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         @Override
         public void onSuccess(int statusCode, JSONObject response){
-            mNotificationManager.cancel("reply", 0xFF);
-            mToast.show();
+            Log.d(TAG, String.format("Apply response to note %s", response));
+            if (getActivity() != null) {
+                mReply.setCommentJson(response);
+                mRow.setReply(mReply);
+                httpClient.get(mReply.getAvatarUrl(), new BitmapResponseHandler(){
+                    @Override
+                    public void onSuccess(int status, Bitmap bitmap){
+                        mRow.getImageView().setImageBitmap(bitmap);
+                    }
+                });
+            } else {
+                mToast.show();
+            }
         }
         @Override
         public void onFailure(Throwable e, JSONObject response){
@@ -204,7 +226,6 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
     
     private class AsyncImageGetter implements Html.ImageGetter {
         private TextView mView;
-        private AsyncHttpClient httpClient = new AsyncHttpClient();
         public AsyncImageGetter(TextView view){
             mView = view;
         }

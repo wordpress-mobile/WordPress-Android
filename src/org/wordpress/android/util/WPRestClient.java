@@ -46,7 +46,9 @@ public class WPRestClient {
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
      */
     public void replyToComment(Note.Reply reply, AsyncHttpResponseHandler handler){
-        replyToComment(reply.getSiteId(), reply.getCommentId(), reply.getContent(), handler);
+        RequestParams params = new RequestParams();
+        params.put(COMMENT_REPLY_CONTENT_FIELD, reply.getContent());
+        post(reply.getRestPath(), params, handler);
     }
     /**
      * Reply to a comment.
