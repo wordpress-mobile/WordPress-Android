@@ -49,8 +49,6 @@
         android:layout_gravity="center_horizontal"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
         android:orientation="vertical" />
     </LinearLayout>
   </ScrollView>
