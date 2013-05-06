@@ -92,14 +92,10 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         mCommentText.setMovementMethod(LinkMovementMethod.getInstance());
         mReplyField.setOnReplyListener(mReplyListener);
         mDetailHeader.setText(getNote().getSubject());
-        final String url = getNote().queryJSON("body.items[last].header_link", "");
-        mDetailHeader.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
-            }
-        });
+        String url = getNote().queryJSON("body.items[last].header_link", "");
+        if (!url.equals("")) {
+            mDetailHeader.setUrl(url);
+        }
         JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
         mFollowRow.setDefaultText(getNote().queryJSON("body.items[-1].header_text", ""));
         mFollowRow.setAction(followAction);

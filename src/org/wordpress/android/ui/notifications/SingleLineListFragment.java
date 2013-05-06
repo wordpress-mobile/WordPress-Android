@@ -47,14 +47,10 @@ public class SingleLineListFragment extends ListFragment implements Notification
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
         noteHeader.setText(getNote().getSubject());
-        final String url = getNote().queryJSON("body.header_link", "");
-        noteHeader.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View v){
-               Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-               startActivity(intent);
-           }
-        });
+        String url = getNote().queryJSON("body.header_link", "");
+        if (!url.equals("")) {
+            noteHeader.setUrl(url);
+        }
         // LinearLayout noteFooter = (LinearLayout) inflater.inflate(R.layout.notifications_detail_footer, null);
         ListView list = getListView();
         list.addHeaderView(noteHeader);

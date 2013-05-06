@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
+import android.provider.Browser;
+import android.net.Uri;
 
 import org.wordpress.android.R;
 
@@ -26,6 +29,24 @@ public class DetailHeader extends LinearLayout {
     }
     public void setText(CharSequence text){
         getTextView().setText(text);
+    }
+    public void setUrl(final String url){
+        if (url == null) {
+            setClickable(false);
+            setOnClickListener(null);
+        } else {
+            setClickable(true);
+            setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Uri uri = Uri.parse(url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    Context context = getContext();
+                    intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+                    context.startActivity(intent);
+                }
+            });
+        }
     }
     public void setClickable(boolean clickable){
         super.setClickable(clickable);
