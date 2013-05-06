@@ -470,6 +470,11 @@ public class PostUploadService extends Service {
                     } else { // file is not in media library
                         fVideo = new File(videoUri.toString().replace("file://", ""));
                     }
+                    
+                    if (fVideo == null) {
+                        error = context.getResources().getString(R.string.error_media_upload) + ".";
+                        return null;
+                    }
 
                     String imageTitle = fVideo.getName();
 
