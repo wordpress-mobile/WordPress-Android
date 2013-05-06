@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_comment">댓글 추가</string>
+	<string name="add_comment_enter">댓글 입력:</string>
+	<string name="add_comment_send">댓글 보내기</string>
+	<string name="write_comment">댓글 쓰기</string>
+	<string name="add_comment_required">필수 필드</string>
+	<string name="add_comment_please_enter">댓글 필드에 무언가 입력해주세요.</string>
+	<string name="comment_added">댓글이 성공적으로 추가됐습니다</string>
+	<string name="attempting_add_comment">댓글 올리는 중</string>
+	<string name="view_admin">관리자 보기</string>
+	<string name="edit_comment">댓글 편집</string>
+	<string name="share_url_page">페이지 공유</string>
+	<string name="attempting_configure">로그인 중...</string>
+	<string name="fatal_db_error">죄송합니다. 앱 데이터베이스 생성 중 에러가 발생했습니다. 앱 재설치를 해주세요.</string>
+	<string name="loading">로딩 중...</string>
 	<string name="view_site">사이트 보기</string>
 	<string name="open_source_licenses">오픈 소스 라이센스</string>
 	<string name="post_signature">글 서명</string>
@@ -119,7 +133,6 @@
 	<string name="upload_failed">업로드 실패</string>
 	<string name="invalid_url_message">입력된 블로그 URL이 정확한지 확인하세요.</string>
 	<string name="view_in_browser">브라우저에서 보기</string>
-	<string name="reply_please_enter">응답란에 무엇이든 입력하세요.</string>
 	<string name="untitled">무제</string>
 	<string name="title_post_required">본문을 작성하거나 미디어를 첨부하십시요.\nPlease enter some post content or attach a media item.</string>
 	<string name="empty_fields">내용이 없습니다.</string>
@@ -239,9 +252,8 @@
 	<string name="reply_enter">댓글 입력</string>
 	<string name="reply_send">댓글 전송</string>
 	<string name="reply_to_comment">댓글 답변</string>
-	<string name="reply_required">필수 항목</string>
+	<string name="reply_please_enter">답변 필드에 무언가 입력해주세요.</string>
 	<string name="preview">미리보기</string>
-	<string name="loading">불러오기중...</string>
 	<string name="on">켜기</string>
 	<string name="approved">수락</string>
 	<string name="unapproved">검토중</string>
@@ -261,7 +273,6 @@
 	<string name="mark_unapproved">댓글 검증중</string>
 	<string name="reply">답글</string>
 	<string name="account_setup">계정설정</string>
-	<string name="attempting_configure">계정을 구성중입니다.</string>
 	<string name="cancel_draft">입력취소</string>
 	<string name="publish">게시하시겠습니까?</string>
 	<string name="yes">예</string>

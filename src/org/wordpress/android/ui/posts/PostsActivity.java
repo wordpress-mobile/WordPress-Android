@@ -79,6 +79,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
+            // Refresh blog content when returning to the app
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog()).execute(false);
+            
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
@@ -135,8 +138,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         attemptToSelectPost();
     }
     
-    
-
     private void showPostUploadErrorAlert(String errorMessage) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
@@ -155,8 +156,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (!isFinishing())
             dialogBuilder.create().show();
     }
-
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -177,8 +176,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         
     }
 
-
-
     private void startNotificationsAcivity(Bundle extras) {
         // Manually set last selection to notifications
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -191,8 +188,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         startActivity(i);
         finish();
     }
-
-
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
@@ -288,7 +283,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
-            postList.refreshPosts(false);
+            checkForLocalChanges(true);
             new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
