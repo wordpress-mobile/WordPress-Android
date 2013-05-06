@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.support.v4.content.IntentCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -126,6 +127,10 @@ public class PostUploadService extends Service {
             n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
 
             Intent notificationIntent = new Intent(context, PostsActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            notificationIntent.setAction("android.intent.action.MAIN");
+            notificationIntent.addCategory("android.intent.category.LAUNCHER");
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
             notificationIntent.putExtra("fromNotification", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
