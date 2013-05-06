@@ -17,7 +17,12 @@ public abstract class BitmapResponseHandler extends BinaryHttpResponseHandler {
     @Override
     protected void sendSuccessMessage(int statusCode, byte[] responseBody) {
         // turn this beast into a bitmap
-        Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+        Bitmap bitmap;
+        try {
+            bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+        } catch (OutOfMemoryError error) {
+            bitmap = null;
+        }
         if (bitmap == null) {
             super.sendSuccessMessage(statusCode, responseBody);
         } else {
