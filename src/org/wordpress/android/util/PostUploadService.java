@@ -95,6 +95,10 @@ public class PostUploadService extends Service {
                 String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
                         .getText(R.string.post_id));
                 Intent notificationIntent = new Intent(context, (post.isPage()) ? PagesActivity.class : PostsActivity.class);
+                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                notificationIntent.setAction("android.intent.action.MAIN");
+                notificationIntent.addCategory("android.intent.category.LAUNCHER");
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
                 notificationIntent.putExtra("fromNotification", true);
                 notificationIntent.putExtra("errorMessage", error);
