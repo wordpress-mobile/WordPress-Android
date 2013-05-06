@@ -101,9 +101,14 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         mFollowRow.setAction(followAction);
         mFollowRow.setListener(new FollowListener());
         Bundle arguments = getArguments();
-        if (arguments != null && arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA)) {
-            mReplyField.setText(arguments.getString(NotificationsActivity.NOTE_REPLY_EXTRA));
-            mReplyField.requestFocus();
+        if (arguments != null && (arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA) || arguments.containsKey(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA))) {
+            if (arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA))
+                mReplyField.setText(arguments.getString(NotificationsActivity.NOTE_REPLY_EXTRA));
+            
+            mReplyField.mTextField.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null)
+                inputMethodManager.showSoftInput(mReplyField.mTextField, 0);
         }
         
     }

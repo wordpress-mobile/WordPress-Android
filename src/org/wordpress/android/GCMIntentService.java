@@ -97,13 +97,12 @@ public class GCMIntentService extends GCMBaseIntentService {
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
-                // TODO pass whatever's needed to go directly to comment reply
-                // TODO use intent service for handling actions
-                // http://udinic.wordpress.com/2012/07/24/adding-more-actions-to-jellybean-notifications/
                 Intent commentReplyIntent = new Intent(this, PostsActivity.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
+                commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
+                commentReplyIntent.setAction(Intent.ACTION_RUN);
                 if (note_id != null)
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,

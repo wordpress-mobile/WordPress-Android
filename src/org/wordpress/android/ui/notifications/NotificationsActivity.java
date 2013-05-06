@@ -51,6 +51,7 @@ public class NotificationsActivity extends WPActionBarActivity {
     public static final String NOTE_ID_EXTRA="noteId";
     public static final String FROM_NOTIFICATION_EXTRA="fromNotification";
     public static final String NOTE_REPLY_EXTRA="replyContent";
+    public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final int FLAG_FROM_NOTE=Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                             Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                             Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -252,7 +253,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         NotificationFragment noteFragment = (NotificationFragment) fragment;
         Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA) && intent.getStringExtra(NOTE_ID_EXTRA).equals(note.getId())) {
-            if (intent.hasExtra(NOTE_REPLY_EXTRA)) {
+            if (intent.hasExtra(NOTE_REPLY_EXTRA) || intent.hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
                 fragment.setArguments(intent.getExtras());
             }
         }
