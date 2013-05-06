@@ -759,7 +759,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private class AdminMenuItem extends MenuDrawerItem {
         AdminMenuItem(){
-            super(DASHBOARD_ACTIVITY, R.string.wp_admin, R.drawable.dashboard_icon_wp);
+            super(DASHBOARD_ACTIVITY, R.string.view_admin, R.drawable.dashboard_icon_wp);
         }
         @Override
         public Boolean isSelected(){
