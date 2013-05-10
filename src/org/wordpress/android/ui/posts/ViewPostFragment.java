@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -135,19 +140,65 @@ public class ViewPostFragment extends Fragment {
                     + " must implement Callback");
         }
     }
+    
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+       private final int SWIPE_MIN_DISTANCE = 50;
+       private final int SWIPE_THRESHOLD_VELOCITY = 60;
+   
+       @Override
+       public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+          if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {                
+           // Right to left
+          swipePost(1);				//Pass 1 for nextpost
+             return true;
+          } 
+          else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
+           // Left to right
+          swipePost(0);				//Pass 0 for prevpost
+                  return true;
+            }
+                  
+                  return false;
+           }
+        }
+    
+    
+    public void swipePost(int motionEvent){
+        ViewPostsFragment vpf = new ViewPostsFragment();
+        String prevpostid,nextpostid;
+        long newid;
+        
+        if(motionEvent==0){
+            prevpostid = vpf.getprevID();
+            int previd=  Integer.parseInt(prevpostid);
+            newid = (long)previd;
+        }
+        else{
+            nextpostid = vpf.getnextID();
+            int nextid=  Integer.parseInt(nextpostid);
+            newid=(long)nextid;
+               }
+        Post post = new Post(WordPress.currentBlog.getId(),newid
+                , false);
+        loadPost(post);
+        }
+    
+    
+    public GestureDetector gesturedetector;
 
     public void loadPost(Post post) {
 
         // Don't load if the Post object of title are null, see #395
         if (post == null || post.getTitle() == null)
             return;
-
+	gesturedetector = new GestureDetector(new GestureListener());
         TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
         if (post.getTitle().equals(""))
             title.setText("(" + getResources().getText(R.string.untitled) + ")");
         else
             title.setText(EscapeUtils.unescapeHtml(post.getTitle()));
-
+	RelativeLayout layout = (RelativeLayout)getActivity().findViewById(R.id.postHead);
         WebView webView = (WebView) getActivity().findViewById(
                 R.id.viewPostWebView);
         TextView tv = (TextView) getActivity().findViewById(
@@ -158,6 +209,30 @@ public class ViewPostFragment extends Fragment {
                 R.id.viewPost);
         ImageButton addCommentButton = (ImageButton) getActivity().findViewById(
                 R.id.addComment);
+        layout.setOnTouchListener(new OnTouchListener() {
+    
+	    @Override
+	    public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+			gesturedetector.onTouchEvent(event);
+			return true;
+	    }
+            
+            
+        });        
+        webView.setOnTouchListener(new OnTouchListener() {
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+	    gesturedetector.onTouchEvent(event);
+	    return true;
+	    }
+    
+    
+	});
+	
+	
 
         tv.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);

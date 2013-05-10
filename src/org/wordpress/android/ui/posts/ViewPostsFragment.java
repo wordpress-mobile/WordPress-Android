@@ -45,7 +45,7 @@ import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewPostsFragment extends ListFragment {
     /** Called when the activity is first created. */
-    private String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
+    private static String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
             mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;
     private int[] mUploaded;
     private int mRowID = 0;
@@ -64,6 +64,28 @@ public class ViewPostsFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
+    public static int curr_position=0;
+    
+    public String getnextID(){
+        if(curr_position+1>=mPostIDs.length)
+            return mPostIDs[curr_position];
+            
+        else{
+        curr_position=curr_position+1; 
+        return mPostIDs[curr_position];
+        }
+    }
+    
+    public String getprevID(){
+	if(curr_position-1<0)
+	    return mPostIDs[curr_position];
+	    
+	else{
+	curr_position=curr_position-1;
+	return mPostIDs[curr_position];
+	}
+              
+    }
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -273,6 +295,7 @@ public class ViewPostsFragment extends ListFragment {
                                         .getId(), mSelectedID, isPage);
                                 if (post.getId() >= 0) {
                                     WordPress.currentPost = post;
+                                    curr_position=position;
                                     mOnPostSelectedListener.onPostSelected(post);
                                     mPostListAdapter.notifyDataSetChanged();
                                 } else {
