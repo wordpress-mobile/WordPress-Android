@@ -1,71 +1,49 @@
 package org.wordpress.android.ui.notifications;
 
-import static org.wordpress.android.WordPress.restClient;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import android.content.Intent;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.style.ImageSpan;
-import android.text.Html;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
-import android.text.Spanned;
-import android.text.SpannableString;
+import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.graphics.Canvas;
+import android.text.style.ImageSpan;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 import android.widget.ScrollView;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.util.Log;
-import android.net.Uri;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.actionbarsherlock.internal.widget.IcsSpinner;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.Note;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.BitmapResponseHandler;
-import org.wordpress.android.ui.notifications.NotificationsActivity.NotesResponseHandler;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.util.Emoticons;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.wordpress.android.util.BitmapResponseHandler;
+import org.wordpress.android.util.JSONUtil;
 
 public class NoteCommentFragment extends Fragment implements NotificationFragment {
     private static final String TAG="NoteComment";
