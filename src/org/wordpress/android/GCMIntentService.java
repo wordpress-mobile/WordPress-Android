@@ -1,7 +1,8 @@
 
 package org.wordpress.android;
 
-import java.net.URI;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,11 +21,6 @@ import android.support.v4.content.IntentCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
-
-import org.xmlrpc.android.WPComXMLRPCApi;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -71,6 +67,11 @@ public class GCMIntentService extends GCMBaseIntentService {
         String iconURL = extras.getString("icon");
         Bitmap largeIconBitmap = null;
         if (iconURL != null) {
+            try {
+                iconURL = URLDecoder.decode(iconURL, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             float screenDensity = getResources().getDisplayMetrics().densityDpi;
             int size = Math.round(64 * (screenDensity / 160));
             String resizedURL = iconURL.replaceAll("(?<=[?&;])s=[0-9]*", "s=" + size);
