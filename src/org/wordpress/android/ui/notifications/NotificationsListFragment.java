@@ -65,7 +65,7 @@ public class NotificationsListFragment extends ListFragment {
         setListAdapter(mNotesAdapter);
     }
     @Override
-    public void onListItemClick (ListView l, View v, int position, long id){
+    public void onListItemClick (ListView l, View v, int position, long id) {
         Note note = mNotesAdapter.getItem(position);
         l.setItemChecked(position, true);
         if (note != null && mNoteClickListener != null) {

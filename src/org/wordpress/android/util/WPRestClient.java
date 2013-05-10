@@ -127,6 +127,17 @@ public class WPRestClient {
         post("notifications/seen", params, handler);
     }
     /**
+     * Moderate a comment.
+     * 
+     * http://developer.wordpress.com/docs/api/1/sites/%24site/comments/%24comment_ID/
+     */
+    public void moderateComment(String siteId, String commentId, String status, AsyncHttpResponseHandler handler){
+        RequestParams params = new RequestParams();
+        params.put("status", status);
+        String path = String.format("sites/%s/comments/%s/", siteId, commentId);
+        post(path, params, handler);
+    }
+    /**
      * Make GET request
      */
     public void get(String path, AsyncHttpResponseHandler handler){

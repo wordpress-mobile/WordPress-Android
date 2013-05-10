@@ -22,5 +22,6 @@
     android:src="@drawable/dashboard_icon_wp" 
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp" />
+    android:layout_marginLeft="10dp"
+    android:tint="#858585" />
 </org.wordpress.android.ui.notifications.DetailHeader>

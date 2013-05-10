@@ -1,5 +1,12 @@
 package org.wordpress.android.ui.notifications;
 
+import static org.wordpress.android.WordPress.restClient;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 import android.content.Intent;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,10 +24,19 @@ import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.graphics.Canvas;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -31,6 +47,8 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.Log;
 import android.net.Uri;
+
+import com.actionbarsherlock.internal.widget.IcsSpinner;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.AsyncHttpClient;
@@ -41,14 +59,17 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.BitmapResponseHandler;
+import org.wordpress.android.ui.notifications.NotificationsActivity.NotesResponseHandler;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.Emoticons;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-class NoteCommentFragment extends Fragment implements NotificationFragment {
+public class NoteCommentFragment extends Fragment implements NotificationFragment {
     private static final String TAG="NoteComment";
-    private TextView mCommentText;
+    private TextView mCommentText, mModeratingText;
     private ReplyField mReplyField;
     private Note mNote;
     private FollowRow mFollowRow;
@@ -56,6 +77,13 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
     private AsyncHttpClient httpClient = new AsyncHttpClient();
     private ReplyList mReplyList;
     private ScrollView mScrollView;
+    private ImageButton mApproveButton, mSpamButton, mTrashButton;
+    private LinearLayout mModerateContainer;
+    
+    private static final String APPROVE_TAG = "approve-comment";
+    private static final String UNAPPROVE_TAG = "unapprove-comment";
+    private static final String SPAM_TAG = "spam-comment";
+    private static final String TRASH_TAG = "trash-comment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
@@ -66,6 +94,14 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         mDetailHeader = (DetailHeader) view.findViewById(R.id.header);
         mReplyList = (ReplyList) view.findViewById(R.id.replies);
         mScrollView = (ScrollView) view.findViewById(R.id.scroll_view);
+        mApproveButton = (ImageButton)view.findViewById(R.id.note_moderate_approve);
+        mSpamButton = (ImageButton)view.findViewById(R.id.note_moderate_spam);
+        mTrashButton = (ImageButton)view.findViewById(R.id.note_moderate_trash);
+        mModeratingText = (TextView)view.findViewById(R.id.comment_moderating);
+        mModerateContainer = (LinearLayout)view.findViewById(R.id.moderate_buttons_container);
+        
+        ((TextView) view.findViewById(R.id.moderate_comment_header)).setText(getResources().getString(R.string.moderate_comment).toUpperCase());
+        
         return view;
     }
 
@@ -92,6 +128,35 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         mCommentText.setMovementMethod(LinkMovementMethod.getInstance());
         mReplyField.setOnReplyListener(mReplyListener);
         mDetailHeader.setText(getNote().getSubject());
+        
+        Map<String, JSONObject> noteActions = getNote().getActions();
+        if (noteActions.containsKey(APPROVE_TAG)) {
+            mApproveButton.setImageResource(R.drawable.moderate_approve);
+            mApproveButton.setVisibility(View.VISIBLE);
+            mApproveButton.setOnClickListener(mModerateClickListener);
+            mApproveButton.setTag(APPROVE_TAG);
+        }
+        if (noteActions.containsKey(UNAPPROVE_TAG)) {
+            mApproveButton.setImageResource(R.drawable.moderate_unapprove);
+            mApproveButton.setVisibility(View.VISIBLE);
+            mApproveButton.setOnClickListener(mModerateClickListener);
+            mApproveButton.setTag(UNAPPROVE_TAG);
+        }
+        if (noteActions.containsKey(SPAM_TAG)) {
+            mSpamButton.setVisibility(View.VISIBLE);
+            mSpamButton.setOnClickListener(mModerateClickListener);
+            mSpamButton.setTag(SPAM_TAG);
+        } else {
+            mSpamButton.setVisibility(View.GONE);
+        }
+        if (noteActions.containsKey(TRASH_TAG)) {
+            mTrashButton.setVisibility(View.VISIBLE);
+            mTrashButton.setOnClickListener(mModerateClickListener);
+            mTrashButton.setTag(TRASH_TAG);
+        } else {
+            mTrashButton.setVisibility(View.GONE);
+        }
+        
         String url = getNote().queryJSON("body.items[last].header_link", "");
         if (!url.equals("")) {
             mDetailHeader.setUrl(url);
@@ -122,6 +187,53 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
     protected void dismissKeyboard(){
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0x0);
+    }
+    
+    private OnClickListener mModerateClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+
+            String tag = (String) v.getTag();
+            if (getNote().getActions().containsKey(tag)) {
+
+                animateModeration(true);
+                JSONObject moderateAction = getNote().getActions().get(tag);
+                String siteId = String.valueOf(JSONUtil.queryJSON(moderateAction, "params.site_id",
+                        -1));
+                String commentId = String.valueOf(JSONUtil.queryJSON(moderateAction,
+                        "params.comment_id", -1));
+                String status = JSONUtil.queryJSON(moderateAction, "params.rest_body.status", "");
+                
+                if (getActivity() != null) {
+                    ((NotificationsActivity)getActivity()).moderateComment(siteId, commentId, status, getNote());
+                }
+                
+            }
+        }
+    };
+    
+    public void animateModeration(boolean start) {
+        // show some fancy animations
+        for (int i = 0; i < mModerateContainer.getChildCount(); i++) {
+            View view = mModerateContainer.getChildAt(i);
+            if (view instanceof ImageButton && view.getVisibility() == View.VISIBLE) {
+                if (start)
+                    view.setClickable(false);
+                else
+                    view.setClickable(true);
+                Animation zoom = AnimationUtils.loadAnimation(getActivity()
+                        .getBaseContext(), (start) ? R.anim.rotate_zoom_out : R.anim.rotate_zoom_in);
+                zoom.setStartOffset(i * 100);
+                view.startAnimation(zoom);
+            }
+        }
+
+        Animation moderatingAnimation = AnimationUtils.loadAnimation(getActivity()
+                .getBaseContext(), (start) ? R.anim.blink : R.anim.fade_out);
+        mModeratingText.setVisibility((start) ? View.VISIBLE : View.GONE);
+        mModeratingText.startAnimation(moderatingAnimation);
+        
     }
     
     private ReplyField.OnReplyListener mReplyListener = new ReplyField.OnReplyListener() {
@@ -274,6 +386,4 @@ class NoteCommentFragment extends Fragment implements NotificationFragment {
         }
         
     }
-    
-
 }

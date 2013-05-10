@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -31,7 +32,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.WordPressDB;
@@ -267,6 +270,65 @@ public class NotificationsActivity extends WPActionBarActivity {
             transaction.addToBackStack(null);
         }
         transaction.commit();
+    }
+    
+    public void moderateComment(String siteId, String commentId, String status, final Note originalNote) {
+        WordPress.restClient.moderateComment(siteId, commentId, status, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                RequestParams params = new RequestParams();
+                params.put("ids", originalNote.getId());
+                WordPress.restClient.getNotifications(params, new NotesResponseHandler() {
+                        @Override
+                        public void onStart() {
+                            Log.d(TAG, "Finding note to display!");
+                        }
+
+                        @Override
+                        public void onSuccess(List<Note> notes) {
+                            // there should only be one note!
+                            if (!notes.isEmpty()) {
+                                Note updatedNote = notes.get(0);
+                                updateNote(originalNote, updatedNote);
+                            }
+                        }
+                    });
+            }
+
+            @Override
+            public void onFailure(Throwable e, String response) {
+                if (isFinishing())
+                    return;
+                
+                Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
+                FragmentManager fm = getSupportFragmentManager();
+                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
+                if (f != null) {
+                    f.animateModeration(false);
+                }
+            }
+        });
+    }
+    
+    public void updateNote(Note originalNote, Note updatedNote) {
+        if (isFinishing())
+            return;
+        int position = mNotesList.getNotesAdapter().getPosition(originalNote);
+        if (position >= 0) {
+            mNotesList.getNotesAdapter().remove(originalNote);
+            mNotesList.getNotesAdapter().insert(updatedNote, position);
+            mNotesList.getNotesAdapter().notifyDataSetChanged();
+            // Update comment detail fragment if we're still viewing the same note
+            if (position == mNotesList.getListView().getCheckedItemPosition()) {
+                FragmentManager fm = getSupportFragmentManager();
+                NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
+                if (f != null) {
+                    f.setNote(updatedNote);
+                    f.onStart();
+                    f.animateModeration(false);
+                }
+            }
+        }
     }
 
     public void refreshNotes(){
