@@ -777,7 +777,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
-            super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_comments);
+            super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_notifications);
         }
         @Override
         public Boolean isVisible(){

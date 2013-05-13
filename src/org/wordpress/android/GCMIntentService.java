@@ -86,6 +86,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         light = prefs.getBoolean("wp_pref_notification_light", false);
 
         NotificationCompat.Builder mBuilder;
+        
+        Intent resultIntent = new Intent(this, PostsActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        resultIntent.setAction("android.intent.action.MAIN");
+        resultIntent.addCategory("android.intent.category.LAUNCHER");
+        resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
+        
         if (activeNotificationsMap.size() <= 1) {
             mBuilder =
                     new NotificationCompat.Builder(this)
@@ -95,20 +103,26 @@ public class GCMIntentService extends GCMBaseIntentService {
                             .setTicker(message)
                             .setAutoCancel(true)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            
+            if (note_id != null)
+                resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+            
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
                 Intent commentReplyIntent = new Intent(this, PostsActivity.class);
-                commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                commentReplyIntent.setAction("android.intent.action.MAIN");
+                commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
+                commentReplyIntent.addCategory("comment-reply");
                 commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
                 commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
-                commentReplyIntent.setAction(Intent.ACTION_RUN);
                 if (note_id != null)
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
                         commentReplyIntent,
-                        0);
+                        PendingIntent.FLAG_CANCEL_CURRENT);
                 mBuilder.addAction(R.drawable.ab_icon_reply,
                         getResources().getText(R.string.reply), commentReplyPendingIntent);
             }
@@ -163,16 +177,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (light)
             mBuilder.setLights(0xff0000ff, 1000, 5000);
 
-        Intent resultIntent = new Intent(this, PostsActivity.class);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-        resultIntent.setAction("android.intent.action.MAIN");
-        resultIntent.addCategory("android.intent.category.LAUNCHER");
-        resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
-        if (note_id != null)
-            resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+        
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
-                Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
