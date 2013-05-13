@@ -82,6 +82,9 @@ public class ImageHelper {
                     // out of memory
                     return null;
                 }
+                
+                if (bm == null)
+                    return null;
 
                 float percentage = (float) finalWidth / bm.getWidth();
                 float proportionateHeight = bm.getHeight() * percentage;
