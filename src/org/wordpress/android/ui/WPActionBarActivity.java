@@ -508,7 +508,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         } else if (item.getItemId() == R.id.menu_settings) {
             Intent i = new Intent(this, PreferencesActivity.class);
-            startActivity(i);
+            startActivityForResult(i, SETTINGS_REQUEST);
         }
         return super.onOptionsItemSelected(item);
     }

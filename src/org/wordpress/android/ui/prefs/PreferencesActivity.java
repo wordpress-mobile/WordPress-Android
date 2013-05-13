@@ -131,6 +131,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     @Override
     protected void onPause() {
         overridePendingTransition(R.anim.do_nothing, R.anim.slide_down);
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
         super.onPause();
     }
 
