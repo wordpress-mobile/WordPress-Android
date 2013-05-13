@@ -82,8 +82,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int QUICK_VIDEO_ACTIVITY = 6;
     protected static final int VIEW_SITE_ACTIVITY = 7;
     protected static final int DASHBOARD_ACTIVITY = 8;
-    protected static final int SETTINGS_ACTIVITY = 9;
-    protected static final int NOTIFICATIONS_ACTIVITY = 10;
+    protected static final int NOTIFICATIONS_ACTIVITY = 9;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
     
@@ -117,7 +116,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());
         mMenuItems.add(new AdminMenuItem());
-        //mMenuItems.add(new SettingsMenuItem());
 
     }
 
