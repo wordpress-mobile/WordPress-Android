@@ -272,7 +272,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                 mReply.setCommentJson(response);
                 mRow.setComplete(true);
                 mRow.setUrl(mReply.getUrl());
-                mRow.setText(String.format("“%s”", mReply.getCommentPreview()));
+                mRow.setText(String.format("\u201c%s\u201d", mReply.getCommentPreview()));
                 httpClient.get(mReply.getAvatarUrl(), new BitmapResponseHandler(){
                     @Override
                     public void onSuccess(int status, Bitmap bitmap){
