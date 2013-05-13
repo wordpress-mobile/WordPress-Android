@@ -18,28 +18,29 @@ public class Emoticons {
     private static final Map<String, String> wpSmilies;
     static {
         Map<String, String> smilies = new HashMap<String, String>();
-        smilies.put("icon_mrgreen.gif",   HAS_EMOJI ? "😁" : ":mrgreen:" );
-        smilies.put("icon_neutral.gif",   HAS_EMOJI ? "😐" : ":|" );
-        smilies.put("icon_twisted.gif",   HAS_EMOJI ? "👿" : ":twisted:" );
-        smilies.put("icon_arrow.gif",     HAS_EMOJI ? "➡" : ":arrow:" );
-        smilies.put("icon_eek.gif",       HAS_EMOJI ? "😲" : "8-O" );
-        smilies.put("icon_smile.gif",     HAS_EMOJI ? "😊" : ":)" );
-        smilies.put("icon_confused.gif",  HAS_EMOJI ? "😕" : ":?" );
-        smilies.put("icon_cool.gif",      HAS_EMOJI ? "😎" : "8)" );
-        smilies.put("icon_evil.gif",      HAS_EMOJI ? "👿" : ":evil:" );
-        smilies.put("icon_biggrin.gif",   HAS_EMOJI ? "😃" : ":D" );
-        smilies.put("icon_idea.gif",      HAS_EMOJI ? "💡" : ":idea:" );
-        smilies.put("icon_redface.gif",   HAS_EMOJI ? "😳" : ":oops:" );
-        smilies.put("icon_razz.gif",      HAS_EMOJI ? "😜" : ":P" );
-        smilies.put("icon_rolleyes.gif",  HAS_EMOJI ? "😒" : ":roll:" );
-        smilies.put("icon_wink.gif",      HAS_EMOJI ? "😉" : ";)" );
-        smilies.put("icon_cry.gif",       HAS_EMOJI ? "😭" : ":'(" );
-        smilies.put("icon_surprised.gif", HAS_EMOJI ? "😱" : ":o" );
-        smilies.put("icon_lol.gif",       HAS_EMOJI ? "😂" : ":lol:" );
-        smilies.put("icon_mad.gif",       HAS_EMOJI ? "😠" : ":x" );
-        smilies.put("icon_sad.gif",       HAS_EMOJI ? "😞" : ":(" );
-        smilies.put("icon_exclaim.gif",   HAS_EMOJI ? "😲" : ":!:" );
-        smilies.put("icon_question.gif",  HAS_EMOJI ? "😕" : ":?:" );
+        smilies.put("icon_mrgreen.gif",   HAS_EMOJI ? "\uD83D\uDE00" : ":mrgreen:" );
+        smilies.put("icon_neutral.gif",   HAS_EMOJI ? "\uD83D\uDE14" : ":|" );
+        smilies.put("icon_twisted.gif",   HAS_EMOJI ? "\uD83D\uDE16" : ":twisted:" );
+        smilies.put("icon_arrow.gif",     HAS_EMOJI ? "\u27A1" : ":arrow:" );
+        smilies.put("icon_eek.gif",       HAS_EMOJI ? "\uD83D\uDE32" : "8-O" );
+        smilies.put("icon_smile.gif",     HAS_EMOJI ? "\uD83D\uDE0A" : ":)" );
+        smilies.put("icon_confused.gif",  HAS_EMOJI ? "\uD83D\uDE15" : ":?" );
+        smilies.put("icon_cool.gif",      HAS_EMOJI ? "\uD83D\uDE0A" : "8)" );
+        smilies.put("icon_evil.gif",      HAS_EMOJI ? "\uD83D\uDE21" : ":evil:" );
+        smilies.put("icon_biggrin.gif",   HAS_EMOJI ? "\uD83D\uDE03" : ":D" );
+        smilies.put("icon_idea.gif",      HAS_EMOJI ? "\uD83D\uDCA1" : ":idea:" );
+        smilies.put("icon_redface.gif",   HAS_EMOJI ? "\uD83D\uDE33" : ":oops:" );
+        smilies.put("icon_razz.gif",      HAS_EMOJI ? "\uD83D\uDE1D" : ":P" );
+        smilies.put("icon_rolleyes.gif",  HAS_EMOJI ? "\uD83D\uDE0F" : ":roll:" );
+        smilies.put("icon_wink.gif",      HAS_EMOJI ? "\uD83D\uDE09" : ";)" );
+        smilies.put("icon_cry.gif",       HAS_EMOJI ? "\uD83D\uDE22" : ":'(" );
+        smilies.put("icon_surprised.gif", HAS_EMOJI ? "\uD83D\uDE32" : ":o" );
+        smilies.put("icon_lol.gif",       HAS_EMOJI ? "\uD83D\uDE03" : ":lol:" );
+        smilies.put("icon_mad.gif",       HAS_EMOJI ? "\uD83D\uDE21" : ":x" );
+        smilies.put("icon_sad.gif",       HAS_EMOJI ? "\uD83D\uDE1E" : ":(" );
+        smilies.put("icon_exclaim.gif",   HAS_EMOJI ? "\u2757" : ":!:" );
+        smilies.put("icon_question.gif",  HAS_EMOJI ? "\u2753" : ":?:" );
+        
         
         wpSmilies = Collections.unmodifiableMap(smilies);
     }

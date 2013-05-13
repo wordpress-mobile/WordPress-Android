@@ -37,11 +37,13 @@ public abstract class BitmapResponseHandler extends BinaryHttpResponseHandler {
         switch(msg.what) {
             case SUCCESS_MESSAGE:
                 response = (Object[])msg.obj;
-                handleSuccessMessage(((Integer) response[0]).intValue() , (Bitmap) response[1]);
+                if (response != null)
+                    handleSuccessMessage(((Integer) response[0]).intValue() , (Bitmap) response[1]);
                 break;
             case FAILURE_MESSAGE:
                 response = (Object[])msg.obj;
-                handleFailureMessage((Throwable)response[0], response[1].toString());
+                if (response != null)
+                    handleFailureMessage((Throwable)response[0], response[1].toString());
                 break;
             default:
                 super.handleMessage(msg);
