@@ -355,6 +355,28 @@ public class NotificationsActivity extends WPActionBarActivity {
                 mFirstLoadComplete = true;
                 stopAnimatingRefreshButton(mRefreshMenuItem);
             }
+            @Override
+            public void onFailure(Throwable arg0, JSONObject arg1){
+                super.onFailure(arg0, arg1);
+                setErrorScreen();
+            }
+            @Override
+            public void onFailure(Throwable arg0, JSONArray arg1){
+                super.onFailure(arg0, arg1);
+                setErrorScreen();
+            }
+            @Override
+            public void onFailure(Throwable arg0, String arg1){
+                super.onFailure(arg0, arg1);
+                setErrorScreen();
+            }
+            private void setErrorScreen(){
+                //We need to show an error message? and remove the loading indicator from the list?
+                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                adapter.clear();
+                adapter.addAll(new ArrayList<Note>());
+                adapter.notifyDataSetChanged();
+            }
         });
     }
     protected void updateLastSeen(String timestamp){
@@ -425,6 +447,24 @@ public class NotificationsActivity extends WPActionBarActivity {
                return;
            }
            onSuccess(notes);
+        }
+        @Override
+        public void onFailure(Throwable arg0, JSONObject arg1){
+            super.onFailure(arg0, arg1);
+            Log.e(TAG, "Error retrieving notes", arg0);
+            mLoadingMore = false;
+        }
+        @Override
+        public void onFailure(Throwable arg0, JSONArray arg1){
+            super.onFailure(arg0, arg1);
+            Log.e(TAG, "Error retrieving notes", arg0);
+            mLoadingMore = false;
+        }
+        @Override
+        public void onFailure(Throwable arg0, String arg1){
+            super.onFailure(arg0, arg1);
+            Log.e(TAG, "Error retrieving notes", arg0);
+            mLoadingMore = false;
         }
     }
     
