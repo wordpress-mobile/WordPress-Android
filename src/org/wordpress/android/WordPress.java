@@ -121,6 +121,29 @@ public class WordPress extends Application {
 
         new WPComXMLRPCApi().getNotificationSettings(null, ctx); 
     }
+    
+    public static void UnregisterWPComToken(Context ctx, String token) {
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        Object[] params = {
+                settings.getString("wp_pref_wpcom_username", ""),
+                WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                token,
+                false,
+                "android"
+        };
+
+        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+        client.callAsync(new XMLRPCCallback() {
+            public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Succesfully unregistered device on WP.com");
+            }
+
+            public void onFailure(long id, XMLRPCException error) {
+                Log.v("WORDPRESS", error.getMessage());
+            }
+        }, "wpcom.mobile_push_unregister_token", params);
+    }
 
     /**
      * Get versionName from Manifest.xml

@@ -477,7 +477,12 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     .setCancelable(false)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            // Unregister for GCM so that we stop receiving notifications
+                            //Delete the token on .COM backend. We need to delete it here, before username/pass are deleted from prefs.
+                            WordPress.UnregisterWPComToken(
+                                    PreferencesActivity.this, 
+                                    GCMRegistrar.getRegistrationId(PreferencesActivity.this)
+                                    );
+                            //Unregister for GCM so that we stop receiving notifications
                             try {
                                 GCMRegistrar.checkDevice(PreferencesActivity.this);
                                 GCMRegistrar.unregister(PreferencesActivity.this);
