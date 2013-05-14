@@ -16,6 +16,7 @@ public class RestClient {
     
     private String mAccessToken;
     private AsyncHttpClient mHttpClient;
+    private String mUserAgent;
     
     public RestClient(){
         mHttpClient = new AsyncHttpClient();
@@ -66,6 +67,9 @@ public class RestClient {
         return String.format("%s%s", REST_API_ENDPOINT_URL, url);
     }
     
-    
-    
+    //Sets the User-Agent header to be sent with each request. 
+    public void setUserAgent(String userAgent){
+        mUserAgent = userAgent;
+        this.mHttpClient.setUserAgent(userAgent);
+    } 
 }
