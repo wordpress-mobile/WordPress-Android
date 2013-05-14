@@ -207,9 +207,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onUnregistered(Context context, String regId) {
-        // TODO Remove id from WP.com?
         Log.v("WORDPRESS", "GCM Unregistered ID: " + regId);
-
     }
 
 }
