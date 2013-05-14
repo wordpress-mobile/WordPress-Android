@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -45,7 +46,7 @@ import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewPostsFragment extends ListFragment {
     /** Called when the activity is first created. */
-    private static String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
+    private String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
             mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;
     private int[] mUploaded;
     private int mRowID = 0;
@@ -66,27 +67,6 @@ public class ViewPostsFragment extends ListFragment {
     public getRecentPostsTask getPostsTask;
     public static int curr_position=0;
     
-    public String getnextID(){
-        if(curr_position+1>=mPostIDs.length)
-            return mPostIDs[curr_position];
-            
-        else{
-        curr_position=curr_position+1; 
-        return mPostIDs[curr_position];
-        }
-    }
-    
-    public String getprevID(){
-	if(curr_position-1<0)
-	    return mPostIDs[curr_position];
-	    
-	else{
-	curr_position=curr_position-1;
-	return mPostIDs[curr_position];
-	}
-              
-    }
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -734,6 +714,39 @@ public class ViewPostsFragment extends ListFragment {
 
     public interface OnPostActionListener {
         public void onPostAction(int action, Post post);
+    }
+
+    public void loadNextPost() {
+        // TODO Auto-generated method stub
+        Post post;
+        if(curr_position+1>=mPostIDs.length)
+        {
+            Toast.makeText(getActivity(), "Reached the end of the posts loaded", Toast.LENGTH_SHORT).show();         
+        }
+            
+        else{
+        curr_position=curr_position+1; 
+        int nextid=  Integer.parseInt(mPostIDs[curr_position]);
+        long newid=(long)nextid;
+        post = new Post(WordPress.currentBlog.getId(),newid, false);
+        mOnPostSelectedListener.onPostSelected(post);
+        }
+        
+    }
+    
+    public void loadPrevPost(){
+        Post post;
+        if(curr_position-1<0){
+            Toast.makeText(getActivity(), "Reached first post", Toast.LENGTH_SHORT).show();
+        }
+        else{
+        curr_position=curr_position-1;
+        int nextid=  Integer.parseInt(mPostIDs[curr_position]);
+        long newid=(long)nextid;
+        post = new Post(WordPress.currentBlog.getId(),newid, false);
+        mOnPostSelectedListener.onPostSelected(post);
+        }
+        
     }
 
 }

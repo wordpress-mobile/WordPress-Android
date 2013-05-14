@@ -26,6 +26,7 @@ public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
 
     private OnDetailPostActionListener onDetailPostActionListener;
+    private OnPostSwipeListener onPostSwipeListener;
     PostsActivity parentActivity;
 
     @Override
@@ -134,6 +135,7 @@ public class ViewPostFragment extends Fragment {
         try {
             // check that the containing activity implements our callback
             onDetailPostActionListener = (OnDetailPostActionListener) activity;
+            onPostSwipeListener = (OnPostSwipeListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -148,42 +150,21 @@ public class ViewPostFragment extends Fragment {
    
        @Override
        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+           onPostSwipeListener.onPostSwipe(1, WordPress.currentPost);
           if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {                
            // Right to left
-          swipePost(1);				//Pass 1 for nextpost
+          onPostSwipeListener.onPostSwipe(1, WordPress.currentPost);			//Pass 1 for nextpost
              return true;
           } 
           else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
            // Left to right
-          swipePost(0);				//Pass 0 for prevpost
+              onPostSwipeListener.onPostSwipe(0, WordPress.currentPost);		//Pass 0 for prevpost
                   return true;
             }
                   
                   return false;
            }
-        }
-    
-    
-    public void swipePost(int motionEvent){
-        ViewPostsFragment vpf = new ViewPostsFragment();
-        String prevpostid,nextpostid;
-        long newid;
-        
-        if(motionEvent==0){
-            prevpostid = vpf.getprevID();
-            int previd=  Integer.parseInt(prevpostid);
-            newid = (long)previd;
-        }
-        else{
-            nextpostid = vpf.getnextID();
-            int nextid=  Integer.parseInt(nextpostid);
-            newid=(long)nextid;
-               }
-        Post post = new Post(WordPress.currentBlog.getId(),newid
-                , false);
-        loadPost(post);
-        }
-    
+        } 
     
     public GestureDetector gesturedetector;
 
@@ -263,6 +244,10 @@ public class ViewPostFragment extends Fragment {
     public interface OnDetailPostActionListener {
         public void onDetailPostAction(int action, Post post);
     }
+    
+    public interface OnPostSwipeListener {
+        public void onPostSwipe(int action, Post post);
+    }
 
     public void clearContent() {
         TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
@@ -284,5 +269,7 @@ public class ViewPostFragment extends Fragment {
         }
         super.onSaveInstanceState(outState);
     }
+    
+    
 
 }
