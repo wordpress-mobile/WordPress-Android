@@ -215,6 +215,8 @@
   <string name="delete">Delete</string>
   <string name="approve">Approve</string>
   <string name="unapprove">Unapprove</string>
+  <string name="confirm_delete">Confirm Deletion</string>
+  <string name="confirm_delete_data">Are you sure to delete the Comment ?</string>
 
   <!-- new account view -->
   <string name="account_setup">Account Setup</string>
