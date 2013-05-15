@@ -65,7 +65,7 @@ public class ViewPostsFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
-    public static int curr_position=0;
+    public int curr_position=0;
     
     @Override
     public void onCreate(Bundle icicle) {
@@ -716,37 +716,34 @@ public class ViewPostsFragment extends ListFragment {
         public void onPostAction(int action, Post post);
     }
 
-    public void loadNextPost() {
-        // TODO Auto-generated method stub
-        Post post;
-        if(curr_position+1>=mPostIDs.length)
-        {
-            Toast.makeText(getActivity(), "Reached the end of the posts loaded", Toast.LENGTH_SHORT).show();         
+    public Post loadNextPost() {
+        if(curr_position+1>=mPostIDs.length){
+            Toast.makeText(getActivity(), "Reached the end of the posts list", Toast.LENGTH_SHORT).show();
+            return WordPress.currentPost;
         }
-            
         else{
-        curr_position=curr_position+1; 
-        int nextid=  Integer.parseInt(mPostIDs[curr_position]);
-        long newid=(long)nextid;
-        post = new Post(WordPress.currentBlog.getId(),newid, false);
-        mOnPostSelectedListener.onPostSelected(post);
+            curr_position++;
+            long nextid=  Integer.parseInt(mPostIDs[curr_position]);
+            Post post = new Post(WordPress.currentBlog.getId(),nextid, isPage);
+            WordPress.currentPost=post;
+            return post;
         }
         
     }
     
-    public void loadPrevPost(){
-        Post post;
+    public Post loadPrevPost(){
         if(curr_position-1<0){
-            Toast.makeText(getActivity(), "Reached first post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Reached first Post", Toast.LENGTH_SHORT).show();
+            return WordPress.currentPost;
         }
         else{
-        curr_position=curr_position-1;
-        int nextid=  Integer.parseInt(mPostIDs[curr_position]);
-        long newid=(long)nextid;
-        post = new Post(WordPress.currentBlog.getId(),newid, false);
-        mOnPostSelectedListener.onPostSelected(post);
+            curr_position--;
+            long prev_id=  Integer.parseInt(mPostIDs[curr_position]);
+            Post post = new Post(WordPress.currentBlog.getId(),prev_id, isPage);
+            WordPress.currentPost=post;
+            return post;
         }
-        
+       
     }
 
 }

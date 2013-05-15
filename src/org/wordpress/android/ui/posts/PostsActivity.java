@@ -358,14 +358,17 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     @Override
-    public void onPostSwipe(int action, Post post){
+    public Post onPostSwipe(int action){
+    Post p;
     if(action==1){
-        postList.loadNextPost();
+       p = postList.loadNextPost();
+        
     }   
     else{
-       postList.loadPrevPost();
+       p=postList.loadPrevPost();
+       
     }
-    
+    return p;
     }
     
     @Override

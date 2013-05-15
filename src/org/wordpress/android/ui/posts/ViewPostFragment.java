@@ -150,21 +150,23 @@ public class ViewPostFragment extends Fragment {
    
        @Override
        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-           onPostSwipeListener.onPostSwipe(1, WordPress.currentPost);
           if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {                
            // Right to left
-          onPostSwipeListener.onPostSwipe(1, WordPress.currentPost);			//Pass 1 for nextpost
+             Post p= onPostSwipeListener.onPostSwipe(1);    
+             loadPost(p);                                       //Pass 1 for nextpost
              return true;
           } 
           else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
            // Left to right
-              onPostSwipeListener.onPostSwipe(0, WordPress.currentPost);		//Pass 0 for prevpost
-                  return true;
+              Post p = onPostSwipeListener.onPostSwipe(0);
+              loadPost(p);                                      //Pass 0 for prevpost
+              return true;
             }
                   
-                  return false;
+              return false;
            }
-        } 
+        }
+     
     
     public GestureDetector gesturedetector;
 
@@ -173,13 +175,13 @@ public class ViewPostFragment extends Fragment {
         // Don't load if the Post object of title are null, see #395
         if (post == null || post.getTitle() == null)
             return;
-	gesturedetector = new GestureDetector(new GestureListener());
+        gesturedetector = new GestureDetector(new GestureListener());
         TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
         if (post.getTitle().equals(""))
             title.setText("(" + getResources().getText(R.string.untitled) + ")");
         else
             title.setText(EscapeUtils.unescapeHtml(post.getTitle()));
-	RelativeLayout layout = (RelativeLayout)getActivity().findViewById(R.id.postHead);
+        RelativeLayout layout = (RelativeLayout)getActivity().findViewById(R.id.postHead);
         WebView webView = (WebView) getActivity().findViewById(
                 R.id.viewPostWebView);
         TextView tv = (TextView) getActivity().findViewById(
@@ -192,12 +194,12 @@ public class ViewPostFragment extends Fragment {
                 R.id.addComment);
         layout.setOnTouchListener(new OnTouchListener() {
     
-	    @Override
-	    public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
-			gesturedetector.onTouchEvent(event);
-			return true;
-	    }
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+        // TODO Auto-generated method stub
+            gesturedetector.onTouchEvent(event);
+            return true;
+        }
             
             
         });        
@@ -206,14 +208,14 @@ public class ViewPostFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // TODO Auto-generated method stub
-	    gesturedetector.onTouchEvent(event);
-	    return true;
-	    }
+        gesturedetector.onTouchEvent(event);
+        return true;
+        }
     
     
-	});
-	
-	
+    });
+    
+    
 
         tv.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
@@ -246,7 +248,7 @@ public class ViewPostFragment extends Fragment {
     }
     
     public interface OnPostSwipeListener {
-        public void onPostSwipe(int action, Post post);
+        public Post onPostSwipe(int action);
     }
 
     public void clearContent() {
