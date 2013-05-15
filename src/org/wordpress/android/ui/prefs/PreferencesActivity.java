@@ -432,7 +432,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 for (int i = 0; i < mMutedBlogsList.size(); i++) {
                     StringMap<?> blogMap = (StringMap<?>) mMutedBlogsList.get(i);
                     String blogName = (String) blogMap.get("blog_name");
-                    if (blogName == null)
+                    if (blogName == null || blogName.trim().equals(""))
                         blogName = (String) blogMap.get("url");
                     CheckBoxPreference blogPreference = new CheckBoxPreference(this);
                     blogPreference.setChecked(!blogMap.get("value").toString().equals("1"));
