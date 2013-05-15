@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import org.xmlrpc.android.XMLRPCClient;
@@ -64,7 +65,8 @@ public class ViewPostsFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
-
+    public int curr_position=0;
+    
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -273,6 +275,7 @@ public class ViewPostsFragment extends ListFragment {
                                         .getId(), mSelectedID, isPage);
                                 if (post.getId() >= 0) {
                                     WordPress.currentPost = post;
+                                    curr_position=position;
                                     mOnPostSelectedListener.onPostSelected(post);
                                     mPostListAdapter.notifyDataSetChanged();
                                 } else {
@@ -711,6 +714,36 @@ public class ViewPostsFragment extends ListFragment {
 
     public interface OnPostActionListener {
         public void onPostAction(int action, Post post);
+    }
+
+    public Post loadNextPost() {
+        if(curr_position+1>=mPostIDs.length){
+            Toast.makeText(getActivity(), "Reached the end of the posts list", Toast.LENGTH_SHORT).show();
+            return WordPress.currentPost;
+        }
+        else{
+            curr_position++;
+            long nextid=  Integer.parseInt(mPostIDs[curr_position]);
+            Post post = new Post(WordPress.currentBlog.getId(),nextid, isPage);
+            WordPress.currentPost=post;
+            return post;
+        }
+        
+    }
+    
+    public Post loadPrevPost(){
+        if(curr_position-1<0){
+            Toast.makeText(getActivity(), "Reached first Post", Toast.LENGTH_SHORT).show();
+            return WordPress.currentPost;
+        }
+        else{
+            curr_position--;
+            long prev_id=  Integer.parseInt(mPostIDs[curr_position]);
+            Post post = new Post(WordPress.currentBlog.getId(),prev_id, isPage);
+            WordPress.currentPost=post;
+            return post;
+        }
+       
     }
 
 }

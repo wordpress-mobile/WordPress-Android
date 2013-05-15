@@ -39,6 +39,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.AddCommentActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.ui.posts.ViewPostFragment.OnPostSwipeListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
@@ -46,7 +47,7 @@ import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
-        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
+        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener, OnPostSwipeListener {
 
     private ViewPostsFragment postList;
     private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
@@ -356,6 +357,20 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         }
     }
 
+    @Override
+    public Post onPostSwipe(int action){
+    Post p;
+    if(action==1){
+       p = postList.loadNextPost();
+        
+    }   
+    else{
+       p=postList.loadPrevPost();
+       
+    }
+    return p;
+    }
+    
     @Override
     public void onRefresh(boolean start) {
         if (start) {

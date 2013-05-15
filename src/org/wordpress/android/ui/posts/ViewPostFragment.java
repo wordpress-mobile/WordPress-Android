@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -21,6 +26,7 @@ public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
 
     private OnDetailPostActionListener onDetailPostActionListener;
+    private OnPostSwipeListener onPostSwipeListener;
     PostsActivity parentActivity;
 
     @Override
@@ -129,25 +135,53 @@ public class ViewPostFragment extends Fragment {
         try {
             // check that the containing activity implements our callback
             onDetailPostActionListener = (OnDetailPostActionListener) activity;
+            onPostSwipeListener = (OnPostSwipeListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
                     + " must implement Callback");
         }
     }
+    
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+       private final int SWIPE_MIN_DISTANCE = 50;
+       private final int SWIPE_THRESHOLD_VELOCITY = 60;
+   
+       @Override
+       public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+          if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {                
+           // Right to left
+             Post p= onPostSwipeListener.onPostSwipe(1);    
+             loadPost(p);                                       //Pass 1 for nextpost
+             return true;
+          } 
+          else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >  SWIPE_THRESHOLD_VELOCITY) {
+           // Left to right
+              Post p = onPostSwipeListener.onPostSwipe(0);
+              loadPost(p);                                      //Pass 0 for prevpost
+              return true;
+            }
+                  
+              return false;
+           }
+        }
+     
+    
+    public GestureDetector gesturedetector;
 
     public void loadPost(Post post) {
 
         // Don't load if the Post object of title are null, see #395
         if (post == null || post.getTitle() == null)
             return;
-
+        gesturedetector = new GestureDetector(new GestureListener());
         TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
         if (post.getTitle().equals(""))
             title.setText("(" + getResources().getText(R.string.untitled) + ")");
         else
             title.setText(EscapeUtils.unescapeHtml(post.getTitle()));
-
+        RelativeLayout layout = (RelativeLayout)getActivity().findViewById(R.id.postHead);
         WebView webView = (WebView) getActivity().findViewById(
                 R.id.viewPostWebView);
         TextView tv = (TextView) getActivity().findViewById(
@@ -158,6 +192,30 @@ public class ViewPostFragment extends Fragment {
                 R.id.viewPost);
         ImageButton addCommentButton = (ImageButton) getActivity().findViewById(
                 R.id.addComment);
+        layout.setOnTouchListener(new OnTouchListener() {
+    
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+        // TODO Auto-generated method stub
+            gesturedetector.onTouchEvent(event);
+            return true;
+        }
+            
+            
+        });        
+        webView.setOnTouchListener(new OnTouchListener() {
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+        gesturedetector.onTouchEvent(event);
+        return true;
+        }
+    
+    
+    });
+    
+    
 
         tv.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
@@ -188,6 +246,10 @@ public class ViewPostFragment extends Fragment {
     public interface OnDetailPostActionListener {
         public void onDetailPostAction(int action, Post post);
     }
+    
+    public interface OnPostSwipeListener {
+        public Post onPostSwipe(int action);
+    }
 
     public void clearContent() {
         TextView title = (TextView) getActivity().findViewById(R.id.postTitle);
@@ -209,5 +271,7 @@ public class ViewPostFragment extends Fragment {
         }
         super.onSaveInstanceState(outState);
     }
+    
+    
 
 }
