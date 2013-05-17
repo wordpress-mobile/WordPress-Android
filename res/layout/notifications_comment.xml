@@ -115,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:linksClickable="true"
+                android:fontFamily="sans-serif-light"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="16dp"
