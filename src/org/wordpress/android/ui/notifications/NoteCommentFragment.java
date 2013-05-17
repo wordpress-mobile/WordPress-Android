@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.wordpress.android.R;
@@ -260,7 +261,6 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                 .build();
             // Toast for notifying the user that comment was published successfully
             mToast = Toast.makeText(getActivity(), R.string.note_reply_successful, Toast.LENGTH_SHORT);
-            
         }
         @Override
         public void onStart(){
@@ -286,18 +286,32 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         @Override
         public void onFailure(Throwable e, JSONObject response){
             Log.e(TAG, String.format("Failed to reply: %s", response), e);
+            this.recoverFromError();
+        }
+        @Override
+        public void onFailure(Throwable e, JSONArray response){
+            Log.e(TAG, String.format("Failed to reply: %s", response), e);
+            this.recoverFromError();
+        }
+        @Override
+        public void onFailure(Throwable e, String response){
+            Log.e(TAG, String.format("Failed to reply: %s", response), e);
+            this.recoverFromError();
+        }
+        @Override
+        public void onFailure(Throwable e){
+            Log.e(TAG, "Failed to reply:", e);
+            this.recoverFromError();
+        }
+        private void recoverFromError(){
             // TODO: show notification about failed reply
             // the notification should open this note and
             // add the reply text to the field
             mNotificationManager.notify("reply", 0xFA, mFailureNotification);
         }
         @Override
-        public void onFailure(Throwable e, String response){
-        }
-        @Override
         public void onFinish(){
-        }
-        
+        }   
     }
     
     public void setNote(Note note){

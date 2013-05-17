@@ -52,6 +52,7 @@ public class WPComXMLRPCApi {
 
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Push notification settings retrieved!");
                 if (callback != null) {
                     callback.onSuccess(id, result);
                 }

@@ -432,7 +432,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 for (int i = 0; i < mMutedBlogsList.size(); i++) {
                     StringMap<?> blogMap = (StringMap<?>) mMutedBlogsList.get(i);
                     String blogName = (String) blogMap.get("blog_name");
-                    if (blogName == null)
+                    if (blogName == null || blogName.trim().equals(""))
                         blogName = (String) blogMap.get("url");
                     CheckBoxPreference blogPreference = new CheckBoxPreference(this);
                     blogPreference.setChecked(!blogMap.get("value").toString().equals("1"));
@@ -477,7 +477,12 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     .setCancelable(false)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            // Unregister for GCM so that we stop receiving notifications
+                            //Delete the token on .COM backend. We need to delete it here, before username/pass are deleted from prefs.
+                            WordPress.UnregisterWPComToken(
+                                    PreferencesActivity.this, 
+                                    GCMRegistrar.getRegistrationId(PreferencesActivity.this)
+                                    );
+                            //Unregister for GCM so that we stop receiving notifications
                             try {
                                 GCMRegistrar.checkDevice(PreferencesActivity.this);
                                 GCMRegistrar.unregister(PreferencesActivity.this);

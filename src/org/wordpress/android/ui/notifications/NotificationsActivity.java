@@ -156,6 +156,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                         openNote(note);
                     } else {
                         // TODO: Could not load note
+                        Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -227,7 +228,23 @@ public class NotificationsActivity extends WPActionBarActivity {
                 }
                 @Override
                 public void onFailure(Throwable e, JSONObject response){
+                    super.onFailure(e, response);
                     Log.d(TAG, String.format("Failed to mark as read %s", response), e);
+                }
+                @Override
+                public void onFailure(Throwable e, JSONArray response){
+                    super.onFailure(e, response);
+                    Log.d(TAG, String.format("Failed to mark as read %s", response), e);
+                }
+                @Override
+                public void onFailure(Throwable e, String response){
+                    super.onFailure(e, response);
+                    Log.d(TAG, String.format("Failed to mark as read %s", response), e);
+                }
+                @Override
+                public void onFailure(Throwable e){
+                    super.onFailure(e);
+                    Log.d(TAG, "Failed to mark as read %s", e);
                 }
                 @Override
                 public void onSuccess(int status, JSONObject response){
@@ -297,15 +314,27 @@ public class NotificationsActivity extends WPActionBarActivity {
 
             @Override
             public void onFailure(Throwable e, String response) {
+                Log.e(TAG, String.format("Error moderating comment: %s", response), e);
                 if (isFinishing())
                     return;
-                
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
                 FragmentManager fm = getSupportFragmentManager();
                 NoteCommentFragment f = (NoteCommentFragment) fm.findFragmentById(R.id.note_fragment_container);
                 if (f != null) {
                     f.animateModeration(false);
                 }
+            }
+            @Override
+            public void onFailure(Throwable e, JSONObject response){
+                this.onFailure(e, response.toString());
+            }
+            @Override
+            public void onFailure(Throwable e, JSONArray response){
+                this.onFailure(e, response.toString());
+            }
+            @Override
+            public void onFailure(Throwable e){
+                this.onFailure(e, "");
             }
         });
     }
@@ -350,10 +379,20 @@ public class NotificationsActivity extends WPActionBarActivity {
                     updateLastSeen(notes.get(0).getTimestamp());                    
                 }
             }
+            @Override
             public void onFinish(){
                 super.onFinish();
                 mFirstLoadComplete = true;
                 stopAnimatingRefreshButton(mRefreshMenuItem);
+            }
+            @Override
+            public void showError(){
+                //We need to show an error message? and remove the loading indicator from the list?
+                final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
+                adapter.clear();
+                adapter.addAll(new ArrayList<Note>());
+                adapter.notifyDataSetChanged();
+                Toast.makeText(NotificationsActivity.this, getString(R.string.error_refresh), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -362,6 +401,22 @@ public class NotificationsActivity extends WPActionBarActivity {
             @Override
             public void onSuccess(int status, JSONObject response){
                 Log.d(TAG, String.format("Set last seen time %s", response));
+            }
+            @Override
+            public void onFailure(Throwable e, JSONObject response){
+                Log.d(TAG, String.format("Failed to set last seen time %s", response), e);
+            }
+            @Override
+            public void onFailure(Throwable e, JSONArray response){
+                Log.d(TAG, String.format("Failed to set last seen time %s", response), e);
+            }
+            @Override
+            public void onFailure(Throwable e, String response){
+                Log.d(TAG, String.format("Failed to set last seen time %s", response), e);
+            }
+            @Override
+            public void onFailure(Throwable e){
+                Log.d(TAG, "Failed to set last seen time %s", e);
             }
         });
     }
@@ -400,15 +455,19 @@ public class NotificationsActivity extends WPActionBarActivity {
     }
     
     public class NotesResponseHandler extends JsonHttpResponseHandler {
+        
         @Override
         public void onStart(){
             mLoadingMore = true;
         }
+        
         @Override
         public void onFinish(){
             mLoadingMore = false;
         }
+        
         public void onSuccess(List<Note> notes){};
+      
         @Override
         public void onSuccess(int statusCode, JSONObject response){
             List<Note> notes;
@@ -420,11 +479,39 @@ public class NotificationsActivity extends WPActionBarActivity {
                     notes.add(n);
                 }
            } catch (JSONException e) {
-               Log.e(TAG, "Did not receive any notes", e);
+               Log.e(TAG, "Success, but did not receive any notes", e);
                onFailure(e, response);
                return;
            }
            onSuccess(notes);
+        }
+        @Override
+        public void onFailure(Throwable e, JSONObject response){
+            Log.d(TAG, String.format("Error retrieving notes: %s", response), e);
+            mLoadingMore = false;
+            this.showError();
+        }
+        @Override
+        public void onFailure(Throwable e, JSONArray response){
+            Log.d(TAG, String.format("Error retrieving notes: %s", response), e);
+            mLoadingMore = false;
+            this.showError();
+        }
+        @Override
+        public void onFailure(Throwable e, String response){
+            Log.d(TAG, String.format("Error retrieving notes: %s", response), e);
+            mLoadingMore = false;
+            this.showError();
+        }
+        @Override
+        public void onFailure(Throwable e){
+            Log.d(TAG,"Error retrieving notes: %s", e);
+            mLoadingMore = false;
+            this.showError();
+        }
+        
+        public void showError(){
+            Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
         }
     }
     
