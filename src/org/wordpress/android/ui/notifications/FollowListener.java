@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.notifications;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 class FollowListener implements FollowRow.OnFollowListener {
@@ -35,6 +40,22 @@ class FollowListener implements FollowRow.OnFollowListener {
             if (mRow.isSiteId(mSiteId)) {
                 mRow.setFollowing(mShouldFollow);
             }
+        }
+        @Override
+        public void onFailure(Throwable e, JSONObject response){
+            Log.e("WPNotifications", String.format("Failed to follow the blog: %s", response), e);
+        }
+        @Override
+        public void onFailure(Throwable e, JSONArray response){
+            Log.e("WPNotifications", String.format("Failed to follow the blog: %s", response), e);
+        }
+        @Override
+        public void onFailure(Throwable e, String response){
+            Log.e("WPNotifications", String.format("Failed to follow the blog: %s", response), e);
+        }
+        @Override
+        public void onFailure(Throwable e){
+            Log.e("WPNotifications", "Failed to follow the blog: ", e);
         }
     }
     @Override
