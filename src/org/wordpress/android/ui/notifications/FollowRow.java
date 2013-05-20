@@ -12,6 +12,7 @@ package org.wordpress.android.ui.notifications;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,7 +62,8 @@ public class FollowRow extends LinearLayout {
     }
     
     public void setAction(JSONObject actionJSON){
-        Button followButton = getFollowButton();
+        ImageButton followButton = getFollowButton();
+        View followDivider = getFollowDivider();
         try {
             if (actionJSON.getString(TYPE_FIELD).equals(ACTION_TYPE)) {
                 // get the parms for following
@@ -69,12 +71,15 @@ public class FollowRow extends LinearLayout {
                 // show the button
                 followButton.setVisibility(VISIBLE);
                 followButton.setOnClickListener(new ClickListener());
+                followButton.setOnLongClickListener(new LongClickListener());
+                followDivider.setVisibility(VISIBLE);
                 getSiteTextView().setText(getSiteDomain());
                 setClickable(true);
             } else {
                 mParams = null;
                 followButton.setVisibility(GONE);
                 followButton.setOnClickListener(null);
+                followDivider.setVisibility(GONE);
                 getSiteTextView().setText("");
                 setClickable(false);
             }
@@ -82,15 +87,17 @@ public class FollowRow extends LinearLayout {
             if (hasParams())
                 setSiteUrl(mParams.optString(BLOG_URL_PARAM, null));
             
-            updateLabel();
+            updateButton();
         }catch (JSONException e) {
             Log.e(TAG, String.format("Could not set action from %s", actionJSON), e);
             getFollowButton().setVisibility(GONE);
+            getFollowDivider().setVisibility(GONE);
             getSiteTextView().setText("");
             setClickable(false);
             mParams = null;
         }
     }
+    
     public JSONObject getParams(){
         return mParams;
     }
@@ -100,14 +107,17 @@ public class FollowRow extends LinearLayout {
     public ImageView getImageView(){
         return (ImageView) findViewById(R.id.avatar);
     }
-    public Button getFollowButton(){
-        return (Button) findViewById(R.id.follow_button);
+    public ImageButton getFollowButton(){
+        return (ImageButton) findViewById(R.id.follow_button);
     }
     public TextView getTextView(){
         return (TextView) findViewById(R.id.name);
     }
     public TextView getSiteTextView(){
         return (TextView) findViewById(R.id.url);
+    }
+    private View getFollowDivider() {
+        return (View) findViewById(R.id.follow_divider);
     }
     public void setDefaultText(CharSequence text){
         setText(text);
@@ -130,7 +140,7 @@ public class FollowRow extends LinearLayout {
                 Log.e(TAG, String.format("Could not set following %b", following), e);
             }
         };
-        updateLabel();
+        updateButton();
     }
     public boolean isFollowing(){
         if (hasParams()) {
@@ -186,26 +196,37 @@ public class FollowRow extends LinearLayout {
     public boolean hasListener(){
         return mListener != null;
     }
-    protected void updateLabel(){
-        Button followButton = getFollowButton();
+    protected void updateButton(){
+        ImageButton followButton = getFollowButton();
         followButton.setSelected(isFollowing());
         if(isFollowing()){
-            followButton.setText(R.string.unfollow);
+            followButton.setImageResource(R.drawable.follow_minus);
         } else {
-            followButton.setText(R.string.follow);
+            followButton.setImageResource(R.drawable.follow_plus);
         }
     }
     class ClickListener implements View.OnClickListener {
-        public void onClick(View v){
+        public void onClick(View v) {
             if (!hasListener()) {
                 return;
             }
+            ImageButton followButton = getFollowButton();
             OnFollowListener listener = getListener();
             if (isFollowing()) {
+                followButton.setImageResource(R.drawable.follow_plus);
                 listener.onUnfollow(FollowRow.this, getSiteId());
             } else {
+                followButton.setImageResource(R.drawable.follow_minus);
                 listener.onFollow(FollowRow.this, getSiteId());
             }
         }
+    }
+    
+    class LongClickListener implements View.OnLongClickListener {
+        @Override
+        public boolean onLongClick(View v) {
+            Toast.makeText(getContext(), getResources().getString(R.string.tooltip_follow), Toast.LENGTH_SHORT).show();
+            return true;
+        } 
     }
 }

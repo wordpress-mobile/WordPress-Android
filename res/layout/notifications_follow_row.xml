@@ -8,7 +8,10 @@
   android:layout_height="wrap_content"
   android:layout_width="match_parent"
   android:layout_gravity="center_vertical"
-  android:padding="10dp">
+  android:paddingLeft="16dp"
+  android:paddingRight="16dp"
+  android:paddingTop="8dp"
+  android:paddingBottom="8dp">
   <ImageView
     android:id="@+id/avatar"
     android:layout_height="48dp"
@@ -35,15 +38,25 @@
       android:ellipsize="end"
       android:singleLine="true"
       android:textColor="#666"
-      android:textSize="18dp" />
+      android:textSize="16dp"
+      android:fontFamily="sans-serif-light" />
   </LinearLayout>
-  <Button
+  <View 
+      android:id="@+id/follow_divider"
+      android:layout_width="1px"
+      android:layout_height="fill_parent"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginLeft="8dp"
+      android:background="#cccccc" />
+  <ImageButton
     android:id="@+id/follow_button"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:drawableLeft="@drawable/follow_indicator"
-    android:drawablePadding="8dp"
-    android:text="@+string/follow" />
+    android:layout_height="fill_parent"
+    android:src="@drawable/follow_indicator"
+    android:contentDescription="@+string/follow"
+    android:background="@drawable/list_bg_selector"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp" />
   
 </org.wordpress.android.ui.notifications.FollowRow>

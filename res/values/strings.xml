@@ -339,6 +339,7 @@
   <string name="more_notifications">and %d more.</string>
   <string name="tap_to_view">Tap to view.</string>
   <string name="moderate_comment">Moderate comment</string>
+  <string name="tooltip_follow">Follow or unfollow this blog</string>
   
   <!-- reader -->
   <string name="reader">Reader</string>

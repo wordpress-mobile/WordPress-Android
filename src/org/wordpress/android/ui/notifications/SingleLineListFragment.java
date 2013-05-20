@@ -53,6 +53,8 @@ public class SingleLineListFragment extends ListFragment implements Notification
         }
         // LinearLayout noteFooter = (LinearLayout) inflater.inflate(R.layout.notifications_detail_footer, null);
         ListView list = getListView();
+        list.setDivider(getResources().getDrawable(R.drawable.list_divider));
+        list.setDividerHeight(1);
         list.addHeaderView(noteHeader);
         // list.addFooterView(noteFooter);
         // set the adapter
