@@ -36,7 +36,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.AddCommentActivity;
-import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
@@ -298,6 +297,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popPostDetail();
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
                 return true;
             }
         }
@@ -356,6 +356,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commit();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 f.loadPost(post);
             }

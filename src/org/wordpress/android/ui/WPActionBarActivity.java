@@ -204,6 +204,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
         menuDrawer.setDropShadowSize(shadowSizeInPixels);
         menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
+        menuDrawer.setSlideDrawable(R.drawable.ic_drawer);
+        menuDrawer.setDrawerIndicatorEnabled(true);
         return menuDrawer;
     }
     

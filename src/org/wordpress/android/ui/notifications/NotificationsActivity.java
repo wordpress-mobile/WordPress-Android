@@ -171,6 +171,7 @@ public class NotificationsActivity extends WPActionBarActivity {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popNoteDetail();
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
                 return true;
             }
         }
@@ -284,6 +285,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         // only add to backstack if we're removing the list view from the fragment container
         if (container.findViewById(R.id.notes_list) != null) {
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
             transaction.addToBackStack(null);
         }
         transaction.commit();

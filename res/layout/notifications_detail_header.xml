@@ -15,7 +15,6 @@
     android:layout_width="0dp"
     android:layout_gravity="center_vertical"
     android:ellipsize="end"
-    android:singleLine="true"
     android:textSize="18dp" />
   <ImageView
     android:id="@+id/indicator"

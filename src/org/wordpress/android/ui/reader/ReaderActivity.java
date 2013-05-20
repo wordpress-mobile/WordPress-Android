@@ -245,8 +245,11 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
             if (readerPager.getCurrentItem() > 1) {
                 readerPager.setCurrentItem(readerPager.getCurrentItem() - 1);
                 supportInvalidateOptionsMenu();
+                if (readerPager.getCurrentItem() == 1) {
+                    mMenuDrawer.setDrawerIndicatorEnabled(true);
+                }
                 return true;
-            }
+            } 
         }
         return super.onOptionsItemSelected(item);
     }
@@ -283,6 +286,7 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
     @Override
     public void onPostSelected(String requestedURL) {
         readerPager.setCurrentItem(2, true);
+        mMenuDrawer.setDrawerIndicatorEnabled(false);
         supportInvalidateOptionsMenu();
     }
 
@@ -294,6 +298,9 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
                 readerPageDetailFragment.wv.loadUrl("javascript:Reader2.clear_article_details();");
             }
             readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
+            if (readerPager.getCurrentItem() == 1) {
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
+            }
             supportInvalidateOptionsMenu();
         } else
             super.onBackPressed();

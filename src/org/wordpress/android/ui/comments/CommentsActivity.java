@@ -112,6 +112,7 @@ public class CommentsActivity extends WPActionBarActivity implements
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popCommentDetail();
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
                 return true;
             }
         }
@@ -189,6 +190,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commit();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 f.loadComment(comment);
             }
