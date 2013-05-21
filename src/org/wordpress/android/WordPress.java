@@ -5,7 +5,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
 
 import android.app.Application;
 import android.content.Context;
@@ -16,23 +15,25 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
+import com.wordpress.rest.Oauth;
+import com.wordpress.rest.OauthToken;
+import com.wordpress.rest.OauthTokenResponseHandler;
 
+import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
-import org.json.JSONObject;
-
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.WPRestClient;
-
-import com.wordpress.rest.Oauth;
-import com.wordpress.rest.OauthTokenResponseHandler;
-import com.wordpress.rest.OauthToken;
 
 public class WordPress extends Application {
 
@@ -51,6 +52,8 @@ public class WordPress extends Application {
     public static boolean shouldRestoreSelectedActivity;
     public static WPRestClient restClient;
     public static Properties config;
+    public static RequestQueue requestQueue;
+    public static ImageLoader imageLoader;
 
     public static final String TAG="WordPress";
 
@@ -59,6 +62,13 @@ public class WordPress extends Application {
         loadProperties();
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
+        
+        // Volley networking setup
+        requestQueue = Volley.newRequestQueue(this);
+        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        // Use a small slice of available memory for the image cache
+        int cacheSize = maxMemory / 32;
+        imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)

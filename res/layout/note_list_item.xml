@@ -30,7 +30,7 @@
       android:shadowDx="0"
       android:shadowDy="1"
       android:shadowRadius="1.0" />
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
       android:id="@+id/note_avatar"
       android:layout_width="48dp"
       android:layout_height="48dp"

@@ -1,37 +1,28 @@
 package org.wordpress.android.ui.notifications;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.LayoutInflater;
-import android.widget.TextView;
-import android.widget.ImageView;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import android.util.Log;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 
-import com.commonsware.cwac.cache.SimpleWebImageCache;
-import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
-import com.commonsware.cwac.thumbnail.ThumbnailBus;
-import com.commonsware.cwac.thumbnail.ThumbnailMessage;
-
 public class NotificationsListFragment extends ListFragment {
-    private static String TAG="WPNotifications";
-    private static final int[] IMAGE_IDS={ R.id.note_avatar };
     private static final int LOAD_MORE_WITHIN_X_ROWS=5;
     private NoteProvider mNoteProvider;
     private NotesAdapter mNotesAdapter;
@@ -76,12 +67,7 @@ public class NotificationsListFragment extends ListFragment {
     }
     @Override
     public void setListAdapter(ListAdapter adapter) {
-        // Wrap the adapter in the thumbnail adapter
-        ThumbnailBus bus = new ThumbnailBus();
-        SimpleWebImageCache<ThumbnailBus, ThumbnailMessage> cache;
-        cache = new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus);
-        ThumbnailAdapter thumbAdapter = new ThumbnailAdapter( getActivity(), adapter, cache, IMAGE_IDS);
-        super.setListAdapter(thumbAdapter);
+        super.setListAdapter(adapter);
     }
     public void setNotesAdapter(NotesAdapter adapter){
         mNotesAdapter = adapter;
@@ -123,9 +109,9 @@ public class NotificationsListFragment extends ListFragment {
             } else {
                 detailText.setVisibility(View.GONE);
             }
-            final ImageView avatarView = (ImageView) view.findViewById(R.id.note_avatar);
-            avatarView.setImageResource(R.drawable.placeholder);
-            avatarView.setTag(note.getIconURL());
+            final NetworkImageView avatarView = (NetworkImageView) view.findViewById(R.id.note_avatar);
+            avatarView.setDefaultImageResId(R.drawable.placeholder);
+            avatarView.setImageUrl(note.getIconURL(), WordPress.imageLoader);
             
             int imageID = getResources().getIdentifier("note_icon_" + note.getType(),"drawable", getActivity().getPackageName());
             if (imageID > 0) {

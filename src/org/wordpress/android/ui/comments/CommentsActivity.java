@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.FragmentManager;
@@ -287,7 +286,7 @@ public class CommentsActivity extends WPActionBarActivity implements
             runOnUiThread(action);
             Thread action2 = new Thread() {
                 public void run() {
-                    commentList.thumbs.notifyDataSetChanged();
+                    commentList.getListView().invalidateViews();
                 }
             };
             runOnUiThread(action2);
@@ -539,14 +538,6 @@ public class CommentsActivity extends WPActionBarActivity implements
         if (f != null && f.isInLayout()) {
             commentList.shouldSelectAfterLoad = true;
         }
-
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        //titleBar.switchDashboardLayout(newConfig.orientation);
 
     }
 }

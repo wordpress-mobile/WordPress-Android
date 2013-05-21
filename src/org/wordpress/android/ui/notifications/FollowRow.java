@@ -23,6 +23,8 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -64,6 +66,7 @@ public class FollowRow extends LinearLayout {
     public void setAction(JSONObject actionJSON){
         ImageButton followButton = getFollowButton();
         View followDivider = getFollowDivider();
+        getImageView().setDefaultImageResId(R.drawable.placeholder);
         try {
             if (actionJSON.getString(TYPE_FIELD).equals(ACTION_TYPE)) {
                 // get the parms for following
@@ -104,8 +107,8 @@ public class FollowRow extends LinearLayout {
     public boolean hasParams(){
         return mParams != null;
     }
-    public ImageView getImageView(){
-        return (ImageView) findViewById(R.id.avatar);
+    public NetworkImageView getImageView(){
+        return (NetworkImageView) findViewById(R.id.avatar);
     }
     public ImageButton getFollowButton(){
         return (ImageButton) findViewById(R.id.follow_button);

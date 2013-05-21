@@ -15,15 +15,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.commonsware.cwac.cache.SimpleWebImageCache;
-import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
-import com.commonsware.cwac.thumbnail.ThumbnailBus;
-import com.commonsware.cwac.thumbnail.ThumbnailMessage;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
 
@@ -31,7 +27,6 @@ public class SingleLineListFragment extends ListFragment implements Notification
     public static final String TAG="NoteDetail";
     public static final String NOTE_ID_ARGUMENT="note_id";
     public static final String NOTE_JSON_ARGUMENT="note_json";
-    private static final int[] IMAGE_IDS={ R.id.avatar };
     
     protected Note mNote;
     
@@ -63,12 +58,7 @@ public class SingleLineListFragment extends ListFragment implements Notification
     
     @Override
     public void setListAdapter(ListAdapter adapter) {
-        // Wrap the adapter in the thumbnail adapter
-        ThumbnailBus bus = new ThumbnailBus();
-        SimpleWebImageCache<ThumbnailBus, ThumbnailMessage> cache;
-        cache = new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(null, null, 101, bus);
-        ThumbnailAdapter thumbAdapter = new ThumbnailAdapter( getActivity(), adapter, cache, IMAGE_IDS);
-        super.setListAdapter(thumbAdapter);
+        super.setListAdapter(adapter);
     }
         
     @Override
@@ -100,7 +90,7 @@ public class SingleLineListFragment extends ListFragment implements Notification
             row.setListener(new FollowListener());
             row.setAction(followAction);
             row.setText(JSONUtil.queryJSON(noteItem, "header_text", ""));
-            row.getImageView().setTag(JSONUtil.queryJSON(noteItem, "icon", ""));
+            row.getImageView().setImageUrl(JSONUtil.queryJSON(noteItem, "icon", ""), WordPress.imageLoader);
             
             return v;
         }

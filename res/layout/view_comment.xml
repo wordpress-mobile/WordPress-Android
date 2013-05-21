@@ -13,11 +13,10 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp" >
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/gravatar"
             android:layout_width="86dp"
-            android:layout_height="86dp" >
-        </ImageView>
+            android:layout_height="86dp" />
 
         <LinearLayout
             android:layout_width="fill_parent"

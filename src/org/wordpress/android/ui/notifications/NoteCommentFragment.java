@@ -87,12 +87,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
     @Override
     public void onStart(){
         super.onStart();
-        httpClient.get(getNote().getIconURL(), new BitmapResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Bitmap bitmap){
-                mFollowRow.getImageView().setImageBitmap(bitmap);
-            }
-        });
+        mFollowRow.getImageView().setImageUrl(getNote().getIconURL(), WordPress.imageLoader);
         SpannableStringBuilder html = (SpannableStringBuilder) getNote().getCommentBody();
         Html.ImageGetter imgGetter = new AsyncImageGetter(mCommentText);
         ImageSpan imgs[] = html.getSpans(0, html.length(), ImageSpan.class);

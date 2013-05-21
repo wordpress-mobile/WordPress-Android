@@ -12,7 +12,7 @@
   android:paddingRight="16dp"
   android:paddingTop="8dp"
   android:paddingBottom="8dp">
-  <ImageView
+  <com.android.volley.toolbox.NetworkImageView
     android:id="@+id/avatar"
     android:layout_height="48dp"
     android:layout_width="48dp"
