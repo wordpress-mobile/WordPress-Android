@@ -213,19 +213,48 @@ public class CommentsActivity extends WPActionBarActivity implements
                     }
                 }.start();
             } else if (status.equals("delete")) {
-                showDialog(ID_DIALOG_DELETING);
-                // pop out of the detail view if on a smaller screen
-                FragmentManager fm = getSupportFragmentManager();
-                CommentFragment f = (CommentFragment) fm
-                        .findFragmentById(R.id.commentDetail);
-                if (f == null) {
-                    fm.popBackStack();
-                }
-                new Thread() {
+                Thread action3 = new Thread() {
                     public void run() {
-                        deleteComment(commentID);
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                                CommentsActivity.this);
+                        dialogBuilder.setTitle(getResources().getText(
+                                R.string.confirm_delete));
+                        dialogBuilder.setMessage(getResources().getText(R.string.confirm_delete_data));
+                        dialogBuilder.setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                                        showDialog(ID_DIALOG_DELETING);
+                                        // pop out of the detail view if on a smaller screen
+                                        FragmentManager fm = getSupportFragmentManager();
+                                        CommentFragment f = (CommentFragment) fm
+                                                .findFragmentById(R.id.commentDetail);
+                                        if (f == null) {
+                                            fm.popBackStack();
+                                        }
+                                        new Thread() {
+                                            public void run() {
+                                                deleteComment(commentID);
+                                            }
+                                        }.start();
+
+
+                                    }
+                                });
+                        dialogBuilder.setNegativeButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                                        //Don't delete Comment
+                                    }
+                                });
+                        dialogBuilder.setCancelable(true);
+                        if (!isFinishing()) {
+                            dialogBuilder.create().show();
+                        }
                     }
-                }.start();
+                };
+                runOnUiThread(action3);
             } else if (status.equals("reply")) {
 
                 Intent i = new Intent(CommentsActivity.this, AddCommentActivity.class);
