@@ -143,7 +143,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
         mFollowRow.setDefaultText(getNote().queryJSON("body.items[-1].header_text", ""));
         mFollowRow.setAction(followAction);
-        mFollowRow.setListener(new FollowListener());
+        mFollowRow.setListener(new FollowListener(getActivity().getApplicationContext()));
         Bundle arguments = getArguments();
         if (arguments != null && (arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA) || arguments.containsKey(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA))) {
             if (arguments.containsKey(NotificationsActivity.NOTE_REPLY_EXTRA))
