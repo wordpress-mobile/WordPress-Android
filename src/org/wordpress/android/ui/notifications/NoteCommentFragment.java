@@ -44,6 +44,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.BitmapResponseHandler;
+import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.JSONUtil;
 
 public class NoteCommentFragment extends Fragment implements NotificationFragment {
@@ -57,7 +58,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
     private ReplyList mReplyList;
     private ScrollView mScrollView;
     private ImageButton mApproveButton, mSpamButton, mTrashButton;
-    private LinearLayout mModerateContainer;
+    private LinearLayout mModerateContainer, mModerateSection;
     
     private static final String APPROVE_TAG = "approve-comment";
     private static final String UNAPPROVE_TAG = "unapprove-comment";
@@ -78,6 +79,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         mTrashButton = (ImageButton)view.findViewById(R.id.note_moderate_trash);
         mModeratingText = (TextView)view.findViewById(R.id.comment_moderating);
         mModerateContainer = (LinearLayout)view.findViewById(R.id.moderate_buttons_container);
+        mModerateSection = (LinearLayout)view.findViewById(R.id.moderate_section);
         
         ((TextView) view.findViewById(R.id.moderate_comment_header)).setText(getResources().getString(R.string.moderate_comment).toUpperCase());
         
@@ -104,19 +106,23 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         mDetailHeader.setText(getNote().getSubject());
         
         Map<String, JSONObject> noteActions = getNote().getActions();
+        boolean hasModerateAction = false;
         if (noteActions.containsKey(APPROVE_TAG)) {
+            hasModerateAction = true;
             mApproveButton.setImageResource(R.drawable.moderate_approve);
             mApproveButton.setVisibility(View.VISIBLE);
             mApproveButton.setOnClickListener(mModerateClickListener);
             mApproveButton.setTag(APPROVE_TAG);
         }
         if (noteActions.containsKey(UNAPPROVE_TAG)) {
+            hasModerateAction = true;
             mApproveButton.setImageResource(R.drawable.moderate_unapprove);
             mApproveButton.setVisibility(View.VISIBLE);
             mApproveButton.setOnClickListener(mModerateClickListener);
             mApproveButton.setTag(UNAPPROVE_TAG);
         }
         if (noteActions.containsKey(SPAM_TAG)) {
+            hasModerateAction = true;
             mSpamButton.setVisibility(View.VISIBLE);
             mSpamButton.setOnClickListener(mModerateClickListener);
             mSpamButton.setTag(SPAM_TAG);
@@ -124,6 +130,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             mSpamButton.setVisibility(View.GONE);
         }
         if (noteActions.containsKey(TRASH_TAG)) {
+            hasModerateAction = true;
             mTrashButton.setVisibility(View.VISIBLE);
             mTrashButton.setOnClickListener(mModerateClickListener);
             mTrashButton.setTag(TRASH_TAG);
@@ -131,12 +138,15 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             mTrashButton.setVisibility(View.GONE);
         }
         
+        if (!hasModerateAction)
+            mModerateSection.setVisibility(View.GONE);
+        
         String url = getNote().queryJSON("body.items[last].header_link", "");
         if (!url.equals("")) {
             mDetailHeader.setUrl(url);
         }
         JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
-        mFollowRow.setDefaultText(getNote().queryJSON("body.items[-1].header_text", ""));
+        mFollowRow.setDefaultText(EscapeUtils.unescapeHtml(getNote().queryJSON("body.items[-1].header_text", "")));
         mFollowRow.setAction(followAction);
         mFollowRow.setListener(new FollowListener(getActivity().getApplicationContext()));
         Bundle arguments = getArguments();

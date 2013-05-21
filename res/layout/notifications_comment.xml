@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/list_row_bg"
     android:orientation="vertical" >
 
     <ScrollView
@@ -26,96 +26,110 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:scaleType="fitXY"
-                android:src="?android:attr/listDivider" />
+                android:src="@drawable/list_divider" />
 
             <include
                 android:id="@+id/follow_row"
                 layout="@layout/notifications_follow_row" />
 
-            <TextView
-                android:id="@+id/moderate_comment_header"
-                style="@style/WordPressSectionHeader"
+            <LinearLayout
+                android:id="@+id/moderate_section"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/moderate_comment" />
-            
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingBottom="8dp" >
+                android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/moderate_buttons_container"
+                <ImageView
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3" >
-
-                    <ImageButton
-                        android:id="@+id/note_moderate_approve"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/list_bg_selector"
-                        android:contentDescription="@string/reply"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/moderate_approve"
-                        android:tint="#858585"
-                        android:visibility="gone" />
-
-                    <ImageButton
-                        android:id="@+id/note_moderate_spam"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/list_bg_selector"
-                        android:contentDescription="@string/reply"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/moderate_spam"
-                        android:tint="#858585"
-                        android:visibility="gone" />
-
-                    <ImageButton
-                        android:id="@+id/note_moderate_trash"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/list_bg_selector"
-                        android:contentDescription="@string/reply"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/moderate_trash"
-                        android:tint="#858585"
-                        android:visibility="gone" />
-                </LinearLayout>
+                    android:layout_height="1px"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/list_divider" />
 
                 <TextView
-                    android:id="@+id/comment_moderating"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/moderate_comment_header"
+                    style="@style/WordPressSectionHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/moderate_comment" />
+
+                <FrameLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/moderating_comment"
-                    android:textAlignment="center"
-                    android:textColor="@color/wordpress_blue"
-                    android:visibility="gone" />
-            </FrameLayout>
+                    android:paddingBottom="8dp" >
 
+                    <LinearLayout
+                        android:id="@+id/moderate_buttons_container"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <ImageButton
+                            android:id="@+id/note_moderate_approve"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/list_bg_selector"
+                            android:contentDescription="@string/reply"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/moderate_approve"
+                            android:tint="#858585"
+                            android:visibility="gone" />
+
+                        <ImageButton
+                            android:id="@+id/note_moderate_spam"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/list_bg_selector"
+                            android:contentDescription="@string/reply"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/moderate_spam"
+                            android:tint="#858585"
+                            android:visibility="gone" />
+
+                        <ImageButton
+                            android:id="@+id/note_moderate_trash"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/list_bg_selector"
+                            android:contentDescription="@string/reply"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/moderate_trash"
+                            android:tint="#858585"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/comment_moderating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/moderating_comment"
+                        android:textAlignment="center"
+                        android:textColor="@color/wordpress_blue"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+            
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:scaleType="fitXY"
-                android:src="?android:attr/listDivider" />
+                android:src="@drawable/list_divider" />
 
             <TextView
                 android:id="@+id/note_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:linksClickable="true"
                 android:fontFamily="sans-serif-light"
+                android:linksClickable="true"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="16dp"

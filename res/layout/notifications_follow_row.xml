@@ -45,8 +45,6 @@
       android:id="@+id/follow_divider"
       android:layout_width="1px"
       android:layout_height="fill_parent"
-      android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"
       android:layout_marginLeft="8dp"
       android:background="#cccccc" />
   <ImageButton

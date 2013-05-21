@@ -335,7 +335,7 @@
   <string name="note_reply_successful">Reply published</string>
   <string name="follow">Follow</string>
   <string name="unfollow">Unfollow</string>
-  <string name="new_notifications">%d New Notifications</string>
+  <string name="new_notifications">%d new notifications</string>
   <string name="more_notifications">and %d more.</string>
   <string name="tap_to_view">Tap to view.</string>
   <string name="moderate_comment">Moderate comment</string>
