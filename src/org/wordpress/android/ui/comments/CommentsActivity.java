@@ -220,7 +220,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                         dialogBuilder.setTitle(getResources().getText(
                                 R.string.confirm_delete));
                         dialogBuilder.setMessage(getResources().getText(R.string.confirm_delete_data));
-                        dialogBuilder.setPositiveButton("Yes",
+                        dialogBuilder.setPositiveButton(getString(R.string.yes),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,
                                             int whichButton) {
@@ -241,7 +241,7 @@ public class CommentsActivity extends WPActionBarActivity implements
 
                                     }
                                 });
-                        dialogBuilder.setNegativeButton("No",
+                        dialogBuilder.setNegativeButton(getString(R.string.no),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,
                                             int whichButton) {
