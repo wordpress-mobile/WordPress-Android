@@ -87,7 +87,7 @@ public class SingleLineListFragment extends ListFragment implements Notification
             JSONObject noteItem = getItem(position);
             JSONObject followAction = JSONUtil.queryJSON(noteItem, "action", new JSONObject());
             FollowRow row = (FollowRow) v;
-            row.setListener(new FollowListener());
+            row.setListener(new FollowListener(getActivity().getApplicationContext()));
             row.setAction(followAction);
             row.setText(JSONUtil.queryJSON(noteItem, "header_text", ""));
             row.getImageView().setImageUrl(JSONUtil.queryJSON(noteItem, "icon", ""), WordPress.imageLoader);
