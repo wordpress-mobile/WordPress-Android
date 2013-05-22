@@ -3,13 +3,23 @@
  */
 package org.wordpress.android.util;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.wordpress.rest.OauthToken;
+import com.android.volley.RequestQueue;
+import com.android.volley.Request.Method;
+import com.android.volley.VolleyError;
+
+import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestClient;
+import com.wordpress.rest.RestRequest;
+import com.wordpress.rest.RestRequest.Listener;
+import com.wordpress.rest.RestRequest.ErrorListener;
+
+import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+
+import java.util.Map;
+import java.util.HashMap;
 
 public class WPRestClient {
     
@@ -19,10 +29,10 @@ public class WPRestClient {
     private RestClient mRestClient;
     private Authenticator mAuthenticator;
     
-    public WPRestClient(Authenticator authenticator, String accessToken){
+    public WPRestClient(RequestQueue queue, Authenticator authenticator, String accessToken){
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
-        mRestClient = new RestClient(accessToken);
+        mRestClient = new RestClient(queue, accessToken);
         if (DeviceUtils.getInstance().isBlackBerry()) {
             mRestClient.setUserAgent(DeviceUtils.getBlackBerryUserAgent());
         } else {
@@ -46,134 +56,128 @@ public class WPRestClient {
      * 
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
      */
-    public void replyToComment(Note.Reply reply, AsyncHttpResponseHandler handler){
-        RequestParams params = new RequestParams();
+    public void replyToComment(Note.Reply reply, Listener listener, ErrorListener errorListener){
+        Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, reply.getContent());
-        post(reply.getRestPath(), params, handler);
+        post(reply.getRestPath(), params, listener, errorListener);
     }
     /**
      * Reply to a comment.
      * 
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
      */
-    public void replyToComment(String siteId, String commentId, String content, AsyncHttpResponseHandler h){
-        RequestParams params = new RequestParams();
+    public void replyToComment(String siteId, String commentId, String content, Listener listener, ErrorListener errorListener){
+        Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, content);
         String path = String.format("sites/%s/comments/%s/replies/new", siteId, commentId);
-        post(path, params, h);
+        post(path, params, listener, errorListener);
     }
     /**
      * Follow a site given an ID or domain
      * 
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/follows/new/
      */
-    public void followSite(String siteId, AsyncHttpResponseHandler handler){
+    public void followSite(String siteId, Listener listener, ErrorListener errorListener){
         String path = String.format("sites/%s/follows/new", siteId);
-        post(path, handler);
+        post(path, listener, errorListener);
     }
     /**
      * Unfollow a site given an ID or domain
      * 
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/follows/mine/delete/
      */
-    public void unfollowSite(String siteId, AsyncHttpResponseHandler handler){
+    public void unfollowSite(String siteId, Listener listener, ErrorListener errorListener){
         String path = String.format("sites/%s/follows/mine/delete", siteId);
-        post(path, handler);
+        post(path, listener, errorListener);
     }
     /**
      * Get a single notification.
      * 
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
-    public void getNotification(String noteId, AsyncHttpResponseHandler handler){
-        get(String.format("notifications/%s", noteId), handler);
+    public void getNotification(String noteId, Listener listener, ErrorListener errorListener){
+        get(String.format("notifications/%s", noteId), listener, errorListener);
     }
     /**
      * Mark a notification as read
      * 
      * https://developer.wordpress.com/docs/api/1/post/notifications/read/
      */
-    public void markNoteAsRead(Note note, AsyncHttpResponseHandler handler){
+    public void markNoteAsRead(Note note, Listener listener, ErrorListener errorListener){
         String path = "notifications/read";
-        RequestParams params = new RequestParams();
+        Map<String, String> params = new HashMap<String, String>();
         params.put(String.format("counts[%s]", note.getId()), note.getUnreadCount());
-        post(path, params, handler);
+        post(path, params, listener, errorListener);
     }
     /**
      * Get notifications with the provided params.
      * 
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
-    public void getNotifications(RequestParams params, AsyncHttpResponseHandler handler){
+    public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener){
         params.put("number", "40");
         params.put("num_note_items", "20");
         params.put("fields", NOTIFICATION_FIELDS);
-        get("notifications", params, handler);
+        get("notifications", params, listener, errorListener);
     }
     /**
      * Get notifications with default params.
      * 
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
-    public void getNotifications(AsyncHttpResponseHandler handler){
-        getNotifications(new RequestParams(), handler);
+    public void getNotifications(Listener listener, ErrorListener errorListener){
+        getNotifications(new HashMap<String, String>(), listener, errorListener);
     }
     /**
      * Update the seen timestamp.
      * 
      * https://developer.wordpress.com/docs/api/1/post/notifications/seen
      */
-    public void markNotificationsSeen(String timestamp, AsyncHttpResponseHandler handler){
-        RequestParams params = new RequestParams();
+    public void markNotificationsSeen(String timestamp, Listener listener, ErrorListener errorListener){
+        Map<String, String> params = new HashMap<String, String>();
         params.put("time", timestamp);
-        post("notifications/seen", params, handler);
+        post("notifications/seen", params, listener, errorListener);
     }
     /**
      * Moderate a comment.
      * 
      * http://developer.wordpress.com/docs/api/1/sites/%24site/comments/%24comment_ID/
      */
-    public void moderateComment(String siteId, String commentId, String status, AsyncHttpResponseHandler handler){
-        RequestParams params = new RequestParams();
+    public void moderateComment(String siteId, String commentId, String status, Listener listener, ErrorListener errorListener){
+        Map<String, String> params = new HashMap<String, String>();
         params.put("status", status);
         String path = String.format("sites/%s/comments/%s/", siteId, commentId);
-        post(path, params, handler);
+        post(path, params, listener, errorListener);
     }
     /**
      * Make GET request
      */
-    public void get(String path, AsyncHttpResponseHandler handler){
-        get(path, null, handler);
+    public void get(String path, Listener listener, ErrorListener errorListener){
+        get(path, null, listener, errorListener);
     }
     /**
      * Make GET request with params
      */
-    public void get(final String path, final RequestParams params, final AsyncHttpResponseHandler handler){
-        Request request = new Request(handler){
-            @Override
-            public void makeRequest(){
-                mRestClient.get(path, params, handler);
-            }
-        };
-        request.send();
+    public void get(String path, Map<String, String> params, Listener listener, ErrorListener errorListener){
+        // turn params into querystring
+        
+        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, listener, errorListener);
+        Request authCheck = new Request(request, errorListener);
+        authCheck.send();
     }
     /**
      * Make POST request
      */
-    public void post(String path, AsyncHttpResponseHandler handler){
-        post(path, null, handler);
+    public void post(String path, Listener listener, ErrorListener errorListener){
+        post(path, null, listener, errorListener);
     }
     /**
      * Make POST request with params
      */
-    public void post(final String path, final RequestParams params, final AsyncHttpResponseHandler handler){
-        Request request = new Request(handler){
-            @Override
-            public void makeRequest(){
-                mRestClient.post(path, params, handler);
-            }
-        };
-        request.send();
+    public void post(final String path, Map<String, String> params, Listener listener, ErrorListener errorListener){
+        final RestRequest request = mRestClient.makeRequest(Method.POST, path, params, listener, errorListener);
+        Request authCheck = new Request(request, errorListener);
+        authCheck.send();
     }
     /**
      * Interface that provides a method that should perform the necessary task to make sure
@@ -190,10 +194,12 @@ public class WPRestClient {
      * Encapsulates the behaviour for asking the Authenticator for an access token. This
      * allows the request maker to disregard the authentication state when making requests.
      */
-    abstract public class Request {
-        private AsyncHttpResponseHandler mHandler;
-        protected Request(AsyncHttpResponseHandler handler){
-            mHandler = handler;
+    public class Request {
+        RestRequest mRequest;
+        RestRequest.ErrorListener mListener;
+        protected Request(RestRequest request, ErrorListener listener){
+            mRequest = request;
+            mListener = listener;
         }
         /**
          * Attempt to send the request, checks to see if we have an access token and if not
@@ -211,22 +217,25 @@ public class WPRestClient {
         /**
          * Method to set the acces token for current and future requests
          */
-        public void setAccessToken(OauthToken token){
+        public void setAccessToken(Oauth.Token token){
             mRestClient.setAccessToken(token.toString());
+            mRequest.setAccessToken(token.toString());
         }
         /**
          * If an access token cannot be obtained the request can be aborted and the
          * handler's onFailure method is called
          */
-        public void abort(Throwable e, String body){
-            if (mHandler != null) {
-                mHandler.onFailure(e, body);                
+        public void abort(VolleyError error){
+            if (mListener != null) {
+                mListener.onErrorResponse(error);
             }
         }
         /**
          * Implement this method to perform the request that should be authenticated
          */
-        abstract public void makeRequest();
+        public void makeRequest(){
+            mRestClient.send(mRequest);
+        }
     }
 
 }
