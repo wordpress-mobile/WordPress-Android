@@ -1,62 +1,75 @@
 package com.wordpress.rest;
 
 import android.util.Log;
+import android.content.Context;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.Response.Listener;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.toolbox.Volley;
+import com.android.volley.Request.Method;
+
+import java.util.Map;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 public class RestClient {
-    
+
     public static final String TAG="WordPressREST";
     public static final String REST_API_ENDPOINT_URL="https://public-api.wordpress.com/rest/v1/";
-    
-    public static final String REST_AUTHORIZATION_HEADER="Authorization";
-    public static final String REST_AUTHORIZATION_FORMAT="Bearer %s";
-    
+    public static final String PARAMS_ENCODING="UTF-8";
+
+    private RequestQueue mQueue;
     private String mAccessToken;
-    private AsyncHttpClient mHttpClient;
     private String mUserAgent;
-    
-    public RestClient(){
-        mHttpClient = new AsyncHttpClient();
+
+    public RestClient(RequestQueue queue){
+        mQueue = queue;
     }
-    
-    public RestClient(String accessToken){
-        this();
-        setAccessToken(accessToken);
-    }
-    
-    public RestClient(OauthToken token){
-        this(token.toString());
-    }
-    
-    public void setAccessToken(String token){
+
+    public RestClient(RequestQueue queue, String token){
         mAccessToken = token;
-        this.mHttpClient.addHeader(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
+    }
+
+    public RestRequest get(String path, RestRequest.Listener listener,
+                           RestRequest.ErrorListener errorListener){
+        return makeRequest(Method.GET, getAbsoluteURL(path), null, listener, errorListener);
+    }
+
+    public RestRequest post(String path, Map<String,String> body, RestRequest.Listener listener,
+                            RestRequest.ErrorListener errorListener){
+        return makeRequest(Method.POST, getAbsoluteURL(path), body, listener, errorListener);
     }
     
-    public String getAccessToken(){
-        return mAccessToken;
+    public RestRequest makeRequest(int method, String url, Map<String, String> params,
+                                   RestRequest.Listener listener, RestRequest.ErrorListener errorListener ){
+    
+        RestRequest request = new RestRequest(method, url, params, listener, errorListener);
+        request.setUserAgent(mUserAgent);
+        request.setAccessToken(mAccessToken);
+        return request;
+    }
+
+    public RestRequest send(RestRequest request){
+        // Volley send the request
+        mQueue.add(request);
+        return request;
     }
     
-    public boolean isAuthenticated(){
-        return getAccessToken() != null;
-    }
-    
-    public void get(String path, AsyncHttpResponseHandler handler){
-        get(path, null, handler);
-    }
-    
-    public void get(String path, RequestParams params, AsyncHttpResponseHandler handler){
-        String url = getAbsoluteURL(path);
-        Log.d(TAG, String.format("Requesting GET %s", url));
-        mHttpClient.get(url, params, handler);
-    }
-    
-    public void post(String path, RequestParams params, AsyncHttpResponseHandler handler){
-        mHttpClient.post(getAbsoluteURL(path), params, handler);
-    }
+    // public void get(String path, AsyncHttpResponseHandler handler){
+    //     get(path, null, handler);
+    // }
+    // 
+    // public void get(String path, RequestParams params, AsyncHttpResponseHandler handler){
+    //     String url = getAbsoluteURL(path);
+    //     Log.d(TAG, String.format("Requesting GET %s", url));
+    //     mHttpClient.get(url, params, handler);
+    // }
+    // 
+    // public void post(String path, RequestParams params, AsyncHttpResponseHandler handler){
+    //     mHttpClient.post(getAbsoluteURL(path), params, handler);
+    // }
     
     public static String getAbsoluteURL(String url){
         // if it already starts with our endpoint, let it pass through
@@ -67,9 +80,35 @@ public class RestClient {
         return String.format("%s%s", REST_API_ENDPOINT_URL, url);
     }
     
-    //Sets the User-Agent header to be sent with each request. 
+    public static String getAbsoluteURL(String path, Map<String, String> params){
+        String url = getAbsoluteURL(path);
+        if (params != null) {
+            // build a query string
+            StringBuilder query = new StringBuilder();
+            try {
+                for (Map.Entry<String,String> entry : params.entrySet()) {
+                    query.append(URLEncoder.encode(entry.getKey(), PARAMS_ENCODING));
+                    query.append("=");
+                    query.append(URLEncoder.encode(entry.getValue(), PARAMS_ENCODING));
+                    query.append("&");
+                }
+            } catch (UnsupportedEncodingException uee) {
+                throw new RuntimeException("Encoding not supported: " + PARAMS_ENCODING, uee);
+            }
+            url = String.format("%s?%s", url, query);
+        }
+        return url;
+    }
+
+    //Sets the User-Agent header to be sent with each future request. 
     public void setUserAgent(String userAgent){
         mUserAgent = userAgent;
-        this.mHttpClient.setUserAgent(userAgent);
-    } 
+    }
+    // Sets the auth token to be used in the request header
+    public void setAccessToken(String token){
+        mAccessToken = token;
+    }
+    public boolean isAuthenticated(){
+        return mAccessToken != null;
+    }
 }
