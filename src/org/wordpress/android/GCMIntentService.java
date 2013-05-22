@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
 import android.util.Log;
+import android.graphics.BitmapFactory;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -34,7 +35,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onError(Context context, String errorId) {
-        // TODO Auto-generated method stub
         Log.v("WORDPRESS", "GCM Error: " + errorId);
     }
 
@@ -126,6 +126,10 @@ public class GCMIntentService extends GCMBaseIntentService {
                 mBuilder.addAction(R.drawable.ab_icon_reply,
                         getResources().getText(R.string.reply), commentReplyPendingIntent);
             }
+
+            if (largeIconBitmap != null) {
+                mBuilder.setLargeIcon(largeIconBitmap);
+            }
         } else {
 
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
@@ -155,16 +159,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             mBuilder =
                     new NotificationCompat.Builder(this)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
                             .setSmallIcon(R.drawable.notification_icon)
-                            .setContentTitle(subject)
-                            .setContentText(getString(R.string.tap_to_view))
+                            .setContentTitle("WordPress")
+                            .setContentText(subject)
                             .setTicker(message)
                             .setAutoCancel(true)
                             .setStyle(inboxStyle);
-        }
-
-        if (largeIconBitmap != null) {
-            mBuilder.setLargeIcon(largeIconBitmap);
         }
 
         if (sound)
