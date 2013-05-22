@@ -6,23 +6,16 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Html;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListAdapter;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.content.IntentCompat;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -34,14 +27,9 @@ import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.comments.CommentFragment;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.WordPressDB;
 import static org.wordpress.android.WordPress.*;
 
-import com.wordpress.rest.OauthTokenResponseHandler;
-import com.wordpress.rest.OauthToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -66,7 +54,6 @@ public class NotificationsActivity extends WPActionBarActivity {
     private MenuItem mRefreshMenuItem;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
-    private Fragment detailFragment = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -368,6 +355,7 @@ public class NotificationsActivity extends WPActionBarActivity {
             public void onStart(){
                 super.onStart();
                 mFirstLoadComplete = false;
+                shouldAnimateRefreshButton = true;
                 startAnimatingRefreshButton(mRefreshMenuItem);
             }
             @Override
