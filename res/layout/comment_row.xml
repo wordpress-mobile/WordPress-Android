@@ -91,7 +91,8 @@
                     android:orientation="vertical"
                     android:paddingTop="4dp"
                     android:singleLine="false"
-                    android:textColor="#545454" />
+                    android:textColor="#545454"
+                    android:fontFamily="sans-serif-light" />
 
                 <TextView
                     android:id="@+id/status"

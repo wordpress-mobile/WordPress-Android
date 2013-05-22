@@ -48,6 +48,7 @@
       android:background="#cccccc" />
   <ImageButton
     android:id="@+id/follow_button"
+    android:tint="#858585"
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:src="@drawable/follow_indicator"
