@@ -15,7 +15,9 @@
         android:divider="@drawable/list_divider"
         android:dividerHeight="1px"
         android:scrollingCache="true"
-        android:textColor="#444444" >
+        android:textColor="#444444"
+        android:paddingTop="8dp"
+        android:clipToPadding="false" >
     </ListView>
 
     <RelativeLayout

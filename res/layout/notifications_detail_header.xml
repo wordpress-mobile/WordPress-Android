@@ -18,7 +18,7 @@
     android:layout_width="0dp"
     android:layout_gravity="center_vertical"
     android:ellipsize="end"
-    android:textSize="18dp" />
+    android:textSize="16sp" />
   <ImageView
     android:id="@+id/indicator"
     android:src="@drawable/dashboard_icon_wp" 

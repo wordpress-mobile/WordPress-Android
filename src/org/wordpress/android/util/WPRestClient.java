@@ -3,15 +3,10 @@
  */
 package org.wordpress.android.util;
 
-import com.wordpress.rest.Oauth;
-import com.wordpress.rest.OauthToken;
-import com.wordpress.rest.OauthTokenResponseHandler;
-import com.wordpress.rest.RestClient;
-
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.json.JSONObject;
+import com.wordpress.rest.OauthToken;
+import com.wordpress.rest.RestClient;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
@@ -111,6 +106,7 @@ public class WPRestClient {
      */
     public void getNotifications(RequestParams params, AsyncHttpResponseHandler handler){
         params.put("number", "40");
+        params.put("num_note_items", "20");
         params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, handler);
     }

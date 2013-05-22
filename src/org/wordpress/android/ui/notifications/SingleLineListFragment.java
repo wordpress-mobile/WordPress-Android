@@ -3,13 +3,10 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
@@ -38,20 +35,32 @@ public class SingleLineListFragment extends ListFragment implements Notification
     @Override
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
-        // set the header
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
-        noteHeader.setText(getNote().getSubject());
-        String url = getNote().queryJSON("body.header_link", "");
-        if (!url.equals("")) {
-            noteHeader.setUrl(url);
-        }
-        // LinearLayout noteFooter = (LinearLayout) inflater.inflate(R.layout.notifications_detail_footer, null);
+        
         ListView list = getListView();
         list.setDivider(getResources().getDrawable(R.drawable.list_divider));
         list.setDividerHeight(1);
+        list.setHeaderDividersEnabled(false);
+        
+        // set the header
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
+        noteHeader.setText(getNote().queryJSON("body.header_text", ""));
+        noteHeader.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
+        /*String url = getNote().queryJSON("body.header_link", "");
+        if (!url.equals("")) {
+            noteHeader.setUrl(url);
+        }*/
+        noteHeader.setClickable(false);
         list.addHeaderView(noteHeader);
-        // list.addFooterView(noteFooter);
+        
+        DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
+        String footerText = getNote().queryJSON("body.footer_text", "");
+        noteFooter.setText(footerText);
+        String footerUrl = getNote().queryJSON("body.footer_link", "");
+        if (!footerUrl.equals("")) {
+            noteFooter.setUrl(footerUrl);
+        }
+        list.addFooterView(noteFooter);
         // set the adapter
         setListAdapter(new NoteAdapter());
     }
