@@ -5,6 +5,7 @@ package org.wordpress.android.ui.notifications;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +46,12 @@ public class SingleLineListFragment extends ListFragment implements Notification
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
         noteHeader.setText(getNote().queryJSON("body.header_text", ""));
-        noteHeader.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
-        /*String url = getNote().queryJSON("body.header_link", "");
-        if (!url.equals("")) {
-            noteHeader.setUrl(url);
-        }*/
+        noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
+        noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         noteHeader.setClickable(false);
         list.addHeaderView(noteHeader);
         
+        // set the footer
         DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
         String footerText = getNote().queryJSON("body.footer_text", "");
         noteFooter.setText(footerText);

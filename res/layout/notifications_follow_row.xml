@@ -8,10 +8,9 @@
   android:layout_height="wrap_content"
   android:layout_width="match_parent"
   android:layout_gravity="center_vertical"
-  android:paddingLeft="16dp"
-  android:paddingRight="16dp"
   android:paddingTop="8dp"
-  android:paddingBottom="8dp">
+  android:paddingBottom="8dp"
+  android:paddingLeft="8dp">
   <com.android.volley.toolbox.NetworkImageView
     android:id="@+id/avatar"
     android:layout_height="48dp"
@@ -49,8 +48,8 @@
       android:background="#cccccc" />
   <ImageButton
     android:id="@+id/follow_button"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
     android:src="@drawable/follow_indicator"
     android:contentDescription="@+string/follow"
     android:background="@drawable/list_bg_selector"

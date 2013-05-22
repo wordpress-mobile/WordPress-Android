@@ -54,9 +54,6 @@ public class NotificationsListFragment extends ListFragment {
         listView.setOnScrollListener(new ListScrollListener());
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
-        int listPadding = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
-        listView.setPadding(0, listPadding, 0, listPadding);
-        listView.setClipToPadding(false);
         View progress = View.inflate(getActivity(), R.layout.list_footer_progress, null);
         listView.addFooterView(progress, null, false);
         setListAdapter(mNotesAdapter);

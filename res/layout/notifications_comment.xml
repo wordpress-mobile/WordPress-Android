@@ -49,7 +49,7 @@
                     style="@style/WordPressSectionHeader"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginLeft="0dp"
                     android:text="@string/moderate_comment" />
 
                 <FrameLayout
@@ -130,9 +130,9 @@
                 android:layout_weight="1.0"
                 android:fontFamily="sans-serif-light"
                 android:linksClickable="true"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
                 android:textSize="18sp" />
 
             <org.wordpress.android.ui.notifications.ReplyList
