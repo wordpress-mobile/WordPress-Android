@@ -29,6 +29,7 @@ public class RestClient {
     }
 
     public RestClient(RequestQueue queue, String token){
+        this(queue);
         mAccessToken = token;
     }
 
@@ -44,7 +45,6 @@ public class RestClient {
     
     public RestRequest makeRequest(int method, String url, Map<String, String> params,
                                    RestRequest.Listener listener, RestRequest.ErrorListener errorListener ){
-    
         RestRequest request = new RestRequest(method, url, params, listener, errorListener);
         request.setUserAgent(mUserAgent);
         request.setAccessToken(mAccessToken);
@@ -56,21 +56,7 @@ public class RestClient {
         mQueue.add(request);
         return request;
     }
-    
-    // public void get(String path, AsyncHttpResponseHandler handler){
-    //     get(path, null, handler);
-    // }
-    // 
-    // public void get(String path, RequestParams params, AsyncHttpResponseHandler handler){
-    //     String url = getAbsoluteURL(path);
-    //     Log.d(TAG, String.format("Requesting GET %s", url));
-    //     mHttpClient.get(url, params, handler);
-    // }
-    // 
-    // public void post(String path, RequestParams params, AsyncHttpResponseHandler handler){
-    //     mHttpClient.post(getAbsoluteURL(path), params, handler);
-    // }
-    
+
     public static String getAbsoluteURL(String url){
         // if it already starts with our endpoint, let it pass through
         if (url.indexOf(REST_API_ENDPOINT_URL) == 0) return url;

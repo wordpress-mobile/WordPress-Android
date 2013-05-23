@@ -3,8 +3,6 @@ package com.wordpress.rest;
 import android.util.Log;
 
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
 import com.android.volley.ParseError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.NetworkResponse;
@@ -41,6 +39,9 @@ public class Oauth {
     private String mAppId;
     private String mAppSecret;
     private String mAppRedirectURI;
+    
+    public interface Listener extends Response.Listener<Token> {}
+    public interface ErrorListener extends Response.ErrorListener {}
 
     public Oauth(String appId, String appSecret, String redirectURI){
         mAppId = appId;
@@ -63,11 +64,22 @@ public class Oauth {
     public String getAuthorizationURL(){
         return String.format(AUTHORIZED_ENDPOINT_FORMAT, AUTHORIZE_ENDPOINT, getAppID(), getAppRedirectURI());
     }
+    
+    public Request makeRequest(String username, String password, Listener listener,
+                       ErrorListener errorListener){
+        return new PasswordRequest(getAppID(), getAppSecret(), getAppRedirectURI(), username,
+                                   password, listener, errorListener);
+    }
+    
+    public Request makeRequest(String code, Listener listener, ErrorListener errorListener){
+        return new BearerRequest(getAppID(), getAppSecret(), getAppRedirectURI(), code, listener,
+                                 errorListener);
+    }
 
     private static class Request extends com.android.volley.Request<Token> {
-        private final Listener<Token> mListener;
+        private final Listener mListener;
         protected Map<String,String> mParams = new HashMap<String,String>();
-        Request(String appId, String appSecret, String redirectUri, Listener<Token> listener,
+        Request(String appId, String appSecret, String redirectUri, Listener listener,
                 ErrorListener errorListener){
             super(Method.POST, TOKEN_ENDPOINT,errorListener);
             mListener = listener;
@@ -105,7 +117,7 @@ public class Oauth {
     public static class PasswordRequest extends Request {
 
         public PasswordRequest(String appId, String appSecret, String redirectUri, String username,
-                               String password, Listener<Token> listener,
+                               String password, Listener listener,
                                ErrorListener errorListener){
             super(appId, appSecret, redirectUri, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
@@ -118,7 +130,7 @@ public class Oauth {
     public static class BearerRequest extends Request {
 
         public BearerRequest(String appId, String appSecret, String redirectUri, String code,
-                             Listener<Token> listener, ErrorListener errorListener){
+                             Listener listener, ErrorListener errorListener){
             super(appId, appSecret, redirectUri, listener, errorListener);
             mParams.put(CODE_PARAM_NAME, code);
             mParams.put(GRANT_TYPE_PARAM_NAME, BEARER_GRANT_TYPE);

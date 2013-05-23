@@ -48,7 +48,9 @@ public class RestRequest extends Request<JSONObject> {
 
     @Override
     protected void deliverResponse(JSONObject response){
-        mListener.onResponse(response);
+        if (mListener != null) {
+            mListener.onResponse(response);
+        }
     }
 
     @Override
