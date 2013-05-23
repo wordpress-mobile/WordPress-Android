@@ -66,9 +66,8 @@ public class NotificationsActivity extends WPActionBarActivity {
         
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        setTitle(getString(R.string.notifications));
-        
-        
+        setTitle(getResources().getString(R.string.notifications));
+
         FragmentManager fm = getSupportFragmentManager();
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
