@@ -89,11 +89,11 @@
         </manifest>
         
         <jar destfile="${dist.dir}/${package.name}-${package.versionname}.jar" basedir="${build.dir}/classes" includes="com/wordpress/**/*.class" manifest="MANIFEST.MF" />
-        <jar id="files" destfile="${dist.dir}/${package.name}-${package.versionname}-http.jar">
+
+        <!--jar id="files" destfile="${dist.dir}/${package.name}-${package.versionname}-http.jar">
             <zipfileset src="${libs.dir}/android-async-http-1.4.3.jar" includes="**/*.java **/*.class"/>
             <zipfileset src="${dist.dir}/${package.name}-${package.versionname}.jar" includes="**/*.java **/*.class"/>
-        </jar>
-        
+        </jar-->
     </target>
 
     <!-- Clean out the build files -->

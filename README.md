@@ -11,9 +11,6 @@ This will produce two files:
 - `dist/wordpress-android-rest-VERSION.jar`
 - `dist/wordpress-android-rest-VERSION-http.jar`
 
-The `http` version has the [`android-async-http`][loopj] `jar` bundled with it.
-
-[loopj]:http://loopj.com/android-async-http/
 
 You can also use this project as an Android Library Project instead of using the `jar` by adding a library references to your app's `project.properties` file:
 
