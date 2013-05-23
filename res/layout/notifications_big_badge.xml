@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:layout_gravity="center" >
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/badge"
             android:layout_width="170dp"
             android:layout_height="170dp"

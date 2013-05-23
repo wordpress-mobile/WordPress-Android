@@ -30,8 +30,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.models.Note;
 import static org.wordpress.android.WordPress.*;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.wordpress.rest.RestRequest;
 
 import com.android.volley.VolleyError;
@@ -333,6 +331,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 if (!notes.isEmpty()) {
                     updateLastSeen(notes.get(0).getTimestamp());                    
                 }
+                stopAnimatingRefreshButton(mRefreshMenuItem);
             }
             @Override
             public void onErrorResponse(VolleyError error){
@@ -343,6 +342,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.addAll(new ArrayList<Note>());
                 adapter.notifyDataSetChanged();
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_refresh), Toast.LENGTH_LONG).show();
+                stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         };
         restClient.getNotifications(handler, handler);

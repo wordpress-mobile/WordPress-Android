@@ -35,8 +35,8 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import com.loopj.android.http.AsyncHttpClient;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
 
 import com.wordpress.rest.RestRequest;
 
@@ -47,7 +47,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.util.BitmapResponseHandler;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.JSONUtil;
 
@@ -58,7 +57,6 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
     private Note mNote;
     private FollowRow mFollowRow;
     private DetailHeader mDetailHeader;
-    private AsyncHttpClient httpClient = new AsyncHttpClient();
     private ReplyList mReplyList;
     private ScrollView mScrollView;
     private ImageButton mApproveButton, mSpamButton, mTrashButton;
@@ -306,20 +304,26 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             Drawable loading = getResources().getDrawable(R.drawable.app_icon);
             final RemoteDrawable remote = new RemoteDrawable(loading);
             // Kick off the async task of downloading the image
-            httpClient.get(source, new BitmapResponseHandler(){
-                @Override
-                public void onSuccess(int statusCode, Bitmap bitmap){
-                    Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                    int oldHeight = remote.getBounds().height();
-                    remote.remote = drawable;
-                    remote.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                    int newHeight = remote.getBounds().height();
-                    mView.invalidate();
-                    // For ICS
-                    mView.setHeight(mView.getHeight() + newHeight - oldHeight);
-                    // Pre ICS
-                    mView.setEllipsize(null);
-                }
+            WordPress.imageLoader.get(source, new ImageLoader.ImageListener(){
+               @Override
+               public void onErrorResponse(VolleyError error){
+                   // TODO: display error image resource
+               }
+               @Override
+               public void onResponse(ImageContainer response, boolean isImmediate){
+                   if (response.getBitmap() != null) {
+                       Drawable drawable = new BitmapDrawable(getResources(), response.getBitmap());
+                       int oldHeight = remote.getBounds().height();
+                       remote.remote = drawable;
+                       remote.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                       int newHeight = remote.getBounds().height();
+                       mView.invalidate();
+                       // For ICS
+                       mView.setHeight(mView.getHeight() + newHeight - oldHeight);
+                       // Pre ICS
+                       mView.setEllipsize(null);
+                   }
+               }
             });
             return remote;
         }
