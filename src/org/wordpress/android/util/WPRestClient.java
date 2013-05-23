@@ -175,7 +175,7 @@ public class WPRestClient {
      * Make POST request with params
      */
     public void post(final String path, Map<String, String> params, Listener listener, ErrorListener errorListener){
-        final RestRequest request = mRestClient.makeRequest(Method.POST, path, params, listener, errorListener);
+        final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params, listener, errorListener);
         Request authCheck = new Request(request, errorListener);
         authCheck.send();
     }
