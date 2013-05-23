@@ -28,6 +28,7 @@ public class NotificationsListFragment extends ListFragment {
     private NoteProvider mNoteProvider;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
+    private View mProgressFooterView;
     /**
      * For responding to tapping of notes
      */
@@ -49,13 +50,13 @@ public class NotificationsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
+        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnScrollListener(new ListScrollListener());
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
-        View progress = View.inflate(getActivity(), R.layout.list_footer_progress, null);
-        listView.addFooterView(progress, null, false);
+        listView.addFooterView(mProgressFooterView, null, false);
         setListAdapter(mNotesAdapter);
     }
     @Override
@@ -139,6 +140,12 @@ public class NotificationsListFragment extends ListFragment {
                 add(noteIterator.next());
             }
         }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            mProgressFooterView.setVisibility(View.GONE);
+        }
     }
 
     private class ListScrollListener implements AbsListView.OnScrollListener {
@@ -146,6 +153,11 @@ public class NotificationsListFragment extends ListFragment {
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
             // if we're within 5 from the last item we should ask for more items
             if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
+                if (totalItemCount <= 1)
+                    mProgressFooterView.setVisibility(View.GONE);
+                else
+                    mProgressFooterView.setVisibility(View.VISIBLE);
+
                 requestMoreNotifications();
             }
         }

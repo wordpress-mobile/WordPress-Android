@@ -371,6 +371,9 @@ public class NotificationsActivity extends WPActionBarActivity {
         NotesResponseHandler handler = new NotesResponseHandler(){
             @Override
             public void onNotes(List<Note> notes){
+                // API returns 'on or before' timestamp, so remove first item
+                if (notes.size() >= 1)
+                    notes.remove(0);
                 NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.addAll(notes);
                 adapter.notifyDataSetChanged();
