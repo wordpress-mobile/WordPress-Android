@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -35,6 +37,7 @@ import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsSpinner;
 import com.actionbarsherlock.view.MenuItem;
 
+import com.google.android.gcm.GCMRegistrar;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -42,6 +45,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -69,6 +73,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Request code for reloading menu after returning from  the PreferencesActivity.
      */
     static final int SETTINGS_REQUEST = 200;
+    /**
+     * Request code for re-authentication
+     */
+    static final int AUTHENTICATE_REQUEST = 300;
     
     /**
      * Used to restore active activity on app creation
@@ -93,6 +101,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean mShouldFinish;
     private boolean mIsXLargeDevice;
     private boolean mBlogSpinnerInitialized;
+    private boolean mReauthCanceled;
 
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
@@ -433,6 +442,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
         }
+
+        if (currentBlog.getPassword().equals("") && !mReauthCanceled) {
+            // User needs to re-auth after a sign out
+            Intent authIntent = new Intent(this, AccountSetupActivity.class);
+            if (currentBlog.isDotcomFlag())
+                authIntent.putExtra("wpcom", true);
+            authIntent.putExtra("auth-only", true);
+            startActivityForResult(authIntent, AUTHENTICATE_REQUEST);
+        }
     }
 
     @Override
@@ -478,6 +496,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     }
                 }
                 break;
+            case AUTHENTICATE_REQUEST:
+                if (resultCode == RESULT_CANCELED) {
+                    mReauthCanceled = true;
+                    Intent i = new Intent(this, NewAccountActivity.class);
+                    startActivityForResult(i, ADD_ACCOUNT_REQUEST);
+                } else {
+                    WordPress.registerForCloudMessaging(this);
+                }
+                break;
         }
     }
     
@@ -509,6 +536,50 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         } else if (item.getItemId() == R.id.menu_settings) {
             Intent i = new Intent(this, PreferencesActivity.class);
             startActivityForResult(i, SETTINGS_REQUEST);
+        } else if (item.getItemId() == R.id.menu_signout) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle(getResources().getText(R.string.sign_out));
+            dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
+            dialogBuilder.setPositiveButton(R.string.sign_out,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                            Blog currentBlog = WordPress.getCurrentBlog();
+                            if (currentBlog != null) {
+                                WordPress.UnregisterWPComToken(
+                                        WPActionBarActivity.this,
+                                        GCMRegistrar.getRegistrationId(WPActionBarActivity.this)
+                                );
+                                try {
+                                    GCMRegistrar.checkDevice(WPActionBarActivity.this);
+                                    GCMRegistrar.unregister(WPActionBarActivity.this);
+                                } catch (Exception e) {
+                                    Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+                                }
+                                SharedPreferences.Editor editor = PreferenceManager
+                                    .getDefaultSharedPreferences(WPActionBarActivity.this).edit();
+                                editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
+                                editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+                                editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
+                                editor.commit();
+                                WordPress.restClient.clearAccessToken();
+                                currentBlog.setPassword("");
+                                currentBlog.save("");
+                            }
+                            finish();
+                        }
+                    });
+            dialogBuilder.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+
+                            // Just close the window.
+                        }
+                    });
+            dialogBuilder.setCancelable(true);
+            if (!isFinishing())
+                dialogBuilder.create().show();
         }
         return super.onOptionsItemSelected(item);
     }

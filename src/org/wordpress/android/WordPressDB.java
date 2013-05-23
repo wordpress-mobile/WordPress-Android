@@ -557,8 +557,8 @@ public class WordPressDB {
             String password = c.getString(1);
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString("wp_pref_wpcom_username", username);
-            editor.putString("wp_pref_wpcom_password", password);
+            editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
+            editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, password);
             editor.commit();
         }
         

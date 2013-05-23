@@ -369,7 +369,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         wpcomCategory.removeAll();
         
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
-            String username = mSettings.getString("wp_pref_wpcom_username", null);
+            String username = mSettings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             Preference usernamePref = new Preference(this);
             usernamePref.setTitle(getString(R.string.username));
             usernamePref.setSummary(username);
@@ -479,9 +479,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             //Delete the token on .COM backend. We need to delete it here, before username/pass are deleted from prefs.
                             WordPress.UnregisterWPComToken(
-                                    PreferencesActivity.this, 
+                                    PreferencesActivity.this,
                                     GCMRegistrar.getRegistrationId(PreferencesActivity.this)
-                                    );
+                            );
                             //Unregister for GCM so that we stop receiving notifications
                             try {
                                 GCMRegistrar.checkDevice(PreferencesActivity.this);
@@ -491,8 +491,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                             }
                             SharedPreferences.Editor editor = PreferenceManager
                                     .getDefaultSharedPreferences(PreferencesActivity.this).edit();
-                            editor.remove("wp_pref_wpcom_username");
-                            editor.remove("wp_pref_wpcom_password");
+                            editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
+                            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
                             editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
                             editor.commit();
                             WordPress.restClient.clearAccessToken();

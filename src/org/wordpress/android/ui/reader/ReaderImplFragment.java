@@ -223,8 +223,8 @@ public class ReaderImplFragment extends ReaderBaseFragment {
             }
             
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-            String username = settings.getString("wp_pref_wpcom_username", null);
-            String password = WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", null));
+            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+            String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
             
             String readerURL = Constants.readerURL_v3;
 

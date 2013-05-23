@@ -80,7 +80,7 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
                 // Remove wpcom password since it is no longer valid
                 SharedPreferences.Editor editor = PreferenceManager
                         .getDefaultSharedPreferences(this.getActivity().getApplicationContext()).edit();
-                editor.remove("wp_pref_wpcom_password");
+                editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
                 editor.commit();
                 b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.please_sign_in));
                 b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {

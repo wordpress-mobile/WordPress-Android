@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.conn.HttpHostConnectException;
+import org.wordpress.android.models.Blog;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -55,15 +56,15 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
 
     private static final String URL_WORDPRESS = "http://wordpress.com";
 
-    private XMLRPCClient client;
-    private String blogURL, xmlrpcURL;
-    private ProgressDialog pd;
-    private String httpuser = "";
-    private String httppassword = "";
-    private boolean wpcom = false, mAuthOnly = false;
-    private int blogCtr = 0;
-    private ArrayList<CharSequence> aBlogNames = new ArrayList<CharSequence>();
-    private boolean isCustomURL = false;
+    private XMLRPCClient mClient;
+    private String mBlogURL, mXmlrpcURL;
+    private ProgressDialog mProgressDialog;
+    private String mHttpuser = "";
+    private String mHttppassword = "";
+    private boolean mIsWpcom = false, mAuthOnly = false;
+    private int mBlogCtr = 0;
+    private ArrayList<CharSequence> mBlogNames = new ArrayList<CharSequence>();
+    private boolean mIsCustomURL = false;
     private ConnectivityManager mSystemService;
     private EditText mUrlEdit;
     private EditText mUsernameEdit;
@@ -89,7 +90,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            wpcom = extras.getBoolean("wpcom", false);
+            mIsWpcom = extras.getBoolean("wpcom", false);
             mAuthOnly = extras.getBoolean("auth-only", false);
             String username = extras.getString("username");
             if (username != null) {
@@ -97,25 +98,27 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             }
         }
 
-        if (wpcom) {
+        if (mIsWpcom) {
             ((EditText) findViewById(R.id.url)).setVisibility(View.GONE);
         } else {
             ImageView logo = (ImageView) findViewById(R.id.wpcomLogo);
             logo.setImageDrawable(getResources().getDrawable(R.drawable.wplogo));
         }
 
-        if (wpcom) {
+        if (mIsWpcom) {
             mSettingsButton.setVisibility(View.GONE);
             if (!mAuthOnly && WordPress.hasValidWPComCredentials(this)) {
                 setupBlogs();
-            } else if (mAuthOnly) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
-                String username = settings.getString("wp_pref_wpcom_username", null);
-                if (username != null)
-                    mUsernameEdit.setText(username);
             }
         }
         else {
+            if (mAuthOnly) {
+                Blog currentBlog = WordPress.getCurrentBlog();
+                if (currentBlog != null) {
+                    mUrlEdit.setText(currentBlog.getHomeURL());
+                    mUsernameEdit.requestFocus();
+                }
+            }
             mSettingsButton.setOnClickListener(this);
         }
 
@@ -128,8 +131,8 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
         if (requestCode == R.id.settingsButton) {
             if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
-                httpuser = extras.getString("httpuser");
-                httppassword = extras.getString("httppassword");
+                mHttpuser = extras.getString("httpuser");
+                mHttppassword = extras.getString("httppassword");
             }
         }
     }
@@ -142,66 +145,61 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
 
     private void configureAccount() {
 
-        if (wpcom) {
-            blogURL = URL_WORDPRESS;
-            if (WordPress.hasValidWPComCredentials(AccountSetupActivity.this)) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
-                mUsernameEdit.setText(settings.getString("wp_pref_wpcom_username", ""));
-                mPasswordEdit.setText(WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")));
-            }
+        if (mIsWpcom) {
+            mBlogURL = URL_WORDPRESS;
         } else {
-            blogURL = mUrlEdit.getText().toString().trim();
+            mBlogURL = mUrlEdit.getText().toString().trim();
         }
         final String username = mUsernameEdit.getText().toString().trim();
         final String password = mPasswordEdit.getText().toString().trim();
 
-        if (blogURL.equals("") || username.equals("") || password.equals("")) {
-            pd.dismiss();
+        if (mBlogURL.equals("") || username.equals("") || password.equals("")) {
+            mProgressDialog.dismiss();
             AlertUtil.showAlert(AccountSetupActivity.this, R.string.required_fields, R.string.url_username_password_required);
             return;
         }
 
         // add http to the beginning of the URL if needed
-        if (!(blogURL.toLowerCase().startsWith("http://")) && !(blogURL.toLowerCase().startsWith("https://"))) {
-            blogURL = "http://" + blogURL; // default to http
+        if (!(mBlogURL.toLowerCase().startsWith("http://")) && !(mBlogURL.toLowerCase().startsWith("https://"))) {
+            mBlogURL = "http://" + mBlogURL; // default to http
         }
 
-        if (!URLUtil.isValidUrl(blogURL)) {
-            pd.dismiss();
+        if (!URLUtil.isValidUrl(mBlogURL)) {
+            mProgressDialog.dismiss();
             AlertUtil.showAlert(AccountSetupActivity.this, R.string.invalid_url, R.string.invalid_url_message);
             return;
         }
 
         // attempt to get the XMLRPC URL via RSD
-        String rsdUrl = getRSDMetaTagHrefRegEx(blogURL);
+        String rsdUrl = getRSDMetaTagHrefRegEx(mBlogURL);
         if (rsdUrl == null) {
-            rsdUrl = getRSDMetaTagHref(blogURL);
+            rsdUrl = getRSDMetaTagHref(mBlogURL);
         }
 
         if (rsdUrl != null) {
-            xmlrpcURL = ApiHelper.getXMLRPCUrl(rsdUrl);
-            if (xmlrpcURL == null)
-                xmlrpcURL = rsdUrl.replace("?rsd", "");
+            mXmlrpcURL = ApiHelper.getXMLRPCUrl(rsdUrl);
+            if (mXmlrpcURL == null)
+                mXmlrpcURL = rsdUrl.replace("?rsd", "");
         } else {
-            isCustomURL = false;
+            mIsCustomURL = false;
             // try the user entered path
             try {
-                client = new XMLRPCClient(blogURL, httpuser, httppassword);
+                mClient = new XMLRPCClient(mBlogURL, mHttpuser, mHttppassword);
                 try {
-                    client.call("system.listMethods");
-                    xmlrpcURL = blogURL;
-                    isCustomURL = true;
+                    mClient.call("system.listMethods");
+                    mXmlrpcURL = mBlogURL;
+                    mIsCustomURL = true;
                 } catch (XMLRPCException e) {
                     // guess the xmlrpc path
-                    String guessURL = blogURL;
+                    String guessURL = mBlogURL;
                     if (guessURL.substring(guessURL.length() - 1, guessURL.length()).equals("/")) {
                         guessURL = guessURL.substring(0, guessURL.length() - 1);
                     }
                     guessURL += "/xmlrpc.php";
-                    client = new XMLRPCClient(guessURL, httpuser, httppassword);
+                    mClient = new XMLRPCClient(guessURL, mHttpuser, mHttppassword);
                     try {
-                        client.call("system.listMethods");
-                        xmlrpcURL = guessURL;
+                        mClient.call("system.listMethods");
+                        mXmlrpcURL = guessURL;
                     } catch (XMLRPCException ex) {
                     }
                 }
@@ -209,22 +207,22 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             }
         }
 
-        if (xmlrpcURL == null) {
-            pd.dismiss();
+        if (mXmlrpcURL == null) {
+            mProgressDialog.dismiss();
             AlertUtil.showAlert(AccountSetupActivity.this, R.string.error, R.string.no_site_error);
         } else {
             // verify settings
-            client = new XMLRPCClient(xmlrpcURL, httpuser, httppassword);
+            mClient = new XMLRPCClient(mXmlrpcURL, mHttpuser, mHttppassword);
 
             XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 
                 public void callFinished(Object[] result) {
                     
-                    if (wpcom) {
+                    if (mIsWpcom) {
                         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
                         SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("wp_pref_wpcom_username", username);
-                        editor.putString("wp_pref_wpcom_password", WordPressDB.encryptPassword(password));
+                        editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
+                        editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(password));
                         editor.commit();
                         WordPress.registerForCloudMessaging(AccountSetupActivity.this);
                         // fire off a request to get an access token
@@ -232,11 +230,21 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     }
                     
                     if (mAuthOnly) {
-                        WordPress.wpDB.updateWPComCredentials(username, password);
-                        if (WordPress.currentBlog != null && WordPress.currentBlog.isDotcomFlag()) {
-                            WordPress.currentBlog.setUsername(username);
-                            WordPress.currentBlog.setPassword(password);
+                        Blog currentBlog = WordPress.getCurrentBlog();
+                        if (currentBlog != null) {
+                            if (mIsWpcom) {
+                                WordPress.wpDB.updateWPComCredentials(username, password);
+                                if (currentBlog != null && currentBlog.isDotcomFlag()) {
+                                    currentBlog.setUsername(username);
+                                    currentBlog.setPassword(password);
+                                }
+                            } else {
+                                currentBlog.setUsername(username);
+                                currentBlog.setPassword(password);
+                            }
+                            currentBlog.save("");
                         }
+                        setResult(RESULT_OK);
                         finish();
                         return;
                     }
@@ -248,7 +256,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     final boolean[] wpcoms = new boolean[result.length];
                     final String[] wpVersions = new String[result.length];
                     Map<Object, Object> contentHash = new HashMap<Object, Object>();
-                    blogCtr = 0;
+                    mBlogCtr = 0;
                     // loop this!
                     for (int ctr = 0; ctr < result.length; ctr++) {
                         contentHash = (Map<Object, Object>) result[ctr];
@@ -260,23 +268,23 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         }
                         match = WordPress.wpDB.checkMatch(matchBlogName, contentHash.get("xmlrpc").toString(), username);
                         if (!match) {
-                            blogNames[blogCtr] = matchBlogName;
-                            if (isCustomURL)
-                                urls[blogCtr] = blogURL;
+                            blogNames[mBlogCtr] = matchBlogName;
+                            if (mIsCustomURL)
+                                urls[mBlogCtr] = mBlogURL;
                             else
-                                urls[blogCtr] = contentHash.get("xmlrpc").toString();
-                            homeURLs[blogCtr] = contentHash.get("url").toString();
-                            blogIds[blogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
-                            String blogURL = urls[blogCtr];
+                                urls[mBlogCtr] = contentHash.get("xmlrpc").toString();
+                            homeURLs[mBlogCtr] = contentHash.get("url").toString();
+                            blogIds[mBlogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
+                            String blogURL = urls[mBlogCtr];
 
-                            aBlogNames.add(EscapeUtils.unescapeHtml(blogNames[blogCtr]));
+                            mBlogNames.add(EscapeUtils.unescapeHtml(blogNames[mBlogCtr]));
 
                             boolean wpcomFlag = false;
                             // check for wordpress.com
                             if (blogURL.toLowerCase().contains("wordpress.com")) {
                                 wpcomFlag = true;
                             }
-                            wpcoms[blogCtr] = wpcomFlag;
+                            wpcoms[mBlogCtr] = wpcomFlag;
 
                             // attempt to get the software version
                             String wpVersion = "";
@@ -286,7 +294,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                 Object[] vParams = { 1, username, password, hPost };
                                 Object versionResult = new Object();
                                 try {
-                                    versionResult = (Object) client.call("wp.getOptions", vParams);
+                                    versionResult = (Object) mClient.call("wp.getOptions", vParams);
                                 } catch (XMLRPCException e) {
                                 }
 
@@ -302,13 +310,13 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                 wpVersion = "3.5";
                             }
 
-                            wpVersions[blogCtr] = wpVersion;
+                            wpVersions[mBlogCtr] = wpVersion;
 
-                            blogCtr++;
+                            mBlogCtr++;
                         }
                     } // end loop
-                    pd.dismiss();
-                    if (blogCtr == 0) {
+                    mProgressDialog.dismiss();
+                    if (mBlogCtr == 0) {
                         String additionalText = "";
                         if (result.length > 0) {
                             additionalText = getString(R.string.additional);
@@ -323,7 +331,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     } else {
                         // take them to the blog selection screen if
                         // there's more than one blog
-                        if (blogCtr > 1) {
+                        if (mBlogCtr > 1) {
 
                             LayoutInflater inflater = (LayoutInflater) AccountSetupActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             final ListView lv = (ListView) inflater.inflate(R.layout.select_blogs_list, null);
@@ -331,7 +339,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             lv.setItemsCanFocus(false);
 
                             ArrayAdapter<CharSequence> blogs = new ArrayAdapter<CharSequence>(AccountSetupActivity.this, R.layout.blogs_row,
-                                    aBlogNames);
+                                    mBlogNames);
 
                             lv.setAdapter(blogs);
 
@@ -346,8 +354,8 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                         if (selectedItems.get(selectedItems.keyAt(i)) == true) {
                                             int rowID = selectedItems.keyAt(i);
                                             long blogID = -1;
-                                            blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, httpuser,
-                                                    httppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
+                                            blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, mHttpuser,
+                                                    mHttppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
                                                     wpcoms[rowID], wpVersions[rowID]);
                                             //Set the first blog in the list to the currentBlog
                                             if (i == 0) {
@@ -366,9 +374,9 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             dialogBuilder.setPositiveButton(R.string.add_all, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
-                                    for (int i = 0; i < blogCtr; i++) {
+                                    for (int i = 0; i < mBlogCtr; i++) {
                                         long blogID = -1;
-                                        blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, httpuser, httppassword,
+                                        blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, mHttpuser, mHttppassword,
                                                 "Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
                                         //Set the first blog in the list to the currentBlog
                                         if (i == 0) {
@@ -408,7 +416,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             });
 
                         } else {
-                            long blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, httpuser, httppassword, "Above Text",
+                            long blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, mHttpuser, mHttppassword, "Above Text",
                                     false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
                             if (blogID >= 0) {
                                 WordPress.setCurrentBlog((int) blogID);
@@ -456,7 +464,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
         public void run() {
             try {
                 final Object[] result;
-                result = (Object[]) client.call(method, params);
+                result = (Object[]) mClient.call(method, params);
                 handler.post(new Runnable() {
                     public void run() {
                         callBack.callFinished(result);
@@ -466,7 +474,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                 handler.post(new Runnable() {
                     public void run() {
                         // e.printStackTrace();
-                        pd.dismiss();
+                        mProgressDialog.dismiss();
                         String message = e.getMessage();
                         if (message.contains("code 403")) {
                             // invalid login
@@ -501,7 +509,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     public void run() {
                         Throwable couse = e.getCause();
                         e.printStackTrace();
-                        pd.dismiss();
+                        mProgressDialog.dismiss();
                         String message = e.getMessage();
                         if (couse instanceof HttpHostConnectException) {
 
@@ -606,8 +614,8 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             setupBlogs();
         } else if (id == R.id.settingsButton) {
             Intent settings = new Intent(AccountSetupActivity.this, AdditionalSettingsActivity.class);
-            settings.putExtra("httpuser", httpuser);
-            settings.putExtra("httppassword", httppassword);
+            settings.putExtra("httpuser", mHttpuser);
+            settings.putExtra("httppassword", mHttppassword);
             startActivityForResult(settings, R.id.settingsButton);
         } else if (id == R.id.wordpressdotcom) {
             startActivity(new Intent(AccountSetupActivity.this, SignupActivity.class));
@@ -618,8 +626,14 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
         if (mSystemService.getActiveNetworkInfo() == null) {
             AlertUtil.showAlert(AccountSetupActivity.this, R.string.no_network_title, R.string.no_network_message);
         } else {
-            pd = ProgressDialog.show(AccountSetupActivity.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
+            mProgressDialog = ProgressDialog.show(AccountSetupActivity.this, getString(R.string.account_setup), getString(R.string.attempting_configure),
                     true, false);
+
+            if (mIsWpcom && WordPress.hasValidWPComCredentials(AccountSetupActivity.this)) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
+                mUsernameEdit.setText(settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""));
+                mPasswordEdit.setText(WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")));
+            }
 
             Thread action = new Thread() {
                 public void run() {

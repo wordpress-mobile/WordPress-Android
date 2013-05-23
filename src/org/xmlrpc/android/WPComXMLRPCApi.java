@@ -44,8 +44,8 @@ public class WPComXMLRPCApi {
          */
 
         Object[] params = {
-                settings.getString("wp_pref_wpcom_username", ""),
-                WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
                 gcmToken,
                 "android"
         };
@@ -128,8 +128,8 @@ public class WPComXMLRPCApi {
             return;
 
         Object[] params = {
-                settings.getString("wp_pref_wpcom_username", ""),
-                WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
                 updatedSettings,
                 gcmToken,
                 "android"

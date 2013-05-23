@@ -40,6 +40,8 @@ import org.wordpress.android.util.WPRestClient;
 public class WordPress extends Application {
 
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
+    public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
+    public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
     private static final String APP_ID_PROPERTY="oauth.app_id";
     private static final String APP_SECRET_PROPERTY="oauth.app_secret";
     private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
@@ -112,8 +114,8 @@ public class WordPress extends Application {
         if (uuid == null)
             return;
         Object[] params = {
-                settings.getString("wp_pref_wpcom_username", ""),
-                WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
                 token,
                 uuid,
                 "android",
@@ -137,8 +139,8 @@ public class WordPress extends Application {
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         Object[] params = {
-                settings.getString("wp_pref_wpcom_username", ""),
-                WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", "")),
+                settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
                 token,
                 false,
                 "android"
@@ -293,8 +295,8 @@ public class WordPress extends Application {
      */
     public static boolean hasValidWPComCredentials(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String username = settings.getString("wp_pref_wpcom_username", null);
-        String password = settings.getString("wp_pref_wpcom_password", null);
+        String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+        String password = settings.getString(WPCOM_PASSWORD_PREFERENCE, null);
         
         if (username != null && password != null)
             return true;
@@ -315,8 +317,8 @@ public class WordPress extends Application {
         }
         public void requestAccessToken(final WPRestClient.Request request){
             final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
-            String username = settings.getString("wp_pref_wpcom_username", null);
-            String password = WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", null));
+            String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+            String password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
             Oauth oauth = new Oauth(config.getProperty(APP_ID_PROPERTY),
                                         config.getProperty(APP_SECRET_PROPERTY),
                                         config.getProperty(APP_REDIRECT_PROPERTY));
