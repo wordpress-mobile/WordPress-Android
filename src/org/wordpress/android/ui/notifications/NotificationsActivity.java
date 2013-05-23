@@ -141,9 +141,6 @@ public class NotificationsActivity extends WPActionBarActivity {
                     if (!notes.isEmpty()) {
                         Note note = notes.get(0);
                         openNote(note);
-                    } else {
-                        // TODO: Could not load note
-                        Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
                     }
                 }
             };
