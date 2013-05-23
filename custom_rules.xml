@@ -9,11 +9,11 @@
     <!-- Get git commit -->
     <available file=".git" type="dir" property="git.present"/>
 
-    <target name="-pre-build">
+    <!-- <target name="-pre-build">
       <get skipexisting="true"
         src="https://github.com/loopj/android-async-http/raw/master/releases/android-async-http-1.4.3.jar"
         dest="${libs.dir}" />
-    </target>
+    </target> -->
     
     <target name="git-details">
         <exec executable="git" outputproperty="git.status">
