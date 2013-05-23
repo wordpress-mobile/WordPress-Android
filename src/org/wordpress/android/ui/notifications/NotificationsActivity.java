@@ -341,7 +341,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.clear();
                 adapter.addAll(new ArrayList<Note>());
                 adapter.notifyDataSetChanged();
-                Toast.makeText(NotificationsActivity.this, getString(R.string.error_refresh), Toast.LENGTH_LONG).show();
+                Toast.makeText(NotificationsActivity.this, String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.notifications).toString().toLowerCase()), Toast.LENGTH_LONG).show();
                 stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         };
