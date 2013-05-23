@@ -4,7 +4,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.android.volley.VolleyError;
+
+import com.wordpress.rest.RestRequest.Listener;
+import com.wordpress.rest.RestRequest.ErrorListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,68 +24,47 @@ class FollowListener implements FollowRow.OnFollowListener {
         this.currentContent = currentContent;
     }
     
-    class FollowResponseHandler extends JsonHttpResponseHandler {
+    class FollowResponseHandler implements Listener, ErrorListener {
         private FollowRow mRow;
         private String mSiteId;
         private boolean mShouldFollow;
         FollowResponseHandler(FollowRow row, String siteId, boolean shouldFollow){
-            super();
             mRow = row;
             mSiteId = siteId;
             mShouldFollow = shouldFollow;
+            disableButton();
         }
         @Override
-        public void onStart(){
+        public void onResponse(JSONObject response){
+            if (mRow.isSiteId(mSiteId)) {
+                mRow.setFollowing(mShouldFollow);
+            }
+            enableButton();
+        }
+        @Override
+        public void onErrorResponse(VolleyError error){
+            enableButton();
+            Log.d("WPNotifications", String.format("Failed to follow the blog: %s ", error));
+        }
+        public void disableButton(){
             if (mRow.isSiteId(mSiteId)) {
                 mRow.getFollowButton().setEnabled(false);
             }
         }
-        @Override
-        public void onFinish(){
+        public void enableButton(){
             if (mRow.isSiteId(mSiteId)) {
                 mRow.getFollowButton().setEnabled(true);
             }
         }
-        @Override
-        public void onSuccess(int status, JSONObject response){
-            if (mRow.isSiteId(mSiteId)) {
-                mRow.setFollowing(mShouldFollow);
-            }
-        }
-        @Override
-        public void onFailure(Throwable e, JSONObject response){
-            Log.e("WPNotifications", String.format("Failed to follow the blog: %s", response), e);
-            showError(null);
-        }
-        @Override
-        public void onFailure(Throwable e, JSONArray response){
-            Log.e("WPNotifications", String.format("Failed to follow the blog: %s", response), e);
-            showError(null);
-        }
-        @Override
-        public void onFailure(Throwable e, String response){
-            Log.e("WPNotifications", String.format("Failed to follow the blog: %s", response), e);
-            showError(null);
-        }
-        @Override
-        public void onFailure(Throwable e){
-            Log.e("WPNotifications", "Failed to follow the blog: ", e);
-            showError(null);
-        }
-        private void showError(String errorMessage) {
-            if(currentContent == null)
-                return;
-            if(errorMessage == null)
-                errorMessage = currentContent.getString(R.string.error_following_blog);
-           Toast.makeText(currentContent, errorMessage, Toast.LENGTH_LONG).show();
-        }
     }
     @Override
     public void onFollow(final FollowRow row, final String siteId){
-        WordPress.restClient.followSite(siteId, new FollowResponseHandler(row, siteId, true));
+        FollowResponseHandler handler = new FollowResponseHandler(row, siteId, true);
+        WordPress.restClient.followSite(siteId, handler, handler);
     }
     @Override
     public void onUnfollow(final FollowRow row, final String siteId){
-        WordPress.restClient.unfollowSite(siteId, new FollowResponseHandler(row, siteId, false));
+        FollowResponseHandler handler = new FollowResponseHandler(row, siteId, false);
+        WordPress.restClient.unfollowSite(siteId, handler, handler);
     }
 }

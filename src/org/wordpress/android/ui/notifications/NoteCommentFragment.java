@@ -33,8 +33,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
+
+import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -227,26 +231,22 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             replyText.clear();
             dismissKeyboard();
             ReplyRow row = mReplyList.addReply(reply);
-            WordPress.restClient.replyToComment(reply, new ReplyResponseHandler(reply, row));
+            ReplyResponseHandler handler = new ReplyResponseHandler(reply, row);
+            WordPress.restClient.replyToComment(reply, handler, handler);
             mScrollView.scrollTo(0, mReplyList.getBottom());
         }
     };
     
-    class ReplyResponseHandler extends JsonHttpResponseHandler {
-        private Notification mNotification;
-        private Notification mFailureNotification;
-        private NotificationManager mNotificationManager;
+    class ReplyResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
         private Toast mToast;
         private Note.Reply mReply;
         private ReplyRow mRow;
+        private NotificationManager mNotificationManager;
+        private Notification mFailureNotification;
         ReplyResponseHandler(Note.Reply reply, ReplyRow row){
-            super();
             mReply = reply;
             mRow = row;
             mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            prepareNotifications();
-        }
-        protected void prepareNotifications(){
             // create intent for failure case
             Intent failureIntent = new Intent(getActivity(), PostsActivity.class);
             failureIntent.setAction(Intent.ACTION_EDIT);
@@ -268,55 +268,24 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             mToast = Toast.makeText(getActivity(), R.string.note_reply_successful, Toast.LENGTH_SHORT);
         }
         @Override
-        public void onStart(){
-        }
-        @Override
-        public void onSuccess(int statusCode, JSONObject response){
-            Log.d(TAG, String.format("Apply response to note %s", response));
+        public void onResponse(JSONObject response){
             if (getActivity() != null) {
                 mReply.setCommentJson(response);
                 mRow.setComplete(true);
                 mRow.setUrl(mReply.getUrl());
                 mRow.setText(String.format("\u201c%s\u201d", mReply.getCommentPreview()));
-                httpClient.get(mReply.getAvatarUrl(), new BitmapResponseHandler(){
-                    @Override
-                    public void onSuccess(int status, Bitmap bitmap){
-                        mRow.getImageView().setImageBitmap(bitmap);
-                    }
-                });
+                mRow.getImageView().setImageUrl(mReply.getAvatarUrl(), WordPress.imageLoader);
             } else {
                 mToast.show();
             }
         }
+        
         @Override
-        public void onFailure(Throwable e, JSONObject response){
-            Log.e(TAG, String.format("Failed to reply: %s", response), e);
-            this.recoverFromError();
-        }
-        @Override
-        public void onFailure(Throwable e, JSONArray response){
-            Log.e(TAG, String.format("Failed to reply: %s", response), e);
-            this.recoverFromError();
-        }
-        @Override
-        public void onFailure(Throwable e, String response){
-            Log.e(TAG, String.format("Failed to reply: %s", response), e);
-            this.recoverFromError();
-        }
-        @Override
-        public void onFailure(Throwable e){
-            Log.e(TAG, "Failed to reply:", e);
-            this.recoverFromError();
-        }
-        private void recoverFromError(){
-            // TODO: show notification about failed reply
-            // the notification should open this note and
-            // add the reply text to the field
+        public void onErrorResponse(VolleyError error){
+            mRow.setComplete(true);
             mNotificationManager.notify("reply", 0xFA, mFailureNotification);
         }
-        @Override
-        public void onFinish(){
-        }   
+        
     }
     
     public void setNote(Note note){

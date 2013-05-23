@@ -228,7 +228,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         editor.commit();
                         WordPress.registerForCloudMessaging(AccountSetupActivity.this);
                         // fire off a request to get an access token
-                        WordPress.restClient.get("me", null);
+                        WordPress.restClient.get("me", null, null);
                     }
                     
                     if (mAuthOnly) {

@@ -38,7 +38,7 @@
     android:layout_marginLeft="8dp"
     android:layout_gravity="center_vertical"
     android:text="Replying ..." />
-  <ImageView
+  <com.android.volley.toolbox.NetworkImageView
     android:id="@+id/button"
     android:visibility="gone"
     android:layout_margin="6dp"

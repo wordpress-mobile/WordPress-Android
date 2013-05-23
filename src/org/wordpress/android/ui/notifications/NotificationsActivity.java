@@ -32,10 +32,16 @@ import static org.wordpress.android.WordPress.*;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.wordpress.rest.RestRequest;
+
+import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.Map;
+import java.util.HashMap;
 
 public class NotificationsActivity extends WPActionBarActivity {
     public static final String TAG="WPNotifications";
@@ -128,15 +134,11 @@ public class NotificationsActivity extends WPActionBarActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
             // find it/load it etc
-            RequestParams params = new RequestParams();
+            Map<String, String> params = new HashMap<String, String>();
             params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
-            restClient.getNotifications(params, new NotesResponseHandler(){
+            NotesResponseHandler handler = new NotesResponseHandler(){
                 @Override
-                public void onStart(){
-                    Log.d(TAG, "Finding note to display!");
-                }
-                @Override
-                public void onSuccess(List<Note> notes){
+                public void onNotes(List<Note> notes){
                     // there should only be one note!
                     if (!notes.isEmpty()) {
                         Note note = notes.get(0);
@@ -146,7 +148,8 @@ public class NotificationsActivity extends WPActionBarActivity {
                         Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
                     }
                 }
-            });
+            };
+            restClient.getNotifications(params, handler, handler);
         }
     }
     @Override
@@ -209,42 +212,21 @@ public class NotificationsActivity extends WPActionBarActivity {
         // if note is "unread" set note to "read"
         if (note.isUnread()) {
             // send a request to mark note as read
-            restClient.markNoteAsRead(note, new JsonHttpResponseHandler(){
-                @Override
-                public void onStart(){
-                    Log.d(TAG, "Marking note as read");
+            restClient.markNoteAsRead(note,
+                new RestRequest.Listener(){
+                    @Override
+                    public void onResponse(JSONObject response){
+                        note.setUnreadCount("0");
+                        mNotesList.getNotesAdapter().notifyDataSetChanged();
+                    }
+                },
+                new RestRequest.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Log.d(TAG, String.format("Failed to mark as read %s", error));
+                    }
                 }
-                @Override
-                public void onFailure(Throwable e, JSONObject response){
-                    super.onFailure(e, response);
-                    Log.d(TAG, String.format("Failed to mark as read %s", response), e);
-                }
-                @Override
-                public void onFailure(Throwable e, JSONArray response){
-                    super.onFailure(e, response);
-                    Log.d(TAG, String.format("Failed to mark as read %s", response), e);
-                }
-                @Override
-                public void onFailure(Throwable e, String response){
-                    super.onFailure(e, response);
-                    Log.d(TAG, String.format("Failed to mark as read %s", response), e);
-                }
-                @Override
-                public void onFailure(Throwable e){
-                    super.onFailure(e);
-                    Log.d(TAG, "Failed to mark as read %s", e);
-                }
-                @Override
-                public void onSuccess(int status, JSONObject response){
-                    Log.d(TAG, String.format("Note is read: %s", response));
-                    note.setUnreadCount("0");
-                    mNotesList.getNotesAdapter().notifyDataSetChanged();
-                }
-                @Override
-                public void onFinish(){
-                    Log.d(TAG, "Completed mark as read request");
-                }
-            });
+            );
         }
         
         FragmentManager fm = getSupportFragmentManager();
@@ -279,31 +261,28 @@ public class NotificationsActivity extends WPActionBarActivity {
     }
     
     public void moderateComment(String siteId, String commentId, String status, final Note originalNote) {
-        WordPress.restClient.moderateComment(siteId, commentId, status, new JsonHttpResponseHandler() {
+        RestRequest.Listener success = new RestRequest.Listener(){
             @Override
-            public void onSuccess(int statusCode, JSONObject response) {
-                RequestParams params = new RequestParams();
+            public void onResponse(JSONObject response){
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("ids", originalNote.getId());
-                WordPress.restClient.getNotifications(params, new NotesResponseHandler() {
-                        @Override
-                        public void onStart() {
-                            Log.d(TAG, "Finding note to display!");
+                NotesResponseHandler handler = new NotesResponseHandler() {
+                    @Override
+                    public void onNotes(List<Note> notes) {
+                        // there should only be one note!
+                        if (!notes.isEmpty()) {
+                            Note updatedNote = notes.get(0);
+                            updateNote(originalNote, updatedNote);
                         }
-
-                        @Override
-                        public void onSuccess(List<Note> notes) {
-                            // there should only be one note!
-                            if (!notes.isEmpty()) {
-                                Note updatedNote = notes.get(0);
-                                updateNote(originalNote, updatedNote);
-                            }
-                        }
-                    });
+                    }
+                };
+                WordPress.restClient.getNotifications(params, handler, handler);
             }
-
+        };
+        RestRequest.ErrorListener failure = new RestRequest.ErrorListener(){
             @Override
-            public void onFailure(Throwable e, String response) {
-                Log.e(TAG, String.format("Error moderating comment: %s", response), e);
+            public void onErrorResponse(VolleyError error){
+                Log.d(TAG, String.format("Error moderating comment: %s", error));
                 if (isFinishing())
                     return;
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_moderate_comment), Toast.LENGTH_LONG).show();
@@ -313,19 +292,8 @@ public class NotificationsActivity extends WPActionBarActivity {
                     f.animateModeration(false);
                 }
             }
-            @Override
-            public void onFailure(Throwable e, JSONObject response){
-                this.onFailure(e, response.toString());
-            }
-            @Override
-            public void onFailure(Throwable e, JSONArray response){
-                this.onFailure(e, response.toString());
-            }
-            @Override
-            public void onFailure(Throwable e){
-                this.onFailure(e, "");
-            }
-        });
+        };
+        WordPress.restClient.moderateComment(siteId, commentId, status, success, failure);
     }
     
     public void updateNote(Note originalNote, Note updatedNote) {
@@ -350,16 +318,13 @@ public class NotificationsActivity extends WPActionBarActivity {
     }
 
     public void refreshNotes(){
-        restClient.getNotifications(new NotesResponseHandler(){
+        mFirstLoadComplete = false;
+        shouldAnimateRefreshButton = true;
+        startAnimatingRefreshButton(mRefreshMenuItem);
+        NotesResponseHandler handler = new NotesResponseHandler(){
             @Override
-            public void onStart(){
-                super.onStart();
-                mFirstLoadComplete = false;
-                shouldAnimateRefreshButton = true;
-                startAnimatingRefreshButton(mRefreshMenuItem);
-            }
-            @Override
-            public void onSuccess(List<Note> notes){
+            public void onNotes(List<Note> notes){
+                mFirstLoadComplete = true;
                 final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.clear();
                 adapter.addAll(notes);
@@ -370,58 +335,48 @@ public class NotificationsActivity extends WPActionBarActivity {
                 }
             }
             @Override
-            public void onFinish(){
-                super.onFinish();
-                mFirstLoadComplete = true;
-                stopAnimatingRefreshButton(mRefreshMenuItem);
-            }
-            @Override
-            public void showError(){
+            public void onErrorResponse(VolleyError error){
                 //We need to show an error message? and remove the loading indicator from the list?
+                mFirstLoadComplete = true;
                 final NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.clear();
                 adapter.addAll(new ArrayList<Note>());
                 adapter.notifyDataSetChanged();
                 Toast.makeText(NotificationsActivity.this, getString(R.string.error_refresh), Toast.LENGTH_LONG).show();
             }
-        });
+        };
+        restClient.getNotifications(handler, handler);
     }
     protected void updateLastSeen(String timestamp){
-        restClient.markNotificationsSeen(timestamp, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int status, JSONObject response){
-                Log.d(TAG, String.format("Set last seen time %s", response));
+        
+        restClient.markNotificationsSeen(timestamp,
+            new RestRequest.Listener(){
+                @Override
+                public void onResponse(JSONObject response){
+                    Log.d(TAG, String.format("Set last seen time %s", response));
+                }
+            },
+            new RestRequest.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error){
+                    Log.d(TAG, String.format("Could not set last seen time %s", error));
+                }
             }
-            @Override
-            public void onFailure(Throwable e, JSONObject response){
-                Log.d(TAG, String.format("Failed to set last seen time %s", response), e);
-            }
-            @Override
-            public void onFailure(Throwable e, JSONArray response){
-                Log.d(TAG, String.format("Failed to set last seen time %s", response), e);
-            }
-            @Override
-            public void onFailure(Throwable e, String response){
-                Log.d(TAG, String.format("Failed to set last seen time %s", response), e);
-            }
-            @Override
-            public void onFailure(Throwable e){
-                Log.d(TAG, "Failed to set last seen time %s", e);
-            }
-        });
+        );
     }
     public void requestNotesBefore(Note note){
-        RequestParams params = new RequestParams();
+        Map<String, String> params = new HashMap<String, String>();
         Log.d(TAG, String.format("Requesting more notes before %s", note.queryJSON("timestamp", "")));
         params.put("before", note.queryJSON("timestamp", ""));
-        restClient.getNotifications(params, new NotesResponseHandler(){
+        NotesResponseHandler handler = new NotesResponseHandler(){
             @Override
-            public void onSuccess(List<Note> notes){
+            public void onNotes(List<Note> notes){
                 NotificationsListFragment.NotesAdapter adapter = mNotesList.getNotesAdapter();
                 adapter.addAll(notes);
                 adapter.notifyDataSetChanged();
             }
-        });
+        };
+        restClient.getNotifications(params, handler, handler);
     }
 
     private class NoteProvider implements NotificationsListFragment.NoteProvider {
@@ -444,22 +399,15 @@ public class NotificationsActivity extends WPActionBarActivity {
         }
     }
     
-    public class NotesResponseHandler extends JsonHttpResponseHandler {
-        
-        @Override
-        public void onStart(){
+    abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
+        NotesResponseHandler(){
             mLoadingMore = true;
         }
-        
+        abstract void onNotes(List<Note> notes);
+
         @Override
-        public void onFinish(){
+        public void onResponse(JSONObject response){
             mLoadingMore = false;
-        }
-        
-        public void onSuccess(List<Note> notes){};
-      
-        @Override
-        public void onSuccess(int statusCode, JSONObject response){
             List<Note> notes;
             try {
                 JSONArray notesJSON = response.getJSONArray("notes");
@@ -470,36 +418,19 @@ public class NotificationsActivity extends WPActionBarActivity {
                 }
            } catch (JSONException e) {
                Log.e(TAG, "Success, but did not receive any notes", e);
-               onFailure(e, response);
+               onErrorResponse(new VolleyError(e));
                return;
            }
-           onSuccess(notes);
-        }
-        @Override
-        public void onFailure(Throwable e, JSONObject response){
-            Log.d(TAG, String.format("Error retrieving notes: %s", response), e);
-            mLoadingMore = false;
-            this.showError();
-        }
-        @Override
-        public void onFailure(Throwable e, JSONArray response){
-            Log.d(TAG, String.format("Error retrieving notes: %s", response), e);
-            mLoadingMore = false;
-            this.showError();
-        }
-        @Override
-        public void onFailure(Throwable e, String response){
-            Log.d(TAG, String.format("Error retrieving notes: %s", response), e);
-            mLoadingMore = false;
-            this.showError();
-        }
-        @Override
-        public void onFailure(Throwable e){
-            Log.d(TAG,"Error retrieving notes: %s", e);
-            mLoadingMore = false;
-            this.showError();
+           onNotes(notes);
         }
         
+        @Override
+        public void onErrorResponse(VolleyError error){
+            mLoadingMore = false;
+            showError();
+            Log.d(TAG, String.format("Error retrieving notes: %s", error));
+        }
+
         public void showError(){
             Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
         }

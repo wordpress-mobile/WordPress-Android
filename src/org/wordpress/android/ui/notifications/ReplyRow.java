@@ -12,11 +12,13 @@ import android.widget.ProgressBar;
 import android.net.Uri;
 import android.provider.Browser;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.R;
 
 class ReplyRow extends LinearLayout {
     private ImageView mButton;
-    private ImageView mAvatar;
+    private NetworkImageView mAvatar;
     private TextView mTextField;
     private ProgressBar mProgress;
     public ReplyRow(Context context){
@@ -30,7 +32,7 @@ class ReplyRow extends LinearLayout {
     }
     protected void onFinishInflate(){
         mButton = (ImageView) findViewById(R.id.button);
-        mAvatar = (ImageView) findViewById(R.id.avatar);
+        mAvatar = (NetworkImageView) findViewById(R.id.avatar);
         mTextField = (TextView) findViewById(R.id.text);
         mProgress = (ProgressBar) findViewById(R.id.progress);
     }
@@ -72,7 +74,7 @@ class ReplyRow extends LinearLayout {
         mTextField.setText(stringRes);
     }
 
-    public ImageView getImageView(){
+    public NetworkImageView getImageView(){
         return mAvatar;
     }
 }

@@ -18,10 +18,12 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+
 import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.Oauth;
-import com.wordpress.rest.OauthToken;
-import com.wordpress.rest.OauthTokenResponseHandler;
 
 import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
@@ -74,7 +76,7 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = new WPRestClient(new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
+        restClient = new WPRestClient(Volley.newRequestQueue(this), new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
         registerForCloudMessaging(this);
         
         super.onCreate();
@@ -301,12 +303,12 @@ public class WordPress extends Application {
     }
     
     class OauthAuthenticator implements WPRestClient.Authenticator {
+        private final RequestQueue mQueue = Volley.newRequestQueue(WordPress.this);
         @Override
         public void authenticate(WPRestClient.Request request){
             // set the access token if we have one
             if (!hasValidWPComCredentials(WordPress.this)) {
-                // For now just send it, let the original request maker handle the 403
-                request.abort(new Throwable("Missing WordPress.com Account"), "Missing WordPress.com Account");
+                request.abort(new VolleyError("Missing WordPress.com Account"));
             } else {
                 requestAccessToken(request);
             }
@@ -316,23 +318,29 @@ public class WordPress extends Application {
             String username = settings.getString("wp_pref_wpcom_username", null);
             String password = WordPressDB.decryptPassword(settings.getString("wp_pref_wpcom_password", null));
             Oauth oauth = new Oauth(config.getProperty(APP_ID_PROPERTY),
-    	                                config.getProperty(APP_SECRET_PROPERTY),
-    	                                config.getProperty(APP_REDIRECT_PROPERTY));
-            oauth.requestAccessToken(username, password, new OauthTokenResponseHandler() {
-                @Override
-                public void onSuccess(OauthToken token){
-                    settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString()).commit();
-                    request.setAccessToken(token);
-                    request.send();
+                                        config.getProperty(APP_SECRET_PROPERTY),
+                                        config.getProperty(APP_REDIRECT_PROPERTY));
+            // make oauth volley request
+            Request oauthRequest = oauth.makeRequest(username, password,
+                new Oauth.Listener(){
+                    @Override
+                    public void onResponse(Oauth.Token token){
+                        settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString())
+                            .commit();
+                        request.setAccessToken(token);
+                        request.send();
+                    }
+                },
+                new Oauth.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        request.abort(error);
+                    }
                 }
+            );
+            mQueue.add(oauthRequest);
+            // add oauth request to the request queue
             
-                @Override
-                public void onFailure(Throwable e, JSONObject response){
-                    // TODO: Notify invalid username/password for WordPress.com account
-                    request.abort(e, response.toString());
-                }
-                
-            });
         }
     }
 }
