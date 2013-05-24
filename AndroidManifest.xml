@@ -94,7 +94,6 @@
             android:name=".ui.comments.AddCommentActivity"
             android:theme="@style/WordPress.Dialog"
             android:windowSoftInputMode="stateVisible" />
-        <activity android:name="ViewCommentActivity" />
 
         <!-- Posts activities -->
         <activity
@@ -174,11 +173,6 @@
             android:name=".util.PostUploadService"
             android:label="Post Upload Service" >
         </service>
-        <service
-            android:name=".util.CommentService"
-            android:label="Comment Service" />
-
-        <receiver android:name=".CommentBroadcastReceiver" />
         
         <service android:name="org.wordpress.android.GCMIntentService" />
         <receiver
