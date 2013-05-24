@@ -217,7 +217,8 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             XMLRPCMethod method = new XMLRPCMethod("wp.getUsersBlogs", new XMLRPCMethodCallback() {
 
                 public void callFinished(Object[] result) {
-                    
+
+                    Blog currentBlog = WordPress.getCurrentBlog();
                     if (mIsWpcom) {
                         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(AccountSetupActivity.this);
                         SharedPreferences.Editor editor = settings.edit();
@@ -230,7 +231,6 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     }
                     
                     if (mAuthOnly) {
-                        Blog currentBlog = WordPress.getCurrentBlog();
                         if (currentBlog != null) {
                             if (mIsWpcom) {
                                 WordPress.wpDB.updateWPComCredentials(username, password);
@@ -313,6 +313,16 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             wpVersions[mBlogCtr] = wpVersion;
 
                             mBlogCtr++;
+                        } else {
+                            if (currentBlog != null && currentBlog.getPassword().equals("") && currentBlog.getUrl().equals(contentHash.get("xmlrpc").toString())) {
+                                //user reauthed to this blog
+                                currentBlog.setUsername(username);
+                                currentBlog.setPassword(password);
+                                currentBlog.save("");
+                                setResult(RESULT_OK);
+                                finish();
+                                return;
+                            }
                         }
                     } // end loop
                     mProgressDialog.dismiss();

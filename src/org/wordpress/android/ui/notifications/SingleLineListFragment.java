@@ -54,12 +54,14 @@ public class SingleLineListFragment extends ListFragment implements Notification
         // set the footer
         DetailHeader noteFooter = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
         String footerText = getNote().queryJSON("body.footer_text", "");
-        noteFooter.setText(footerText);
-        String footerUrl = getNote().queryJSON("body.footer_link", "");
-        if (!footerUrl.equals("")) {
-            noteFooter.setUrl(footerUrl);
+        if (!footerText.equals("")) {
+            noteFooter.setText(footerText);
+            String footerUrl = getNote().queryJSON("body.footer_link", "");
+            if (!footerUrl.equals("")) {
+                noteFooter.setUrl(footerUrl);
+            }
+            list.addFooterView(noteFooter);
         }
-        list.addFooterView(noteFooter);
         // set the adapter
         setListAdapter(new NoteAdapter());
     }
