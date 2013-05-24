@@ -144,7 +144,8 @@ public class NotificationsListFragment extends ListFragment {
         @Override
         public void notifyDataSetChanged() {
             super.notifyDataSetChanged();
-            mProgressFooterView.setVisibility(View.GONE);
+            if (mProgressFooterView != null)
+                mProgressFooterView.setVisibility(View.GONE);
         }
     }
 
