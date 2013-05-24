@@ -70,6 +70,7 @@ public class CommentsActivity extends WPActionBarActivity implements
         }
 
         FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         commentList = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
 
         WordPress.currentComment = null;
@@ -111,13 +112,19 @@ public class CommentsActivity extends WPActionBarActivity implements
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popCommentDetail();
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
                 return true;
             }
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        public void onBackStackChanged() {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
+        }
+    };
 
     protected void popCommentDetail() {
         FragmentManager fm = getSupportFragmentManager();

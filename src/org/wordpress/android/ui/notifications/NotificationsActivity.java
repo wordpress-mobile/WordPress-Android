@@ -69,6 +69,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         setTitle(getResources().getString(R.string.notifications));
 
         FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
@@ -120,8 +121,6 @@ public class NotificationsActivity extends WPActionBarActivity {
         
     }
     
-    
-    
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -130,7 +129,12 @@ public class NotificationsActivity extends WPActionBarActivity {
         
     }
 
-
+    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        public void onBackStackChanged() {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
+        }
+    };
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
@@ -163,7 +167,6 @@ public class NotificationsActivity extends WPActionBarActivity {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popNoteDetail();
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
                 return true;
             }
         }

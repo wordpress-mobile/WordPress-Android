@@ -105,6 +105,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         actionBar.setDisplayShowTitleEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         postList = (ViewPostsFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
 
@@ -187,6 +188,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         startActivity(i);
         finish();
     }
+
+    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        public void onBackStackChanged() {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
+        }
+    };
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
@@ -297,7 +305,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popPostDetail();
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
                 return true;
             }
         }
