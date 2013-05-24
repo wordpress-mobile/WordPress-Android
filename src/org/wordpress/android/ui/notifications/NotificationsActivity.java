@@ -72,7 +72,15 @@ public class NotificationsActivity extends WPActionBarActivity {
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
-        
+
+        try {
+            if(WordPress.latestNotes != null){
+                mNotesList.getNotesAdapter().addAll(parseNotes(WordPress.latestNotes));                
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "No cached notes");
+        }
+
         fragmentDetectors.add(new FragmentDetector(){
             @Override
             public Fragment getFragment(Note note){
@@ -341,7 +349,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 stopAnimatingRefreshButton(mRefreshMenuItem);
             }
         };
-        restClient.getNotifications(handler, handler);
+        WordPress.refreshNotifications(this, handler, handler);
     }
     protected void updateLastSeen(String timestamp){
         
@@ -407,20 +415,14 @@ public class NotificationsActivity extends WPActionBarActivity {
         @Override
         public void onResponse(JSONObject response){
             mLoadingMore = false;
-            List<Note> notes;
             try {
-                JSONArray notesJSON = response.getJSONArray("notes");
-                notes = new ArrayList<Note>(notesJSON.length());
-                for (int i=0; i<notesJSON.length(); i++) {
-                    Note n = new Note(notesJSON.getJSONObject(i));
-                    notes.add(n);
-                }
-           } catch (JSONException e) {
-               Log.e(TAG, "Success, but did not receive any notes", e);
-               onErrorResponse(new VolleyError(e));
-               return;
-           }
-           onNotes(notes);
+                List<Note> notes = parseNotes(response);
+                onNotes(notes);
+            } catch (JSONException e) {
+                Log.e(TAG, "Success, but did not receive any notes", e);
+                onErrorResponse(new VolleyError(e));
+                return;
+            }
         }
         
         @Override
@@ -437,5 +439,16 @@ public class NotificationsActivity extends WPActionBarActivity {
     
     private abstract class FragmentDetector {
         abstract public Fragment getFragment(Note note);
+    }
+    
+    public static List<Note> parseNotes(JSONObject response) throws JSONException {
+        List<Note> notes = null;
+        JSONArray notesJSON = response.getJSONArray("notes");
+        notes = new ArrayList<Note>(notesJSON.length());
+        for (int i=0; i<notesJSON.length(); i++) {
+            Note n = new Note(notesJSON.getJSONObject(i));
+            notes.add(n);
+        }
+        return notes;
     }
 }

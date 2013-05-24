@@ -496,6 +496,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                             editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
                             editor.commit();
                             WordPress.restClient.clearAccessToken();
+                            WordPress.deleteCachedNotifications(PreferencesActivity.this);
                             refreshWPComAuthCategory();
                         }
                     })

@@ -1,6 +1,11 @@
 package org.wordpress.android;
 
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +29,9 @@ import com.android.volley.VolleyError;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.Oauth;
+import com.wordpress.rest.RestRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
@@ -39,6 +46,7 @@ import org.wordpress.android.util.WPRestClient;
 
 public class WordPress extends Application {
 
+    public static final String NOTES_CACHE="notifications.json";
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
     public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
@@ -58,6 +66,7 @@ public class WordPress extends Application {
     public static Properties config;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
+    public static JSONObject latestNotes;
 
     public static final String TAG="WordPress";
 
@@ -78,9 +87,10 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
 
-        restClient = new WPRestClient(Volley.newRequestQueue(this), new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
+        restClient = new WPRestClient(requestQueue, new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
         registerForCloudMessaging(this);
         
+        loadNotifications(this);
         super.onCreate();
     }
     
@@ -286,6 +296,108 @@ public class WordPress extends Application {
             config = null;
             Log.e(TAG, "Could not load config.properties", error);
         }
+    }
+    /**
+     * Restores notifications from cached file
+     */
+    public static void loadNotifications(Context context){
+        File file = new File(context.getCacheDir(), NOTES_CACHE);
+        BufferedReader buf = null;
+        StringBuilder json = null;
+        try {
+            buf = new BufferedReader(new FileReader(file));
+            json = new StringBuilder();
+            String line;
+            do {
+                line = buf.readLine();
+                json.append(line);
+            } while(line == null);
+        } catch (java.io.FileNotFoundException e) {
+            json = null;
+            Log.e(TAG, "No cached notes", e);
+        } catch (IOException e) {
+            json = null;
+            Log.e(TAG, "Could not read cached notes", e);
+        } finally {
+            try {
+                if (buf != null) {
+                    buf.close();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Couldn't close file buffer", e);
+            }
+        }
+        if (json == null) {
+            Log.d(TAG, "Could not find cached notes");
+            return;
+        }
+        try {
+            latestNotes = new JSONObject(json.toString());
+        } catch (JSONException e) {
+            latestNotes = null;
+            Log.e(TAG, "Failed to parse note json", e);
+            return;
+        }
+        Log.d(TAG, "Restored notes");
+    }
+    /**
+     * Refreshes latest notes and stores a copy of the response to disk.
+     */
+    public static void refreshNotifications(final Context context,
+                                            final RestRequest.Listener listener,
+                                            final RestRequest.ErrorListener errorListener){
+        restClient.getNotifications(
+            new RestRequest.Listener(){
+                @Override
+                public void onResponse(JSONObject response){
+                    latestNotes = response;
+                    File file = new File(context.getCacheDir(), NOTES_CACHE);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    FileWriter writer = null;
+                    try {
+                        String json = response.toString();
+                        writer = new FileWriter(file);
+                        writer.write(json, 0, json.length());
+                        writer.close();
+                        Log.d(TAG, String.format("Wrote notes json to %s", file));
+                    } catch (IOException e) {
+                        Log.d(TAG, String.format("Failed to cache notifications to %s", file));
+                    } finally {
+                        try {
+                            if (writer != null) {
+                                writer.close();                                    
+                            }
+                        } catch (IOException e) {
+                            writer = null;
+                        }
+                    }
+                    Log.d(TAG, String.format("Store file here %s", file));
+                    if (listener != null) {
+                        listener.onResponse(response);                        
+                    }
+                }
+            },
+            new RestRequest.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error){
+                    if (errorListener != null) {
+                        errorListener.onErrorResponse(error)                      ;
+                    }
+                }
+            }
+        );
+    }
+    /**
+     * Delete cached notifications, usually due to account logout
+     */
+    public static void deleteCachedNotifications(Context context){
+        File file = new File(context.getCacheDir(), NOTES_CACHE);
+        if (file.exists()) {
+            file.delete();
+        }
+        latestNotes = null;
     }
     
     /**
