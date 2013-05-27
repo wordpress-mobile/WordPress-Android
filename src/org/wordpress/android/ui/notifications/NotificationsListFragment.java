@@ -29,6 +29,7 @@ public class NotificationsListFragment extends ListFragment {
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private View mProgressFooterView;
+    private boolean mAllNotesLoaded;
     /**
      * For responding to tapping of notes
      */
@@ -135,9 +136,16 @@ public class NotificationsListFragment extends ListFragment {
             return getItem(getCount()-1);
         }
         public void addAll(List<Note> notes){
-            Iterator<Note> noteIterator = notes.iterator();
-            while(noteIterator.hasNext()){
-                add(noteIterator.next());
+
+            if (notes.size() == 0) {
+                // No more notes available
+                mAllNotesLoaded = true;
+                mProgressFooterView.setVisibility(View.GONE);
+            } else {
+                Iterator<Note> noteIterator = notes.iterator();
+                while(noteIterator.hasNext()){
+                    add(noteIterator.next());
+                }
             }
         }
 
@@ -152,6 +160,9 @@ public class NotificationsListFragment extends ListFragment {
     private class ListScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount){
+            if (mAllNotesLoaded)
+                return;
+
             // if we're within 5 from the last item we should ask for more items
             if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
                 if (totalItemCount <= 1)
