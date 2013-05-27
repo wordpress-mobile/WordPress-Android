@@ -15,6 +15,9 @@
   <string name="enable_blogs">Enable blogs</string>
   <string name="no_network_title">No network available</string>
   <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
+  <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
+  <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+  <string name="please_sign_in">Please sign in again.</string>
   
   <!-- form labels -->
   <string name="select_categories">Select Categories</string>
@@ -88,7 +91,10 @@
   <string name="more_tag">More</string>
   <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
   <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
-
+  <string name="wpcom">WordPress.com</string>
+  <string name="sign_in">Sign in</string>
+  <string name="sign_out">Sign out</string>
+  
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
   <string name="tab_posts">Posts</string>
@@ -215,18 +221,16 @@
   <string name="delete">Delete</string>
   <string name="approve">Approve</string>
   <string name="unapprove">Unapprove</string>
+  <string name="confirm_delete">Confirm Deletion</string>
+  <string name="confirm_delete_data">Are you sure you want to delete this comment?</string>
 
   <!-- new account view -->
   <string name="account_setup">Account Setup</string>
-  <string name="attempting_configure">Logging in&#8230;</string>
+  <string name="attempting_configure">Signing in&#8230;</string>
   <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
 
   <!-- drafts -->
   <string name="cancel_draft">Cancel Draft</string>
-
-  <!-- comment notifications -->
-  <string name="comment_notifications">Comment Notifications</string>
-  <string name="notifications_interval">Update interval</string>
 
   <!-- media selection -->
   <string name="select_photo">Select a photo from gallery</string>
@@ -318,8 +322,28 @@
   <string name="publish_date">Publish</string>
   <string name="edit">Edit</string>
   <string name="post_format">Post Format</string>
-  <string name="log_in">Log In</string>
+  <string name="log_in">Sign In</string>
 
+  <!-- notifications -->
+  <string name="notifications">Notifications</string>
+  <string name="manage_notifications">Manage notifications</string>
+  <string name="enable_notifications">Enable notifications</string>
+  <string name="types">Types</string>
+  <string name="options">Options</string>
+  <string name="notifications_turn_off">Turn off</string>
+  <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
+  <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
+  <string name="tap_to_reply">Tap to Reply</string>
+  <string name="notification_replying">Publishing reply</string>
+  <string name="note_reply_successful">Reply published</string>
+  <string name="follow">Follow</string>
+  <string name="unfollow">Unfollow</string>
+  <string name="new_notifications">%d new notifications</string>
+  <string name="more_notifications">and %d more.</string>
+  <string name="tap_to_view">Tap to view.</string>
+  <string name="moderate_comment">Moderate comment</string>
+  <string name="tooltip_follow">Follow or unfollow this blog</string>
+  
   <!-- reader -->
   <string name="reader">Reader</string>
   <string name="topics">Topics</string>
@@ -384,6 +408,7 @@
   <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
   <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
   <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
+  <string name="error_following_blog">Sorry, an error occurred while attempting to follow the blog. Please try again later.</string>
   <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
   <string name="error_media_upload">An error occurred while uploading media</string>
   <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
