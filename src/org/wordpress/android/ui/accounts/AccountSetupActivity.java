@@ -228,17 +228,15 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         // fire off a request to get an access token
                         WordPress.restClient.get("me", null, null);
                     }
-                    
+
                     if (mAuthOnly) {
                         if (currentBlog != null) {
                             if (mIsWpcom) {
                                 WordPress.wpDB.updateWPComCredentials(username, password);
                                 if (currentBlog != null && currentBlog.isDotcomFlag()) {
-                                    currentBlog.setUsername(username);
                                     currentBlog.setPassword(password);
                                 }
                             } else {
-                                currentBlog.setUsername(username);
                                 currentBlog.setPassword(password);
                             }
                             currentBlog.save("");
@@ -259,70 +257,56 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     // loop this!
                     for (int ctr = 0; ctr < result.length; ctr++) {
                         contentHash = (Map<Object, Object>) result[ctr];
-                        // check if this blog is already set up
-                        boolean match = false;
-                        String matchBlogName = contentHash.get("blogName").toString();
-                        if (matchBlogName.length() == 0) {
-                            matchBlogName = contentHash.get("url").toString();
+
+                        String blogName = contentHash.get("blogName").toString();
+                        if (blogName.length() == 0) {
+                            blogName = contentHash.get("url").toString();
                         }
-                        match = WordPress.wpDB.checkMatch(matchBlogName, contentHash.get("xmlrpc").toString(), username);
-                        if (!match) {
-                            blogNames[mBlogCtr] = matchBlogName;
-                            if (mIsCustomURL)
-                                urls[mBlogCtr] = mBlogURL;
-                            else
-                                urls[mBlogCtr] = contentHash.get("xmlrpc").toString();
-                            homeURLs[mBlogCtr] = contentHash.get("url").toString();
-                            blogIds[mBlogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
-                            String blogURL = urls[mBlogCtr];
+                        blogNames[mBlogCtr] = blogName;
 
-                            mBlogNames.add(EscapeUtils.unescapeHtml(blogNames[mBlogCtr]));
+                        if (mIsCustomURL)
+                            urls[mBlogCtr] = mBlogURL;
+                        else
+                            urls[mBlogCtr] = contentHash.get("xmlrpc").toString();
+                        homeURLs[mBlogCtr] = contentHash.get("url").toString();
+                        blogIds[mBlogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
+                        String blogURL = urls[mBlogCtr];
 
-                            boolean wpcomFlag = false;
-                            // check for wordpress.com
-                            if (blogURL.toLowerCase().contains("wordpress.com")) {
-                                wpcomFlag = true;
+                        mBlogNames.add(EscapeUtils.unescapeHtml(blogNames[mBlogCtr]));
+
+                        boolean wpcomFlag = false;
+                        // check for wordpress.com
+                        if (blogURL.toLowerCase().contains("wordpress.com")) {
+                            wpcomFlag = true;
+                        }
+                        wpcoms[mBlogCtr] = wpcomFlag;
+
+                        // attempt to get the software version
+                        String wpVersion = "";
+                        if (!wpcomFlag) {
+                            Map<String, String> hPost = new HashMap<String, String>();
+                            hPost.put("software_version", "software_version");
+                            Object[] vParams = { 1, username, password, hPost };
+                            Object versionResult = new Object();
+                            try {
+                                versionResult = (Object) mClient.call("wp.getOptions", vParams);
+                            } catch (XMLRPCException e) {
                             }
-                            wpcoms[mBlogCtr] = wpcomFlag;
 
-                            // attempt to get the software version
-                            String wpVersion = "";
-                            if (!wpcomFlag) {
-                                Map<String, String> hPost = new HashMap<String, String>();
-                                hPost.put("software_version", "software_version");
-                                Object[] vParams = { 1, username, password, hPost };
-                                Object versionResult = new Object();
+                            if (versionResult != null) {
                                 try {
-                                    versionResult = (Object) mClient.call("wp.getOptions", vParams);
-                                } catch (XMLRPCException e) {
+                                    contentHash = (Map<Object, Object>) versionResult;
+                                    Map<?, ?> sv = (Map<?, ?>) contentHash.get("software_version");
+                                    wpVersion = sv.get("value").toString();
+                                } catch (Exception e) {
                                 }
-
-                                if (versionResult != null) {
-                                    try {
-                                        contentHash = (Map<Object, Object>) versionResult;
-                                        Map<?, ?> sv = (Map<?, ?>) contentHash.get("software_version");
-                                        wpVersion = sv.get("value").toString();
-                                    } catch (Exception e) {
-                                    }
-                                }
-                            } else {
-                                wpVersion = "3.5";
                             }
-
-                            wpVersions[mBlogCtr] = wpVersion;
-
-                            mBlogCtr++;
                         } else {
-                            if (currentBlog != null && currentBlog.getPassword().equals("") && currentBlog.getUrl().equals(contentHash.get("xmlrpc").toString())) {
-                                //user reauthed to this blog
-                                currentBlog.setUsername(username);
-                                currentBlog.setPassword(password);
-                                currentBlog.save("");
-                                setResult(RESULT_OK);
-                                finish();
-                                return;
-                            }
+                            wpVersion = "3.5";
                         }
+
+                        wpVersions[mBlogCtr] = wpVersion;
+                        mBlogCtr++;
                     } // end loop
                     mProgressDialog.dismiss();
                     if (mBlogCtr == 0) {
@@ -363,9 +347,13 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                         if (selectedItems.get(selectedItems.keyAt(i)) == true) {
                                             int rowID = selectedItems.keyAt(i);
                                             long blogID = -1;
-                                            blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, mHttpuser,
-                                                    mHttppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
-                                                    wpcoms[rowID], wpVersions[rowID]);
+
+                                            blogID = WordPress.wpDB.checkMatch(blogNames[rowID], urls[rowID], username, password);
+                                            if (blogID == -1) {
+                                                blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, mHttpuser,
+                                                        mHttppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
+                                                        wpcoms[rowID], wpVersions[rowID]);
+                                            }
                                             //Set the first blog in the list to the currentBlog
                                             if (i == 0) {
                                                 if (blogID >= 0) {
@@ -384,9 +372,12 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
                                     for (int i = 0; i < mBlogCtr; i++) {
-                                        long blogID = -1;
-                                        blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, mHttpuser, mHttppassword,
-                                                "Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+                                        long blogID;
+                                        blogID = WordPress.wpDB.checkMatch(blogNames[i], urls[i], username, password);
+                                        if (blogID == -1) {
+                                            blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, mHttpuser, mHttppassword,
+                                                    "Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+                                        }
                                         //Set the first blog in the list to the currentBlog
                                         if (i == 0) {
                                             if (blogID >= 0) {
@@ -425,8 +416,12 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             });
 
                         } else {
-                            long blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, mHttpuser, mHttppassword, "Above Text",
+                            long blogID;
+                            blogID = WordPress.wpDB.checkMatch(blogNames[0], urls[0], username, password);
+                            if (blogID == -1) {
+                                blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, mHttpuser, mHttppassword, "Above Text",
                                     false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                            }
                             if (blogID >= 0) {
                                 WordPress.setCurrentBlog((int) blogID);
                             }

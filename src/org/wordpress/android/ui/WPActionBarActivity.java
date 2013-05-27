@@ -434,22 +434,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     public void setupCurrentBlog() {
         Blog currentBlog = WordPress.getCurrentBlog();
 
-        // no blogs are configured, so display new account activity
-        if (currentBlog == null) {
+        // No blogs are configured or user has signed out, so display new account activity
+        if (currentBlog == null || getBlogNames().length == 0) {
             Log.d(TAG, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
             Intent i = new Intent(this, NewAccountActivity.class);
             startActivityForResult(i, ADD_ACCOUNT_REQUEST);
             return;
-        }
-
-        if (currentBlog.getPassword().equals("") && !mReauthCanceled) {
-            // User needs to re-auth after a sign out
-            Intent authIntent = new Intent(this, AccountSetupActivity.class);
-            if (currentBlog.isDotcomFlag())
-                authIntent.putExtra("wpcom", true);
-            authIntent.putExtra("auth-only", true);
-            startActivityForResult(authIntent, AUTHENTICATE_REQUEST);
         }
     }
 
@@ -544,28 +535,26 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
-                            Blog currentBlog = WordPress.getCurrentBlog();
-                            if (currentBlog != null) {
-                                WordPress.UnregisterWPComToken(
-                                        WPActionBarActivity.this,
-                                        GCMRegistrar.getRegistrationId(WPActionBarActivity.this)
-                                );
-                                try {
-                                    GCMRegistrar.checkDevice(WPActionBarActivity.this);
-                                    GCMRegistrar.unregister(WPActionBarActivity.this);
-                                } catch (Exception e) {
-                                    Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
-                                }
-                                SharedPreferences.Editor editor = PreferenceManager
-                                    .getDefaultSharedPreferences(WPActionBarActivity.this).edit();
-                                editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-                                editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
-                                editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
-                                editor.commit();
-                                WordPress.restClient.clearAccessToken();
-                                currentBlog.setPassword("");
-                                currentBlog.save("");
+                            WordPress.UnregisterWPComToken(
+                                    WPActionBarActivity.this,
+                                    GCMRegistrar.getRegistrationId(WPActionBarActivity.this)
+                            );
+                            try {
+                                GCMRegistrar.checkDevice(WPActionBarActivity.this);
+                                GCMRegistrar.unregister(WPActionBarActivity.this);
+                            } catch (Exception e) {
+                                Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
                             }
+                            SharedPreferences.Editor editor = PreferenceManager
+                                .getDefaultSharedPreferences(WPActionBarActivity.this).edit();
+                            editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
+                            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+                            editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
+                            editor.commit();
+                            WordPress.wpDB.deactivateAccounts();
+                            WordPress.wpDB.updateLastBlogId(-1);
+                            WordPress.currentBlog = null;
+                            WordPress.restClient.clearAccessToken();
                             finish();
                         }
                     });
@@ -573,7 +562,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
-
                             // Just close the window.
                         }
                     });

@@ -591,32 +591,42 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values);
     }
 
+    public boolean deactivateAccounts() {
+
+        ContentValues values = new ContentValues();
+        values.put("password", "");
+
+        boolean returnValue = db.update(SETTINGS_TABLE, values, null, null) > 0;
+
+        return (returnValue);
+    }
+
     public List<Map<String, Object>> getAccounts() {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
-                "username", "runService", "blogId", "url" }, null, null, null,
+                "username", "blogId", "url", "dotcomFlag", "password" }, null, null, null,
                 null, null);
-        int id;
-        String blogName, username, url;
-        int blogId;
-        int runService;
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
+        String wpcomUsername = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
 
-            id = c.getInt(0);
-            blogName = c.getString(1);
-            username = c.getString(2);
-            runService = c.getInt(3);
-            blogId = c.getInt(4);
-            url = c.getString(5);
-            if (id > 0) {
+            int id = c.getInt(0);
+            String blogName = c.getString(1);
+            String username = c.getString(2);
+            int blogId = c.getInt(3);
+            String url = c.getString(4);
+            boolean isWPCom = c.getInt(5) > 0;
+            String password = c.getString(6);
+            if (((isWPCom && username.equals(wpcomUsername)) || !isWPCom) && !password.equals("") && id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);
                 thisHash.put("username", username);
-                thisHash.put("runService", runService);
                 thisHash.put("blogId", blogId);
                 thisHash.put("url", url);
                 accounts.add(thisHash);
@@ -628,23 +638,26 @@ public class WordPressDB {
         return accounts;
     }
 
-    public boolean checkMatch(String blogName, String blogURL, String username) {
+    public long checkMatch(String blogName, String blogURL, String username, String password) {
 
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName", "url" },
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
                 "blogName='" + addSlashes(blogName) + "' AND url='"
                         + addSlashes(blogURL) + "'" + " AND username='"
                         + username + "'", null, null, null, null);
         int numRows = c.getCount();
-        boolean result = false;
 
         if (numRows > 0) {
-            // this account is already saved, yo!
-            result = true;
+            // This account is already saved
+            c.moveToFirst();
+            long blogID = c.getLong(0);
+            ContentValues values = new ContentValues();
+            values.put("password", encryptPassword(password));
+            db.update(SETTINGS_TABLE, values, "id=" + blogID, null);
+            return blogID;
         }
 
         c.close();
-
-        return result;
+        return -1;
     }
 
     public static String addSlashes(String text) {
@@ -711,7 +724,6 @@ public class WordPressDB {
         if (isWPCom) {
             returnValue = updateWPComCredentials(username, password);
         }
-
 
         return (returnValue);
     }
