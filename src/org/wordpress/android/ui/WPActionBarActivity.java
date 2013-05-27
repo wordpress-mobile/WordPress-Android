@@ -732,15 +732,17 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void configureView(View view){
+            if (WordPress.getCurrentBlog() != null) {
             TextView bagdeTextView = (TextView) view.findViewById(R.id.menu_row_badge);
-            int commentCount = WordPress.currentBlog.getUnmoderatedCommentCount();
-            if (commentCount > 0) {
-                bagdeTextView.setVisibility(View.VISIBLE);
-            } else
-            {
-                bagdeTextView.setVisibility(View.GONE);
+                int commentCount = WordPress.getCurrentBlog().getUnmoderatedCommentCount();
+                if (commentCount > 0) {
+                    bagdeTextView.setVisibility(View.VISIBLE);
+                } else
+                {
+                    bagdeTextView.setVisibility(View.GONE);
+                }
+                bagdeTextView.setText(String.valueOf(commentCount));
             }
-            bagdeTextView.setText(String.valueOf(commentCount));
         }
     }
 
