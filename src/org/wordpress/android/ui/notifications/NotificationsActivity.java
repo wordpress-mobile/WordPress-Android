@@ -418,12 +418,22 @@ public class NotificationsActivity extends WPActionBarActivity {
         @Override
         public void onResponse(JSONObject response){
             mLoadingMore = false;
+            List<Note> notes = null;
+            
+            if( response == null ) {
+                //Not sure this could ever happen, but make sure we're catching all response types
+                Log.w(TAG, "Success, but did not receive any notes");
+                notes = new ArrayList<Note>(0);
+                onNotes(notes);
+                return;
+            }
+            
             try {
-                List<Note> notes = parseNotes(response);
+                notes = parseNotes(response);
                 onNotes(notes);
             } catch (JSONException e) {
-                Log.e(TAG, "Success, but did not receive any notes", e);
-                onErrorResponse(new VolleyError(e));
+                Log.e(TAG, "Success, but can't parse the response", e);
+                showError(getString(R.string.error_parsing_response));
                 return;
             }
         }
@@ -435,6 +445,10 @@ public class NotificationsActivity extends WPActionBarActivity {
             Log.d(TAG, String.format("Error retrieving notes: %s", error));
         }
 
+        public void showError(String errorMessage){
+            Toast.makeText(NotificationsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+        }
+        
         public void showError(){
             Toast.makeText(NotificationsActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
         }
