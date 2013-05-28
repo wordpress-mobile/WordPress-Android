@@ -478,7 +478,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             //Delete the token on .COM backend. We need to delete it here, before username/pass are deleted from prefs.
-                            WordPress.UnregisterWPComToken(
+                            WordPress.unregisterWPComToken(
                                     PreferencesActivity.this,
                                     GCMRegistrar.getRegistrationId(PreferencesActivity.this)
                             );

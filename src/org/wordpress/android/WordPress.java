@@ -135,7 +135,7 @@ public class WordPress extends Application {
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
-                Log.v("WORDPRESS", "Succesfully registered device on WP.com");
+                Log.v("WORDPRESS", "Successfully registered device on WP.com");
                 new WPComXMLRPCApi().getNotificationSettings(null, ctx); 
             }
 
@@ -145,7 +145,7 @@ public class WordPress extends Application {
         }, "wpcom.mobile_push_register_token", params);
     }
     
-    public static void UnregisterWPComToken(Context ctx, String token) {
+    public static void unregisterWPComToken(Context ctx, String token) {
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         Object[] params = {
@@ -159,7 +159,7 @@ public class WordPress extends Application {
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
-                Log.v("WORDPRESS", "Succesfully unregistered device on WP.com");
+                Log.v("WORDPRESS", "Successfully unregistered device on WP.com");
             }
 
             public void onFailure(long id, XMLRPCException error) {

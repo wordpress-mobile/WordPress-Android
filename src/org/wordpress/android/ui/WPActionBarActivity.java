@@ -45,7 +45,6 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -535,7 +534,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
-                            WordPress.UnregisterWPComToken(
+                            WordPress.unregisterWPComToken(
                                     WPActionBarActivity.this,
                                     GCMRegistrar.getRegistrationId(WPActionBarActivity.this)
                             );
