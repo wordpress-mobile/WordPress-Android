@@ -32,7 +32,11 @@ public class RestRequest extends Request<JSONObject> {
         mParams = params;
         mListener = listener;
     }
-    
+
+    public void removeAccessToken(){
+        setAccessToken(null);
+    }
+
     public void setAccessToken(String token){
         if (token == null) {
             mHeaders.remove(REST_AUTHORIZATION_HEADER);
