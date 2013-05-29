@@ -34,7 +34,11 @@ public class RestRequest extends Request<JSONObject> {
     }
     
     public void setAccessToken(String token){
-        mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
+        if (token == null) {
+            mHeaders.remove(REST_AUTHORIZATION_HEADER);
+        } else {
+            mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));            
+        }
     }
 
     public void setUserAgent(String userAgent){
