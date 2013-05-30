@@ -19,6 +19,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,13 +94,27 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         super.onStart();
         mFollowRow.getImageView().setImageUrl(getNote().getIconURL(), WordPress.imageLoader);
         SpannableStringBuilder html = (SpannableStringBuilder) getNote().getCommentBody();
-        Html.ImageGetter imgGetter = new AsyncImageGetter(mCommentText);
+        final Html.ImageGetter imgGetter = new AsyncImageGetter(mCommentText);
         ImageSpan imgs[] = html.getSpans(0, html.length(), ImageSpan.class);
         for(ImageSpan img : imgs){
             // create a new image span using the image getter
-            ImageSpan remote = new ImageSpan(imgGetter.getDrawable(img.getSource()), img.getSource());
+            final String src = img.getSource();
+            final RemoteDrawable remoteDrawable = (RemoteDrawable) imgGetter.getDrawable(src);
+            ClickableSpan clickListener = new ClickableSpan(){
+                @Override
+                public void onClick(View v){
+                    if (remoteDrawable.didFail()) {
+                        imgGetter.getDrawable(src);
+                    }
+                }
+            };
+            ImageSpan remote = new ImageSpan(remoteDrawable, img.getSource());
             // now replace
-            html.setSpan(remote, html.getSpanStart(img), html.getSpanEnd(img), html.getSpanFlags(img));
+            int spanStart = html.getSpanStart(img);
+            int spanEnd = html.getSpanEnd(img);
+            int spanFlags = html.getSpanFlags(img);
+            html.setSpan(remote, spanStart, spanEnd, spanFlags);
+            html.setSpan(clickListener, spanStart, spanEnd, spanFlags);
             html.removeSpan(img);
         }
         mCommentText.setText(html);
@@ -301,21 +316,36 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         }
         @Override
         public Drawable getDrawable(final String source){
-            Drawable loading = getResources().getDrawable(R.drawable.app_icon);
-            final RemoteDrawable remote = new RemoteDrawable(loading);
+            // TODO: cancel any requests when the view is destroyed
+            Drawable loading = getResources().getDrawable(R.drawable.remote_image);
+            Drawable failed = getResources().getDrawable(R.drawable.remote_failed);
+            if (getActivity() == null) {
+                return failed;
+            }
+            final RemoteDrawable remote = new RemoteDrawable(loading, failed);
             // Kick off the async task of downloading the image
             WordPress.imageLoader.get(source, new ImageLoader.ImageListener(){
                @Override
                public void onErrorResponse(VolleyError error){
-                   // TODO: display error image resource
+                   Log.e(TAG, "Failed to load image", error);
+                   remote.displayFailed();
+                   mView.invalidate();
                }
                @Override
                public void onResponse(ImageContainer response, boolean isImmediate){
                    if (response.getBitmap() != null) {
+                       // view is gone? then stop
+                       if (mView == null) {
+                           return;
+                       }
                        Drawable drawable = new BitmapDrawable(getResources(), response.getBitmap());
-                       int oldHeight = remote.getBounds().height();
-                       remote.remote = drawable;
-                       remote.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                       final int oldHeight = remote.getBounds().height();
+                       remote.setRemoteDrawable(drawable);
+                       // TODO: resize image to fit visibliy within the TextView
+                       // image is from cache? don't need to modify view height
+                       if (isImmediate) {
+                           return;
+                       }
                        int newHeight = remote.getBounds().height();
                        mView.invalidate();
                        // For ICS
@@ -331,29 +361,46 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
     }
 
     private class RemoteDrawable extends BitmapDrawable {
-        protected Drawable remote;
-        protected Drawable loading;
-        public RemoteDrawable(Drawable loadingDrawable){
-            loading = loadingDrawable;
-            setBounds(0, 0, loading.getIntrinsicWidth(), loading.getIntrinsicHeight());
+        protected Drawable mRemoteDrawable;
+        protected Drawable mLoadingDrawable;
+        protected Drawable mFailedDrawable;
+        private boolean mDidFail=false;
+        public RemoteDrawable(Drawable loadingDrawable, Drawable failedDrawable){
+            mLoadingDrawable = loadingDrawable;
+            mFailedDrawable = failedDrawable;
+            setBounds(0, 0, mLoadingDrawable.getIntrinsicWidth(), mLoadingDrawable.getIntrinsicHeight());
+        }
+        public void displayFailed(){
+            mDidFail = true;
         }
         public void setBounds(int x, int y, int width, int height){
             super.setBounds(x, y, width, height);
-            if (remote != null) {
-                remote.setBounds(x, y, width, height);
+            if (mRemoteDrawable != null) {
+                mRemoteDrawable.setBounds(x, y, width, height);
                 return;
             }
-            if (loading != null) {
-                loading.setBounds(x, y, width, height);
+            if (mLoadingDrawable != null) {
+                mLoadingDrawable.setBounds(x, y, width, height);
+                mFailedDrawable.setBounds(x, y, width, height);
             }
         }
+        public void setRemoteDrawable(Drawable remote){
+            mRemoteDrawable = remote;
+            setBounds(0, 0, mRemoteDrawable.getIntrinsicWidth(), mRemoteDrawable.getIntrinsicHeight());
+        }
+        public boolean didFail(){
+            return mDidFail;
+        }
         public void draw(Canvas canvas){
-            if (remote != null) {
-                remote.draw(canvas);
-            } else {
-                loading.draw(canvas);
+            if (mRemoteDrawable != null) {
+                mRemoteDrawable.draw(canvas);
+            } else if (didFail()) {
+                mFailedDrawable.draw(canvas);
+            } else {                
+                mLoadingDrawable.draw(canvas);
             }
         }
         
     }
+
 }

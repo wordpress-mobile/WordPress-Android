@@ -350,6 +350,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 adapter.notifyDataSetChanged();
                 Toast.makeText(NotificationsActivity.this, String.format(getResources().getString(R.string.error_refresh), getResources().getText(R.string.notifications).toString().toLowerCase()), Toast.LENGTH_LONG).show();
                 stopAnimatingRefreshButton(mRefreshMenuItem);
+                shouldAnimateRefreshButton = false;
             }
         };
         WordPress.refreshNotifications(this, handler, handler);
