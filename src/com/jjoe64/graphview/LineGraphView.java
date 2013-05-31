@@ -3,6 +3,7 @@ package com.jjoe64.graphview;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
@@ -18,6 +19,14 @@ public class LineGraphView extends GraphView {
 	private final Paint paintBackground;
 	private boolean drawBackground;
 
+	public LineGraphView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		
+		paintBackground = new Paint();
+		paintBackground.setARGB(255, 20, 40, 60);
+		paintBackground.setStrokeWidth(4);
+	}
+	
 	public LineGraphView(Context context, String title) {
 		super(context, title);
 
@@ -47,7 +56,7 @@ public class LineGraphView extends GraphView {
 
 				if (i > 0) {
 					// fill space between last and current point
-					int numSpace = (int) ((endX - lastEndX) / 3f) +1;
+					double numSpace = ((endX - lastEndX) / 3f) +1;
 					for (int xi=0; xi<numSpace; xi++) {
 						float spaceX = (float) (lastEndX + ((endX-lastEndX)*xi/(numSpace-1)));
 						float spaceY = (float) (lastEndY + ((endY-lastEndY)*xi/(numSpace-1)));
