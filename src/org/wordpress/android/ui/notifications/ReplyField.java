@@ -7,6 +7,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.content.Context;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 
 import org.wordpress.android.R;
@@ -46,22 +48,34 @@ public class ReplyField extends LinearLayout {
     public void setText(CharSequence text){
         mTextField.setText(text);
     }
+    public boolean isEmpty(){
+        return TextUtils.isEmpty(getText());
+    }
     protected void onFinishInflate(){
         mTextField = (EditText) findViewById(R.id.note_reply_field);
         mReplyButton = (ImageButton) findViewById(R.id.note_reply_button);
+        mReplyButton.setEnabled(!isEmpty());
         mReplyButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                mOnReplyListener.onReply(ReplyField.this, getText());
+                if (!isEmpty()) {
+                    mOnReplyListener.onReply(ReplyField.this, getText());
+                }
             }
         });
-        mTextField.setOnKeyListener(new View.OnKeyListener(){
-           @Override
-           public boolean onKey(View v, int keyCode, KeyEvent event){
-               if (mOnReplyListener != null) {
-               }
-               return false;
-           } 
+        mTextField.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void afterTextChanged(Editable text){
+                mReplyButton.setEnabled(!isEmpty());
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+                // noop
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count){
+                // noop
+            }
         });
     }
 }
