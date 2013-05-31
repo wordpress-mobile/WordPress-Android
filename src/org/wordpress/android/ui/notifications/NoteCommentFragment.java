@@ -317,11 +317,11 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         @Override
         public Drawable getDrawable(final String source){
             // TODO: cancel any requests when the view is destroyed
+            if (getActivity() == null) {
+                return null;
+            }
             Drawable loading = getResources().getDrawable(R.drawable.remote_image);
             Drawable failed = getResources().getDrawable(R.drawable.remote_failed);
-            if (getActivity() == null) {
-                return failed;
-            }
             final RemoteDrawable remote = new RemoteDrawable(loading, failed);
             // Kick off the async task of downloading the image
             WordPress.imageLoader.get(source, new ImageLoader.ImageListener(){
