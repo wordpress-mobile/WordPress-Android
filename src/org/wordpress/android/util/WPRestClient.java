@@ -3,23 +3,22 @@
  */
 package org.wordpress.android.util;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Request.Method;
-import com.android.volley.VolleyError;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
-import com.wordpress.rest.RestRequest.Listener;
 import com.wordpress.rest.RestRequest.ErrorListener;
-
-import org.json.JSONObject;
+import com.wordpress.rest.RestRequest.Listener;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-
-import java.util.Map;
-import java.util.HashMap;
 
 public class WPRestClient {
     
@@ -28,6 +27,16 @@ public class WPRestClient {
     
     private RestClient mRestClient;
     private Authenticator mAuthenticator;
+    
+    /** Socket timeout in milliseconds for rest requests */
+    private static final int REST_TIMEOUT_MS = 20000;
+
+    /** Default number of retries for rest requests */
+    private static final int REST_MAX_RETRIES = 3;
+
+    /** Default backoff multiplier for rest requests */
+    private static final float REST_BACKOFF_MULT = 2f;
+    
     
     public WPRestClient(RequestQueue queue, Authenticator authenticator, String accessToken){
         // load an existing access token from prefs if we have one
@@ -59,7 +68,7 @@ public class WPRestClient {
     public void replyToComment(Note.Reply reply, Listener listener, ErrorListener errorListener){
         Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, reply.getContent());
-        post(reply.getRestPath(), params, listener, errorListener);
+        post(reply.getRestPath(), params, null, listener, errorListener);
     }
     /**
      * Reply to a comment.
@@ -70,7 +79,7 @@ public class WPRestClient {
         Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, content);
         String path = String.format("sites/%s/comments/%s/replies/new", siteId, commentId);
-        post(path, params, listener, errorListener);
+        post(path, params, null, listener, errorListener);
     }
     /**
      * Follow a site given an ID or domain
@@ -107,7 +116,7 @@ public class WPRestClient {
         String path = "notifications/read";
         Map<String, String> params = new HashMap<String, String>();
         params.put(String.format("counts[%s]", note.getId()), note.getUnreadCount());
-        post(path, params, listener, errorListener);
+        post(path, params, null, listener, errorListener);
     }
     /**
      * Get notifications with the provided params.
@@ -118,7 +127,7 @@ public class WPRestClient {
         params.put("number", "40");
         params.put("num_note_items", "20");
         params.put("fields", NOTIFICATION_FIELDS);
-        get("notifications", params, listener, errorListener);
+        get("notifications", params, null, listener, errorListener);
     }
     /**
      * Get notifications with default params.
@@ -136,7 +145,7 @@ public class WPRestClient {
     public void markNotificationsSeen(String timestamp, Listener listener, ErrorListener errorListener){
         Map<String, String> params = new HashMap<String, String>();
         params.put("time", timestamp);
-        post("notifications/seen", params, listener, errorListener);
+        post("notifications/seen", params, null, listener, errorListener);
     }
     /**
      * Moderate a comment.
@@ -147,21 +156,25 @@ public class WPRestClient {
         Map<String, String> params = new HashMap<String, String>();
         params.put("status", status);
         String path = String.format("sites/%s/comments/%s/", siteId, commentId);
-        post(path, params, listener, errorListener);
+        post(path, params, null, listener, errorListener);
     }
     /**
      * Make GET request
      */
     public void get(String path, Listener listener, ErrorListener errorListener){
-        get(path, null, listener, errorListener);
+        get(path, null, null, listener, errorListener);
     }
     /**
      * Make GET request with params
      */
-    public void get(String path, Map<String, String> params, Listener listener, ErrorListener errorListener){
+    public void get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener, ErrorListener errorListener){
         // turn params into querystring
         
         RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, listener, errorListener);
+        if(retryPolicy == null) {
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES, REST_BACKOFF_MULT);
+        } 
+        request.setRetryPolicy(retryPolicy);
         Request authCheck = new Request(request, errorListener);
         authCheck.send();
     }
@@ -169,13 +182,17 @@ public class WPRestClient {
      * Make POST request
      */
     public void post(String path, Listener listener, ErrorListener errorListener){
-        post(path, null, listener, errorListener);
+        post(path, null, null, listener, errorListener);
     }
     /**
      * Make POST request with params
      */
-    public void post(final String path, Map<String, String> params, Listener listener, ErrorListener errorListener){
+    public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener, ErrorListener errorListener){
         final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params, listener, errorListener);
+        if(retryPolicy == null) {
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES, REST_BACKOFF_MULT);
+        } 
+        request.setRetryPolicy(retryPolicy);
         Request authCheck = new Request(request, errorListener);
         authCheck.send();
     }
