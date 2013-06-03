@@ -29,7 +29,7 @@ public class WPRestClient {
     private Authenticator mAuthenticator;
     
     /** Socket timeout in milliseconds for rest requests */
-    private static final int REST_TIMEOUT_MS = 20000;
+    private static final int REST_TIMEOUT_MS = 30000;
 
     /** Default number of retries for rest requests */
     private static final int REST_MAX_RETRIES = 3;
@@ -190,7 +190,7 @@ public class WPRestClient {
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener, ErrorListener errorListener){
         final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params, listener, errorListener);
         if(retryPolicy == null) {
-            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES, REST_BACKOFF_MULT);
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, 0, REST_BACKOFF_MULT); //Do not retry on failure
         } 
         request.setRetryPolicy(retryPolicy);
         Request authCheck = new Request(request, errorListener);
