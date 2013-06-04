@@ -340,7 +340,8 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                        }
                        Drawable drawable = new BitmapDrawable(getResources(), response.getBitmap());
                        final int oldHeight = remote.getBounds().height();
-                       remote.setRemoteDrawable(drawable);
+                       int maxWidth = mView.getWidth() - mView.getPaddingLeft() - mView.getPaddingRight();
+                       remote.setRemoteDrawable(drawable, maxWidth);
                        // TODO: resize image to fit visibliy within the TextView
                        // image is from cache? don't need to modify view height
                        if (isImmediate) {
@@ -387,6 +388,23 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         public void setRemoteDrawable(Drawable remote){
             mRemoteDrawable = remote;
             setBounds(0, 0, mRemoteDrawable.getIntrinsicWidth(), mRemoteDrawable.getIntrinsicHeight());
+        }
+        public void setRemoteDrawable(Drawable remote, int maxWidth){
+            // null sentinel for now
+            if (remote == null) {
+                // throw error
+                return;
+            }
+            mRemoteDrawable = remote;
+            // determine if we need to scale the image to fit in view
+            int imgWidth = remote.getIntrinsicWidth();
+            int imgHeight = remote.getIntrinsicHeight();
+            float xScale = (float) imgWidth/(float) maxWidth;
+            if (xScale > 1.0f) {
+                setBounds(0, 0, Math.round(imgWidth/xScale), Math.round(imgHeight/xScale));
+            } else {
+                setBounds(0, 0, imgWidth, imgHeight);
+            }
         }
         public boolean didFail(){
             return mDidFail;
