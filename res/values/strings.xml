@@ -343,7 +343,10 @@
   <string name="tap_to_view">Tap to view.</string>
   <string name="moderate_comment">Moderate comment</string>
   <string name="tooltip_follow">Follow or unfollow this blog</string>
-  
+  <string name="retry_reply">Reply failed. Tap to retry.</string>
+  <string name="reply_failed">Reply failed.</string>
+  <string name="tap_retry">Tap to retry.</string>
+
   <!-- reader -->
   <string name="reader">Reader</string>
   <string name="topics">Topics</string>

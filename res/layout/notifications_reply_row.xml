@@ -24,6 +24,14 @@
     android:layout_gravity="center_vertical"
     android:indeterminateDrawable="@drawable/throbber"
     android:indeterminateOnly="true" />
+  <ImageView
+    android:id="@+id/error"
+    android:layout_margin="6dp"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:layout_gravity="center_vertical"
+    android:visibility="gone"
+    android:src="@android:drawable/stat_notify_error" />
   <TextView
     android:id="@+id/text"
     android:layout_height="wrap_content"
@@ -38,7 +46,7 @@
     android:layout_marginLeft="8dp"
     android:layout_gravity="center_vertical"
     android:text="Replying ..." />
-  <com.android.volley.toolbox.NetworkImageView
+  <ImageView
     android:id="@+id/button"
     android:visibility="gone"
     android:layout_margin="6dp"

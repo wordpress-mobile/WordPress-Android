@@ -250,12 +250,13 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         }
     };
     
-    class ReplyResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
+    class ReplyResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener, View.OnClickListener {
         private Toast mToast;
         private Note.Reply mReply;
         private ReplyRow mRow;
         private NotificationManager mNotificationManager;
         private Notification mFailureNotification;
+        private static final int NOTE_ID = 0x0;
         ReplyResponseHandler(Note.Reply reply, ReplyRow row){
             mReply = reply;
             mRow = row;
@@ -270,18 +271,20 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             // TODO: Improve failure text. Who was it they tried to reply to and a better
             // reason why it failed. Need to make sure id's are unique.
             mFailureNotification = new NotificationCompat.Builder(getActivity())
-                .setContentTitle("Reply failed")
-                .setContentText("Tap to try again")
-                .setTicker("Reply failed")
+                .setContentTitle(getString(R.string.reply_failed))
+                .setContentText(getString(R.string.tap_retry))
+                .setTicker(getString(R.string.reply_failed))
                 .setWhen(0)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setContentIntent(PendingIntent.getActivity(getActivity(), 0x0, failureIntent, 0x0))
+                .setContentIntent(PendingIntent.getActivity(getActivity(), NOTE_ID, failureIntent, NOTE_ID))
                 .build();
             // Toast for notifying the user that comment was published successfully
             mToast = Toast.makeText(getActivity(), R.string.note_reply_successful, Toast.LENGTH_SHORT);
         }
         @Override
         public void onResponse(JSONObject response){
+            // remove the notification if it's there
+            mNotificationManager.cancel(NOTE_ID);
             if (getActivity() != null) {
                 mReply.setCommentJson(response);
                 mRow.setComplete(true);
@@ -292,11 +295,24 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
                 mToast.show();
             }
         }
-        
+
         @Override
         public void onErrorResponse(VolleyError error){
-            mRow.setComplete(true);
+            if (error.networkResponse != null) {
+                String body = new String(error.networkResponse.data);
+                Log.e(TAG, body, error);
+            }
+            mRow.setFailed(true);
+            mRow.setText(R.string.retry_reply);
+            mRow.setOnClickListener(this);
             mNotificationManager.notify("reply", 0xFA, mFailureNotification);
+        }
+
+        @Override
+        public void onClick(View v){
+            mRow.setFailed(false);
+            mRow.setComplete(false);
+            WordPress.restClient.replyToComment(mReply, this, this);
         }
         
     }

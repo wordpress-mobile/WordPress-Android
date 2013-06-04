@@ -17,7 +17,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 
 class ReplyRow extends LinearLayout {
-    private ImageView mButton;
+    private ImageView mButton, mErrorIndicator;
     private NetworkImageView mAvatar;
     private TextView mTextField;
     private ProgressBar mProgress;
@@ -35,6 +35,7 @@ class ReplyRow extends LinearLayout {
         mAvatar = (NetworkImageView) findViewById(R.id.avatar);
         mTextField = (TextView) findViewById(R.id.text);
         mProgress = (ProgressBar) findViewById(R.id.progress);
+        mErrorIndicator = (ImageView) findViewById(R.id.error);
     }
     
     public void setComplete(boolean complete){
@@ -42,8 +43,18 @@ class ReplyRow extends LinearLayout {
             mProgress.setVisibility(View.GONE);
             mAvatar.setVisibility(View.VISIBLE);
         } else {
+            mProgress.setVisibility(View.VISIBLE);
+            mAvatar.setVisibility(View.GONE);
+        }
+    }
+
+    public void setFailed(boolean failed){
+        if (failed) {
             mProgress.setVisibility(View.GONE);
-            mAvatar.setVisibility(View.VISIBLE);
+            mAvatar.setVisibility(View.GONE);
+            mErrorIndicator.setVisibility(View.VISIBLE);
+        } else {
+            mErrorIndicator.setVisibility(View.GONE);
         }
     }
 
