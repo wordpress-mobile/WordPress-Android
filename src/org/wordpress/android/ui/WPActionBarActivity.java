@@ -37,7 +37,6 @@ import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsSpinner;
 import com.actionbarsherlock.view.MenuItem;
 
-import com.google.android.gcm.GCMRegistrar;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -534,26 +533,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
-                            WordPress.unregisterWPComToken(
-                                    WPActionBarActivity.this,
-                                    GCMRegistrar.getRegistrationId(WPActionBarActivity.this)
-                            );
-                            try {
-                                GCMRegistrar.checkDevice(WPActionBarActivity.this);
-                                GCMRegistrar.unregister(WPActionBarActivity.this);
-                            } catch (Exception e) {
-                                Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
-                            }
-                            SharedPreferences.Editor editor = PreferenceManager
-                                .getDefaultSharedPreferences(WPActionBarActivity.this).edit();
-                            editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-                            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
-                            editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
-                            editor.commit();
-                            WordPress.wpDB.deactivateAccounts();
-                            WordPress.wpDB.updateLastBlogId(-1);
-                            WordPress.currentBlog = null;
-                            WordPress.restClient.clearAccessToken();
+                            WordPress.signOut(WPActionBarActivity.this);
                             finish();
                         }
                     });

@@ -53,6 +53,12 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         Integer id = getIntent().getIntExtra("id", -1);
         blog = WordPress.getBlog(id);
 
+        if (blog == null) {
+            Toast.makeText(this, getString(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        
         getSupportActionBar().setTitle(EscapeUtils.unescapeHtml(blog.getBlogName()));
         
         mUsernameET = (EditText) findViewById(R.id.username);

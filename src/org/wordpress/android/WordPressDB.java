@@ -604,11 +604,8 @@ public class WordPressDB {
     public List<Map<String, Object>> getAccounts() {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
-                "username", "blogId", "url", "dotcomFlag", "password" }, null, null, null,
+                "username", "blogId", "url", "password" }, null, null, null,
                 null, null);
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
-        String wpcomUsername = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
 
         int numRows = c.getCount();
         c.moveToFirst();
@@ -620,9 +617,8 @@ public class WordPressDB {
             String username = c.getString(2);
             int blogId = c.getInt(3);
             String url = c.getString(4);
-            boolean isWPCom = c.getInt(5) > 0;
-            String password = c.getString(6);
-            if (((isWPCom && username.equals(wpcomUsername)) || !isWPCom) && !password.equals("") && id > 0) {
+            String password = c.getString(5);
+            if (!password.equals("") && id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);

@@ -69,5 +69,12 @@
                 android:targetPackage="org.wordpress.android"/>
         </Preference>
     </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:key="wp_pref_app_signout_section"
+        android:title="@string/sign_out">
+        <Preference android:key="wp_pref_sign_out"
+            android:title="@string/sign_out" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

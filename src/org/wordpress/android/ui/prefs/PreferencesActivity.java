@@ -44,6 +44,7 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.DeviceUtils;
@@ -97,6 +98,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         taglineTextPreference = (EditTextPreference) findPreference("wp_pref_post_signature");
         taglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
         
+        Preference signOutPreference = (Preference) findPreference("wp_pref_sign_out");
+        signOutPreference.setOnPreferenceClickListener(signOutPreferenceClickListener);
+        
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         
         // Request notification settings if needed
@@ -131,8 +135,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     @Override
     protected void onPause() {
         overridePendingTransition(R.anim.do_nothing, R.anim.slide_down);
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK);
         super.onPause();
     }
 
@@ -375,12 +378,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             usernamePref.setSummary(username);
             usernamePref.setSelectable(false);
             
-            Preference signOutPref = new Preference(this);
-            signOutPref.setTitle(getString(R.string.sign_out));
-            signOutPref.setOnPreferenceClickListener(signOutPreferenceClickListener);
-            
             wpcomCategory.addPreference(usernamePref);
-            wpcomCategory.addPreference(signOutPref);
             
             loadNotifications();
         } else {
@@ -471,43 +469,27 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(PreferencesActivity.this);
-            builder.setMessage(getString(R.string.sure_sign_out))
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //Delete the token on .COM backend. We need to delete it here, before username/pass are deleted from prefs.
-                            WordPress.unregisterWPComToken(
-                                    PreferencesActivity.this,
-                                    GCMRegistrar.getRegistrationId(PreferencesActivity.this)
-                            );
-                            //Unregister for GCM so that we stop receiving notifications
-                            try {
-                                GCMRegistrar.checkDevice(PreferencesActivity.this);
-                                GCMRegistrar.unregister(PreferencesActivity.this);
-                            } catch (Exception e) {
-                                Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
-                            }
-                            SharedPreferences.Editor editor = PreferenceManager
-                                    .getDefaultSharedPreferences(PreferencesActivity.this).edit();
-                            editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
-                            editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
-                            editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
-                            editor.commit();
-                            WordPress.restClient.clearAccessToken();
-                            WordPress.deleteCachedNotifications(PreferencesActivity.this);
-                            refreshWPComAuthCategory();
-                        }
-                    })
-                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Dismiss dialog
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PreferencesActivity.this);
+            dialogBuilder.setTitle(getResources().getText(R.string.sign_out));
+            dialogBuilder.setMessage(getString(R.string.sign_out_confirm));
+            dialogBuilder.setPositiveButton(R.string.sign_out,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                            WordPress.signOut(PreferencesActivity.this);
+                            finish();
                         }
                     });
-            AlertDialog alert = builder.create();
-            alert.show();
-
+            dialogBuilder.setNegativeButton(R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int whichButton) {
+                            // Just close the window.
+                        }
+                    });
+            dialogBuilder.setCancelable(true);
+            if (!isFinishing())
+                dialogBuilder.create().show();
             return true;
         }
     };

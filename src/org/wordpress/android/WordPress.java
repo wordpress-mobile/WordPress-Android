@@ -24,7 +24,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -41,6 +40,7 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.WPRestClient;
 
@@ -234,18 +234,12 @@ public class WordPress extends Application {
      * @return the blog with the specified ID, or null if blog could not be retrieved.
      */
     public static Blog getBlog(int id) {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
-        for (Map<String, Object> account : accounts) {
-            int accountId = (Integer) account.get("id");
-            if (accountId == id) {
-                try {
-                    return new Blog(id);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            Blog blog = new Blog(id);
+            return blog;
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -456,5 +450,31 @@ public class WordPress extends Application {
             // add oauth request to the request queue
             
         }
+    }
+
+    /**
+     * Sign out from all accounts by clearing out the password, which will require user to sign in
+     * again
+     */
+    public static void signOut(Context context) {
+        unregisterWPComToken(
+                context,
+                GCMRegistrar.getRegistrationId(context));
+        try {
+            GCMRegistrar.checkDevice(context);
+            GCMRegistrar.unregister(context);
+        } catch (Exception e) {
+            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+        }
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(context).edit();
+        editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
+        editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+        editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
+        editor.commit();
+        wpDB.deactivateAccounts();
+        wpDB.updateLastBlogId(-1);
+        currentBlog = null;
+        restClient.clearAccessToken();
     }
 }
