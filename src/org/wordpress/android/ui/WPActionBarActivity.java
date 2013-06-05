@@ -204,15 +204,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             } else {
                 menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                menuDrawer.setDrawerIndicatorEnabled(true);
             }
         } else {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+            menuDrawer.setDrawerIndicatorEnabled(true);
         }
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
         menuDrawer.setDropShadowSize(shadowSizeInPixels);
         menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
         menuDrawer.setSlideDrawable(R.drawable.ic_drawer);
-        menuDrawer.setDrawerIndicatorEnabled(true);
         return menuDrawer;
     }
     
