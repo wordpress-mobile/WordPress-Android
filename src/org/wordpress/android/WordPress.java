@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import android.app.Application;
 import android.content.Context;
@@ -43,6 +42,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.WPRestClient;
+import org.wordpress.android.Config;
 
 public class WordPress extends Application {
 
@@ -63,7 +63,6 @@ public class WordPress extends Application {
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
     public static WPRestClient restClient;
-    public static Properties config;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static JSONObject latestNotes;
@@ -72,7 +71,6 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
-        loadProperties();
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
         
@@ -103,7 +101,7 @@ public class WordPress extends Application {
                 GCMRegistrar.checkDevice(ctx);
                 GCMRegistrar.checkManifest(ctx);
                 token = GCMRegistrar.getRegistrationId(ctx);
-                String gcmId = WordPress.config.getProperty("gcm.id").toString();
+                String gcmId = Config.GCM_ID;
                 if (gcmId != null && token.equals("")) {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
@@ -279,19 +277,6 @@ public class WordPress extends Application {
         return currentBlog;
     }
     /**
-     * Load res/raw/config.properties into a Properties object
-     */
-    private void loadProperties(){
-        config = new Properties();
-        InputStream stream = getResources().openRawResource(R.raw.config);
-        try {
-            config.load(stream);               
-        } catch(java.io.IOException error){
-            config = null;
-            Log.e(TAG, "Could not load config.properties", error);
-        }
-    }
-    /**
      * Restores notifications from cached file
      */
     public static void loadNotifications(Context context){
@@ -425,9 +410,7 @@ public class WordPress extends Application {
             final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
             String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
             String password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
-            Oauth oauth = new Oauth(config.getProperty(APP_ID_PROPERTY),
-                                        config.getProperty(APP_SECRET_PROPERTY),
-                                        config.getProperty(APP_REDIRECT_PROPERTY));
+            Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
             // make oauth volley request
             Request oauthRequest = oauth.makeRequest(username, password,
                 new Oauth.Listener(){
