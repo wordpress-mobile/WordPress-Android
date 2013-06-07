@@ -100,7 +100,6 @@ public class PostUploadService extends Service {
                 notificationIntent.setAction("android.intent.action.MAIN");
                 notificationIntent.addCategory("android.intent.category.LAUNCHER");
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-                notificationIntent.putExtra("fromNotification", true);
                 notificationIntent.putExtra("errorMessage", error);
                 notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -136,7 +135,6 @@ public class PostUploadService extends Service {
             notificationIntent.setAction("android.intent.action.MAIN");
             notificationIntent.addCategory("android.intent.category.LAUNCHER");
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-            notificationIntent.putExtra("fromNotification", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             n.setLatestEventInfo(context, message, message, pendingIntent);
@@ -500,7 +498,7 @@ public class PostUploadService extends Service {
                     Object result = null;
 
                     try {
-                        result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
+                        result = (Object) client.call("wp.uploadFile", params, tempFile);
                     } catch (XMLRPCException e) {
                         error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
                         return null;
@@ -657,7 +655,7 @@ public class PostUploadService extends Service {
                             Object result = null;
 
                             try {
-                                result = (Object) client.callUploadFile("wp.uploadFile", params, tempFile);
+                                result = (Object) client.call("wp.uploadFile", params, tempFile);
                             } catch (XMLRPCException e) {
                                 error = context.getResources().getString(R.string.error_media_upload) + ": " + cleanXMLRPCErrorMessage(e.getMessage());
                                 mediaError = true;

@@ -26,7 +26,6 @@
         <item name="android:actionBarStyle">@style/wordpress_solid_ActionBar</item>
         <item name="actionBarStyle">@style/wordpress_solid_ActionBar</item>
         
-        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
                 <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
         <item name="actionBarWidgetTheme">@style/Theme.wordpress.widget</item>

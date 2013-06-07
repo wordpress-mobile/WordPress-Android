@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,18 +33,15 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.DashboardActivity;
-import org.wordpress.android.ui.StatsActivity;
-import org.wordpress.android.ui.ViewSiteActivity;
+import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.AddCommentActivity;
-import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
-import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
@@ -70,6 +68,13 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             return;
         }
         
+        // Check if we came from a notification, if so let's launch NotificationsActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
+            startNotificationsAcivity(extras);
+            return;
+        }
+        
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
@@ -78,47 +83,32 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-            int lastActivitySelection = settings.getInt("wp_pref_last_activity", -1);
-            if (lastActivitySelection >= 0) {
-                Intent i = null;
-                switch (lastActivitySelection) {
-                    case READER_ACTIVITY:
-                        i = new Intent(this, ReaderActivity.class);
-                        break;
-                    case PAGES_ACTIVITY:
-                        i = new Intent(this, PagesActivity.class);
-                        i.putExtra("viewPages", true);
-                        break;
-                    case COMMENTS_ACTIVITY:
-                        i = new Intent(this, CommentsActivity.class);
-                        break;
-                    case STATS_ACTIVITY:
-                        i = new Intent(this, StatsActivity.class);
-                        break;
-                    case VIEW_SITE_ACTIVITY:
-                        i = new Intent(this, ViewSiteActivity.class);
-                        break;
-                    case DASHBOARD_ACTIVITY:
-                        i = new Intent(this, DashboardActivity.class);
-                        break;
-                }
-                if (i != null) {
-                    startActivity(i);
-                    finish();
+            int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
+            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID) {
+                Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
+                while(itemIterator.hasNext()){
+                    MenuDrawerItem item = itemIterator.next();
+                    // if we have a matching item id, and it's not selected and it's visible, call it
+                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() && item.isVisible()) {
+                        mFirstLaunch = true;
+                        item.selectItem();
+                        finish();
+                        return;
+                    }
                 }
             }
         }
-        
+
         createMenuDrawer(R.layout.posts);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         postList = (ViewPostsFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
 
-        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
             String errorMessage = extras.getString("errorMessage");
@@ -173,12 +163,38 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         
         Bundle extras = intent.getExtras();
         if (extras != null) {
+            // Check if we came from a notification, if so let's launch NotificationsActivity
+            if (extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
+                startNotificationsAcivity(extras);
+                return;
+            }
+            
             String errorMessage = extras.getString("errorMessage");
             if (errorMessage != null)
                 showPostUploadErrorAlert(errorMessage);
         }
         
     }
+
+    private void startNotificationsAcivity(Bundle extras) {
+        // Manually set last selection to notifications
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(LAST_ACTIVITY_PREFERENCE, NOTIFICATIONS_ACTIVITY);
+        editor.commit();
+        
+        Intent i = new Intent(this, NotificationsActivity.class);
+        i.putExtras(extras);
+        startActivity(i);
+        finish();
+    }
+
+    private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+        public void onBackStackChanged() {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
+        }
+    };
 
     protected void checkForLocalChanges(boolean shouldPrompt) {
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges();
@@ -347,6 +363,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commit();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 f.loadPost(post);
             }

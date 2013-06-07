@@ -217,7 +217,8 @@ public class ApiHelper {
                         } else {
                             blog.setFeaturedImageCapable(false);
                         }
-                        blog.save("");
+                        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive())
+                            blog.save("");
                     } catch (Exception e) {
                     }
                 }

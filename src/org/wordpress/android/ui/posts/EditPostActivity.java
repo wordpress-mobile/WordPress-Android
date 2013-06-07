@@ -98,7 +98,7 @@ import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
 import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
@@ -1642,7 +1642,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             } else {
                 // add link tag around URLs, trac #64
                 text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(WPHtml.fromHtml(StringHelper.addPTags(text), EditPostActivity.this, mPost));
+                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), EditPostActivity.this, mPost));
             }
         } else {
             String action = intent.getAction();

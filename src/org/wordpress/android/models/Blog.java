@@ -308,4 +308,8 @@ public class Blog {
     public void setBlogOptions(String blogOptions) {
         this.blogOptions = blogOptions;
     }
+
+    public boolean isActive() {
+        return !password.equals("");
+    }
 }

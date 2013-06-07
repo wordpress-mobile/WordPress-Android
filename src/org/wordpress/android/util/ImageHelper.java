@@ -82,6 +82,9 @@ public class ImageHelper {
                     // out of memory
                     return null;
                 }
+                
+                if (bm == null)
+                    return null;
 
                 float percentage = (float) finalWidth / bm.getWidth();
                 float proportionateHeight = bm.getHeight() * percentage;
@@ -177,7 +180,7 @@ public class ImageHelper {
         }
     }
 
-    static Bitmap downloadBitmap(String url) {
+    public static Bitmap downloadBitmap(String url) {
         final DefaultHttpClient client = new DefaultHttpClient();
 
         final HttpGet getRequest = new HttpGet(url);
@@ -197,8 +200,6 @@ public class ImageHelper {
                 try {
                     inputStream = entity.getContent();
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    BitmapDrawable bd = new BitmapDrawable(bitmap);
-                    bitmap = com.commonsware.cwac.thumbnail.ThumbnailAdapter.getRoundedCornerBitmap(bd.getBitmap());
                     return bitmap;
                 } finally {
                     if (inputStream != null) {

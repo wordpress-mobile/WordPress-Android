@@ -343,6 +343,9 @@
   <string name="tap_to_view">Tap to view.</string>
   <string name="moderate_comment">Moderate comment</string>
   <string name="tooltip_follow">Follow or unfollow this blog</string>
+  <string name="retry_reply">Reply failed. Tap to retry.</string>
+  <string name="reply_failed">Reply failed.</string>
+  <string name="tap_retry">Tap to retry.</string>
   
   <!-- reader -->
   <string name="reader">Reader</string>
@@ -406,6 +409,7 @@
   <string name="error_delete_post">Sorry, an error occurred while attempting to delete the %s.</string>
   <string name="error_refresh">Sorry, %s could not be refreshed at this time. Please try again later.</string>
   <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
+   <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
   <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
   <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
   <string name="error_following_blog">Sorry, an error occurred while attempting to follow the blog. Please try again later.</string>

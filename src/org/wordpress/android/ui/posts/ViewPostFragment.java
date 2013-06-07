@@ -15,7 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.StringUtils;
 
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
@@ -161,7 +161,7 @@ public class ViewPostFragment extends Fragment {
 
         tv.setVisibility(View.GONE);
         webView.setVisibility(View.VISIBLE);
-        String html = StringHelper.addPTags(post.getDescription()
+        String html = StringUtils.addPTags(post.getDescription()
                 + "\n\n" + post.getMt_text_more());
 
         String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
