@@ -3,7 +3,7 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <ImageView
+  <com.android.volley.toolbox.NetworkImageView
     android:id="@+id/blavatar"
     android:layout_width="42dip"
     android:layout_height="42dip"

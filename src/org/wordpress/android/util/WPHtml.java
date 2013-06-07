@@ -53,6 +53,10 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.view.Display;
 import android.view.WindowManager;
+import android.text.Layout;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.os.Build;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
@@ -72,6 +76,56 @@ import org.wordpress.android.models.Post;
  * tags are supported.
  */
 public class WPHtml {
+    /**
+     * Customzed QuoteSpan for use in SpannableString's
+     */
+    public static class WPQuoteSpan extends QuoteSpan {
+        private static final int STRIPE_WIDTH=5;
+        private static final int GAP_WIDTH=20;
+        public static final int STRIPE_COLOR=0xFF21759B;
+        private static final boolean IS_ICS= Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+
+        public WPQuoteSpan(){
+            super(STRIPE_COLOR);
+        }
+
+        @Override
+        public int getLeadingMargin(boolean first){
+            if (IS_ICS) {
+                int margin = GAP_WIDTH * 2 + STRIPE_WIDTH;
+                return margin;
+            } else {
+                return super.getLeadingMargin(first);
+            }
+        }
+        /**
+         * Draw a nice thick gray bar if Ice Cream Sandwhich or newer. There's a
+         * bug on older devices that does not respect the increased margin.
+         */
+        @Override
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
+                                      int top, int baseline, int bottom,
+                                      CharSequence text, int start, int end,
+                                      boolean first, Layout layout) {
+
+            if (IS_ICS) {
+                Paint.Style style = p.getStyle();
+                int color = p.getColor();
+
+                p.setStyle(Paint.Style.FILL);
+                p.setColor(STRIPE_COLOR);
+
+                c.drawRect(GAP_WIDTH + x, top, x + dir * STRIPE_WIDTH, bottom, p);
+
+                p.setStyle(style);
+                p.setColor(color);
+            } else {
+                super.drawLeadingMargin(c, p, x, dir, top, baseline, bottom,
+                                        text, start, end, first, layout);
+            }
+        }
+    }
+    
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
      */
@@ -1133,5 +1187,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 
         return Integer.parseInt(nm.substring(index), base) * sign;
     }
+
 
 }

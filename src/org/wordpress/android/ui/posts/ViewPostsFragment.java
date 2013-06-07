@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
@@ -40,7 +41,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.StringHelper;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ViewPostsFragment extends ListFragment {
@@ -234,11 +235,11 @@ public class ViewPostsFragment extends ListFragment {
         boolean drafts = loadDrafts();
 
         if (drafts) {
-            mPostIDs = StringHelper.mergeStringArrays(mDraftIDs, mPostIDs);
-            mTitles = StringHelper.mergeStringArrays(mDraftTitles, mTitles);
-            mDateCreatedFormatted = StringHelper.mergeStringArrays(
+            mPostIDs = StringUtils.mergeStringArrays(mDraftIDs, mPostIDs);
+            mTitles = StringUtils.mergeStringArrays(mDraftTitles, mTitles);
+            mDateCreatedFormatted = StringUtils.mergeStringArrays(
                     mDraftDateCreated, mDateCreatedFormatted);
-            mStatuses = StringHelper.mergeStringArrays(mDraftStatuses, mStatuses);
+            mStatuses = StringUtils.mergeStringArrays(mDraftStatuses, mStatuses);
         } else {
             if (mPostListAdapter != null) {
                 mPostListAdapter.notifyDataSetChanged();
@@ -249,6 +250,8 @@ public class ViewPostsFragment extends ListFragment {
             ListView listView = getListView();
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             listView.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
+            listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
+            listView.setDividerHeight(1);
             listView.removeFooterView(switcher);
             if (loadedPosts != null) {
                 if (loadedPosts.size() >= 20) {
@@ -386,6 +389,8 @@ public class ViewPostsFragment extends ListFragment {
 
             if (loadedPosts == null) {
                 refreshPosts(false);
+                if (!isPage)
+                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog()).execute(false);
             }
 
             return false;

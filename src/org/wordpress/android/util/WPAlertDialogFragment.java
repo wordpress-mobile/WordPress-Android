@@ -4,14 +4,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.PreferencesActivity;
 
 public class WPAlertDialogFragment extends SherlockDialogFragment implements
     DialogInterface.OnClickListener {
@@ -71,27 +75,43 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
             //invalid credentials
             b.setIcon(android.R.drawable.ic_dialog_alert);
             b.setTitle(R.string.connection_error);
-            if (error.contains("code 503"))
-                b.setMessage(getResources().getText(R.string.login_limit) + " " + getResources().getText(R.string.load_settings));
-            else
+            
+            if (WordPress.currentBlog.isDotcomFlag()) {
+                // Remove wpcom password since it is no longer valid
+                SharedPreferences.Editor editor = PreferenceManager
+                        .getDefaultSharedPreferences(this.getActivity().getApplicationContext()).edit();
+                editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+                editor.commit();
+                b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.please_sign_in));
+                b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent authIntent = new Intent(getActivity(), AccountSetupActivity.class);
+                        authIntent.putExtra("wpcom", true);
+                        authIntent.putExtra("auth-only", true);
+                        getActivity().startActivity(authIntent);
+                    }
+                });
+            } else {
                 b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.load_settings));
-            b.setCancelable(true);
-            b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                b.setCancelable(true);
+                b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
-                    settingsIntent.putExtra("id", WordPress.currentBlog.getId());
-                    getActivity().startActivity(settingsIntent);
-                }
-            });
-            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
+                        getActivity().startActivity(settingsIntent);
+                    }
+                });
+                b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                }
-            });
+                    }
+                });
+            }
             return b.create();
         } else {
             b.setIcon(android.R.drawable.ic_dialog_alert);

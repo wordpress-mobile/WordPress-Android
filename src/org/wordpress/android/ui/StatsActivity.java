@@ -187,7 +187,7 @@ public class StatsActivity extends WPActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.refresh_only, menu);
+        inflater.inflate(R.menu.basic_menu, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }

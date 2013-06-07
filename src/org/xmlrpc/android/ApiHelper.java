@@ -188,6 +188,7 @@ public class ApiHelper {
                 try {
                     versionResult = (Object) client.call("wp.getOptions", vParams);
                 } catch (XMLRPCException e) {
+                    return false;
                 }
 
                 if (versionResult != null) {
@@ -216,7 +217,8 @@ public class ApiHelper {
                         } else {
                             blog.setFeaturedImageCapable(false);
                         }
-                        blog.save("");
+                        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive())
+                            blog.save("");
                     } catch (Exception e) {
                     }
                 }
@@ -238,7 +240,7 @@ public class ApiHelper {
             try {
                 ApiHelper.refreshComments(context, commentParams);
             } catch (XMLRPCException e) {
-                e.printStackTrace();
+                return false;
             }
 
             return true;
@@ -311,7 +313,6 @@ public class ApiHelper {
         WordPress.wpDB.saveComments(dbVector);
 
         return allComments;
-
     }
 
     /**
@@ -380,7 +381,12 @@ public class ApiHelper {
     public static String getResponse(String urlString) {
         HttpRequest request = getHttpRequest(urlString);
         if (request != null) {
-            return request.body();
+            try {
+                String body = request.body();
+                return body;
+            } catch (HttpRequestException e) {
+                return null;
+            }
         } else {
             return null;
         }

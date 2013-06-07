@@ -1,0 +1,12 @@
+<project default="package">
+    <property file="local.properties"/>
+    <property file="project.properties"/>
+    <!-- Create a config class with values for this build -->
+    <target name="-pre-build" depends="wp-config" />
+    <target name="wp-config" depends="-setup"
+      description="Generates Config.java from local.properties">
+      <exec executable="./wpconfig">
+        <arg value="${source.absolute.dir}/org/wordpress/android/Config.java" />
+      </exec>      
+    </target>
+</project>

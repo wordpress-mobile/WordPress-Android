@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+require 'erb'
+
+constants = {}
+
+File.open('local.properties', 'r') do |f|
+  f.each_line do |line|
+    if line.index '='
+      name, value = line.split '=', 2
+      key = name.split '.'
+      constants[key[1..-1].join('_').upcase.strip] = value.strip if key[0] == 'wp'
+    end
+  end
+end
+
+File.open(ARGV[0], 'w') do |f|
+  f.puts ERB.new(<<-JAVA).result binding
+package org.wordpress.android;
+
+class Config {
+  <% constants.each do |name, value| %>
+    protected static final String <%=name%>="<%=value%>";
+  <% end %>
+}
+JAVA
+end

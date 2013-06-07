@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.ui.notifications.FollowRow
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:background="@drawable/list_bg_selector"
+  android:clickable="true"
+  android:focusable="true"
+  android:layout_height="wrap_content"
+  android:layout_width="match_parent"
+  android:layout_gravity="center_vertical"
+  android:paddingTop="8dp"
+  android:paddingBottom="8dp"
+  android:paddingLeft="8dp">
+  <com.android.volley.toolbox.NetworkImageView
+    android:id="@+id/avatar"
+    android:layout_height="48dp"
+    android:layout_width="48dp"
+    android:background="#CCCCCC"
+    android:layout_marginRight="8dp" />
+  <LinearLayout
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content" >
+    <TextView
+      android:id="@+id/name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:ellipsize="end"
+      android:singleLine="true"
+      android:textSize="20dp" />
+    <TextView
+      android:id="@+id/url"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:singleLine="true"
+      android:textColor="#666"
+      android:textSize="16dp"
+      android:fontFamily="sans-serif-light" />
+  </LinearLayout>
+  <View 
+      android:id="@+id/follow_divider"
+      android:layout_width="1px"
+      android:layout_height="fill_parent"
+      android:layout_marginLeft="8dp"
+      android:background="#cccccc" />
+  <ImageButton
+    android:id="@+id/follow_button"
+    android:tint="#858585"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:src="@drawable/follow_indicator"
+    android:contentDescription="@+string/follow"
+    android:background="@drawable/list_bg_selector"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp" />
+  
+</org.wordpress.android.ui.notifications.FollowRow>

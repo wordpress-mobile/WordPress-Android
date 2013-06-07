@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="#FFFFFF" >
+  <LinearLayout
+    android:id="@+id/note_fragment_container"
+    android:background="#FFFFFF"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <fragment
+      android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
+      android:id="@+id/notes_list"
+      android:layout_weight="1"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent" />
+  </LinearLayout>
+</RelativeLayout>

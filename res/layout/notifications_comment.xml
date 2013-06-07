@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/list_row_bg"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <include
+                android:id="@+id/header"
+                layout="@layout/notifications_detail_header" />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="1px"
+                android:scaleType="fitXY"
+                android:src="@drawable/list_divider" />
+
+            <include
+                android:id="@+id/follow_row"
+                layout="@layout/notifications_follow_row" />
+
+            <LinearLayout
+                android:id="@+id/moderate_section"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="1px"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/list_divider" />
+
+                <TextView
+                    android:id="@+id/moderate_comment_header"
+                    style="@style/WordPressSectionHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:text="@string/moderate_comment" />
+
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingBottom="8dp" >
+
+                    <LinearLayout
+                        android:id="@+id/moderate_buttons_container"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <ImageButton
+                            android:id="@+id/note_moderate_approve"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/list_bg_selector"
+                            android:contentDescription="@string/reply"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/moderate_approve"
+                            android:tint="#858585"
+                            android:visibility="gone" />
+
+                        <ImageButton
+                            android:id="@+id/note_moderate_spam"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/list_bg_selector"
+                            android:contentDescription="@string/reply"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/moderate_spam"
+                            android:tint="#858585"
+                            android:visibility="gone" />
+
+                        <ImageButton
+                            android:id="@+id/note_moderate_trash"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/list_bg_selector"
+                            android:contentDescription="@string/reply"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/moderate_trash"
+                            android:tint="#858585"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/comment_moderating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/moderating_comment"
+                        android:textAlignment="center"
+                        android:textColor="@color/wordpress_blue"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
+            
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="1px"
+                android:scaleType="fitXY"
+                android:src="@drawable/list_divider" />
+
+            <TextView
+                android:id="@+id/note_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:fontFamily="sans-serif-light"
+                android:linksClickable="true"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:textSize="18sp" />
+
+            <org.wordpress.android.ui.notifications.ReplyList
+                android:id="@+id/replies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#666" />
+
+    <org.wordpress.android.ui.notifications.ReplyField
+        android:id="@+id/replyField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:padding="8dp" >
+
+        <EditText
+            android:id="@+id/note_reply_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@+string/tap_to_reply"
+            android:inputType="text|textMultiLine|textCapSentences"
+            android:maxLines="4" />
+
+        <ImageButton
+            android:id="@+id/note_reply_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/list_bg_selector"
+            android:contentDescription="@string/reply"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ab_icon_send" />
+    </org.wordpress.android.ui.notifications.ReplyField>
+
+</LinearLayout>
