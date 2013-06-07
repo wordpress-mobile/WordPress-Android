@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.comments;
 
-import java.math.BigInteger;
 import java.net.URI;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +19,6 @@ import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -40,17 +36,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.commonsware.cwac.cache.SimpleWebImageCache;
-import com.commonsware.cwac.thumbnail.ThumbnailAdapter;
-import com.commonsware.cwac.thumbnail.ThumbnailBus;
-import com.commonsware.cwac.thumbnail.ThumbnailMessage;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -61,11 +53,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class CommentsListFragment extends ListFragment {
-    private static final int[] IMAGE_IDS = { R.id.avatar };
-    public ThumbnailAdapter thumbs = null;
     public ArrayList<Comment> model = null;
     private XMLRPCClient client;
     private String accountName = "", moderateErrorMsg = "";
@@ -133,13 +124,6 @@ public class CommentsListFragment extends ListFragment {
 
         switcher.addView(footer);
         switcher.addView(progress);
-
-        /*
-         * if (fromNotification) // dismiss the notification { //
-         * NotificationManager nm = (NotificationManager) //
-         * getSystemService(NOTIFICATION_SERVICE); // nm.cancel(22 +
-         * Integer.valueOf(id)); // loadComments(false, false); }
-         */
 
         getActivity().setTitle(accountName + " - Moderate Comments");
 
@@ -260,13 +244,13 @@ public class CommentsListFragment extends ListFragment {
                             Toast.LENGTH_SHORT).show();
                     checkedCommentTotal = 0;
                     hideModerationBar();
-                    thumbs.notifyDataSetChanged();
+                    getListView().invalidateViews();
                 } else {
                     // there was an xmlrpc error
                     if (!getActivity().isFinishing()) {
                         checkedCommentTotal = 0;
                         hideModerationBar();
-                        thumbs.notifyDataSetChanged();
+                        getListView().invalidateViews();
                         FragmentTransaction ft = getFragmentManager()
                             .beginTransaction();
                         WPAlertDialogFragment alert = WPAlertDialogFragment
@@ -389,28 +373,17 @@ public class CommentsListFragment extends ListFragment {
                         dateCreatedFormatted, comment, status, postTitle,
                         authorURL, authorEmail, URI
                                 .create("http://gravatar.com/avatar/"
-                                        + getMd5Hash(authorEmail.trim())
+                                        + StringUtils.getMd5Hash(authorEmail.trim())
                                         + "?s=140&d=404")));
             }
 
             if (!refreshOnly) {
-                try {
-                    ThumbnailBus bus = new ThumbnailBus();
-                    thumbs = new ThumbnailAdapter(
-                            getActivity(),
-                            new CommentAdapter(),
-                            new SimpleWebImageCache<ThumbnailBus, ThumbnailMessage>(
-                                    null, null, 101, bus), IMAGE_IDS);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-
                 ListView listView = this.getListView();
                 listView.removeFooterView(switcher);
                 if (loadedPosts.size() % 30 == 0) {
                     listView.addFooterView(switcher);
                 }
-                setListAdapter(thumbs);
+                setListAdapter(new CommentAdapter());
 
                 listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -419,7 +392,7 @@ public class CommentsListFragment extends ListFragment {
                         selectedPosition = position;
                         Comment comment = model.get((int) id);
                         onCommentSelectedListener.onCommentSelected(comment);
-                        thumbs.notifyDataSetChanged();
+                        getListView().invalidateViews();
                     }
                 });
 
@@ -475,9 +448,7 @@ public class CommentsListFragment extends ListFragment {
                     }
                 });
             } else {
-                if (thumbs != null) {
-                    thumbs.notifyDataSetChanged();
-                }
+                getListView().invalidateViews();
             }
 
             if (this.shouldSelectAfterLoad) {
@@ -549,20 +520,6 @@ public class CommentsListFragment extends ListFragment {
 
     }
 
-    /*
-     * @Override public Object onRetainNonConfigurationInstance() { return
-     * (model); }
-     */
-
-    private void goBlooey(Throwable t) {
-        Log.e("WordPress", "Exception!", t);
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        WPAlertDialogFragment alert = WPAlertDialogFragment.newInstance(t
-                .toString());
-        alert.show(ft, "alert");
-    }
-
     class CommentAdapter extends ArrayAdapter<Comment> {
 
         int sdk_version = 7;
@@ -585,8 +542,9 @@ public class CommentsListFragment extends ListFragment {
 
             if (row == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-
                 row = inflater.inflate(R.layout.comment_row, null);
+                NetworkImageView avatar = (NetworkImageView)row.findViewById(R.id.avatar);
+                avatar.setDefaultImageResId(R.drawable.placeholder);
                 wrapper = new CommentEntryWrapper(row);
                 row.setTag(wrapper);
             } else {
@@ -605,7 +563,7 @@ public class CommentsListFragment extends ListFragment {
         private TextView comment = null;
         private TextView status = null;
         private TextView postTitle = null;
-        private ImageView avatar = null;
+        private NetworkImageView avatar = null;
         private View row = null;
         private CheckBox bulkCheck = null;
         private RelativeLayout bulkEditGroup = null;
@@ -669,14 +627,7 @@ public class CommentsListFragment extends ListFragment {
                 }
             });
 
-            if (s.profileImageUrl != null) {
-                try {
-                    getAvatar().setImageResource(R.drawable.placeholder);
-                    getAvatar().setTag(s.profileImageUrl.toString());
-                } catch (Throwable t) {
-                    goBlooey(t);
-                }
-            }
+            getAvatar().setImageUrl(s.profileImageUrl.toString(), WordPress.imageLoader);
         }
 
         TextView getName() {
@@ -721,9 +672,9 @@ public class CommentsListFragment extends ListFragment {
             return (postTitle);
         }
 
-        ImageView getAvatar() {
+        NetworkImageView getAvatar() {
             if (avatar == null) {
-                avatar = (ImageView) row.findViewById(R.id.avatar);
+                avatar = (NetworkImageView) row.findViewById(R.id.avatar);
             }
 
             return (avatar);
@@ -762,23 +713,6 @@ public class CommentsListFragment extends ListFragment {
 
             }
 
-        }
-    }
-
-    public static String getMd5Hash(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(input.getBytes());
-            BigInteger number = new BigInteger(1, messageDigest);
-            String md5 = number.toString(16);
-
-            while (md5.length() < 32)
-                md5 = "0" + md5;
-
-            return md5;
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("MD5", e.getLocalizedMessage());
-            return null;
         }
     }
 
@@ -1020,18 +954,16 @@ public class CommentsListFragment extends ListFragment {
 
             if (commentsResult == null) {
 
-                if (thumbs != null) {
-                    if (model.size() == 1) {
-                        WordPress.wpDB.clearComments(WordPress.currentBlog
-                                .getId());
-                        model.clear();
-                        allComments.clear();
-                        thumbs.notifyDataSetChanged();
-                        onCommentStatusChangeListener
-                                .onCommentStatusChanged("clear");
-                        WordPress.currentComment = null;
-                        loadComments(false, false);
-                    }
+                if (model.size() == 1) {
+                    WordPress.wpDB.clearComments(WordPress.currentBlog
+                            .getId());
+                    model.clear();
+                    allComments.clear();
+                    getListView().invalidateViews();
+                    onCommentStatusChangeListener
+                            .onCommentStatusChanged("clear");
+                    WordPress.currentComment = null;
+                    loadComments(false, false);
                 }
 
                 onAnimateRefreshButton.onAnimateRefreshButton(false);

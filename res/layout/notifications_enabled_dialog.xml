@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp" >
+    <Button
+        android:id="@+id/notificationsOff"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/notifications_turn_off"
+        />
+    <Button
+        android:id="@+id/notifications1Hour"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/notifications_turn_off_1hr"
+        />
+    <Button
+        android:id="@+id/notifications8Hours"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/notifications_turn_off_8hr"
+        />
+</LinearLayout>

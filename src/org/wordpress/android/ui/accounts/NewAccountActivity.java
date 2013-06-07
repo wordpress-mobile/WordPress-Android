@@ -29,7 +29,7 @@ public class NewAccountActivity extends Activity {
         Button dotComButton = (Button) findViewById(R.id.dotcomExisting);
         dotComButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(NewAccountActivity.this, AddAccountActivity.class);
+                Intent i = new Intent(NewAccountActivity.this, AccountSetupActivity.class);
                 i.putExtra("wpcom", true);
                 startActivityForResult(i, EXISTING_COM_ACCOUNT_REQUEST);
             }
@@ -38,7 +38,7 @@ public class NewAccountActivity extends Activity {
         Button dotOrgButton = (Button) findViewById(R.id.dotorgExisting);
         dotOrgButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(NewAccountActivity.this, AddAccountActivity.class);
+                Intent i = new Intent(NewAccountActivity.this, AccountSetupActivity.class);
                 startActivityForResult(i, EXISTING_ORG_ACCOUNT_REQUEST);
             }
         });
@@ -53,7 +53,7 @@ public class NewAccountActivity extends Activity {
                 if (resultCode == RESULT_OK && data != null) {
                     String username = data.getStringExtra("username");
                     if (username != null) {
-                        Intent i = new Intent(NewAccountActivity.this, AddAccountActivity.class);
+                        Intent i = new Intent(NewAccountActivity.this, AccountSetupActivity.class);
                         i.putExtra("wpcom", true);
                         i.putExtra("username", username);
                         startActivityForResult(i, EXISTING_COM_ACCOUNT_REQUEST);

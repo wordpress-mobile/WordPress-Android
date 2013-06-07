@@ -1,7 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="notifications_turn_off">关闭</string>
+	<string name="notifications_turn_off_1hr">关闭 1 小时</string>
+	<string name="notifications_turn_off_8hr">关闭 8 小时</string>
+	<string name="tap_to_reply">轻按可回复</string>
+	<string name="notification_replying">正在发表回复</string>
+	<string name="note_reply_successful">回复已发表</string>
+	<string name="follow">关注</string>
+	<string name="unfollow">取消关注</string>
+	<string name="new_notifications">%d 条新通知</string>
+	<string name="more_notifications">以及其他 %d 人。</string>
+	<string name="tap_to_view">轻按可查看。</string>
+	<string name="moderate_comment">管理评论</string>
+	<string name="tooltip_follow">关注或取消关注该博客</string>
+	<string name="error_following_blog">抱歉，尝试关注该博客时发生了一个错误。请稍候再试。</string>
+	<string name="sure_sign_out">你确定要从 WordPress.com 退出登录吗?</string>
+	<string name="sign_out_confirm">你确定要退出吗?</string>
+	<string name="please_sign_in">请再次登录。</string>
+	<string name="wpcom">WordPress.com</string>
+	<string name="sign_in">登录</string>
+	<string name="sign_out">退出</string>
+	<string name="confirm_delete">确认删除</string>
+	<string name="confirm_delete_data">是否确定要删除该评论?</string>
+	<string name="attempting_configure">正在登录…</string>
+	<string name="log_in">登录</string>
+	<string name="notifications">通知</string>
+	<string name="manage_notifications">管理通知</string>
+	<string name="enable_notifications">启用通知</string>
+	<string name="types">类型</string>
+	<string name="options">选项</string>
+	<string name="add_comment_send">发送评论</string>
+	<string name="add_comment_enter">输入评论:</string>
+	<string name="comment_added">评论已成功添加</string>
+	<string name="add_comment">添加评论</string>
+	<string name="write_comment">撰写评论</string>
+	<string name="add_comment_required">必填字段</string>
+	<string name="add_comment_please_enter">请在评论字段输入一些内容。</string>
+	<string name="attempting_add_comment">正在尝试发表评论</string>
+	<string name="view_admin">查看管理</string>
+	<string name="edit_comment">编辑评论</string>
+	<string name="share_url_page">分享页面</string>
+	<string name="fatal_db_error">非常抱歉，尝试创建应用数据库时发生错误。请尝试重新安装应用。</string>
+	<string name="loading">正在加载…</string>
+	<string name="view_site">查看站点</string>
+	<string name="open_source_licenses">开源许可协议</string>
+	<string name="post_signature">文章签名</string>
+	<string name="add_tagline">为新发表的博文添加签名</string>
+	<string name="httpuser">HTTP 用户名</string>
+	<string name="httppassword">HTTP 密码</string>
+	<string name="http_credentials">HTTP 登录凭据 (可选)</string>
 	<string name="enable_blogs">启用博客</string>
-	<string name="notifications_interval">更新间隔</string>
 	<string name="tagline">数秒内即可撰写博客。</string>
 	<string name="file_error_create">无法创建上传媒体所需的临时文件。请确保设备有足够的空闲空间。</string>
 	<string name="error_media_upload">上传媒体时出错</string>
@@ -24,7 +72,6 @@
 	<string name="category_name">分类名称</string>
 	<string name="category_slug">分类代号 (可选)</string>
 	<string name="category_desc">分类描述 (可选)</string>
-	<string name="log_in">登录</string>
 	<string name="add_account_blog_url">博客 URL</string>
 	<string name="reader">阅读器</string>
 	<string name="out_of_memory">设备内存已满。</string>
@@ -89,7 +136,6 @@
 	<string name="link_enter_url_text">链接文字 (可选)</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">发自 WordPress for Android</string>
-	<string name="comment_notifications">评论通知</string>
 	<string name="mark_spam">垃圾</string>
 	<string name="uploading">正在上传</string>
 	<string name="uploading_media_item">正在上传媒体项 #</string>
@@ -112,7 +158,6 @@
 	<string name="upload_failed">上传失败</string>
 	<string name="invalid_url_message">请检查所输博客 URL 是否有效。</string>
 	<string name="view_in_browser">在浏览器中查看</string>
-	<string name="reply_please_enter">请在回复字段中输入一些内容。</string>
 	<string name="untitled">无标题</string>
 	<string name="empty_fields">未找到内容</string>
 	<string name="title_post_required">请输入一些博文内容或附加媒体对象。</string>
@@ -229,8 +274,6 @@
 	<string name="reply_enter">输入回复：</string>
 	<string name="reply_send">发送回复</string>
 	<string name="reply_to_comment">回复评论</string>
-	<string name="reply_required">必填字段</string>
-	<string name="loading">正在加载...</string>
 	<string name="on">于</string>
 	<string name="approved">已通过</string>
 	<string name="unapproved">未通过</string>
@@ -250,7 +293,6 @@
 	<string name="mark_unapproved">标记未通过</string>
 	<string name="reply">回复</string>
 	<string name="account_setup">账号配置</string>
-	<string name="attempting_configure">正在尝试配置账号</string>
 	<string name="cancel_draft">取消草稿</string>
 	<string name="publish">发布?</string>
 	<string name="yes">是</string>
@@ -259,4 +301,5 @@
 	<string name="sure_to_cancel_edit">是否确定要取消编辑该博文?</string>
 	<string name="sure_to_cancel_edit_page">是否确定要取消编辑该页面?</string>
 	<string name="preview">预览</string>
+	<string name="reply_please_enter">请在回复字段输入一些内容。</string>
 </resources>

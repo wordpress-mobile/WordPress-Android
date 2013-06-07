@@ -1,2 +1,6 @@
 /bin
 /gen
+local.properties
+res/raw/config.properties
+.jdbrc
+src/org/wordpress/android/Config.java

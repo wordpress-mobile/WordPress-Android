@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.ui.notifications.ReplyRow
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/reply_row"
+  android:layout_width="match_parent"
+  android:layout_height="44dp"
+  android:layout_marginTop="1dp"
+  android:layout_marginBottom="1dp"
+  android:orientation="horizontal"
+  android:padding="0dp"
+  android:background="@drawable/reply_row_background" >
+  <com.android.volley.toolbox.NetworkImageView
+    android:id="@+id/avatar"
+    android:visibility="gone"
+    android:layout_width="44dp"
+    android:layout_height="44dp"
+    android:layout_gravity="center_vertical"
+    android:background="#666" />
+  <ProgressBar
+    android:id="@+id/progress"
+    android:layout_margin="10dp"
+    android:layout_height="24dp"
+    android:layout_width="24dp"
+    android:layout_gravity="center_vertical"
+    android:indeterminateDrawable="@drawable/throbber"
+    android:indeterminateOnly="true" />
+  <ImageView
+    android:id="@+id/error"
+    android:layout_margin="6dp"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:layout_gravity="center_vertical"
+    android:visibility="gone"
+    android:src="@android:drawable/stat_notify_error" />
+  <TextView
+    android:id="@+id/text"
+    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_weight="1.0"
+    android:ellipsize="end"
+    android:singleLine="true"
+    android:textSize="16dp"
+    android:textColor="@drawable/reply_row_textcolor"
+    android:duplicateParentState="true"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_gravity="center_vertical"
+    android:text="Replying ..." />
+  <ImageView
+    android:id="@+id/button"
+    android:visibility="gone"
+    android:layout_margin="6dp"
+    android:layout_height="32dp"
+    android:layout_width="32dp"
+    android:layout_gravity="center_vertical"
+    android:scaleType="fitCenter"
+    android:tint="#00FF0000"
+    android:background="@drawable/dashboard_icon_wp" />
+</org.wordpress.android.ui.notifications.ReplyRow>

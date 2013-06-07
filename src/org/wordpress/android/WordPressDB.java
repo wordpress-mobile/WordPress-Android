@@ -32,7 +32,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -125,7 +125,7 @@ public class WordPressDB {
 
     private SQLiteDatabase db;
 
-    protected static final String PASSWORD_SECRET = "nottherealpasscode";
+    protected static final String PASSWORD_SECRET = Config.DB_SECRET;
 
     public String defaultBlog = "";
 
@@ -151,7 +151,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
-
+        
         try {
             if (db.getVersion() < 1) { // user is new install
                 db.execSQL(ADD_BLOGID);
@@ -213,6 +213,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 2) {
                 db.delete(POSTS_TABLE, null, null);
@@ -244,6 +245,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 3) {
                 db.delete(POSTS_TABLE, null, null);
@@ -272,6 +274,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 4) {
                 db.delete(POSTS_TABLE, null, null);
@@ -300,6 +303,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 5) {
                 db.delete(POSTS_TABLE, null, null);
@@ -327,6 +331,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 6) {
                 db.delete(POSTS_TABLE, null, null);
@@ -352,6 +357,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 7) {
                 db.delete(POSTS_TABLE, null, null);
@@ -369,6 +375,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 8) {
                 db.delete(POSTS_TABLE, null, null);
@@ -385,6 +392,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 9) {
                 db.delete(POSTS_TABLE, null, null);
@@ -401,6 +409,7 @@ public class WordPressDB {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePasswords();
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 10) {
                 db.delete(POSTS_TABLE, null, null);
@@ -471,6 +480,7 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 11) {
                 db.execSQL(ADD_SCALED_IMAGE);
@@ -480,24 +490,32 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 12) {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 13) {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 14) {
                 db.execSQL(ADD_BLOG_OPTIONS);
                 migratePreferences(ctx);
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 15) {
                 migratePreferences(ctx);
+                migrateWPComAccount();
+                db.setVersion(DATABASE_VERSION);
+            } else if (db.getVersion() == 16) {
+                migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             }
         } catch (SQLException e) {
@@ -505,7 +523,7 @@ public class WordPressDB {
         }
 
     }
-    
+
     private void migratePreferences(Context ctx) {
         // Migrate preferences out of the db
         Map<?, ?> notificationOptions = getNotificationOptions();
@@ -527,6 +545,24 @@ public class WordPressDB {
             }
             editor.commit();
         }
+    }
+    
+    private void migrateWPComAccount() {
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "username", "password" }, "dotcomFlag=1", null, null,
+                null, null);
+        
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            String username = c.getString(0);
+            String password = c.getString(1);
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, username);
+            editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, password);
+            editor.commit();
+        }
+        
+        c.close();
     }
 
     public long addAccount(String url, String homeURL, String blogName, String username,
@@ -555,32 +591,38 @@ public class WordPressDB {
         return db.insert(SETTINGS_TABLE, null, values);
     }
 
+    public boolean deactivateAccounts() {
+
+        ContentValues values = new ContentValues();
+        values.put("password", "");
+
+        boolean returnValue = db.update(SETTINGS_TABLE, values, null, null) > 0;
+
+        return (returnValue);
+    }
+
     public List<Map<String, Object>> getAccounts() {
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
-                "username", "runService", "blogId", "url" }, null, null, null,
+                "username", "blogId", "url", "password" }, null, null, null,
                 null, null);
-        int id;
-        String blogName, username, url;
-        int blogId;
-        int runService;
+
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
 
-            id = c.getInt(0);
-            blogName = c.getString(1);
-            username = c.getString(2);
-            runService = c.getInt(3);
-            blogId = c.getInt(4);
-            url = c.getString(5);
-            if (id > 0) {
+            int id = c.getInt(0);
+            String blogName = c.getString(1);
+            String username = c.getString(2);
+            int blogId = c.getInt(3);
+            String url = c.getString(4);
+            String password = c.getString(5);
+            if (!password.equals("") && id > 0) {
                 Map<String, Object> thisHash = new HashMap<String, Object>();
                 thisHash.put("id", id);
                 thisHash.put("blogName", blogName);
                 thisHash.put("username", username);
-                thisHash.put("runService", runService);
                 thisHash.put("blogId", blogId);
                 thisHash.put("url", url);
                 accounts.add(thisHash);
@@ -592,23 +634,26 @@ public class WordPressDB {
         return accounts;
     }
 
-    public boolean checkMatch(String blogName, String blogURL, String username) {
+    public long checkMatch(String blogName, String blogURL, String username, String password) {
 
-        Cursor c = db.query(SETTINGS_TABLE, new String[] { "blogName", "url" },
+        Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
                 "blogName='" + addSlashes(blogName) + "' AND url='"
                         + addSlashes(blogURL) + "'" + " AND username='"
                         + username + "'", null, null, null, null);
         int numRows = c.getCount();
-        boolean result = false;
 
         if (numRows > 0) {
-            // this account is already saved, yo!
-            result = true;
+            // This account is already saved
+            c.moveToFirst();
+            long blogID = c.getLong(0);
+            ContentValues values = new ContentValues();
+            values.put("password", encryptPassword(password));
+            db.update(SETTINGS_TABLE, values, "id=" + blogID, null);
+            return blogID;
         }
 
         c.close();
-
-        return result;
+        return -1;
     }
 
     public static String addSlashes(String text) {
@@ -673,16 +718,19 @@ public class WordPressDB {
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
                 null) > 0;
         if (isWPCom) {
-            // update the login for other wordpress.com accounts
-            ContentValues userPass = new ContentValues();
-            userPass.put("username", username);
-            userPass.put("password", encryptPassword(password));
-            returnValue = db.update(SETTINGS_TABLE, userPass, "username=\""
-                    + originalUsername + "\" AND dotcomFlag=1", null) > 0;
+            returnValue = updateWPComCredentials(username, password);
         }
 
-
         return (returnValue);
+    }
+    
+    public boolean updateWPComCredentials(String username, String password) {
+        // update the login for wordpress.com blogs
+        ContentValues userPass = new ContentValues();
+        userPass.put("username", username);
+        userPass.put("password", encryptPassword(password));
+        return db.update(SETTINGS_TABLE, userPass, "username=\""
+                + username + "\" AND dotcomFlag=1", null) > 0;
     }
 
     public boolean deleteAccount(Context ctx, int id) {
@@ -1650,7 +1698,7 @@ public class WordPressDB {
         return clearText;
     }
 
-    protected String decryptPassword(String encryptedPwd) {
+    public static String decryptPassword(String encryptedPwd) {
         try {
             DESKeySpec keySpec = new DESKeySpec(
                     PASSWORD_SECRET.getBytes("UTF-8"));

@@ -1,20 +1,58 @@
 package org.wordpress.android;
 
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+
+import com.google.android.gcm.GCMRegistrar;
+import com.wordpress.rest.Oauth;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xmlrpc.android.WPComXMLRPCApi;
+import org.xmlrpc.android.XMLRPCCallback;
+import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.WPRestClient;
+import org.wordpress.android.Config;
 
 public class WordPress extends Application {
+
+    public static final String NOTES_CACHE="notifications.json";
+    public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
+    public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
+    public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
+    private static final String APP_ID_PROPERTY="oauth.app_id";
+    private static final String APP_SECRET_PROPERTY="oauth.app_secret";
+    private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -24,19 +62,110 @@ public class WordPress extends Application {
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
+    public static WPRestClient restClient;
+    public static RequestQueue requestQueue;
+    public static ImageLoader imageLoader;
+    public static JSONObject latestNotes;
+
+    public static final String TAG="WordPress";
 
     @Override
     public void onCreate() {
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
         
+        // Volley networking setup
+        requestQueue = Volley.newRequestQueue(this);
+        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        // Use a small slice of available memory for the image cache
+        int cacheSize = maxMemory / 32;
+        imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+        
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
             shouldRestoreSelectedActivity = true;
+
+        restClient = new WPRestClient(requestQueue, new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
+        registerForCloudMessaging(this);
         
+        loadNotifications(this);
         super.onCreate();
     }
     
+    public static void registerForCloudMessaging(Context ctx) {
+        
+        if (WordPress.hasValidWPComCredentials(ctx)) {
+            String token = null;
+            try {
+                // Register for Google Cloud Messaging
+                GCMRegistrar.checkDevice(ctx);
+                GCMRegistrar.checkManifest(ctx);
+                token = GCMRegistrar.getRegistrationId(ctx);
+                String gcmId = Config.GCM_ID;
+                if (gcmId != null && token.equals("")) {
+                    GCMRegistrar.register(ctx, gcmId);
+                } else {
+                    // Send the token to WP.com in case it was invalidated
+                    registerWPComToken(ctx, token);
+                    Log.v("WORDPRESS", "Already registered for GCM");
+                }
+            } catch (Exception e) {
+                Log.v("WORDPRESS", "Could not register for GCM: " + e.getMessage());
+            }
+        }
+    }
+    
+    public static void registerWPComToken(final Context ctx, String token) {
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String uuid = settings.getString("wp_pref_notifications_uuid", null);
+        if (uuid == null)
+            return;
+        Object[] params = {
+                settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
+                token,
+                uuid,
+                "android",
+                false
+        };
+
+        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+        client.callAsync(new XMLRPCCallback() {
+            public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Successfully registered device on WP.com");
+                new WPComXMLRPCApi().getNotificationSettings(null, ctx); 
+            }
+
+            public void onFailure(long id, XMLRPCException error) {
+                Log.v("WORDPRESS", error.getMessage());
+            }
+        }, "wpcom.mobile_push_register_token", params);
+    }
+    
+    public static void unregisterWPComToken(Context ctx, String token) {
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        Object[] params = {
+                settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
+                token,
+                false,
+                "android"
+        };
+
+        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+        client.callAsync(new XMLRPCCallback() {
+            public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Successfully unregistered device on WP.com");
+            }
+
+            public void onFailure(long id, XMLRPCException error) {
+                Log.v("WORDPRESS", error.getMessage());
+            }
+        }, "wpcom.mobile_push_unregister_token", params);
+    }
+
     /**
      * Get versionName from Manifest.xml
      * @return versionName
@@ -103,18 +232,12 @@ public class WordPress extends Application {
      * @return the blog with the specified ID, or null if blog could not be retrieved.
      */
     public static Blog getBlog(int id) {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
-        for (Map<String, Object> account : accounts) {
-            int accountId = (Integer) account.get("id");
-            if (accountId == id) {
-                try {
-                    return new Blog(id);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            Blog blog = new Blog(id);
+            return blog;
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -152,5 +275,189 @@ public class WordPress extends Application {
         }
 
         return currentBlog;
+    }
+    /**
+     * Restores notifications from cached file
+     */
+    public static void loadNotifications(Context context){
+        File file = new File(context.getCacheDir(), NOTES_CACHE);
+        BufferedReader buf = null;
+        StringBuilder json = null;
+        try {
+            buf = new BufferedReader(new FileReader(file));
+            json = new StringBuilder();
+            String line;
+            do {
+                line = buf.readLine();
+                json.append(line);
+            } while(line == null);
+        } catch (java.io.FileNotFoundException e) {
+            json = null;
+            Log.e(TAG, "No cached notes", e);
+        } catch (IOException e) {
+            json = null;
+            Log.e(TAG, "Could not read cached notes", e);
+        } finally {
+            try {
+                if (buf != null) {
+                    buf.close();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Couldn't close file buffer", e);
+            }
+        }
+        if (json == null) {
+            Log.d(TAG, "Could not find cached notes");
+            return;
+        }
+        try {
+            latestNotes = new JSONObject(json.toString());
+        } catch (JSONException e) {
+            latestNotes = null;
+            Log.e(TAG, "Failed to parse note json", e);
+            return;
+        }
+        Log.d(TAG, "Restored notes");
+    }
+    /**
+     * Refreshes latest notes and stores a copy of the response to disk.
+     */
+    public static void refreshNotifications(final Context context,
+                                            final RestRequest.Listener listener,
+                                            final RestRequest.ErrorListener errorListener){
+        restClient.getNotifications(
+            new RestRequest.Listener(){
+                @Override
+                public void onResponse(JSONObject response){
+                    latestNotes = response;
+                    File file = new File(context.getCacheDir(), NOTES_CACHE);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    FileWriter writer = null;
+                    try {
+                        String json = response.toString();
+                        writer = new FileWriter(file);
+                        writer.write(json, 0, json.length());
+                        writer.close();
+                        Log.d(TAG, String.format("Wrote notes json to %s", file));
+                    } catch (IOException e) {
+                        Log.d(TAG, String.format("Failed to cache notifications to %s", file));
+                    } finally {
+                        try {
+                            if (writer != null) {
+                                writer.close();                                    
+                            }
+                        } catch (IOException e) {
+                            writer = null;
+                        }
+                    }
+                    Log.d(TAG, String.format("Store file here %s", file));
+                    if (listener != null) {
+                        listener.onResponse(response);                        
+                    }
+                }
+            },
+            new RestRequest.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error){
+                    if (errorListener != null) {
+                        errorListener.onErrorResponse(error)                      ;
+                    }
+                }
+            }
+        );
+    }
+    /**
+     * Delete cached notifications, usually due to account logout
+     */
+    public static void deleteCachedNotifications(Context context){
+        File file = new File(context.getCacheDir(), NOTES_CACHE);
+        if (file.exists()) {
+            file.delete();
+        }
+        latestNotes = null;
+    }
+    
+    /**
+     * Checks for WordPress.com credentials
+     * 
+     * @return true if we have credentials or false if not
+     */
+    public static boolean hasValidWPComCredentials(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+        String password = settings.getString(WPCOM_PASSWORD_PREFERENCE, null);
+        
+        if (username != null && password != null)
+            return true;
+        else 
+            return false;
+    }
+    
+    class OauthAuthenticator implements WPRestClient.Authenticator {
+        private final RequestQueue mQueue = Volley.newRequestQueue(WordPress.this);
+        @Override
+        public void authenticate(WPRestClient.Request request){
+            // set the access token if we have one
+            if (!hasValidWPComCredentials(WordPress.this)) {
+                request.abort(new VolleyError("Missing WordPress.com Account"));
+            } else {
+                requestAccessToken(request);
+            }
+        }
+        public void requestAccessToken(final WPRestClient.Request request){
+            final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.this);
+            String username = settings.getString(WPCOM_USERNAME_PREFERENCE, null);
+            String password = WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, null));
+            Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
+            // make oauth volley request
+            Request oauthRequest = oauth.makeRequest(username, password,
+                new Oauth.Listener(){
+                    @Override
+                    public void onResponse(Oauth.Token token){
+                        settings.edit().putString(ACCESS_TOKEN_PREFERENCE, token.toString())
+                            .commit();
+                        request.setAccessToken(token);
+                        request.send();
+                    }
+                },
+                new Oauth.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        request.abort(error);
+                    }
+                }
+            );
+            mQueue.add(oauthRequest);
+            // add oauth request to the request queue
+            
+        }
+    }
+
+    /**
+     * Sign out from all accounts by clearing out the password, which will require user to sign in
+     * again
+     */
+    public static void signOut(Context context) {
+        unregisterWPComToken(
+                context,
+                GCMRegistrar.getRegistrationId(context));
+        try {
+            GCMRegistrar.checkDevice(context);
+            GCMRegistrar.unregister(context);
+        } catch (Exception e) {
+            Log.v("WORDPRESS", "Could not unregister for GCM: " + e.getMessage());
+        }
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(context).edit();
+        editor.remove(WordPress.WPCOM_USERNAME_PREFERENCE);
+        editor.remove(WordPress.WPCOM_PASSWORD_PREFERENCE);
+        editor.remove(WordPress.ACCESS_TOKEN_PREFERENCE);
+        editor.commit();
+        wpDB.deactivateAccounts();
+        wpDB.updateLastBlogId(-1);
+        currentBlog = null;
+        restClient.clearAccessToken();
     }
 }
