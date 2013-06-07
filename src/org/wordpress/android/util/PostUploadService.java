@@ -100,7 +100,6 @@ public class PostUploadService extends Service {
                 notificationIntent.setAction("android.intent.action.MAIN");
                 notificationIntent.addCategory("android.intent.category.LAUNCHER");
                 notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-                notificationIntent.putExtra("fromNotification", true);
                 notificationIntent.putExtra("errorMessage", error);
                 notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -136,7 +135,6 @@ public class PostUploadService extends Service {
             notificationIntent.setAction("android.intent.action.MAIN");
             notificationIntent.addCategory("android.intent.category.LAUNCHER");
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getBlogID())));
-            notificationIntent.putExtra("fromNotification", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             n.setLatestEventInfo(context, message, message, pendingIntent);
