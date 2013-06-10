@@ -92,6 +92,12 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
     @Override
     public void onStart(){
         super.onStart();
+
+        if (getNote() == null && getActivity() != null) {
+            ((NotificationsActivity)getActivity()).popNoteDetail();
+            return;
+        }
+
         mFollowRow.getImageView().setImageUrl(getNote().getIconURL(), WordPress.imageLoader);
         SpannableStringBuilder html = (SpannableStringBuilder) getNote().getCommentBody();
         final Html.ImageGetter imgGetter = new AsyncImageGetter(mCommentText);
