@@ -346,7 +346,7 @@
   <string name="retry_reply">Reply failed. Tap to retry.</string>
   <string name="reply_failed">Reply failed.</string>
   <string name="tap_retry">Tap to retry.</string>
-
+  
   <!-- reader -->
   <string name="reader">Reader</string>
   <string name="topics">Topics</string>
