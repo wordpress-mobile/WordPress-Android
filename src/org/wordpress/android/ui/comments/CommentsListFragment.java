@@ -954,7 +954,7 @@ public class CommentsListFragment extends ListFragment {
 
             if (commentsResult == null) {
 
-                if (model.size() == 1) {
+                if (model != null && model.size() == 1) {
                     WordPress.wpDB.clearComments(WordPress.currentBlog
                             .getId());
                     model.clear();
