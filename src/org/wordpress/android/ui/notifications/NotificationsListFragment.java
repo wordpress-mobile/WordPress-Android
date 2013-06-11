@@ -140,7 +140,8 @@ public class NotificationsListFragment extends ListFragment {
             if (notes.size() == 0) {
                 // No more notes available
                 mAllNotesLoaded = true;
-                mProgressFooterView.setVisibility(View.GONE);
+                if(mProgressFooterView != null)
+                    mProgressFooterView.setVisibility(View.GONE);
             } else {
                 Iterator<Note> noteIterator = notes.iterator();
                 while(noteIterator.hasNext()){
