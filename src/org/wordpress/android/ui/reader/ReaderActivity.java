@@ -246,7 +246,10 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
                 readerPager.setCurrentItem(readerPager.getCurrentItem() - 1);
                 supportInvalidateOptionsMenu();
                 if (readerPager.getCurrentItem() == 1) {
-                    mMenuDrawer.setDrawerIndicatorEnabled(true);
+                    try {
+                        mMenuDrawer.setDrawerIndicatorEnabled(true);
+                    } catch (Exception e) {
+                    }
                 }
                 return true;
             } 
@@ -286,7 +289,10 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
     @Override
     public void onPostSelected(String requestedURL) {
         readerPager.setCurrentItem(2, true);
-        mMenuDrawer.setDrawerIndicatorEnabled(false);
+        try {
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+        } catch (Exception e) {
+        }
         supportInvalidateOptionsMenu();
     }
 
@@ -299,7 +305,10 @@ public class ReaderActivity extends WPActionBarActivity implements ChangeTopicLi
             }
             readerPager.setCurrentItem(readerPager.getCurrentItem() - 1, true);
             if (readerPager.getCurrentItem() == 1) {
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
+                try {
+                    mMenuDrawer.setDrawerIndicatorEnabled(true);
+                } catch (Exception e) {
+                }
             }
             supportInvalidateOptionsMenu();
         } else
