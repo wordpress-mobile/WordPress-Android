@@ -35,6 +35,13 @@ public class GCMIntentService extends GCMBaseIntentService {
     private int notificationId = 1337;
 
     @Override
+    protected String[] getSenderIds(Context context) {
+        String[] senderIds = new String[1];
+        senderIds[0] = Config.GCM_ID;
+        return senderIds;
+    }
+
+    @Override
     protected void onError(Context context, String errorId) {
         Log.v("WORDPRESS", "GCM Error: " + errorId);
     }
