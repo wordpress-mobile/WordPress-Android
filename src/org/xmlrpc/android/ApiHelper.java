@@ -13,11 +13,13 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 
@@ -313,6 +315,70 @@ public class ApiHelper {
         WordPress.wpDB.saveComments(dbVector);
 
         return allComments;
+    }
+    
+    public static class GetMediaTask extends AsyncTask<List<?>, Void, Boolean> {
+
+        public interface Callback {
+            public void onSuccess();
+        }
+        
+        private Callback mCallback;
+
+        public GetMediaTask(Callback callback) {
+            mCallback = callback;
+        }
+        
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            Log.d("WordPress", "ApiHelper - starting getMediaTask");
+            
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            
+            if(WordPress.currentBlog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return false;
+            }
+            
+            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+                    WordPress.currentBlog.getHttpuser(),
+                    WordPress.currentBlog.getHttppassword());
+            
+            Object[] apiParams = { 
+                    WordPress.currentBlog.getBlogId(),
+                    WordPress.currentBlog.getUsername(),
+                    WordPress.currentBlog.getPassword()
+            };
+            
+            Object[] results = null;
+            try {
+                results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", "ApiHelper - failed to get media library");
+                Log.e("WordPress", e.getMessage());
+            }
+            
+            if(results != null) {
+
+                Map<?, ?> resultMap;
+                
+                for(Object result : results) {
+                    resultMap = (Map<?, ?>) result;
+                    WordPress.wpDB.saveMediaFile(new MediaFile(String.valueOf(WordPress.currentBlog.getBlogId()), resultMap));
+                }
+            }
+            
+            return true;
+        }
+        
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(result && mCallback != null) {
+                mCallback.onSuccess();
+            }
+        }
+        
     }
 
     /**

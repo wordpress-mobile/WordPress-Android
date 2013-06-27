@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +33,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -122,6 +123,13 @@ public class WordPressDB {
     private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
+    
+    // add thumbnailURL, thumbnailPath and fileURL to media
+    private static final String ADD_MEDIA_THUMBNAIL_PATH = "alter table media add thumbnailPath text default '';";
+    private static final String ADD_MEDIA_THUMBNAIL_URL = "alter table media add thumbnailURL text default '';";
+    private static final String ADD_MEDIA_FILE_URL = "alter table media add fileURL text default '';";
+    private static final String ADD_MEDIA_UNIQUE_ID = "alter table media add uuid text default '';";
+    private static final String ADD_MEDIA_BLOG_ID = "alter table media add blogId text default '';";
 
     private SQLiteDatabase db;
 
@@ -179,6 +187,11 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_MEDIA_FILE_URL);
+                db.execSQL(ADD_MEDIA_THUMBNAIL_PATH);
+                db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
+                db.execSQL(ADD_MEDIA_UNIQUE_ID);
+                db.execSQL(ADD_MEDIA_BLOG_ID);
                 migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -517,6 +530,14 @@ public class WordPressDB {
             } else if (db.getVersion() == 16) {
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
+            } else if (db.getVersion() == 17) {
+                db.execSQL(ADD_MEDIA_FILE_URL);
+                db.execSQL(ADD_MEDIA_THUMBNAIL_PATH);
+                db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
+                db.execSQL(ADD_MEDIA_UNIQUE_ID);
+                db.execSQL(ADD_MEDIA_BLOG_ID);
+                db.setVersion(DATABASE_VERSION);
+                migrateWPComAccount();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1765,6 +1786,8 @@ public class WordPressDB {
     public boolean saveMediaFile(MediaFile mf) {
         boolean returnValue = false;
 
+        Log.d("WordPress", "DB - saveMediaFile: title: " + mf.getTitle());
+        
         ContentValues values = new ContentValues();
         values.put("postID", mf.getPostID());
         values.put("filePath", mf.getFileName());
@@ -1779,12 +1802,17 @@ public class WordPressDB {
         values.put("featured", mf.isFeatured());
         values.put("isVideo", mf.isVideo());
         values.put("isFeaturedInPost", mf.isFeaturedInPost());
+        values.put("fileURL", mf.getFileURL());
+        values.put("thumbnailPath", mf.getThumbnailPath());
+        values.put("thumbnailURL", mf.getThumbnailURL());
+        values.put("uuid", mf.getId());
+        values.put("blogId", mf.getBlogId());
         synchronized (this) {
             int result = db.update(
                     MEDIA_TABLE,
                     values,
-                    "postID=" + mf.getPostID() + " AND filePath='"
-                            + mf.getFileName() + "'", null);
+                    "blogId=? AND uuid=?", 
+                    new String[]{ mf.getBlogId(), String.valueOf(mf.getId())});
             if (result == 0)
                 returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
         }
@@ -1815,6 +1843,11 @@ public class WordPressDB {
             mf.setFeatured(c.getInt(11) > 0);
             mf.setVideo(c.getInt(12) > 0);
             mf.setFeaturedInPost(c.getInt(13) > 0);
+            mf.setFileURL(c.getString(14));
+            mf.setThumbnailPath(c.getString(15));
+            mf.setThumbnailURL(c.getString(16));
+            mf.setId(Integer.parseInt(c.getString(17)));
+            mf.setBlogId(c.getString(18));
             mediaFiles[i] = mf;
             c.moveToNext();
         }
@@ -1822,13 +1855,17 @@ public class WordPressDB {
 
         return mediaFiles;
     }
+    
+    public Cursor getMediaFilesForBlog(String blogId) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=?", new String[] { blogId });
+    }
 
     public boolean deleteMediaFile(MediaFile mf) {
 
         boolean returnValue = false;
 
         int result = 0;
-        result = db.delete(MEDIA_TABLE, "id=" + mf.getId(), null);
+        result = db.delete(MEDIA_TABLE, "blogId='" + mf.getBlogId() + "' AND id=" + mf.getId(), null);
 
         if (result == 1) {
             returnValue = true;
@@ -1858,6 +1895,11 @@ public class WordPressDB {
             mf.setFeatured(c.getInt(11) > 0);
             mf.setVideo(c.getInt(12) > 0);
             mf.setFeaturedInPost(c.getInt(13) > 0);
+            mf.setFileURL(c.getString(14));
+            mf.setThumbnailPath(c.getString(15));
+            mf.setThumbnailURL(c.getString(16));
+            mf.setId(Integer.parseInt(c.getString(17)));
+            mf.setBlogId(c.getString(18));
         } else {
             c.close();
             return null;
@@ -1869,7 +1911,7 @@ public class WordPressDB {
 
     public void deleteMediaFilesForPost(Post post) {
 
-        db.delete(MEDIA_TABLE, "postID=" + post.getId(), null);
+        db.delete(MEDIA_TABLE, "blogId='" + post.getBlogID() + "' AND postID=" + post.getId(), null);
 
     }
 
