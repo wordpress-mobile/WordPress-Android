@@ -1,18 +1,10 @@
 package org.wordpress.android.ui.media;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.CursorAdapter;
@@ -20,13 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xtremelabs.imageutils.BitmapListener;
-import com.xtremelabs.imageutils.ImageLoader;
-import com.xtremelabs.imageutils.ImageReturnedFrom;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetMediaTask.Callback;
@@ -41,18 +29,14 @@ public class MediaItemListFragment extends ListFragment {
     private MediaCursorAdapter mAdapter;
     private Cursor mCursor;
     
-    private ImageLoader mImageLoader;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mImageLoader = ImageLoader.buildImageLoaderForSupportFragment(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
     
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mImageLoader.destroy();
     }
     
     @Override
@@ -104,66 +88,18 @@ public class MediaItemListFragment extends ListFragment {
             TextView title = (TextView) view.findViewById(R.id.media_listitem_title);
             title.setText(cursor.getString(cursor.getColumnIndex("title")));
             
+            
+            NetworkImageView thumbnail = (NetworkImageView) view.findViewById(R.id.media_listitem_thumbnail);
+            thumbnail.setDefaultImageResId(R.drawable.placeholder);
+            
             String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
-            ImageView thumbnail = (ImageView) view.findViewById(R.id.media_listitem_thumbnail);
+            String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
+            
             if(isValidImage(fileURL))
-                loadThumbnail(thumbnail, context, cursor);
+                thumbnail.setImageUrl(thumbnailURL, WordPress.imageLoader);
             else
                 thumbnail.setImageDrawable(null);
                 
-        }
-
-        private void loadThumbnail(final ImageView thumbnail, Context context, Cursor cursor) {
-            
-            
-            Blog blog = WordPress.getCurrentBlog(); 
-            if(blog != null) {
-                String blogId = String.valueOf(blog.getBlogId());
-                File blogDir = context.getDir(blogId, Context.MODE_PRIVATE);
-                final String imgPath = blogDir.getAbsolutePath() + File.separator + cursor.getString(cursor.getColumnIndex("uuid"));
-                
-                Uri imageUri;
-                
-                final File file = new File(imgPath);
-                if(file.exists()) {
-                    Log.d("WordPress", "MCA: File " + imgPath + " exists");
-                    // show image
-                    imageUri = Uri.fromFile(file);
-                    mImageLoader.loadImage(thumbnail, imageUri.toString());
-                } else {
-                    Log.d("WordPress", "MCA: File " + imgPath + " does not exist");
-                    imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
-                    
-
-                    mImageLoader.loadImage(imageUri.toString(), new BitmapListener() {
-                        
-                        @Override
-                        public void onImageLoadError(String error) {
-                            
-                        }
-                        
-                        @Override
-                        public void onImageAvailable(Bitmap bitmap, ImageReturnedFrom arg1) {
-                            thumbnail.setImageBitmap(bitmap);
-                            saveBitmapToFile(file, bitmap);
-                            
-                        }
-                       
-                    });
-                }
-                
-            }
-        }
-
-        private void saveBitmapToFile(File file, Bitmap bitmap) {
-            try {
-               OutputStream out = new FileOutputStream(file);
-               bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-               out.flush();
-               out.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         @Override
