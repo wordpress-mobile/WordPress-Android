@@ -54,6 +54,11 @@ public class MediaItemListFragment extends ListFragment {
             
             mAdapter.changeCursor(mCursor);
         }
+
+        @Override
+        public void onFailure() {
+            // TODO: handle failure
+        }
     };    
     
 }

@@ -321,6 +321,7 @@ public class ApiHelper {
 
         public interface Callback {
             public void onSuccess();
+            public void onFailure();
         }
         
         private Callback mCallback;
@@ -355,7 +356,6 @@ public class ApiHelper {
             try {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
             } catch (XMLRPCException e) {
-                Log.e("WordPress", "ApiHelper - failed to get media library");
                 Log.e("WordPress", e.getMessage());
             }
             
@@ -367,15 +367,22 @@ public class ApiHelper {
                     resultMap = (Map<?, ?>) result;
                     WordPress.wpDB.saveMediaFile(new MediaFile(String.valueOf(WordPress.currentBlog.getBlogId()), resultMap));
                 }
+                
+                return true;
+            } else {
+                return false;
             }
             
-            return true;
+            
         }
         
         @Override
         protected void onPostExecute(Boolean result) {
-            if(result && mCallback != null) {
-                mCallback.onSuccess();
+            if(mCallback != null) {
+                if(result)
+                    mCallback.onSuccess();
+                else
+                    mCallback.onFailure();
             }
         }
         
