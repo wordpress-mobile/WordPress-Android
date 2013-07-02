@@ -46,6 +46,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
@@ -81,14 +82,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      */
     protected static final int READER_ACTIVITY = 0;
     protected static final int POSTS_ACTIVITY = 1;
-    protected static final int PAGES_ACTIVITY = 2;
-    protected static final int COMMENTS_ACTIVITY = 3;
-    protected static final int STATS_ACTIVITY = 4;
-    protected static final int QUICK_PHOTO_ACTIVITY = 5;
-    protected static final int QUICK_VIDEO_ACTIVITY = 6;
-    protected static final int VIEW_SITE_ACTIVITY = 7;
-    protected static final int DASHBOARD_ACTIVITY = 8;
-    protected static final int NOTIFICATIONS_ACTIVITY = 9;
+    protected static final int MEDIA_ACTIVITY = 2;
+    protected static final int PAGES_ACTIVITY = 3;
+    protected static final int COMMENTS_ACTIVITY = 4;
+    protected static final int STATS_ACTIVITY = 5;
+    protected static final int QUICK_PHOTO_ACTIVITY = 6;
+    protected static final int QUICK_VIDEO_ACTIVITY = 7;
+    protected static final int VIEW_SITE_ACTIVITY = 8;
+    protected static final int DASHBOARD_ACTIVITY = 9;
+    protected static final int NOTIFICATIONS_ACTIVITY = 10;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
     
@@ -116,6 +118,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new ReaderMenuItem());
         mMenuItems.add(new NotificationsMenuItem());
         mMenuItems.add(new PostsMenuItem());
+        mMenuItems.add(new MediaMenuItem());
         mMenuItems.add(new PagesMenuItem());
         mMenuItems.add(new CommentsMenuItem());
         mMenuItems.add(new StatsMenuItem());
@@ -670,6 +673,24 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
     }
 
+    private class MediaMenuItem extends MenuDrawerItem {
+        MediaMenuItem(){
+            super(MEDIA_ACTIVITY, R.string.media, R.drawable.dashboard_icon_posts); // TODO: REPLACE ICON
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof MediaBrowserActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof MediaBrowserActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, MediaBrowserActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+    
     private class PagesMenuItem extends MenuDrawerItem {
         PagesMenuItem(){
             super(PAGES_ACTIVITY, R.string.pages, R.drawable.dashboard_icon_pages);

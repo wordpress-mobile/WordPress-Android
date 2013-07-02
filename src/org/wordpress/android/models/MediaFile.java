@@ -1,6 +1,10 @@
 package org.wordpress.android.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+
+import android.text.format.DateFormat;
 
 import org.wordpress.android.WordPress;
 
@@ -24,26 +28,12 @@ public class MediaFile {
     protected String fileURL = null; // url of the file to download
     protected String thumbnailPath = null; // path of the thumbnail in disk
     protected String thumbnailURL = null;  // url of the thumbnail to download
-    private String uniqueId;
     private String blogId;
+    private long date_created_gmt;
 
 
     public MediaFile(String blogId, Map<?, ?> resultMap) {
-/*        { 
- *          title=400, 
- *          thumbnail=http://fombico.files.wordpress.com/2013/06/400.jpeg?w=150, 
- *          attachment_id=30, 
- *          date_created_gmt=Wed Jun 26 10:59:17 EDT 2013, 
- *          description=, 
- *          link=http://fombico.files.wordpress.com/2013/06/400.jpeg, 
- *          parent=0, 
- *          caption=, 
- *          metadata={
- *              sizes=[Ljava.lang.Object;@423f2810, height=400, image_meta={focal_length=0, title=, shutter_speed=0, iso=0, camera=, created_timestamp=0, caption=, copyright=, credit=, aperture=0}, 
- *              file=/home/wpcom/public_html/wp-content/blogs.dir/024/54276583/files/2013/06/400.jpeg, 
- *              width=500}
- *          }
-*/
+        
         setBlogId(blogId);
         setId(Integer.parseInt(resultMap.get("attachment_id").toString()));
         setPostID(Long.parseLong(resultMap.get("parent").toString()));
@@ -52,6 +42,9 @@ public class MediaFile {
         setDescription(resultMap.get("description").toString());
         setFileURL(resultMap.get("link").toString());
         setThumbnailURL(resultMap.get("thumbnail").toString());
+
+        Date date = (Date) resultMap.get("date_created_gmt");
+        setDateCreatedGMT(date.getTime());
         
         Object meta = resultMap.get("metadata");
         if(meta != null && meta instanceof Map) {
@@ -228,6 +221,15 @@ public class MediaFile {
     public void setBlogId(String blogId) {
         this.blogId = blogId;
         
+    }
+
+    public void setDateCreatedGMT(long date_created_gmt) {
+        this.date_created_gmt = date_created_gmt;
+    }
+    
+
+    public long getDateCreatedGMT() {
+        return date_created_gmt;
     }
 
 }

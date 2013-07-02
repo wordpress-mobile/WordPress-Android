@@ -4,6 +4,7 @@ import java.text.StringCharacterIterator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -130,6 +131,7 @@ public class WordPressDB {
     private static final String ADD_MEDIA_FILE_URL = "alter table media add fileURL text default '';";
     private static final String ADD_MEDIA_UNIQUE_ID = "alter table media add uuid text default '';";
     private static final String ADD_MEDIA_BLOG_ID = "alter table media add blogId text default '';";
+    private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
 
     private SQLiteDatabase db;
 
@@ -192,6 +194,7 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
                 db.execSQL(ADD_MEDIA_BLOG_ID);
+                db.execSQL(ADD_MEDIA_DATE_GMT);
                 migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -536,6 +539,7 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
                 db.execSQL(ADD_MEDIA_BLOG_ID);
+                db.execSQL(ADD_MEDIA_DATE_GMT);
                 db.setVersion(DATABASE_VERSION);
                 migrateWPComAccount();
             }
@@ -1807,6 +1811,7 @@ public class WordPressDB {
         values.put("thumbnailURL", mf.getThumbnailURL());
         values.put("uuid", mf.getId());
         values.put("blogId", mf.getBlogId());
+        values.put("date_created_gmt", mf.getDateCreatedGMT());
         synchronized (this) {
             int result = db.update(
                     MEDIA_TABLE,
@@ -1848,6 +1853,7 @@ public class WordPressDB {
             mf.setThumbnailURL(c.getString(16));
             mf.setId(Integer.parseInt(c.getString(17)));
             mf.setBlogId(c.getString(18));
+            mf.setDateCreatedGMT(c.getLong(19));
             mediaFiles[i] = mf;
             c.moveToNext();
         }
@@ -1856,10 +1862,20 @@ public class WordPressDB {
         return mediaFiles;
     }
     
+    /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=?", new String[] { blogId });
     }
 
+    /** For a given blogId, get all the media files with searchTerm **/
+    public Cursor getMediaFilesForBlog(String blogId, String searchTerm) {
+        // Currently on WordPress.com, the media search engine only searches the title. 
+        // We'll match this.
+        
+        String term = searchTerm.toLowerCase(Locale.getDefault());
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ?", new String[] { blogId, "%" + term + "%" });
+    }
+    
     public boolean deleteMediaFile(MediaFile mf) {
 
         boolean returnValue = false;
@@ -1900,6 +1916,7 @@ public class WordPressDB {
             mf.setThumbnailURL(c.getString(16));
             mf.setId(Integer.parseInt(c.getString(17)));
             mf.setBlogId(c.getString(18));
+            mf.setDateCreatedGMT(c.getLong(19));
         } else {
             c.close();
             return null;
