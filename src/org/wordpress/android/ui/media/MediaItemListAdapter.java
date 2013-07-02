@@ -32,8 +32,8 @@ public class MediaItemListAdapter extends CursorAdapter {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
 
         int viewType = getItemViewType(cursor);
-        
-        if(viewType == Type.IMAGE.ordinal()) {
+
+        if (viewType == Type.IMAGE.ordinal()) {
             NetworkImageView thumbnail = (NetworkImageView) view.findViewById(R.id.media_listitem_thumbnail);
             thumbnail.setDefaultImageResId(R.drawable.placeholder);
             thumbnail.setImageUrl(thumbnailURL, WordPress.imageLoader);
@@ -48,8 +48,8 @@ public class MediaItemListAdapter extends CursorAdapter {
         
         int viewType = getItemViewType(cursor);
         View view = null;
-        
-        if(viewType == Type.IMAGE.ordinal())
+
+        if (viewType == Type.IMAGE.ordinal())
             view = inflater.inflate(R.layout.media_listitem_image, root, false);
         else
             view = inflater.inflate(R.layout.media_listitem_default, root, false);
@@ -71,16 +71,11 @@ public class MediaItemListAdapter extends CursorAdapter {
 
     private int getItemViewType(Cursor cursor) {
         String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
-        if (isValidImage(fileURL)) {
+        if (MediaUtils.isValidImage(fileURL)) {
             return Type.IMAGE.ordinal();
         } else {
             return Type.DEFAULT.ordinal();
         }
     }
 
-    private boolean isValidImage(String url) {
-        if(url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif"))
-            return true;
-        return false;
-    }
 }

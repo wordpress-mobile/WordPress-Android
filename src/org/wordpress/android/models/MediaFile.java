@@ -26,7 +26,6 @@ public class MediaFile {
     protected boolean isVideo = false;
     protected boolean featuredInPost;
     protected String fileURL = null; // url of the file to download
-    protected String thumbnailPath = null; // path of the thumbnail in disk
     protected String thumbnailURL = null;  // url of the thumbnail to download
     private String blogId;
     private long date_created_gmt;
@@ -40,6 +39,11 @@ public class MediaFile {
         setTitle(resultMap.get("title").toString());
         setCaption(resultMap.get("caption").toString());
         setDescription(resultMap.get("description").toString());
+        
+        // get the file name from the link - TODO: may have problem with unicode names
+        String link = resultMap.get("link").toString();
+        setFileName(link.replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
+        
         setFileURL(resultMap.get("link").toString());
         setThumbnailURL(resultMap.get("thumbnail").toString());
 
@@ -128,14 +132,6 @@ public class MediaFile {
 
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
-    }
-    
-    public String getThumbnailPath() {
-        return thumbnailPath;
-    }
-    
-    public void setThumbnailPath(String thumbnailPath) {
-        this.thumbnailPath = thumbnailPath;
     }
     
     public boolean isVerticalAlignmentOnTop() {

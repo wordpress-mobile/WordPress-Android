@@ -126,7 +126,6 @@ public class WordPressDB {
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
     
     // add thumbnailURL, thumbnailPath and fileURL to media
-    private static final String ADD_MEDIA_THUMBNAIL_PATH = "alter table media add thumbnailPath text default '';";
     private static final String ADD_MEDIA_THUMBNAIL_URL = "alter table media add thumbnailURL text default '';";
     private static final String ADD_MEDIA_FILE_URL = "alter table media add fileURL text default '';";
     private static final String ADD_MEDIA_UNIQUE_ID = "alter table media add uuid text default '';";
@@ -190,7 +189,6 @@ public class WordPressDB {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
                 db.execSQL(ADD_MEDIA_FILE_URL);
-                db.execSQL(ADD_MEDIA_THUMBNAIL_PATH);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
                 db.execSQL(ADD_MEDIA_BLOG_ID);
@@ -535,7 +533,6 @@ public class WordPressDB {
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 17) {
                 db.execSQL(ADD_MEDIA_FILE_URL);
-                db.execSQL(ADD_MEDIA_THUMBNAIL_PATH);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
                 db.execSQL(ADD_MEDIA_BLOG_ID);
@@ -1794,7 +1791,7 @@ public class WordPressDB {
         
         ContentValues values = new ContentValues();
         values.put("postID", mf.getPostID());
-        values.put("filePath", mf.getFileName());
+        values.put("filePath", mf.getFilePath());
         values.put("fileName", mf.getFileName());
         values.put("title", mf.getTitle());
         values.put("description", mf.getDescription());
@@ -1807,7 +1804,6 @@ public class WordPressDB {
         values.put("isVideo", mf.isVideo());
         values.put("isFeaturedInPost", mf.isFeaturedInPost());
         values.put("fileURL", mf.getFileURL());
-        values.put("thumbnailPath", mf.getThumbnailPath());
         values.put("thumbnailURL", mf.getThumbnailURL());
         values.put("uuid", mf.getId());
         values.put("blogId", mf.getBlogId());
@@ -1849,11 +1845,10 @@ public class WordPressDB {
             mf.setVideo(c.getInt(12) > 0);
             mf.setFeaturedInPost(c.getInt(13) > 0);
             mf.setFileURL(c.getString(14));
-            mf.setThumbnailPath(c.getString(15));
-            mf.setThumbnailURL(c.getString(16));
-            mf.setId(Integer.parseInt(c.getString(17)));
-            mf.setBlogId(c.getString(18));
-            mf.setDateCreatedGMT(c.getLong(19));
+            mf.setThumbnailURL(c.getString(15));
+            mf.setId(Integer.parseInt(c.getString(16)));
+            mf.setBlogId(c.getString(17));
+            mf.setDateCreatedGMT(c.getLong(18));
             mediaFiles[i] = mf;
             c.moveToNext();
         }
@@ -1874,6 +1869,11 @@ public class WordPressDB {
         
         String term = searchTerm.toLowerCase(Locale.getDefault());
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ?", new String[] { blogId, "%" + term + "%" });
+    }
+    
+    /** For a given blogId, get the media file with the given media_id **/
+    public Cursor getMediaFile(String blogId, String media_id) {
+        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uuid=?", new String[] { blogId, media_id });
     }
     
     public boolean deleteMediaFile(MediaFile mf) {
@@ -1912,11 +1912,10 @@ public class WordPressDB {
             mf.setVideo(c.getInt(12) > 0);
             mf.setFeaturedInPost(c.getInt(13) > 0);
             mf.setFileURL(c.getString(14));
-            mf.setThumbnailPath(c.getString(15));
-            mf.setThumbnailURL(c.getString(16));
-            mf.setId(Integer.parseInt(c.getString(17)));
-            mf.setBlogId(c.getString(18));
-            mf.setDateCreatedGMT(c.getLong(19));
+            mf.setThumbnailURL(c.getString(15));
+            mf.setId(Integer.parseInt(c.getString(16)));
+            mf.setBlogId(c.getString(17));
+            mf.setDateCreatedGMT(c.getLong(18));
         } else {
             c.close();
             return null;

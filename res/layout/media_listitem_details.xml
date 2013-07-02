@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <TextView
+        android:id="@+id/media_listitem_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:text="Title" />
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/media_listitem_details_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/media_listitem_details_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Caption" />
+
+    <TextView
+        android:id="@+id/media_listitem_details_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description" />
+
+    <TextView
+        android:id="@+id/media_listitem_details_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Uploaded on" />
+
+    <TextView
+        android:id="@+id/media_listitem_details_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File name" />
+
+    <TextView
+        android:id="@+id/media_listitem_details_file_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File type" />
+
+    <TextView
+        android:id="@+id/media_listitem_details_dimensions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dimensions" />
+
+</LinearLayout>
