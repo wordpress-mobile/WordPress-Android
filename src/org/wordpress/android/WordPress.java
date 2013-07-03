@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -19,12 +18,11 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
-
 import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestRequest;
@@ -39,10 +37,9 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
-import org.wordpress.android.Config;
 
 public class WordPress extends Application {
 
@@ -121,16 +118,20 @@ public class WordPress extends Application {
         String uuid = settings.getString("wp_pref_notifications_uuid", null);
         if (uuid == null)
             return;
+
+        String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
         Object[] params = {
                 settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
                 WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
                 token,
                 uuid,
                 "android",
-                false
+                false,
+                deviceName
         };
-
+        
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
                 Log.v("WORDPRESS", "Successfully registered device on WP.com");
@@ -138,7 +139,7 @@ public class WordPress extends Application {
             }
 
             public void onFailure(long id, XMLRPCException error) {
-                Log.v("WORDPRESS", error.getMessage());
+                Log.e("WORDPRESS", error.getMessage());
             }
         }, "wpcom.mobile_push_register_token", params);
     }
