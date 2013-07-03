@@ -1857,6 +1857,11 @@ public class WordPressDB {
         return mediaFiles;
     }
     
+    /** For a given blogId, get the first media files **/
+    public Cursor getFirstMediaFileForBlog(String blogId) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? LIMIT 1", new String[] { blogId });
+    }
+    
     /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=?", new String[] { blogId });

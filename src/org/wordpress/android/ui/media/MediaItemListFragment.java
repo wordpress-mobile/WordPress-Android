@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
@@ -21,9 +20,10 @@ public class MediaItemListFragment extends ListFragment {
     private ApiHelper.GetMediaTask mGetMediaTask;
     private MediaItemListAdapter mAdapter;
     private Cursor mCursor;
-    private OnMediaItemSelectedListener mListener;
+    private MediaItemListListener mListener;
     
-    public interface OnMediaItemSelectedListener {
+    public interface MediaItemListListener {
+        public void onMediaItemListDownloaded();
         public void onMediaItemSelected(String mediaId);
     }
     
@@ -32,7 +32,7 @@ public class MediaItemListFragment extends ListFragment {
         super.onAttach(activity);
         
         try {
-            mListener = (OnMediaItemSelectedListener) activity;
+            mListener = (MediaItemListListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnMediaItemSelectedListener");
         }
@@ -55,11 +55,6 @@ public class MediaItemListFragment extends ListFragment {
         if(blog != null) {
             String blogId = String.valueOf(blog.getBlogId());
             mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId);
-            
-            if(mCursor.moveToFirst()) {
-                String mediaId = mCursor.getString(mCursor.getColumnIndex("uuid"));
-                mListener.onMediaItemSelected(mediaId);
-            }
         }
     }
 
@@ -85,6 +80,7 @@ public class MediaItemListFragment extends ListFragment {
         @Override
         public void onSuccess() {
             loadCursor();
+            mListener.onMediaItemListDownloaded();
             mAdapter.changeCursor(mCursor);
         }
 

@@ -12,10 +12,10 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.media.MediaItemListFragment.OnMediaItemSelectedListener;
+import org.wordpress.android.ui.media.MediaItemListFragment.MediaItemListListener;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 
-public class MediaBrowserActivity extends WPActionBarActivity implements OnMediaItemSelectedListener {
+public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener {
 
     private MediaItemListFragment mMediaItemListFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -44,6 +44,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements OnMedia
         mMediaItemListFragment = (MediaItemListFragment) fm.findFragmentById(R.id.mediaItemListFragment);
         mMediaItemListFragment.setListShown(true);
         
+        mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -62,7 +63,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements OnMedia
     @Override
     public void onMediaItemSelected(String mediaId) {
         FragmentManager fm = getSupportFragmentManager();
-        mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
         
         if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
@@ -101,6 +101,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements OnMedia
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void onMediaItemListDownloaded() {
+        if(mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
+            mMediaItemFragment.loadDefaultMedia();
         }
     }
     

@@ -26,7 +26,7 @@ public class MediaItemFragment extends Fragment {
     private TextView mFileNameView;
     private TextView mFileTypeView;
     private TextView mDimensionsView;
-
+    
     public static MediaItemFragment newInstance(String mediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
         
@@ -63,14 +63,27 @@ public class MediaItemFragment extends Fragment {
         return view;
     }
 
+    /** Loads the first media item for the current blog from the database **/
+    public void loadDefaultMedia() {
+        loadMedia(null); 
+    }
+    
     public void loadMedia(String mediaId) {
-        if (mediaId == null)
-            return;
-
+        String id = mediaId;
         Blog blog = WordPress.getCurrentBlog();
+        
         if (blog != null) {
             String blogId = String.valueOf(blog.getBlogId());
-            Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+            
+            Cursor cursor;
+            
+            // if the id is null, get the first media item in the database
+            if (id == null) {
+                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
+            } else {
+                cursor = WordPress.wpDB.getMediaFile(blogId, id);
+            }
+            
             refreshViews(cursor);
         }
     }
