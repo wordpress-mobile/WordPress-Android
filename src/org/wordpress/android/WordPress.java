@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,7 +8,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import android.app.Application;
 import android.content.Context;
@@ -17,17 +15,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.AssetManager;
-import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
-
 import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestRequest;
@@ -42,11 +37,9 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
-import org.wordpress.android.Config;
 
 public class WordPress extends Application {
 

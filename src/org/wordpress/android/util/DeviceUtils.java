@@ -113,7 +113,7 @@ public class DeviceUtils {
             Properties prop = new Properties();
             InputStream fileStream;
             //Read the device name from a precomplied list: see http://making.meetup.com/post/29648976176/human-readble-android-device-names
-            fileStream = context.getAssets().open("android_models.properties.properties");
+            fileStream = context.getAssets().open("android_models.properties");
             prop.load(fileStream);
             fileStream.close();
             String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_" ) );
