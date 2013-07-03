@@ -1,8 +1,13 @@
 package org.wordpress.android.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import org.wordpress.android.WordPress;
 
@@ -98,4 +103,49 @@ public class DeviceUtils {
 
         return pm.hasSystemFeature("android.hardware.camera.any");
     }
+
+    public String getDeviceName(Context context) {
+        String manufacturer = Build.MANUFACTURER;
+        String undecodedModel = Build.MODEL;
+        String model = null;
+
+        try {
+            Properties prop = new Properties();
+            InputStream fileStream;
+            //Read the device name from a precomplied list: see http://making.meetup.com/post/29648976176/human-readble-android-device-names
+            fileStream = context.getAssets().open("android_models.properties.properties");
+            prop.load(fileStream);
+            fileStream.close();
+            String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_" ) );
+            if ( decodedModel != null )  {
+                model = decodedModel;
+            }
+        } catch (IOException e) {
+            Log.e("WORDPRESS", e.getMessage());
+        }
+
+        if( model == null ) {  //Device model not found in the list
+           
+            if (undecodedModel.startsWith(manufacturer)) {
+                model = capitalize(undecodedModel);
+            } else {
+                model = capitalize(manufacturer) + " " + undecodedModel;
+            }
+
+        }
+
+        return model;
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    } 
 }

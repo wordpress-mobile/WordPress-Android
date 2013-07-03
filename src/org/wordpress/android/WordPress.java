@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import android.app.Application;
 import android.content.Context;
@@ -16,6 +17,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetManager;
+import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -41,6 +44,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
 import org.wordpress.android.Config;
 
@@ -121,16 +125,20 @@ public class WordPress extends Application {
         String uuid = settings.getString("wp_pref_notifications_uuid", null);
         if (uuid == null)
             return;
+
+        String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
         Object[] params = {
                 settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
                 WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
                 token,
                 uuid,
                 "android",
-                false
+                false,
+                deviceName
         };
-
+        
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
                 Log.v("WORDPRESS", "Successfully registered device on WP.com");
@@ -138,7 +146,7 @@ public class WordPress extends Application {
             }
 
             public void onFailure(long id, XMLRPCException error) {
-                Log.v("WORDPRESS", error.getMessage());
+                Log.e("WORDPRESS", error.getMessage());
             }
         }, "wpcom.mobile_push_register_token", params);
     }
