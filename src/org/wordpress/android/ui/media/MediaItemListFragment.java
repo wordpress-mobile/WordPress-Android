@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
@@ -23,7 +24,7 @@ public class MediaItemListFragment extends ListFragment {
     private OnMediaItemSelectedListener mListener;
     
     public interface OnMediaItemSelectedListener {
-        public void onMediaItemSelected(String media_id);
+        public void onMediaItemSelected(String mediaId);
     }
     
     @Override
@@ -54,6 +55,11 @@ public class MediaItemListFragment extends ListFragment {
         if(blog != null) {
             String blogId = String.valueOf(blog.getBlogId());
             mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId);
+            
+            if(mCursor.moveToFirst()) {
+                String mediaId = mCursor.getString(mCursor.getColumnIndex("uuid"));
+                mListener.onMediaItemSelected(mediaId);
+            }
         }
     }
 
@@ -63,6 +69,7 @@ public class MediaItemListFragment extends ListFragment {
         Cursor cursor = (Cursor) getListAdapter().getItem(position);
         String mediaId = cursor.getString(cursor.getColumnIndex("uuid"));
         mListener.onMediaItemSelected(mediaId);
+        
     }
     
     private void refreshMediaFromServer() {
@@ -78,7 +85,6 @@ public class MediaItemListFragment extends ListFragment {
         @Override
         public void onSuccess() {
             loadCursor();
-            
             mAdapter.changeCursor(mCursor);
         }
 

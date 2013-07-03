@@ -9,8 +9,7 @@
         android:id="@+id/media_listitem_details_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24dp"
-        android:text="Title" />
+        android:textSize="24sp" />
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/media_listitem_details_image"
@@ -22,36 +21,31 @@
         android:id="@+id/media_listitem_details_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Caption" />
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/media_listitem_details_description"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/media_listitem_details_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Uploaded on" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/media_listitem_details_file_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="File name" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/media_listitem_details_file_type"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="File type" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/media_listitem_details_dimensions"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dimensions" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
