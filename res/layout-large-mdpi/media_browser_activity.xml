@@ -6,12 +6,23 @@
     android:baselineAligned="false"
     android:orientation="horizontal" >
 
-    <fragment
-        android:id="@+id/mediaItemListFragment"
-        android:name="org.wordpress.android.ui.media.MediaItemListFragment"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.4" />
+        android:layout_weight="0.4" >
+
+        <fragment
+            android:id="@+id/mediaItemListFragment"
+            android:name="org.wordpress.android.ui.media.MediaItemListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/right_shadow"
+            android:orientation="vertical" />
+    </FrameLayout>
 
     <fragment
         android:id="@+id/mediaItemFragment"

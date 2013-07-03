@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -75,5 +76,32 @@ public class MediaBrowserActivity extends WPActionBarActivity implements OnMedia
             mMediaItemFragment.loadMedia(mediaId);
         }
     };
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        
+        if(itemId == android.R.id.home) {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                popMediaItemDetails();
+                return true;
+            }
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void popMediaItemDetails() {
+        FragmentManager fm = getSupportFragmentManager();
+        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.mediaItemFragment);
+        if (f == null) {
+            try {
+                fm.popBackStack();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     
 }
