@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaItemListFragment.MediaItemListListener;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener, OnQueryTextListener  {
@@ -127,6 +129,11 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
                 return true;
             }
         } else if (itemId == R.id.menu_new_media) {
+            Intent i = new Intent(this, MediaUploadActivity.class);
+            i.putExtra("id", WordPress.currentBlog.getId());
+            
+            startActivity(i);
+            
             return true;
         } else if (itemId == R.id.menu_search) {
 
