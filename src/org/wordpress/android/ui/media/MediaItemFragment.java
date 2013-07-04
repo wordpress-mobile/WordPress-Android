@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView.FindListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -111,12 +115,38 @@ public class MediaItemFragment extends Fragment {
 
         String imageUrl = cursor.getString(cursor.getColumnIndex("fileURL"));
         if (MediaUtils.isValidImage(imageUrl)) {
-            mImageView.setImageUrl(imageUrl, WordPress.imageLoader);
-            mImageView.setVisibility(View.VISIBLE);
+            
+            int width = cursor.getInt(cursor.getColumnIndex("width"));
+            int height = cursor.getInt(cursor.getColumnIndex("height"));
 
-            String dimensions = cursor.getString(cursor.getColumnIndex("width")) + "x" + cursor.getString(cursor.getColumnIndex("height"));
+            String dimensions = width + "x" + height;
             mDimensionsView.setText("Dimensions: " + dimensions);
             mDimensionsView.setVisibility(View.VISIBLE);
+            
+            mImageView.setImageUrl(imageUrl, WordPress.imageLoader);
+            mImageView.setVisibility(View.VISIBLE);
+            
+            View parentView = (View) mImageView.getParent();
+            
+            
+            float screenWidth;
+            
+            //differentiating between tablet and phone
+            if (this.isInLayout()) {
+                screenWidth =  parentView.getMeasuredWidth();
+            } else {
+                screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
+            }
+            float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
+            
+
+            if (width > screenWidth) {
+                height = (int) (height / (width/screenWidth));
+            } else if (height > screenHeight) {
+                width = (int) (width / (height/screenHeight));
+            }
+            mImageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
+            
         } else {
             mImageView.setVisibility(View.GONE);
             mDimensionsView.setVisibility(View.GONE);
