@@ -33,6 +33,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
             return;
         }
         
+        setTitle(R.string.media);
+        
         createMenuDrawer(R.layout.media_browser_activity);
         
         ActionBar actionBar = getSupportActionBar();
