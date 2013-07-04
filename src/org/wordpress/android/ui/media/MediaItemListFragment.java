@@ -5,8 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import org.xmlrpc.android.ApiHelper;
@@ -21,6 +24,7 @@ public class MediaItemListFragment extends ListFragment {
     private MediaItemListAdapter mAdapter;
     private Cursor mCursor;
     private MediaItemListListener mListener;
+    private boolean mIsRefreshing = false;
     
     public interface MediaItemListListener {
         public void onMediaItemListDownloaded();
@@ -46,10 +50,18 @@ public class MediaItemListFragment extends ListFragment {
         mAdapter = new MediaItemListAdapter(getActivity(), mCursor, 0);
         setListAdapter(mAdapter);
         
-        if(WordPress.getCurrentBlog() != null)
-            refreshMediaFromServer();
+        refreshMediaFromServer();
     }
 
+    public void search(String searchTerm) {
+        Blog blog = WordPress.getCurrentBlog();
+        if(blog != null) {
+            String blogId = String.valueOf(blog.getBlogId());
+            mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
+            mAdapter.changeCursor(mCursor);
+        }
+    }
+    
     private void loadCursor() {
         Blog blog = WordPress.getCurrentBlog();
         if(blog != null) {
@@ -67,18 +79,25 @@ public class MediaItemListFragment extends ListFragment {
         
     }
     
-    private void refreshMediaFromServer() {
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
+    public void refreshMediaFromServer() {
+        if(WordPress.getCurrentBlog() == null)
+            return; 
         
-        mGetMediaTask = new ApiHelper.GetMediaTask(mCallback);
-        mGetMediaTask.execute(apiArgs);
+        if(!mIsRefreshing) {
+            mIsRefreshing = true;
+
+            List<Object> apiArgs = new ArrayList<Object>();
+            apiArgs.add(WordPress.getCurrentBlog());
+            mGetMediaTask = new ApiHelper.GetMediaTask(mCallback);
+            mGetMediaTask.execute(apiArgs);
+        }
     }
 
     private Callback mCallback = new Callback() {
         
         @Override
         public void onSuccess() {
+            mIsRefreshing = false;
             loadCursor();
             mListener.onMediaItemListDownloaded();
             mAdapter.changeCursor(mCursor);
@@ -86,8 +105,13 @@ public class MediaItemListFragment extends ListFragment {
 
         @Override
         public void onFailure() {
-            // TODO: handle failure
+            mIsRefreshing = false;
+            
         }
     };    
+    
+    public boolean isRefreshing() {
+        return mIsRefreshing;
+    }
     
 }
