@@ -11,6 +11,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
@@ -19,10 +20,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.MediaItemListFragment.MediaItemListListener;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 
-public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener, MediaItemFragmentCallback, OnQueryTextListener  {
+public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener, MediaItemFragmentCallback, 
+    OnQueryTextListener, OnActionExpandListener  {
 
     private MediaItemListFragment mMediaItemListFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -83,9 +84,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         
         if (mSearchView != null)
             mSearchView.clearFocus();
-        
-        if (mSearchMenuItem != null)
-            mSearchMenuItem.collapseActionView();
     };
     
     @Override
@@ -137,10 +135,11 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         } else if (itemId == R.id.menu_search) {
 
             mSearchMenuItem = item;
+            mSearchMenuItem.setOnActionExpandListener(this);
+            mSearchMenuItem.expandActionView();
+            
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
-            
-            mSearchMenuItem.expandActionView();
             
             return true;
         } else if (itemId == R.id.menu_refresh) {
@@ -202,6 +201,18 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
     @Override
     public void onResumeMediaItemFragment() {
         invalidateOptionsMenu();
+    }
+
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        onQueryTextChange("");
+        return true;
     }
     
 }
