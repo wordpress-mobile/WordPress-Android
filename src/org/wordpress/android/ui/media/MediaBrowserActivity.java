@@ -17,11 +17,12 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.MediaItemListFragment.MediaItemListListener;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 
-public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener, OnQueryTextListener  {
+public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener, MediaItemFragmentCallback, OnQueryTextListener  {
 
     private MediaItemListFragment mMediaItemListFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -29,16 +30,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
     
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        Log.d("WordPress", "MediaBrowserActivity started");
-        
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            Log.d("WordPress", "MediaBrowserActivity DB is null - finishing");
+            Log.e("WordPress", "MediaBrowserActivity DB is null - finishing MediaBrowser");
             finish();
             return;
         }
@@ -65,12 +64,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("WordPress", "MediaBrowserActivity onResume");
-    }
 
     @Override
     public void onMediaItemSelected(String mediaId) {
@@ -88,33 +81,39 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
             mMediaItemFragment.loadMedia(mediaId);
         }
         
-        if(mSearchView != null)
+        if (mSearchView != null)
             mSearchView.clearFocus();
         
-        if(mSearchMenuItem != null)
+        if (mSearchMenuItem != null)
             mSearchMenuItem.collapseActionView();
     };
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
+        stopAnimatingRefreshButton();
+        
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.media, menu);
         
-        refreshMenuItem = menu.findItem(R.id.menu_refresh);
-        startAnimatingRefreshButton();
-        
+        // show a separate menu when the media item fragment is in phone layout and visible
+        if (mMediaItemFragment != null && !mMediaItemFragment.isInLayout() && mMediaItemFragment.isVisible()) {
+            inflater.inflate(R.menu.media_details, menu);
+        } else {
+            inflater.inflate(R.menu.media, menu);
+            
+            refreshMenuItem = menu.findItem(R.id.menu_refresh);
+            startAnimatingRefreshButton();
+        }
         return true;
     }
 
     private void startAnimatingRefreshButton() {
-        if(refreshMenuItem != null && mMediaItemListFragment != null && mMediaItemListFragment.isRefreshing())
+        if (refreshMenuItem != null && mMediaItemListFragment != null && mMediaItemListFragment.isRefreshing())
             startAnimatingRefreshButton(refreshMenuItem);
     }
     
     private void stopAnimatingRefreshButton() {
-        if(refreshMenuItem != null)
+        if (refreshMenuItem != null)
             stopAnimatingRefreshButton(refreshMenuItem);
     }
     
@@ -194,6 +193,15 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
             mMediaItemListFragment.search(newText);
         return true;
     }
-    
+
+    @Override
+    public void onPauseMediaItemFragment() {
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onResumeMediaItemFragment() {
+        invalidateOptionsMenu();
+    }
     
 }

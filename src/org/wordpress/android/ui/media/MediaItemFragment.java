@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,15 +20,21 @@ import org.wordpress.android.models.Blog;
 public class MediaItemFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
-    
-    private TextView mTitleView;
+
     private NetworkImageView mImageView;
+    private TextView mTitleView;
     private TextView mCaptionView;
     private TextView mDescriptionView;
     private TextView mDateView;
     private TextView mFileNameView;
     private TextView mFileTypeView;
     private TextView mDimensionsView;
+    private MediaItemFragmentCallback mCallback;
+    
+    public interface MediaItemFragmentCallback {
+        public void onResumeMediaItemFragment();
+        public void onPauseMediaItemFragment();
+    }
     
     public static MediaItemFragment newInstance(String mediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
@@ -38,7 +45,30 @@ public class MediaItemFragment extends Fragment {
 
         return fragment;
     }
-
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        try {
+            mCallback = (MediaItemFragmentCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement MediaItemFragmentCallback");
+        }
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCallback.onResumeMediaItemFragment();
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCallback.onPauseMediaItemFragment();
+    }
+    
     private String getMediaId() {
         if (getArguments() != null)
             return getArguments().getString(ARGS_MEDIA_ID);
