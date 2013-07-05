@@ -1857,12 +1857,12 @@ public class WordPressDB {
     
     /** For a given blogId, get the first media files **/
     public Cursor getFirstMediaFileForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? LIMIT 1", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? ORDER BY date_created_gmt DESC LIMIT 1", new String[] { blogId });
     }
     
     /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=?", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? ORDER BY date_created_gmt DESC", new String[] { blogId });
     }
 
     /** For a given blogId, get all the media files with searchTerm **/
@@ -1871,7 +1871,7 @@ public class WordPressDB {
         // We'll match this.
         
         String term = searchTerm.toLowerCase(Locale.getDefault());
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ?", new String[] { blogId, "%" + term + "%" });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? ORDER BY date_created_gmt DESC", new String[] { blogId, "%" + term + "%" });
     }
     
     /** For a given blogId, get the media file with the given media_id **/
