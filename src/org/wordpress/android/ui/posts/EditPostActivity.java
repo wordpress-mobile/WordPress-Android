@@ -92,6 +92,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
+import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
@@ -109,10 +112,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
-    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
-    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
-    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
-    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
@@ -1156,58 +1155,29 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     private void launchPictureLibrary() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
-        startActivityForResult(photoPickerIntent, ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
+        MediaUtils.launchPictureLibrary(this);
     }
 
     private void launchCamera() {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
-            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
-            dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            String dcimFolderName = Environment.DIRECTORY_DCIM;
-            if (dcimFolderName == null)
-                dcimFolderName = "DCIM";
-            mMediaCapturePath = Environment.getExternalStorageDirectory() + File.separator + dcimFolderName + File.separator + "Camera"
-                    + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
-            Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mMediaCapturePath)));
-
-            // make sure the directory we plan to store the recording in exists
-            File directory = new File(mMediaCapturePath).getParentFile();
-            if (!directory.exists() && !directory.mkdirs()) {
-                try {
-                    throw new IOException("Path to file could not be created.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        MediaUtils.launchCamera(this, new LaunchCameraCallback() {
+            
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+                mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
             }
-            mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
-            startActivityForResult(takePictureFromCameraIntent, ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
-        }
+        });
     }
 
     private void launchVideoLibrary() {
-        Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
-        videoPickerIntent.setType("video/*");
-        mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
-        startActivityForResult(videoPickerIntent, ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
+        MediaUtils.launchVideoLibrary(this);
     }
 
     private void launchVideoCamera() {
-        mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-        startActivityForResult(new Intent(MediaStore.ACTION_VIDEO_CAPTURE), ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
+        MediaUtils.launchVideoCamera(this);
     }
 
     private LocationResult locationResult = new LocationResult() {
@@ -1253,16 +1223,16 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             return;
         }
 
-        if (data != null || ((requestCode == ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
 
             switch (requestCode) {
-            case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                 Uri imageUri = data.getData();
                 String imgPath = imageUri.toString();
                 addMedia(imgPath, imageUri);
                 break;
-            case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
                         File f = new File(mMediaCapturePath);
@@ -1278,12 +1248,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     }
                 }
                 break;
-            case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+            case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                 Uri videoUri = data.getData();
                 String videoPath = videoUri.toString();
                 addMedia(videoPath, videoUri);
                 break;
-            case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri capturedVideo = data.getData();
                     addMedia(capturedVideo.toString(), capturedVideo);

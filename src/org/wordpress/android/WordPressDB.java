@@ -1786,8 +1786,6 @@ public class WordPressDB {
 
     public boolean saveMediaFile(MediaFile mf) {
         boolean returnValue = false;
-
-        Log.d("WordPress", "DB - saveMediaFile: title: " + mf.getTitle());
         
         ContentValues values = new ContentValues();
         values.put("postID", mf.getPostID());
