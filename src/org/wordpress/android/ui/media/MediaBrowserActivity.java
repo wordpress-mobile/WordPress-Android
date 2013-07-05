@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -31,6 +34,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
     
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+    private Spinner mSpinner;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,18 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         mMediaItemListFragment.setListShown(true);
         
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
+        
+        String[] filters = new String[] {
+                getResources().getString(R.string.all),
+                getResources().getString(R.string.images),
+                getResources().getString(R.string.unattached) };
+        mSpinner = (Spinner) findViewById(R.id.filterSpinner);
+        if (mSpinner != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, filters);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mSpinner.setAdapter(adapter);
+        }
+
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -66,6 +82,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         }
     };
 
+    
     @Override
     public void onMediaItemSelected(String mediaId) {
         FragmentManager fm = getSupportFragmentManager();
@@ -73,6 +90,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaItemListFragment);
+            mSpinner.setVisibility(View.GONE);
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment);
             ft.addToBackStack(null);
@@ -157,6 +175,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
     private void popMediaItemDetails() {
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.mediaItemFragment);
+        if (!mSpinner.isShown()) {
+            mSpinner.setVisibility(View.VISIBLE);
+        }
         if (f == null) {
             try {
                 fm.popBackStack();
@@ -195,6 +216,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
 
     @Override
     public void onPauseMediaItemFragment() {
+        if (!mSpinner.isShown()) {
+            mSpinner.setVisibility(View.VISIBLE);
+        }
         invalidateOptionsMenu();
     }
 

@@ -49,12 +49,6 @@
             android:text="@string/media_upload_other_button" />
     </LinearLayout>
 
-    <!--
-         <fragment
-        android:id="@+id/mediaItemListFragment"
-        android:name="org.wordpress.android.ui.media.MediaItemListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    -->
+
 
 </LinearLayout>

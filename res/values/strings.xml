@@ -95,6 +95,10 @@
   <string name="wpcom">WordPress.com</string>
   <string name="sign_in">Sign in</string>
   <string name="sign_out">Sign out</string>
+  <string name="all">All</string>
+  <string name="images">Images</string>
+  <string name="unattached">Unattached</string>
+  
   
   <!-- Upload Media -->
   <string name="media_upload_title">Upload New Media</string>
@@ -103,6 +107,7 @@
   <string name="media_upload_image_button">Image</string>
   <string name="media_upload_video_button">Video</string>
   <string name="media_upload_other_button">Other</string>
+  
   
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>

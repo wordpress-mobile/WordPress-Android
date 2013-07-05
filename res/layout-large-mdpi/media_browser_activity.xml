@@ -6,7 +6,7 @@
     android:baselineAligned="false"
     android:orientation="horizontal" >
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.4" >
@@ -15,14 +15,28 @@
             android:id="@+id/mediaItemListFragment"
             android:name="org.wordpress.android.ui.media.MediaItemListFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_below="@id/media_browser_filter_container" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/right_shadow"
             android:orientation="vertical" />
-    </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/media_browser_filter_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md__defaultBackground"
+            android:orientation="horizontal" >
+
+            <Spinner
+                android:id="@+id/filterSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <fragment
         android:id="@+id/mediaItemFragment"
