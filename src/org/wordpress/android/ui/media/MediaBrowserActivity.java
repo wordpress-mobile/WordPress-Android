@@ -21,14 +21,14 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
-import org.wordpress.android.ui.media.MediaItemListFragment.MediaItemListListener;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 
-public class MediaBrowserActivity extends WPActionBarActivity implements MediaItemListListener, MediaItemFragmentCallback, 
+public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
     OnQueryTextListener, OnActionExpandListener  {
 
-    private MediaItemListFragment mMediaItemListFragment;
+    private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
     private MenuItem refreshMenuItem;
     
@@ -57,8 +57,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         
-        mMediaItemListFragment = (MediaItemListFragment) fm.findFragmentById(R.id.mediaItemListFragment);
-        mMediaItemListFragment.setListShown(true);
+        mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
         
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
         
@@ -89,7 +88,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
         
         if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mMediaItemListFragment);
+            ft.hide(mMediaGridFragment);
             mSpinner.setVisibility(View.GONE);
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment);
@@ -124,7 +123,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
     }
 
     private void startAnimatingRefreshButton() {
-        if (refreshMenuItem != null && mMediaItemListFragment != null && mMediaItemListFragment.isRefreshing())
+        if (refreshMenuItem != null && mMediaGridFragment != null && mMediaGridFragment.isRefreshing())
             startAnimatingRefreshButton(refreshMenuItem);
     }
     
@@ -162,8 +161,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
             return true;
         } else if (itemId == R.id.menu_refresh) {
 
-            if(mMediaItemListFragment != null) {
-                mMediaItemListFragment.refreshMediaFromServer();
+            if(mMediaGridFragment != null) {
+                mMediaGridFragment.refreshMediaFromServer();
                 startAnimatingRefreshButton();
             }
             return true;
@@ -199,8 +198,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if(mMediaItemListFragment != null)
-            mMediaItemListFragment.search(query);
+        if(mMediaGridFragment != null)
+            mMediaGridFragment.search(query);
         
         mSearchView.clearFocus();
         
@@ -209,8 +208,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaIt
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if(mMediaItemListFragment != null)
-            mMediaItemListFragment.search(newText);
+        if(mMediaGridFragment != null)
+            mMediaGridFragment.search(newText);
         return true;
     }
 

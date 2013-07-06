@@ -6,27 +6,44 @@ import java.util.List;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetMediaTask.Callback;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
-public class MediaItemListFragment extends ListFragment {
+public class MediaGridFragment extends Fragment implements OnItemClickListener {
+    
+    private GridView mGridView;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        
+        mGridView = (GridView) inflater.inflate(R.layout.media_grid_fragment, container);
+        mGridView.setOnItemClickListener(this);
+        
+        
+        return mGridView;
+        
+    }
+    
     private ApiHelper.GetMediaTask mGetMediaTask;
-    private MediaItemListAdapter mAdapter;
+    private MediaGridListAdapter mAdapter;
     private Cursor mCursor;
-    private MediaItemListListener mListener;
+    private MediaGridListener mListener;
     private boolean mIsRefreshing = false;
     
-    public interface MediaItemListListener {
+    public interface MediaGridListener {
         public void onMediaItemListDownloaded();
         public void onMediaItemSelected(String mediaId);
     }
@@ -36,9 +53,9 @@ public class MediaItemListFragment extends ListFragment {
         super.onAttach(activity);
         
         try {
-            mListener = (MediaItemListListener) activity;
+            mListener = (MediaGridListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnMediaItemSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement MediaGridListener");
         }
     }
     
@@ -47,8 +64,8 @@ public class MediaItemListFragment extends ListFragment {
         super.onResume();
         
         loadCursor();
-        mAdapter = new MediaItemListAdapter(getActivity(), mCursor, 0);
-        setListAdapter(mAdapter);
+        mAdapter = new MediaGridListAdapter(getActivity(), mCursor, 0);
+        mGridView.setAdapter(mAdapter);
         
         refreshMediaFromServer();
     }
@@ -68,15 +85,6 @@ public class MediaItemListFragment extends ListFragment {
             String blogId = String.valueOf(blog.getBlogId());
             mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId);
         }
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Cursor cursor = (Cursor) getListAdapter().getItem(position);
-        String mediaId = cursor.getString(cursor.getColumnIndex("uuid"));
-        mListener.onMediaItemSelected(mediaId);
-        
     }
     
     public void refreshMediaFromServer() {
@@ -113,5 +121,12 @@ public class MediaItemListFragment extends ListFragment {
     public boolean isRefreshing() {
         return mIsRefreshing;
     }
-    
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor = ((MediaGridListAdapter) parent.getAdapter()).getCursor();
+        String mediaId = cursor.getString(cursor.getColumnIndex("uuid"));
+        mListener.onMediaItemSelected(mediaId);
+    }
+
 }

@@ -12,8 +12,8 @@
         android:layout_weight="0.4" >
 
         <fragment
-            android:id="@+id/mediaItemListFragment"
-            android:name="org.wordpress.android.ui.media.MediaItemListFragment"
+            android:id="@+id/mediaGridFragment"
+            android:name="org.wordpress.android.ui.media.MediaGridFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/media_browser_filter_container" />
