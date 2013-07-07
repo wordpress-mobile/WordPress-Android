@@ -113,7 +113,6 @@ public class MediaUploadService extends Service {
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(filePath);
         mediaFile.setMIMEType(mimeType);
-        mediaFile.save();
         
         ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile, new Callback() {
             
