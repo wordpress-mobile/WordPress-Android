@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 

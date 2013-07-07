@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.UploadMediaTask.Callback;
