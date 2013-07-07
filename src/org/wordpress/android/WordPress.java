@@ -63,6 +63,7 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static JSONObject latestNotes;
+    public static BitmapLruCache localImageCache;
 
     public static final String TAG="WordPress";
 
@@ -77,6 +78,9 @@ public class WordPress extends Application {
         // Use a small slice of available memory for the image cache
         int cacheSize = maxMemory / 32;
         imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+        
+        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
+        localImageCache = new BitmapLruCache(cacheSize);
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)

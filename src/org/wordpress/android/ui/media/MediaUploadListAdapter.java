@@ -2,11 +2,11 @@ package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
+import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 
 public class MediaUploadListAdapter extends CursorAdapter implements OnClickListener {
 
@@ -30,12 +33,38 @@ public class MediaUploadListAdapter extends CursorAdapter implements OnClickList
         mOnButtonClickListener = onButtonClickListener;
     }
 
+    
+
     @Override
     public void bindView(final View view, Context context, final Cursor cursor) {
-        ImageView imageView = (ImageView) view.findViewById(R.id.media_upload_listitem_image);
-        
         TextView textView = (TextView) view.findViewById(R.id.media_upload_listitem_filename);
         textView.setText(cursor.getString(cursor.getColumnIndex("fileName")));
+
+        ImageView imageView = (ImageView) view.findViewById(R.id.media_upload_listitem_image);
+        final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
+        
+        if (MediaUtils.isValidImage(filePath)) {
+            
+            Bitmap bitmap = WordPress.localImageCache.get(filePath); 
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+            
+                int width = imageView.getLayoutParams().width;
+                int height = imageView.getLayoutParams().height;
+                
+                BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
+                    
+                    @Override
+                    public void onBitmapReady(Bitmap bitmap) {
+                        WordPress.localImageCache.put(filePath, bitmap);
+                    }
+                });
+                task.execute(filePath);
+            }
+        } else {
+            imageView.setImageBitmap(null);
+        }
         
         String uploadState = cursor.getString(cursor.getColumnIndex("uploadState"));
         
@@ -89,10 +118,7 @@ public class MediaUploadListAdapter extends CursorAdapter implements OnClickList
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup root) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        
-        View view = inflater.inflate(R.layout.media_upload_listitem, root, false);
-        
-        return view;
+        return inflater.inflate(R.layout.media_upload_listitem, root, false);
     }
 
     @Override
