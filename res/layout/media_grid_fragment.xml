@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/media_gridview"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:horizontalSpacing="10dp"
-    android:numColumns="2"
-    android:scrollbarStyle="outsideOverlay"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:stretchMode="columnWidth"
-    android:verticalSpacing="10dp" >
+    android:layout_height="match_parent" >
 
-</GridView>
+    <FrameLayout
+        android:id="@+id/media_filter_spinner_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/md_list_selector"
+        android:clickable="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="14dp" >
+
+        <com.actionbarsherlock.internal.widget.IcsSpinner
+            android:id="@+id/media_filter_spinner"
+            style="@style/wordpress_DropDownNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:paddingLeft="0dp" />
+    </FrameLayout>
+
+    <GridView
+        android:id="@+id/media_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/media_filter_spinner_container"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" >
+    </GridView>
+
+</RelativeLayout>

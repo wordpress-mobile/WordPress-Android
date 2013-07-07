@@ -3,6 +3,8 @@ package org.wordpress.android.models;
 import java.util.Date;
 import java.util.Map;
 
+import android.webkit.MimeTypeMap;
+
 import org.wordpress.android.WordPress;
 
 public class MediaFile {
@@ -41,7 +43,11 @@ public class MediaFile {
         
         // get the file name from the link - TODO: may have problem with unicode names
         String link = resultMap.get("link").toString();
-        setFileName(link.replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
+        setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
+        
+        String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
+        setMIMEType(mimeType);
         
         setFileURL(resultMap.get("link").toString());
         setThumbnailURL(resultMap.get("thumbnail").toString());

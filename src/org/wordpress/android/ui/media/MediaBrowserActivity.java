@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -21,6 +19,7 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.ViewPostFragment;
@@ -34,7 +33,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private Spinner mSpinner;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,17 +58,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
         
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
-        
-        String[] filters = new String[] {
-                getResources().getString(R.string.all),
-                getResources().getString(R.string.images),
-                getResources().getString(R.string.unattached) };
-        mSpinner = (Spinner) findViewById(R.id.filterSpinner);
-        if (mSpinner != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, filters);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mSpinner.setAdapter(adapter);
-        }
 
     }
 
@@ -89,7 +76,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaGridFragment);
-            mSpinner.setVisibility(View.GONE);
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment);
             ft.addToBackStack(null);
@@ -174,9 +160,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private void popMediaItemDetails() {
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.mediaItemFragment);
-        if (!mSpinner.isShown()) {
-            mSpinner.setVisibility(View.VISIBLE);
-        }
         if (f == null) {
             try {
                 fm.popBackStack();
@@ -215,9 +198,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onPauseMediaItemFragment() {
-        if (!mSpinner.isShown()) {
-            mSpinner.setVisibility(View.VISIBLE);
-        }
         invalidateOptionsMenu();
     }
 
@@ -229,12 +209,22 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        // currently we don't support searching from within a filter, so hide it
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.setFilterVisibility(View.GONE);
+            mMediaGridFragment.setFilter(Filter.ALL);
+        }
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         onQueryTextChange("");
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.setFilterVisibility(View.VISIBLE);
+            mMediaGridFragment.setFilter(Filter.ALL);
+        }
+            
         return true;
     }
     

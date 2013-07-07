@@ -1868,11 +1868,6 @@ public class WordPressDB {
     public Cursor getMediaFilesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY date_created_gmt DESC", new String[] { blogId });
     }
-    
-    /** For a given blogId, get all the media files for upload **/
-    public Cursor getMediaFilesForUpload(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IN ('uploaded', 'queued', 'failed', 'uploading') ORDER BY date_created_gmt ASC", new String[] { blogId });
-    }
 
     /** For a given blogId, get all the media files with searchTerm **/
     public Cursor getMediaFilesForBlog(String blogId, String searchTerm) {
@@ -1886,6 +1881,33 @@ public class WordPressDB {
     /** For a given blogId, get the media file with the given media_id **/
     public Cursor getMediaFile(String blogId, String mediaId) {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+    }
+    
+    public int getMediaCountAll(String blogId) {
+        Cursor cursor = getMediaFilesForBlog(blogId);
+        return cursor.getCount();
+    }
+
+
+    public Cursor getMediaImagesForBlog(String blogId) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') AND mimeType LIKE ?", new String[] { blogId, "image%" });
+    }
+
+    public int getMediaCountImages(String blogId) {
+        return getMediaImagesForBlog(blogId).getCount();
+    }
+
+    public Cursor getMediaUnattachedForBlog(String blogId) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') AND postId=0", new String[] { blogId });
+    }
+    
+    public int getMediaCountUnattached(String blogId) {
+        return getMediaUnattachedForBlog(blogId).getCount();
+    }
+
+    /** For a given blogId, get all the media files for upload **/
+    public Cursor getMediaFilesForUpload(String blogId) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IN ('uploaded', 'queued', 'failed', 'uploading') ORDER BY date_created_gmt ASC", new String[] { blogId });
     }
     
     public boolean deleteMediaFile(MediaFile mf) {

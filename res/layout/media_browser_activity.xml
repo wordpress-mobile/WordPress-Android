@@ -5,21 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/media_browser_filter_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md__defaultBackground"
-        android:orientation="horizontal" >
-
-        <Spinner
-            android:id="@+id/filterSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
     <fragment
-        android:layout_below="@id/media_browser_filter_container"
         android:id="@+id/mediaGridFragment"
         android:name="org.wordpress.android.ui.media.MediaGridFragment"
         android:layout_width="match_parent"
