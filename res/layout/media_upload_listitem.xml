@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:padding="2dp" >
+
+    <ImageView
+        android:id="@+id/media_upload_listitem_image"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentLeft="true"
+        android:padding="3dp" />
+
+    <FrameLayout
+        android:id="@+id/media_upload_listitem_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_margin="3dp" >
+
+        <Button
+            android:id="@+id/media_upload_listitem_button_queued"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/media_upload_button_queued"
+            android:enabled="false"
+            android:focusable="false"
+            android:padding="4dp"
+            android:text="@string/media_upload_queued_button"
+            android:textColor="@color/media_upload_btn_text"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/media_upload_listitem_button_uploading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/media_upload_button_uploading"
+            android:enabled="false"
+            android:focusable="false"
+            android:padding="4dp"
+            android:text="@string/media_upload_uploading_button"
+            android:textColor="@color/media_upload_btn_text"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/media_upload_listitem_button_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/media_upload_button_edit"
+            android:focusable="false"
+            android:padding="4dp"
+            android:text="@string/media_upload_edit_button"
+            android:textColor="@color/media_upload_btn_text"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/media_upload_listitem_button_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/media_upload_button_retry"
+            android:focusable="false"
+            android:padding="4dp"
+            android:text="@string/media_upload_retry_button"
+            android:textColor="@color/media_upload_btn_text"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/media_upload_listitem_filename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="13dp"
+        android:layout_toLeftOf="@id/media_upload_listitem_buttons"
+        android:layout_toRightOf="@id/media_upload_listitem_image"
+        android:ellipsize="end"
+        android:paddingLeft="3dp"
+        android:paddingRight="1dp"
+        android:paddingTop="7dp"
+        android:singleLine="true" />
+
+    <ProgressBar
+        android:id="@+id/media_upload_listitem_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/media_upload_listitem_filename"
+        android:layout_alignRight="@id/media_upload_listitem_filename"
+        android:layout_below="@id/media_upload_listitem_filename"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

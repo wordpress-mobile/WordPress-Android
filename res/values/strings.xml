@@ -107,6 +107,11 @@
   <string name="media_upload_image_button">Image</string>
   <string name="media_upload_video_button">Video</string>
   <string name="media_upload_other_button">Other</string>
+  <string name="media_upload_clear_uploaded">Clear Uploaded</string>
+  <string name="media_upload_edit_button">edit</string>
+  <string name="media_upload_queued_button">queued</string>
+  <string name="media_upload_retry_button">retry</string>
+  <string name="media_upload_uploading_button">uploading</string>
   
   
   <!-- tab titles -->
@@ -252,6 +257,7 @@
   <string name="select_video">Select a video from gallery</string>
   <string name="take_video">Take a new video</string>
   <string name="media">Media</string>
+  <string name="media_remove_from_queue">Remove from queue</string>
 
   <!-- category management -->
   <string name="add_new_category">Add New Category</string>

@@ -1,54 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/media_upload_container"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mediaUploadFragment"
+    android:name="org.wordpress.android.ui.media.MediaUploadFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp" >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
-        android:text="@string/media_upload_allowed_file_types"
-        android:textStyle="normal" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/media_upload_current_usage" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal" >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/dashboard_icon_photo"
-            android:text="@string/media_upload_image_button"
-            android:id="@+id/media_upload_image_button" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/dashboard_icon_video"
-            android:text="@string/media_upload_video_button"
-            android:id="@+id/media_upload_video_button"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/dashboard_icon_pages"
-            android:text="@string/media_upload_other_button" />
-    </LinearLayout>
-
-
-
-</LinearLayout>
+    android:layout_height="match_parent" />

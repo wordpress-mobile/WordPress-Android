@@ -1,5 +1,10 @@
 package org.xmlrpc.android;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Date;
@@ -13,10 +18,12 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
@@ -332,7 +339,6 @@ public class ApiHelper {
         
         @Override
         protected Boolean doInBackground(List<?>... params) {
-            Log.d("WordPress", "ApiHelper - starting getMediaTask");
             
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
@@ -386,6 +392,110 @@ public class ApiHelper {
             }
         }
         
+    }
+    
+    public static class UploadMediaTask extends AsyncTask<List<?>, Void, String> {
+        
+        private Callback mCallback;
+        private Context mContext;
+        private MediaFile mMediaFile;
+        
+        public interface Callback {
+            public void onSuccess(String id);
+            public void onFailure();
+        }
+        
+        public UploadMediaTask(Context applicationContext, MediaFile mediaFile, Callback callback) {
+            mContext = applicationContext;
+            mMediaFile = mediaFile;
+            mCallback = callback;
+        }
+        
+        @Override
+        protected String doInBackground(List<?>... params) {
+            
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            
+            if (WordPress.currentBlog == null) {
+                Log.e("WordPress", "UploadMediaTask: ApiHelper - current blog is null");
+                return null;
+            }
+
+            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+                    WordPress.currentBlog.getHttpuser(),
+                    WordPress.currentBlog.getHttppassword());
+         
+            byte[] bits = readFile(new File(mMediaFile.getFilePath()));
+            
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("name", mMediaFile.getFileName());
+            data.put("type", mMediaFile.getMIMEType());
+            data.put("bits", bits);
+            data.put("overwrite", true);
+            
+            Object[] apiParams = { 
+                    1, 
+                    WordPress.currentBlog.getUsername(),
+                    WordPress.currentBlog.getPassword(),
+                    data
+            };
+            
+            Map<?, ?> resultMap = null;
+            try {
+                resultMap = (HashMap<?, ?>) client.call("wp.uploadFile", apiParams, getTempFile(mContext));
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+            }
+            
+            if(resultMap == null) {
+                return null;
+            } else {
+                if(resultMap.containsKey("id"))
+                    return (String) resultMap.get("id");
+            }
+
+            return null;
+        }
+        
+        // Create a temp file for media upload
+        private File getTempFile(Context context) {
+            String tempFileName = "wp-" + System.currentTimeMillis();
+            try {
+                context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+            } catch (FileNotFoundException e) {
+                return null;
+            }
+            return context.getFileStreamPath(tempFileName);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (mCallback != null) {
+                if (result != null)
+                    mCallback.onSuccess(result);
+                else
+                    mCallback.onFailure();
+            }
+        }
+
+        private byte[] readFile(File file) {
+            
+            try {
+                byte fileContent[] = new byte[(int)file.length()];
+                DataInputStream dis = new DataInputStream((new FileInputStream(file)));
+                dis.readFully(fileContent);
+                dis.close();
+                return fileContent;
+                
+            } catch (FileNotFoundException e) {
+                Log.e("WordPress", "Failed to upload media: file not found.");
+            } catch (IOException ioe) {
+                Log.e("WordPress", "Failed to upload media: " + ioe);
+            }
+            
+            return null;
+        }        
     }
 
     /**

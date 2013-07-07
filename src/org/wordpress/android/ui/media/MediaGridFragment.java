@@ -24,7 +24,17 @@ import org.wordpress.android.models.Blog;
 public class MediaGridFragment extends Fragment implements OnItemClickListener {
     
     private GridView mGridView;
+    private ApiHelper.GetMediaTask mGetMediaTask;
+    private MediaGridListAdapter mAdapter;
+    private Cursor mCursor;
+    private MediaGridListener mListener;
+    private boolean mIsRefreshing = false;
 
+    public interface MediaGridListener {
+        public void onMediaItemListDownloaded();
+        public void onMediaItemSelected(String mediaId);
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -32,20 +42,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
         mGridView = (GridView) inflater.inflate(R.layout.media_grid_fragment, container);
         mGridView.setOnItemClickListener(this);
         
-        
         return mGridView;
         
-    }
-    
-    private ApiHelper.GetMediaTask mGetMediaTask;
-    private MediaGridListAdapter mAdapter;
-    private Cursor mCursor;
-    private MediaGridListener mListener;
-    private boolean mIsRefreshing = false;
-    
-    public interface MediaGridListener {
-        public void onMediaItemListDownloaded();
-        public void onMediaItemSelected(String mediaId);
     }
     
     @Override
@@ -63,7 +61,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
     public void onResume() {
         super.onResume();
         
-        loadCursor();
+        mCursor = fetchMediaFromDB();
         mAdapter = new MediaGridListAdapter(getActivity(), mCursor, 0);
         mGridView.setAdapter(mAdapter);
         
@@ -79,12 +77,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
         }
     }
     
-    private void loadCursor() {
+    private Cursor fetchMediaFromDB() {
+        Cursor cursor = null;
         Blog blog = WordPress.getCurrentBlog();
         if(blog != null) {
             String blogId = String.valueOf(blog.getBlogId());
-            mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId);
+            cursor = WordPress.wpDB.getMediaFilesForBlog(blogId);
         }
+        return cursor;
     }
     
     public void refreshMediaFromServer() {
@@ -106,8 +106,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
         @Override
         public void onSuccess() {
             mIsRefreshing = false;
-            loadCursor();
             mListener.onMediaItemListDownloaded();
+            mCursor = fetchMediaFromDB();
             mAdapter.changeCursor(mCursor);
         }
 
@@ -125,7 +125,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = ((MediaGridListAdapter) parent.getAdapter()).getCursor();
-        String mediaId = cursor.getString(cursor.getColumnIndex("uuid"));
+        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         mListener.onMediaItemSelected(mediaId);
     }
 

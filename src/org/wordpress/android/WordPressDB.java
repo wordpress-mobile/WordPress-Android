@@ -128,9 +128,10 @@ public class WordPressDB {
     // add thumbnailURL, thumbnailPath and fileURL to media
     private static final String ADD_MEDIA_THUMBNAIL_URL = "alter table media add thumbnailURL text default '';";
     private static final String ADD_MEDIA_FILE_URL = "alter table media add fileURL text default '';";
-    private static final String ADD_MEDIA_UNIQUE_ID = "alter table media add uuid text default '';";
+    private static final String ADD_MEDIA_UNIQUE_ID = "alter table media add mediaId text default '';";
     private static final String ADD_MEDIA_BLOG_ID = "alter table media add blogId text default '';";
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
+    private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
 
     private SQLiteDatabase db;
 
@@ -193,6 +194,7 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
                 db.execSQL(ADD_MEDIA_BLOG_ID);
                 db.execSQL(ADD_MEDIA_DATE_GMT);
+                db.execSQL(ADD_MEDIA_UPLOAD_STATE);
                 migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -537,6 +539,7 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
                 db.execSQL(ADD_MEDIA_BLOG_ID);
                 db.execSQL(ADD_MEDIA_DATE_GMT);
+                db.execSQL(ADD_MEDIA_UPLOAD_STATE);
                 db.setVersion(DATABASE_VERSION);
                 migrateWPComAccount();
             }
@@ -1803,15 +1806,16 @@ public class WordPressDB {
         values.put("isFeaturedInPost", mf.isFeaturedInPost());
         values.put("fileURL", mf.getFileURL());
         values.put("thumbnailURL", mf.getThumbnailURL());
-        values.put("uuid", mf.getId());
+        values.put("mediaId", mf.getMediaId());
         values.put("blogId", mf.getBlogId());
         values.put("date_created_gmt", mf.getDateCreatedGMT());
+        values.put("uploadState", mf.getUploadState());
         synchronized (this) {
             int result = db.update(
                     MEDIA_TABLE,
                     values,
-                    "blogId=? AND uuid=?", 
-                    new String[]{ mf.getBlogId(), String.valueOf(mf.getId())});
+                    "blogId=? AND mediaId=?", 
+                    new String[]{ mf.getBlogId(), String.valueOf(mf.getMediaId())});
             if (result == 0)
                 returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
         }
@@ -1844,9 +1848,10 @@ public class WordPressDB {
             mf.setFeaturedInPost(c.getInt(13) > 0);
             mf.setFileURL(c.getString(14));
             mf.setThumbnailURL(c.getString(15));
-            mf.setId(Integer.parseInt(c.getString(16)));
+            mf.setMediaId(c.getString(16));
             mf.setBlogId(c.getString(17));
             mf.setDateCreatedGMT(c.getLong(18));
+            mf.setUploadState(c.getString(19));
             mediaFiles[i] = mf;
             c.moveToNext();
         }
@@ -1857,12 +1862,17 @@ public class WordPressDB {
     
     /** For a given blogId, get the first media files **/
     public Cursor getFirstMediaFileForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? ORDER BY date_created_gmt DESC LIMIT 1", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IS NULL ORDER BY date_created_gmt DESC LIMIT 1", new String[] { blogId });
     }
     
     /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? ORDER BY date_created_gmt DESC", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IS NULL ORDER BY date_created_gmt DESC", new String[] { blogId });
+    }
+    
+    /** For a given blogId, get all the media files for upload **/
+    public Cursor getMediaFilesForUpload(String blogId) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IS NOT NULL AND uploadState <> '' ORDER BY date_created_gmt ASC", new String[] { blogId });
     }
 
     /** For a given blogId, get all the media files with searchTerm **/
@@ -1871,12 +1881,12 @@ public class WordPressDB {
         // We'll match this.
         
         String term = searchTerm.toLowerCase(Locale.getDefault());
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? ORDER BY date_created_gmt DESC", new String[] { blogId, "%" + term + "%" });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? AND uploadState IS NULL ORDER BY date_created_gmt DESC", new String[] { blogId, "%" + term + "%" });
     }
     
     /** For a given blogId, get the media file with the given media_id **/
-    public Cursor getMediaFile(String blogId, String media_id) {
-        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uuid=?", new String[] { blogId, media_id });
+    public Cursor getMediaFile(String blogId, String mediaId) {
+        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[] { blogId, mediaId });
     }
     
     public boolean deleteMediaFile(MediaFile mf) {
@@ -1916,9 +1926,10 @@ public class WordPressDB {
             mf.setFeaturedInPost(c.getInt(13) > 0);
             mf.setFileURL(c.getString(14));
             mf.setThumbnailURL(c.getString(15));
-            mf.setId(Integer.parseInt(c.getString(16)));
+            mf.setMediaId(c.getString(16));
             mf.setBlogId(c.getString(17));
             mf.setDateCreatedGMT(c.getLong(18));
+            mf.setUploadState(c.getString(19));
         } else {
             c.close();
             return null;
@@ -1934,6 +1945,48 @@ public class WordPressDB {
 
     }
 
+    /** Get the queued media files for a given blogId **/
+    public Cursor getMediaQueue(String blogId) {
+        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE uploadState=?", new String[] {"queued"}); 
+    }
+    
+    /** Update a media file to a new upload state **/
+    public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
+        if (blogId == null || blogId.equals(""))
+            return;
+        
+        ContentValues values = new ContentValues();
+        values.put("uploadState", uploadState);
+        
+        db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+    }
+
+    /** 
+     * For a given blogId, set all uploading states to failed.
+     * Useful for cleaning up files stuck in the "uploading" state.  
+     **/
+    public void setMediaUploadingToFailed(String blogId) {
+        if (blogId == null || blogId.equals(""))
+            return; 
+        
+        ContentValues values = new ContentValues();
+        values.put("uploadState", "failed");
+        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[] { blogId, "uploading" });
+    }
+    
+    /**
+     * For a given blogId, remove all the entries that have been uploaded 
+     */
+    public void clearMediaUploaded(String blogId) {
+        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[] { blogId, "uploaded" });
+    }
+    
+
+    /** Delete a media item from a blog locally **/
+    public void deleteMediaFile(String blogId, String mediaId) {
+        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+    }
+    
     public int getWPCOMBlogID() {
         int id = -1;
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id" },

@@ -1,10 +1,7 @@
 package org.wordpress.android.models;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-
-import android.text.format.DateFormat;
 
 import org.wordpress.android.WordPress;
 
@@ -28,13 +25,15 @@ public class MediaFile {
     protected String fileURL = null; // url of the file to download
     protected String thumbnailURL = null;  // url of the thumbnail to download
     private String blogId;
-    private long date_created_gmt;
+    private long dateCreatedGmt;
+    private String uploadState = null;
+    private String mediaId;
 
 
     public MediaFile(String blogId, Map<?, ?> resultMap) {
         
         setBlogId(blogId);
-        setId(Integer.parseInt(resultMap.get("attachment_id").toString()));
+        setMediaId(resultMap.get("attachment_id").toString());
         setPostID(Long.parseLong(resultMap.get("parent").toString()));
         setTitle(resultMap.get("title").toString());
         setCaption(resultMap.get("caption").toString());
@@ -70,6 +69,14 @@ public class MediaFile {
         this.id = id;
     }
 
+    public String getMediaId() {
+        return mediaId;
+    }
+    
+    public void setMediaId(String id) {
+        mediaId = id;
+    }
+    
     public boolean isFeatured() {
         return featured;
     }
@@ -220,12 +227,20 @@ public class MediaFile {
     }
 
     public void setDateCreatedGMT(long date_created_gmt) {
-        this.date_created_gmt = date_created_gmt;
+        this.dateCreatedGmt = date_created_gmt;
     }
     
 
     public long getDateCreatedGMT() {
-        return date_created_gmt;
+        return dateCreatedGmt;
+    }
+
+    public void setUploadState(String uploadState) {
+        this.uploadState = uploadState;
+    }
+    
+    public String getUploadState() {
+        return uploadState;
     }
 
 }

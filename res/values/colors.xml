@@ -20,5 +20,10 @@
     <color name="media_gallery_grid_label">#FFFFFF</color>
     <color name="media_gallery_image_bg">#FFFFFF</color>
     <color name="media_gallery_shadow">#E2E2E2</color>
+    <color name="media_upload_btn_text">#FFFFFF</color>
+    <color name="media_upload_btn_upload">#FFBB33</color>
+    <color name="media_upload_btn_edit">#0099CC</color>
+    <color name="media_upload_btn_retry">#669900</color>
+    <color name="media_upload_btn_queued">#FF8800</color>
     
 </resources>
