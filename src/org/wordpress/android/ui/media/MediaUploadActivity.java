@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -10,11 +11,15 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
+import org.wordpress.android.ui.media.MediaUploadFragment.MediaUploadFragmentCallback;
+import org.wordpress.android.ui.posts.ViewPostFragment;
 
 
-public class MediaUploadActivity extends SherlockFragmentActivity {
+public class MediaUploadActivity extends SherlockFragmentActivity implements MediaItemFragmentCallback, MediaUploadFragmentCallback {
 
     private MediaUploadFragment mMediaUploadFragment;
+    private MediaItemFragment mMediaItemFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,7 @@ public class MediaUploadActivity extends SherlockFragmentActivity {
         
         FragmentManager fm = getSupportFragmentManager();
         mMediaUploadFragment = (MediaUploadFragment) fm.findFragmentById(R.id.mediaUploadFragment);
+        mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
     }
     
     @Override
@@ -37,7 +43,12 @@ public class MediaUploadActivity extends SherlockFragmentActivity {
         super.onOptionsItemSelected(item);
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
-            finish();   
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                popMediaItemDetails();
+            } else {
+                finish();
+            }
             return true;
         } else if(itemId == R.id.menu_media_upload_clear_uploaded) {
             String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
@@ -56,8 +67,51 @@ public class MediaUploadActivity extends SherlockFragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getSupportMenuInflater().inflate(R.menu.media_upload, menu);
+        
+        if (mMediaItemFragment != null && !mMediaItemFragment.isInLayout() && mMediaItemFragment.isVisible()) {
+            // show no options
+        } else {
+            getSupportMenuInflater().inflate(R.menu.media_upload, menu);
+        }
+        
         return true;
     }
+
+    @Override
+    public void onEditMediaItem(String mediaId) {
+        FragmentManager fm = getSupportFragmentManager();
+        
+        if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.hide(mMediaUploadFragment);
+            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
+            ft.add(R.id.media_upload_container, mMediaItemFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        } else {
+            mMediaItemFragment.loadMedia(mediaId);
+        }
+    }
     
+    private void popMediaItemDetails() {
+        FragmentManager fm = getSupportFragmentManager();
+        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.mediaItemFragment);
+        if (f == null) {
+            try {
+                fm.popBackStack();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onResumeMediaItemFragment() {
+        invalidateOptionsMenu();   
+    }
+
+    @Override
+    public void onPauseMediaItemFragment() {
+        invalidateOptionsMenu();        
+    }
 }

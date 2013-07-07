@@ -23,7 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1867,12 +1866,12 @@ public class WordPressDB {
     
     /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IS NULL ORDER BY date_created_gmt DESC", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY date_created_gmt DESC", new String[] { blogId });
     }
     
     /** For a given blogId, get all the media files for upload **/
     public Cursor getMediaFilesForUpload(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IS NOT NULL AND uploadState <> '' ORDER BY date_created_gmt ASC", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IN ('uploaded', 'queued', 'failed', 'uploading') ORDER BY date_created_gmt ASC", new String[] { blogId });
     }
 
     /** For a given blogId, get all the media files with searchTerm **/
@@ -1881,7 +1880,7 @@ public class WordPressDB {
         // We'll match this.
         
         String term = searchTerm.toLowerCase(Locale.getDefault());
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? AND uploadState IS NULL ORDER BY date_created_gmt DESC", new String[] { blogId, "%" + term + "%" });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY date_created_gmt DESC", new String[] { blogId, "%" + term + "%" });
     }
     
     /** For a given blogId, get the media file with the given media_id **/
@@ -1947,7 +1946,7 @@ public class WordPressDB {
 
     /** Get the queued media files for a given blogId **/
     public Cursor getMediaQueue(String blogId) {
-        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE uploadState=?", new String[] {"queued"}); 
+        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?", new String[] {"queued", blogId}); 
     }
     
     /** Update a media file to a new upload state **/
@@ -1956,11 +1955,34 @@ public class WordPressDB {
             return;
         
         ContentValues values = new ContentValues();
-        values.put("uploadState", uploadState);
+        if (uploadState == null) values.putNull("uploadState");
+        else values.put("uploadState", uploadState);
         
         db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
     }
 
+    /** Updates all media files to a new upload state **/
+    public void updateMediaForSync(String blogId) {
+        if (blogId == null || blogId.equals(""))
+            return;
+        
+        ContentValues values = new ContentValues();
+        values.put("uploadState", "unsynced");
+        
+        db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState='uploaded') ", new String[] { blogId });
+    }
+    
+    /** Delete media that is not synced on the server and not in the queue **/
+    public void deleteUnsyncedMedia(String blogId) {
+        if (blogId == null || blogId.equals(""))
+            return;
+        
+        ContentValues values = new ContentValues();
+        values.put("uploadState", "unsynced");
+        
+        db.delete(MEDIA_TABLE, "blogId=? and uploadState='unsynced'", new String[] { blogId });
+    }
+    
     /** 
      * For a given blogId, set all uploading states to failed.
      * Useful for cleaning up files stuck in the "uploading" state.  
@@ -1974,11 +1996,14 @@ public class WordPressDB {
         db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[] { blogId, "uploading" });
     }
     
-    /**
-     * For a given blogId, remove all the entries that have been uploaded 
-     */
+    /** For a given blogId, clear the upload states in the upload queue **/
     public void clearMediaUploaded(String blogId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[] { blogId, "uploaded" });
+        if (blogId == null || blogId.equals(""))
+            return;
+        
+        ContentValues values = new ContentValues();
+        values.putNull("uploadState");
+        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[] { blogId, "uploaded" });
     }
     
 

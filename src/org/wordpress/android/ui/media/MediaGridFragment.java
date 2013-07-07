@@ -15,7 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetMediaTask.Callback;
+import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -24,7 +24,7 @@ import org.wordpress.android.models.Blog;
 public class MediaGridFragment extends Fragment implements OnItemClickListener {
     
     private GridView mGridView;
-    private ApiHelper.GetMediaTask mGetMediaTask;
+    private ApiHelper.SyncMediaLibraryTask mGetMediaTask;
     private MediaGridListAdapter mAdapter;
     private Cursor mCursor;
     private MediaGridListener mListener;
@@ -96,7 +96,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
 
             List<Object> apiArgs = new ArrayList<Object>();
             apiArgs.add(WordPress.getCurrentBlog());
-            mGetMediaTask = new ApiHelper.GetMediaTask(mCallback);
+            mGetMediaTask = new ApiHelper.SyncMediaLibraryTask(mCallback);
             mGetMediaTask.execute(apiArgs);
         }
     }

@@ -42,7 +42,24 @@ public class MediaUploadFragment extends Fragment implements LaunchCameraCallbac
     private ListView mListView;
     private MediaUploadListAdapter mAdapter;
     private Cursor mCursor;
-
+    private MediaUploadFragmentCallback mCallback;
+    
+    public interface MediaUploadFragmentCallback {
+        public void onEditMediaItem(String mediaId);
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        try {
+            mCallback = (MediaUploadFragmentCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement MediaUploadFragmentCallback");
+        }
+    }
+    
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -268,7 +285,7 @@ public class MediaUploadFragment extends Fragment implements LaunchCameraCallbac
 
     @Override
     public void onEditClicked(String mediaId) {
-        // TODO Auto-generated method stub
+        mCallback.onEditMediaItem(mediaId);
     }
     
     public void refresh() {

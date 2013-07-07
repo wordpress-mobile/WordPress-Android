@@ -18,12 +18,10 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
-import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
@@ -324,7 +322,7 @@ public class ApiHelper {
         return allComments;
     }
     
-    public static class GetMediaTask extends AsyncTask<List<?>, Void, Boolean> {
+    public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Boolean> {
 
         public interface Callback {
             public void onSuccess();
@@ -333,7 +331,7 @@ public class ApiHelper {
         
         private Callback mCallback;
 
-        public GetMediaTask(Callback callback) {
+        public SyncMediaLibraryTask(Callback callback) {
             mCallback = callback;
         }
         
@@ -367,12 +365,26 @@ public class ApiHelper {
             
             if(results != null) {
 
+                // To sync files from the server, we'll first set the state of
+                // files not in the queue to be 'unsynced'. 
+                // Then replace of the db entries with the fresh data. 
+                // All the remaining entries that haven't been replaced are still 'unsynced'
+                // and are deleted.
+                
+                // We only do this when we have results from the server.
+                
+                String blogId = String.valueOf(WordPress.currentBlog.getBlogId());
+                
+                WordPress.wpDB.updateMediaForSync(blogId);
+                
                 Map<?, ?> resultMap;
                 
                 for(Object result : results) {
                     resultMap = (Map<?, ?>) result;
-                    WordPress.wpDB.saveMediaFile(new MediaFile(String.valueOf(WordPress.currentBlog.getBlogId()), resultMap));
+                    WordPress.wpDB.saveMediaFile(new MediaFile(blogId, resultMap));
                 }
+                
+                WordPress.wpDB.deleteUnsyncedMedia(blogId);
                 
                 return true;
             } else {
@@ -387,6 +399,72 @@ public class ApiHelper {
             if(mCallback != null) {
                 if(result)
                     mCallback.onSuccess();
+                else
+                    mCallback.onFailure();
+            }
+        }
+        
+    }
+    
+    public static class GetMediaItemTask extends AsyncTask<List<?>, Void, MediaFile> {
+
+        public interface Callback {
+            public void onSuccess(MediaFile mediaFile);
+            public void onFailure();
+        }
+        
+        private Callback mCallback;
+        private int mMediaId;
+
+        public GetMediaItemTask(int mediaId, Callback callback) {
+            mMediaId = mediaId;
+            mCallback = callback;
+        }
+        
+        @Override
+        protected MediaFile doInBackground(List<?>... params) {
+            
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            
+            if(WordPress.currentBlog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return null;
+            }
+            
+            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
+                    WordPress.currentBlog.getHttpuser(),
+                    WordPress.currentBlog.getHttppassword());
+            
+            Object[] apiParams = { 
+                    WordPress.currentBlog.getBlogId(),
+                    WordPress.currentBlog.getUsername(),
+                    WordPress.currentBlog.getPassword(),
+                    mMediaId
+            };
+            
+            Map<?, ?> results = null;
+            try {
+                results = (Map<?, ?>) client.call("wp.getMediaItem", apiParams);
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", e.getMessage());
+            }
+            
+            if(results != null) {
+                MediaFile mediaFile = new MediaFile(String.valueOf(WordPress.currentBlog.getBlogId()), results);
+                mediaFile.save();
+                return mediaFile;
+            } else {
+                return null;
+            }
+            
+        }
+        
+        @Override
+        protected void onPostExecute(MediaFile result) {
+            if(mCallback != null) {
+                if(result != null)
+                    mCallback.onSuccess(result);
                 else
                     mCallback.onFailure();
             }
@@ -440,6 +518,9 @@ public class ApiHelper {
                     WordPress.currentBlog.getPassword(),
                     data
             };
+            
+            if (mContext == null)
+                return null;
             
             Map<?, ?> resultMap = null;
             try {

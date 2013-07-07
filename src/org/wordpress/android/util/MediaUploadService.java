@@ -10,8 +10,10 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
 import org.xmlrpc.android.ApiHelper.UploadMediaTask.Callback;
 
 import org.wordpress.android.WordPress;
@@ -50,15 +52,10 @@ public class MediaUploadService extends Service {
     
     @Override
     public void onStart(Intent intent, int startId) {
-        mHandler.post(FetchQueueTask);
+        mHandler.post(fetchQueueTask);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    private Runnable FetchQueueTask = new Runnable() {
+    private Runnable fetchQueueTask = new Runnable() {
         
         @Override
         public void run() {
@@ -76,7 +73,6 @@ public class MediaUploadService extends Service {
         }
     };
     
-
     private void cancelOldUploads() {
         // There should be no media files with an upload state of 'uploading' at the start of this service.
         // Since we won't be able to receive notifications for these, set them to 'failed'.
@@ -112,23 +108,23 @@ public class MediaUploadService extends Service {
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(filePath);
         mediaFile.setMIMEType(mimeType);
-        
+
         ApiHelper.UploadMediaTask task = new ApiHelper.UploadMediaTask(mContext, mediaFile, new Callback() {
             
             @Override
             public void onSuccess(String id) {
-                mUploadInProgress = false;
-                WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploaded");
-                sendUpdateBroadcast();
-                mHandler.post(FetchQueueTask);
+                // once the file has been uploaded, delete the local database entry and
+                // download the new one so that we are up-to-date and so that users can edit it.
+                WordPress.wpDB.deleteMediaFile(blogIdStr, mediaId);
+                fetchMediaFile(id);
             }
             
             @Override
             public void onFailure() {
-                mUploadInProgress = false;
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
+                mUploadInProgress = false;
                 sendUpdateBroadcast();
-                mHandler.post(FetchQueueTask);
+                mHandler.post(fetchQueueTask);
             }
         });
         
@@ -139,7 +135,33 @@ public class MediaUploadService extends Service {
         apiArgs.add(WordPress.getCurrentBlog());
         task.execute(apiArgs) ;
         
-        mHandler.post(FetchQueueTask);
+        mHandler.post(fetchQueueTask);
+    }
+
+    protected void fetchMediaFile(String id) {
+        List<Object> apiArgs = new ArrayList<Object>();
+        apiArgs.add(WordPress.getCurrentBlog());
+        GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id), new GetMediaItemTask.Callback() {
+            
+            @Override
+            public void onSuccess(MediaFile mediaFile) {
+                String blogId = mediaFile.getBlogId();
+                String mediaId = mediaFile.getMediaId();
+                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
+
+                mUploadInProgress = false;
+                sendUpdateBroadcast();
+                mHandler.post(fetchQueueTask);
+            }
+            
+            @Override
+            public void onFailure() {
+                mUploadInProgress = false;
+                sendUpdateBroadcast();
+                mHandler.post(fetchQueueTask);                
+            }
+        });
+        task.execute(apiArgs);
     }
 
     private void sendUpdateBroadcast() {
