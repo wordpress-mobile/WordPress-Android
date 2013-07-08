@@ -121,4 +121,12 @@ public class SingleLineListFragment extends ListFragment implements Notification
             return mItems.length();
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
 }
