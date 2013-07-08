@@ -161,7 +161,37 @@ public class WPRestClient {
         String path = String.format("sites/%s/comments/%s/", siteId, commentId);
         post(path, params, null, listener, errorListener);
     }
+    
     /**
+     * Get all a site's themes
+     */
+    public void getThemes(String siteId, String sort, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        if (sort == null || sort.equals(""))
+            sort = "trending";
+        String path = String.format("site/%s/themes?sort=%s&limit=%d&offset=%d", siteId, sort, limit, offset);
+        get(path, listener, errorListener);
+    }
+    
+    /**
+     * Set a site's theme
+     */
+    public void setTheme(String siteId, String themeId, Listener listener, ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("theme", themeId);
+        String path = String.format("site/%s/themes/mine", siteId);
+        post(path, params, null, listener, errorListener);
+    }
+    
+    /**
+     * Get a site's current theme
+     */
+    public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("site/%s/themes/mine", siteId);
+        get(path, listener, errorListener);
+    }
+    
+    /**
+     * 
      * Make GET request
      */
     public void get(String path, Listener listener, ErrorListener errorListener){
