@@ -41,7 +41,11 @@ public class SingleLineListFragment extends ListFragment implements Notification
         list.setDivider(getResources().getDrawable(R.drawable.list_divider));
         list.setDividerHeight(1);
         list.setHeaderDividersEnabled(false);
-        
+
+        // No note? No service.
+        if (getNote() == null)
+            return;
+
         // set the header
         LayoutInflater inflater = getActivity().getLayoutInflater();
         DetailHeader noteHeader = (DetailHeader) inflater.inflate(R.layout.notifications_detail_header, null);
