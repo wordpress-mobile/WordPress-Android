@@ -146,7 +146,10 @@ public class XMLRPCClient {
      * @param String authorization token
      */
     public void setAuthorizationHeader(String authToken) {
-        postMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
+        if( authToken != null) 
+            postMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
+        else
+            postMethod.removeHeaders("Authorization");
     }
 
     /**
