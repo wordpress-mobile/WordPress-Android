@@ -122,8 +122,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new QuickPhotoMenuItem());
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());
-        mMenuItems.add(new AdminMenuItem());
-
     }
 
     @Override
@@ -792,25 +790,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
-        }
-    }
-
-    private class AdminMenuItem extends MenuDrawerItem {
-        AdminMenuItem(){
-            super(DASHBOARD_ACTIVITY, R.string.view_admin, R.drawable.dashboard_icon_wp);
-        }
-        @Override
-        public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof DashboardActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof DashboardActivity))
-                mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
-            intent.putExtra("loadAdmin", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

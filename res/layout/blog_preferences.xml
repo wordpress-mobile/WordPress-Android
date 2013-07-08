@@ -159,10 +159,29 @@
             android:layout_below="@id/section3"
             android:layout_marginTop="8dp" >
 
+            <TextView
+                    android:id="@+id/l_section4"
+                    style="@style/WordPressSettingsSectionHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/manage" />
+
+            <Button android:id="@+id/view_admin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/l_section4"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/view_admin"
+                    android:drawableRight="@drawable/dashboard_icon_wp"
+                    android:onClick="viewAdmin"
+                    />
+
             <Button
                 android:id="@+id/remove_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/view_admin"
                 android:text="@string/remove_account"
                 android:onClick="removeBlog" />
         </RelativeLayout>

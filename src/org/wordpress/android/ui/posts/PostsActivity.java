@@ -84,7 +84,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
-            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID) {
+            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID && lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
                 Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
                 while(itemIterator.hasNext()){
                     MenuDrawerItem item = itemIterator.next();

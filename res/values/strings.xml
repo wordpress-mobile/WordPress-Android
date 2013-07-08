@@ -421,5 +421,7 @@
   <!--  Image Descriptions for Accessibility -->
   <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Sorry, could not load the comment. Please try again.</string>
+    <string name="manage">Manage</string>
+    <string name="dashboard_tip">Tap the back key to return to the app.</string>
 
 </resources>
