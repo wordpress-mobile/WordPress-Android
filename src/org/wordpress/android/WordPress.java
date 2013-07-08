@@ -341,6 +341,16 @@ public class WordPress extends Application {
             return false;
     }
     
+    /**
+     * Returns WordPress.com Auth Token
+     * 
+     * @return String - The wpcom Auth token, or null if not authenticated.
+     */
+    public static String getWPComAuthToken(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+    }
+    
     class OauthAuthenticator implements WPRestClient.Authenticator {
         private final RequestQueue mQueue = Volley.newRequestQueue(WordPress.this);
         @Override

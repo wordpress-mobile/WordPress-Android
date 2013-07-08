@@ -50,9 +50,8 @@ public class WPComXMLRPCApi {
         };
         
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
-      /*  if(settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null) != null){
-            client.setAuthorizationHeader(settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null));
-        }*/
+        /*client.setAuthorizationHeader(WordPress.getWPComAuthToken(ctx));*/    
+
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
                 Log.v("WORDPRESS", "Successfully registered device on WP.com");
@@ -64,7 +63,6 @@ public class WPComXMLRPCApi {
             }
         }, "wpcom.mobile_push_register_token", params);
     }
-    
     
     public void unregisterWPComToken(Context ctx, String token) {
         
@@ -78,6 +76,7 @@ public class WPComXMLRPCApi {
         };
 
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+        /*client.setAuthorizationHeader(WordPress.getWPComAuthToken(ctx));*/
         client.callAsync(new XMLRPCCallback() {
             public void onSuccess(long id, Object result) {
                 Log.v("WORDPRESS", "Successfully unregistered device on WP.com");
@@ -98,10 +97,7 @@ public class WPComXMLRPCApi {
         if (!WordPress.hasValidWPComCredentials(context))
             return;
 
-        /*
-         * String wpcomToken = settings.getString("wpcom-access-token", null); if (wpcomToken ==
-         * null) return false; client.setAuthorizationHeader(wpcomToken);
-         */
+        /*client.setAuthorizationHeader(WordPress.getWPComAuthToken(context));*/
 
         Object[] params = {
                 settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
@@ -179,10 +175,7 @@ public class WPComXMLRPCApi {
             updatedSettings.put("muted_blogs", mutedBlogsList);
         }
 
-        /*
-         * String wpcomToken = settings.getString("wpcom-access-token", null); if (wpcomToken ==
-         * null) return false; client.setAuthorizationHeader(wpcomToken);
-         */
+        /*client.setAuthorizationHeader(WordPress.getWPComAuthToken(context));*/
 
         if (updatedSettings.size() == 0)
             return;
