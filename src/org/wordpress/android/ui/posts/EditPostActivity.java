@@ -333,8 +333,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }
 
         String[] items = new String[] { getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private),
-                getResources().getString(R.string.local_draft) };
+                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private) };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -423,7 +422,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 } else if (status.equals("private")) {
                     mStatusSpinner.setSelection(3, true);
                 } else if (status.equals("localdraft")) {
-                    mStatusSpinner.setSelection(4, true);
+                    mStatusSpinner.setSelection(0, true);
                 }
             }
 
@@ -552,17 +551,15 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         if (itemId == R.id.menu_edit_post) {
             if (mAutoSaveHandler != null)
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-            if (savePost(false)) {
-                if (mPost.isUploaded() || !mPost.getPost_status().equals("localdraft")) {
-                    if (mQuickMediaType >= 0) {
-                        if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
-                            mPost.setQuickPostType("QuickPhoto");
-                        else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
-                            mPost.setQuickPostType("QuickVideo");
-                    }
-                    WordPress.currentPost = mPost;
-                    startService(new Intent(this, PostUploadService.class));
+            if (savePost(false, false)) {
+                if (mQuickMediaType >= 0) {
+                    if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
+                        mPost.setQuickPostType("QuickPhoto");
+                    else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
+                        mPost.setQuickPostType("QuickVideo");
                 }
+                WordPress.currentPost = mPost;
+                startService(new Intent(this, PostUploadService.class));
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
                 setResult(RESULT_OK, i);
@@ -652,7 +649,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         } else if (id == R.id.post) {
             if (mAutoSaveHandler != null)
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-            if (savePost(false)) {
+            if (savePost(false, false)) {
                 if (mPost.isUploaded() || !mPost.getPost_status().equals("localdraft")) {
                     if (mQuickMediaType >= 0) {
                         if (mQuickMediaType == Constants.QUICK_POST_PHOTO_CAMERA || mQuickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY)
@@ -856,30 +853,31 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     private void showCancelAlert(final boolean isUpPress) {
+
+        // Empty post? Let's not prompt then.
+        if (mIsNew && mContentEditText.getText().toString().equals("") && mTitleEditText.getText().toString().equals("")) {
+            finish();
+            return;
+        }
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
-        dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
-        dialogBuilder.setMessage(getResources().getText((mIsPage) ? R.string.sure_to_cancel_edit_page : R.string.sure_to_cancel_edit));
+        dialogBuilder.setTitle(getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
+        dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                if (mIsNewDraft)
-                    mPost.delete();
-                if (isUpPress && mIsExternalInstance) {
-                    Intent intent = new Intent(EditPostActivity.this, (mIsPage) ? PagesActivity.class : PostsActivity.class);
-                    if (mIsPage)
-                        intent.putExtra("viewPages", true);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("returnStatus", "CANCEL");
-                    Intent mIntent = new Intent();
-                    mIntent.putExtras(bundle);
-                    setResult(RESULT_OK, mIntent);
-                }
+                savePost(false, true);
+                Intent i = new Intent();
+                i.putExtra("shouldRefresh", true);
+                setResult(RESULT_OK, i);
                 finish();
             }
         });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
+        dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                finish();
+            }
+        });
+        dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
@@ -1378,14 +1376,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         return super.onCreateDialog(id);
     }
 
-    private boolean savePost(boolean autoSave) {
+    private boolean savePost(boolean isAutoSave, boolean isDraftSave) {
 
         String title = mTitleEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String pubDate = mPubDateText.getText().toString();
         String content = "";
 
-        if (mLocalDraft || mIsNew && !autoSave) {
+        if (mLocalDraft || mIsNew && !isAutoSave) {
             Editable e = mContentEditText.getText();
             if (android.os.Build.VERSION.SDK_INT >= 14) {
                 // remove suggestion spans, they cause craziness in
@@ -1427,7 +1425,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String images = "";
         boolean success = false;
 
-        if (content.equals("") && !autoSave) {
+        if (content.equals("") && !isAutoSave && !isDraftSave) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
             dialogBuilder.setTitle(getResources().getText(R.string.empty_fields));
             dialogBuilder.setMessage(getResources().getText(R.string.title_post_required));
@@ -1465,7 +1463,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         mf.save();
 
                         int tagStart = s.getSpanStart(wpIS);
-                        if (!autoSave) {
+                        if (!isAutoSave) {
                             s.removeSpan(wpIS);
                             s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                             if (mLocalDraft)
@@ -1493,9 +1491,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 break;
             case 3:
                 status = "private";
-                break;
-            case 4:
-                status = "localdraft";
                 break;
             }
 
@@ -1906,7 +1901,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private Runnable autoSaveRunnable = new Runnable() {
         @Override
         public void run() {
-            savePost(true);
+            savePost(true, false);
             mAutoSaveHandler.postDelayed(this, AUTOSAVE_DELAY_MILLIS);
         }
     };

@@ -44,7 +44,7 @@ import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
-public class ViewPostsFragment extends ListFragment {
+public class PostsListFragment extends ListFragment {
     /** Called when the activity is first created. */
     private String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
             mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;

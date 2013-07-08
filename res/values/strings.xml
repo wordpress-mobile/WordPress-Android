@@ -94,6 +94,7 @@
   <string name="wpcom">WordPress.com</string>
   <string name="sign_in">Sign in</string>
   <string name="sign_out">Sign out</string>
+  <string name="upload">Upload</string>
   
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
@@ -423,5 +424,7 @@
     <string name="error_load_comment">Sorry, could not load the comment. Please try again.</string>
     <string name="manage">Manage</string>
     <string name="dashboard_tip">Tap the back key to return to the app.</string>
+    <string name="discard">Discard</string>
+    <string name="prompt_save_changes">Would you like to save your changes?</string>
 
 </resources>
