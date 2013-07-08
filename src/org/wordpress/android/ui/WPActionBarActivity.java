@@ -199,15 +199,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (mIsXLargeDevice) {
             // on a x-large screen device
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT, Position.LEFT, true);
+                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else {
-                menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 menuDrawer.setDrawerIndicatorEnabled(true);
             }
         } else {
-            menuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_CONTENT);
+            menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
             menuDrawer.setDrawerIndicatorEnabled(true);
         }
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);

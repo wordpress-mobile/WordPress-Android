@@ -10,7 +10,7 @@
     <!-- Colors for menu drawer. -->
     <color name="md__itemBackground">#CC2EA2CC</color>
     <color name="md__iconTintColor">#DDFFFFFF</color>
-    <color name="md__shadowColor">#44000000</color>
+    <color name="md__shadowColor">#99000000</color>
     
     <color name="wordpress_blue">#21759B</color>
     <color name="light_gray">#E5E5E5</color>
