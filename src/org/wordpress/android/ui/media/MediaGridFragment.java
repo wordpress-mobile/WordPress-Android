@@ -98,7 +98,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
     }
 
     private void refreshSpinnerAdapter() {
-        if (getActivity() == null)
+        if (getActivity() == null || WordPress.getCurrentBlog() == null)
             return; 
         
         Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar().getThemedContext();

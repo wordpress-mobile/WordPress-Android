@@ -80,7 +80,11 @@ public class MediaUploadFragment extends Fragment implements LaunchCameraCallbac
             
             @Override
             public void onClick(View v) {
-                MediaUtils.launchBrowseFiles(MediaUploadFragment.this);
+                if (MediaUtils.fileBrowserAvailable(getActivity())) {
+                    MediaUtils.launchBrowseFiles(MediaUploadFragment.this);
+                } else {
+                    Toast.makeText(getActivity(), "No file browser available", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -12,6 +13,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -165,11 +168,23 @@ public class MediaUtils {
     }
     
     public static void launchBrowseFiles(Activity activity) {
-        activity.startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT), RequestCode.ACTIVITY_REQUEST_CODE_BROWSE_FILES);
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_BROWSE_FILES);
     }
     
     public static void launchBrowseFiles(Fragment fragment) {
-        fragment.startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT), RequestCode.ACTIVITY_REQUEST_CODE_BROWSE_FILES);
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_BROWSE_FILES);
+    }
+    
+    public static boolean fileBrowserAvailable(Activity activity) {
+        final PackageManager packageManager = activity.getPackageManager();
+        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.GET_ACTIVITIES);
+        return list.size() > 0;
     }
     
     public static boolean isSupportedFile(String filePath) {
