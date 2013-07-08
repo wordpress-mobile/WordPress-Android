@@ -1,6 +1,7 @@
 
 package org.xmlrpc.android;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.google.gson.internal.StringMap;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.util.DeviceUtils;
 
 /**
  * WordPress.com specific XML-RPC API calls
@@ -29,6 +31,64 @@ public class WPComXMLRPCApi {
 
     private XMLRPCClient client = new XMLRPCClient(Constants.wpcomXMLRPCURL, "", "");
 
+    public void registerWPComToken(final Context ctx, String token) {
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String uuid = settings.getString("wp_pref_notifications_uuid", null);
+        if (uuid == null)
+            return;
+
+        String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
+        Object[] params = {
+                settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
+                token,
+                uuid,
+                "android",
+                false,
+                deviceName
+        };
+        
+        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+      /*  if(settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null) != null){
+            client.setAuthorizationHeader(settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null));
+        }*/
+        client.callAsync(new XMLRPCCallback() {
+            public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Successfully registered device on WP.com");
+                getNotificationSettings(null, ctx); 
+            }
+
+            public void onFailure(long id, XMLRPCException error) {
+                Log.e("WORDPRESS", error.getMessage());
+            }
+        }, "wpcom.mobile_push_register_token", params);
+    }
+    
+    
+    public void unregisterWPComToken(Context ctx, String token) {
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        Object[] params = {
+                settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
+                WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
+                token,
+                false,
+                "android"
+        };
+
+        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
+        client.callAsync(new XMLRPCCallback() {
+            public void onSuccess(long id, Object result) {
+                Log.v("WORDPRESS", "Successfully unregistered device on WP.com");
+            }
+
+            public void onFailure(long id, XMLRPCException error) {
+                Log.e("WORDPRESS", error.getMessage());
+            }
+        }, "wpcom.mobile_push_unregister_token", params);
+    }
+    
     public void getNotificationSettings(final XMLRPCCallback callback, Context context) {
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String gcmToken = GCMRegistrar.getRegistrationId(context);
@@ -66,7 +126,7 @@ public class WPComXMLRPCApi {
                 if (callback != null) {
                     callback.onFailure(id, error);
                 }
-                Log.v("WORDPRESS", error.getMessage());
+                Log.e("WORDPRESS", error.getMessage());
             }
         }, "wpcom.get_mobile_push_notification_settings", params);
     }
@@ -141,7 +201,7 @@ public class WPComXMLRPCApi {
             }
 
             public void onFailure(long id, XMLRPCException error) {
-                Log.v("WORDPRESS", error.getMessage());
+                Log.e("WORDPRESS", error.getMessage());
             }
         }, "wpcom.set_mobile_push_notification_settings", params);
     }
