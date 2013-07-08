@@ -218,7 +218,7 @@ public class ReaderImplFragment extends ReaderBaseFragment {
         @Override
         protected Void doInBackground(Void... args) {
 
-            if ( !WordPress.hasValidWPComCredentials(getActivity().getApplicationContext()) ){
+            if (getActivity() == null || !WordPress.hasValidWPComCredentials(getActivity().getApplicationContext()) ){
                 return null;
             }
             
