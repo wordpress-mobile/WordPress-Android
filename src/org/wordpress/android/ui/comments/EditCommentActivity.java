@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
@@ -47,6 +48,12 @@ public class EditCommentActivity extends SherlockActivity {
 
         // Retrieve a reference to the current comment.
         Comment comment = WordPress.currentComment;
+
+        if (comment == null) {
+            Toast.makeText(this, getString(R.string.error_load_comment), Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         final EditText authorNameET = (EditText) this.findViewById(R.id.author_name);
         authorNameET.setText(comment.name);

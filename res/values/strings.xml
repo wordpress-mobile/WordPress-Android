@@ -420,5 +420,6 @@
   
   <!--  Image Descriptions for Accessibility -->
   <string name="content_description_add_media">Add media</string>
+    <string name="error_load_comment">Sorry, could not load the comment. Please try again.</string>
 
 </resources>
