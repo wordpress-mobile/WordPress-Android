@@ -53,6 +53,7 @@ import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
 
@@ -85,12 +86,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected static final int MEDIA_ACTIVITY = 2;
     protected static final int PAGES_ACTIVITY = 3;
     protected static final int COMMENTS_ACTIVITY = 4;
-    protected static final int STATS_ACTIVITY = 5;
-    protected static final int QUICK_PHOTO_ACTIVITY = 6;
-    protected static final int QUICK_VIDEO_ACTIVITY = 7;
-    protected static final int VIEW_SITE_ACTIVITY = 8;
-    protected static final int DASHBOARD_ACTIVITY = 9;
-    protected static final int NOTIFICATIONS_ACTIVITY = 10;
+    protected static final int THEMES_ACTIVITY = 5;
+    protected static final int STATS_ACTIVITY = 6;
+    protected static final int QUICK_PHOTO_ACTIVITY = 7;
+    protected static final int QUICK_VIDEO_ACTIVITY = 8;
+    protected static final int VIEW_SITE_ACTIVITY = 9;
+    protected static final int DASHBOARD_ACTIVITY = 10;
+    protected static final int NOTIFICATIONS_ACTIVITY = 11;
     
     protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
     
@@ -121,6 +123,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new MediaMenuItem());
         mMenuItems.add(new PagesMenuItem());
         mMenuItems.add(new CommentsMenuItem());
+        mMenuItems.add(new ThemesMenuItem());
         mMenuItems.add(new StatsMenuItem());
         mMenuItems.add(new QuickPhotoMenuItem());
         mMenuItems.add(new QuickVideoMenuItem());
@@ -746,6 +749,25 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
     }
+    
+    private class ThemesMenuItem extends MenuDrawerItem {
+        ThemesMenuItem(){
+            super(THEMES_ACTIVITY, R.string.themes, R.drawable.dashboard_icon_posts); // TODO: REPLACE ICON
+        }
+        @Override
+        public Boolean isSelected(){
+            return WPActionBarActivity.this instanceof ThemeBrowserActivity;
+        }
+        @Override
+        public void onSelectItem(){
+            if (!(WPActionBarActivity.this instanceof ThemeBrowserActivity))
+                mShouldFinish = true;
+            Intent intent = new Intent(WPActionBarActivity.this, ThemeBrowserActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+        }
+    }
+    
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
