@@ -576,4 +576,12 @@ public class CommentsActivity extends WPActionBarActivity implements
         }
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
 }
