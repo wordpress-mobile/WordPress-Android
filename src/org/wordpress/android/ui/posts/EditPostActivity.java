@@ -863,7 +863,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
         dialogBuilder.setTitle(getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
         dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 savePost(false, true);
                 Intent i = new Intent();
