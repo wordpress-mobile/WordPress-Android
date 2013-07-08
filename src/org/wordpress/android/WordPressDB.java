@@ -603,6 +603,9 @@ public class WordPressDB {
 
     public List<Map<String, Object>> getAccounts() {
 
+        if (db == null)
+            return new Vector<Map<String, Object>>();
+        
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName",
                 "username", "blogId", "url", "password" }, null, null, null,
                 null, null);
