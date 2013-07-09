@@ -165,10 +165,8 @@ public class WPRestClient {
     /**
      * Get all a site's themes
      */
-    public void getThemes(String siteId, String sort, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        if (sort == null || sort.equals(""))
-            sort = "trending";
-        String path = String.format("sites/%s/themes?sort=%s&limit=%d&offset=%d", siteId, sort, limit, offset);
+    public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes?limit=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
     
