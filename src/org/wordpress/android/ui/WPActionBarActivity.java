@@ -456,7 +456,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     getBlogNames();
                     setupCurrentBlog();
                     initMenuDrawer();
-                    mMenuDrawer.openMenu();
+                    mMenuDrawer.openMenu(false);
                     WordPress.registerForCloudMessaging(this);
                 } else {
                     finish();
