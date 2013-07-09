@@ -8,7 +8,7 @@
     android:paddingRight="1dp"
     android:paddingTop="0.5dp" >
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/theme_grid_item_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

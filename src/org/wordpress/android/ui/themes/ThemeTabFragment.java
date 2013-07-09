@@ -1,27 +1,15 @@
 package org.wordpress.android.ui.themes;
 
-import java.util.ArrayList;
-
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Theme;
 
 public class ThemeTabFragment extends Fragment {
 
@@ -30,6 +18,7 @@ public class ThemeTabFragment extends Fragment {
         A_Z("A-Z"), 
         POPULAR("Popular"), 
         NEWEST("Newest"),
+        PREMIUM("Premium"),
         FRIENDS_OF_WP("Friends of WP");
         
         private String mTitle;
@@ -52,7 +41,7 @@ public class ThemeTabFragment extends Fragment {
     
     private static final String ARGS_THEME = "ARGS_THEME";
     
-    public static Fragment newInstance(ThemeSortType theme) {
+    public static ThemeTabFragment newInstance(ThemeSortType theme) {
         
         ThemeTabFragment fragment = new ThemeTabFragment();
         
@@ -79,12 +68,10 @@ public class ThemeTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        mAdapter = new ThemeTabAdapter(getActivity(), new ArrayList<Theme>());
+        
+        Cursor cursor = fetchThemes(getThemeSortType());
+        mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         mGridView.setAdapter(mAdapter);
-        
-        fetchThemes(getThemeSortType());
-        
     }
 
     private ThemeSortType getThemeSortType() {
@@ -96,80 +83,40 @@ public class ThemeTabFragment extends Fragment {
         return ThemeSortType.getTheme(sortType);
     }
     
-    private void fetchThemes(ThemeSortType themeSortType) {
+    private Cursor fetchThemes(ThemeSortType themeSortType) {
         
-        String sort = "trending";
+        String blogId = getBlogId();
         
         switch(themeSortType) {
             case A_Z:
+                return WordPress.wpDB.getThemesAtoZ(blogId);
             case FRIENDS_OF_WP:
+                return WordPress.wpDB.getThemesFriendsOfWP(blogId);
             case POPULAR:
-                sort = "popular";
-                break;
+                return WordPress.wpDB.getThemesPopularity(blogId);
             case NEWEST:
-                sort = "newest";
-                break;
+                return WordPress.wpDB.getThemesNewest(blogId);
+            case PREMIUM:
+                return WordPress.wpDB.getThemesPremium(blogId);
             case TRENDING:
             default:
+                return WordPress.wpDB.getThemesTrending(blogId);
                 
         }
-         
-        String siteId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        WordPress.restClient.getThemes(siteId, sort, 0, 0, new Listener() {
-            
-            @Override
-            public void onResponse(JSONObject response) {
-                new FetchThemesTask().execute(response);
-            }
-        }, new ErrorListener() {
-            
-            @Override
-            public void onErrorResponse(VolleyError response) {
-                Log.d("WordPress", "Failed to download themes: " + response.getMessage());
-            }
-        });
         
     }
-    
-    public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
 
-        @Override
-        protected ArrayList<Theme> doInBackground(JSONObject... args) {
-            JSONObject response = args[0];
-            
-            final ArrayList<Theme> themes = new ArrayList<Theme>();
-            
-            if (response != null) {
-                JSONArray array = null;
-                try {
-                    array = response.getJSONArray("themes");
-                    System.out.println("Themes: " + themes.size());
-
-                    if (array != null) {
-
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject object = array.getJSONObject(i);
-
-                            themes.add(Theme.fromJSON(object));
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (themes != null && themes.size() > 0) {
-                return themes;
-            }
-            return null;
+    public void refresh() {
+        Cursor cursor = fetchThemes(getThemeSortType());
+        if (mAdapter == null) {
+            mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+            mGridView.setAdapter(mAdapter);
+        } else {
+            mAdapter.swapCursor(cursor);
         }
-        
-        @Override
-        protected void onPostExecute(ArrayList<Theme> result) {
-            mAdapter.setThemes(result);
-        }
-       
     }
     
+    private String getBlogId() {
+        return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+    }
 }

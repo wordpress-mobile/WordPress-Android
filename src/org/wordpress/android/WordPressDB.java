@@ -29,6 +29,7 @@ import org.json.JSONException;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WordPressDB {
@@ -56,6 +57,10 @@ public class WordPressDB {
     private static final String POSTS_TABLE = "posts";
     private static final String COMMENTS_TABLE = "comments";
 
+    private static final String THEMES_TABLE = "themes";
+    private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
+            + "themeId text, name text, description text, screenshotURL text, price integer default 0, trendingRank integer default 0, popularityRank integer default 0, launchDate date, blogId text);";
+    
     // eula
     private static final String EULA_TABLE = "eula";
 
@@ -194,6 +199,7 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_BLOG_ID);
                 db.execSQL(ADD_MEDIA_DATE_GMT);
                 db.execSQL(ADD_MEDIA_UPLOAD_STATE);
+                db.execSQL(CREATE_TABLE_THEMES);
                 migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -540,6 +546,7 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_DATE_GMT);
                 db.execSQL(ADD_MEDIA_UPLOAD_STATE);
                 db.setVersion(DATABASE_VERSION);
+                db.execSQL(CREATE_TABLE_THEMES);
                 migrateWPComAccount();
             }
         } catch (SQLException e) {
@@ -2067,4 +2074,57 @@ public class WordPressDB {
         return false;
     }
 
+    public boolean saveTheme(Theme theme) {
+        boolean returnValue = false;
+        
+        ContentValues values = new ContentValues();
+        values.put("themeId", theme.getThemeId());
+        values.put("name", theme.getName());
+        values.put("description", theme.getDescription());
+        values.put("screenshotURL", theme.getScreenshotURL());
+        values.put("price", theme.getPrice());
+        values.put("trendingRank", theme.getTrendingRank());
+        values.put("popularityRank", theme.getPopularityRank());
+        values.put("launchDate", theme.getLaunchDateMs());
+        values.put("blogId", theme.getBlogId());
+        synchronized (this) {
+            int result = db.update(
+                    THEMES_TABLE,
+                    values,
+                    "themeId=?", 
+                    new String[]{ theme.getThemeId() });
+            if (result == 0)
+                returnValue = db.insert(THEMES_TABLE, null, values) > 0;
+        }
+
+        return (returnValue);
+    }
+    
+    public Cursor getThemesAtoZ(String blogId) {
+        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY name ASC", new String[] { blogId });
+    }
+    
+    public Cursor getThemesTrending(String blogId) {
+        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY trendingRank ASC", new String[] { blogId });
+    }
+    
+    public Cursor getThemesPopularity(String blogId) {
+        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY popularityRank ASC", new String[] { blogId });
+    }
+    
+    public Cursor getThemesNewest(String blogId) {
+        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY launchDate DESC", new String[] { blogId });
+    }
+    
+    public Cursor getThemesPremium(String blogId) {
+        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND price > 0 ORDER BY name ASC", new String[] { blogId });
+    }
+    
+    public Cursor getThemesFriendsOfWP(String blogId) {
+        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND themeId LIKE ? ORDER BY popularityRank ASC", new String[] { blogId, "partner-%" });
+    }
+    
+    public int getThemeCount(String blogId) {
+        return getThemesAtoZ(blogId).getCount();
+    }
 }
