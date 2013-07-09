@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPHtmlTagHandler;
 
 public class Note {
     protected static final String TAG="NoteModel";
@@ -254,7 +255,7 @@ public class Note {
      * Replaces emoticons with emoji
      */
     public static SpannableStringBuilder prepareHtml(String text){
-        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text);
+        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {
