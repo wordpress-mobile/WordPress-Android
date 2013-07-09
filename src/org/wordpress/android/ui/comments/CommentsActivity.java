@@ -310,6 +310,7 @@ public class CommentsActivity extends WPActionBarActivity implements
                         WordPress.currentComment);
                 WordPress.wpDB.updateCommentStatus(id, WordPress.currentComment.commentID,
                         newStatus);
+                contentHash.put("status", newStatus);
             }
             dismissDialog(ID_DIALOG_MODERATING);
             Thread action = new Thread() {
