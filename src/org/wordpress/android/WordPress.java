@@ -107,7 +107,7 @@ public class WordPress extends Application {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
                     // Send the token to WP.com in case it was invalidated
-                    registerWPComToken(ctx, token);
+                    new WPComXMLRPCApi().registerWPComToken(ctx, token);
                     Log.v("WORDPRESS", "Already registered for GCM");
                 }
             } catch (Exception e) {
@@ -115,62 +115,7 @@ public class WordPress extends Application {
             }
         }
     }
-    
-    public static void registerWPComToken(final Context ctx, String token) {
         
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String uuid = settings.getString("wp_pref_notifications_uuid", null);
-        if (uuid == null)
-            return;
-
-        String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
-        Object[] params = {
-                settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
-                WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
-                token,
-                uuid,
-                "android",
-                false,
-                deviceName
-        };
-        
-        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
-
-        client.callAsync(new XMLRPCCallback() {
-            public void onSuccess(long id, Object result) {
-                Log.v("WORDPRESS", "Successfully registered device on WP.com");
-                new WPComXMLRPCApi().getNotificationSettings(null, ctx); 
-            }
-
-            public void onFailure(long id, XMLRPCException error) {
-                Log.e("WORDPRESS", error.getMessage());
-            }
-        }, "wpcom.mobile_push_register_token", params);
-    }
-    
-    public static void unregisterWPComToken(Context ctx, String token) {
-        
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        Object[] params = {
-                settings.getString(WPCOM_USERNAME_PREFERENCE, ""),
-                WordPressDB.decryptPassword(settings.getString(WPCOM_PASSWORD_PREFERENCE, "")),
-                token,
-                false,
-                "android"
-        };
-
-        XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
-        client.callAsync(new XMLRPCCallback() {
-            public void onSuccess(long id, Object result) {
-                Log.v("WORDPRESS", "Successfully unregistered device on WP.com");
-            }
-
-            public void onFailure(long id, XMLRPCException error) {
-                Log.v("WORDPRESS", error.getMessage());
-            }
-        }, "wpcom.mobile_push_unregister_token", params);
-    }
-
     /**
      * Get versionName from Manifest.xml
      * @return versionName
@@ -400,6 +345,16 @@ public class WordPress extends Application {
             return false;
     }
     
+    /**
+     * Returns WordPress.com Auth Token
+     * 
+     * @return String - The wpcom Auth token, or null if not authenticated.
+     */
+    public static String getWPComAuthToken(Context context) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        return settings.getString(WordPress.ACCESS_TOKEN_PREFERENCE, null);
+    }
+    
     class OauthAuthenticator implements WPRestClient.Authenticator {
         private final RequestQueue mQueue = Volley.newRequestQueue(WordPress.this);
         @Override
@@ -445,7 +400,7 @@ public class WordPress extends Application {
      * again
      */
     public static void signOut(Context context) {
-        unregisterWPComToken(
+        new WPComXMLRPCApi().unregisterWPComToken(
                 context,
                 GCMRegistrar.getRegistrationId(context));
         try {

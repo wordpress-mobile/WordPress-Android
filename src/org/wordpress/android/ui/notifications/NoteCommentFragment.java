@@ -443,4 +443,12 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
         
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
 }

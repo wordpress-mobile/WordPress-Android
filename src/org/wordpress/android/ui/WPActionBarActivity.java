@@ -128,8 +128,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new QuickPhotoMenuItem());
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());
-        mMenuItems.add(new AdminMenuItem());
-
     }
 
     @Override
@@ -150,7 +148,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshUI();
+    }
 
+    private void refreshUI(){
         // the current blog may have changed while we were away
         setupCurrentBlog();
         if (mMenuDrawer != null) {
@@ -167,7 +168,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
     }
-
+    
     /**
      * Create a menu drawer and attach it to the activity.
      * 
@@ -205,15 +206,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (mIsXLargeDevice) {
             // on a x-large screen device
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT, MenuDrawer.MENU_DRAG_CONTENT);
+                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else {
-                menuDrawer = MenuDrawer.attach(this);
+                menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 menuDrawer.setDrawerIndicatorEnabled(true);
             }
         } else {
-            menuDrawer = MenuDrawer.attach(this);
+            menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
             menuDrawer.setDrawerIndicatorEnabled(true);
         }
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
@@ -461,7 +462,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                     getBlogNames();
                     setupCurrentBlog();
                     initMenuDrawer();
-                    mMenuDrawer.peekDrawer(0);
+                    mMenuDrawer.openMenu();
                     WordPress.registerForCloudMessaging(this);
                 } else {
                     finish();
@@ -541,7 +542,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
                             WordPress.signOut(WPActionBarActivity.this);
-                            finish();
+                            refreshUI();
                         }
                     });
             dialogBuilder.setNegativeButton(R.string.cancel,
@@ -835,25 +836,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
-        }
-    }
-
-    private class AdminMenuItem extends MenuDrawerItem {
-        AdminMenuItem(){
-            super(DASHBOARD_ACTIVITY, R.string.view_admin, R.drawable.dashboard_icon_wp);
-        }
-        @Override
-        public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof DashboardActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof DashboardActivity))
-                mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, DashboardActivity.class);
-            intent.putExtra("loadAdmin", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

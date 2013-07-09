@@ -23,6 +23,8 @@ import android.graphics.BitmapFactory;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
+import org.xmlrpc.android.WPComXMLRPCApi;
+
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.EscapeUtils;
@@ -210,7 +212,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 editor.commit();
             }
             
-            WordPress.registerWPComToken(context, regId);
+            new WPComXMLRPCApi().registerWPComToken(context, regId);
         }
     }
 

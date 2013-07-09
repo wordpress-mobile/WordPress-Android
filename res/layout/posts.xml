@@ -13,7 +13,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
     <fragment
-      android:name="org.wordpress.android.ui.posts.ViewPostsFragment"
+      android:name="org.wordpress.android.ui.posts.PostsListFragment"
       android:id="@+id/postList"
       android:layout_weight="1"
       android:layout_width="0dp"

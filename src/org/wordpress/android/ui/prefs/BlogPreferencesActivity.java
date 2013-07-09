@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import java.util.List;
-import java.util.Locale;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,19 +15,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.EscapeUtils;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Activity for configuring blog specific settings.
  */
 public class BlogPreferencesActivity extends SherlockFragmentActivity {
-    protected static Intent svc = null;
     private String originalUsername;
+    private boolean mIsViewingAdmin;
 
     /** The blog this activity is managing settings for. */
     private Blog blog;
@@ -58,8 +61,10 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             finish();
             return;
         }
-        
-        getSupportActionBar().setTitle(EscapeUtils.unescapeHtml(blog.getBlogName()));
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(EscapeUtils.unescapeHtml(blog.getBlogName()));
+        actionBar.setDisplayHomeAsUpEnabled(true);
         
         mUsernameET = (EditText) findViewById(R.id.username);
         mPasswordET = (EditText) findViewById(R.id.password);
@@ -81,10 +86,16 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mIsViewingAdmin = false;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         
-        if (mBlogDeleted)
+        if (mBlogDeleted || mIsViewingAdmin)
             return;
         
         blog.setUsername(mUsernameET.getText().toString());
@@ -146,6 +157,18 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemID = item.getItemId();
+        if (itemID == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadSettingsForBlog() {
@@ -290,5 +313,15 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         });
         dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
+    }
+
+    /**
+     * View the blog admin area in the web browser
+     */
+    public void viewAdmin(View view) {
+        mIsViewingAdmin = true;
+        Intent i = new Intent(this, DashboardActivity.class);
+        i.putExtra("blogID", blog.getId());
+        startActivity(i);
     }
 }

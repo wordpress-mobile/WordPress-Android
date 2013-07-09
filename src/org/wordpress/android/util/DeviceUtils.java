@@ -117,7 +117,7 @@ public class DeviceUtils {
             prop.load(fileStream);
             fileStream.close();
             String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_" ) );
-            if ( decodedModel != null )  {
+            if ( decodedModel != null && !decodedModel.trim().equals("") )  {
                 model = decodedModel;
             }
         } catch (IOException e) {

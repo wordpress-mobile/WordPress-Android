@@ -37,16 +37,16 @@ import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.AddCommentActivity;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostActionListener;
-import org.wordpress.android.ui.posts.ViewPostsFragment.OnPostSelectedListener;
-import org.wordpress.android.ui.posts.ViewPostsFragment.OnRefreshListener;
+import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
+import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
+import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
 
-    private ViewPostsFragment postList;
+    private PostsListFragment postList;
     private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
     public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
     public ProgressDialog loadingDialog;
@@ -84,7 +84,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
-            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID) {
+            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID && lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
                 Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
                 while(itemIterator.hasNext()){
                     MenuDrawerItem item = itemIterator.next();
@@ -106,7 +106,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        postList = (ViewPostsFragment) fm.findFragmentById(R.id.postList);
+        postList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
 
         if (extras != null) {

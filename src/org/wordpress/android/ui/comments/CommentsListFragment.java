@@ -203,6 +203,12 @@ public class CommentsListFragment extends ListFragment {
 
                 Map<String, String> contentHash, postHash = new HashMap<String, String>();
                 contentHash = (Map<String, String>) allComments.get(curCommentID);
+
+                if(contentHash.get("status").equals(newStatus)){
+                    checkedComments.set(i, "false");                    
+                    continue;
+                }
+                
                 postHash.put("status", newStatus);
                 postHash.put("content", contentHash.get("comment"));
                 postHash.put("author", contentHash.get("author"));
@@ -221,6 +227,7 @@ public class CommentsListFragment extends ListFragment {
                     if (bResult) {
                         checkedComments.set(i, "false");
                         listRow.status = newStatus;
+                        contentHash.put("status", newStatus);
                         model.set(i, listRow);
                         WordPress.wpDB.updateCommentStatus(
                                 WordPress.currentBlog.getId(),
@@ -330,10 +337,10 @@ public class CommentsListFragment extends ListFragment {
         String author, postID, comment, dateCreatedFormatted, status, authorEmail, authorURL, postTitle;
         int commentID;
 
-        List<Map<String, Object>> loadedPosts = WordPress.wpDB
+        List<Map<String, Object>> loadedComments = WordPress.wpDB
                 .loadComments(WordPress.currentBlog.getId());
-        if (loadedPosts != null) {
-            numRecords = loadedPosts.size();
+        if (loadedComments != null) {
+            numRecords = loadedComments.size();
             if (refreshOnly) {
                 if (model != null) {
                     model.clear();
@@ -343,9 +350,9 @@ public class CommentsListFragment extends ListFragment {
             }
 
             checkedComments = new Vector<String>();
-            for (int i = 0; i < loadedPosts.size(); i++) {
+            for (int i = 0; i < loadedComments.size(); i++) {
                 checkedComments.add(i, "false");
-                Map<String, Object> contentHash = loadedPosts.get(i);
+                Map<String, Object> contentHash = loadedComments.get(i);
                 allComments.put((Integer)contentHash.get("commentID"),
                         contentHash);
                 author = EscapeUtils.unescapeHtml(contentHash.get("author")
@@ -380,7 +387,7 @@ public class CommentsListFragment extends ListFragment {
             if (!refreshOnly) {
                 ListView listView = this.getListView();
                 listView.removeFooterView(switcher);
-                if (loadedPosts.size() % 30 == 0) {
+                if (loadedComments.size() % 30 == 0) {
                     listView.addFooterView(switcher);
                 }
                 setListAdapter(new CommentAdapter());

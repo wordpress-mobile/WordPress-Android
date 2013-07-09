@@ -685,7 +685,6 @@ public class ApiHelper {
 
             return request;
         } catch (HttpRequestException e) {
-            e.printStackTrace();
             return null;
         }
     }
