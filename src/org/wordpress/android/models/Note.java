@@ -6,7 +6,6 @@ package org.wordpress.android.models;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
 import android.text.SpannableStringBuilder;
 
@@ -82,7 +81,7 @@ public class Note {
      * Removes HTML and cleans up newlines and whitespace
      */
     public String getCommentPreview(){
-        return getCommentBody().toString().replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
+        return getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
     }
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
