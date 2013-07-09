@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/theme_details_fragment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="20dp"
+            android:text="Truly Minimal"
+            android:textColor="@color/theme_details_name"
+            android:textSize="23sp" />
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/theme_details_fragment_image"
+            android:layout_width="300dp"
+            android:layout_height="225dp"
+            android:layout_below="@id/theme_details_fragment_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/theme_details_fragment_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/theme_details_fragment_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/media_upload_button_edit"
+            android:text="Live Preview"
+            android:textColor="@color/theme_details_button" />
+
+        <View
+            android:id="@+id/theme_details_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/theme_details_fragment_button" />
+
+        <TextView
+            android:id="@+id/theme_details_fragment_details_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/theme_details_divider"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="18dp"
+            android:text="Details"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/theme_details_fragment_details_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/theme_details_fragment_details_label"
+            android:layout_marginLeft="15dp"
+            android:text="Details"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="normal" />
+    </RelativeLayout>
+
+</ScrollView>

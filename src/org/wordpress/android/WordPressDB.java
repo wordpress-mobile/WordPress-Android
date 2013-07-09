@@ -2101,30 +2101,50 @@ public class WordPressDB {
     }
     
     public Cursor getThemesAtoZ(String blogId) {
-        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY name ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY name ASC", new String[] { blogId });
     }
     
     public Cursor getThemesTrending(String blogId) {
-        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY trendingRank ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY trendingRank ASC", new String[] { blogId });
     }
     
     public Cursor getThemesPopularity(String blogId) {
-        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY popularityRank ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY popularityRank ASC", new String[] { blogId });
     }
     
     public Cursor getThemesNewest(String blogId) {
-        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY launchDate DESC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) ORDER BY launchDate DESC", new String[] { blogId });
     }
     
     public Cursor getThemesPremium(String blogId) {
-        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND price > 0 ORDER BY name ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND price > 0 ORDER BY name ASC", new String[] { blogId });
     }
     
     public Cursor getThemesFriendsOfWP(String blogId) {
-        return db.rawQuery("SELECT _id, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND themeId LIKE ? ORDER BY popularityRank ASC", new String[] { blogId, "partner-%" });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND themeId LIKE ? ORDER BY popularityRank ASC", new String[] { blogId, "partner-%" });
     }
     
     public int getThemeCount(String blogId) {
         return getThemesAtoZ(blogId).getCount();
+    }
+
+    public Theme getTheme(String themeId) {
+        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL FROM " + THEMES_TABLE + " WHERE themeId=?", new String[] { themeId });
+        if (cursor.moveToFirst()) {
+            String name = cursor.getString(0);
+            String description = cursor.getString(1);
+            String screenshotURL = cursor.getString(2);
+            
+            Theme theme = new Theme();
+            theme.setThemeId(themeId);
+            theme.setName(name);
+            theme.setDescription(description);
+            theme.setScreenshotURL(screenshotURL);
+            
+            return theme;
+        } else {
+            return null;    
+        }
+        
     }
 }

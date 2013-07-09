@@ -34,7 +34,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
     
     private GridView mGridView;
     private ApiHelper.SyncMediaLibraryTask mGetMediaTask;
-    private MediaGridListAdapter mAdapter;
+    private MediaGridAdapter mAdapter;
     private Cursor mCursor;
     private MediaGridListener mListener;
     private boolean mIsRefreshing = false;
@@ -136,7 +136,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
         
         setFilter(mFilter);
         if (mCursor != null) {
-            mAdapter = new MediaGridListAdapter(getActivity(), mCursor, 0);
+            mAdapter = new MediaGridAdapter(getActivity(), mCursor, 0);
             mGridView.setAdapter(mAdapter);
         }
         
@@ -189,7 +189,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor cursor = ((MediaGridListAdapter) parent.getAdapter()).getCursor();
+        Cursor cursor = ((MediaGridAdapter) parent.getAdapter()).getCursor();
         String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         mListener.onMediaItemSelected(mediaId);
     }

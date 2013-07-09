@@ -11,11 +11,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
@@ -29,12 +32,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
+import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
 
-public class ThemeBrowserActivity extends WPActionBarActivity implements ActionBar.TabListener {
+public class ThemeBrowserActivity extends WPActionBarActivity implements ActionBar.TabListener, ThemeTabFragmentCallback {
 
-    private ThemeTabFragment[] mFragments;
+    private ThemeTabFragment[] mTabFragments;
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
+    private ThemeDetailsFragment mDetailsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         createMenuDrawer(R.layout.theme_browser_activity);
 
         mThemePagerAdapter = new ThemePagerAdapter(getSupportFragmentManager());
-        mFragments = new ThemeTabFragment[mThemePagerAdapter.getCount()];
+        mTabFragments = new ThemeTabFragment[mThemePagerAdapter.getCount()];
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -114,8 +119,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
 
         @Override
         public Fragment getItem(int i) {
-            mFragments[i] = ThemeTabFragment.newInstance(ThemeSortType.getTheme(i)); 
-            return mFragments[i];
+            mTabFragments[i] = ThemeTabFragment.newInstance(ThemeSortType.getTheme(i)); 
+            return mTabFragments[i];
         }
 
         @Override
@@ -153,6 +158,54 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         return String.valueOf(WordPress.getCurrentBlog().getBlogId());
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.theme, menu);
+
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        
+        if (itemId == android.R.id.home) {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                popThemeDetailsFragment();
+                return true;
+            }
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
+    
+    
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            popThemeDetailsFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
+    
+    private void popThemeDetailsFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+            try {
+                fm.popBackStack();
+                mViewPager.setVisibility(View.VISIBLE);
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
 
         @Override
@@ -197,10 +250,29 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
     }
 
     private void refreshFragments() {
-        for (int i = 0; i < mFragments.length; i++) {
-            ThemeTabFragment fragment = mFragments[i];
+        for (int i = 0; i < mTabFragments.length; i++) {
+            ThemeTabFragment fragment = mTabFragments[i];
             if (fragment != null)
                 fragment.refresh();
+        }
+    }
+
+    @Override
+    public void onThemeSelected(String themeId) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        if (mDetailsFragment == null || !mDetailsFragment.isInLayout()) {
+            FragmentTransaction ft = fm.beginTransaction();
+            mViewPager.setVisibility(View.GONE);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
+            ft.add(R.id.theme_browser_container, mDetailsFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+        } else {
+            mDetailsFragment.loadTheme(themeId);
         }
     }
 }

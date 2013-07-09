@@ -15,9 +15,9 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
-public class MediaGridListAdapter extends CursorAdapter {
+public class MediaGridAdapter extends CursorAdapter {
     
-    public MediaGridListAdapter(Context context, Cursor c, int flags) {
+    public MediaGridAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 

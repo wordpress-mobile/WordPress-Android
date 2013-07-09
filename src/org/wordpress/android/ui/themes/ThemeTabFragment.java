@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
-public class ThemeTabFragment extends Fragment {
+public class ThemeTabFragment extends Fragment implements OnItemClickListener {
 
     public enum ThemeSortType {
         TRENDING("Trending"), 
@@ -38,6 +41,10 @@ public class ThemeTabFragment extends Fragment {
                 return TRENDING;
         }
     }
+
+    public interface ThemeTabFragmentCallback {
+        public void onThemeSelected(String themeId);
+    }
     
     private static final String ARGS_THEME = "ARGS_THEME";
     
@@ -54,6 +61,18 @@ public class ThemeTabFragment extends Fragment {
 
     private GridView mGridView;
     private ThemeTabAdapter mAdapter;
+    private ThemeTabFragmentCallback mCallback;
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        try {
+            mCallback = (ThemeTabFragmentCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement ThemeTabFragmentCallback");
+        }
+    }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +91,7 @@ public class ThemeTabFragment extends Fragment {
         Cursor cursor = fetchThemes(getThemeSortType());
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         mGridView.setAdapter(mAdapter);
+        mGridView.setOnItemClickListener(this);
     }
 
     private ThemeSortType getThemeSortType() {
@@ -108,15 +128,17 @@ public class ThemeTabFragment extends Fragment {
 
     public void refresh() {
         Cursor cursor = fetchThemes(getThemeSortType());
-        if (mAdapter == null) {
-            mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
-            mGridView.setAdapter(mAdapter);
-        } else {
-            mAdapter.swapCursor(cursor);
-        }
+        mAdapter.swapCursor(cursor);
     }
     
     private String getBlogId() {
         return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor = ((ThemeTabAdapter) parent.getAdapter()).getCursor();
+        String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
+        mCallback.onThemeSelected(themeId);
     }
 }
