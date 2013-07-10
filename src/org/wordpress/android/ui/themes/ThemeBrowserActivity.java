@@ -33,6 +33,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.HorizontalTabView;
+import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
@@ -40,7 +42,7 @@ import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback
 
 public class ThemeBrowserActivity extends WPActionBarActivity implements ActionBar.TabListener,
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, OnQueryTextListener,
-        OnActionExpandListener {
+        OnActionExpandListener, TabListener {
 
     private ThemeTabFragment[] mTabFragments;
     private ThemePagerAdapter mThemePagerAdapter;
@@ -49,6 +51,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private ThemeTabFragment mSearchFragment;
+    private HorizontalTabView mTabView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,23 +74,24 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
+                mTabView.setSelectedTab(position);
             }
         });
-        for (int i = 0; i < mThemePagerAdapter.getCount(); i++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(mThemePagerAdapter.getPageTitle(i))
-                            .setTabListener(this)
-                            .setTag(i));
+
+        mTabView = (HorizontalTabView) findViewById(R.id.horizontalTabView1);
+        mTabView.setTabListener(this);
+        for (int i = 0; i < ThemeSortType.values().length; i++) {
+            String title = ThemeSortType.values()[i].getTitle();
+
+            mTabView.addTab(mTabView.newTab().setText(title));
         }
+        mTabView.setSelectedTab(0);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
@@ -112,6 +116,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
             fetchThemes();
     };
 
+    @Override
+    public void onTabSelected(HorizontalTabView.Tab tab) {
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+    
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         mViewPager.setCurrentItem(tab.getPosition());
@@ -225,11 +234,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         FragmentManager fm = getSupportFragmentManager();
         try {
             fm.popBackStack();
-
             mViewPager.setVisibility(View.VISIBLE);
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            mTabView.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -303,8 +309,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
                 }
             } else {
                 mViewPager.setVisibility(View.GONE);
-                ActionBar actionBar = getSupportActionBar();
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);    
+                mTabView.setVisibility(View.GONE);
             }
             
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
@@ -324,9 +329,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 mViewPager.setVisibility(View.GONE);
-                ActionBar actionBar = getSupportActionBar();
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
+                mTabView.setVisibility(View.GONE);
                 mSearchFragment = ThemeTabFragment.newInstance(ThemeSortType.getTheme(0));
                 ft.add(R.id.theme_browser_container, mSearchFragment);
                 ft.addToBackStack(null);

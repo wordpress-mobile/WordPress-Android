@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Default colors -->
+    <color name="light_gray">#E5E5E5</color>
+    <color name="gray">#CCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    
     <color name="image_options_label">#CCCCCC</color>
     <color name="image_options_text">#FFFFFF</color>
     <color name="pressed_wordpress">#CC2EA2CC</color>
@@ -13,20 +19,27 @@
     <color name="md__shadowColor">#99000000</color>
     
     <color name="wordpress_blue">#21759B</color>
-    <color name="light_gray">#E5E5E5</color>
-    <color name="gray">#CCC</color>
-    
+
+    <!-- Media Gallery colors -->
     <color name="media_gallery_grid_label_bg">#B3000000</color>
     <color name="media_gallery_grid_label">#FFFFFF</color>
     <color name="media_gallery_image_bg">#FFFFFF</color>
     <color name="media_gallery_shadow">#E2E2E2</color>
+    
+    <!-- Media Gallery Upload colors -->
     <color name="media_upload_btn_text">#FFFFFF</color>
     <color name="media_upload_btn_upload">#FFBB33</color>
     <color name="media_upload_btn_edit">#2179AE</color>
     <color name="media_upload_btn_retry">#669900</color>
     <color name="media_upload_btn_queued">#FF8800</color>
 
-    <color name="black">#000000</color>
+    <!-- Theme Details colors -->
     <color name="theme_details_name">@color/black</color>
     <color name="theme_details_button">#FFFFFF</color>
+    
+    <!-- Horizontal Tab View colors -->
+    <color name="tab_divider">#565656</color>
+    <color name="tab_background">#363636</color>
+    <color name="tab_text">@color/white</color>
 </resources>
+
