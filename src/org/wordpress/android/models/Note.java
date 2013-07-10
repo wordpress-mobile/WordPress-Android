@@ -6,7 +6,6 @@ package org.wordpress.android.models;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.text.style.ImageSpan;
 import android.text.style.QuoteSpan;
 import android.text.SpannableStringBuilder;
 
@@ -20,6 +19,7 @@ import org.json.JSONException;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPHtmlTagHandler;
 
 public class Note {
     protected static final String TAG="NoteModel";
@@ -81,7 +81,7 @@ public class Note {
      * Removes HTML and cleans up newlines and whitespace
      */
     public String getCommentPreview(){
-        return getCommentBody().toString().replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
+        return getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
     }
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
@@ -254,7 +254,7 @@ public class Note {
      * Replaces emoticons with emoji
      */
     public static SpannableStringBuilder prepareHtml(String text){
-        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text);
+        SpannableStringBuilder html = (SpannableStringBuilder) Html.fromHtml(text, null, new WPHtmlTagHandler());
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {
