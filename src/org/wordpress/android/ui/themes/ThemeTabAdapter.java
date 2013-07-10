@@ -31,36 +31,51 @@ public class ThemeTabAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         
-        String screenshotURL =  cursor.getString(cursor.getColumnIndex("screenshotURL"));
+        final String screenshotURL =  cursor.getString(cursor.getColumnIndex("screenshotURL"));
         
         final ImageView imageView = (ImageView) view.findViewById(R.id.theme_grid_item_image);
-        imageView.setImageBitmap(null);
+
+        ViewHolder holder = (ViewHolder) imageView.getTag();
+        if (holder == null) {
+            holder = new ViewHolder();
+            holder.requestURL = screenshotURL;
+            imageView.setTag(holder);
+        }
         
+        if (!holder.requestURL.equals(screenshotURL)) {
+            imageView.setImageBitmap(null);
+            holder.requestURL = screenshotURL;
+            
+        }
+
         // load image in this way to get it sized properly for the imageview
-        WordPress.imageLoader.get(screenshotURL, new ImageListener() {
+        WordPress.imageLoader.get(holder.requestURL, new ImageListener() {
             
             @Override
             public void onErrorResponse(VolleyError error) { }
             
             @Override
             public void onResponse(ImageContainer response, boolean isImmediate) {
-                if (response != null && response.getBitmap() != null)
-                    imageView.setImageBitmap(response.getBitmap());
-                else
-                    imageView.setImageBitmap(null);
+                ViewHolder holder = (ViewHolder) imageView.getTag();
+                if (holder != null) {
+                    String url = holder.requestURL;
+                    
+                    if (response != null && response.getBitmap() != null && response.getRequestUrl().equals(url)) {
+                        imageView.setImageBitmap(response.getBitmap());
+                    }
+                } 
                 
             }
         }, getGridWidth(context), getGridHeight(context));
-        
+
         updateGridWidth(mContext, view);   
     }
 
     private void updateGridWidth(Context context, View view) {
         // make it so that total padding = 1/12 of screen width
+        // (this padding is based on the mocks)
         // since there are two columns on the grid, each column will get
         // 11/24 of the remaining space available
-        
-        // (the padding is based on the mocks)
         
         view.setLayoutParams(new GridView.LayoutParams(getGridWidth(context), getGridHeight(context)));
     }
@@ -77,5 +92,9 @@ public class ThemeTabAdapter extends CursorAdapter {
     
     private int getGridHeight(Context context) {
         return (int) (0.75f * getGridWidth(context));
+    }
+    
+    static class ViewHolder {
+        String requestURL;
     }
 }
