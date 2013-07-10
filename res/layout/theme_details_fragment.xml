@@ -5,7 +5,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp" >
 
         <TextView
             android:id="@+id/theme_details_fragment_name"
@@ -13,7 +14,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="20dp"
-            android:text="Truly Minimal"
             android:textColor="@color/theme_details_name"
             android:textSize="23sp" />
 
@@ -35,8 +35,9 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="18dp"
+            android:padding="10dp"
             android:background="@drawable/media_upload_button_edit"
-            android:text="Live Preview"
+            android:text="@string/themes_live_preview"
             android:textColor="@color/theme_details_button" />
 
         <View
@@ -52,7 +53,7 @@
             android:layout_below="@id/theme_details_divider"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="18dp"
-            android:text="Details"
+            android:text="@string/themes_details_label"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -63,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_details_label"
             android:layout_marginLeft="15dp"
-            android:text="Details"
+            android:layout_marginRight="15dp"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="normal" />

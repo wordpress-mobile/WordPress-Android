@@ -131,6 +131,19 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener {
         mAdapter.swapCursor(cursor);
     }
     
+    public void search(String searchTerm) {
+        
+        String blogId = getBlogId();
+        Cursor cursor =  WordPress.wpDB.getThemes(blogId, searchTerm);
+        if (mAdapter == null) {
+//            mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+            return;
+        } else {   
+            mAdapter.swapCursor(cursor);   
+            mGridView.invalidateViews();
+        }             
+    }
+    
     private String getBlogId() {
         return String.valueOf(WordPress.getCurrentBlog().getBlogId());
     }

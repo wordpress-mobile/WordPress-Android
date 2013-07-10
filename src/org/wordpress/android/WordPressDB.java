@@ -2130,7 +2130,12 @@ public class WordPressDB {
     public int getThemeCount(String blogId) {
         return getThemesAtoZ(blogId).getCount();
     }
-
+    
+    public Cursor getThemes(String blogId, String searchTerm) {
+        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE (blogId='' OR blogId=?) AND (name LIKE ? OR description LIKE ?)", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"}); 
+        
+    }
+    
     public Theme getTheme(String themeId) {
         Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL FROM " + THEMES_TABLE + " WHERE themeId=?", new String[] { themeId });
         if (cursor.moveToFirst()) {

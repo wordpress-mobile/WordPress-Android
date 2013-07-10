@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,6 +33,12 @@ public class ThemeDetailsFragment extends Fragment {
     private NetworkImageView mImageView;
     private TextView mDescriptionView;
     private Button mLivePreviewButton;
+    private ThemeDetailsFragmentCallback mCallback;
+    
+    public interface ThemeDetailsFragmentCallback {
+        public void onResumeThemeDetailsFragment();
+        public void onPauseThemeDetailsFragment();
+    }
     
     private String getThemeId() {
         if (getArguments() != null)
@@ -40,6 +47,17 @@ public class ThemeDetailsFragment extends Fragment {
             return null;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        try {
+            mCallback = (ThemeDetailsFragmentCallback) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement ThemeDetailsFragmentCallback");
+        }
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -55,6 +73,18 @@ public class ThemeDetailsFragment extends Fragment {
         
         return view;
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();      
+        mCallback.onResumeThemeDetailsFragment();
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCallback.onPauseThemeDetailsFragment();
+    };
 
     public void loadTheme(String themeId) {
         Theme theme = WordPress.wpDB.getTheme(themeId);
