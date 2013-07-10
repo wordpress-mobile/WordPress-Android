@@ -115,6 +115,13 @@
   <string name="media_upload_retry_button">retry</string>
   <string name="media_upload_uploading_button">uploading</string>
   
+  <!-- Edit Media -->
+  <string name="media_edit_title_hint">Title</string>
+  <string name="media_edit_caption_hint">Caption</string>
+  <string name="media_edit_description_hint">Description</string>
+  <string name="media_edit_show_likes">Show Likes</string>
+  <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
+  
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
   <string name="tab_posts">Posts</string>

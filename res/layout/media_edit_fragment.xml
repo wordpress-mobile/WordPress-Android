@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp" >
+
+        <EditText
+            android:id="@+id/media_edit_fragment_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/media_edit_title_hint" />
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/media_edit_fragment_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside" />
+
+        <EditText
+            android:id="@+id/media_edit_fragment_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/media_edit_caption_hint" />
+
+        <EditText
+            android:id="@+id/media_edit_fragment_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:hint="@string/media_edit_description_hint"
+            android:lines="3" />
+
+        <CheckBox
+            android:id="@+id/media_edit_fragment_show_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_edit_show_likes" />
+
+        <CheckBox
+            android:id="@+id/media_edit_fragment_show_sharing_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_edit_show_sharing_buttons" />
+    </LinearLayout>
+
+</ScrollView>

@@ -74,19 +74,6 @@ public class MediaUploadFragment extends Fragment implements LaunchCameraCallbac
         registerForContextMenu(uploadVideoButton);
         uploadImageButton.setOnClickListener(MediaUploadButtonListener);
         uploadVideoButton.setOnClickListener(MediaUploadButtonListener);
-        
-        Button uploadOtherButton = (Button) view.findViewById(R.id.media_upload_other_button);
-        uploadOtherButton.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                if (MediaUtils.fileBrowserAvailable(getActivity())) {
-                    MediaUtils.launchBrowseFiles(MediaUploadFragment.this);
-                } else {
-                    Toast.makeText(getActivity(), "No file browser available", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         return view;
     }

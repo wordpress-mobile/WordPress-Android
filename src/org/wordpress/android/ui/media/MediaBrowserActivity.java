@@ -19,16 +19,19 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
-    OnQueryTextListener, OnActionExpandListener  {
+    OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback  {
 
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
+    private MediaEditFragment mMediaEditFragment;
+    
     private MenuItem refreshMenuItem;
     
     private SearchView mSearchView;
@@ -58,7 +61,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
         
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
-
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -99,7 +101,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         // show a separate menu when the media item fragment is in phone layout and visible
         if (mMediaItemFragment != null && !mMediaItemFragment.isInLayout() && mMediaItemFragment.isVisible()) {
             inflater.inflate(R.menu.media_details, menu);
-        } else {
+        } else if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
+            inflater.inflate(R.menu.media_edit, menu);
+        }
+        else {
             inflater.inflate(R.menu.media, menu);
             
             refreshMenuItem = menu.findItem(R.id.menu_refresh);
@@ -152,6 +157,24 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 startAnimatingRefreshButton();
             }
             return true;
+        } else if (itemId == R.id.menu_edit_media) {
+            String mediaId = mMediaItemFragment.getMediaId();
+            FragmentManager fm = getSupportFragmentManager();
+            
+            if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.hide(mMediaItemFragment);
+                mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
+                ft.add(R.id.media_browser_container, mMediaEditFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
+            } else {
+                mMediaItemFragment.loadMedia(mediaId);
+            }
+            
+            if (mSearchView != null)
+                mSearchView.clearFocus();
         }
         
         return super.onOptionsItemSelected(item);
@@ -206,7 +229,16 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         invalidateOptionsMenu();
     }
 
+    @Override
+    public void onResumeMediaEditFragment() {
+        invalidateOptionsMenu();
+    }
 
+    @Override
+    public void onPauseMediaEditFragment() {
+        invalidateOptionsMenu();
+    }
+    
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         // currently we don't support searching from within a filter, so hide it

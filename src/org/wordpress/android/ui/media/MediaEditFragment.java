@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -17,87 +17,74 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
-public class MediaItemFragment extends Fragment {
+public class MediaEditFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
-
-    private NetworkImageView mImageView;
-    private TextView mTitleView;
-    private TextView mCaptionView;
-    private TextView mDescriptionView;
-    private TextView mDateView;
-    private TextView mFileNameView;
-    private TextView mFileTypeView;
-    private TextView mDimensionsView;
-    private MediaItemFragmentCallback mCallback;
     
-    public interface MediaItemFragmentCallback {
-        public void onResumeMediaItemFragment();
-        public void onPauseMediaItemFragment();
+    private NetworkImageView mImageView;
+    private EditText mTitleView;
+    private EditText mCaptionView;
+    private EditText mDescriptionView;
+    private MediaEditFragmentCallback mCallback;
+    
+    public interface MediaEditFragmentCallback {
+        public void onResumeMediaEditFragment();
+        public void onPauseMediaEditFragment();
     }
     
-    public static MediaItemFragment newInstance(String mediaId) {
-        MediaItemFragment fragment = new MediaItemFragment();
+    public static MediaEditFragment newInstance(String mediaId) {
+        MediaEditFragment fragment = new MediaEditFragment();
         
         Bundle args = new Bundle();
         args.putString(ARGS_MEDIA_ID, mediaId);
         fragment.setArguments(args);
 
         return fragment;
-    }
+    }    
     
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         
         try {
-            mCallback = (MediaItemFragmentCallback) activity;
+            mCallback = (MediaEditFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement MediaItemFragmentCallback");
+            throw new ClassCastException(activity.toString() + " must implement MediaEditFragmentCallback");
         }
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        mCallback.onResumeMediaItemFragment();
+        mCallback.onResumeMediaEditFragment();
     }
     
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPauseMediaItemFragment();
+        mCallback.onPauseMediaEditFragment();
     }
     
-    public String getMediaId() {
+    private String getMediaId() {
         if (getArguments() != null)
             return getArguments().getString(ARGS_MEDIA_ID);
         else
             return null;
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.media_listitem_details, container, false);
+        View view = inflater.inflate(R.layout.media_edit_fragment, container, false);
 
-        mTitleView = (TextView) view.findViewById(R.id.media_listitem_details_title);
-        mImageView = (NetworkImageView) view.findViewById(R.id.media_listitem_details_image);
-        mCaptionView = (TextView) view.findViewById(R.id.media_listitem_details_caption);
-        mDescriptionView = (TextView) view.findViewById(R.id.media_listitem_details_description);
-        mDateView = (TextView) view.findViewById(R.id.media_listitem_details_date);
-        mFileNameView = (TextView) view.findViewById(R.id.media_listitem_details_file_name);
-        mFileTypeView = (TextView) view.findViewById(R.id.media_listitem_details_file_type);
-        mDimensionsView = (TextView) view.findViewById(R.id.media_listitem_details_dimensions);
+        mTitleView = (EditText) view.findViewById(R.id.media_edit_fragment_title);
+        mImageView = (NetworkImageView) view.findViewById(R.id.media_edit_fragment_image);
+        mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
+        mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
 
         loadMedia(getMediaId());
 
         return view;
-    }
-
-    /** Loads the first media item for the current blog from the database **/
-    public void loadDefaultMedia() {
-        loadMedia(null); 
     }
     
     public void loadMedia(String mediaId) {
@@ -119,28 +106,15 @@ public class MediaItemFragment extends Fragment {
             refreshViews(cursor);
         }
     }
-
+    
     private void refreshViews(Cursor cursor) {
         if (!cursor.moveToFirst())
             return;
         
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
-        
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
         
-        String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mDateView.setText("Uploaded on: " + date);
-        
-        String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
-        mFileNameView.setText("File name: " + fileName);
-        
-        // get the file extension from the fileURL
-        String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
-        String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase(); 
-        mFileTypeView.setText("File type: " + fileType);
-        
-
         String imageUrl = cursor.getString(cursor.getColumnIndex("fileURL"));
         if (MediaUtils.isValidImage(imageUrl)) {
             
@@ -159,11 +133,6 @@ public class MediaItemFragment extends Fragment {
             }
             float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
             
-            String dimensions = width + "x" + height;
-            mDimensionsView.setText("Dimensions: " + dimensions);
-            mDimensionsView.setVisibility(View.VISIBLE);
-            
-            
             mImageView.setImageUrl(imageUrl + "?w=" + screenWidth, WordPress.imageLoader);
             mImageView.setVisibility(View.VISIBLE);
             
@@ -176,8 +145,6 @@ public class MediaItemFragment extends Fragment {
             
         } else {
             mImageView.setVisibility(View.GONE);
-            mDimensionsView.setVisibility(View.GONE);
         }
     }
-
 }

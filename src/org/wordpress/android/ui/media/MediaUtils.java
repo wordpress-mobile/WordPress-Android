@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -13,8 +13,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -68,7 +66,7 @@ public class MediaUtils {
     /** E.g. Jul 2, 2013 @ 21:57 **/
     public static String getDate(long ms) {
         Date date = new Date(ms);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy '@' HH:mm", Locale.ENGLISH);
         
         // The timezone on the website is at GMT
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -166,27 +164,7 @@ public class MediaUtils {
     public static void launchVideoCamera(Fragment fragment) {
         fragment.startActivityForResult(new Intent(MediaStore.ACTION_VIDEO_CAPTURE), RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
     }
-    
-    public static void launchBrowseFiles(Activity activity) {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_BROWSE_FILES);
-    }
-    
-    public static void launchBrowseFiles(Fragment fragment) {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_BROWSE_FILES);
-    }
-    
-    public static boolean fileBrowserAvailable(Activity activity) {
-        final PackageManager packageManager = activity.getPackageManager();
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
-        List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.GET_ACTIVITIES);
-        return list.size() > 0;
-    }
-    
+
     public static boolean isSupportedFile(String filePath) {
         for(String extension : sSupportedFiles) {
             if(filePath.endsWith(extension))

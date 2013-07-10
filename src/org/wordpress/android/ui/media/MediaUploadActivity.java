@@ -11,15 +11,14 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
+import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaUploadFragment.MediaUploadFragmentCallback;
-import org.wordpress.android.ui.posts.ViewPostFragment;
 
 
-public class MediaUploadActivity extends SherlockFragmentActivity implements MediaItemFragmentCallback, MediaUploadFragmentCallback {
+public class MediaUploadActivity extends SherlockFragmentActivity implements MediaEditFragmentCallback, MediaUploadFragmentCallback {
 
     private MediaUploadFragment mMediaUploadFragment;
-    private MediaItemFragment mMediaItemFragment;
+    private MediaEditFragment mMediaEditFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
         
         FragmentManager fm = getSupportFragmentManager();
         mMediaUploadFragment = (MediaUploadFragment) fm.findFragmentById(R.id.mediaUploadFragment);
-        mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
     }
     
     @Override
@@ -45,7 +43,7 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
         if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popMediaItemDetails();
+                popMediaEditDetails();
             } else {
                 finish();
             }
@@ -68,8 +66,8 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         
-        if (mMediaItemFragment != null && !mMediaItemFragment.isInLayout() && mMediaItemFragment.isVisible()) {
-            // show no options
+        if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
+            getSupportMenuInflater().inflate(R.menu.media_edit, menu);
         } else {
             getSupportMenuInflater().inflate(R.menu.media_upload, menu);
         }
@@ -81,37 +79,29 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
     public void onEditMediaItem(String mediaId) {
         FragmentManager fm = getSupportFragmentManager();
         
-        if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
+        if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaUploadFragment);
-            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
-            ft.add(R.id.media_upload_container, mMediaItemFragment);
+            mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
+            ft.add(R.id.media_upload_container, mMediaEditFragment);
             ft.addToBackStack(null);
             ft.commit();
         } else {
-            mMediaItemFragment.loadMedia(mediaId);
+            mMediaEditFragment.loadMedia(mediaId);
         }
     }
     
-    private void popMediaItemDetails() {
-        FragmentManager fm = getSupportFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.mediaItemFragment);
-        if (f == null) {
-            try {
-                fm.popBackStack();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    private void popMediaEditDetails() {
+        // TODO
     }
 
     @Override
-    public void onResumeMediaItemFragment() {
+    public void onResumeMediaEditFragment() {
         invalidateOptionsMenu();   
     }
 
     @Override
-    public void onPauseMediaItemFragment() {
+    public void onPauseMediaEditFragment() {
         invalidateOptionsMenu();        
     }
 }
