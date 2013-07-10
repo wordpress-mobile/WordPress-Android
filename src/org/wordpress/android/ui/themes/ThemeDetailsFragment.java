@@ -3,6 +3,8 @@ package org.wordpress.android.ui.themes;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +93,8 @@ public class ThemeDetailsFragment extends Fragment {
         if (theme != null) {
             mNameView.setText(theme.getName());
             mImageView.setImageUrl(theme.getScreenshotURL(), WordPress.imageLoader);
-            mDescriptionView.setText(theme.getDescription());
+            mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
+            mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
     
