@@ -396,7 +396,7 @@
   
   <!-- Remote Post Changes -->
   <string name="local_changes">Local Changes</string>
-  <string name="remote_changes">You\'ve made changes to an uploaded post that haven\'t been saved yet. Proceed with the refresh and overwrite local changes?</string>
+  <string name="remote_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
   
   <string name="ok">OK</string>
   <string name="image_settings">Image Settings</string>
