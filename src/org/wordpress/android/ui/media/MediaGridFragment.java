@@ -184,12 +184,16 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         @Override
         public void onSuccess() {
             mIsRefreshing = false;
-            mListener.onMediaItemListDownloaded();
-            setFilter(mFilter);
-            updateFilterText();
-
-            ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
-            adapter.notifyDataSetChanged();
+            
+            if (MediaGridFragment.this.isVisible()) {
+            
+                mListener.onMediaItemListDownloaded();
+                setFilter(mFilter);
+                updateFilterText();
+    
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
+                adapter.notifyDataSetChanged();
+            }
         }
 
         @Override

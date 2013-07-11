@@ -279,8 +279,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
             if (result == null) {
                 Toast.makeText(ThemeBrowserActivity.this, "Failed to fetch themes",
                         Toast.LENGTH_SHORT).show();
-                refreshFragments();
-            }
+            } 
+            refreshFragments();
         }
 
     }
