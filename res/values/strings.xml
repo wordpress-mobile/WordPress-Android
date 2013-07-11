@@ -132,6 +132,9 @@
   <string name="themes_live_preview">Live Preview</string>
   <string name="themes_details_label">Details</string>
   <string name="activate_theme">Activate theme</string>
+  <string name="theme_fetch_failed">Failed to fetch themes. Please try again</string>
+  <string name="theme_set_failed">Failed to set theme. Please try again</string>
+  <string name="theme_set_success">Successfully set theme!</string>
 
   <!-- link view -->
   <string name="link_enter_url">URL</string>

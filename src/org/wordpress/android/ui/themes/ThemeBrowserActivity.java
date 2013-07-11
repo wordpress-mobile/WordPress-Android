@@ -44,15 +44,15 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         OnQueryTextListener, OnActionExpandListener, TabListener {
 
+    private HorizontalTabView mTabView;
     private ThemeTabFragment[] mTabFragments;
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
-    private ThemeDetailsFragment mDetailsFragment;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private ThemeTabFragment mSearchFragment;
-    private HorizontalTabView mTabView;
     private ThemePreviewFragment mPreviewFragment;
+    private ThemeDetailsFragment mDetailsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,13 +159,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
             @Override
             public void onErrorResponse(VolleyError response) {
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
                 Log.d("WordPress", "Failed to download themes: " + response.getMessage());
             }
         });
-    }
-
-    private String getBlogId() {
-        return String.valueOf(WordPress.getCurrentBlog().getBlogId());
     }
 
     @Override
@@ -174,13 +171,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         MenuInflater inflater = getSupportMenuInflater();
 
-        if (mDetailsFragment != null && !mDetailsFragment.isInLayout()
-                && mDetailsFragment.isVisible()) {
+        if (mDetailsFragment != null && !mDetailsFragment.isInLayout() && mDetailsFragment.isVisible()) {
             inflater.inflate(R.menu.theme_details, menu);
         } else if (mPreviewFragment != null && !mPreviewFragment.isInLayout() && mPreviewFragment.isVisible()) {
             inflater.inflate(R.menu.theme_preview, menu);
-        }
-        else {
+        } else {
             inflater.inflate(R.menu.theme, menu);
 
         }
@@ -215,7 +210,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     private void handleMenuActivateTheme() {
         
-        String siteId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String siteId = getBlogId();
         String themeId = mPreviewFragment.getThemeId();
         
         WordPress.restClient.setTheme(siteId, themeId, 
@@ -223,7 +218,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     
                     @Override
                     public void onResponse(JSONObject arg0) { 
-                        Toast.makeText(ThemeBrowserActivity.this, "Successfully set theme!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
                         FragmentManager fm = getSupportFragmentManager();
 
                         if (fm.getBackStackEntryCount() > 0) {
@@ -236,7 +231,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
-                        Toast.makeText(ThemeBrowserActivity.this, "Failed to set theme. Please try again later.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_failed, Toast.LENGTH_LONG).show();
                 }
         });
         
@@ -263,6 +258,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private String getBlogId() {
+        return String.valueOf(WordPress.getCurrentBlog().getBlogId());
     }
 
     public class FetchThemesTask extends AsyncTask<JSONObject, Void, ArrayList<Theme>> {
@@ -301,8 +300,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         @Override
         protected void onPostExecute(ArrayList<Theme> result) {
             if (result == null) {
-                Toast.makeText(ThemeBrowserActivity.this, "Failed to fetch themes",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
             } 
             refreshFragments();
         }
