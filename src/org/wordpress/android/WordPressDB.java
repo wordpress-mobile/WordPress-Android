@@ -1993,28 +1993,6 @@ public class WordPressDB {
         db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
     }
 
-    /** Updates all media files to a new upload state **/
-    public void updateMediaForSync(String blogId) {
-        if (blogId == null || blogId.equals(""))
-            return;
-        
-        ContentValues values = new ContentValues();
-        values.put("uploadState", "unsynced");
-        
-        db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState='uploaded') ", new String[] { blogId });
-    }
-    
-    /** Delete media that is not synced on the server and not in the queue **/
-    public void deleteUnsyncedMedia(String blogId) {
-        if (blogId == null || blogId.equals(""))
-            return;
-        
-        ContentValues values = new ContentValues();
-        values.put("uploadState", "unsynced");
-        
-        db.delete(MEDIA_TABLE, "blogId=? and uploadState='unsynced'", new String[] { blogId });
-    }
-    
     /** 
      * For a given blogId, set all uploading states to failed.
      * Useful for cleaning up files stuck in the "uploading" state.  

@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress;
 public class MediaGridAdapter extends CursorAdapter {
     
     private MediaGridAdapterCallback mCallback;
-    private boolean mIsRefreshing;
     
     public interface MediaGridAdapterCallback {
         public void onPrefetchData(int offset);

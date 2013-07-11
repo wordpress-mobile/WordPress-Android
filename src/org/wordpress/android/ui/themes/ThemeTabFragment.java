@@ -21,7 +21,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener {
         A_Z("A-Z"), 
         POPULAR("Popular"), 
         NEWEST("Newest"),
-        PREMIUM("Premium"),
         FRIENDS_OF_WP("Friends of WP");
         
         private String mTitle;
@@ -116,8 +115,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener {
                 return WordPress.wpDB.getThemesPopularity(blogId);
             case NEWEST:
                 return WordPress.wpDB.getThemesNewest(blogId);
-            case PREMIUM:
-                return WordPress.wpDB.getThemesPremium(blogId);
             case TRENDING:
             default:
                 return WordPress.wpDB.getThemesTrending(blogId);
@@ -136,7 +133,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener {
         String blogId = getBlogId();
         Cursor cursor =  WordPress.wpDB.getThemes(blogId, searchTerm);
         if (mAdapter == null) {
-//            mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
             return;
         } else {   
             mAdapter.swapCursor(cursor);   
