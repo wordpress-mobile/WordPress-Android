@@ -17,6 +17,13 @@ import org.wordpress.android.WordPress;
 
 public class MediaGridAdapter extends CursorAdapter {
     
+    private MediaGridAdapterCallback mCallback;
+    private boolean mIsRefreshing;
+    
+    public interface MediaGridAdapterCallback {
+        public void onPrefetchData(int offset);
+    }
+    
     public MediaGridAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -38,7 +45,14 @@ public class MediaGridAdapter extends CursorAdapter {
         TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
         fileTypeView.setText(fileType);
         
-        updateGridWidth(context, view);        
+        updateGridWidth(context, view);
+        
+        // if we are near the end, make a call to fetch more
+        int position = cursor.getPosition();
+        if ( cursor.getCount() - position == 25 || (position == cursor.getCount() - 1)) {
+            if (mCallback != null)
+                mCallback.onPrefetchData(cursor.getCount());
+        }
     }
 
     @Override
@@ -64,4 +78,8 @@ public class MediaGridAdapter extends CursorAdapter {
         view.setLayoutParams(new GridView.LayoutParams(width, width));
     }
 
+    
+    public void setCallback(MediaGridAdapterCallback callback) {
+        mCallback = callback;
+    }
 }

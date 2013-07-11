@@ -153,7 +153,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (itemId == R.id.menu_refresh) {
 
             if(mMediaGridFragment != null) {
-                mMediaGridFragment.refreshMediaFromServer();
+                mMediaGridFragment.refreshMediaFromServer(0);
                 startAnimatingRefreshButton();
             }
             return true;
@@ -200,6 +200,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if(mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
             mMediaItemFragment.loadDefaultMedia();
         }
+    }
+    
+
+    @Override
+    public void onMediaItemListDownloadStart() {
+        startAnimatingRefreshButton();
     }
 
     @Override

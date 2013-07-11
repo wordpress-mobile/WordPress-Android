@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
 
@@ -330,9 +331,13 @@ public class ApiHelper {
         }
         
         private Callback mCallback;
+        private int mOffset;
+        private Filter mFilter;
 
-        public SyncMediaLibraryTask(Callback callback) {
+        public SyncMediaLibraryTask(int offset, Filter filter, Callback callback) {
+            mOffset = offset;
             mCallback = callback;
+            mFilter = filter;
         }
         
         @Override
@@ -350,10 +355,22 @@ public class ApiHelper {
                     WordPress.currentBlog.getHttpuser(),
                     WordPress.currentBlog.getHttppassword());
             
+
+            Map<String, Object> filter = new HashMap<String, Object>();
+            filter.put("number", 50);
+            filter.put("offset", mOffset);
+            
+            if (mFilter == Filter.IMAGES)
+                filter.put("mime_type","images/*");
+            else if(mFilter == Filter.UNATTACHED)
+                filter.put("parent_id", 0);
+                
+            
             Object[] apiParams = { 
                     WordPress.currentBlog.getBlogId(),
                     WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword()
+                    WordPress.currentBlog.getPassword(),
+                    filter
             };
             
             Object[] results = null;
@@ -364,18 +381,8 @@ public class ApiHelper {
             }
             
             if(results != null) {
-
-                // To sync files from the server, we'll first set the state of
-                // files not in the queue to be 'unsynced'. 
-                // Then replace of the db entries with the fresh data. 
-                // All the remaining entries that haven't been replaced are still 'unsynced'
-                // and are deleted.
-                
-                // We only do this when we have results from the server.
                 
                 String blogId = String.valueOf(WordPress.currentBlog.getBlogId());
-                
-                WordPress.wpDB.updateMediaForSync(blogId);
                 
                 Map<?, ?> resultMap;
                 
@@ -383,8 +390,6 @@ public class ApiHelper {
                     resultMap = (Map<?, ?>) result;
                     WordPress.wpDB.saveMediaFile(new MediaFile(blogId, resultMap));
                 }
-                
-                WordPress.wpDB.deleteUnsyncedMedia(blogId);
                 
                 return true;
             } else {

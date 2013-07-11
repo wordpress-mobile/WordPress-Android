@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.SpinnerAdapter;
 
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
@@ -29,19 +28,22 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
-public class MediaGridFragment extends Fragment implements OnItemClickListener {
+public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback {
     
     private GridView mGridView;
-    private ApiHelper.SyncMediaLibraryTask mGetMediaTask;
     private MediaGridAdapter mAdapter;
     private Cursor mCursor;
     private MediaGridListener mListener;
-    private boolean mIsRefreshing = false;
     private IcsSpinner mSpinner;
     private Filter mFilter = Filter.ALL;
+    private boolean mIsRefreshing = false;
 
+    private String[] mFilters;
+    
     public interface MediaGridListener {
+        public void onMediaItemListDownloadStart();
         public void onMediaItemListDownloaded();
         public void onMediaItemSelected(String mediaId);
     }
@@ -90,6 +92,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
             }
         });
 
+        mFilters = new String[3];
         mSpinner = (IcsSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
         refreshSpinnerAdapter();
@@ -100,23 +103,24 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
     private void refreshSpinnerAdapter() {
         if (getActivity() == null || WordPress.getCurrentBlog() == null)
             return; 
-        
-        Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar().getThemedContext();
+
+        updateFilterText();
+
+        Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar().getThemedContext();        
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.sherlock_spinner_dropdown_item, mFilters);
+        mSpinner.setAdapter(adapter);
+    }
+    
+    private void updateFilterText() {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
         int countAll = WordPress.wpDB.getMediaCountAll(blogId);
         int countImages = WordPress.wpDB.getMediaCountImages(blogId);
         int countUnattached = WordPress.wpDB.getMediaCountUnattached(blogId);
         
-        String[] filters = new String[] {
-            getResources().getString(R.string.all) + " (" + countAll + ")",
-            getResources().getString(R.string.images) + " (" + countImages + ")",
-            getResources().getString(R.string.unattached) + " (" + countUnattached + ")" 
-        };
-        
-        SpinnerAdapter adapter = new ArrayAdapter<String>(context, R.layout.sherlock_spinner_dropdown_item, filters);
-        
-        mSpinner.setAdapter(adapter);
+        mFilters[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
+        mFilters[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
+        mFilters[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
     }
 
     @Override
@@ -137,10 +141,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
         setFilter(mFilter);
         if (mCursor != null) {
             mAdapter = new MediaGridAdapter(getActivity(), mCursor, 0);
+            mAdapter.setCallback(this);
             mGridView.setAdapter(mAdapter);
         }
         
-        refreshMediaFromServer();
+        refreshMediaFromServer(0);
     }
 
     public void search(String searchTerm) {
@@ -152,17 +157,19 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
         }
     }
     
-    public void refreshMediaFromServer() {
+    public void refreshMediaFromServer(int offset) {
         if(WordPress.getCurrentBlog() == null)
             return; 
         
         if(!mIsRefreshing) {
             mIsRefreshing = true;
+            mListener.onMediaItemListDownloadStart();
 
             List<Object> apiArgs = new ArrayList<Object>();
             apiArgs.add(WordPress.getCurrentBlog());
-            mGetMediaTask = new ApiHelper.SyncMediaLibraryTask(mCallback);
-            mGetMediaTask.execute(apiArgs);
+            
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter, mCallback);
+            getMediaTask.execute(apiArgs);
         }
     }
 
@@ -173,13 +180,16 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
             mIsRefreshing = false;
             mListener.onMediaItemListDownloaded();
             setFilter(mFilter);
+            updateFilterText();
 
-            refreshSpinnerAdapter();
+            ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
+            adapter.notifyDataSetChanged();
         }
 
         @Override
         public void onFailure() {
             mIsRefreshing = false;
+            mListener.onMediaItemListDownloaded();
         }
     };    
     
@@ -226,6 +236,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener {
             return WordPress.wpDB.getMediaUnattachedForBlog(blogId);
         }
         return null;
+    }
+
+    @Override
+    public void onPrefetchData(int offset) {
+        refreshMediaFromServer(offset);
     }
 
 }
