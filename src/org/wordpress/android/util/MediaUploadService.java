@@ -60,16 +60,26 @@ public class MediaUploadService extends Service {
         @Override
         public void run() {
             Cursor cursor = getQueue();
-            if ((cursor.getCount() == 0 || mContext == null) && !mUploadInProgress) {
+            if ((cursor == null || cursor.getCount() == 0 || mContext == null) && !mUploadInProgress) {
+
+                if (cursor != null)
+                    cursor.close();
+                
                 MediaUploadService.this.stopSelf();
                 return;
             } else {
                 if (!mUploadInProgress) {
                     uploadMediaFile(cursor);
                 } else {
+
+                    if (cursor != null)
+                        cursor.close();
+                    
                     mHandler.postDelayed(this, UPLOAD_WAIT_TIME);
                 }
             }
+            
+            
         }
     };
     
@@ -77,13 +87,18 @@ public class MediaUploadService extends Service {
         // There should be no media files with an upload state of 'uploading' at the start of this service.
         // Since we won't be able to receive notifications for these, set them to 'failed'.
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        WordPress.wpDB.setMediaUploadingToFailed(blogId);
-
-        sendUpdateBroadcast();
+        if(WordPress.getCurrentBlog() != null){
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            WordPress.wpDB.setMediaUploadingToFailed(blogId);
+    
+            sendUpdateBroadcast();
+        }
     }
     
     private Cursor getQueue() {
+        if (WordPress.getCurrentBlog() == null)
+            return null;
+        
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         return WordPress.wpDB.getMediaQueue(blogId);
     }
@@ -102,6 +117,8 @@ public class MediaUploadService extends Service {
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
         String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        
+        cursor.close();
         
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(blogIdStr);

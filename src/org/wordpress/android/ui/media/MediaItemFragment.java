@@ -117,6 +117,7 @@ public class MediaItemFragment extends Fragment {
             }
             
             refreshViews(cursor);
+            cursor.close();
         }
     }
 

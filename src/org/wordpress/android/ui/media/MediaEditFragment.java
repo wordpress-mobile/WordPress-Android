@@ -104,6 +104,7 @@ public class MediaEditFragment extends Fragment {
             }
             
             refreshViews(cursor);
+            cursor.close();
         }
     }
     

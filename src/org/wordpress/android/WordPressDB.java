@@ -1895,7 +1895,9 @@ public class WordPressDB {
     
     public int getMediaCountAll(String blogId) {
         Cursor cursor = getMediaFilesForBlog(blogId);
-        return cursor.getCount();
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 
 
@@ -2129,6 +2131,8 @@ public class WordPressDB {
             theme.setDescription(description);
             theme.setScreenshotURL(screenshotURL);
             theme.setPreviewURL(previewURL);
+            
+            cursor.close();
             
             return theme;
         } else {

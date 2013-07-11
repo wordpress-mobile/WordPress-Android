@@ -345,15 +345,18 @@ public class ApiHelper {
             
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
             
-            if(WordPress.currentBlog == null) {
+            if(blog == null) {
                 Log.e("WordPress", "ApiHelper - current blog is null");
                 return false;
             }
+
+            String blogId = String.valueOf(blog.getBlogId());
             
-            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
             
 
             Map<String, Object> filter = new HashMap<String, Object>();
@@ -367,9 +370,9 @@ public class ApiHelper {
                 
             
             Object[] apiParams = { 
-                    WordPress.currentBlog.getBlogId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(),
+                    blog.getBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
                     filter
             };
             
@@ -380,10 +383,7 @@ public class ApiHelper {
                 Log.e("WordPress", e.getMessage());
             }
             
-            if(results != null) {
-                
-                String blogId = String.valueOf(WordPress.currentBlog.getBlogId());
-                
+            if(results != null && blogId != null) {
                 Map<?, ?> resultMap;
                 
                 for(Object result : results) {
@@ -392,11 +392,9 @@ public class ApiHelper {
                 }
                 
                 return true;
-            } else {
-                return false;
             }
             
-            
+            return false;
         }
         
         @Override
@@ -431,20 +429,23 @@ public class ApiHelper {
             
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
             
-            if(WordPress.currentBlog == null) {
+            if(blog == null) {
                 Log.e("WordPress", "ApiHelper - current blog is null");
                 return null;
             }
             
-            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
+            String blogId = String.valueOf(blog.getBlogId());
+            
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
             
             Object[] apiParams = { 
-                    WordPress.currentBlog.getBlogId(),
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(),
+                    blog.getBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
                     mMediaId
             };
             
@@ -455,8 +456,8 @@ public class ApiHelper {
                 Log.e("WordPress", e.getMessage());
             }
             
-            if(results != null) {
-                MediaFile mediaFile = new MediaFile(String.valueOf(WordPress.currentBlog.getBlogId()), results);
+            if(results != null && blogId != null) {
+                MediaFile mediaFile = new MediaFile(blogId, results);
                 mediaFile.save();
                 return mediaFile;
             } else {
@@ -499,15 +500,16 @@ public class ApiHelper {
             
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
             
-            if (WordPress.currentBlog == null) {
+            if (blog == null) {
                 Log.e("WordPress", "UploadMediaTask: ApiHelper - current blog is null");
                 return null;
             }
 
-            client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
-                    WordPress.currentBlog.getHttpuser(),
-                    WordPress.currentBlog.getHttppassword());
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
          
             byte[] bits = readFile(new File(mMediaFile.getFilePath()));
             
@@ -519,8 +521,8 @@ public class ApiHelper {
             
             Object[] apiParams = { 
                     1, 
-                    WordPress.currentBlog.getUsername(),
-                    WordPress.currentBlog.getPassword(),
+                    blog.getUsername(),
+                    blog.getPassword(),
                     data
             };
             
@@ -534,12 +536,8 @@ public class ApiHelper {
                 Log.e("WordPress", "XMLRPCException: " + e.getMessage());
             }
             
-            if(resultMap == null) {
-                return null;
-            } else {
-                if(resultMap.containsKey("id"))
-                    return (String) resultMap.get("id");
-            }
+            if (resultMap != null && resultMap.containsKey("id"))
+                return (String) resultMap.get("id");
 
             return null;
         }

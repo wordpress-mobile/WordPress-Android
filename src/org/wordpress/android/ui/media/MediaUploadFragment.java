@@ -182,7 +182,9 @@ public class MediaUploadFragment extends Fragment implements LaunchCameraCallbac
         Cursor cursor = loader.loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
-        return cursor.getString(column_index);
+        String path = cursor.getString(column_index);
+        cursor.close();
+        return path;
     }
     
     private void queueImageFileForUpload(String path) {
