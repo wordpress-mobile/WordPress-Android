@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,10 @@ import android.widget.GridView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
 import com.actionbarsherlock.internal.widget.IcsSpinner;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
@@ -30,7 +35,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
-public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback {
+public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener {
     
     private GridView mGridView;
     private MediaGridAdapter mAdapter;
@@ -80,6 +85,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         
         mGridView = (GridView) view.findViewById(R.id.media_gridview);
         mGridView.setOnItemClickListener(this);
+        mGridView.setRecyclerListener(this);
 
         View spinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         spinnerContainer.setOnClickListener(new OnClickListener() {
@@ -241,6 +247,32 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     @Override
     public void onPrefetchData(int offset) {
         refreshMediaFromServer(offset);
+    }
+
+    @Override
+    public void onMovedToScrapHeap(View view) {
+        
+        // cancel image fetch requests if the view has been moved to recycler.
+        
+        NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.media_grid_item_image);
+        if (niv != null) {
+            // this tag is set in the MediaGridAdapter class
+            String tag = (String) niv.getTag();
+            if (tag != null) {
+                // need a listener to cancel request, even if the listener does nothing
+                ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) { }
+
+                    @Override
+                    public void onResponse(ImageContainer response, boolean isImmediate) { }
+                    
+                });
+                container.cancelRequest();
+            }
+        }
+                
     }
 
 }

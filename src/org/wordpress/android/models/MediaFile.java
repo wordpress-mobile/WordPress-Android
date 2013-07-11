@@ -50,7 +50,9 @@ public class MediaFile {
         setMIMEType(mimeType);
         
         setFileURL(resultMap.get("link").toString());
-        setThumbnailURL(resultMap.get("thumbnail").toString());
+        String thumbnailURL = resultMap.get("thumbnail").toString();
+        if(thumbnailURL != null && thumbnailURL.startsWith("http"))
+            setThumbnailURL(thumbnailURL);
 
         Date date = (Date) resultMap.get("date_created_gmt");
         setDateCreatedGMT(date.getTime());

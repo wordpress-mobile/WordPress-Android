@@ -35,8 +35,12 @@ public class MediaGridAdapter extends CursorAdapter {
         
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.media_grid_item_image);
-        imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
-
+        
+        if (thumbnailURL != null) { 
+            imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
+            imageView.setTag(thumbnailURL);
+        }
+        
         // get the file extension from the fileURL
         String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
         String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
