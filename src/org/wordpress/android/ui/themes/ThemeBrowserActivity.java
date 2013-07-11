@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -37,12 +36,13 @@ import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
+import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
 
-public class ThemeBrowserActivity extends WPActionBarActivity implements ActionBar.TabListener,
-        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, OnQueryTextListener,
-        OnActionExpandListener, TabListener {
+public class ThemeBrowserActivity extends WPActionBarActivity implements
+        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
+        OnQueryTextListener, OnActionExpandListener, TabListener {
 
     private ThemeTabFragment[] mTabFragments;
     private ThemePagerAdapter mThemePagerAdapter;
@@ -52,6 +52,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
     private SearchView mSearchView;
     private ThemeTabFragment mSearchFragment;
     private HorizontalTabView mTabView;
+    private ThemePreviewFragment mPreviewFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,19 +122,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         mViewPager.setCurrentItem(tab.getPosition());
     }
     
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-    }
-
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
-    }
-
     public class ThemePagerAdapter extends FragmentPagerAdapter {
 
         public ThemePagerAdapter(FragmentManager fm) {
@@ -189,7 +177,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         if (mDetailsFragment != null && !mDetailsFragment.isInLayout()
                 && mDetailsFragment.isVisible()) {
             inflater.inflate(R.menu.theme_details, menu);
-        } else {
+        } else if (mPreviewFragment != null && !mPreviewFragment.isInLayout() && mPreviewFragment.isVisible()) {
+            inflater.inflate(R.menu.theme_preview, menu);
+        }
+        else {
             inflater.inflate(R.menu.theme, menu);
 
         }
@@ -215,9 +206,40 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
             mSearchView.setOnQueryTextListener(this);
 
             return true;
+        } else if (itemId == R.id.menu_activate) {
+            handleMenuActivateTheme();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handleMenuActivateTheme() {
+        
+        String siteId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String themeId = mPreviewFragment.getThemeId();
+        
+        WordPress.restClient.setTheme(siteId, themeId, 
+                new Listener() {
+                    
+                    @Override
+                    public void onResponse(JSONObject arg0) { 
+                        Toast.makeText(ThemeBrowserActivity.this, "Successfully set theme!", Toast.LENGTH_LONG).show();
+                        FragmentManager fm = getSupportFragmentManager();
+
+                        if (fm.getBackStackEntryCount() > 0) {
+                            popThemeDetailsFragment();
+                            invalidateOptionsMenu();
+                        }
+                    }
+                }, 
+                new ErrorListener() {
+            
+                    @Override
+                    public void onErrorResponse(VolleyError arg0) {
+                        Toast.makeText(ThemeBrowserActivity.this, "Failed to set theme. Please try again later.", Toast.LENGTH_LONG).show();
+                }
+        });
+        
     }
 
     @Override
@@ -234,8 +256,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
         FragmentManager fm = getSupportFragmentManager();
         try {
             fm.popBackStack();
-            mViewPager.setVisibility(View.VISIBLE);
-            mTabView.setVisibility(View.VISIBLE);
+            if (fm.getBackStackEntryCount() == 1) {
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabView.setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -375,6 +399,31 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements ActionB
     @Override
     public void onPauseThemeDetailsFragment() {
         invalidateOptionsMenu();
-
     }
+    
+    @Override
+    public void onResumeThemePreviewFragment() {
+        invalidateOptionsMenu();    
+    }
+
+    @Override
+    public void onPauseThemePreviewFragment() {
+        invalidateOptionsMenu();        
+    }
+    
+    @Override
+    public void onLivePreviewClicked(String themeId, String previewURL) {
+        if (mPreviewFragment == null || !mPreviewFragment.isInLayout()) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            mViewPager.setVisibility(View.GONE);
+            mTabView.setVisibility(View.GONE);
+            mPreviewFragment = ThemePreviewFragment.newInstance(themeId, previewURL);
+            ft.hide(mDetailsFragment);
+            ft.add(R.id.theme_browser_container, mPreviewFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }        
+    }
+
 }

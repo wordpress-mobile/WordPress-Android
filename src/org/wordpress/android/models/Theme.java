@@ -22,12 +22,13 @@ public class Theme {
     private String launchDate = "";
     private long launchDateMs = 0;
     private String blogId;
+    private String previewURL = "";
     
     public Theme() {
         
     }
 
-    public Theme(String themeId, String screenshotURL, int price, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId) {
+    public Theme(String themeId, String screenshotURL, int price, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL) {
         setThemeId(themeId);
         setScreenshotURL(screenshotURL);
         setPrice(price);
@@ -37,6 +38,7 @@ public class Theme {
         setPopularityRank(popularityRank);
         setLaunchDate(launchDate);
         setBlogId(blogId);
+        setPreviewURL(previewURL);
     }
 
     public String getThemeId() {
@@ -112,10 +114,6 @@ public class Theme {
             e.printStackTrace();
         }
     }
-    
-    public void save() {
-        WordPress.wpDB.saveTheme(this);
-    }
 
     public String getBlogId() {
         return blogId;
@@ -125,6 +123,18 @@ public class Theme {
         this.blogId = blogId;
     }
     
+    public String getPreviewURL() {
+        return previewURL;
+    }
+
+    public void setPreviewURL(String previewURL) {
+        this.previewURL = previewURL;
+    }
+
+    public void save() {
+        WordPress.wpDB.saveTheme(this);
+    }
+
     public static Theme fromJSON(JSONObject object) throws JSONException {
         
         String themeId = object.getString("id");
@@ -135,14 +145,13 @@ public class Theme {
         int trendingRank = object.getInt("trending_rank");
         int popularityRank = object.getInt("popularity_rank");
         String launchDate = object.getString("launch_date");
+        String previewURL = object.getString("preview_url");
 
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        if (price == 0)
-            blogId = "";
         
-        return new Theme(themeId, screenshotURL, price, name, description, trendingRank, popularityRank, launchDate, blogId);        
+        return new Theme(themeId, screenshotURL, price, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL);        
     }
 
 }

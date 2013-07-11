@@ -7,6 +7,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,10 +37,12 @@ public class ThemeDetailsFragment extends Fragment {
     private TextView mDescriptionView;
     private Button mLivePreviewButton;
     private ThemeDetailsFragmentCallback mCallback;
+    private String mPreviewURL;
     
     public interface ThemeDetailsFragmentCallback {
         public void onResumeThemeDetailsFragment();
         public void onPauseThemeDetailsFragment();
+        public void onLivePreviewClicked(String themeId, String previewURL);
     }
     
     private String getThemeId() {
@@ -70,6 +73,14 @@ public class ThemeDetailsFragment extends Fragment {
         mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
         
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_button);
+        mLivePreviewButton.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                if (mPreviewURL != null)
+                    mCallback.onLivePreviewClicked(getThemeId(), mPreviewURL);
+            }
+        });
         
         loadTheme(getThemeId());
         
@@ -89,12 +100,14 @@ public class ThemeDetailsFragment extends Fragment {
     };
 
     public void loadTheme(String themeId) {
-        Theme theme = WordPress.wpDB.getTheme(themeId);
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        Theme theme = WordPress.wpDB.getTheme(blogId, themeId);
         if (theme != null) {
             mNameView.setText(theme.getName());
             mImageView.setImageUrl(theme.getScreenshotURL(), WordPress.imageLoader);
             mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
             mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+            mPreviewURL = theme.getPreviewURL();
         }
     }
     

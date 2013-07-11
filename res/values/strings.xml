@@ -131,6 +131,7 @@
   <!-- themes -->
   <string name="themes_live_preview">Live Preview</string>
   <string name="themes_details_label">Details</string>
+  <string name="activate_theme">Activate theme</string>
 
   <!-- link view -->
   <string name="link_enter_url">URL</string>
