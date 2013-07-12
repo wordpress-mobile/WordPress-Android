@@ -202,16 +202,17 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
             return true;
         } else if (itemId == R.id.menu_activate) {
-            handleMenuActivateTheme();
+            handleMenuActivateTheme(null);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void handleMenuActivateTheme() {
-        
+    private void handleMenuActivateTheme(String themeId) {
         String siteId = getBlogId();
-        String themeId = mPreviewFragment.getThemeId();
+        if (themeId == null) {
+            themeId = mPreviewFragment.getThemeId();            
+        }
         
         WordPress.restClient.setTheme(siteId, themeId, 
                 new Listener() {
@@ -407,6 +408,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public void onPauseThemePreviewFragment() {
         invalidateOptionsMenu();        
+    }
+    
+    @Override
+    public void onActivateThemeClicked(String themeId) {
+        handleMenuActivateTheme(themeId);
+        
     }
     
     @Override

@@ -25,26 +25,45 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp" />
 
-        <Button
-            android:id="@+id/theme_details_fragment_button"
+        <LinearLayout
+            android:id="@+id/theme_details_fragment_button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_image"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="18dp"
-            android:padding="10dp"
-            android:background="@drawable/media_upload_button_edit"
-            android:text="@string/themes_live_preview"
-            android:textColor="@color/theme_details_button" />
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/theme_details_fragment_preview_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/media_upload_button_edit"
+                android:padding="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="@string/themes_live_preview"
+                android:textColor="@color/theme_details_button" />
+
+            <Button
+                android:id="@+id/theme_details_fragment_activate_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/theme_activate_button"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:text="@string/activate_theme"
+                android:textColor="@color/theme_details_button" />
+        </LinearLayout>
 
         <View
             android:id="@+id/theme_details_divider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/theme_details_fragment_button" />
+            android:layout_below="@id/theme_details_fragment_button_container" />
 
         <TextView
             android:id="@+id/theme_details_fragment_details_label"

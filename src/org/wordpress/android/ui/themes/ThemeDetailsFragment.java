@@ -38,11 +38,13 @@ public class ThemeDetailsFragment extends Fragment {
     private Button mLivePreviewButton;
     private ThemeDetailsFragmentCallback mCallback;
     private String mPreviewURL;
+    private Button mActivateThemeButton;
     
     public interface ThemeDetailsFragmentCallback {
         public void onResumeThemeDetailsFragment();
         public void onPauseThemeDetailsFragment();
         public void onLivePreviewClicked(String themeId, String previewURL);
+        public void onActivateThemeClicked(String themeId);
     }
     
     private String getThemeId() {
@@ -72,13 +74,26 @@ public class ThemeDetailsFragment extends Fragment {
         mImageView = (NetworkImageView) view.findViewById(R.id.theme_details_fragment_image);
         mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
         
-        mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_button);
+        mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
+        mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
                 if (mPreviewURL != null)
                     mCallback.onLivePreviewClicked(getThemeId(), mPreviewURL);
+            }
+        });
+        
+        mActivateThemeButton.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                String themeId = getThemeId();
+                if (themeId != null) {
+                    mCallback.onActivateThemeClicked(themeId);
+                }
+                
             }
         });
         
