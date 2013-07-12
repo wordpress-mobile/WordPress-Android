@@ -2085,7 +2085,7 @@ public class WordPressDB {
     }
     
     public Cursor getThemesAtoZ(String blogId) {
-        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name ASC", new String[] { blogId });
+        return db.rawQuery("SELECT _id, themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE blogId=? ORDER BY name COLLATE NOCASE ASC", new String[] { blogId });
     }
     
     public Cursor getThemesTrending(String blogId) {
