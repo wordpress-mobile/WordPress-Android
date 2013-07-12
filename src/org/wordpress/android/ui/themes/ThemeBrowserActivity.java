@@ -53,6 +53,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private ThemeTabFragment mSearchFragment;
     private ThemePreviewFragment mPreviewFragment;
     private ThemeDetailsFragment mDetailsFragment;
+    private boolean mFetchingThemes = false;
+    
+    private MenuItem refreshMenuItem;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,6 +153,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private void fetchThemes() {
         String siteId = getBlogId();
 
+        mFetchingThemes = true;
+        startAnimatingRefreshButton();
+
         WordPress.restClient.getThemes(siteId, 0, 0, new Listener() {
 
             @Override
@@ -161,6 +168,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             public void onErrorResponse(VolleyError response) {
                 Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
                 Log.d("WordPress", "Failed to download themes: " + response.getMessage());
+               
+                mFetchingThemes = false;
+                stopAnimatingRefreshButton();
+               refreshFragments();
+               
+                
             }
         });
     }
@@ -177,8 +190,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             inflater.inflate(R.menu.theme_preview, menu);
         } else {
             inflater.inflate(R.menu.theme, menu);
+            refreshMenuItem = menu.findItem(R.id.menu_refresh);
 
         }
+        
+
 
         return true;
     }
@@ -203,6 +219,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             return true;
         } else if (itemId == R.id.menu_activate) {
             handleMenuActivateTheme(null);
+        } else if (itemId == R.id.menu_refresh) {
+            
+            fetchThemes();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -300,12 +320,24 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         @Override
         protected void onPostExecute(ArrayList<Theme> result) {
+            mFetchingThemes = false;
+            stopAnimatingRefreshButton();
             if (result == null) {
                 Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
             } 
             refreshFragments();
         }
 
+    }
+    
+    private void startAnimatingRefreshButton() {
+        if (refreshMenuItem != null && mFetchingThemes)
+            startAnimatingRefreshButton(refreshMenuItem);
+    }
+    
+    private void stopAnimatingRefreshButton() {
+        if (refreshMenuItem != null && !mFetchingThemes)
+            stopAnimatingRefreshButton(refreshMenuItem);
     }
 
     private void refreshFragments() {
@@ -415,6 +447,13 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         handleMenuActivateTheme(themeId);
         
     }
+    
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        fetchThemes();
+    };
+    
     
     @Override
     public void onLivePreviewClicked(String themeId, String previewURL) {

@@ -70,6 +70,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
     };
 
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        if(mMediaGridFragment != null) {
+            mMediaGridFragment.refreshMediaFromServer(0);
+            startAnimatingRefreshButton();
+        }
+    };
     
     @Override
     public void onMediaItemSelected(String mediaId) {
