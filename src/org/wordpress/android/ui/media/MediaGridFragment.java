@@ -118,6 +118,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     }
     
     private void updateFilterText() {
+        if(WordPress.currentBlog == null)
+            return;
+        
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
         int countAll = WordPress.wpDB.getMediaCountAll(blogId);
