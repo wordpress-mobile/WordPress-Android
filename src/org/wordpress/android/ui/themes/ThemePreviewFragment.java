@@ -11,7 +11,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -20,6 +19,10 @@ public class ThemePreviewFragment extends Fragment {
 
     private static final String ARGS_THEME_ID = "theme_id";
     private static final String ARGS_PREVIEW_URL = "preview_url";
+    
+    // sample desktop user-agent to force desktop view of site 
+    private static final String DESKTOP_UA = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0";
+
     
     private ThemePreviewFragmentCallback mCallback;
     private WebView mWebView;
@@ -90,7 +93,7 @@ public class ThemePreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.webview, container, false);
         
         mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.getSettings().setUserAgentString(Constants.USER_AGENT);
+        mWebView.getSettings().setUserAgentString(DESKTOP_UA);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.loadUrl(previewURL);
