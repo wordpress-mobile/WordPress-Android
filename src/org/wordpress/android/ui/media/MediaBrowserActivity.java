@@ -1,7 +1,15 @@
 package org.wordpress.android.ui.media;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -23,7 +31,7 @@ import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallbac
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
-import org.wordpress.android.ui.posts.ViewPostFragment;
+import org.wordpress.android.util.MediaDeleteService;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
     OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback  {
@@ -43,7 +51,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            Log.e("WordPress", "MediaBrowserActivity DB is null - finishing MediaBrowser");
             finish();
             return;
         }
@@ -70,6 +77,11 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
     };
 
+    protected void onResume() {
+        super.onResume();
+        startMediaDeleteService();
+    };
+    
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
@@ -111,8 +123,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             inflater.inflate(R.menu.media_details, menu);
         } else if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
             inflater.inflate(R.menu.media_edit, menu);
-        }
-        else {
+        } else {
             inflater.inflate(R.menu.media, menu);
             
             refreshMenuItem = menu.findItem(R.id.menu_refresh);
@@ -138,7 +149,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popMediaItemDetails();
+                fm.popBackStack();
                 return true;
             }
         } else if (itemId == R.id.menu_new_media) {
@@ -183,21 +194,27 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             
             if (mSearchView != null)
                 mSearchView.clearFocus();
+        } else if (itemId == R.id.menu_delete) {
+            Builder builder = new AlertDialog.Builder(this)
+                .setMessage(R.string.confirm_delete_media)
+                .setCancelable(true)
+                .setPositiveButton(R.string.delete, new OnClickListener() {
+                
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
+                            ArrayList<String> ids = new ArrayList<String>(1);
+                            ids.add(mMediaItemFragment.getMediaId());
+                            onDeleteMedia(ids);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
         
         return super.onOptionsItemSelected(item);
-    }
-
-    private void popMediaItemDetails() {
-        FragmentManager fm = getSupportFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.mediaItemFragment);
-        if (f == null) {
-            try {
-                fm.popBackStack();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -234,22 +251,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     @Override
-    public void onPauseMediaItemFragment() {
+    public void onResume(Fragment fragment) {
         invalidateOptionsMenu();
     }
 
     @Override
-    public void onResumeMediaItemFragment() {
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onResumeMediaEditFragment() {
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onPauseMediaEditFragment() {
+    public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
     
@@ -273,5 +280,23 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             
         return true;
     }
+
+    public void onDeleteMedia(final List<String> ids) {
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        if(mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
+            getSupportFragmentManager().popBackStack();
+        }
+
+        // mark items for delete without actually deleting items yet,
+        // and then refresh the grid
+        WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, ids);
+        mMediaGridFragment.refreshMediaFromDB();
+        
+        startMediaDeleteService();
+    }
     
+    private void startMediaDeleteService() {
+        startService(new Intent(this, MediaDeleteService.class));
+    }    
 }

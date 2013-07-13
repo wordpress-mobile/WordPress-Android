@@ -36,13 +36,14 @@ public class ThemeDetailsFragment extends Fragment {
     private NetworkImageView mImageView;
     private TextView mDescriptionView;
     private Button mLivePreviewButton;
-    private ThemeDetailsFragmentCallback mCallback;
     private String mPreviewURL;
     private Button mActivateThemeButton;
     
+    private ThemeDetailsFragmentCallback mCallback;
+    
     public interface ThemeDetailsFragmentCallback {
-        public void onResumeThemeDetailsFragment();
-        public void onPauseThemeDetailsFragment();
+        public void onResume(Fragment fragment);
+        public void onPause(Fragment fragment);
         public void onLivePreviewClicked(String themeId, String previewURL);
         public void onActivateThemeClicked(String themeId);
     }
@@ -105,13 +106,13 @@ public class ThemeDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();      
-        mCallback.onResumeThemeDetailsFragment();
+        mCallback.onResume(this);
     }
     
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPauseThemeDetailsFragment();
+        mCallback.onPause(this);
     };
 
     public void loadTheme(String themeId) {

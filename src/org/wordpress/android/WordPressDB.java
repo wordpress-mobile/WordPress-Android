@@ -1871,7 +1871,7 @@ public class WordPressDB {
     
     /** For a given blogId, get the first media files **/
     public Cursor getFirstMediaFileForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IS NULL ORDER BY date_created_gmt DESC LIMIT 1", new String[] { blogId });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY date_created_gmt DESC LIMIT 1", new String[] { blogId });
     }
     
     /** For a given blogId, get all the media files **/
@@ -1978,8 +1978,8 @@ public class WordPressDB {
 
     }
 
-    /** Get the queued media files for a given blogId **/
-    public Cursor getMediaQueue(String blogId) {
+    /** Get the queued media files for upload for a given blogId **/
+    public Cursor getMediaUploadQueue(String blogId) {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?", new String[] {"queued", blogId}); 
     }
     
@@ -2017,12 +2017,23 @@ public class WordPressDB {
         values.putNull("uploadState");
         db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[] { blogId, "uploaded" });
     }
-    
 
     /** Delete a media item from a blog locally **/
     public void deleteMediaFile(String blogId, String mediaId) {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
     }
+
+    /** Mark media files for deletion without actually deleting them **/
+    public void setMediaFilesMarkedForDelete(String blogId, List<String> ids) {
+        for (String id : ids)
+            updateMediaUploadState(blogId, id, "delete");
+    }
+    
+    /** Get a media file scheduled for delete for a given blogId **/
+    public Cursor getMediaDeleteQueueItem(String blogId) {
+        return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=? LIMIT 1", new String[] {"delete", blogId}); 
+    }
+    
     
     public int getWPCOMBlogID() {
         int id = -1;
@@ -2140,4 +2151,5 @@ public class WordPressDB {
         }
         
     }
+
 }

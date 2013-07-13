@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -43,7 +44,7 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
         if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popMediaEditDetails();
+                fm.popBackStack();
             } else {
                 finish();
             }
@@ -90,18 +91,14 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
             mMediaEditFragment.loadMedia(mediaId);
         }
     }
-    
-    private void popMediaEditDetails() {
-        // TODO
-    }
 
     @Override
-    public void onResumeMediaEditFragment() {
+    public void onResume(Fragment fragment) {
         invalidateOptionsMenu();   
     }
 
     @Override
-    public void onPauseMediaEditFragment() {
+    public void onPause(Fragment fragment) {
         invalidateOptionsMenu();        
     }
 }

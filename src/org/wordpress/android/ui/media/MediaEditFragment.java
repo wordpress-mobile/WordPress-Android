@@ -28,8 +28,8 @@ public class MediaEditFragment extends Fragment {
     private MediaEditFragmentCallback mCallback;
     
     public interface MediaEditFragmentCallback {
-        public void onResumeMediaEditFragment();
-        public void onPauseMediaEditFragment();
+        public void onResume(Fragment fragment);
+        public void onPause(Fragment fragment);
     }
     
     public static MediaEditFragment newInstance(String mediaId) {
@@ -56,13 +56,13 @@ public class MediaEditFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCallback.onResumeMediaEditFragment();
+        mCallback.onResume(this);
     }
     
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPauseMediaEditFragment();
+        mCallback.onPause(this);
     }
     
     private String getMediaId() {

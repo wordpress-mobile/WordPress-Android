@@ -32,8 +32,8 @@ public class ThemePreviewFragment extends Fragment {
     private Blog mBlog;
     
     public interface ThemePreviewFragmentCallback {
-        public void onResumeThemePreviewFragment();
-        public void onPauseThemePreviewFragment();
+        public void onResume(Fragment fragment);
+        public void onPause(Fragment fragment);
     }
     
     public static ThemePreviewFragment newInstance(String themeId, String previewURL) {
@@ -61,13 +61,13 @@ public class ThemePreviewFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCallback.onResumeThemePreviewFragment();
+        mCallback.onResume(this);
     }
     
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPauseThemePreviewFragment();
+        mCallback.onPause(this);
     }
     
     public String getThemeId() {
@@ -162,6 +162,7 @@ public class ThemePreviewFragment extends Fragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            
         }
 
         @Override
@@ -170,9 +171,7 @@ public class ThemePreviewFragment extends Fragment {
         }
 
         @Override
-        public void onReceivedError(WebView view, int errorCode, String description,
-                String failingUrl) {
-
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
         }
 

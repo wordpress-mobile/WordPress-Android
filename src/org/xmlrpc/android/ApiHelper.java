@@ -582,6 +582,61 @@ public class ApiHelper {
         }        
     }
 
+    public static class DeleteMediaTask extends AsyncTask<List<?>, Void, Boolean> {
+        private Callback mCallback;
+        private String mMediaId;
+        
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+        
+        public DeleteMediaTask(String mediaId, Callback callback) {
+            mMediaId = mediaId;
+            mCallback = callback;
+        }
+        
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            
+            List<?> arguments = params[0];
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+            
+            
+            Object[] apiParams = null;
+            
+            
+            apiParams = new Object[] {
+                    blog.getBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    mMediaId
+            };
+            
+            Boolean result = null;
+            try {
+                result = (Boolean) client.call("wp.deletePost", apiParams);
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+            }
+            
+            return result;
+            
+        }
+        
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if (mCallback != null) {
+                if (b == null || !b)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess();
+            }
+        }
+    }
+    
     /**
      * Discover the XML-RPC endpoint for the WordPress API associated with the specified blog URL.
      *
