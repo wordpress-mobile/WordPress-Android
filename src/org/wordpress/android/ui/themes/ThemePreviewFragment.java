@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.themes;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -114,10 +117,15 @@ public class ThemePreviewFragment extends Fragment {
      * @param url URL to be loaded in the webview.
      */
     protected void loadAuthenticatedUrl(String url) {
+
+        try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     mBlog.getUsername(), mBlog.getPassword(),
-                    url);
+                    URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl(getLoginUrl(), postData.getBytes());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
