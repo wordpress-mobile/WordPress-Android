@@ -68,7 +68,7 @@ public class FollowRow extends LinearLayout {
         View followDivider = getFollowDivider();
         getImageView().setDefaultImageResId(R.drawable.placeholder);
         try {
-            if (actionJSON.getString(TYPE_FIELD).equals(ACTION_TYPE)) {
+            if (actionJSON.has(TYPE_FIELD) && actionJSON.getString(TYPE_FIELD).equals(ACTION_TYPE)) {
                 // get the parms for following
                 mParams = actionJSON.getJSONObject(PARAMS_FIELD);
                 // show the button

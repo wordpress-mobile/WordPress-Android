@@ -24,6 +24,8 @@ public class JSONUtil {
         if (nextSeperator == -1 && nextIndexStart == -1) {
             // last item let's get it
             try {
+                if(!source.has(query))
+                    return defaultObject;
                 Object result = source.get(query);
                 if (result.getClass().isAssignableFrom(defaultObject.getClass())) {
                     return (U) result;
