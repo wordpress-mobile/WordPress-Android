@@ -6,12 +6,11 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.GridView;
-import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -33,7 +32,7 @@ public class ThemeTabAdapter extends CursorAdapter {
         
         final String screenshotURL =  cursor.getString(cursor.getColumnIndex("screenshotURL"));
         
-        final ImageView imageView = (ImageView) view.findViewById(R.id.theme_grid_item_image);
+        final NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
 
         ViewHolder holder = (ViewHolder) imageView.getTag();
         if (holder == null) {
@@ -49,25 +48,11 @@ public class ThemeTabAdapter extends CursorAdapter {
         }
 
         // load image in this way to get it sized properly for the imageview
-        WordPress.imageLoader.get(holder.requestURL, new ImageListener() {
-            
-            @Override
-            public void onErrorResponse(VolleyError error) { }
-            
-            @Override
-            public void onResponse(ImageContainer response, boolean isImmediate) {
-                ViewHolder holder = (ViewHolder) imageView.getTag();
-                if (holder != null) {
-                    String url = holder.requestURL;
-                    
-                    if (response != null && response.getBitmap() != null && response.getRequestUrl().equals(url)) {
-                        imageView.setImageBitmap(response.getBitmap());
-                    }
-                } 
-                
-            }
-        }, getGridWidth(context), getGridHeight(context));
-
+        FrameLayout.LayoutParams params = (LayoutParams) imageView.getLayoutParams();
+        params.width = getGridWidth(context);
+        params.height = getGridHeight(context);
+        imageView.setImageUrl(screenshotURL, WordPress.imageLoader);
+        
         updateGridWidth(mContext, view);   
     }
 
