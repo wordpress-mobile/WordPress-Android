@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.Map;
 
 import android.os.Bundle;
@@ -70,7 +71,12 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (isPrivate || post.isLocalDraft() || post.isLocalChange()
+            
+            Date d = new Date();           
+            if ( isPrivate //blog private 
+                    || post.isLocalDraft() 
+                    || post.isLocalChange()
+                    || post.getDate_created_gmt() > d.getTime() //Scheduled
                     || !post.getPost_status().equals("publish")) {
                 if (-1 == url.indexOf('?')) {
                     url = url.concat("?preview=true");
