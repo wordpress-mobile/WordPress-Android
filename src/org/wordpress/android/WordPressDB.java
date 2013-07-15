@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import java.text.StringCharacterIterator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.json.JSONException;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
 
@@ -634,8 +636,11 @@ public class WordPressDB {
         }
         c.close();
 
+        Collections.sort(accounts, Utils.BlogNameComparator);
+        
         return accounts;
     }
+    
 
     public long checkMatch(String blogName, String blogURL, String username, String password) {
 

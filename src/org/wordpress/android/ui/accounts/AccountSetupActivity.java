@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -51,6 +52,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.Utils;
 
 public class AccountSetupActivity extends Activity implements OnClickListener {
 
@@ -245,6 +247,8 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         finish();
                         return;
                     }
+                    
+                    Arrays.sort(result, Utils.BlogNameComparator);
 
                     final String[] blogNames = new String[result.length];
                     final String[] urls = new String[result.length];
