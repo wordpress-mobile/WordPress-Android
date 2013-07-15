@@ -2,7 +2,9 @@
 package org.wordpress.android.ui;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +20,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -57,12 +61,26 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
      * @return URL of the login page.
      */
     protected String getLoginUrl() {
-        if (mBlog.getUrl().lastIndexOf("/") != -1) {
-            return mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
-                    + "/wp-login.php";
-        } else {
-            return mBlog.getUrl().replace("xmlrpc.php", "wp-login.php");
+        String loginURL = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Map<?, ?> blogOptions = gson.fromJson(mBlog.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
+            if (homeURLMap != null)
+                loginURL = homeURLMap.get("value").toString();
         }
+        // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
+        if( loginURL == null ) {
+            if (mBlog.getUrl().lastIndexOf("/") != -1) {
+                return mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
+                        + "/wp-login.php";
+            } else {
+                return mBlog.getUrl().replace("xmlrpc.php", "wp-login.php");
+            }
+        }
+        
+        return loginURL;
     }
 
     /**

@@ -19,6 +19,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -26,7 +28,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * Basic activity for displaying a WebView.
@@ -94,17 +98,29 @@ public class DashboardActivity extends SherlockActivity {
         Toast.makeText(this, getString(R.string.dashboard_tip), Toast.LENGTH_LONG).show();
     }
 
-    public void loadDashboard() {
-        String dashboardUrl;
-        if (mBlog.getUrl().lastIndexOf("/") != -1) {
-            dashboardUrl = mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
-            + "/wp-admin";
-        } else {
-            dashboardUrl = mBlog.getUrl().replace("xmlrpc.php", "wp-admin");
+    
+    private void loadDashboard() {
+        String dashboardUrl = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Map<?, ?> blogOptions = gson.fromJson(mBlog.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
+            if (homeURLMap != null)
+                dashboardUrl = homeURLMap.get("value").toString();
+        }
+        // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6 
+        if (dashboardUrl == null) {
+            if (mBlog.getUrl().lastIndexOf("/") != -1) {
+                dashboardUrl = mBlog.getUrl().substring(0, mBlog.getUrl().lastIndexOf("/"))
+                + "/wp-admin";
+            } else {
+                dashboardUrl = mBlog.getUrl().replace("xmlrpc.php", "wp-admin");
+            }
         }
         loadAuthenticatedUrl(dashboardUrl);
     }
-
+    
     /**
      * Load the specified URL in the webview.
      *
