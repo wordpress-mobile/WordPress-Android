@@ -57,6 +57,8 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
                 mMediaUploadFragment.refresh();
             
             return true;
+        } else if (itemId == R.id.menu_save_media) {
+            mMediaEditFragment.editMedia();
         }
         return false;
     }
@@ -100,5 +102,12 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
     @Override
     public void onPause(Fragment fragment) {
         invalidateOptionsMenu();        
+    }
+
+    @Override
+    public void onEditCompleted(boolean result) {
+        if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }

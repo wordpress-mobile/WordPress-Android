@@ -1997,7 +1997,33 @@ public class WordPressDB {
         if (uploadState == null) values.putNull("uploadState");
         else values.put("uploadState", uploadState);
         
-        db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
+        if (mediaId == null) {
+            db.update(MEDIA_TABLE, values, "blogId=? AND (uploadState IS NULL OR uploadState ='uploaded')", new String[] { blogId });
+        } else {
+            db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });            
+        }
+    }
+    
+    public void updateMediaFile(String blogId, String mediaId, String title, String description) {
+        if (blogId == null || blogId.equals("")) {
+            return;
+        }
+        
+        ContentValues values = new ContentValues();
+        
+        if (title == null || title.equals("")) {
+            values.put("title", "");
+        } else {
+            values.put("title", title);            
+        }
+        
+        if (title == null || title.equals("")) {
+            values.put("description", "");
+        } else {
+            values.put("description", description);
+        }
+        
+        db.update(MEDIA_TABLE, values, "blogId = ? AND mediaId=?", new String[] { blogId, mediaId });
     }
 
     /** 
@@ -2032,6 +2058,11 @@ public class WordPressDB {
     public void setMediaFilesMarkedForDelete(String blogId, List<String> ids) {
         for (String id : ids)
             updateMediaUploadState(blogId, id, "delete");
+    }
+    
+    /** Mark media files as deleted without actually deleting them **/
+    public void setMediaFilesMarkedForDeleted(String blogId) {
+        updateMediaUploadState(blogId, null, "deleted");
     }
     
     /** Get a media file scheduled for delete for a given blogId **/
