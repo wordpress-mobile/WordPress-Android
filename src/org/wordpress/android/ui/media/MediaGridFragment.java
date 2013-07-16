@@ -16,7 +16,6 @@ import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
@@ -32,25 +31,37 @@ import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.CheckableFrameLayout;
+import org.wordpress.android.ui.MultiSelectGridView;
+import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
-public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener {
+public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
     
-    private GridView mGridView;
-    private MediaGridAdapter mAdapter;
-    private Cursor mCursor;
-    private MediaGridListener mListener;
-    private IcsSpinner mSpinner;
-    private Filter mFilter = Filter.ALL;
-    private boolean mIsRefreshing = false;
+    private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
 
-    private String[] mFilters;
+    private Cursor mCursor;
+    private Filter mFilter = Filter.ALL;
+    private String[] mFiltersText;
+    
+    private MultiSelectGridView mGridView;
+    private MediaGridAdapter mGridAdapter;
+    private MediaGridListener mListener;
+    
+    private boolean mIsRefreshing = false;
+    
+    private ArrayList<String> mCheckedItems;
+    
+    private IcsSpinner mSpinner;
+    private View mSpinnerContainer;
+
     
     public interface MediaGridListener {
         public void onMediaItemListDownloadStart();
         public void onMediaItemListDownloaded();
         public void onMediaItemSelected(String mediaId);
+        public void onMultiSelectChange(int count);
     }
     
     public enum Filter {
@@ -83,38 +94,66 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
         
-        mGridView = (GridView) view.findViewById(R.id.media_gridview);
+        mGridView = (MultiSelectGridView) view.findViewById(R.id.media_gridview);
         mGridView.setOnItemClickListener(this);
         mGridView.setRecyclerListener(this);
+        mGridView.setMultiSelectListener(this);
 
-        View spinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
-        spinnerContainer.setOnClickListener(new OnClickListener() {
+        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
+        mSpinnerContainer.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
-                if (mSpinner != null) {
+                if (mSpinner != null && !isInMultiSelect()) {
                     mSpinner.performClick();
                 }
             }
+
         });
 
-        mFilters = new String[3];
+        mFiltersText = new String[Filter.values().length];
         mSpinner = (IcsSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
-        refreshSpinnerAdapter();
+        setupSpinnerAdapter();
+        
+        mCheckedItems = new ArrayList<String>();
+        restoreState(savedInstanceState);
         
         return view;
     }
 
-    private void refreshSpinnerAdapter() {
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState == null)
+            return;
+        if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES))
+            mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
+        
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveState(outState);
+    }
+
+    private void saveState(Bundle outState) {
+        outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
+    }
+
+    private void setupSpinnerAdapter() {
         if (getActivity() == null || WordPress.getCurrentBlog() == null)
             return; 
 
         updateFilterText();
 
         Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar().getThemedContext();        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.sherlock_spinner_dropdown_item, mFilters);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.sherlock_spinner_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
+    }
+    
+    public void refreshSpinnerAdapter() {
+        updateFilterText();
+        updateSpinnerAdapter();
     }
     
     private void updateFilterText() {
@@ -127,11 +166,17 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         int countImages = WordPress.wpDB.getMediaCountImages(blogId);
         int countUnattached = WordPress.wpDB.getMediaCountUnattached(blogId);
         
-        mFilters[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
-        mFilters[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
-        mFilters[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
+        mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
+        mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
+        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
     }
 
+    private void updateSpinnerAdapter() {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
+        if (adapter != null) 
+            adapter.notifyDataSetChanged();
+    }
+    
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -154,9 +199,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
         if (mCursor != null) {
-            mAdapter = new MediaGridAdapter(getActivity(), mCursor, 0);
-            mAdapter.setCallback(this);
-            mGridView.setAdapter(mAdapter);
+            mGridAdapter = new MediaGridAdapter(getActivity(), mCursor, 0, mCheckedItems);
+            mGridAdapter.setCallback(this);
+            mGridView.setAdapter(mGridAdapter);
         }
     }
     
@@ -176,14 +221,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         }
     }
 
-    public void search(String searchTerm) {
-        Blog blog = WordPress.getCurrentBlog();
-        if(blog != null) {
-            String blogId = String.valueOf(blog.getBlogId());
-            mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
-            mAdapter.changeCursor(mCursor);
-        }
-    }
     
     private Callback mCallback = new Callback() {
         
@@ -194,12 +231,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             if (MediaGridFragment.this.isVisible()) {
             
                 mListener.onMediaItemListDownloaded();
+                refreshSpinnerAdapter();
                 setFilter(mFilter);
-                updateFilterText();
-    
-                ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
-                if (adapter != null) 
-                    adapter.notifyDataSetChanged();
             }
         }
 
@@ -208,7 +241,16 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             mIsRefreshing = false;
             mListener.onMediaItemListDownloaded();
         }
-    };    
+    };
+
+    public void search(String searchTerm) {
+        Blog blog = WordPress.getCurrentBlog();
+        if(blog != null) {
+            String blogId = String.valueOf(blog.getBlogId());
+            mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
+            mGridAdapter.changeCursor(mCursor);
+        }
+    }
     
     public boolean isRefreshing() {
         return mIsRefreshing;
@@ -231,8 +273,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mSpinner.setSelection(mFilter.ordinal());
         mCursor = filterItems(mFilter);
         
-        if (mCursor != null && mAdapter != null) {
-            mAdapter.swapCursor(mCursor);
+        if (mCursor != null && mGridAdapter != null) {
+            mGridAdapter.swapCursor(mCursor);
         }
     }
 
@@ -283,7 +325,41 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                 container.cancelRequest();
             }
         }
+        
+        CheckableFrameLayout layout = (CheckableFrameLayout) view;
+        if (layout != null) {
+            layout.setOnCheckedChangeListener(null);
+        }
                 
+    }
+
+    @Override
+    public void onMultiSelectChange(int count) {
+        if (count == 0) {
+            // enable filtering when not in multiselect
+            mSpinner.setEnabled(true);
+            mSpinnerContainer.setEnabled(true);
+            mSpinnerContainer.setVisibility(View.VISIBLE);
+        } else {
+            // disable filtering on multiselect
+            mSpinner.setEnabled(false);
+            mSpinnerContainer.setEnabled(false);
+            mSpinnerContainer.setVisibility(View.GONE);
+        }
+        
+        mListener.onMultiSelectChange(count);
+    }
+    
+    private boolean isInMultiSelect() {
+        return mCheckedItems.size() > 0;
+    }
+    
+    public ArrayList<String> getCheckedItems() {
+        return mCheckedItems;
+    }
+    
+    public void clearCheckedItems() {
+        mGridView.cancelSelection();
     }
 
 }

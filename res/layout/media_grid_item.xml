@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.ui.CheckableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/media_gallery_grid_cell"
@@ -13,6 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
+
+    <CheckBox
+        android:id="@+id/media_grid_item_checkstate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:button="@android:color/transparent"
+        android:background="@drawable/media_grid_item_checkstate_selector"
+        android:clickable="false"
+        android:duplicateParentState="true"
+        android:focusable="false" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,4 +49,4 @@
             android:textColor="@color/media_gallery_grid_label" />
     </RelativeLayout>
 
-</FrameLayout>
+</org.wordpress.android.ui.CheckableFrameLayout>

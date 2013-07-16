@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageButton
+        android:id="@+id/media_multiselect_actionbar_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:background="@drawable/media_multiselect_ab_selector"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/abs__ic_cab_done_holo_dark" />
+
+    <View
+        android:id="@+id/media_multiselect_actionbar_div"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/media_multiselect_actionbar_ok"
+        android:background="#84BCD8" />
+
+    <TextView
+        android:id="@+id/media_mutliselect_actionbar_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/media_multiselect_actionbar_div"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:text="0"
+        android:textColor="@color/white" />
+
+    <ImageButton
+        android:id="@+id/media_multiselect_actionbar_trash"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/media_multiselect_ab_selector"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:src="@android:drawable/ic_menu_delete" />
+
+    <ImageButton
+        android:id="@+id/media_multiselect_actionbar_share"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/media_multiselect_actionbar_trash"
+        android:background="@drawable/media_multiselect_ab_selector"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:src="@android:drawable/ic_menu_share" />
+
+    <ImageButton
+        android:id="@+id/media_multiselect_actionbar_post"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/media_multiselect_actionbar_share"
+        android:background="@drawable/media_multiselect_ab_selector"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:src="@android:drawable/ic_menu_edit" />
+
+</RelativeLayout>
