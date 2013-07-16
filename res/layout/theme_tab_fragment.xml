@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:horizontalSpacing="10dp"
-        android:numColumns="2"
+        android:numColumns="@integer/themes_grid_num_columns"
         android:padding="10dp"
         android:scrollbarStyle="outsideOverlay"
         android:stretchMode="columnWidth"

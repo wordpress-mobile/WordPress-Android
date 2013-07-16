@@ -133,7 +133,7 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         int tabContainerWidth = 0;
         for(TextView textView : mTextViews) {
             LinearLayout.LayoutParams textViewParams =
-                    new LinearLayout.LayoutParams((int) mMaxTabWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    new LinearLayout.LayoutParams((int) mMaxTabWidth, LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
             textView.setLayoutParams(textViewParams);
             
             tabContainerWidth += mMaxTabWidth; // add text width
