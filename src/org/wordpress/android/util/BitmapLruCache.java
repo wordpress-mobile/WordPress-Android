@@ -14,15 +14,10 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
 
     @Override
     protected int sizeOf(String key, Bitmap value) {
-        return super.sizeOf(key, value);
-    }
-
-    @Override
-    protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-        if (!oldValue.isRecycled()) {
-            oldValue.recycle();
-            oldValue = null;
-        }
+        if (android.os.Build.VERSION.SDK_INT < 12)
+            return value.getRowBytes() * value.getHeight();
+        else
+            return value.getByteCount() / 1024;
     }
 
     @Override

@@ -32,8 +32,8 @@ public class MediaItemFragment extends Fragment {
     private MediaItemFragmentCallback mCallback;
     
     public interface MediaItemFragmentCallback {
-        public void onResumeMediaItemFragment();
-        public void onPauseMediaItemFragment();
+        public void onResume(Fragment fragment);
+        public void onPause(Fragment fragment);
     }
     
     public static MediaItemFragment newInstance(String mediaId) {
@@ -60,13 +60,13 @@ public class MediaItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mCallback.onResumeMediaItemFragment();
+        mCallback.onResume(this);
     }
     
     @Override
     public void onPause() {
         super.onPause();
-        mCallback.onPauseMediaItemFragment();
+        mCallback.onPause(this);
     }
     
     public String getMediaId() {

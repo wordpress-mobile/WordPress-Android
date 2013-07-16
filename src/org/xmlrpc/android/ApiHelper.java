@@ -386,6 +386,13 @@ public class ApiHelper {
             if(results != null && blogId != null) {
                 Map<?, ?> resultMap;
                 
+                // results returned, so mark everything existing to deleted
+                // since offset is 0, we are doing a full refresh
+                if (mOffset == 0) {
+                    WordPress.wpDB.setMediaFilesMarkedForDeleted(blogId);
+                }
+                
+                // 
                 for(Object result : results) {
                     resultMap = (Map<?, ?>) result;
                     WordPress.wpDB.saveMediaFile(new MediaFile(blogId, resultMap));
@@ -407,6 +414,72 @@ public class ApiHelper {
             }
         }
         
+    }
+    
+    public static class EditMediaItemTask extends AsyncTask<List<?>, Void, Boolean> {
+        
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+        
+        private Callback mCallback;
+        private String mMediaId;
+        private String mTitle;
+        private String mDescription;
+        
+        public EditMediaItemTask(String mediaId, String title, String description, Callback callback) {
+            mMediaId = mediaId;
+            mCallback = callback;
+            mTitle = title;
+            mDescription = description;
+        }
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            
+            List<?> arguments = params[0];
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
+            
+            if (blog == null) {
+                Log.e("WordPress", "ApiHelper - current blog is null");
+                return null;
+            }
+                        
+            client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
+            
+            Map<String, Object> contentStruct = new HashMap<String, Object>();
+            contentStruct.put("post_title", mTitle);
+            contentStruct.put("post_content", mDescription);
+
+            Object[] apiParams = {
+                    blog.getBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    mMediaId,
+                    contentStruct
+            };
+            
+            Boolean result = null;
+            try {
+                result = (Boolean) client.call("wp.editPost", apiParams);
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+            }
+            
+            return result;
+        }
+        
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (mCallback != null) {
+                if (result == null || !result)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess();
+            }
+        }
+
     }
     
     public static class GetMediaItemTask extends AsyncTask<List<?>, Void, MediaFile> {
@@ -448,6 +521,8 @@ public class ApiHelper {
                     blog.getPassword(),
                     mMediaId
             };
+            
+
             
             Map<?, ?> results = null;
             try {
@@ -582,6 +657,61 @@ public class ApiHelper {
         }        
     }
 
+    public static class DeleteMediaTask extends AsyncTask<List<?>, Void, Boolean> {
+        private Callback mCallback;
+        private String mMediaId;
+        
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+        
+        public DeleteMediaTask(String mediaId, Callback callback) {
+            mMediaId = mediaId;
+            mCallback = callback;
+        }
+        
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            
+            List<?> arguments = params[0];
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+            
+            
+            Object[] apiParams = null;
+            
+            
+            apiParams = new Object[] {
+                    blog.getBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    mMediaId
+            };
+            
+            Boolean result = null;
+            try {
+                result = (Boolean) client.call("wp.deletePost", apiParams);
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+            }
+            
+            return result;
+            
+        }
+        
+        @Override
+        protected void onPostExecute(Boolean b) {
+            if (mCallback != null) {
+                if (b == null || !b)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess();
+            }
+        }
+    }
+    
     /**
      * Discover the XML-RPC endpoint for the WordPress API associated with the specified blog URL.
      *

@@ -7,6 +7,11 @@
         android:showAsAction="ifRoom"
         android:title="@string/new_media"/>
     <item
+        android:id="@+id/menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="never"
+        android:title="@string/delete"/>
+    <item
         android:id="@+id/menu_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="never"

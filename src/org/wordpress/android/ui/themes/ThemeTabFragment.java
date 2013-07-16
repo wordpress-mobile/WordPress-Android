@@ -7,14 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
 
-public class ThemeTabFragment extends Fragment implements OnItemClickListener {
+public class ThemeTabFragment extends Fragment implements OnItemClickListener, RecyclerListener {
 
     public enum ThemeSortType {
         TRENDING("Trending"), 
@@ -79,6 +86,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener {
         View view = inflater.inflate(R.layout.theme_tab_fragment, container, false);
         
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
+        mGridView.setRecyclerListener(this);
         
         return view;
     }
@@ -149,5 +157,29 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener {
         Cursor cursor = ((ThemeTabAdapter) parent.getAdapter()).getCursor();
         String themeId = cursor.getString(cursor.getColumnIndex("themeId"));
         mCallback.onThemeSelected(themeId);
+    }
+
+    @Override
+    public void onMovedToScrapHeap(View view) {
+        // cancel image fetch requests if the view has been moved to recycler.
+        
+        NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+        if (niv != null) {
+            // this tag is set in the ThemeTabAdapter class
+            ThemeTabAdapter.ViewHolder tag =  (ViewHolder) niv.getTag();
+            if (tag != null && tag.requestURL != null) {
+                // need a listener to cancel request, even if the listener does nothing
+                ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) { }
+
+                    @Override
+                    public void onResponse(ImageContainer response, boolean isImmediate) { }
+                    
+                });
+                container.cancelRequest();
+            }
+        }        
     }
 }

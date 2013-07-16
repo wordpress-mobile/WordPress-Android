@@ -64,7 +64,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
-            Log.e("WordPress", "ThemeActivity DB is null - finishing ThemeActivity");
             finish();
             return;
         }
@@ -423,23 +422,13 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     @Override
-    public void onResumeThemeDetailsFragment() {
+    public void onResume(Fragment fragment) {
         invalidateOptionsMenu();
     }
 
     @Override
-    public void onPauseThemeDetailsFragment() {
+    public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
-    }
-    
-    @Override
-    public void onResumeThemePreviewFragment() {
-        invalidateOptionsMenu();    
-    }
-
-    @Override
-    public void onPauseThemePreviewFragment() {
-        invalidateOptionsMenu();        
     }
     
     @Override

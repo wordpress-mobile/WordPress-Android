@@ -147,22 +147,16 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void onResume() {
         super.onResume();
         
+        refreshMediaFromDB();
+        refreshMediaFromServer(0);
+    }
+
+    public void refreshMediaFromDB() {
         setFilter(mFilter);
         if (mCursor != null) {
             mAdapter = new MediaGridAdapter(getActivity(), mCursor, 0);
             mAdapter.setCallback(this);
             mGridView.setAdapter(mAdapter);
-        }
-        
-        refreshMediaFromServer(0);
-    }
-
-    public void search(String searchTerm) {
-        Blog blog = WordPress.getCurrentBlog();
-        if(blog != null) {
-            String blogId = String.valueOf(blog.getBlogId());
-            mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
-            mAdapter.changeCursor(mCursor);
         }
     }
     
@@ -182,6 +176,15 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         }
     }
 
+    public void search(String searchTerm) {
+        Blog blog = WordPress.getCurrentBlog();
+        if(blog != null) {
+            String blogId = String.valueOf(blog.getBlogId());
+            mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
+            mAdapter.changeCursor(mCursor);
+        }
+    }
+    
     private Callback mCallback = new Callback() {
         
         @Override
@@ -195,7 +198,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                 updateFilterText();
     
                 ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
-                adapter.notifyDataSetChanged();
+                if (adapter != null) 
+                    adapter.notifyDataSetChanged();
             }
         }
 

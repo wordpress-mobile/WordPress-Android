@@ -198,7 +198,12 @@
             android:name=".util.MediaUploadService"
             android:label="Media Upload Service" >
         </service>
-        
+
+        <service
+            android:name=".util.MediaDeleteService"
+            android:label="Media Delete Service" >
+        </service>
+                
         <service android:name="org.wordpress.android.GCMIntentService" />
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"

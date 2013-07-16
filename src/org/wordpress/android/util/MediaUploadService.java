@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
@@ -26,9 +25,9 @@ import org.wordpress.android.models.MediaFile;
 public class MediaUploadService extends Service {
 
     // time to wait before trying to upload the next file
-    private static final int UPLOAD_WAIT_TIME = 500;
+    private static final int UPLOAD_WAIT_TIME = 1000;
 
-    /** Intent to listen for notifications **/
+    /** Listen to this Intent for when there are updates to the upload queue **/
     public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION = "MEDIA_UPLOAD_INTENT_NOTIFICATION";
     
     private Context mContext;
@@ -52,33 +51,29 @@ public class MediaUploadService extends Service {
     
     @Override
     public void onStart(Intent intent, int startId) {
-        mHandler.post(fetchQueueTask);
+        mHandler.post(mFetchQueueTask);
     }
 
-    private Runnable fetchQueueTask = new Runnable() {
+    private Runnable mFetchQueueTask = new Runnable() {
         
         @Override
         public void run() {
             Cursor cursor = getQueue();
-            if ((cursor == null || cursor.getCount() == 0 || mContext == null) && !mUploadInProgress) {
-
+            try {
+                if ((cursor == null || cursor.getCount() == 0 || mContext == null) && !mUploadInProgress) {
+                    MediaUploadService.this.stopSelf();
+                    return;
+                } else {
+                    if (mUploadInProgress) {
+                        mHandler.postDelayed(this, UPLOAD_WAIT_TIME);
+                    } else {
+                        uploadMediaFile(cursor);
+                    }
+                }
+            } finally {
                 if (cursor != null)
                     cursor.close();
-                
-                MediaUploadService.this.stopSelf();
-                return;
-            } else {
-                if (!mUploadInProgress) {
-                    uploadMediaFile(cursor);
-                } else {
-
-                    if (cursor != null)
-                        cursor.close();
-                    
-                    mHandler.postDelayed(this, UPLOAD_WAIT_TIME);
-                }
-            }
-            
+            }            
             
         }
     };
@@ -100,7 +95,7 @@ public class MediaUploadService extends Service {
             return null;
         
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        return WordPress.wpDB.getMediaQueue(blogId);
+        return WordPress.wpDB.getMediaUploadQueue(blogId);
     }
     
     private void uploadMediaFile(Cursor cursor) {
@@ -110,15 +105,11 @@ public class MediaUploadService extends Service {
         
         mUploadInProgress = true;
         
-        int blogId = Integer.valueOf(cursor.getString((cursor.getColumnIndex("blogId"))));
-        final String blogIdStr = String.valueOf(blogId);
-        
+        final String blogIdStr = cursor.getString((cursor.getColumnIndex("blogId")));
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
         String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        
-        cursor.close();
         
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(blogIdStr);
@@ -141,7 +132,7 @@ public class MediaUploadService extends Service {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
                 sendUpdateBroadcast();
-                mHandler.post(fetchQueueTask);
+                mHandler.post(mFetchQueueTask);
             }
         });
         
@@ -152,10 +143,10 @@ public class MediaUploadService extends Service {
         apiArgs.add(WordPress.getCurrentBlog());
         task.execute(apiArgs) ;
         
-        mHandler.post(fetchQueueTask);
+        mHandler.post(mFetchQueueTask);
     }
 
-    protected void fetchMediaFile(String id) {
+    private void fetchMediaFile(String id) {
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id), new GetMediaItemTask.Callback() {
@@ -168,14 +159,14 @@ public class MediaUploadService extends Service {
 
                 mUploadInProgress = false;
                 sendUpdateBroadcast();
-                mHandler.post(fetchQueueTask);
+                mHandler.post(mFetchQueueTask);
             }
             
             @Override
             public void onFailure() {
                 mUploadInProgress = false;
                 sendUpdateBroadcast();
-                mHandler.post(fetchQueueTask);                
+                mHandler.post(mFetchQueueTask);                
             }
         });
         task.execute(apiArgs);

@@ -122,6 +122,9 @@
   <string name="media_edit_show_likes">Show Likes</string>
   <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
   
+  <!-- Delete Media -->
+  <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
+  
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
   <string name="tab_posts">Posts</string>
