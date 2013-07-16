@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.themes;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,17 +54,7 @@ public class ThemeTabAdapter extends CursorAdapter {
         params.width = getGridWidth(context);
         params.height = getGridHeight(context);
         imageView.setImageUrl(screenshotURL, WordPress.imageLoader);
-        
-        updateGridWidth(mContext, view);   
-    }
-
-    private void updateGridWidth(Context context, View view) {
-        // make it so that total padding = 1/12 of screen width
-        // (this padding is based on the mocks)
-        // since there are two columns on the grid, each column will get
-        // 11/24 of the remaining space available
-        
-        view.setLayoutParams(new GridView.LayoutParams(getGridWidth(context), getGridHeight(context)));
+        view.setLayoutParams(new GridView.LayoutParams(params.width, params.height));
     }
 
     // The theme previews are 600x450 px, resulting in a ratio of 0.75
@@ -70,16 +62,46 @@ public class ThemeTabAdapter extends CursorAdapter {
     // Then we'll determine the height based on the width and the 0.75 ratio
     
     private int getGridWidth(Context context) {
-        // for phone-size, use entire screen
-        int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-        return (int) (screenWidth * 11.0f / 24.0f);
+        // Padding is 12 dp between the grid columns and on the outside
+        int columnCount = getColumnCount(context);
+        int dp12 = (int) dpToPx(context, 12);
+        int padding = (columnCount + 1) * dp12;
+        
+        // the max width of the themes is either:
+        // = width of entire screen (phone and tablet portrait)
+        // = width of entire screen - menu drawer width (tablet landscape)
+        int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
+        if (isXLarge(context) && isLandscape(context))
+            maxWidth -= context.getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
+        
+        return (int) (maxWidth - padding) / columnCount;
     }
-    
+
     private int getGridHeight(Context context) {
         return (int) (0.75f * getGridWidth(context));
+    }
+    
+    private int getColumnCount(Context context) {
+        return context.getResources().getInteger(R.integer.themes_grid_num_columns);
     }
     
     static class ViewHolder {
         String requestURL;
     }
+
+    private float dpToPx(Context context, int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+   }
+    
+    // logic below based on login in WPActionBarActivity.java
+    private boolean isXLarge(Context context) {
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            return true;
+        return false;
+    }
+    
+    private boolean isLandscape(Context context) {
+        return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+    
 }
