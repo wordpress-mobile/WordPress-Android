@@ -3,6 +3,8 @@ package org.wordpress.android.ui.themes;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -205,7 +207,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popThemeDetailsFragment();
+                popThemeFragment();
                 return true;
             }
         } else if (itemId == R.id.menu_search) {
@@ -239,10 +241,15 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     @Override
                     public void onResponse(JSONObject arg0) { 
                         Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
+                        
+                        if (isXLarge(ThemeBrowserActivity.this)) {
+                            mDetailsFragment.dismiss();
+                        }
+                        
                         FragmentManager fm = getSupportFragmentManager();
-
+                        
                         if (fm.getBackStackEntryCount() > 0) {
-                            popThemeDetailsFragment();
+                            popThemeFragment();
                             invalidateOptionsMenu();
                         }
                     }
@@ -261,13 +268,13 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            popThemeDetailsFragment();
+            popThemeFragment();
         } else {
             super.onBackPressed();
         }
     }
 
-    private void popThemeDetailsFragment() {
+    private void popThemeFragment() {
         FragmentManager fm = getSupportFragmentManager();
         try {
             fm.popBackStack();
@@ -351,7 +358,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onThemeSelected(String themeId) {
         FragmentManager fm = getSupportFragmentManager();
 
-        if (mDetailsFragment == null || !mDetailsFragment.isInLayout()) {
+        if (!isXLarge(ThemeBrowserActivity.this)) {
             FragmentTransaction ft = fm.beginTransaction();
             
             // determine if we are in regular view or search view
@@ -372,7 +379,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             ft.commit();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
-            mDetailsFragment.loadTheme(themeId);
+            mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
+            mDetailsFragment.show(getSupportFragmentManager(), "ThemeDetails");
         }
     }
 
@@ -394,6 +402,13 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
         return false;
     }
+    
+    // logic below based on login in WPActionBarActivity.java
+    private boolean isXLarge(Context context) {
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            return true;
+        return false;
+    }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
@@ -401,7 +416,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mSearchFragment = null;
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popThemeDetailsFragment();
+                popThemeFragment();
             }
         }
         return true;
@@ -452,7 +467,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mViewPager.setVisibility(View.GONE);
             mTabView.setVisibility(View.GONE);
             mPreviewFragment = ThemePreviewFragment.newInstance(themeId, previewURL);
-            ft.hide(mDetailsFragment);
+            
+            if (isXLarge(ThemeBrowserActivity.this)) {
+                mDetailsFragment.dismiss();
+            } else {
+                ft.hide(mDetailsFragment);
+            }
             ft.add(R.id.theme_browser_container, mPreviewFragment);
             ft.addToBackStack(null);
             ft.commit();

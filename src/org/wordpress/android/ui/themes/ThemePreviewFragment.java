@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.HttpAuthHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -30,6 +32,7 @@ public class ThemePreviewFragment extends Fragment {
     private ThemePreviewFragmentCallback mCallback;
     private WebView mWebView;
     private Blog mBlog;
+    private ProgressBar mProgressBar;
     
     public interface ThemePreviewFragmentCallback {
         public void onResume(Fragment fragment);
@@ -93,13 +96,28 @@ public class ThemePreviewFragment extends Fragment {
         if (previewURL == null || mBlog == null)
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         
-        View view = inflater.inflate(R.layout.webview, container, false);
+        View view = inflater.inflate(R.layout.webview, container, false);        
         
         mWebView = (WebView) view.findViewById(R.id.webView);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mWebView.getSettings().setUserAgentString(DESKTOP_UA);
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWebView.loadUrl(previewURL);
+        
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if(newProgress < 100 && !mProgressBar.isShown()){
+                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                }
+                mProgressBar.setProgress(newProgress);
+                
+                if(newProgress == 100) {
+                    mProgressBar.setVisibility(ProgressBar.GONE);
+                }
+            }
+        });
         
         mWebView.setWebViewClient(new WordPressWebViewClient(mBlog));
 
