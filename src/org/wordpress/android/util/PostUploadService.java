@@ -535,9 +535,12 @@ public class PostUploadService extends Service {
 
                         curImagePath = mf.getFileName();
 
-                        if (i == 0
-                                || (((post.getBlog().isFullSizeImage() && !post.getBlog().getMaxImageWidth().equals("Original Size")) || post
-                                        .getBlog().isScaledImage()))) {
+                        if ( i == 0
+                             || 
+                             (post.getBlog().isFullSizeImage() && !post.getBlog().getMaxImageWidth().equals("Original Size") ) 
+                             || 
+                             post.getBlog().isScaledImage()
+                           ) {
 
                             Uri imageUri = Uri.parse(curImagePath);
                             File jpeg = null;
@@ -710,17 +713,18 @@ public class PostUploadService extends Service {
                                     content = content + "<a href=\"" + finalImageUrl + "\"><img title=\"" + mf.getTitle() + "\" "
                                             + alignmentCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
                                 } else {
-                                    if (i == 0
-                                            && (post.getBlog().isFullSizeImage() == false && !post.getBlog().isScaledImage())
-                                            || (post.getBlog().getMaxImageWidth().equals("Original Size") && !post.getBlog()
-                                                    .isScaledImage())) {
+                                    if ( ( i == 0 && !post.getBlog().isFullSizeImage() && !post.getBlog().isScaledImage() )
+                                            || 
+                                            ( post.getBlog().getMaxImageWidth().equals("Original Size") && !post.getBlog().isScaledImage() )
+                                            ) {
                                         content = content + "<a href=\"" + finalThumbnailUrl + "\"><img title=\"" + mf.getTitle() + "\" "
                                                 + alignmentCSS + "alt=\"image\" src=\"" + finalThumbnailUrl + "\" /></a>";
                                     }
                                 }
 
-                                if ((i == 0 && (!post.getBlog().isFullSizeImage() && !post.getBlog().isScaledImage()) || (post.getBlog()
-                                        .getMaxImageWidth().equals("Original Size") && !post.getBlog().isScaledImage()))
+                                //Add the caption
+                                if ( ( i == 0 && !post.getBlog().isFullSizeImage() && !post.getBlog().isScaledImage() ) 
+                                        || (post.getBlog().getMaxImageWidth().equals("Original Size") && !post.getBlog().isScaledImage())
                                         || i == 1) {
                                     if (!mf.getCaption().equals("")) {
                                         content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
