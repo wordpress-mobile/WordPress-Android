@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.media;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,22 +16,32 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.CheckableFrameLayout;
+import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
 
 public class MediaGridAdapter extends CursorAdapter {
     
     private MediaGridAdapterCallback mCallback;
+    private ArrayList<String> mCheckedItems;
     
     public interface MediaGridAdapterCallback {
         public void onPrefetchData(int offset);
     }
     
-    public MediaGridAdapter(Context context, Cursor c, int flags) {
+    public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
         super(context, c, flags);
+        mCheckedItems = checkedItems;
     }
-
+    
+    public ArrayList<String> getCheckedItems() {
+        return mCheckedItems;
+    }
+    
     @SuppressLint("DefaultLocale")
 	@Override
     public void bindView(final View view, Context context, Cursor cursor) {
+        final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        
         TextView title = (TextView) view.findViewById(R.id.media_grid_item_name);
         title.setText(cursor.getString(cursor.getColumnIndex("title")));
         
@@ -47,11 +59,31 @@ public class MediaGridAdapter extends CursorAdapter {
         
         TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
         fileTypeView.setText(fileType);
+
+        final int position = cursor.getPosition();
         
-        updateGridWidth(context, view);
+        CheckableFrameLayout frameLayout = (CheckableFrameLayout) view;
         
+        frameLayout.setTag(mediaId);
+        frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            
+            @Override
+            public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked) {
+                String mediaId = (String) view.getTag();
+                if (isChecked) {
+                    if (!mCheckedItems.contains(mediaId)) {
+                        mCheckedItems.add(mediaId);
+                    }
+                } else {
+                    mCheckedItems.remove(mediaId);
+                }
+                
+            }
+        });
+        frameLayout.setChecked(mCheckedItems.contains(mediaId));
+            
+        updateGridWidth(context, view);        
         // if we are near the end, make a call to fetch more
-        int position = cursor.getPosition();
         if ( cursor.getCount() - position == 25 || (position == cursor.getCount() - 1)) {
             if (mCallback != null)
                 mCallback.onPrefetchData(cursor.getCount());

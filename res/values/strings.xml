@@ -124,6 +124,7 @@
   
   <!-- Delete Media -->
   <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
+  <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
   
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>

@@ -14,6 +14,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -24,9 +26,6 @@ import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.DeleteMediaTask.Callback;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -36,19 +35,18 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.util.MediaDeleteService;
 
-public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
-        MediaItemFragmentCallback,
-        OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback {
+public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
+    OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback, View.OnClickListener  {
 
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
     private MediaEditFragment mMediaEditFragment;
-
-    private MenuItem refreshMenuItem;
-
+    
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-
+    private MenuItem mRefreshMenuItem;
+    private int mMultiSelectCount;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +118,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         super.onCreateOptionsMenu(menu);
         stopAnimatingRefreshButton();
 
+        // reset action bar state to default
+        ActionBar actionBar = getSupportActionBar();
+        
+        actionBar.setDisplayShowCustomEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        
         MenuInflater inflater = getSupportMenuInflater();
 
         // show a separate menu when the media item fragment is in phone layout and visible
@@ -129,24 +134,44 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout()
                 && mMediaEditFragment.isVisible()) {
             inflater.inflate(R.menu.media_edit, menu);
+        } else if (isInMultiSelect()) {
+            // show a custom view that emulates contextual action bar (CAB)
+            // since CAB is not available in gingerbread
+            actionBar.setCustomView(R.layout.media_multiselect_actionbar);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+
+            TextView text = (TextView) findViewById(R.id.media_mutliselect_actionbar_count);
+            text.setText(mMultiSelectCount + "");
+            ImageButton button = (ImageButton) findViewById(R.id.media_multiselect_actionbar_ok);
+            button.setOnClickListener(this);
+            
+            button = (ImageButton) findViewById(R.id.media_multiselect_actionbar_share);
+            button.setOnClickListener(this);
+            
+            button = (ImageButton) findViewById(R.id.media_multiselect_actionbar_post);
+            button.setOnClickListener(this);
+            
+            button = (ImageButton) findViewById(R.id.media_multiselect_actionbar_trash);
+            button.setOnClickListener(this);
+            
         } else {
             inflater.inflate(R.menu.media, menu);
-
-            refreshMenuItem = menu.findItem(R.id.menu_refresh);
+            mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
             startAnimatingRefreshButton();
         }
         return true;
     }
 
     private void startAnimatingRefreshButton() {
-        if (refreshMenuItem != null && mMediaGridFragment != null
-                && mMediaGridFragment.isRefreshing())
-            startAnimatingRefreshButton(refreshMenuItem);
+        if (mRefreshMenuItem != null && mMediaGridFragment != null && mMediaGridFragment.isRefreshing())
+            startAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     private void stopAnimatingRefreshButton() {
-        if (refreshMenuItem != null)
-            stopAnimatingRefreshButton(refreshMenuItem);
+        if (mRefreshMenuItem != null)
+            stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     @Override
@@ -317,5 +342,70 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void startMediaDeleteService() {
         startService(new Intent(this, MediaDeleteService.class));
+    }
+
+    @Override
+    public void onMultiSelectChange(int count) {
+        mMultiSelectCount = count;
+        invalidateOptionsMenu();
+    }
+    
+    private boolean isInMultiSelect() {
+        return mMultiSelectCount > 0;
+    }
+    
+    @Override
+    public void onBackPressed() {
+        if (isInMultiSelect()) {
+            cancelMultiSelect();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.media_multiselect_actionbar_ok) {
+            cancelMultiSelect();
+        } else if (v.getId() == R.id.media_multiselect_actionbar_post) {
+            handleMultiSelectPost();
+        } else if (v.getId() == R.id.media_multiselect_actionbar_share) {
+            handleMultiSelectShare();
+        } else if (v.getId() == R.id.media_multiselect_actionbar_trash) {
+            handleMultiSelectDelete();
+        }
+    }
+
+    private void cancelMultiSelect() {
+        mMediaGridFragment.clearCheckedItems();
+    }
+
+    private void handleMultiSelectDelete() {
+        Builder builder = new AlertDialog.Builder(this)
+        .setMessage(R.string.confirm_delete_multi_media)
+        .setCancelable(true)
+        .setPositiveButton(R.string.delete, new OnClickListener() {
+        
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
+                onDeleteMedia(ids);
+                mMediaGridFragment.clearCheckedItems();
+                mMediaGridFragment.refreshSpinnerAdapter();
+            }
+        })
+        .setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void handleMultiSelectShare() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    private void handleMultiSelectPost() {
+        // TODO Auto-generated method stub
+        
     }
 }
