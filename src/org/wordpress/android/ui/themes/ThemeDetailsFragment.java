@@ -1,15 +1,21 @@
+
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -18,13 +24,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 
-public class ThemeDetailsFragment extends Fragment {
+public class ThemeDetailsFragment extends DialogFragment {
 
     private static final String ARGS_THEME_ID = "ARGS_THEME_ID";
 
     public static ThemeDetailsFragment newInstance(String themeId) {
         ThemeDetailsFragment fragment = new ThemeDetailsFragment();
-        
+
         Bundle args = new Bundle();
         args.putString(ARGS_THEME_ID, themeId);
         fragment.setArguments(args);
@@ -38,16 +44,19 @@ public class ThemeDetailsFragment extends Fragment {
     private Button mLivePreviewButton;
     private String mPreviewURL;
     private Button mActivateThemeButton;
-    
+
     private ThemeDetailsFragmentCallback mCallback;
-    
+
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
+
         public void onPause(Fragment fragment);
+
         public void onLivePreviewClicked(String themeId, String previewURL);
+
         public void onActivateThemeClicked(String themeId);
     }
-    
+
     private String getThemeId() {
         if (getArguments() != null)
             return getArguments().getString(ARGS_THEME_ID);
@@ -58,57 +67,78 @@ public class ThemeDetailsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+
         try {
             mCallback = (ThemeDetailsFragmentCallback) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement ThemeDetailsFragmentCallback");
+            throw new ClassCastException(activity.toString()
+                    + " must implement ThemeDetailsFragmentCallback");
         }
     }
+
+    @Override
+    public void onStart()
+    {
+      super.onStart();
+
+      // safety check
+      if (getDialog() == null)
+        return;
+
+      int dialogWidth = (int) getActivity().getResources().getDimension(R.dimen.theme_details_fragment_width);
+      
+      int dialogHeight = (int) getActivity().getResources().getDimension(R.dimen.theme_details_fragment_height);
+
+      getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
+
+    }
+     
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.theme_details_fragment, container, false);
-        
+
         mNameView = (TextView) view.findViewById(R.id.theme_details_fragment_name);
         mImageView = (NetworkImageView) view.findViewById(R.id.theme_details_fragment_image);
-        mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
-        
+        mDescriptionView = (TextView) view
+                .findViewById(R.id.theme_details_fragment_details_description);
+
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
-        mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
+        mActivateThemeButton = (Button) view
+                .findViewById(R.id.theme_details_fragment_activate_button);
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 if (mPreviewURL != null)
                     mCallback.onLivePreviewClicked(getThemeId(), mPreviewURL);
             }
         });
-        
+
         mActivateThemeButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 String themeId = getThemeId();
                 if (themeId != null) {
                     mCallback.onActivateThemeClicked(themeId);
                 }
-                
+
             }
         });
-        
+
         loadTheme(getThemeId());
-        
+
         return view;
     }
-    
+
     @Override
     public void onResume() {
-        super.onResume();      
+        super.onResume();
         mCallback.onResume(this);
     }
-    
+
     @Override
     public void onPause() {
         super.onPause();
@@ -119,12 +149,19 @@ public class ThemeDetailsFragment extends Fragment {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         Theme theme = WordPress.wpDB.getTheme(blogId, themeId);
         if (theme != null) {
-            mNameView.setText(theme.getName());
+            if (mNameView != null) {
+                mNameView.setText(theme.getName());
+            }
             mImageView.setImageUrl(theme.getScreenshotURL(), WordPress.imageLoader);
             mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
             mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
             mPreviewURL = theme.getPreviewURL();
+
+            if (getDialog() != null) {
+                getDialog().setTitle(theme.getName());
+            }
         }
+
     }
-    
+
 }
