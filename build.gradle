@@ -6,6 +6,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:0.5.+'
     }
 }
+
+task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
+    gradleVersion = '1.6'
+}
+
 apply plugin: 'android-library'
 
 dependencies {
@@ -14,7 +19,7 @@ dependencies {
 
 android {
     compileSdkVersion 16
-    buildToolsVersion "17.0.0"
+    buildToolsVersion '17.0.0'
 
     sourceSets {
         main {
