@@ -398,6 +398,8 @@ public class ApiHelper {
                     WordPress.wpDB.saveMediaFile(new MediaFile(blogId, resultMap));
                 }
                 
+                WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
+                
                 return true;
             }
             

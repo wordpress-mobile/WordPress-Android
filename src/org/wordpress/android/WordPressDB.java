@@ -2054,15 +2054,24 @@ public class WordPressDB {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[] { blogId, mediaId });
     }
 
-    /** Mark media files for deletion without actually deleting them **/
+    /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, List<String> ids) {
+        // This is for queueing up files to delete on the server
         for (String id : ids)
             updateMediaUploadState(blogId, id, "delete");
     }
     
     /** Mark media files as deleted without actually deleting them **/
     public void setMediaFilesMarkedForDeleted(String blogId) {
+        // This is for syncing our files to the server:
+        // when we pull from the server, everything that is still 'deleted' 
+        // was not downloaded from the server and can be removed via deleteFilesMarkedForDeleted()
         updateMediaUploadState(blogId, null, "deleted");
+    }
+    
+    /** Delete files marked as deleted **/
+    public void deleteFilesMarkedForDeleted(String blogId) {
+        db.delete(MEDIA_TABLE, "blogId=? AND uploadState=?", new String[] { blogId, "deleted" });
     }
     
     /** Get a media file scheduled for delete for a given blogId **/

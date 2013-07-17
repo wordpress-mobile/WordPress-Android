@@ -71,9 +71,9 @@ public class WordPress extends Application {
         requestQueue = Volley.newRequestQueue(this);
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // Use a small slice of available memory for the image cache
-        int cacheSize = maxMemory / 16;
+        int cacheSize = maxMemory / 32;
         imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
-        Log.d("WordPress", "Mem: cacheSize: " + cacheSize + ", maxMemory: " + maxMemory);
+
         // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
         localImageCache = new BitmapLruCache(cacheSize / 2);
         
