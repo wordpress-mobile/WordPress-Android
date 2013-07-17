@@ -778,7 +778,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                         alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
 
-                        seekBar.setMax(100);
+                        seekBar.setMax(span.getWidth() / 10 );
                         if (span.getWidth() != 0)
                             seekBar.setProgress(span.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -1690,6 +1690,30 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }
     }
 
+    //Calculate the minimun width between the blog setting and picture real width
+    private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
+        String imageWidth = WordPress.currentBlog.getMaxImageWidth();
+        int imageWidthBlogSetting = Integer.MAX_VALUE;
+        
+        if (!imageWidth.equals("Original Size")) {
+            try {
+                imageWidthBlogSetting = Integer.valueOf(imageWidth);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        } 
+        
+        int[] dimensions = ImageHelper.getImageSize(curStream, EditPostActivity.this);
+        int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
+        
+        if ( Math.min(imageWidthPictureSetting, imageWidthBlogSetting) ==  Integer.MAX_VALUE ) {
+            is.setWidth(1024); //Default value in case of errors reading the picture size and the blog settings is set to Original size
+        } else {
+            is.setWidth(Math.min(imageWidthPictureSetting, imageWidthBlogSetting));
+        }
+    }
+    
+    
     private void addMedia(String imgPath, Uri curStream) {
         
         if (mFormatBar.getVisibility() == View.VISIBLE)
@@ -1744,14 +1768,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         Editable s = mContentEditText.getText();
         WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
 
-        String imageWidth = WordPress.currentBlog.getMaxImageWidth();
-        if (!imageWidth.equals("Original Size")) {
-            try {
-                is.setWidth(Integer.valueOf(imageWidth));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+        setWPImageSpanWidth(curStream, is);
 
         is.setTitle((String) mediaData.get("title"));
         is.setImageSource(curStream);
@@ -1829,14 +1846,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
 
-        String imageWidth = WordPress.currentBlog.getMaxImageWidth();
-        if (!imageWidth.equals("Original Size")) {
-            try {
-                is.setWidth(Integer.valueOf(imageWidth));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+        setWPImageSpanWidth(curStream, is);
 
         is.setTitle(imageTitle);
         is.setImageSource(curStream);
