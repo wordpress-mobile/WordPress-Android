@@ -11,7 +11,7 @@
         android:background="@drawable/media_multiselect_ab_selector"
         android:paddingLeft="10dp"
         android:paddingRight="15dp"
-        android:src="@drawable/abs__ic_cab_done_holo_dark" />
+        android:src="@drawable/tab_icon_checkmark" />
 
     <View
         android:id="@+id/media_multiselect_actionbar_div"
@@ -44,7 +44,7 @@
         android:background="@drawable/media_multiselect_ab_selector"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        android:src="@android:drawable/ic_menu_delete" />
+        android:src="@drawable/tab_icon_trash" />
 
     <ImageButton
         android:id="@+id/media_multiselect_actionbar_share"
@@ -66,6 +66,6 @@
         android:background="@drawable/media_multiselect_ab_selector"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@drawable/tab_icon_newpost" />
 
 </RelativeLayout>

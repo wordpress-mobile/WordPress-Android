@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/media_upload_button_edit"
+                android:background="@drawable/media_blue_button_selector"
                 android:padding="10dp"
                 android:text="@string/themes_live_preview"
                 android:textColor="@color/theme_details_button" />
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/theme_activate_button"
+                android:background="@drawable/theme_activate_button_selector"
                 android:padding="10dp"
                 android:text="@string/activate_theme"
                 android:textColor="@color/theme_details_button" />

@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_activate"
-        android:icon="@drawable/abs__ic_cab_done_holo_dark"
+        android:icon="@drawable/tab_icon_checkmark"
         android:showAsAction="always"
         android:title="@string/activate_theme"/>
     <item
