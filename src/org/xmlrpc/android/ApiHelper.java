@@ -391,11 +391,11 @@ public class ApiHelper {
                 if (mOffset == 0) {
                     WordPress.wpDB.setMediaFilesMarkedForDeleted(blogId);
                 }
-                
-                // 
+               
                 for(Object result : results) {
                     resultMap = (Map<?, ?>) result;
-                    WordPress.wpDB.saveMediaFile(new MediaFile(blogId, resultMap));
+                    MediaFile mediaFile = new MediaFile(blogId, resultMap);
+                    WordPress.wpDB.saveMediaFile(mediaFile);
                 }
                 
                 WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
@@ -429,11 +429,13 @@ public class ApiHelper {
         private String mMediaId;
         private String mTitle;
         private String mDescription;
+        private String mCaption;
         
-        public EditMediaItemTask(String mediaId, String title, String description, Callback callback) {
+        public EditMediaItemTask(String mediaId, String title, String description, String caption, Callback callback) {
             mMediaId = mediaId;
             mCallback = callback;
             mTitle = title;
+            mCaption = caption;
             mDescription = description;
         }
         @Override
@@ -453,7 +455,8 @@ public class ApiHelper {
             Map<String, Object> contentStruct = new HashMap<String, Object>();
             contentStruct.put("post_title", mTitle);
             contentStruct.put("post_content", mDescription);
-
+            contentStruct.put("post_excerpt", mCaption);
+            
             Object[] apiParams = {
                     blog.getBlogId(),
                     blog.getUsername(),

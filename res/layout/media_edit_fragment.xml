@@ -59,17 +59,17 @@
             android:hint="@string/media_edit_description_hint"
             android:lines="3" />
 
-        <CheckBox
-            android:id="@+id/media_edit_fragment_show_likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_edit_show_likes" />
+<!--         <CheckBox -->
+<!--             android:id="@+id/media_edit_fragment_show_likes" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:text="@string/media_edit_show_likes" /> -->
 
-        <CheckBox
-            android:id="@+id/media_edit_fragment_show_sharing_buttons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_edit_show_sharing_buttons" />
+<!--         <CheckBox -->
+<!--             android:id="@+id/media_edit_fragment_show_sharing_buttons" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:text="@string/media_edit_show_sharing_buttons" /> -->
     </LinearLayout>
 
 </ScrollView>

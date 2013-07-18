@@ -2004,7 +2004,7 @@ public class WordPressDB {
         }
     }
     
-    public void updateMediaFile(String blogId, String mediaId, String title, String description) {
+    public void updateMediaFile(String blogId, String mediaId, String title, String description, String caption) {
         if (blogId == null || blogId.equals("")) {
             return;
         }
@@ -2021,6 +2021,12 @@ public class WordPressDB {
             values.put("description", "");
         } else {
             values.put("description", description);
+        }
+        
+        if (caption == null || caption.equals("")) {
+            values.put("caption", "");
+        } else {
+            values.put("caption", caption);
         }
         
         db.update(MEDIA_TABLE, values, "blogId = ? AND mediaId=?", new String[] { blogId, mediaId });

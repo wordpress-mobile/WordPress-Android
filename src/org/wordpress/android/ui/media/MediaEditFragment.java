@@ -38,8 +38,9 @@ public class MediaEditFragment extends Fragment {
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
-    private MediaEditFragmentCallback mCallback;
     private Button mSaveButton;
+    
+    private MediaEditFragmentCallback mCallback;
 
     private boolean mIsMediaUpdating = false;
 
@@ -111,6 +112,7 @@ public class MediaEditFragment extends Fragment {
         mImageView = (NetworkImageView) view.findViewById(R.id.media_edit_fragment_image);
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
+        
         mSaveButton = (Button) view.findViewById(R.id.media_edit_save_button);
         mSaveButton.setOnClickListener(new OnClickListener() {
             
@@ -183,15 +185,16 @@ public class MediaEditFragment extends Fragment {
         final String title = mTitleView.getText().toString();
         final String description = mDescriptionView.getText().toString();
         final Blog currentBlog = WordPress.getCurrentBlog();
+        final String caption = mCaptionView.getText().toString();
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title,
-                description,
+                description, caption, 
                 new ApiHelper.EditMediaItemTask.Callback() {
 
                     @Override
                     public void onSuccess() {
                         String blogId = String.valueOf(currentBlog.getBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description);
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
 
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
