@@ -120,7 +120,7 @@ public class MediaEditFragment extends Fragment {
             }
         });
         
-        if (Utils.isXLarge(getActivity())) 
+        if (Utils.isLarge(getActivity())) 
             mSaveButton.setVisibility(View.VISIBLE);
         else
             mSaveButton.setVisibility(View.GONE);
