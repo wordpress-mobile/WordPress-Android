@@ -16,6 +16,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.Utils;
 
 public class ThemeTabAdapter extends CursorAdapter {
 
@@ -71,7 +72,7 @@ public class ThemeTabAdapter extends CursorAdapter {
         // = width of entire screen (phone and tablet portrait)
         // = width of entire screen - menu drawer width (tablet landscape)
         int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
-        if (isXLarge(context) && isLandscape(context))
+        if (Utils.isXLarge(context) && Utils.isLandscape(context))
             maxWidth -= context.getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
         
         return (int) (maxWidth - padding) / columnCount;
@@ -92,16 +93,5 @@ public class ThemeTabAdapter extends CursorAdapter {
     private float dpToPx(Context context, int dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
    }
-    
-    // logic below based on login in WPActionBarActivity.java
-    private boolean isXLarge(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
-            return true;
-        return false;
-    }
-    
-    private boolean isLandscape(Context context) {
-        return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-    }
     
 }

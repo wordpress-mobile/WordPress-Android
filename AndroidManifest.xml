@@ -141,9 +141,12 @@
         <activity android:name=".ui.posts.ViewPostActivity" />
 
         <!-- Media Activities -->
-        <activity
-            android:name=".ui.media.MediaBrowserActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+        <activity android:name=".ui.media.MediaBrowserActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.media.MediaUploadActivity"
@@ -153,11 +156,6 @@
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
                 
         <!-- Other activities -->

@@ -9,16 +9,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -28,18 +27,23 @@ import org.xmlrpc.android.ApiHelper;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.Utils;
 
 public class MediaEditFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
+    private static final String BUNDLE_MEDIA_ID = "media_id";
 
     private NetworkImageView mImageView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
     private MediaEditFragmentCallback mCallback;
+    private Button mSaveButton;
 
-    private boolean mUpdatingMedia = false;
+    private boolean mIsMediaUpdating = false;
+
+    private String mMediaId;
 
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
@@ -64,8 +68,7 @@ public class MediaEditFragment extends Fragment {
         try {
             mCallback = (MediaEditFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement MediaEditFragmentCallback");
+            throw new ClassCastException(activity.toString() + " must implement MediaEditFragmentCallback");
         }
     }
 
@@ -73,6 +76,13 @@ public class MediaEditFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mCallback.onResume(this);
+        getView().post(new Runnable() {
+            
+            @Override
+            public void run() {
+                loadMedia(getMediaId());
+            }
+        });
     }
 
     @Override
@@ -82,10 +92,14 @@ public class MediaEditFragment extends Fragment {
     }
 
     public String getMediaId() {
-        if (getArguments() != null)
-            return getArguments().getString(ARGS_MEDIA_ID);
-        else
+        if (mMediaId != null) {
+            return mMediaId;
+        } else if (getArguments() != null) {
+            mMediaId = getArguments().getString(ARGS_MEDIA_ID); 
+            return mMediaId;
+        } else {
             return null;
+        }
     }
 
     @Override
@@ -97,14 +111,45 @@ public class MediaEditFragment extends Fragment {
         mImageView = (NetworkImageView) view.findViewById(R.id.media_edit_fragment_image);
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
+        mSaveButton = (Button) view.findViewById(R.id.media_edit_save_button);
+        mSaveButton.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                editMedia();
+            }
+        });
+        
+        if (Utils.isXLarge(getActivity())) 
+            mSaveButton.setVisibility(View.VISIBLE);
+        else
+            mSaveButton.setVisibility(View.GONE);
 
-        loadMedia(getMediaId());
-
+        restoreState(savedInstanceState);
+        
         return view;
+    }
+    
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(BUNDLE_MEDIA_ID)) {
+                mMediaId = savedInstanceState.getString(BUNDLE_MEDIA_ID);
+            }
+        }
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveState(outState);
+    }
+
+    private void saveState(Bundle outState) {
+        outState.putString(BUNDLE_MEDIA_ID, getMediaId());
     }
 
     public void loadMedia(String mediaId) {
-        String id = mediaId;
+        mMediaId = mediaId;
         Blog blog = WordPress.getCurrentBlog();
 
         if (blog != null) {
@@ -113,10 +158,10 @@ public class MediaEditFragment extends Fragment {
             Cursor cursor;
 
             // if the id is null, get the first media item in the database
-            if (id == null) {
+            if (mMediaId == null) {
                 cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
             } else {
-                cursor = WordPress.wpDB.getMediaFile(blogId, id);
+                cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
             }
 
             refreshViews(cursor);
@@ -146,20 +191,17 @@ public class MediaEditFragment extends Fragment {
                         String blogId = String.valueOf(currentBlog.getBlogId());
                         WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description);
 
-                        Toast.makeText(getActivity(), "SUCCESS!!", Toast.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
 
-                        mUpdatingMedia = false;
-                        
+                        setMediaUpdating(false);
                         mCallback.onEditCompleted(true);
                     }
 
                     @Override
                     public void onFailure() {
-                        Toast.makeText(getActivity(), "Failure!!", Toast.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
 
-                        mUpdatingMedia = false;
+                        setMediaUpdating(false);
                         mCallback.onEditCompleted(false);
                     }
                 });
@@ -167,11 +209,20 @@ public class MediaEditFragment extends Fragment {
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(currentBlog);
 
-        if (!mUpdatingMedia) {
-            mUpdatingMedia = true;
+        if (!isMediaUpdating()) {
+            setMediaUpdating(true); 
             task.execute(apiArgs);
         }
 
+    }
+
+    private void setMediaUpdating(boolean isUpdating) {
+        mIsMediaUpdating = isUpdating;
+        mSaveButton.setEnabled(!isUpdating);
+    }
+    
+    private boolean isMediaUpdating() {
+        return mIsMediaUpdating;
     }
 
     private void refreshViews(Cursor cursor) {
@@ -188,7 +239,7 @@ public class MediaEditFragment extends Fragment {
             int width = cursor.getInt(cursor.getColumnIndex("width"));
             int height = cursor.getInt(cursor.getColumnIndex("height"));
 
-            float screenWidth;
+            float screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
 
             View parentView = (View) mImageView.getParent();
 
@@ -208,11 +259,13 @@ public class MediaEditFragment extends Fragment {
             } else if (height > screenHeight) {
                 width = (int) (width / (height / screenHeight));
             }
-            mImageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                    height));
+            mImageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
 
         } else {
             mImageView.setVisibility(View.GONE);
         }
     }
+    
+    
+    
 }

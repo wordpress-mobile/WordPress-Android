@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
+import org.wordpress.android.util.Utils;
 
 public class MediaGridAdapter extends CursorAdapter {
     
@@ -45,6 +46,27 @@ public class MediaGridAdapter extends CursorAdapter {
         TextView title = (TextView) view.findViewById(R.id.media_grid_item_name);
         title.setText(cursor.getString(cursor.getColumnIndex("title")));
         
+        TextView uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
+        if (uploadDateView != null) {
+            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
+            uploadDateView.setText("Uploaded on: " + date);
+        }
+        
+        TextView filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
+        if (filenameView != null) {
+            String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
+            filenameView.setText("File name: " + fileName);
+        }
+        
+        TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
+        if (dimensionView != null) {
+            int width = cursor.getInt(cursor.getColumnIndex("width"));
+            int height = cursor.getInt(cursor.getColumnIndex("height"));
+            
+            String dimensions = width + "x" + height;
+            dimensionView.setText("Dimensions: " + dimensions);
+        }
+
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.media_grid_item_image);
         
@@ -58,7 +80,11 @@ public class MediaGridAdapter extends CursorAdapter {
         String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
         
         TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-        fileTypeView.setText(fileType);
+        if  (Utils.isXLarge(context)) {
+            fileTypeView.setText("File type: " + fileType);
+        } else {
+            fileTypeView.setText(fileType);
+        }
 
         final int position = cursor.getPosition();
         
@@ -98,23 +124,35 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     private void updateGridWidth(Context context, View view) {
-        // make it so that total padding = 1/12 of screen width
-        // since there are two columns on the grid, each column will get
-        // 11/24 of the remaining space available
-        
-        // (the padding is based on the mocks)
 
-        // phone-size - full screen - use entire screen
-        int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
         
-        // TODO: tablet-size
-        
-        int width = (int) (screenWidth * 11.0f / 24.0f);
-        view.setLayoutParams(new GridView.LayoutParams(width, width));
+        if (!Utils.isXLarge(context)) {
+            // for phones, make it so that total padding = 1/12 of screen width
+            // (based on mocks)
+            // since there are two columns on the grid, each column will get
+            // 11/24 of the remaining space available
+            int width = (int) (maxWidth * 11.0f / 24.0f);
+            view.setLayoutParams(new GridView.LayoutParams(width, width));
+        } else if (!Utils.isLandscape(context)){
+            
+            int width = (int) (maxWidth * getGalleryPortLargeWeight(context));
+            view.setLayoutParams(new GridView.LayoutParams(width, GridView.LayoutParams.WRAP_CONTENT));
+        } else {
+            int width = (int) context.getResources().getDimension(R.dimen.media_grid_item_width);
+            view.setLayoutParams(new GridView.LayoutParams(width, GridView.LayoutParams.WRAP_CONTENT));
+        }
     }
 
-    
     public void setCallback(MediaGridAdapterCallback callback) {
         mCallback = callback;
+    }
+    
+    /** Returns the weight of the gallery view relative to its parent linear layout for the portrait orientation in large devices **/
+    private float getGalleryPortLargeWeight(Context context) {
+        // TODO: find a cleaner solution
+        float galleryWeight = context.getResources().getInteger(R.integer.media_browser_gallery_port_large_weight);
+        float editorWeight = context.getResources().getInteger(R.integer.media_browser_editor_port_large_weight);
+        return galleryWeight / (editorWeight + galleryWeight);
     }
 }

@@ -9,11 +9,32 @@
         android:orientation="vertical"
         android:padding="15dp" >
 
-        <EditText
-            android:id="@+id/media_edit_fragment_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/media_edit_title_hint" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_marginBottom="32dp">
+
+            <Button
+                android:id="@+id/media_edit_save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/media_blue_button_selector"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/save"
+                android:textColor="@color/media_upload_btn_text"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/media_edit_fragment_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/media_edit_save_button"
+                android:layout_toLeftOf="@id/media_edit_save_button"
+                android:hint="@string/media_edit_title_hint" />
+        </RelativeLayout>
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/media_edit_fragment_image"
@@ -26,12 +47,14 @@
             android:id="@+id/media_edit_fragment_caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:hint="@string/media_edit_caption_hint" />
 
         <EditText
             android:id="@+id/media_edit_fragment_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:gravity="top|start"
             android:hint="@string/media_edit_description_hint"
             android:lines="3" />

@@ -121,6 +121,8 @@
   <string name="media_edit_description_hint">Description</string>
   <string name="media_edit_show_likes">Show Likes</string>
   <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
+  <string name="media_edit_success">Successfully edited media</string>
+  <string name="media_edit_failure">Failed to edit media</string>
   
   <!-- Delete Media -->
   <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>

@@ -41,6 +41,7 @@ import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragment
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
+import org.wordpress.android.util.Utils;
 
 public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
@@ -242,7 +243,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     public void onResponse(JSONObject arg0) { 
                         Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
                         
-                        if (isXLarge(ThemeBrowserActivity.this)) {
+                        if (Utils.isXLarge(ThemeBrowserActivity.this)) {
                             mDetailsFragment.dismiss();
                         }
                         
@@ -358,7 +359,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onThemeSelected(String themeId) {
         FragmentManager fm = getSupportFragmentManager();
 
-        if (!isXLarge(ThemeBrowserActivity.this)) {
+        if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
             FragmentTransaction ft = fm.beginTransaction();
             
             // determine if we are in regular view or search view
@@ -400,13 +401,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
             return true;
         }
-        return false;
-    }
-    
-    // logic below based on login in WPActionBarActivity.java
-    private boolean isXLarge(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
-            return true;
         return false;
     }
 
@@ -468,7 +462,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mTabView.setVisibility(View.GONE);
             mPreviewFragment = ThemePreviewFragment.newInstance(themeId, previewURL);
             
-            if (isXLarge(ThemeBrowserActivity.this)) {
+            if (Utils.isXLarge(ThemeBrowserActivity.this)) {
                 mDetailsFragment.dismiss();
             } else {
                 ft.hide(mDetailsFragment);

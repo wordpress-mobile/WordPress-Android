@@ -125,8 +125,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
-        if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES))
+        if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
             mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
+            mListener.onMultiSelectChange(mCheckedItems.size());
+        }
         
     }
     

@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.Configuration;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -68,10 +69,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-
-        mMediaItemFragment = (MediaItemFragment) fm.findFragmentById(R.id.mediaItemFragment);
+        
+        mMediaEditFragment = (MediaEditFragment) fm.findFragmentById(R.id.mediaEditFragment);
     }
-
+    
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0)
@@ -79,11 +80,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
     };
 
+    @Override
     protected void onResume() {
         super.onResume();
         startMediaDeleteService();
     };
-
+    
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
@@ -97,7 +99,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public void onMediaItemSelected(String mediaId) {
         FragmentManager fm = getSupportFragmentManager();
 
-        if (mMediaItemFragment == null || !mMediaItemFragment.isInLayout()) {
+        if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaGridFragment);
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
@@ -106,7 +108,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             ft.commit();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
-            mMediaItemFragment.loadMedia(mediaId);
+            mMediaEditFragment.loadMedia(mediaId);
         }
 
         if (mSearchView != null)
@@ -334,7 +336,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             getSupportFragmentManager().popBackStack();
             
-            mMediaItemFragment.loadMedia(mMediaItemFragment.getMediaId());
+            if (mMediaItemFragment != null)
+                mMediaItemFragment.loadMedia(mMediaItemFragment.getMediaId());
             
             mMediaGridFragment.refreshMediaFromDB();
         }
