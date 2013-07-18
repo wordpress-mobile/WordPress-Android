@@ -127,7 +127,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
         int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
         
-        if (!Utils.isXLarge(context)) {
+        if (!Utils.isLarge(context)) {
             // for phones, make it so that total padding = 1/12 of screen width
             // (based on mocks)
             // since there are two columns on the grid, each column will get
