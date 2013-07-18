@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
@@ -39,6 +40,8 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
 public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
     
+    private static final int MIN_REFERSH_INTERVAL_MS = 10 * 1000;
+
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
 
     private Cursor mCursor;
@@ -48,6 +51,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
+    private long mLastRefreshTime;
     
     private boolean mIsRefreshing = false;
     
@@ -211,7 +215,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         if(WordPress.getCurrentBlog() == null)
             return; 
         
-        if(!mIsRefreshing) {
+        if(offset == 0 || !mIsRefreshing && (System.currentTimeMillis() - mLastRefreshTime > MIN_REFERSH_INTERVAL_MS)) {
+            mLastRefreshTime = System.currentTimeMillis();
             mIsRefreshing = true;
             mListener.onMediaItemListDownloadStart();
 
@@ -231,16 +236,21 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             mIsRefreshing = false;
             
             if (MediaGridFragment.this.isVisible()) {
-            
-                mListener.onMediaItemListDownloaded();
+                Toast.makeText(getActivity(), "Refreshed content", Toast.LENGTH_SHORT).show();
                 refreshSpinnerAdapter();
                 setFilter(mFilter);
             }
+
+            mListener.onMediaItemListDownloaded();
         }
 
         @Override
         public void onFailure() {
             mIsRefreshing = false;
+            
+            if (MediaGridFragment.this.isVisible()) {
+                Toast.makeText(getActivity(), "Failed to refresh content", Toast.LENGTH_SHORT).show();
+            }
             mListener.onMediaItemListDownloaded();
         }
     };
