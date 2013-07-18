@@ -3,8 +3,6 @@ package org.wordpress.android.ui.themes;
 
 import java.util.ArrayList;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,6 +45,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         OnQueryTextListener, OnActionExpandListener, TabListener {
 
+    private static final String SEARCH_FRAGMENT_TAG = "SEARCH_FRAGMENT";
+    private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
     private HorizontalTabView mTabView;
     private ThemeTabFragment[] mTabFragments;
     private ThemePagerAdapter mThemePagerAdapter;
@@ -57,6 +57,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private ThemePreviewFragment mPreviewFragment;
     private ThemeDetailsFragment mDetailsFragment;
     private boolean mFetchingThemes = false;
+    private String mLastSearch;
     
     private MenuItem refreshMenuItem;
 
@@ -102,19 +103,45 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-
+        setupBaseLayout();
+        mPreviewFragment = (ThemePreviewFragment) fm.findFragmentByTag(ThemePreviewFragment.TAG);
+        mDetailsFragment = (ThemeDetailsFragment) fm.findFragmentByTag(ThemeDetailsFragment.TAG);
+        mSearchFragment = (ThemeTabFragment) fm.findFragmentByTag(SEARCH_FRAGMENT_TAG);
+        
+        restoreState(savedInstanceState);
     }
 
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState != null ) {
+            if (savedInstanceState.containsKey(BUNDLE_LAST_SEARCH))
+                mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
+    }
+    
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
-            } else {
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
-            }
+            setupBaseLayout();
         }
     };
 
+    private void setupBaseLayout() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            mMenuDrawer.setDrawerIndicatorEnabled(true);
+            mViewPager.setVisibility(View.VISIBLE);
+            mTabView.setVisibility(View.VISIBLE);
+        } else {
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+            mViewPager.setVisibility(View.GONE);
+            mTabView.setVisibility(View.GONE);
+        }
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -153,6 +180,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private void fetchThemes() {
+        if (mFetchingThemes)
+            return; 
+        
         String siteId = getBlogId();
 
         mFetchingThemes = true;
@@ -173,32 +203,34 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                
                 mFetchingThemes = false;
                 stopAnimatingRefreshButton();
-               refreshFragments();
-               
-                
+                refreshViewPager();
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
         MenuInflater inflater = getSupportMenuInflater();
 
-        if (mDetailsFragment != null && !mDetailsFragment.isInLayout() && mDetailsFragment.isVisible()) {
-            inflater.inflate(R.menu.theme_details, menu);
-        } else if (mPreviewFragment != null && !mPreviewFragment.isInLayout() && mPreviewFragment.isVisible()) {
+        if (mPreviewFragment != null && !mPreviewFragment.isInLayout() && mPreviewFragment.isVisible()) {
             inflater.inflate(R.menu.theme_preview, menu);
+        } else if (mDetailsFragment != null && !mDetailsFragment.isInLayout() && mDetailsFragment.isVisible()) {
+            inflater.inflate(R.menu.theme_details, menu);
+        } else if (mSearchFragment != null && mSearchFragment.isVisible()) {
+            inflater.inflate(R.menu.theme, menu);
+            MenuItem searchItem = menu.findItem(R.id.menu_search);
+            if (searchItem != null) {
+                String lastSearch = mLastSearch;
+                onOptionsItemSelected(searchItem);
+                mSearchMenuItem.expandActionView();
+                onQueryTextChange(lastSearch);
+            }
         } else {
             inflater.inflate(R.menu.theme, menu);
             refreshMenuItem = menu.findItem(R.id.menu_refresh);
-
         }
         
-
-
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -208,7 +240,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popThemeFragment();
+                fm.popBackStack();
+                setupBaseLayout();
                 return true;
             }
         } else if (itemId == R.id.menu_search) {
@@ -221,8 +254,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             return true;
         } else if (itemId == R.id.menu_activate) {
             handleMenuActivateTheme(null);
+            return true;
         } else if (itemId == R.id.menu_refresh) {
-            
             fetchThemes();
             return true;
         }
@@ -250,7 +283,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         FragmentManager fm = getSupportFragmentManager();
                         
                         if (fm.getBackStackEntryCount() > 0) {
-                            popThemeFragment();
+                            fm.popBackStack();
+                            setupBaseLayout();
                             invalidateOptionsMenu();
                         }
                     }
@@ -269,22 +303,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            popThemeFragment();
+            fm.popBackStack();
+            setupBaseLayout();
         } else {
             super.onBackPressed();
-        }
-    }
-
-    private void popThemeFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        try {
-            fm.popBackStack();
-            if (fm.getBackStackEntryCount() == 1) {
-                mViewPager.setVisibility(View.VISIBLE);
-                mTabView.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
     
@@ -332,7 +354,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             if (result == null) {
                 Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
             } 
-            refreshFragments();
+            refreshViewPager();
         }
 
     }
@@ -347,7 +369,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             stopAnimatingRefreshButton(refreshMenuItem);
     }
 
-    private void refreshFragments() {
+    private void refreshViewPager() {
         for (int i = 0; i < mTabFragments.length; i++) {
             ThemeTabFragment fragment = mTabFragments[i];
             if (fragment != null)
@@ -360,25 +382,21 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         FragmentManager fm = getSupportFragmentManager();
 
         if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
+
             FragmentTransaction ft = fm.beginTransaction();
-            
-            // determine if we are in regular view or search view
-            if (fm.getBackStackEntryCount() > 0) {
+            if (fm.getBackStackEntryCount() > 0){
                 if (mSearchFragment != null && mSearchFragment.isVisible()) {
                     ft.hide(mSearchFragment);
                     ft.remove(mSearchFragment);
                     fm.popBackStack();
                 }
-            } else {
-                mViewPager.setVisibility(View.GONE);
-                mTabView.setVisibility(View.GONE);
             }
             
+            setupBaseLayout();
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
-            ft.add(R.id.theme_browser_container, mDetailsFragment);
+            ft.add(R.id.theme_browser_container, mDetailsFragment, ThemeDetailsFragment.TAG);
             ft.addToBackStack(null);
             ft.commit();
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
         } else {
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             mDetailsFragment.show(getSupportFragmentManager(), "ThemeDetails");
@@ -388,16 +406,16 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
         if (item.getItemId() == R.id.menu_search) {
+
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
             if (mSearchFragment == null || !mSearchFragment.isInLayout()) {
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                mViewPager.setVisibility(View.GONE);
-                mTabView.setVisibility(View.GONE);
                 mSearchFragment = ThemeTabFragment.newInstance(ThemeSortType.getTheme(0));
-                ft.add(R.id.theme_browser_container, mSearchFragment);
-                ft.addToBackStack(null);
-                ft.commit();
             }
+            ft.add(R.id.theme_browser_container, mSearchFragment, SEARCH_FRAGMENT_TAG);
+            ft.addToBackStack(null);
+            ft.commit();
+            setupBaseLayout();
 
             return true;
         }
@@ -407,10 +425,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         if (item.getItemId() == R.id.menu_search) {
-            mSearchFragment = null;
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
-                popThemeFragment();
+                fm.popBackStack();
+                setupBaseLayout();
             }
         }
         return true;
@@ -418,7 +436,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-
+        mLastSearch = query;
         mSearchFragment.search(query);
         mSearchView.clearFocus();
         return true;
@@ -426,6 +444,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        mLastSearch = newText;
         mSearchFragment.search(newText);
         return true;
     }
@@ -455,22 +474,25 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     
     @Override
     public void onLivePreviewClicked(String themeId, String previewURL) {
-        if (mPreviewFragment == null || !mPreviewFragment.isInLayout()) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            mViewPager.setVisibility(View.GONE);
-            mTabView.setVisibility(View.GONE);
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        
+        if (mPreviewFragment == null) {
             mPreviewFragment = ThemePreviewFragment.newInstance(themeId, previewURL);
-            
-            if (Utils.isXLarge(ThemeBrowserActivity.this)) {
-                mDetailsFragment.dismiss();
-            } else {
-                ft.hide(mDetailsFragment);
-            }
-            ft.add(R.id.theme_browser_container, mPreviewFragment);
-            ft.addToBackStack(null);
-            ft.commit();
-        }        
+        } else {
+            mPreviewFragment.load(themeId, previewURL);
+        }
+
+        if (Utils.isXLarge(ThemeBrowserActivity.this)) {
+            mDetailsFragment.dismiss();
+        } else {
+            ft.hide(mDetailsFragment);
+        }
+        ft.add(R.id.theme_browser_container, mPreviewFragment, ThemePreviewFragment.TAG);
+        ft.addToBackStack(null);
+        ft.commit();
+        setupBaseLayout();
     }
 
 }

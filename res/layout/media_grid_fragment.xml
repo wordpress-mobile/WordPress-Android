@@ -32,7 +32,6 @@
         android:padding="10dp"
         android:scrollbarStyle="outsideOverlay"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" >
-    </org.wordpress.android.ui.MultiSelectGridView>
+        android:verticalSpacing="10dp" />
 
 </RelativeLayout>

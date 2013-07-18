@@ -7,25 +7,25 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 
-public class ThemeDetailsFragment extends DialogFragment {
+public class ThemeDetailsFragment extends SherlockDialogFragment {
 
+    public static final String TAG = ThemeDetailsFragment.class.getName();
     private static final String ARGS_THEME_ID = "ARGS_THEME_ID";
 
     public static ThemeDetailsFragment newInstance(String themeId) {
@@ -57,7 +57,7 @@ public class ThemeDetailsFragment extends DialogFragment {
         public void onActivateThemeClicked(String themeId);
     }
 
-    private String getThemeId() {
+    String getThemeId() {
         if (getArguments() != null)
             return getArguments().getString(ARGS_THEME_ID);
         else
@@ -71,8 +71,7 @@ public class ThemeDetailsFragment extends DialogFragment {
         try {
             mCallback = (ThemeDetailsFragmentCallback) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ThemeDetailsFragmentCallback");
+            throw new ClassCastException(activity.toString() + " must implement ThemeDetailsFragmentCallback");
         }
     }
 
@@ -101,12 +100,10 @@ public class ThemeDetailsFragment extends DialogFragment {
 
         mNameView = (TextView) view.findViewById(R.id.theme_details_fragment_name);
         mImageView = (NetworkImageView) view.findViewById(R.id.theme_details_fragment_image);
-        mDescriptionView = (TextView) view
-                .findViewById(R.id.theme_details_fragment_details_description);
+        mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
 
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
-        mActivateThemeButton = (Button) view
-                .findViewById(R.id.theme_details_fragment_activate_button);
+        mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
 
             @Override

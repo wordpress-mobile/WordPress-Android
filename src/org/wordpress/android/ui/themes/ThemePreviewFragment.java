@@ -16,12 +16,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
-public class ThemePreviewFragment extends Fragment {
+public class ThemePreviewFragment extends SherlockFragment {
 
+    public static final String TAG = ThemePreviewFragment.class.getName();
     private static final String ARGS_THEME_ID = "theme_id";
     private static final String ARGS_PREVIEW_URL = "preview_url";
     
@@ -33,11 +38,14 @@ public class ThemePreviewFragment extends Fragment {
     private WebView mWebView;
     private Blog mBlog;
     private ProgressBar mProgressBar;
+    private String mThemeId;
+    private String mPreviewURL;
     
     public interface ThemePreviewFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
     }
+    
     
     public static ThemePreviewFragment newInstance(String themeId, String previewURL) {
         ThemePreviewFragment fragment = new ThemePreviewFragment();
@@ -65,6 +73,8 @@ public class ThemePreviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mCallback.onResume(this);
+        setHasOptionsMenu(true);
+        setMenuVisibility(true);
     }
     
     @Override
@@ -74,19 +84,33 @@ public class ThemePreviewFragment extends Fragment {
     }
     
     public String getThemeId() {
-        if (getArguments() != null)
-            return getArguments().getString(ARGS_THEME_ID);
-        else
+        if (mThemeId != null) {
+            return mThemeId;
+        } else if (getArguments() != null) {
+            mThemeId = getArguments().getString(ARGS_THEME_ID); 
+            return mThemeId;
+        } else {
             return null;
+        }
     }
     
     private String getPreviewURL() {
-        if (getArguments() != null)
-            return getArguments().getString(ARGS_PREVIEW_URL);
-        else
-            return null;
+        if (mPreviewURL != null) {
+            return mPreviewURL;
+        } else if (getArguments() != null) {
+            mPreviewURL = getArguments().getString(ARGS_PREVIEW_URL);
+            return mPreviewURL;
+        } else {
+            return null; 
+        }
     }
     
+    public void load(String themeId, String previewURL) {
+        mThemeId = themeId;
+        mPreviewURL = previewURL;
+        refreshViews();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -129,6 +153,11 @@ public class ThemePreviewFragment extends Fragment {
         return view;
     }
 
+    private void refreshViews() {
+        loadAuthenticatedUrl(getPreviewURL());   
+    }
+
+    
     /**
      * Login to the WordPress blog and load the specified URL.
      *
@@ -180,7 +209,7 @@ public class ThemePreviewFragment extends Fragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            
+            mProgressBar.setVisibility(ProgressBar.GONE);
         }
 
         @Override
@@ -194,5 +223,11 @@ public class ThemePreviewFragment extends Fragment {
         }
 
     }
-
+    
+    
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.theme_preview, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 }

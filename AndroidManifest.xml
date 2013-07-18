@@ -142,20 +142,18 @@
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.media.MediaUploadActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         
         <!-- Theme Activities -->
-        <activity
-            android:name=".ui.themes.ThemeBrowserActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+        <activity android:name=".ui.themes.ThemeBrowserActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
                 
         <!-- Other activities -->
