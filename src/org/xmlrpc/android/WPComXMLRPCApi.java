@@ -39,14 +39,19 @@ public class WPComXMLRPCApi {
             return;
 
         String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
+        Map<String, Object> contentStruct = new HashMap<String, Object>();
+        contentStruct.put("device_family", "android");
+        contentStruct.put("device_name", deviceName);
+        contentStruct.put("app_version", WordPress.versionName);
+        contentStruct.put("os_version",  android.os.Build.VERSION.RELEASE);
+        contentStruct.put("device_uuid", uuid);
+        contentStruct.put("production", true); //production, NOT sandbox.
+        
         Object[] params = {
                 settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, ""),
                 WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, "")),
                 token,
-                uuid,
-                "android",
-                false,
-                deviceName
+                contentStruct
         };
         
         XMLRPCClient client = new XMLRPCClient(URI.create(Constants.wpcomXMLRPCURL), "", "");
