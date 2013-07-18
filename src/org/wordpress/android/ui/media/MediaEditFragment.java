@@ -48,7 +48,7 @@ public class MediaEditFragment extends Fragment {
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
-        public void onEditCompleted(boolean result);
+        public void onEditCompleted(String mediaId, boolean result);
     }
 
     public static MediaEditFragment newInstance(String mediaId) {
@@ -170,8 +170,10 @@ public class MediaEditFragment extends Fragment {
     }
 
     public void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        if (getActivity() != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
     
     public void editMedia() {
@@ -191,18 +193,20 @@ public class MediaEditFragment extends Fragment {
                         String blogId = String.valueOf(currentBlog.getBlogId());
                         WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description);
 
-                        Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
 
                         setMediaUpdating(false);
-                        mCallback.onEditCompleted(true);
+                        mCallback.onEditCompleted(mediaId, true);
                     }
 
                     @Override
                     public void onFailure() {
-                        Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+    
                         setMediaUpdating(false);
-                        mCallback.onEditCompleted(false);
+                        mCallback.onEditCompleted(mediaId, false);
                     }
                 });
 
@@ -229,6 +233,7 @@ public class MediaEditFragment extends Fragment {
         if (!cursor.moveToFirst())
             return;
 
+        mMediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));

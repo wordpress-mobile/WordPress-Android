@@ -332,13 +332,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         startMediaDeleteService();
     }
     
-    public void onEditCompleted(boolean result) {
+    public void onEditCompleted(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             getSupportFragmentManager().popBackStack();
             
             if (mMediaItemFragment != null)
                 mMediaItemFragment.loadMedia(mMediaItemFragment.getMediaId());
             
+            mMediaEditFragment.loadMedia(mediaId);
             mMediaGridFragment.refreshMediaFromDB();
         }
     }
