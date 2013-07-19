@@ -21,6 +21,8 @@ public class MediaItemFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
 
+    public static final String TAG = MediaItemFragment.class.getName();
+
     private NetworkImageView mImageView;
     private TextView mTitleView;
     private TextView mCaptionView;

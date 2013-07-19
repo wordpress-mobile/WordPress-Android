@@ -43,20 +43,17 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private static final int MIN_REFERSH_INTERVAL_MS = 10 * 1000;
 
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
+    private static final String BUNDLE_LAST_REFRESH_TIME = "BUNDLE_LAST_REFRESH_TIME";
 
     private Cursor mCursor;
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
-    
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
     private long mLastRefreshTime;
-    
     private boolean mIsRefreshing = false;
-    
     private ArrayList<String> mCheckedItems;
-    
     private IcsSpinner mSpinner;
     private View mSpinnerContainer;
 
@@ -133,6 +130,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
             mListener.onMultiSelectChange(mCheckedItems.size());
         }
+        mLastRefreshTime = savedInstanceState.getLong(BUNDLE_LAST_REFRESH_TIME, 0l);
         
     }
     
@@ -144,6 +142,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     private void saveState(Bundle outState) {
         outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
+        outState.putLong(BUNDLE_LAST_REFRESH_TIME, mLastRefreshTime);
     }
 
     private void setupSpinnerAdapter() {
@@ -199,7 +198,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         super.onResume();
         
         refreshMediaFromDB();
-        refreshMediaFromServer(0);
+        
+        if (mLastRefreshTime == 0l)
+            refreshMediaFromServer(0);
     }
 
     public void refreshMediaFromDB() {

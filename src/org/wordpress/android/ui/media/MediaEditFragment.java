@@ -33,7 +33,8 @@ public class MediaEditFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
     private static final String BUNDLE_MEDIA_ID = "media_id";
-
+    public static final String TAG = "MediaEditFragment"; // also appears in the layouts, from the strings.xml
+    
     private NetworkImageView mImageView;
     private EditText mTitleView;
     private EditText mCaptionView;

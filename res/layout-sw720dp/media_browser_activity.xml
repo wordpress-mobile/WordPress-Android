@@ -27,6 +27,7 @@
         android:id="@+id/mediaEditFragment"
         android:name="org.wordpress.android.ui.media.MediaEditFragment"
         android:layout_width="@dimen/media_item_details_width"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" 
+        android:tag="@string/media_edit_fragment_tag"/>
 
 </LinearLayout>
