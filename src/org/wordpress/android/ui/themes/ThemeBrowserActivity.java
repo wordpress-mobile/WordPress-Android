@@ -278,7 +278,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             stopAnimatingRefreshButton();
             if (result == null) {
                 Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
-            } 
+            } else {
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success, Toast.LENGTH_SHORT).show();
+            }
             refreshViewPager();
         }
 

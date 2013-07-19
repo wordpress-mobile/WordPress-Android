@@ -21,8 +21,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/media_blue_button_selector"
-                android:paddingEnd="20dp"
-                android:paddingStart="20dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
                 android:text="@string/save"
                 android:textColor="@color/media_upload_btn_text"
                 android:visibility="visible" />
