@@ -1921,7 +1921,11 @@ public class WordPressDB {
     public int getMediaCountUnattached(String blogId) {
         return getMediaUnattachedForBlog(blogId).getCount();
     }
-
+    
+    public Cursor getMediaFilesForBlog(String blogId, long startDate, long endDate) {
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND (uploadState IS NULL OR uploadState ='uploaded') AND (date_created_gmt >= ? AND date_created_gmt <= ?) ", new String[] { blogId , String.valueOf(startDate), String.valueOf(endDate) });
+    }
+    
     /** For a given blogId, get all the media files for upload **/
     public Cursor getMediaFilesForUpload(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IN ('uploaded', 'queued', 'failed', 'uploading') ORDER BY date_created_gmt ASC", new String[] { blogId });
