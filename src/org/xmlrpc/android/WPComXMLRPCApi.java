@@ -9,6 +9,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -42,6 +43,7 @@ public class WPComXMLRPCApi {
         Map<String, Object> contentStruct = new HashMap<String, Object>();
         contentStruct.put("device_family", "android");
         contentStruct.put("device_name", deviceName);
+        contentStruct.put("device_model",  Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
         contentStruct.put("os_version",  android.os.Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
