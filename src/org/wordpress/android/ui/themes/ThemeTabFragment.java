@@ -3,7 +3,6 @@ package org.wordpress.android.ui.themes;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -21,7 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
 
-public class ThemeTabFragment extends Fragment implements OnItemClickListener, RecyclerListener {
+public class ThemeTabFragment extends SherlockFragment implements OnItemClickListener, RecyclerListener {
 
     public enum ThemeSortType {
         TRENDING("Trending"), 
@@ -52,23 +52,23 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         public void onThemeSelected(String themeId);
     }
     
-    private static final String ARGS_THEME = "ARGS_THEME";
+    protected static final String ARGS_SORT = "ARGS_SORT";
+
+    protected GridView mGridView;
+    protected ThemeTabAdapter mAdapter;
+    protected ThemeTabFragmentCallback mCallback;
     
-    public static ThemeTabFragment newInstance(ThemeSortType theme) {
+    public static ThemeTabFragment newInstance(ThemeSortType sort) {
         
         ThemeTabFragment fragment = new ThemeTabFragment();
         
         Bundle args = new Bundle();
-        args.putInt(ARGS_THEME, theme.ordinal());
+        args.putInt(ARGS_SORT, sort.ordinal());
         fragment.setArguments(args);
         
         return fragment;
     }
 
-    private GridView mGridView;
-    private ThemeTabAdapter mAdapter;
-    private ThemeTabFragmentCallback mCallback;
-    
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -103,8 +103,8 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
 
     private ThemeSortType getThemeSortType() {
         int sortType = ThemeSortType.TRENDING.ordinal();
-        if (getArguments().containsKey(ARGS_THEME))  {
-            sortType = getArguments().getInt(ARGS_THEME);
+        if (getArguments().containsKey(ARGS_SORT))  {
+            sortType = getArguments().getInt(ARGS_SORT);
         }
         
         return ThemeSortType.getTheme(sortType);
@@ -136,19 +136,7 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         mAdapter.swapCursor(cursor);
     }
     
-    public void search(String searchTerm) {
-        
-        String blogId = getBlogId();
-        Cursor cursor =  WordPress.wpDB.getThemes(blogId, searchTerm);
-        if (mAdapter == null) {
-            return;
-        } else {   
-            mAdapter.swapCursor(cursor);   
-            mGridView.invalidateViews();
-        }             
-    }
-    
-    private String getBlogId() {
+    protected String getBlogId() {
         return String.valueOf(WordPress.getCurrentBlog().getBlogId());
     }
 

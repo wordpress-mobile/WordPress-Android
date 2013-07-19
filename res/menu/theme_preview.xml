@@ -6,15 +6,5 @@
         android:icon="@drawable/tab_icon_checkmark"
         android:showAsAction="always"
         android:title="@string/activate_theme"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:showAsAction="never"
-        android:title="@string/settings"/>
-    <item
-        android:id="@+id/menu_signout"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:showAsAction="never"
-        android:title="@string/sign_out"/>
 
 </menu>

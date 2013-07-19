@@ -3,7 +3,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -49,19 +47,22 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
-
         public void onPause(Fragment fragment);
-
         public void onLivePreviewClicked(String themeId, String previewURL);
-
         public void onActivateThemeClicked(String themeId);
     }
 
-    String getThemeId() {
+    public String getThemeId() {
         if (getArguments() != null)
             return getArguments().getString(ARGS_THEME_ID);
         else
             return null;
+    }
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -160,5 +161,10 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         }
 
     }
-
+    
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.removeItem(R.id.menu_search);
+        menu.removeItem(R.id.menu_refresh);
+    }
 }

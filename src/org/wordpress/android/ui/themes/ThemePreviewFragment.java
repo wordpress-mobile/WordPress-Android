@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -44,6 +45,7 @@ public class ThemePreviewFragment extends SherlockFragment {
     public interface ThemePreviewFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
+        public void onActivateThemeClicked(String themeId);
     }
     
     
@@ -56,6 +58,12 @@ public class ThemePreviewFragment extends SherlockFragment {
         fragment.setArguments(args);
         
         return fragment;
+    }
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
     
     @Override
@@ -224,10 +232,25 @@ public class ThemePreviewFragment extends SherlockFragment {
 
     }
     
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.theme_preview, menu);
+    }
     
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.theme_preview, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_activate:
+                mCallback.onActivateThemeClicked(getThemeId());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.removeItem(R.id.menu_search);
+        menu.removeItem(R.id.menu_refresh);
+    }
 }

@@ -124,6 +124,7 @@
   <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
   <string name="media_edit_success">Successfully edited media</string>
   <string name="media_edit_failure">Failed to edit media</string>
+  <string name="media_edit_fragment_tag">MediaEditFragment</string>
   
   <!-- Delete Media -->
   <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
@@ -140,6 +141,7 @@
   <string name="themes_details_label">Details</string>
   <string name="activate_theme">Activate</string>
   <string name="theme_fetch_failed">Failed to fetch themes. Please try again</string>
+  <string name="theme_fetch_success">Themes have been refreshed</string>
   <string name="theme_set_failed">Failed to set theme. Please try again</string>
   <string name="theme_set_success">Successfully set theme!</string>
 

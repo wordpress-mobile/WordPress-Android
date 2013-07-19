@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -67,18 +66,36 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
+        FragmentTransaction ft = fm.beginTransaction();
+        setupBaseLayout();
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
         
-        mMediaEditFragment = (MediaEditFragment) fm.findFragmentById(R.id.mediaEditFragment);
+        mMediaItemFragment = (MediaItemFragment) fm.findFragmentByTag(MediaItemFragment.TAG);
+        if (mMediaItemFragment != null)
+            ft.hide(mMediaGridFragment);
+        
+        mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
+        if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
+            ft.hide(mMediaItemFragment);
+            
+        
+        ft.commit();
     }
     
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
+            setupBaseLayout();
         }
     };
+    
+    private void setupBaseLayout() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            mMenuDrawer.setDrawerIndicatorEnabled(true);
+        } else {
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -102,8 +119,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaGridFragment);
+            setupBaseLayout();
+            
             mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
-            ft.add(R.id.media_browser_container, mMediaItemFragment);
+            ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commit();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
@@ -184,6 +203,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
+                setupBaseLayout();
                 return true;
             }
         } else if (itemId == R.id.menu_new_media) {
@@ -218,12 +238,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mMediaItemFragment);
                 mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
-                ft.add(R.id.media_browser_container, mMediaEditFragment);
+                ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
                 ft.commit();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
-                mMediaItemFragment.loadMedia(mediaId);
+                mMediaEditFragment.loadMedia(mediaId);
             }
 
             if (mSearchView != null)
@@ -332,13 +352,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         startMediaDeleteService();
     }
     
-    public void onEditCompleted(boolean result) {
+    public void onEditCompleted(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             getSupportFragmentManager().popBackStack();
             
             if (mMediaItemFragment != null)
                 mMediaItemFragment.loadMedia(mMediaItemFragment.getMediaId());
             
+            mMediaEditFragment.loadMedia(mediaId);
             mMediaGridFragment.refreshMediaFromDB();
         }
     }

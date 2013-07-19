@@ -42,8 +42,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/media_multiselect_ab_selector"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:src="@drawable/tab_icon_trash" />
 
     <ImageButton
@@ -53,8 +53,8 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/media_multiselect_actionbar_trash"
         android:background="@drawable/media_multiselect_ab_selector"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:src="@android:drawable/ic_menu_share" />
 
     <ImageButton
@@ -64,8 +64,8 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/media_multiselect_actionbar_share"
         android:background="@drawable/media_multiselect_ab_selector"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:src="@drawable/tab_icon_newpost" />
 
 </RelativeLayout>

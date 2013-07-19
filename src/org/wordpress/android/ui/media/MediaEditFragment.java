@@ -33,13 +33,15 @@ public class MediaEditFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
     private static final String BUNDLE_MEDIA_ID = "media_id";
-
+    public static final String TAG = "MediaEditFragment"; // also appears in the layouts, from the strings.xml
+    
     private NetworkImageView mImageView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
-    private MediaEditFragmentCallback mCallback;
     private Button mSaveButton;
+    
+    private MediaEditFragmentCallback mCallback;
 
     private boolean mIsMediaUpdating = false;
 
@@ -48,7 +50,7 @@ public class MediaEditFragment extends Fragment {
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
-        public void onEditCompleted(boolean result);
+        public void onEditCompleted(String mediaId, boolean result);
     }
 
     public static MediaEditFragment newInstance(String mediaId) {
@@ -111,6 +113,7 @@ public class MediaEditFragment extends Fragment {
         mImageView = (NetworkImageView) view.findViewById(R.id.media_edit_fragment_image);
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
+        
         mSaveButton = (Button) view.findViewById(R.id.media_edit_save_button);
         mSaveButton.setOnClickListener(new OnClickListener() {
             
@@ -170,8 +173,10 @@ public class MediaEditFragment extends Fragment {
     }
 
     public void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        if (getActivity() != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
     
     public void editMedia() {
@@ -181,28 +186,31 @@ public class MediaEditFragment extends Fragment {
         final String title = mTitleView.getText().toString();
         final String description = mDescriptionView.getText().toString();
         final Blog currentBlog = WordPress.getCurrentBlog();
+        final String caption = mCaptionView.getText().toString();
 
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title,
-                description,
+                description, caption, 
                 new ApiHelper.EditMediaItemTask.Callback() {
 
                     @Override
                     public void onSuccess() {
                         String blogId = String.valueOf(currentBlog.getBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description);
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
 
-                        Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
 
                         setMediaUpdating(false);
-                        mCallback.onEditCompleted(true);
+                        mCallback.onEditCompleted(mediaId, true);
                     }
 
                     @Override
                     public void onFailure() {
-                        Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+    
                         setMediaUpdating(false);
-                        mCallback.onEditCompleted(false);
+                        mCallback.onEditCompleted(mediaId, false);
                     }
                 });
 
@@ -229,6 +237,7 @@ public class MediaEditFragment extends Fragment {
         if (!cursor.moveToFirst())
             return;
 
+        mMediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));

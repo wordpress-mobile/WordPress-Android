@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -46,15 +47,16 @@ import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
-public class MediaGridFragment extends Fragment implements OnItemClickListener,
-        MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
+public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
+    
+    private static final int MIN_REFERSH_INTERVAL_MS = 10 * 1000;
 
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
+    private static final String BUNDLE_LAST_REFRESH_TIME = "BUNDLE_LAST_REFRESH_TIME";
 
     private Cursor mCursor;
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
-
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
@@ -62,8 +64,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     private boolean mIsRefreshing = false;
 
     private ArrayList<String> mCheckedItems;
+    private long mLastRefreshTime;
 
     private CustomSpinner mSpinner;
+
     private View mSpinnerContainer;
 
     private boolean mUserClickedCustomDateFilter = false;
@@ -155,6 +159,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             mListener.onMultiSelectChange(mCheckedItems.size());
         }
 
+        mLastRefreshTime = savedInstanceState.getLong(BUNDLE_LAST_REFRESH_TIME, 0l);
     }
 
     @Override
@@ -165,6 +170,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     private void saveState(Bundle outState) {
         outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
+        outState.putLong(BUNDLE_LAST_REFRESH_TIME, mLastRefreshTime);
     }
 
     private void setupSpinnerAdapter() {
@@ -224,7 +230,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         super.onResume();
 
         refreshMediaFromDB();
-        refreshMediaFromServer(0);
+        
+        if (mLastRefreshTime == 0l)
+            refreshMediaFromServer(0);
     }
 
     public void refreshMediaFromDB() {
@@ -237,10 +245,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     public void refreshMediaFromServer(int offset) {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-
-        if (!mIsRefreshing) {
+        if(WordPress.getCurrentBlog() == null)
+            return; 
+        
+        if(offset == 0 || !mIsRefreshing && (System.currentTimeMillis() - mLastRefreshTime > MIN_REFERSH_INTERVAL_MS)) {
+            mLastRefreshTime = System.currentTimeMillis();
             mIsRefreshing = true;
             mListener.onMediaItemListDownloadStart();
 
@@ -260,16 +269,21 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             mIsRefreshing = false;
 
             if (MediaGridFragment.this.isVisible()) {
-
-                mListener.onMediaItemListDownloaded();
+                Toast.makeText(getActivity(), "Refreshed content", Toast.LENGTH_SHORT).show();
                 refreshSpinnerAdapter();
                 setFilter(mFilter);
             }
+
+            mListener.onMediaItemListDownloaded();
         }
 
         @Override
         public void onFailure() {
             mIsRefreshing = false;
+            
+            if (MediaGridFragment.this.isVisible()) {
+                Toast.makeText(getActivity(), "Failed to refresh content", Toast.LENGTH_SHORT).show();
+            }
             mListener.onMediaItemListDownloaded();
         }
     };

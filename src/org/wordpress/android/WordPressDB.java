@@ -2008,7 +2008,7 @@ public class WordPressDB {
         }
     }
     
-    public void updateMediaFile(String blogId, String mediaId, String title, String description) {
+    public void updateMediaFile(String blogId, String mediaId, String title, String description, String caption) {
         if (blogId == null || blogId.equals("")) {
             return;
         }
@@ -2025,6 +2025,12 @@ public class WordPressDB {
             values.put("description", "");
         } else {
             values.put("description", description);
+        }
+        
+        if (caption == null || caption.equals("")) {
+            values.put("caption", "");
+        } else {
+            values.put("caption", caption);
         }
         
         db.update(MEDIA_TABLE, values, "blogId = ? AND mediaId=?", new String[] { blogId, mediaId });
@@ -2173,7 +2179,7 @@ public class WordPressDB {
     }
     
     public Cursor getThemes(String blogId, String searchTerm) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?)", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"}); 
+        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"}); 
         
     }
     

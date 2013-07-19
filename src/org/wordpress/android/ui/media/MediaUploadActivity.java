@@ -105,7 +105,7 @@ public class MediaUploadActivity extends SherlockFragmentActivity implements Med
     }
 
     @Override
-    public void onEditCompleted(boolean result) {
+    public void onEditCompleted(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             getSupportFragmentManager().popBackStack();
         }
