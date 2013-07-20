@@ -1,6 +1,13 @@
 package org.wordpress.android.ui.media;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +21,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -39,6 +47,7 @@ public class MediaItemFragment extends SherlockFragment {
     public interface MediaItemFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
+        public void onDeleteMedia(final List<String> ids);
     }
     
     public static MediaItemFragment newInstance(String mediaId) {
@@ -149,8 +158,13 @@ public class MediaItemFragment extends SherlockFragment {
         
         // get the file extension from the fileURL
         String fileURL = cursor.getString(cursor.getColumnIndex("fileURL"));
-        String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase(); 
-        mFileTypeView.setText("File type: " + fileType);
+        if (fileURL != null) {
+            String fileType = fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase(); 
+            mFileTypeView.setText("File type: " + fileType);
+            mFileTypeView.setVisibility(View.VISIBLE);
+        } else {
+            mFileTypeView.setVisibility(View.GONE);
+        }
         
 
         String imageUrl = cursor.getString(cursor.getColumnIndex("fileURL"));
@@ -202,5 +216,30 @@ public class MediaItemFragment extends SherlockFragment {
         menu.findItem(R.id.menu_refresh).setVisible(false);
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        
+        if (itemId == R.id.menu_delete) {
+            Builder builder = new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.confirm_delete_media)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.delete, new OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                                ArrayList<String> ids = new ArrayList<String>(1);
+                                ids.add(getMediaId());
+                                mCallback.onDeleteMedia(ids);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        
+        return super.onOptionsItemSelected(item);
     }
 }

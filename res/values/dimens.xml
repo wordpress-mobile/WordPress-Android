@@ -16,4 +16,7 @@
     
     <dimen name="theme_details_fragment_width">650dp</dimen>
     <dimen name="theme_details_fragment_height">450dp</dimen>
+    
+    <dimen name="action_bar_spinner_width">312dp</dimen>
+    <dimen name="action_bar_spinner_y_offset">-8dp</dimen>
 </resources>

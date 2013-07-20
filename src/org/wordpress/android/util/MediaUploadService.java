@@ -29,6 +29,7 @@ public class MediaUploadService extends Service {
 
     /** Listen to this Intent for when there are updates to the upload queue **/
     public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION = "MEDIA_UPLOAD_INTENT_NOTIFICATION";
+    public static final String MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA = "MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA";
     
     private Context mContext;
     private Handler mHandler = new Handler();
@@ -86,7 +87,7 @@ public class MediaUploadService extends Service {
             String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
             WordPress.wpDB.setMediaUploadingToFailed(blogId);
     
-            sendUpdateBroadcast();
+            sendUpdateBroadcast(null);
         }
     }
     
@@ -131,13 +132,13 @@ public class MediaUploadService extends Service {
             public void onFailure() {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
                 mUploadInProgress = false;
-                sendUpdateBroadcast();
+                sendUpdateBroadcast(mediaId);
                 mHandler.post(mFetchQueueTask);
             }
         });
         
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "uploading");
-        sendUpdateBroadcast();
+        sendUpdateBroadcast(mediaId);
         
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
@@ -146,7 +147,7 @@ public class MediaUploadService extends Service {
         mHandler.post(mFetchQueueTask);
     }
 
-    private void fetchMediaFile(String id) {
+    private void fetchMediaFile(final String id) {
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id), new GetMediaItemTask.Callback() {
@@ -158,23 +159,27 @@ public class MediaUploadService extends Service {
                 WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "uploaded");
 
                 mUploadInProgress = false;
-                sendUpdateBroadcast();
+                sendUpdateBroadcast(id);
                 mHandler.post(mFetchQueueTask);
             }
             
             @Override
             public void onFailure() {
                 mUploadInProgress = false;
-                sendUpdateBroadcast();
+                sendUpdateBroadcast(id);
                 mHandler.post(mFetchQueueTask);                
             }
         });
         task.execute(apiArgs);
     }
 
-    private void sendUpdateBroadcast() {
+    private void sendUpdateBroadcast(String mediaId) {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(mContext);
-        lbm.sendBroadcast(new Intent(MEDIA_UPLOAD_INTENT_NOTIFICATION));
+        Intent intent = new Intent(MEDIA_UPLOAD_INTENT_NOTIFICATION);
+        if (mediaId != null)
+            intent.putExtra(MEDIA_UPLOAD_INTENT_NOTIFICATION_EXTRA, mediaId);
+        lbm.sendBroadcast(intent);
+        
     }
     
 }

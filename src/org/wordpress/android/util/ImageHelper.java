@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.util.FloatMath;
+import android.util.Log;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -354,19 +355,20 @@ public class ImageHelper {
 
 
     public interface BitmapWorkerCallback {
-        public void onBitmapReady(Bitmap bitmap); 
+        public void onBitmapReady(String filePath, Bitmap bitmap); 
     }
     
     public static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<BitmapWorkerCallback> callbackReference;
+        private final BitmapWorkerCallback callback;
         private int targetWidth;
         private int targetHeight;
+        private String path;
         
         public BitmapWorkerTask(ImageView imageView, int width, int height, BitmapWorkerCallback callback) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<ImageView>(imageView);
-            callbackReference = new WeakReference<BitmapWorkerCallback>(callback);
+            this.callback = callback;
             targetWidth = width;
             targetHeight = height;
         }
@@ -374,7 +376,7 @@ public class ImageHelper {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(String... params) {
-            String path = params[0];
+            path = params[0];
             
             BitmapFactory.Options bfo = new BitmapFactory.Options();
             bfo.inJustDecodeBounds = true;
@@ -389,18 +391,21 @@ public class ImageHelper {
         // Once complete, see if ImageView is still around and set bitmap.
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
+            if (imageViewReference == null || bitmap == null) 
+                return;
+
+            final ImageView imageView = imageViewReference.get();
+            if (imageView == null)
+                return;
+            
+            String tag = imageView.getTag().toString();    
+            if (tag.equals(path)) {
+                imageView.setImageBitmap(bitmap);
             }
-            if (callbackReference != null && bitmap != null) {
-                final BitmapWorkerCallback callback = callbackReference.get();
-                if (callback != null) {
-                    callback.onBitmapReady(bitmap);
-                }
-            }
+            
+            if (callback != null) 
+                callback.onBitmapReady(path, bitmap);
+            
         }
     }
 

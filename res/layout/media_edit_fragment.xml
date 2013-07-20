@@ -11,8 +11,8 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_marginBottom="32dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp" >
 
             <Button
                 android:id="@+id/media_edit_save_button"
@@ -21,11 +21,11 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/media_blue_button_selector"
-                android:paddingRight="20dp"
                 android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="@string/save"
                 android:textColor="@color/media_upload_btn_text"
-                android:visibility="visible" />
+                android:visibility="@integer/media_editor_save_button_visibility" />
 
             <EditText
                 android:id="@+id/media_edit_fragment_title"
@@ -58,18 +58,6 @@
             android:gravity="top|start"
             android:hint="@string/media_edit_description_hint"
             android:lines="3" />
-
-<!--         <CheckBox -->
-<!--             android:id="@+id/media_edit_fragment_show_likes" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:text="@string/media_edit_show_likes" /> -->
-
-<!--         <CheckBox -->
-<!--             android:id="@+id/media_edit_fragment_show_sharing_buttons" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:text="@string/media_edit_show_sharing_buttons" /> -->
     </LinearLayout>
 
 </ScrollView>

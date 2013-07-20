@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.xmlrpc.android.ApiHelper;
@@ -30,7 +31,6 @@ import org.xmlrpc.android.ApiHelper;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.Utils;
 
 public class MediaEditFragment extends SherlockFragment {
 
@@ -53,7 +53,7 @@ public class MediaEditFragment extends SherlockFragment {
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
-        public void onEditCompleted(String mediaId, boolean result);
+        public void onSavedEdit(String mediaId, boolean result);
     }
 
     public static MediaEditFragment newInstance(String mediaId) {
@@ -131,12 +131,6 @@ public class MediaEditFragment extends SherlockFragment {
                 editMedia();
             }
         });
-        
-        Context context = getActivity(); // galaxy note on gingerbread is large+HXDPI
-        if (!Utils.isLarge(context) || (Utils.isLarge(context) && Utils.isXHDPI(context))) 
-            mSaveButton.setVisibility(View.GONE);
-        else
-            mSaveButton.setVisibility(View.VISIBLE);
 
         restoreState(savedInstanceState);
         
@@ -211,7 +205,7 @@ public class MediaEditFragment extends SherlockFragment {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
 
                         setMediaUpdating(false);
-                        mCallback.onEditCompleted(mediaId, true);
+                        mCallback.onSavedEdit(mediaId, true);
                     }
 
                     @Override
@@ -220,7 +214,7 @@ public class MediaEditFragment extends SherlockFragment {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
     
                         setMediaUpdating(false);
-                        mCallback.onEditCompleted(mediaId, false);
+                        mCallback.onSavedEdit(mediaId, false);
                     }
                 });
 
@@ -300,5 +294,14 @@ public class MediaEditFragment extends SherlockFragment {
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
         }
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_save_media) {
+            editMedia();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

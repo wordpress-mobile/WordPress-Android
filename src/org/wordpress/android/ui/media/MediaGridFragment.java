@@ -13,22 +13,20 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
-import com.actionbarsherlock.internal.widget.IcsSpinner;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -74,12 +72,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     public interface MediaGridListener {
         public void onMediaItemListDownloadStart();
-
         public void onMediaItemListDownloaded();
-
         public void onMediaItemSelected(String mediaId);
-
         public void onMultiSelectChange(int count);
+        public void onRetryUpload(String mediaId);
     }
 
     public enum Filter {
@@ -104,8 +100,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             setFilter(Filter.getFilter(position));
 
         }
-        
-        
 
         @Override
         public void onNothingSelected(IcsAdapterView<?> parent) { }
@@ -179,10 +173,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         updateFilterText();
 
-        Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar()
-                .getThemedContext();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                R.layout.sherlock_spinner_dropdown_item, mFiltersText);
+        Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar().getThemedContext();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.sherlock_spinner_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
     }
 
@@ -203,8 +195,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
         mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
-        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached
-                + ")";
+        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
         mFiltersText[3] = getResources().getString(R.string.custom_date) + "...";
     }
 
@@ -437,17 +428,15 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         if (niv != null) {
             // this tag is set in the MediaGridAdapter class
             String tag = (String) niv.getTag();
-            if (tag != null) {
+            if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
 
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
+                    public void onErrorResponse(VolleyError error) { }
 
                     @Override
-                    public void onResponse(ImageContainer response, boolean isImmediate) {
-                    }
+                    public void onResponse(ImageContainer response, boolean isImmediate) { }
 
                 });
                 container.cancelRequest();
@@ -488,6 +477,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     public void clearCheckedItems() {
         mGridView.cancelSelection();
+    }
+
+    @Override
+    public void onRetryUpload(String mediaId) {
+        mListener.onRetryUpload(mediaId);
     }
 
 }

@@ -3,4 +3,7 @@
     <integer name="content_editor_min_lines">4</integer>
     <integer name="media_grid_num_columns">2</integer>
     <integer name="themes_grid_num_columns">2</integer>
+    <integer name="visible">0</integer>
+    <integer name="gone">2</integer>
+    <integer name="media_editor_save_button_visibility">@integer/gone</integer>
 </resources>

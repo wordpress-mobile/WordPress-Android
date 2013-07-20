@@ -72,4 +72,15 @@
             android:textSize="12sp" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/media_grid_item_upload_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:background="@color/wordpress_blue"
+        android:padding="6dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
 </org.wordpress.android.ui.CheckableFrameLayout>

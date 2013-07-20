@@ -102,11 +102,14 @@
   <string name="custom_date">Custom Date</string>
   <string name="upload">Upload</string>
   
+  <!-- Media Gallery Action Bar -->
+  <string name="media_add_popup_title">Add to Media Library</string>
+  <string name="media_add_popup_capture_photo">Capture photo</string>
+  <string name="media_add_popup_capture_video">Capture video</string>
+  <string name="media_add_popup_pick_from_gallery">Pick from gallery</string>
   
   <!-- Upload Media -->
   <string name="media_upload_title">Upload New Media</string>
-  <string name="media_upload_allowed_file_types">Allowed file types: jpg, jpeg, png, gif, pdf, doc, ppt, odt, pptx, docx, pps, ppsx, xls, xlsx, key.</string>
-  <string name="media_upload_current_usage">You are currently using %1$s out of %2$s upload limit (%3$s).</string>
   <string name="media_upload_image_button">Image</string>
   <string name="media_upload_video_button">Video</string>
   <string name="media_upload_other_button">Other</string>

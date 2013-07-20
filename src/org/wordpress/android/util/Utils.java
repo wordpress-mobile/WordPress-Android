@@ -39,18 +39,8 @@ public class Utils {
         return false;
     }
     
-    public static boolean isLarge(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
-            return true;
-        return false;
-    }
-    
     public static boolean isLandscape(Context context) {
         return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
-    public static boolean isXHDPI(Context context) {
-        float density = context.getResources().getDisplayMetrics().densityDpi;
-        return density == DisplayMetrics.DENSITY_XHIGH;
-    }
 }
