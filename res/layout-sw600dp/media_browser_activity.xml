@@ -9,7 +9,7 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" >
+        android:layout_weight="0.4">
 
         <fragment
             android:id="@+id/mediaGridFragment"
@@ -29,7 +29,7 @@
         android:name="org.wordpress.android.ui.media.MediaEditFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="0.6"
         android:tag="@string/media_edit_fragment_tag" />
 
 </LinearLayout>

@@ -11,13 +11,16 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
-public class MediaItemFragment extends Fragment {
+public class MediaItemFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
 
@@ -46,6 +49,12 @@ public class MediaItemFragment extends Fragment {
         fragment.setArguments(args);
 
         return fragment;
+    }
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
     
     @Override
@@ -183,4 +192,15 @@ public class MediaItemFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.media_details, menu);
+    }
+    
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_refresh).setVisible(false);
+        menu.findItem(R.id.menu_new_media).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
+    }
 }

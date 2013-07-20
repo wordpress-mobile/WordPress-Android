@@ -28,7 +28,7 @@
         android:layout_below="@id/media_filter_spinner_container"
         android:gravity="center"
         android:horizontalSpacing="10dp"
-        android:numColumns="2"
+        android:numColumns="@integer/media_grid_num_columns"
         android:padding="10dp"
         android:scrollbarStyle="outsideOverlay"
         android:stretchMode="columnWidth"

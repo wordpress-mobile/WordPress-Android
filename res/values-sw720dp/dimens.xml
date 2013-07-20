@@ -12,7 +12,4 @@
     <dimen name="format_bar_font_size">17dp</dimen>
     <dimen name="format_bar_button_padding">4dp</dimen>
     <dimen name="format_bar_height">50dp</dimen>
-    
-    <dimen name="media_grid_item_width">410dp</dimen>
-    <dimen name="media_item_details_width">618dp</dimen>
 </resources>

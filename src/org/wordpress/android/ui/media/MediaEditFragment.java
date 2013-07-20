@@ -20,6 +20,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.xmlrpc.android.ApiHelper;
@@ -29,7 +32,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.Utils;
 
-public class MediaEditFragment extends Fragment {
+public class MediaEditFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
     private static final String BUNDLE_MEDIA_ID = "media_id";
@@ -64,13 +67,19 @@ public class MediaEditFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+    
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
         try {
             mCallback = (MediaEditFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement MediaEditFragmentCallback");
+            throw new ClassCastException(activity.toString() + " must implement " + MediaEditFragmentCallback.class.getCanonicalName());
         }
     }
 
@@ -123,10 +132,11 @@ public class MediaEditFragment extends Fragment {
             }
         });
         
-        if (Utils.isLarge(getActivity())) 
-            mSaveButton.setVisibility(View.VISIBLE);
-        else
+        Context context = getActivity(); // galaxy note on gingerbread is large+HXDPI
+        if (!Utils.isLarge(context) || (Utils.isLarge(context) && Utils.isXHDPI(context))) 
             mSaveButton.setVisibility(View.GONE);
+        else
+            mSaveButton.setVisibility(View.VISIBLE);
 
         restoreState(savedInstanceState);
         
@@ -155,7 +165,7 @@ public class MediaEditFragment extends Fragment {
         mMediaId = mediaId;
         Blog blog = WordPress.getCurrentBlog();
 
-        if (blog != null) {
+        if (blog != null && getActivity() != null) {
             String blogId = String.valueOf(blog.getBlogId());
 
             Cursor cursor;
@@ -275,6 +285,20 @@ public class MediaEditFragment extends Fragment {
         }
     }
     
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (!isInLayout()) {
+            inflater.inflate(R.menu.media_edit, menu);
+        }
+    }
     
-    
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (!isInLayout()) {
+            menu.findItem(R.id.menu_refresh).setVisible(false);
+            menu.findItem(R.id.menu_new_media).setVisible(false);
+            menu.findItem(R.id.menu_search).setVisible(false);
+        }
+    }
 }

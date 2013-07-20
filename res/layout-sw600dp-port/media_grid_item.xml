@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.wordpress.android.ui.CheckableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/media_gallery_grid_cell"
     android:padding="1dp" >
 
@@ -9,7 +9,7 @@
         android:id="@+id/media_grid_item_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:padding="4dp"
+        android:layout_margin="4dp"
         android:scaleType="fitCenter" />
 
     <CheckBox
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginLeft="100dp"
+        android:layout_marginTop="100dp"
         android:padding="10dp" >
 
         <TextView

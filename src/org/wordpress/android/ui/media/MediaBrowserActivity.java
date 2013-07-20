@@ -114,6 +114,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemSelected(String mediaId) {
+
+        if (mSearchView != null)
+            mSearchView.clearFocus();
+        
+        if(mSearchMenuItem != null)
+            mSearchMenuItem.collapseActionView();
+        
         FragmentManager fm = getSupportFragmentManager();
 
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
@@ -130,8 +137,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaEditFragment.loadMedia(mediaId);
         }
 
-        if (mSearchView != null)
-            mSearchView.clearFocus();
     };
 
     @Override
@@ -149,13 +154,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         MenuInflater inflater = getSupportMenuInflater();
 
         // show a separate menu when the media item fragment is in phone layout and visible
-        if (mMediaItemFragment != null && !mMediaItemFragment.isInLayout()
-                && mMediaItemFragment.isVisible()) {
-            inflater.inflate(R.menu.media_details, menu);
-        } else if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout()
-                && mMediaEditFragment.isVisible()) {
-            inflater.inflate(R.menu.media_edit, menu);
-        } else if (isInMultiSelect()) {
+        if (isInMultiSelect()) {
             // show a custom view that emulates contextual action bar (CAB)
             // since CAB is not available in gingerbread
             actionBar.setCustomView(R.layout.media_multiselect_actionbar);
@@ -235,8 +234,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             FragmentManager fm = getSupportFragmentManager();
 
             if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
+
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.hide(mMediaItemFragment);
+                
+                if (mMediaItemFragment.isVisible())
+                    ft.hide(mMediaItemFragment);
+                
                 mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
@@ -354,10 +357,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     public void onEditCompleted(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            getSupportFragmentManager().popBackStack();
-            
-            if (mMediaItemFragment != null)
-                mMediaItemFragment.loadMedia(mMediaItemFragment.getMediaId());
+            FragmentManager fm = getSupportFragmentManager();
+            fm.popBackStack();
             
             mMediaEditFragment.loadMedia(mediaId);
             mMediaGridFragment.refreshMediaFromDB();
@@ -380,8 +381,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     @Override
     public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
         if (isInMultiSelect()) {
             cancelMultiSelect();
+        } else if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+            setupBaseLayout();
         } else {
             super.onBackPressed();
         }

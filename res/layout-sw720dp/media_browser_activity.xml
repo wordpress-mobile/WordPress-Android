@@ -7,8 +7,9 @@
     android:orientation="horizontal" >
 
     <FrameLayout
-        android:layout_width="@dimen/media_grid_item_width"
-        android:layout_height="match_parent" >
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
 
         <fragment
             android:id="@+id/mediaGridFragment"
@@ -26,8 +27,9 @@
     <fragment
         android:id="@+id/mediaEditFragment"
         android:name="org.wordpress.android.ui.media.MediaEditFragment"
-        android:layout_width="@dimen/media_item_details_width"
-        android:layout_height="match_parent" 
-        android:tag="@string/media_edit_fragment_tag"/>
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:tag="@string/media_edit_fragment_tag" />
 
 </LinearLayout>

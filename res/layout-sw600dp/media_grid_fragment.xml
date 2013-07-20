@@ -27,10 +27,9 @@
         android:layout_height="match_parent"
         android:layout_below="@id/media_filter_spinner_container"
         android:gravity="left"
-        android:numColumns="1"
+        android:numColumns="@integer/media_grid_num_columns"
         android:padding="2dp"
         android:scrollbarStyle="outsideOverlay"
-        android:stretchMode="none" >
-    </org.wordpress.android.ui.MultiSelectGridView>
+        android:stretchMode="columnWidth" />
 
 </RelativeLayout>

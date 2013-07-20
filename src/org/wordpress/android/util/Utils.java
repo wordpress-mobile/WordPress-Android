@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.DisplayMetrics;
 
 public class Utils {
 
@@ -42,10 +43,14 @@ public class Utils {
         if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
             return true;
         return false;
-                    
     }
     
     public static boolean isLandscape(Context context) {
         return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
+    public static boolean isXHDPI(Context context) {
+        float density = context.getResources().getDisplayMetrics().densityDpi;
+        return density == DisplayMetrics.DENSITY_XHIGH;
     }
 }

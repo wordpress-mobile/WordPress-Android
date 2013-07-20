@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="8dp" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp" >
-
-        <TextView
-            android:id="@+id/theme_details_fragment_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/theme_details_name"
-            android:textSize="22sp" />
+        android:layout_weight="0.4" >
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/theme_details_fragment_image"
             android:layout_width="300dp"
             android:layout_height="225dp"
-            android:layout_below="@id/theme_details_fragment_name"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="25dp"
             android:layout_marginTop="12dp" />
 
         <LinearLayout
@@ -30,46 +24,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_image"
-            android:layout_marginBottom="18dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/theme_details_fragment_preview_button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/media_blue_button_selector"
-                android:padding="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/media_blue_button_selector"
+                android:padding="10dp"
                 android:text="@string/themes_live_preview"
                 android:textColor="@color/theme_details_button" />
 
             <Button
                 android:id="@+id/theme_details_fragment_activate_button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
                 android:background="@drawable/theme_activate_button_selector"
                 android:padding="10dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
                 android:text="@string/activate_theme"
                 android:textColor="@color/theme_details_button" />
         </LinearLayout>
+    </RelativeLayout>
 
-        <View
-            android:id="@+id/theme_details_divider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/theme_details_fragment_button_container" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6" >
 
         <TextView
             android:id="@+id/theme_details_fragment_details_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/theme_details_divider"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="18dp"
             android:text="@string/themes_details_label"
@@ -89,4 +82,4 @@
             android:textStyle="normal" />
     </RelativeLayout>
 
-</ScrollView>
+</LinearLayout>

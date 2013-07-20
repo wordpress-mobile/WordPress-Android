@@ -402,10 +402,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mPreviewFragment.load(themeId, previewURL);
         }
 
-        if (Utils.isXLarge(ThemeBrowserActivity.this)) {
-            mDetailsFragment.dismiss();
-        } else {
-            ft.hide(mDetailsFragment);
+        if (mDetailsFragment != null) {
+            if (Utils.isXLarge(ThemeBrowserActivity.this)) {
+                mDetailsFragment.dismiss();
+            } else {
+                ft.hide(mDetailsFragment);
+            }
         }
         ft.add(R.id.theme_browser_container, mPreviewFragment, ThemePreviewFragment.TAG);
         ft.addToBackStack(null);

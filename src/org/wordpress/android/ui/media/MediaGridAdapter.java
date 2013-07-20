@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,15 +58,6 @@ public class MediaGridAdapter extends CursorAdapter {
             String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
             filenameView.setText("File name: " + fileName);
         }
-        
-        TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-        if (dimensionView != null) {
-            int width = cursor.getInt(cursor.getColumnIndex("width"));
-            int height = cursor.getInt(cursor.getColumnIndex("height"));
-            
-            String dimensions = width + "x" + height;
-            dimensionView.setText("Dimensions: " + dimensions);
-        }
 
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.media_grid_item_image);
@@ -84,6 +76,21 @@ public class MediaGridAdapter extends CursorAdapter {
             fileTypeView.setText("File type: " + fileType);
         } else {
             fileTypeView.setText(fileType);
+        }
+        
+
+        TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
+        if (dimensionView != null) {
+            if( MediaUtils.isValidImage(fileURL)) {
+                int width = cursor.getInt(cursor.getColumnIndex("width"));
+                int height = cursor.getInt(cursor.getColumnIndex("height"));
+                
+                String dimensions = width + "x" + height;
+                dimensionView.setText("Dimensions: " + dimensions);
+                dimensionView.setVisibility(View.VISIBLE);
+            } else {
+                dimensionView.setVisibility(View.GONE);
+            }
         }
 
         final int position = cursor.getPosition();
@@ -108,7 +115,8 @@ public class MediaGridAdapter extends CursorAdapter {
         });
         frameLayout.setChecked(mCheckedItems.contains(mediaId));
             
-        updateGridWidth(context, view);        
+        updateGridWidth(context, view);   
+        
         // if we are near the end, make a call to fetch more
         if ( cursor.getCount() - position == 25 || (position == cursor.getCount() - 1)) {
             if (mCallback != null)
@@ -123,36 +131,27 @@ public class MediaGridAdapter extends CursorAdapter {
         return inflater.inflate(R.layout.media_grid_item, root, false);
     }
 
+    /** Updates the width of a cell to max out the space available, for phones **/
     private void updateGridWidth(Context context, View view) {
 
         int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
+        int columnCount = context.getResources().getInteger(R.integer.media_grid_num_columns);
         
-        if (!Utils.isLarge(context)) {
-            // for phones, make it so that total padding = 1/12 of screen width
-            // (based on mocks)
-            // since there are two columns on the grid, each column will get
-            // 11/24 of the remaining space available
-            int width = (int) (maxWidth * 11.0f / 24.0f);
+        if (columnCount > 1) {
+            int dp12 = (int) dpToPx(context, 12);
+            int padding = (columnCount + 1) * dp12;
+            int width = (maxWidth - padding) / columnCount;
             view.setLayoutParams(new GridView.LayoutParams(width, width));
-        } else if (!Utils.isLandscape(context)){
-            
-            int width = (int) (maxWidth * getGalleryPortLargeWeight(context));
-            view.setLayoutParams(new GridView.LayoutParams(width, GridView.LayoutParams.WRAP_CONTENT));
-        } else {
-            int width = (int) context.getResources().getDimension(R.dimen.media_grid_item_width);
-            view.setLayoutParams(new GridView.LayoutParams(width, GridView.LayoutParams.WRAP_CONTENT));
         }
+        
     }
 
-    public void setCallback(MediaGridAdapterCallback callback) {
-        mCallback = callback;
+
+    private float dpToPx(Context context, int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
     
-    /** Returns the weight of the gallery view relative to its parent linear layout for the portrait orientation in large devices **/
-    private float getGalleryPortLargeWeight(Context context) {
-        // TODO: find a cleaner solution
-        float galleryWeight = context.getResources().getInteger(R.integer.media_browser_gallery_port_large_weight);
-        float editorWeight = context.getResources().getInteger(R.integer.media_browser_editor_port_large_weight);
-        return galleryWeight / (editorWeight + galleryWeight);
+    public void setCallback(MediaGridAdapterCallback callback) {
+        mCallback = callback;
     }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="content_editor_min_lines">4</integer>
+    <integer name="media_grid_num_columns">2</integer>
     <integer name="themes_grid_num_columns">2</integer>
-    <integer name="media_browser_gallery_port_large_weight">1</integer>
-    <integer name="media_browser_editor_port_large_weight">2</integer>
 </resources>
