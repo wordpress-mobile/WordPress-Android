@@ -51,6 +51,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
     private static final String BUNDLE_LAST_REFRESH_TIME = "BUNDLE_LAST_REFRESH_TIME";
+    private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
 
     private Cursor mCursor;
     private Filter mFilter = Filter.ALL;
@@ -59,14 +60,16 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
 
-    private boolean mIsRefreshing = false;
-
     private ArrayList<String> mCheckedItems;
+    
+    private boolean mIsRefreshing = false;
     private long mLastRefreshTime;
-
-    private CustomSpinner mSpinner;
+    
+    private int mSavedFirstVisiblePosition = 0;
 
     private View mSpinnerContainer;
+    private TextView mResultView;
+    private CustomSpinner mSpinner;
 
     private boolean mUserClickedCustomDateFilter = false;
 
@@ -105,8 +108,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         public void onNothingSelected(IcsAdapterView<?> parent) { }
         
     };
-
-    private TextView mResultView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -152,6 +153,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
             mListener.onMultiSelectChange(mCheckedItems.size());
         }
+        mSavedFirstVisiblePosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0);
 
         mLastRefreshTime = savedInstanceState.getLong(BUNDLE_LAST_REFRESH_TIME, 0l);
     }
@@ -165,6 +167,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private void saveState(Bundle outState) {
         outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
         outState.putLong(BUNDLE_LAST_REFRESH_TIME, mLastRefreshTime);
+        outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
     }
 
     private void setupSpinnerAdapter() {
@@ -232,6 +235,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             mGridAdapter = new MediaGridAdapter(getActivity(), mCursor, 0, mCheckedItems);
             mGridAdapter.setCallback(this);
             mGridView.setAdapter(mGridAdapter);
+            mGridView.setSelection(mSavedFirstVisiblePosition);
         }
     }
 
@@ -247,8 +251,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             List<Object> apiArgs = new ArrayList<Object>();
             apiArgs.add(WordPress.getCurrentBlog());
 
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(
-                    offset, mFilter, mCallback);
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter, mCallback);
             getMediaTask.execute(apiArgs);
         }
     }

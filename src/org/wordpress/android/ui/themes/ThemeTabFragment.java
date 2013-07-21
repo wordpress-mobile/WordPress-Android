@@ -53,10 +53,12 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     }
     
     protected static final String ARGS_SORT = "ARGS_SORT";
+    protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected GridView mGridView;
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
+    protected int mSavedScrollPosition = 0;
     
     public static ThemeTabFragment newInstance(ThemeSortType sort) {
         
@@ -88,9 +90,17 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
         
+        restoreState(savedInstanceState);
+        
         return view;
     }
     
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mSavedScrollPosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSTION, 0);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -99,6 +109,13 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
+        mGridView.setSelection(mSavedScrollPosition);
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
     }
 
     private ThemeSortType getThemeSortType() {
