@@ -115,7 +115,8 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
+        if (mGridView != null)
+            outState.putInt(BUNDLE_SCROLL_POSTION, mGridView.getFirstVisiblePosition());
     }
 
     private ThemeSortType getThemeSortType() {

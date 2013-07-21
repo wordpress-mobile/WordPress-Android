@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -26,7 +25,7 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
     private LinearLayout mTabContainer;
     private float mMaxTabWidth = 0f;
     private TabListener mTabListener;
-    
+    private boolean mEnableScroll = true;
     private LinearLayout mSelectedLayout;
     
     public HorizontalTabView(Context context) {
@@ -57,7 +56,7 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
     private void setupTabContainer() {
         mTabContainer = new LinearLayout(getContext());
         HorizontalScrollView.LayoutParams linearLayoutParams =
-                new HorizontalScrollView.LayoutParams(HorizontalScrollView.LayoutParams.MATCH_PARENT, HorizontalScrollView.LayoutParams.WRAP_CONTENT);
+                new HorizontalScrollView.LayoutParams(HorizontalScrollView.LayoutParams.WRAP_CONTENT, HorizontalScrollView.LayoutParams.WRAP_CONTENT);
         mTabContainer.setLayoutParams(linearLayoutParams);
         mTabContainer.setOrientation(LinearLayout.HORIZONTAL);
         
@@ -117,12 +116,10 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         recomputeTabWidths();
     }
 
-
+    /** Make the tabs have the same widths, where this width is based on the longest tab title **/ 
     private void recomputeTabWidths() {
         
-        int tabPad = (int) dpToPx(16);
-        int divWidth = (int) dpToPx(1);
-        
+        // Determine the max width
         for(TextView textView : mTextViews) {
             Paint paint = textView.getPaint();
             float width = paint.measureText(textView.getText().toString());
@@ -130,23 +127,18 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
                 mMaxTabWidth = width;
         }
         
-        int tabContainerWidth = 0;
+        // Set the tabs to use the max width
         for(TextView textView : mTextViews) {
             LinearLayout.LayoutParams textViewParams =
                     new LinearLayout.LayoutParams((int) mMaxTabWidth, LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
             textView.setLayoutParams(textViewParams);
-            
-            tabContainerWidth += mMaxTabWidth; // add text width
-            tabContainerWidth += 2*tabPad; // add 2*tabPad for left and right padding
-            tabContainerWidth += divWidth; // add divider width
         }
         
-        mTabContainer.setLayoutParams(new HorizontalScrollView.LayoutParams(tabContainerWidth, HorizontalScrollView.LayoutParams.WRAP_CONTENT));
     }
 
     public class Tab {
         
-        String mText;
+        private String mText;
         private int mPosition;
         
         @SuppressLint("DefaultLocale")
@@ -187,30 +179,47 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
             
             String tag = (String) layout.getTag();
             int position = Integer.valueOf(tag.substring(TAG_PREFIX.length()));
-            mTabListener.onTabSelected(mTabs.get(position));
 
-            scrollToTab(layout, position);
-            setSelectedLayout(layout);
+            // It is necessary to disable scrolling upon click before informing the listener
+            // because I've found that if setSelectedTab() was called in the listener implementation,
+            // and that setSelectedTab() is called again after onTabSelected(), it does not smooth scroll.
+            
+            // The call to setSelectedTab() in this method is necessary because if there was no listener or if 
+            // it did not call setSelectedTab(), then it would appear as if nothing happened.
+            
+            mEnableScroll = false;
+            
+            if (mTabListener != null)
+                mTabListener.onTabSelected(mTabs.get(position));
+            
+            mEnableScroll = true;
+
+            setSelectedTab(position);
         }
     }
 
     public void setSelectedTab(int position) {
         if (position >= mTextViews.size())
             return;
-        
-        View tab = mTextViews.get(position);
-        LinearLayout parentView = (LinearLayout) tab.getParent();
-        scrollToTab(parentView, position);
-        setSelectedLayout(parentView);
 
+        if (mEnableScroll) {
+            scrollToTab(position);
+            setSelectedLayout(getTabParent(position));
+        }
     }
     
-    private void scrollToTab(LinearLayout view, int position) {
-        int tabWidth = view.getWidth();
+    private void scrollToTab(int position) {
+        int tabWidth = getTabParent(position).getWidth();
         int parentWidth = ((View) this.getParent()).getWidth();
+        
         int offset = parentWidth / 2 - tabWidth / 2;
         
         smoothScrollTo(tabWidth * position - offset, 0);
+    }
+    
+    private LinearLayout getTabParent(int position) {
+        View tab = mTextViews.get(position);
+        return (LinearLayout) tab.getParent();
     }
     
     private void setSelectedLayout(LinearLayout layout) {
@@ -222,12 +231,8 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         mSelectedLayout.setSelected(true);
     }
     
-    public float dpToPx(int dp) {
+    private float dpToPx(int dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getContext().getResources().getDisplayMetrics());
-   }
-    
-    public float pxToDp(float px) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px, getContext().getResources().getDisplayMetrics());
     }
     
 }

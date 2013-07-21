@@ -216,6 +216,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                 mSearchFragment = ThemeSearchFragment.newInstance();
             }
             ft.add(R.id.theme_browser_container, mSearchFragment, ThemeSearchFragment.TAG);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.addToBackStack(null);
             ft.commit();
             return true;
@@ -318,6 +319,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             setupBaseLayout();
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             ft.add(R.id.theme_browser_container, mDetailsFragment, ThemeDetailsFragment.TAG);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.addToBackStack(null);
             ft.commit();
         } else {
