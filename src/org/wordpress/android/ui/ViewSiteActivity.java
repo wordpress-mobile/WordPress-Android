@@ -44,7 +44,7 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
             if (homeURLMap != null)
                 siteURL = homeURLMap.get("value").toString();
         }
-        // load dashboard
+        // Try to guess the URL of the site if blogOptions is null (blog not added to the app)
         if (siteURL == null) {
             siteURL = mBlog.getUrl().replace("/xmlrpc.php", "");
         }

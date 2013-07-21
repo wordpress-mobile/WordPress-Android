@@ -5,8 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -187,6 +190,22 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
                 });
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mImageWidthSpinner.setAdapter(spinnerArrayAdapter);
+        mImageWidthSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               CheckBox fullSizeImageCheckBox = (CheckBox)findViewById(R.id.fullSizeImage);
+               if(id == 0) //Original size selected. Do not show the link to full image.
+                   fullSizeImageCheckBox.setVisibility(View.GONE);
+               else
+                   fullSizeImageCheckBox.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+        
 
         mUsernameET.setText(blog.getUsername());
         originalUsername = blog.getUsername();
@@ -209,8 +228,13 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         
         this.mScaledImageWidthET.setText("" + blog.getScaledImageWidth());
         showScaledSetting(blog.isScaledImage());
+        
+        CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
+        scaledImage.setChecked(false);
+        scaledImage.setVisibility(View.GONE);
+        
         // sets up a state listener for the scaled image checkbox
-        ((CheckBox) findViewById(R.id.scaledImage)).setOnClickListener(new View.OnClickListener() {
+   /*     ((CheckBox) findViewById(R.id.scaledImage)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
@@ -220,9 +244,10 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
                     fullSize.setChecked(false);
                 }
             }
-        });
+        });*/
         // sets up a state listener for the fullsize checkbox
-        ((CheckBox) findViewById(R.id.fullSizeImage)).setOnClickListener(new View.OnClickListener() {
+        CheckBox fullSizeImageCheckBox = (CheckBox)findViewById(R.id.fullSizeImage);
+        fullSizeImageCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckBox fullSize = (CheckBox) findViewById(R.id.fullSizeImage);
@@ -254,6 +279,10 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         }
 
         mImageWidthSpinner.setSelection(blog.getMaxImageWidthId());
+        if(blog.getMaxImageWidthId() == 0) //Original size selected. Do not show the link to full image.
+            fullSizeImageCheckBox.setVisibility(View.GONE);
+        else
+            fullSizeImageCheckBox.setVisibility(View.VISIBLE);
     }
 
     /**

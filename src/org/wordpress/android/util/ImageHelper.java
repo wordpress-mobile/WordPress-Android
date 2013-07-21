@@ -34,7 +34,39 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class ImageHelper {
+    
+    public static int[] getImageSize(Uri uri, Context context){
+        String path = null;
+        if (uri.toString().contains("content:")) {
+            String[] projection;
+            Uri imgPath;
 
+            projection = new String[] { Images.Media._ID, Images.Media.DATA };
+
+            imgPath = uri;
+
+            Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
+            String thumbData = "";
+
+            if (cur.moveToFirst()) {
+                int dataColumn;
+                dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                thumbData = cur.getString(dataColumn);
+                path = thumbData;
+            }
+        } else { // file is not in media library
+            path = uri.toString().replace("file://", "");
+        }
+        
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile( path, options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+        int[] dimensions = { imageWidth, imageHeight};
+        return dimensions;
+    }
+    
     public byte[] createThumbnail(byte[] bytes, String sMaxImageWidth, String orientation, boolean tiny) {
         // creates a thumbnail and returns the bytes
 

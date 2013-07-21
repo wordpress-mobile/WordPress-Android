@@ -3,6 +3,8 @@ package org.wordpress.android.ui.prefs;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
@@ -44,7 +45,6 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.DeviceUtils;
@@ -156,6 +156,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         blogsCategory.removeAll();
 
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        int order = 0;
         for (Map<String, Object> account : accounts) {
             String blogName = EscapeUtils.unescapeHtml(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
@@ -176,7 +177,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             Intent intent = new Intent(this, BlogPreferencesActivity.class);
             intent.putExtra("id", accountId);
             blogSettingsPreference.setIntent(intent);
-            blogSettingsPreference.setOrder(0);
+            blogSettingsPreference.setOrder(order++);
             blogsCategory.addPreference(blogSettingsPreference);
         }
 
@@ -184,7 +185,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         addBlogPreference.setTitle(R.string.add_account);
         Intent intent = new Intent(this, NewAccountActivity.class);
         addBlogPreference.setIntent(intent);
-        addBlogPreference.setOrder(1);
+        addBlogPreference.setOrder(order++);
         blogsCategory.addPreference(addBlogPreference);
     }
 
@@ -392,6 +393,30 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
     }
 
+    
+    private static Comparator<StringMap<?>> BlogNameComparatorForMutedBlogsList = new Comparator<StringMap<?>>() {
+        
+        public int compare(StringMap<?> blog1, StringMap<?> blog2) {
+ 
+            StringMap<?> blogMap1 = (StringMap<?>)blog1;
+            StringMap<?> blogMap2 = (StringMap<?>)blog2;
+            
+            String blogName1 = blogMap1.get("blog_name").toString();
+            if (blogName1.length() == 0) {
+                blogName1 = blogMap1.get("url").toString();
+            }
+            
+            String blogName2 = blogMap2.get("blog_name").toString();
+            if (blogName2.length() == 0) {
+                blogName2 = blogMap2.get("url").toString();
+            }
+            
+          return blogName1.compareToIgnoreCase(blogName2);
+ 
+        }
+ 
+    };
+    
     private void loadNotifications() {
         
         // Add notifications group back in case it was previously removed from being logged out
@@ -411,6 +436,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 mNotificationSettings = gson.fromJson(settingsJson, HashMap.class);
                 StringMap<?> mutedBlogsMap = (StringMap<?>) mNotificationSettings.get("muted_blogs");
                 mMutedBlogsList = (ArrayList<StringMap<Double>>) mutedBlogsMap.get("value");
+                Collections.sort(mMutedBlogsList, this.BlogNameComparatorForMutedBlogsList);
+                               
                 mTypeList = mNotificationSettings.keySet().toArray();
                 
                 for (int i = 0; i < mTypeList.length; i++) {

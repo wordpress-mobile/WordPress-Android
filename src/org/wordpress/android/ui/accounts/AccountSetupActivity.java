@@ -355,7 +355,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                             blogID = WordPress.wpDB.checkMatch(blogNames[rowID], urls[rowID], username, password);
                                             if (blogID == -1) {
                                                 blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, mHttpuser,
-                                                        mHttppassword, "Above Text", false, false, "500", 5, false, blogIds[rowID],
+                                                        mHttppassword, "Above Text", false, false, "2000", 20, false, blogIds[rowID],
                                                         wpcoms[rowID], wpVersions[rowID]);
                                             }
                                             //Set the first blog in the list to the currentBlog
