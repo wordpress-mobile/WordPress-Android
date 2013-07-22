@@ -17,7 +17,7 @@
             android:textColor="@color/theme_details_name"
             android:textSize="22sp" />
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/theme_details_fragment_image"
             android:layout_width="300dp"
             android:layout_height="225dp"

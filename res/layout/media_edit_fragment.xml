@@ -37,7 +37,7 @@
                 android:inputType="textCapSentences|textAutoCorrect" />
         </RelativeLayout>
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/media_edit_fragment_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

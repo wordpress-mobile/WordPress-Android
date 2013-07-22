@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:textSize="24sp" />
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/media_listitem_details_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
