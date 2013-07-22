@@ -55,7 +55,7 @@
         android:background="@drawable/media_multiselect_ab_selector"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:src="@android:drawable/ic_menu_share" />
+        android:src="@drawable/ab_icon_share" />
 
     <ImageButton
         android:id="@+id/media_multiselect_actionbar_post"
