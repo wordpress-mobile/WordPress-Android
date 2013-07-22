@@ -121,6 +121,8 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
                 String themeId = getThemeId();
                 if (themeId != null) {
                     mCallback.onActivateThemeClicked(themeId);
+                    mActivateThemeButton.setEnabled(false);
+                    mActivateThemeButton.setText(R.string.theme_activating_button);
                 }
 
             }
@@ -166,5 +168,10 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         menu.removeItem(R.id.menu_search);
         menu.removeItem(R.id.menu_refresh);
+    }
+
+    public void onThemeActivated(boolean activated) {
+        mActivateThemeButton.setEnabled(true);
+        mActivateThemeButton.setText(R.string.theme_activate_button);
     }
 }

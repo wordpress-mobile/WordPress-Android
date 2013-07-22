@@ -49,7 +49,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/theme_activate_button_selector"
                 android:padding="10dp"
-                android:text="@string/activate_theme"
+                android:text="@string/theme_activate_button"
                 android:textColor="@color/theme_details_button" />
         </LinearLayout>
     </RelativeLayout>

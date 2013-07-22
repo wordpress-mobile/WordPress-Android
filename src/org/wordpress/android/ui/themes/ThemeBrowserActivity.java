@@ -336,7 +336,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             ft.commit();
         } else {
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
-            mDetailsFragment.show(getSupportFragmentManager(), "ThemeDetails");
+            mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
         }
     }
 
@@ -358,6 +358,16 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
     
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (Utils.isXLarge(ThemeBrowserActivity.this) && mDetailsFragment != null) {
+            mDetailsFragment.dismiss();
+        }
+        
+        super.onSaveInstanceState(outState);
+        
+    }
+    
+    @Override
     public void onActivateThemeClicked(String themeId) {
         String siteId = getBlogId();
         if (themeId == null) {
@@ -371,13 +381,17 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     @Override
                     public void onResponse(JSONObject arg0) { 
                         Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
-                        
-                        if (Utils.isXLarge(ThemeBrowserActivity.this)) {
-                            mDetailsFragment.dismiss();
-                        }
+
+                        if (mDetailsFragment != null) {
+                            mDetailsFragment.onThemeActivated(true);
+                        } 
                         
                         if (ref.get() != null && mIsRunning) {
-
+                            
+                            if (Utils.isXLarge(ThemeBrowserActivity.this)) {
+                                mDetailsFragment.dismiss();
+                            }
+                            
                             FragmentManager fm = ref.get().getSupportFragmentManager();
                             if (fm.getBackStackEntryCount() > 0) {
                                 fm.popBackStack();
@@ -391,6 +405,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
+                        
+                        if (mDetailsFragment.isVisible())
+                            mDetailsFragment.onThemeActivated(false);
+                        
                         Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG).show();
                 }
         });

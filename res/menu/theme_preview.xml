@@ -5,6 +5,6 @@
         android:id="@+id/menu_activate"
         android:icon="@drawable/tab_icon_checkmark"
         android:showAsAction="always"
-        android:title="@string/activate_theme"/>
+        android:title="@string/theme_activate_button"/>
 
 </menu>
