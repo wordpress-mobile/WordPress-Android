@@ -295,7 +295,11 @@ abstract public class GraphView extends LinearLayout {
 
 	public void setGraphViewStyle(GraphViewStyle style) {
 		graphViewStyle = style;
-	}
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
+    }
 
 	private GraphViewData[] _values(int idxSeries) {
 		GraphViewData[] values = graphSeries.get(idxSeries).values;
