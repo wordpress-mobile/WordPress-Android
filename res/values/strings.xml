@@ -147,6 +147,8 @@
   <string name="theme_fetch_success">Themes have been refreshed</string>
   <string name="theme_set_failed">Failed to set theme. Please try again</string>
   <string name="theme_set_success">Successfully set theme!</string>
+  <string name="theme_auth_error_title">Failed to fetch themes</string>
+  <string name="theme_auth_error_message">Ensure you have the privilege to set themes.</string>
 
   <!-- link view -->
   <string name="link_enter_url">URL</string>

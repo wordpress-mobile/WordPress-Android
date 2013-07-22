@@ -19,6 +19,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.android.volley.AuthFailureError;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragment
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
 import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback, TabListener {
@@ -176,9 +178,19 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
             @Override
             public void onErrorResponse(VolleyError response) {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
-                Log.d("WordPress", "Failed to download themes: " + response.getMessage());
-               
+                
+                if(response.toString().equals(AuthFailureError.class.getName())) {
+                    String errorTitle = getString(R.string.theme_auth_error_title);
+                    String errorMsg = getString(R.string.theme_auth_error_message);
+                    
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false).show(ft, "alert");
+                    Log.d("WordPress", "Failed to fetch themes: failed authenticate user");
+                } else {
+                    Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
+                    Log.d("WordPress", "Failed to fetch themes: " + response.toString());
+                }
+                
                 mFetchingThemes = false;
                 stopAnimatingRefreshButton();
                 refreshViewPager();
