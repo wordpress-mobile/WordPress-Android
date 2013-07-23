@@ -58,6 +58,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private MenuItem mSearchMenuItem;
     private MenuItem mRefreshMenuItem;
     private int mMultiSelectCount;
+    private Menu mMenu;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,6 +150,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     };
     
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mSearchMenuItem != null)
+            mSearchMenuItem.collapseActionView();
+    }
+    
+    @Override
     public void onBlogChanged() {
         super.onBlogChanged();
         if (mMediaGridFragment != null) {
@@ -187,6 +196,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        mMenu = menu;
         stopAnimatingRefreshButton();
 
         // reset action bar state to default
@@ -352,6 +362,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilterVisibility(View.GONE);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
+
+        mMenu.findItem(R.id.menu_refresh).setVisible(false);
+        mMenu.findItem(R.id.menu_new_media).setVisible(false);
+        
         return true;
     }
 
@@ -363,6 +377,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilter(Filter.ALL);
         }
 
+        mMenu.findItem(R.id.menu_refresh).setVisible(true);
+        mMenu.findItem(R.id.menu_new_media).setVisible(true);
         return true;
     }
 
@@ -413,7 +429,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (isInMultiSelect()) {
+        if (mMenuDrawer.isShown()) {
+            super.onBackPressed();
+        } else if (isInMultiSelect()) {
             cancelMultiSelect();
         } else if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();

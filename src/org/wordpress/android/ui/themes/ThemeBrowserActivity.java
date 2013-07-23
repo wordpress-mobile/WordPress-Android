@@ -240,7 +240,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
+        if (mMenuDrawer.isShown()) {
+            super.onBackPressed();
+        } else if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {
