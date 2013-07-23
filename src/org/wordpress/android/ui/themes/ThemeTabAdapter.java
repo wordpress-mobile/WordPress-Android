@@ -53,7 +53,8 @@ public class ThemeTabAdapter extends CursorAdapter {
         FrameLayout.LayoutParams params = (LayoutParams) imageView.getLayoutParams();
         params.width = getGridWidth(context);
         params.height = getGridHeight(context);
-        imageView.setImageUrl(screenshotURL, WordPress.imageLoader);
+        
+        imageView.setImageUrl(screenshotURL + "?w=" + params.width, WordPress.imageLoader);
         view.setLayoutParams(new GridView.LayoutParams(params.width, params.height));
     }
 

@@ -148,9 +148,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.media.MediaUploadActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
