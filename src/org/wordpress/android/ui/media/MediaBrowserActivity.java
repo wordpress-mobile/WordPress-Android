@@ -41,6 +41,7 @@ import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallbac
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
@@ -460,12 +461,25 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void handleMultiSelectShare() {
         // TODO Auto-generated method stub
-        
     }
 
     private void handleMultiSelectPost() {
-        // TODO Auto-generated method stub
+        if (mMediaGridFragment == null)
+            return;
         
+        ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
+        String galleryIds = "";
+        for (String id : ids) {
+            galleryIds += id + ",";
+        }
+        galleryIds = galleryIds.substring(0, galleryIds.length() - 1); // remove last comma
+         
+        
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.putExtra("id", WordPress.currentBlog.getId());
+        i.putExtra("isNew", true);
+        i.putExtra("content", "[gallery ids=\"" + galleryIds + "\"]" );
+        startActivity(i);
     }
 
     @Override

@@ -353,6 +353,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     launchVideoLibrary();
                 mLocalDraft = extras.getBoolean("localDraft");
             }
+            
+            if (extras.containsKey("content")) {
+                mContentEditText.setText(extras.getString("content"));
+            }
         } else {
             mTitleEditText.setText(mPost.getTitle());
 
