@@ -125,8 +125,8 @@
   <string name="media_edit_description_hint">Description</string>
   <string name="media_edit_show_likes">Show Likes</string>
   <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
-  <string name="media_edit_success">Successfully edited media</string>
-  <string name="media_edit_failure">Failed to edit media</string>
+  <string name="media_edit_success">Updated</string>
+  <string name="media_edit_failure">Failed to update</string>
   <string name="media_edit_fragment_tag">MediaEditFragment</string>
   
   <!-- Delete Media -->
