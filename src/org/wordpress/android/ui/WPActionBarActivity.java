@@ -679,7 +679,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
 
     private class MediaMenuItem extends MenuDrawerItem {
         MediaMenuItem(){
-            super(MEDIA_ACTIVITY, R.string.media, R.drawable.menu_media_library_icon);
+            super(MEDIA_ACTIVITY, R.string.media, R.drawable.dashboard_icon_media);
         }
         @Override
         public Boolean isSelected(){
@@ -753,7 +753,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     
     private class ThemesMenuItem extends MenuDrawerItem {
         ThemesMenuItem(){
-            super(THEMES_ACTIVITY, R.string.themes, R.drawable.menu_themes_icon);
+            super(THEMES_ACTIVITY, R.string.themes, R.drawable.dashboard_icon_themes);
         }
         @Override
         public Boolean isSelected(){
