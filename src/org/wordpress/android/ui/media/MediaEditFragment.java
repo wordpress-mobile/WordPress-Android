@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -49,6 +50,7 @@ public class MediaEditFragment extends SherlockFragment {
     private boolean mIsMediaUpdating = false;
 
     private String mMediaId;
+    private ScrollView mScrollView;
 
     public interface MediaEditFragmentCallback {
         public void onResume(Fragment fragment);
@@ -116,14 +118,14 @@ public class MediaEditFragment extends SherlockFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.media_edit_fragment, container, false);
+        mScrollView = (ScrollView) inflater.inflate(R.layout.media_edit_fragment, container, false);
 
-        mTitleView = (EditText) view.findViewById(R.id.media_edit_fragment_title);
-        mImageView = (NetworkImageView) view.findViewById(R.id.media_edit_fragment_image);
-        mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
-        mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
+        mTitleView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_title);
+        mImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image);
+        mCaptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_caption);
+        mDescriptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_description);
         
-        mSaveButton = (Button) view.findViewById(R.id.media_edit_save_button);
+        mSaveButton = (Button) mScrollView.findViewById(R.id.media_edit_save_button);
         mSaveButton.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -134,7 +136,7 @@ public class MediaEditFragment extends SherlockFragment {
 
         restoreState(savedInstanceState);
         
-        return view;
+        return mScrollView;
     }
     
     private void restoreState(Bundle savedInstanceState) {
@@ -240,9 +242,13 @@ public class MediaEditFragment extends SherlockFragment {
     private void refreshViews(Cursor cursor) {
         if (!cursor.moveToFirst())
             return;
-
+        
+        mScrollView.scrollTo(0, 0);
+        
         mMediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
+        mTitleView.requestFocus();
+        mTitleView.setSelection(mTitleView.getText().length());
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
 

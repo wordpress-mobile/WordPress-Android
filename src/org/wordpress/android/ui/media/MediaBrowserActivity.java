@@ -41,6 +41,7 @@ import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallbac
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
@@ -57,6 +58,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private MenuItem mSearchMenuItem;
     private MenuItem mRefreshMenuItem;
     private int mMultiSelectCount;
+    private Menu mMenu;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,8 +130,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 
                 if (position == 0)
                     mMediaAddFragment.launchCamera();
+                if (position == 1)
+                    mMediaAddFragment.launchVideoCamera();
                 else if (position == 2)
-                    mMediaAddFragment.launchPictureLibrary();
+                    mMediaAddFragment.launchPictureVideoLibrary();
                 
                 mAddMediaPopup.dismiss();
             };
@@ -146,6 +150,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         super.onResume();
         startMediaDeleteService();
     };
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mSearchMenuItem != null)
+            mSearchMenuItem.collapseActionView();
+    }
     
     @Override
     public void onBlogChanged() {
@@ -168,15 +180,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         FragmentManager fm = getSupportFragmentManager();
 
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mMediaGridFragment);
-            setupBaseLayout();
-            
-            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
-            ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
-            ft.addToBackStack(null);
-            ft.commit();
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
+            if (fm.getBackStackEntryCount() == 0) {
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.hide(mMediaGridFragment);
+                setupBaseLayout();
+                
+                mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
+                ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
+                ft.addToBackStack(null);
+                ft.commit();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
+            }
         } else {
             mMediaEditFragment.loadMedia(mediaId);
         }
@@ -186,6 +200,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        mMenu = menu;
         stopAnimatingRefreshButton();
 
         // reset action bar state to default
@@ -351,6 +366,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilterVisibility(View.GONE);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
+
+        mMenu.findItem(R.id.menu_refresh).setVisible(false);
+        mMenu.findItem(R.id.menu_new_media).setVisible(false);
+        
         return true;
     }
 
@@ -362,6 +381,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilter(Filter.ALL);
         }
 
+        mMenu.findItem(R.id.menu_refresh).setVisible(true);
+        mMenu.findItem(R.id.menu_new_media).setVisible(true);
         return true;
     }
 
@@ -412,7 +433,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (isInMultiSelect()) {
+        if (mMenuDrawer.isShown()) {
+            super.onBackPressed();
+        } else if (isInMultiSelect()) {
             cancelMultiSelect();
         } else if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
@@ -460,12 +483,25 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void handleMultiSelectShare() {
         // TODO Auto-generated method stub
-        
     }
 
     private void handleMultiSelectPost() {
-        // TODO Auto-generated method stub
+        if (mMediaGridFragment == null)
+            return;
         
+        ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
+        String galleryIds = "";
+        for (String id : ids) {
+            galleryIds += id + ",";
+        }
+        galleryIds = galleryIds.substring(0, galleryIds.length() - 1); // remove last comma
+         
+        
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.putExtra("id", WordPress.currentBlog.getId());
+        i.putExtra("isNew", true);
+        i.putExtra("content", "[gallery ids=\"" + galleryIds + "\"]" );
+        startActivity(i);
     }
 
     @Override
