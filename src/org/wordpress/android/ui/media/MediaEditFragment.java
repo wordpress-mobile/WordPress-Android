@@ -240,8 +240,19 @@ public class MediaEditFragment extends SherlockFragment {
     }
 
     private void refreshViews(Cursor cursor) {
-        if (!cursor.moveToFirst())
+        if (!cursor.moveToFirst()) {
+            // hide all the views
+            for (int i = 0; i < mScrollView.getChildCount();  i++){
+                View view = mScrollView.getChildAt(i);
+                view.setVisibility(View.GONE);
+            }
             return;
+        }
+        
+        for (int i = 0; i < mScrollView.getChildCount();  i++){
+            View view = mScrollView.getChildAt(i);
+            view.setVisibility(View.VISIBLE);
+        }
         
         mScrollView.scrollTo(0, 0);
         
