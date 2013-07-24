@@ -180,15 +180,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         FragmentManager fm = getSupportFragmentManager();
 
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mMediaGridFragment);
-            setupBaseLayout();
-            
-            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
-            ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
-            ft.addToBackStack(null);
-            ft.commit();
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
+            if (fm.getBackStackEntryCount() == 0) {
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.hide(mMediaGridFragment);
+                setupBaseLayout();
+                
+                mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
+                ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
+                ft.addToBackStack(null);
+                ft.commit();
+                mMenuDrawer.setDrawerIndicatorEnabled(false);
+            }
         } else {
             mMediaEditFragment.loadMedia(mediaId);
         }
