@@ -94,6 +94,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             String path = null;
             
             switch (requestCode) {
+            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
             case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY:
                 Uri imageUri = data.getData();
                 path = getRealPathFromURI(imageUri);
@@ -176,6 +177,10 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     
     public void launchPictureVideoLibrary() {
         MediaUtils.launchPictureVideoLibrary(this);
+    }
+    
+    public void launchPictureLibrary() {
+        MediaUtils.launchPictureLibrary(this);
     }
     
     public void addToQueue(String mediaId) {

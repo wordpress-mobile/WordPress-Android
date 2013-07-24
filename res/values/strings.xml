@@ -118,6 +118,8 @@
   <string name="media_upload_queued_button">queued</string>
   <string name="media_upload_retry_button">retry</string>
   <string name="media_upload_uploading_button">uploading</string>
+  <string name="media_no_video_title">VideoPress unavailable</string>
+  <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
   
   <!-- Edit Media -->
   <string name="media_edit_title_text">Title</string>

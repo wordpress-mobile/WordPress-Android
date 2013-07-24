@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.HttpRequest;
@@ -688,10 +689,7 @@ public class ApiHelper {
                 return false;
             
             
-            Object[] apiParams = null;
-            
-            
-            apiParams = new Object[] {
+            Object[] apiParams = new Object[] {
                     blog.getBlogId(),
                     blog.getUsername(),
                     blog.getPassword(),
@@ -718,6 +716,55 @@ public class ApiHelper {
                     mCallback.onSuccess();
             }
         }
+    }
+    
+    public static class GetFeatures extends AsyncTask<List<?>, Void, FeatureSet> {
+
+        public interface Callback {
+            void onResult(FeatureSet featureSet);
+        }
+
+        private Callback mCallback;
+        
+        public GetFeatures(Callback callback) {
+            mCallback = callback;
+        }
+        
+        @Override
+        protected FeatureSet doInBackground(List<?>... params) {
+            
+            List<?> arguments = params[0];
+            Blog blog = (Blog) arguments.get(0);
+            
+            if (blog == null)
+                return null;
+            
+            Object[] apiParams = new Object[] {
+                    blog.getBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+            };
+            
+            Map<?, ?> resultMap = null;
+            try {
+                resultMap = (HashMap<?, ?>) client.call("wpcom.getFeatures", apiParams);
+            } catch (XMLRPCException e) {
+                Log.e("WordPress", "XMLRPCException: " + e.getMessage());
+            }
+            
+            if (resultMap != null) {
+                return new FeatureSet(blog.getBlogId(), resultMap);
+            }
+            
+            return null;
+        }
+        
+        @Override
+        protected void onPostExecute(FeatureSet result) {
+            if (mCallback != null)
+                mCallback.onResult(result);
+        }
+        
     }
     
     /**
@@ -829,4 +876,5 @@ public class ApiHelper {
             return null;
         }
     }
+
 }
