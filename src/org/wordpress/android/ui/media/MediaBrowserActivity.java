@@ -130,8 +130,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 
                 if (position == 0)
                     mMediaAddFragment.launchCamera();
+                if (position == 1)
+                    mMediaAddFragment.launchVideoCamera();
                 else if (position == 2)
-                    mMediaAddFragment.launchPictureLibrary();
+                    mMediaAddFragment.launchPictureVideoLibrary();
                 
                 mAddMediaPopup.dismiss();
             };

@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,21 +94,24 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             String path = null;
             
             switch (requestCode) {
-            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY:
                 Uri imageUri = data.getData();
                 path = getRealPathFromURI(imageUri);
-                queueImageFileForUpload(path);
+                queueFileForUpload(path);
                 break;
             case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
                     path = mMediaCapturePath;
                     mMediaCapturePath = null;
-                    queueImageFileForUpload(path);
+                    queueFileForUpload(path);
                 }
                 break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
-                break;
             case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri videoUri = data.getData();
+                    path = getRealPathFromURI(videoUri);
+                    queueFileForUpload(path);
+                }
                 break;
             }
             
@@ -128,7 +130,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         return path;
     }
     
-    private void queueImageFileForUpload(String path) {
+    private void queueFileForUpload(String path) {
         if (path == null || path.equals("")) {
             Toast.makeText(getActivity(), "Error opening file", Toast.LENGTH_SHORT).show();
             return;
@@ -165,13 +167,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     public void launchCamera(){
-        Log.d("MAF:", "MAF: launching camera");
         MediaUtils.launchCamera(this, this);
     }
+
+    public void launchVideoCamera() {
+        MediaUtils.launchVideoCamera(this);
+    }
     
-    public void launchPictureLibrary() {
-        Log.d("MAF:", "MAF: launching pic library");
-        MediaUtils.launchPictureLibrary(this);
+    public void launchPictureVideoLibrary() {
+        MediaUtils.launchPictureVideoLibrary(this);
     }
     
     public void addToQueue(String mediaId) {

@@ -48,6 +48,7 @@ public class MediaUtils {
         public static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 1200;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 1300;
         public static final int ACTIVITY_REQUEST_CODE_BROWSE_FILES = 1400;
+        public static final int ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY = 1500;
     }
     
     public interface LaunchCameraCallback {
@@ -155,6 +156,18 @@ public class MediaUtils {
         Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
         videoPickerIntent.setType("video/*");
         fragment.startActivityForResult(videoPickerIntent, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+    }
+    
+    public static void launchPictureVideoLibrary(Activity activity) {
+        Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
+        videoPickerIntent.setType("image/*, video/*");
+        activity.startActivityForResult(videoPickerIntent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY);
+    }
+    
+    public static void launchPictureVideoLibrary(Fragment fragment) {
+        Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
+        videoPickerIntent.setType("image/*, video/*");
+        fragment.startActivityForResult(videoPickerIntent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY);
     }
     
     public static void launchVideoCamera(Activity activity) {
