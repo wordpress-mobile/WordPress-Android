@@ -223,6 +223,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void onResume() {
         super.onResume();
 
+        setupSpinnerAdapter();
         refreshMediaFromDB();
         
         if (mLastRefreshTime == 0l)
