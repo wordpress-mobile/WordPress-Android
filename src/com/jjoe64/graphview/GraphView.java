@@ -107,8 +107,14 @@ abstract public class GraphView extends LinearLayout {
 
 			if (maxY == minY) {
 				// if min/max is the same, fake it so that we can render a line
-				maxY = maxY*1.05d;
-				minY = minY*0.95d;
+				if(maxY == 0) {
+					// if both are zero, change the values to prevent division by zero
+					maxY = 1.0d;
+					minY = 0.0d;
+				} else {
+					maxY = maxY*1.05d;
+					minY = minY*0.95d;
+				}
 			}
 
 			double diffY = maxY - minY;
@@ -414,8 +420,14 @@ abstract public class GraphView extends LinearLayout {
 		double max = getMaxY();
 		if (max == min) {
 			// if min/max is the same, fake it so that we can render a line
-			max = max*1.05d;
-			min = min*0.95d;
+			if(max == 0) {
+				// if both are zero, change the values to prevent division by zero
+				max = 1.0d;
+				min = 0.0d;
+			} else {
+				max = max*1.05d;
+				min = min*0.95d;
+			}
 		}
 
 		for (int i=0; i<=numLabels; i++) {
