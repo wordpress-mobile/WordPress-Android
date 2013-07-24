@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -54,6 +55,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private boolean mFetchingThemes = false;
     private boolean mIsRunning;
     private MenuItem refreshMenuItem;
+    private ProgressBar mProgressBar;
 
 
     @Override
@@ -77,6 +79,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -166,6 +169,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         String siteId = getBlogId();
 
         mFetchingThemes = true;
+        mProgressBar.setVisibility(View.VISIBLE);
         startAnimatingRefreshButton();
 
         WordPress.restClient.getThemes(siteId, 0, 0, new Listener() {
@@ -192,6 +196,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                 }
                 
                 mFetchingThemes = false;
+                mProgressBar.setVisibility(View.GONE);
                 stopAnimatingRefreshButton();
                 refreshViewPager();
             }
@@ -288,6 +293,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         @Override
         protected void onPostExecute(ArrayList<Theme> result) {
             mFetchingThemes = false;
+            mProgressBar.setVisibility(View.GONE);
             stopAnimatingRefreshButton();
             if (result == null) {
                 Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
