@@ -260,7 +260,7 @@ abstract public class GraphView extends LinearLayout {
 	private double manualMaxYValue;
 	private double manualMinYValue;
 	private GraphViewStyle graphViewStyle;
-	private GraphViewContentView graphViewContentView;
+	private final GraphViewContentView graphViewContentView;
 
 	public GraphView(Context context, AttributeSet attrs) {
 		this(context, attrs.getAttributeValue(null, "title"));
@@ -683,7 +683,7 @@ abstract public class GraphView extends LinearLayout {
 	 * The user can disable any touch gestures, this is useful if you are using a real time graph, but don't want the user to interact
 	 * @param disableTouch
 	 */
-	public void setDiscableTouch(boolean disableTouch) {
+	public void setDisableTouch(boolean disableTouch) {
 		this.disableTouch = disableTouch;
 	}
 
