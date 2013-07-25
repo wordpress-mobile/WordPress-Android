@@ -469,7 +469,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (mMenuDrawer.isShown()) {
+        if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (isInMultiSelect()) {
             cancelMultiSelect();
