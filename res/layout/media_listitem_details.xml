@@ -15,12 +15,11 @@
             android:layout_height="wrap_content"
             android:textSize="24sp" />
 
-        <org.wordpress.android.ui.FadeInNetworkImageView
-            android:id="@+id/media_listitem_details_image"
+        <ViewStub
+            android:id="@+id/media_listitem_details_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside" />
+            android:inflatedId="@+id/media_listitem_details_image" />
 
         <TextView
             android:id="@+id/media_listitem_details_caption"

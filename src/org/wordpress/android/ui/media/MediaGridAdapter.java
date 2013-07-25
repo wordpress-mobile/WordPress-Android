@@ -89,7 +89,7 @@ public class MediaGridAdapter extends CursorAdapter {
             }
         }
 
-        boolean isLocalFile = isLocalFile(state);
+        boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
         TextView filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
@@ -192,16 +192,6 @@ public class MediaGridAdapter extends CursorAdapter {
         return mCheckedItems.size() > 0;
     }
     
-    private boolean isLocalFile(String state) {
-        if (state == null)
-            return false;
-        
-        if (state.equals("queued") || state.equals("uploading") || state.equals("retry") || state.equals("failed"))
-            return true;
-        
-        return false;
-    }
-    
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         
@@ -277,7 +267,7 @@ public class MediaGridAdapter extends CursorAdapter {
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
-        if (isLocalFile(state))
+        if (MediaUtils.isLocalFile(state))
             return ViewTypes.LOCAL.ordinal();
         else
             return ViewTypes.NETWORK.ordinal();

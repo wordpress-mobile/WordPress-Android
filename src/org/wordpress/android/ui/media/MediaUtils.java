@@ -187,4 +187,14 @@ public class MediaUtils {
         return false;
     }
     
+    public static boolean isLocalFile(String state) {
+        if (state == null)
+            return false;
+        
+        if (state.equals("queued") || state.equals("uploading") || state.equals("retry") || state.equals("failed"))
+            return true;
+        
+        return false;
+    }
+    
 }

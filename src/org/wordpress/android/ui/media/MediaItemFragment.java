@@ -9,12 +9,15 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewStub;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +30,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
+import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 
 public class MediaItemFragment extends SherlockFragment {
 
@@ -34,7 +39,9 @@ public class MediaItemFragment extends SherlockFragment {
 
     public static final String TAG = MediaItemFragment.class.getName();
 
-    private NetworkImageView mImageView;
+    private View mView;
+    
+    private ImageView mImageView;
     private TextView mTitleView;
     private TextView mCaptionView;
     private TextView mDescriptionView;
@@ -43,6 +50,8 @@ public class MediaItemFragment extends SherlockFragment {
     private TextView mFileTypeView;
     private TextView mDimensionsView;
     private MediaItemFragmentCallback mCallback;
+
+    private boolean mIsLocal;
     
     public interface MediaItemFragmentCallback {
         public void onResume(Fragment fragment);
@@ -99,20 +108,19 @@ public class MediaItemFragment extends SherlockFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.media_listitem_details, container, false);
+        mView = inflater.inflate(R.layout.media_listitem_details, container, false);
 
-        mTitleView = (TextView) view.findViewById(R.id.media_listitem_details_title);
-        mImageView = (NetworkImageView) view.findViewById(R.id.media_listitem_details_image);
-        mCaptionView = (TextView) view.findViewById(R.id.media_listitem_details_caption);
-        mDescriptionView = (TextView) view.findViewById(R.id.media_listitem_details_description);
-        mDateView = (TextView) view.findViewById(R.id.media_listitem_details_date);
-        mFileNameView = (TextView) view.findViewById(R.id.media_listitem_details_file_name);
-        mFileTypeView = (TextView) view.findViewById(R.id.media_listitem_details_file_type);
-        mDimensionsView = (TextView) view.findViewById(R.id.media_listitem_details_dimensions);
-
+        mTitleView = (TextView) mView.findViewById(R.id.media_listitem_details_title);
+        mCaptionView = (TextView) mView.findViewById(R.id.media_listitem_details_caption);
+        mDescriptionView = (TextView) mView.findViewById(R.id.media_listitem_details_description);
+        mDateView = (TextView) mView.findViewById(R.id.media_listitem_details_date);
+        mFileNameView = (TextView) mView.findViewById(R.id.media_listitem_details_file_name);
+        mFileTypeView = (TextView) mView.findViewById(R.id.media_listitem_details_file_type);
+        mDimensionsView = (TextView) mView.findViewById(R.id.media_listitem_details_dimensions);
+        
         loadMedia(getMediaId());
 
-        return view;
+        return mView;
     }
 
     /** Loads the first media item for the current blog from the database **/
@@ -149,9 +157,19 @@ public class MediaItemFragment extends SherlockFragment {
         
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
+
+        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        mIsLocal = MediaUtils.isLocalFile(state);
+        if (mIsLocal)
+            getActivity().invalidateOptionsMenu(); // don't allow editing for local files
+
+        inflateImageView();
         
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mDateView.setText("Uploaded on: " + date);
+        if (mIsLocal)
+            mDateView.setText("Added on: " + date);
+        else
+            mDateView.setText("Uploaded on: " + date);
         
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
         mFileNameView.setText("File name: " + fileName);
@@ -166,9 +184,11 @@ public class MediaItemFragment extends SherlockFragment {
             mFileTypeView.setVisibility(View.GONE);
         }
         
-
-        String imageUrl = cursor.getString(cursor.getColumnIndex("fileURL"));
-        if (MediaUtils.isValidImage(imageUrl)) {
+        String imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
+        if (imageUri == null)
+            imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
+        
+        if (MediaUtils.isValidImage(imageUri)) {
             
             int width = cursor.getInt(cursor.getColumnIndex("width"));
             int height = cursor.getInt(cursor.getColumnIndex("height"));
@@ -185,25 +205,66 @@ public class MediaItemFragment extends SherlockFragment {
             }
             float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
             
-            String dimensions = width + "x" + height;
-            mDimensionsView.setText("Dimensions: " + dimensions);
-            mDimensionsView.setVisibility(View.VISIBLE);
-            
-            
-            mImageView.setImageUrl(imageUrl + "?w=" + screenWidth, WordPress.imageLoader);
-            mImageView.setVisibility(View.VISIBLE);
+            if (width > 0 && height > 0) {
+                String dimensions = width + "x" + height;
+                mDimensionsView.setText("Dimensions: " + dimensions);
+                mDimensionsView.setVisibility(View.VISIBLE);
+            } else {
+                mDimensionsView.setVisibility(View.GONE);
+            }
             
             if (width > screenWidth) {
                 height = (int) (height / (width/screenWidth));
             } else if (height > screenHeight) {
                 width = (int) (width / (height/screenHeight));
             }
+            
+            if (mIsLocal) {
+                final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
+                loadLocalImage(mImageView, filePath, width, height);
+            } else {
+                ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, WordPress.imageLoader);
+            }
+            mImageView.setVisibility(View.VISIBLE);
+            
             mImageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             
         } else {
             mImageView.setVisibility(View.GONE);
             mDimensionsView.setVisibility(View.GONE);
         }
+    }
+
+    private void inflateImageView() {
+        ViewStub viewStub = (ViewStub) mView.findViewById(R.id.media_listitem_details_stub);
+        if (mIsLocal)
+            viewStub.setLayoutResource(R.layout.media_grid_image_local);
+        else
+            viewStub.setLayoutResource(R.layout.media_grid_image_network);
+        viewStub.inflate();
+        
+        mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
+    }
+    
+    private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
+
+        if (MediaUtils.isValidImage(filePath)) {
+            imageView.setTag(filePath);
+            
+            Bitmap bitmap = WordPress.localImageCache.get(filePath); 
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
+                    
+                    @Override
+                    public void onBitmapReady(String path, Bitmap bitmap) {
+                        WordPress.localImageCache.put(path, bitmap);
+                    }
+                });
+                task.execute(filePath);
+            }
+        }        
     }
 
     @Override
@@ -216,6 +277,9 @@ public class MediaItemFragment extends SherlockFragment {
         menu.findItem(R.id.menu_refresh).setVisible(false);
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
+        
+        if (mIsLocal)
+            menu.findItem(R.id.menu_edit_media).setVisible(false);
     }
     
     @Override
@@ -242,4 +306,5 @@ public class MediaItemFragment extends SherlockFragment {
         
         return super.onOptionsItemSelected(item);
     }
+    
 }

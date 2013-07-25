@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -150,6 +152,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         mediaFile.setDateCreatedGMT(System.currentTimeMillis());
         mediaFile.setMediaId(String.valueOf(System.currentTimeMillis()));
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
+        if (mimeType.startsWith("image")) {
+            // get width and height
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            bfo.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, bfo);
+            mediaFile.setWidth(bfo.outWidth);
+            mediaFile.setHeight(bfo.outHeight);
+        }
+        
         mediaFile.setMIMEType(mimeType);
         mediaFile.save();
         
