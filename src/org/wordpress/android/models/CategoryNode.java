@@ -1,9 +1,7 @@
 package org.wordpress.android.models;
 
-
 import android.util.SparseArray;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.posts.CategoryArrayAdapter;
 
 import java.util.*;
 
@@ -63,7 +61,8 @@ public class CategoryNode {
 
     public static CategoryNode createCategoryTreeFromDB(int blogId) {
         List<String> stringCategories = WordPress.wpDB.loadCategories(blogId);
-        // First pass instantiate Category and CategoryNode objects
+
+        // First pass instantiate CategoryNode objects
         SparseArray<CategoryNode> categoryMap = new SparseArray<CategoryNode>();
         CategoryNode rootCategory = new CategoryNode(-1, -1, "");
         CategoryNode currentRootNode;
