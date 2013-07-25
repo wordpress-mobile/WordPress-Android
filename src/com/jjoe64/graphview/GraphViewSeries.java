@@ -1,10 +1,7 @@
 package com.jjoe64.graphview;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import android.annotation.TargetApi;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
@@ -25,11 +22,11 @@ public class GraphViewSeries {
 			this.color = color;
 			this.thickness = thickness;
 		}
-		public void setValueDependentColor(ValueDependentColor valueDependentColor) {
-			this.valueDependentColor = valueDependentColor;
-		}
 		public ValueDependentColor getValueDependentColor() {
 			return valueDependentColor;
+		}
+		public void setValueDependentColor(ValueDependentColor valueDependentColor) {
+			this.valueDependentColor = valueDependentColor;
 		}
 	}
 
@@ -79,6 +76,10 @@ public class GraphViewSeries {
 				g.scrollToEnd();
 			}
 		}
+	}
+
+	public void removeGraphView(GraphView graphView) {
+		graphViews.remove(graphView);
 	}
 
 	/**

@@ -295,18 +295,6 @@ abstract public class GraphView extends LinearLayout {
 		addView(graphViewContentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
 	}
 
-	public GraphViewStyle getGraphViewStyle() {
-		return graphViewStyle;
-	}
-
-	public void setGraphViewStyle(GraphViewStyle style) {
-		graphViewStyle = style;
-    }
-
-    public void setTitle(String title) {
-      this.title = title;
-    }
-
 	private GraphViewData[] _values(int idxSeries) {
 		GraphViewData[] values = graphSeries.get(idxSeries).values;
 		if (viewportStart == 0 && viewportSize == 0) {
@@ -337,6 +325,7 @@ abstract public class GraphView extends LinearLayout {
 	public void addSeries(GraphViewSeries series) {
 		series.addGraphView(this);
 		graphSeries.add(series);
+		redrawAll();
 	}
 
 	protected void drawLegend(Canvas canvas, float height, float width) {
@@ -434,6 +423,10 @@ abstract public class GraphView extends LinearLayout {
 			labels[numLabels-i] = formatLabel(min + ((max-min)*i/numLabels), false);
 		}
 		return labels;
+	}
+
+	public GraphViewStyle getGraphViewStyle() {
+		return graphViewStyle;
 	}
 
 	public LegendAlign getLegendAlign() {
@@ -550,12 +543,12 @@ abstract public class GraphView extends LinearLayout {
 		return smallest;
 	}
 
-	public boolean isScrollable() {
-		return scrollable;
-	}
-	
 	public boolean isDisableTouch() {
 		return disableTouch;
+	}
+
+	public boolean isScrollable() {
+		return scrollable;
 	}
 
 	public boolean isShowLegend() {
@@ -572,19 +565,28 @@ abstract public class GraphView extends LinearLayout {
 		graphViewContentView.invalidate();
 	}
 
-	public void removeSeries(GraphViewSeries series)
-	{
-		graphSeries.remove(series);
+	public void removeAllSeries() {
+		for (GraphViewSeries s : graphSeries) {
+			s.removeGraphView(this);
+		}
+		while (!graphSeries.isEmpty()) {
+			graphSeries.remove(0);
+		}
+		redrawAll();
 	}
 
-	public void removeSeries(int index)
-	{
-		if (index < 0 || index >= graphSeries.size())
-		{
+	public void removeSeries(GraphViewSeries series) {
+		series.removeGraphView(this);
+		graphSeries.remove(series);
+		redrawAll();
+	}
+
+	public void removeSeries(int index) {
+		if (index < 0 || index >= graphSeries.size()) {
 			throw new IndexOutOfBoundsException("No series at index " + index);
 		}
 
-		graphSeries.remove(index);
+		removeSeries(graphSeries.get(index));
 	}
 
 	public void scrollToEnd() {
@@ -592,6 +594,18 @@ abstract public class GraphView extends LinearLayout {
 		double max = getMaxX(true);
 		viewportStart = max-viewportSize;
 		redrawAll();
+	}
+
+	/**
+	 * The user can disable any touch gestures, this is useful if you are using a real time graph, but don't want the user to interact
+	 * @param disableTouch
+	 */
+	public void setDisableTouch(boolean disableTouch) {
+		this.disableTouch = disableTouch;
+	}
+
+	public void setGraphViewStyle(GraphViewStyle style) {
+		graphViewStyle = style;
 	}
 
 	/**
@@ -678,18 +692,14 @@ abstract public class GraphView extends LinearLayout {
 	public void setScrollable(boolean scrollable) {
 		this.scrollable = scrollable;
 	}
-	
-	/**
-	 * The user can disable any touch gestures, this is useful if you are using a real time graph, but don't want the user to interact
-	 * @param disableTouch
-	 */
-	public void setDisableTouch(boolean disableTouch) {
-		this.disableTouch = disableTouch;
-	}
 
 	public void setShowLegend(boolean showLegend) {
 		this.showLegend = showLegend;
 	}
+
+	public void setTitle(String title) {
+      this.title = title;
+    }
 
 	/**
 	 * set's static vertical labels (from top to bottom)
