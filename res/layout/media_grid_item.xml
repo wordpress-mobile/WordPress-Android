@@ -14,16 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <CheckBox
-        android:id="@+id/media_grid_item_checkstate"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/media_grid_item_checkstate_selector"
-        android:button="@android:color/transparent"
-        android:clickable="false"
-        android:duplicateParentState="true"
-        android:focusable="false" />
-
     <TextView
         android:id="@+id/media_grid_item_upload_state"
         android:layout_width="wrap_content"
@@ -34,6 +24,16 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:visibility="gone" />
+    
+    <CheckBox
+        android:id="@+id/media_grid_item_checkstate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/media_grid_item_checkstate_selector"
+        android:button="@android:color/transparent"
+        android:clickable="false"
+        android:duplicateParentState="true"
+        android:focusable="false" />
 
     <RelativeLayout
         android:layout_width="match_parent"

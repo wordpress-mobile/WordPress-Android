@@ -73,9 +73,12 @@ public class MediaGridAdapter extends CursorAdapter {
                         
                         @Override
                         public void onClick(View v) {
-                            mCallback.onRetryUpload(mediaId);
-                            notifyDataSetChanged();
+                            if (!inMultiSelect()) {
+                                mCallback.onRetryUpload(mediaId);
+                                notifyDataSetChanged();
+                            }
                         }
+
                     });
                 }
                 
@@ -185,6 +188,10 @@ public class MediaGridAdapter extends CursorAdapter {
         }
     }
 
+    private boolean inMultiSelect() {
+        return mCheckedItems.size() > 0;
+    }
+    
     private boolean isLocalFile(String state) {
         if (state == null)
             return false;
