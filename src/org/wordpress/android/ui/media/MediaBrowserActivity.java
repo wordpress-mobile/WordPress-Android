@@ -39,7 +39,6 @@ import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -200,7 +199,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public void onBlogChanged() {
         super.onBlogChanged();
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.refreshMediaFromServer(0);
+            mMediaGridFragment.refreshMediaFromServer(0, false);
             startAnimatingRefreshButton();
         }
     };
@@ -322,7 +321,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (itemId == R.id.menu_refresh) {
 
             if (mMediaGridFragment != null) {
-                mMediaGridFragment.refreshMediaFromServer(0);
+                mMediaGridFragment.refreshMediaFromServer(0, false);
                 startAnimatingRefreshButton();
             }
             return true;

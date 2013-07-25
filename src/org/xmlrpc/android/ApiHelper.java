@@ -327,10 +327,10 @@ public class ApiHelper {
         return allComments;
     }
     
-    public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Boolean> {
+    public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Integer> {
 
         public interface Callback {
-            public void onSuccess();
+            public void onSuccess(int count);
             public void onFailure();
         }
         
@@ -345,7 +345,7 @@ public class ApiHelper {
         }
         
         @Override
-        protected Boolean doInBackground(List<?>... params) {
+        protected Integer doInBackground(List<?>... params) {
             
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
@@ -353,7 +353,7 @@ public class ApiHelper {
             
             if(blog == null) {
                 Log.e("WordPress", "ApiHelper - current blog is null");
-                return false;
+                return -1;
             }
 
             String blogId = String.valueOf(blog.getBlogId());
@@ -388,6 +388,7 @@ public class ApiHelper {
             }
             
             if(results != null && blogId != null) {
+                
                 Map<?, ?> resultMap;
                 
                 // results returned, so mark everything existing to deleted
@@ -404,19 +405,19 @@ public class ApiHelper {
                 
                 WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
                 
-                return true;
+                return results.length;
             }
             
-            return false;
+            return -1;
         }
         
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(Integer resultCount) {
             if(mCallback != null) {
-                if(result)
-                    mCallback.onSuccess();
-                else
+                if(resultCount == null || resultCount == -1)
                     mCallback.onFailure();
+                else
+                    mCallback.onSuccess(resultCount);
             }
         }
         
