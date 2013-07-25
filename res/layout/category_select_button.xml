@@ -5,5 +5,5 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:id="@+id/selectCategories"
-        android:drawableRight="@android:drawable/ic_input_add"
+        android:drawableRight="@drawable/ic_content_new"
         android:tag="select-category"/>
