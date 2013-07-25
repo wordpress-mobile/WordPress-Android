@@ -49,7 +49,7 @@ public class ThemePreviewFragment extends SherlockFragment {
     public interface ThemePreviewFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
-        public void onActivateThemeClicked(String themeId);
+        public void onActivateThemeClicked(String themeId, Fragment fragment);
     }
     
     
@@ -261,7 +261,7 @@ public class ThemePreviewFragment extends SherlockFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_activate:
-                mCallback.onActivateThemeClicked(getThemeId());
+                mCallback.onActivateThemeClicked(getThemeId(), ThemePreviewFragment.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

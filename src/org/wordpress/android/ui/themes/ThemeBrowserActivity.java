@@ -43,7 +43,8 @@ import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class ThemeBrowserActivity extends WPActionBarActivity implements
-        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback, TabListener {
+        ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
+        TabListener {
 
     private HorizontalTabView mTabView;
     private ThemeTabFragment[] mTabFragments;
@@ -56,7 +57,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     private boolean mIsRunning;
     private MenuItem refreshMenuItem;
     private ProgressBar mProgressBar;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         actionBar.setHomeButtonEnabled(true);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -104,7 +105,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mPreviewFragment = (ThemePreviewFragment) fm.findFragmentByTag(ThemePreviewFragment.TAG);
         mDetailsFragment = (ThemeDetailsFragment) fm.findFragmentByTag(ThemeDetailsFragment.TAG);
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
-        
+
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -124,7 +125,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mTabView.setVisibility(View.GONE);
         }
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -137,7 +138,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onTabSelected(HorizontalTabView.Tab tab) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
-    
+
     public class ThemePagerAdapter extends FragmentPagerAdapter {
 
         public ThemePagerAdapter(FragmentManager fm) {
@@ -164,8 +165,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     private void fetchThemes() {
         if (mFetchingThemes)
-            return; 
-        
+            return;
+
         String siteId = getBlogId();
 
         mFetchingThemes = true;
@@ -182,23 +183,48 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
             @Override
             public void onErrorResponse(VolleyError response) {
-                
-                if(response.toString().equals(AuthFailureError.class.getName())) {
+
+                if (response.toString().equals(AuthFailureError.class.getName())) {
                     String errorTitle = getString(R.string.theme_auth_error_title);
                     String errorMsg = getString(R.string.theme_auth_error_message);
-                    
+
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false).show(ft, "alert");
+                    WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false)
+                            .show(ft, "alert");
                     Log.d("WordPress", "Failed to fetch themes: failed authenticate user");
                 } else {
-                    Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed,
+                            Toast.LENGTH_LONG).show();
                     Log.d("WordPress", "Failed to fetch themes: " + response.toString());
                 }
-                
+
                 mFetchingThemes = false;
                 mProgressBar.setVisibility(View.GONE);
                 stopAnimatingRefreshButton();
                 refreshViewPager();
+            }
+        });
+    }
+
+    private void fetchCurrentTheme() {
+        final String siteId = getBlogId();
+
+        WordPress.restClient.getCurrentTheme(siteId, new Listener() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Theme theme = Theme.fromJSON(response);
+                    WordPress.wpDB.setCurrentTheme(siteId, theme.getThemeId());
+                    refreshViewPager();
+                } catch (JSONException e) {
+                }
+
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError response) {
             }
         });
     }
@@ -209,7 +235,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         inflater.inflate(R.menu.theme, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
-        
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -254,7 +280,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             super.onBackPressed();
         }
     }
-    
+
     private String getBlogId() {
         return String.valueOf(WordPress.getCurrentBlog().getBlogId());
     }
@@ -285,11 +311,15 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     e.printStackTrace();
                 }
             }
+            
+            fetchCurrentTheme();
 
             if (themes != null && themes.size() > 0) {
                 return themes;
             }
+            
             return null;
+
         }
 
         @Override
@@ -298,20 +328,22 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mProgressBar.setVisibility(View.GONE);
             stopAnimatingRefreshButton();
             if (result == null) {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed,
+                        Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success,
+                        Toast.LENGTH_SHORT).show();
             }
             refreshViewPager();
         }
 
     }
-    
+
     private void startAnimatingRefreshButton() {
         if (refreshMenuItem != null && mFetchingThemes)
             startAnimatingRefreshButton(refreshMenuItem);
     }
-    
+
     private void stopAnimatingRefreshButton() {
         if (refreshMenuItem != null && !mFetchingThemes)
             stopAnimatingRefreshButton(refreshMenuItem);
@@ -332,10 +364,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
 
             FragmentTransaction ft = fm.beginTransaction();
-            
+
             if (mSearchFragment != null && mSearchFragment.isVisible())
                 fm.popBackStack();
-            
+
             setupBaseLayout();
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             ft.add(R.id.theme_browser_container, mDetailsFragment, ThemeDetailsFragment.TAG);
@@ -348,7 +380,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
     }
 
-
     @Override
     public void onResume(Fragment fragment) {
         invalidateOptionsMenu();
@@ -358,84 +389,86 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
         mIsRunning = false;
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (Utils.isXLarge(ThemeBrowserActivity.this) && mDetailsFragment != null) {
             mDetailsFragment.dismiss();
         }
-        
-        super.onSaveInstanceState(outState);
-        
-    }
-    
-    @Override
-    public void onActivateThemeClicked(String themeId) {
-        String siteId = getBlogId();
-        if (themeId == null) {
-            themeId = mPreviewFragment.getThemeId();            
-        }
-        
-        final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
-        WordPress.restClient.setTheme(siteId, themeId, 
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject arg0) { 
-                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
 
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onActivateThemeClicked(String themeId, final Fragment fragment) {
+        final String siteId = getBlogId();
+        if (themeId == null) {
+            themeId = mPreviewFragment.getThemeId();
+        }
+
+        final String currentThemeId = themeId;
+        final WeakReference<ThemeBrowserActivity> ref = new WeakReference<ThemeBrowserActivity>(this);
+        WordPress.restClient.setTheme(siteId, themeId,
+                new Listener() {
+
+                    @Override
+                    public void onResponse(JSONObject arg0) {
+                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success,
+                                Toast.LENGTH_LONG).show();
+
+                        
+                        WordPress.wpDB.setCurrentTheme(siteId, currentThemeId);
                         if (mDetailsFragment != null) {
                             mDetailsFragment.onThemeActivated(true);
-                        } 
+                        }
+                        refreshViewPager();
+
                         
-                        if (ref.get() != null && mIsRunning) {
-                            
-                            if (Utils.isXLarge(ThemeBrowserActivity.this)) {
-                                mDetailsFragment.dismiss();
-                            }
-                            
+                        if (ref.get() != null && mIsRunning && fragment instanceof ThemePreviewFragment) {
                             FragmentManager fm = ref.get().getSupportFragmentManager();
+                            
                             if (fm.getBackStackEntryCount() > 0) {
                                 fm.popBackStack();
                                 setupBaseLayout();
                                 invalidateOptionsMenu();
-                            }      
+                            }
                         }
                     }
-                }, 
+                },
                 new ErrorListener() {
-            
+
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
-                        
+
                         if (mDetailsFragment.isVisible())
                             mDetailsFragment.onThemeActivated(false);
-                        
-                        Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG).show();
-                }
-        });
-        
+
+                        Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
     }
-    
+
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
         fetchThemes();
     };
-    
-    
+
     @Override
     public void onLivePreviewClicked(String themeId, String previewURL) {
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        
+
         if (mPreviewFragment == null) {
             mPreviewFragment = ThemePreviewFragment.newInstance(themeId, previewURL);
         } else {

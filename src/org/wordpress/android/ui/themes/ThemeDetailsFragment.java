@@ -2,6 +2,7 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -20,6 +21,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.ViewSiteActivity;
+import org.wordpress.android.ui.WPActionBarActivity;
 
 public class ThemeDetailsFragment extends SherlockDialogFragment {
 
@@ -44,12 +47,13 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     private Button mActivateThemeButton;
 
     private ThemeDetailsFragmentCallback mCallback;
+    private Button mViewSiteButton;
 
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
         public void onPause(Fragment fragment);
         public void onLivePreviewClicked(String themeId, String previewURL);
-        public void onActivateThemeClicked(String themeId);
+        public void onActivateThemeClicked(String themeId, Fragment fragment);
     }
 
     public String getThemeId() {
@@ -105,6 +109,18 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
         mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
+        
+        mViewSiteButton = (Button) view.findViewById(R.id.theme_details_fragment_view_site_button);
+        mViewSiteButton.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ViewSiteActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+        
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -120,7 +136,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             public void onClick(View v) {
                 String themeId = getThemeId();
                 if (themeId != null) {
-                    mCallback.onActivateThemeClicked(themeId);
+                    mCallback.onActivateThemeClicked(themeId, ThemeDetailsFragment.this);
                     mActivateThemeButton.setEnabled(false);
                     mActivateThemeButton.setText(R.string.theme_activating_button);
                 }
@@ -131,6 +147,12 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         loadTheme(getThemeId());
 
         return view;
+    }
+    
+    public void showViewSite() {
+        mLivePreviewButton.setVisibility(View.GONE);
+        mActivateThemeButton.setVisibility(View.GONE);
+        mViewSiteButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -156,6 +178,10 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
             mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
             mPreviewURL = theme.getPreviewURL();
+            
+            if (theme.getIsCurrentTheme()) {
+                showViewSite();
+            }
 
             if (getDialog() != null) {
                 getDialog().setTitle(theme.getName());
@@ -173,5 +199,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     public void onThemeActivated(boolean activated) {
         mActivateThemeButton.setEnabled(true);
         mActivateThemeButton.setText(R.string.theme_activate_button);
+        
+        showViewSite();
     }
 }

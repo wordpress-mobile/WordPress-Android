@@ -23,6 +23,7 @@ public class Theme {
     private long launchDateMs = 0;
     private String blogId;
     private String previewURL = "";
+    private boolean isCurrentTheme = false;
     
     public Theme() {
         
@@ -145,13 +146,21 @@ public class Theme {
         int trendingRank = object.getInt("trending_rank");
         int popularityRank = object.getInt("popularity_rank");
         String launchDate = object.getString("launch_date");
-        String previewURL = object.getString("preview_url");
+        String previewURL = object.has("preview_url") ? object.getString("preview_url") : ""; // we don't receive preview_url when we fetch current theme
 
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
         return new Theme(themeId, screenshotURL, price, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL);        
+    }
+
+    public void setIsCurrentTheme(boolean isCurrentTheme) {
+        this.isCurrentTheme = isCurrentTheme;
+    }
+    
+    public boolean getIsCurrentTheme() {
+        return isCurrentTheme;
     }
 
 }

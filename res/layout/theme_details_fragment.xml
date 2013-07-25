@@ -57,6 +57,18 @@
                 android:layout_marginLeft="5dp"
                 android:text="@string/theme_activate_button"
                 android:textColor="@color/theme_details_button" />
+            
+            <Button
+                android:id="@+id/theme_details_fragment_view_site_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/theme_activate_button_selector"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:text="@string/view_site"
+                android:visibility="gone"
+                android:textColor="@color/theme_details_button" />
         </LinearLayout>
 
         <View
