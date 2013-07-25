@@ -107,24 +107,16 @@ public class AddCategoryActivity extends Activity {
         ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
         loadTextArray.clear();
         List<?> categoriesVector = WordPress.wpDB.loadCategories(id);
-        if (categoriesVector.size() > 0)
-        {
-
+        if (categoriesVector.size() > 0) {
             loadTextArray.add(getResources().getText(R.string.none));
-
-            for(int i=0; i < categoriesVector.size(); i++)
-            {
+            for(int i=0; i < categoriesVector.size(); i++) {
                 loadTextArray.add(categoriesVector.get(i).toString());
             }
-
-            ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_dropdown_item_1line, loadTextArray);
+            ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this,
+                    android.R.layout.simple_dropdown_item_1line, loadTextArray);
             categories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
             Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
-
-
             sCategories.setAdapter(categories);
-
         }
 
     }
