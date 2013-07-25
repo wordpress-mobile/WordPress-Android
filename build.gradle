@@ -1,21 +1,4 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
-    }
-}
-
-task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
-    gradleVersion = '1.6'
-}
-
 apply plugin: 'android-library'
-
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-}
 
 android {
     compileSdkVersion 16
