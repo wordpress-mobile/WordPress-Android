@@ -274,7 +274,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             mLocationCB.setChecked(blog.isLocation());
         } else {
             mLocationCB.setChecked(false);
-            RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.section3);
+            RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.sectionLocation);
             locationLayout.setVisibility(View.GONE);
         }
 

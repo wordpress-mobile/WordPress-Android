@@ -46,34 +46,15 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.view.ContextMenu;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.util.Log;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -82,7 +63,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.json.JSONException;
+import org.wordpress.android.util.*;
 import org.xmlrpc.android.ApiHelper;
 
 import org.wordpress.android.Constants;
@@ -92,17 +73,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
-import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.EscapeUtils;
-import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
-import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPEditText;
-import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPUnderlineSpan;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -120,6 +91,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_TIME = 1;
     private static final int ID_DIALOG_LOADING = 2;
 
+    private static final String CATEGORY_PREFIX_TAG = "category-";
+    private static final String UNCATEGORIZED_LABEL = "Uncategorized";
+
     private Blog mBlog;
     private Post mPost;
 
@@ -127,7 +101,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
     private EditText mTitleEditText, mPasswordEditText, mTagsEditText;
-    private TextView mLocationText, mCategoriesText, mPubDateText;
+    private TextView mLocationText, mPubDateText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
     private Button mPubDateButton, mLinkButton, mMoreButton;
@@ -136,7 +110,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private Location mCurrentLocation;
     private LocationHelper mLocationHelper;
     private Handler mAutoSaveHandler;
-    private JSONArray mCategories;
+    private List<String> mCategories;
 
     private boolean mIsPage = false;
     private boolean mIsNew = false;
@@ -147,7 +121,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private boolean mIsNewDraft = false;
     private boolean mIsExternalInstance = false;
 
-    private List<String> mSelectedCategories;
     private String mAccountName = "";
     private int mQuickMediaType = -1;
     private String mMediaCapturePath = "";
@@ -181,9 +154,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        mCategories = new JSONArray();
+        mCategories = new ArrayList<String>();
         mAutoSaveHandler = new Handler();
-        mSelectedCategories = new Vector<String>();
 
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -261,7 +233,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mBquoteToggleButton = (ToggleButton) findViewById(R.id.bquote);
         mUnderlineToggleButton = (ToggleButton) findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) findViewById(R.id.strike);
-        mCategoriesText = (TextView) findViewById(R.id.selectedCategories);
         mAddPictureButton = (ImageButton) findViewById(R.id.addPictureButton);
         mPubDateButton = (Button) findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) findViewById(R.id.pubDate);
@@ -277,8 +248,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         ((TextView) findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
 
         if (mIsPage) { // remove post specific views
-            ((LinearLayout) findViewById(R.id.section2)).setVisibility(View.GONE);
-            ((RelativeLayout) findViewById(R.id.section3)).setVisibility(View.GONE);
+            ((LinearLayout) findViewById(R.id.sectionTags)).setVisibility(View.GONE);
+            ((FlowLayout) findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
             ((TextView) findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
             ((Spinner) findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
@@ -427,21 +399,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (!mIsPage) {
-                if (mPost.getCategories() != null) {
-                    mCategories = mPost.getCategories();
-                    if (!mCategories.equals("")) {
-
-                        for (int i = 0; i < mCategories.length(); i++) {
-                            try {
-                                mSelectedCategories.add(mCategories.getString(i));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        mCategoriesText.setVisibility(View.VISIBLE);
-                        mCategoriesText.setText(getString(R.string.selected_categories) + " "
-                                + getCategoriesCSV());
-                    }
+                if (mPost.getJSONCategories() != null) {
+                    mCategories = JSONUtil.fromJSONArrayToStringList(mPost.getJSONCategories());
                 }
 
                 Double latitude = mPost.getLatitude();
@@ -451,17 +410,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     new getAddressTask().execute(latitude, longitude);
                 }
             }
-
             String tags = mPost.getMt_keywords();
             if (!tags.equals("")) {
                 mTagsEditText.setText(tags);
             }
         }
 
-        if (!mIsPage) {
-            Button selectCategories = (Button) findViewById(R.id.selectCategories);
-            selectCategories.setOnClickListener(this);
-        }
+        // if mCategories is empty or if mIsNew, we want to add an "Uncategorized" category
+        populateSelectedCategories();
 
         registerForContextMenu(mAddPictureButton);
         mContentEditText.setOnSelectionChangedListener(this);
@@ -580,20 +536,20 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
     }
-    
+
     @Override
     public void onImeBack(WPEditText ctrl, String text) {
         if (mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
     }
-    
+
     private void showFormatBar() {
         mFormatBar.setVisibility(View.VISIBLE);
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
         fadeInAnimation.setDuration(500);
         mFormatBar.startAnimation(fadeInAnimation);
     }
-    
+
     private void hideFormatBar() {
         AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
         fadeOutAnimation.setDuration(500);
@@ -640,12 +596,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", mBlogID);
-            if (mCategories.length() > 0) {
+            if (mCategories.size() > 0) {
                 bundle.putString("categoriesCSV", getCategoriesCSV());
             }
             Intent i1 = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
             i1.putExtras(bundle);
             startActivityForResult(i1, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+        } else if (id == R.id.categoryButton) {
+            onCategoryButtonClick(v);
         } else if (id == R.id.post) {
             if (mAutoSaveHandler != null)
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
@@ -657,7 +615,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                             mPost.setQuickPostType("QuickVideo");
                     }
-                    
+
                     WordPress.currentPost = mPost;
                     startService(new Intent(this, PostUploadService.class));
                 }
@@ -693,10 +651,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        
+
         if (mFormatBar.getVisibility() != View.VISIBLE)
             showFormatBar();
-        
+
         float pos = event.getY();
 
         if (event.getAction() == 0)
@@ -909,7 +867,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         mIsNew = true;
         mLocalDraft = true;
-        
+
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         if (accounts.size() > 0) {
@@ -1226,7 +1184,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private void enableLBSButtons() {
         mLocationHelper = new LocationHelper();
-        ((RelativeLayout) findViewById(R.id.section3)).setVisibility(View.VISIBLE);
+        ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.VISIBLE);
         Button viewMap = (Button) findViewById(R.id.viewMap);
         Button updateLocation = (Button) findViewById(R.id.updateLocation);
         Button removeLocation = (Button) findViewById(R.id.removeLocation);
@@ -1341,17 +1299,91 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 extras = data.getExtras();
                 String cats = extras.getString("selectedCategories");
                 String[] splitCats = cats.split(",");
-                if (splitCats.length < 1)
-                    return;
-                mCategories = new JSONArray();
-                for (int i = 0; i < splitCats.length; i++) {
-                    mCategories.put(splitCats[i]);
+                mCategories = new ArrayList<String>();
+                if (splitCats.length >= 1) {
+                    for (int i = 0; i < splitCats.length; i++) {
+                        if (!splitCats[i].isEmpty()) {
+                            mCategories.add(splitCats[i]);
+                        }
+                    }
                 }
-                mCategoriesText.setVisibility(View.VISIBLE);
-                mCategoriesText.setText(getString(R.string.selected_categories) + " " + getCategoriesCSV());
+                populateSelectedCategories();
                 break;
             }
         }// end null check
+    }
+
+    private void onCategoryButtonClick(View v) {
+        // Get category name by removing prefix from the tag
+        boolean listChanged = false;
+        String categoryName = (String) v.getTag();
+        categoryName = categoryName.replaceFirst(CATEGORY_PREFIX_TAG, "");
+
+        // Remove clicked category from list
+        for (int i = 0; i < mCategories.size(); i++) {
+            if (mCategories.get(i).equals(categoryName)) {
+                mCategories.remove(i);
+                listChanged = true;
+                break;
+            }
+        }
+
+        // Recreate category views
+        if (listChanged) {
+            populateSelectedCategories();
+        }
+    }
+
+    private void populateSelectedCategories() {
+        ViewGroup sectionCategories = ((ViewGroup) findViewById(R.id.sectionCategories));
+        boolean uncategorizedAlone = false;
+
+        // We want an "Uncategorized" if no category selected
+        if (mCategories.size() == 0) {
+            mCategories.add(UNCATEGORIZED_LABEL);
+            uncategorizedAlone = true;
+        } else { // Check for an alone "Uncategorized"
+            if (mCategories.size() == 1 && mCategories.get(0).equals(UNCATEGORIZED_LABEL)) {
+                uncategorizedAlone = true;
+            }
+        }
+
+        // Remove previous category buttons if any + select category button
+        List<View> viewsToRemove = new ArrayList<View>();
+        for (int i = 0; i < sectionCategories.getChildCount(); i++) {
+            View v = sectionCategories.getChildAt(i);
+            Object tag = v.getTag();
+            if (tag != null && tag.getClass() == String.class &&
+                    (((String) tag).startsWith(CATEGORY_PREFIX_TAG) || tag.equals("select-category"))) {
+                viewsToRemove.add(v);
+            }
+        }
+        for (int i = 0; i < viewsToRemove.size(); i++) {
+            sectionCategories.removeView(viewsToRemove.get(i));
+        }
+        viewsToRemove.clear();
+
+        // New category buttons
+        LayoutInflater layoutInflater = getLayoutInflater();
+        List<View> categoryButtons = new ArrayList<View>();
+        for (int i = 0; i < mCategories.size(); i++) {
+            String categoryName = mCategories.get(i);
+            Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
+            buttonCategory.setText(categoryName);
+            buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+            buttonCategory.setOnClickListener(this);
+            // Special case for Uncategorized, remove drawable left and disable
+            if (uncategorizedAlone) {
+                buttonCategory.setCompoundDrawables(null, null, null, null);
+                buttonCategory.setEnabled(false);
+            }
+            sectionCategories.addView(buttonCategory);
+        }
+
+        // Add select category button
+        View selectCategory = layoutInflater.inflate(R.layout.category_select_button, null);
+        selectCategory.setOnClickListener(this);
+        sectionCategories.addView(selectCategory);
     }
 
     @Override
@@ -1572,7 +1604,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
                 mPost.setMediaPaths(images);
                 mPost.setDate_created_gmt(pubDateTimestamp);
-                mPost.setCategories(mCategories);
+                mPost.setJSONCategories(new JSONArray(mCategories));
                 mPost.setMt_keywords(tags);
                 mPost.setPost_status(status);
                 mPost.setWP_password(password);
@@ -1694,28 +1726,28 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
         String imageWidth = WordPress.currentBlog.getMaxImageWidth();
         int imageWidthBlogSetting = Integer.MAX_VALUE;
-        
+
         if (!imageWidth.equals("Original Size")) {
             try {
                 imageWidthBlogSetting = Integer.valueOf(imageWidth);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-        } 
-        
+        }
+
         int[] dimensions = ImageHelper.getImageSize(curStream, EditPostActivity.this);
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
-        
+
         if ( Math.min(imageWidthPictureSetting, imageWidthBlogSetting) ==  Integer.MAX_VALUE ) {
             is.setWidth(1024); //Default value in case of errors reading the picture size and the blog settings is set to Original size
         } else {
             is.setWidth(Math.min(imageWidthPictureSetting, imageWidthBlogSetting));
         }
     }
-    
-    
+
+
     private void addMedia(String imgPath, Uri curStream) {
-        
+
         if (mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
 
@@ -1861,13 +1893,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private String getCategoriesCSV() {
         String csv = "";
-        if (mCategories.length() > 0) {
-            for (int i = 0; i < mCategories.length(); i++) {
-                try {
-                    csv += EscapeUtils.unescapeHtml(mCategories.getString(i)) + ",";
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+        if (mCategories.size() > 0) {
+            for (int i = 0; i < mCategories.size(); i++) {
+                csv += EscapeUtils.unescapeHtml(mCategories.get(i)) + ",";
             }
             csv = csv.substring(0, csv.length() - 1);
         }

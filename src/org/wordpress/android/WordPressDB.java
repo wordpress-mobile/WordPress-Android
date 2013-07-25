@@ -1269,10 +1269,10 @@ public class WordPressDB {
                 values.put("mt_text_more", post.getMt_text_more());
             values.put("uploaded", post.isUploaded());
 
-            if (post.getCategories() != null) {
+            if (post.getJSONCategories() != null) {
                 JSONArray jsonArray = null;
                 try {
-                    jsonArray = new JSONArray(post.getCategories().toString());
+                    jsonArray = new JSONArray(post.getJSONCategories().toString());
                     values.put("categories", jsonArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();

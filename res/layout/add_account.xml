@@ -20,7 +20,7 @@
             android:src="@drawable/wpcom" />
 
         <RelativeLayout
-            android:id="@+id/section1"
+            android:id="@+id/sectionContent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/wpcomLogo"
@@ -93,7 +93,7 @@
             android:id="@+id/l_wordpressdotcom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/section1"
+            android:layout_below="@id/sectionContent"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:shadowColor="#FFFFFF"

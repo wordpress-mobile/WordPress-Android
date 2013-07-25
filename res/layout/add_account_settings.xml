@@ -15,7 +15,7 @@
         android:paddingRight="10dip" >
 
         <RelativeLayout
-            android:id="@+id/section1"
+            android:id="@+id/sectionContent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginTop="10dip"
