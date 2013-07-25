@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -81,7 +80,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         
         if (blog.isDotcomFlag()) {
             // Hide credentials section
-            RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.section1);
+            RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
         }
         

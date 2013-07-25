@@ -260,7 +260,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             // Convert "result" (= category_id) from type Object to int
             int category_id = Integer.parseInt(result.toString());
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(id, category_id, category_name);
+            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, category_name);
 
             returnString = "addCategory_success";
         }
