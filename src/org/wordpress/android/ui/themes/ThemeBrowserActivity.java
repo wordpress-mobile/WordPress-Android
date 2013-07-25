@@ -245,7 +245,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (mMenuDrawer.isShown()) {
+        if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();

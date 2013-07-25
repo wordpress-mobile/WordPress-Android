@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,15 +33,22 @@ public class MediaGridAdapter extends CursorAdapter {
     
     private MediaGridAdapterCallback mCallback;
     private ArrayList<String> mCheckedItems;
+    private Set<String> mLocalImageRequestQueue;
+    private boolean mHasRetrievedAll;
     
     public interface MediaGridAdapterCallback {
-        public void onPrefetchData(int offset);
+        public void fetchMoreData(int offset);
         public void onRetryUpload(String mediaId);
+    }
+    
+    private static enum ViewTypes {
+        LOCAL, NETWORK
     }
     
     public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
         super(context, c, flags);
         mCheckedItems = checkedItems;
+        mLocalImageRequestQueue = new HashSet<String>();
     }
     
     public ArrayList<String> getCheckedItems() {
@@ -63,9 +73,12 @@ public class MediaGridAdapter extends CursorAdapter {
                         
                         @Override
                         public void onClick(View v) {
-                            mCallback.onRetryUpload(mediaId);
-                            notifyDataSetChanged();
+                            if (!inMultiSelect()) {
+                                mCallback.onRetryUpload(mediaId);
+                                notifyDataSetChanged();
+                            }
                         }
+
                     });
                 }
                 
@@ -98,13 +111,13 @@ public class MediaGridAdapter extends CursorAdapter {
             String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
             uploadDateView.setText("Uploaded on: " + date);
         }
-            
+
         // load image
-        final NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.media_grid_item_image);
+        final ImageView imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
         if (isLocalFile) {
             loadLocalImage(cursor, imageView);
         } else {
-            loadNetworkImage(cursor, imageView);
+            loadNetworkImage(cursor, (NetworkImageView) imageView);
         }
         
         String fileType = null;
@@ -169,17 +182,21 @@ public class MediaGridAdapter extends CursorAdapter {
         
         // if we are near the end, make a call to fetch more
         int position = cursor.getPosition();
-        if ( cursor.getCount() - position == 25 || (position == cursor.getCount() - 1)) {
+        if (position == cursor.getCount() - 1 && !mHasRetrievedAll) {
             if (mCallback != null)
-                mCallback.onPrefetchData(cursor.getCount());
+                mCallback.fetchMoreData(cursor.getCount());
         }
     }
 
+    private boolean inMultiSelect() {
+        return mCheckedItems.size() > 0;
+    }
+    
     private boolean isLocalFile(String state) {
         if (state == null)
             return false;
         
-        if (state.equals("queued") || state.equals("uploading") || state.equals("failed"))
+        if (state.equals("queued") || state.equals("uploading") || state.equals("retry") || state.equals("failed"))
             return true;
         
         return false;
@@ -195,9 +212,9 @@ public class MediaGridAdapter extends CursorAdapter {
         
     }
 
-    private void loadLocalImage(Cursor cursor, final ImageView imageView) {
-        final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
+    private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
 
+        final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
@@ -205,10 +222,14 @@ public class MediaGridAdapter extends CursorAdapter {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
+                
+                if (mLocalImageRequestQueue.contains(filePath))
+                    return;
+                
+                mLocalImageRequestQueue.add(filePath);
             
                 int maxWidth = mContext.getResources().getDisplayMetrics().widthPixels;
                 int width = (int) (maxWidth * 11.0f / 24.0f);
-                
                 BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, width, new BitmapWorkerCallback() {
                     
                     @Override
@@ -225,9 +246,51 @@ public class MediaGridAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup root) {
         LayoutInflater inflater = LayoutInflater.from(context);
         
-        return inflater.inflate(R.layout.media_grid_item, root, false);
+        View view =  inflater.inflate(R.layout.media_grid_item, root, false);
+        
+        ViewStub imageStub = (ViewStub) view.findViewById(R.id.media_grid_image_stub);
+        
+        // We need to use viewstubs to inflate the image to either:
+        // - a regular ImageView (for local images)
+        // - a FadeInNetworkImageView (for network images)
+        // This is because the NetworkImageView can't load local images.
+        // The other option would be to inflate multiple layouts, but that would lead
+        // to extra near-duplicate xml files that would need to be maintained.
+        
+        if (getItemViewType(cursor.getPosition()) == ViewTypes.LOCAL.ordinal())
+            imageStub.setLayoutResource(R.layout.media_grid_image_local);
+        else
+            imageStub.setLayoutResource(R.layout.media_grid_image_network);
+        
+        imageStub.inflate();
+        
+        return view;
     }
 
+    @Override
+    public int getViewTypeCount() {
+        return ViewTypes.values().length;
+    }
+    
+    @Override
+    public int getItemViewType(int position) {
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        if (isLocalFile(state))
+            return ViewTypes.LOCAL.ordinal();
+        else
+            return ViewTypes.NETWORK.ordinal();
+    }
+    
+    public void setCallback(MediaGridAdapterCallback callback) {
+        mCallback = callback;
+    }
+
+    public void setHasRetrieviedAll(boolean b) {
+        mHasRetrievedAll = b;
+    }
+    
     /** Updates the width of a cell to max out the space available, for phones **/
     private void updateGridWidth(Context context, View view) {
 
@@ -243,12 +306,7 @@ public class MediaGridAdapter extends CursorAdapter {
         
     }
 
-
     private float dpToPx(Context context, int dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
-    
-    public void setCallback(MediaGridAdapterCallback callback) {
-        mCallback = callback;
     }
 }

@@ -30,7 +30,6 @@ import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListen
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
@@ -47,10 +46,7 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
 public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
     
-    private static final int MIN_REFERSH_INTERVAL_MS = 10 * 1000;
-
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
-    private static final String BUNDLE_LAST_REFRESH_TIME = "BUNDLE_LAST_REFRESH_TIME";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
 
     private Cursor mCursor;
@@ -63,7 +59,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private ArrayList<String> mCheckedItems;
     
     private boolean mIsRefreshing = false;
-    private long mLastRefreshTime;
     
     private int mSavedFirstVisiblePosition = 0;
 
@@ -154,8 +149,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             mListener.onMultiSelectChange(mCheckedItems.size());
         }
         mSavedFirstVisiblePosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0);
-
-        mLastRefreshTime = savedInstanceState.getLong(BUNDLE_LAST_REFRESH_TIME, 0l);
     }
 
     @Override
@@ -166,7 +159,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     private void saveState(Bundle outState) {
         outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
-        outState.putLong(BUNDLE_LAST_REFRESH_TIME, mLastRefreshTime);
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
     }
 
@@ -223,10 +215,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void onResume() {
         super.onResume();
 
+        setupSpinnerAdapter();
         refreshMediaFromDB();
-        
-        if (mLastRefreshTime == 0l)
-            refreshMediaFromServer(0);
     }
 
     public void refreshMediaFromDB() {
@@ -239,48 +229,63 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         }
     }
 
-    public void refreshMediaFromServer(int offset) {
+    public void refreshMediaFromServer(int offset, final boolean auto) {
         if(WordPress.getCurrentBlog() == null)
             return; 
         
-        if(offset == 0 || !mIsRefreshing && (System.currentTimeMillis() - mLastRefreshTime > MIN_REFERSH_INTERVAL_MS)) {
-            mLastRefreshTime = System.currentTimeMillis();
+        if(offset == 0 || !mIsRefreshing) {
             mIsRefreshing = true;
             mListener.onMediaItemListDownloadStart();
 
             List<Object> apiArgs = new ArrayList<Object>();
             apiArgs.add(WordPress.getCurrentBlog());
 
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter, mCallback);
+            Callback callback = new Callback() {
+
+                @Override
+                public void onSuccess(int count) {
+                    MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+                    if (count == 0) {
+                        adapter.setHasRetrieviedAll(true);
+                    } else {
+                        adapter.setHasRetrieviedAll(false);
+                    }
+                    
+                    mIsRefreshing = false;
+
+                    if (MediaGridFragment.this.isVisible()) {
+                        Toast.makeText(getActivity(), "Refreshed content", Toast.LENGTH_SHORT).show();
+                        refreshSpinnerAdapter();
+                        setFilter(mFilter);
+                        if (!auto)
+                            mGridView.post(new Runnable() {
+                                
+                                @Override
+                                public void run() {
+                                    mGridView.setSelection(0);
+                                }
+                            });
+                    }
+
+                    mListener.onMediaItemListDownloaded();
+                }
+
+                @Override
+                public void onFailure() {
+                    mIsRefreshing = false;
+                    
+                    if (MediaGridFragment.this.isVisible()) {
+                        Toast.makeText(getActivity(), "Failed to refresh content", Toast.LENGTH_SHORT).show();
+                    }
+                    mListener.onMediaItemListDownloaded();
+                }
+            };
+            
+            
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter, callback);
             getMediaTask.execute(apiArgs);
         }
     }
-
-    private Callback mCallback = new Callback() {
-
-        @Override
-        public void onSuccess() {
-            mIsRefreshing = false;
-
-            if (MediaGridFragment.this.isVisible()) {
-                Toast.makeText(getActivity(), "Refreshed content", Toast.LENGTH_SHORT).show();
-                refreshSpinnerAdapter();
-                setFilter(mFilter);
-            }
-
-            mListener.onMediaItemListDownloaded();
-        }
-
-        @Override
-        public void onFailure() {
-            mIsRefreshing = false;
-            
-            if (MediaGridFragment.this.isVisible()) {
-                Toast.makeText(getActivity(), "Failed to refresh content", Toast.LENGTH_SHORT).show();
-            }
-            mListener.onMediaItemListDownloaded();
-        }
-    };
 
     public void search(String searchTerm) {
         Blog blog = WordPress.getCurrentBlog();
@@ -418,8 +423,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     }
 
     @Override
-    public void onPrefetchData(int offset) {
-        refreshMediaFromServer(offset);
+    public void fetchMoreData(int offset) {
+        refreshMediaFromServer(offset, true);
     }
 
     @Override
@@ -427,10 +432,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         // cancel image fetch requests if the view has been moved to recycler.
 
-        NetworkImageView niv = (NetworkImageView) view.findViewById(R.id.media_grid_item_image);
-        if (niv != null) {
+        View imageView = view.findViewById(R.id.media_grid_item_image);
+        if (imageView != null) {
             // this tag is set in the MediaGridAdapter class
-            String tag = (String) niv.getTag();
+            String tag = (String) imageView.getTag();
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {

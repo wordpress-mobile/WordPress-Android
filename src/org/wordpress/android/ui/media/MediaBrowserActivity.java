@@ -33,8 +33,12 @@ import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -43,6 +47,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
+import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
     OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback, View.OnClickListener,
@@ -59,6 +64,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private MenuItem mRefreshMenuItem;
     private int mMultiSelectCount;
     private Menu mMenu;
+    private FeatureSet mFeatureSet;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,9 +99,24 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
             ft.hide(mMediaItemFragment);
         
+        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())
+            getFeatureSet();
+        
         ft.commit();
         
         setupAddMenuPopup();
+    }
+
+    /** Get the feature set for a wordpress.com hosted blog **/
+    private void getFeatureSet() {
+        new ApiHelper.GetFeatures(new Callback() {
+
+            @Override
+            public void onResult(FeatureSet featureSet) {
+                mFeatureSet = featureSet;
+            }
+            
+        });
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -128,14 +149,29 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
                 
-                if (position == 0)
-                    mMediaAddFragment.launchCamera();
-                if (position == 1)
-                    mMediaAddFragment.launchVideoCamera();
-                else if (position == 2)
-                    mMediaAddFragment.launchPictureVideoLibrary();
+                boolean selfHosted = !WordPress.getCurrentBlog().isDotcomFlag();
+                boolean isVideoEnabled = selfHosted || (mFeatureSet != null && mFeatureSet.isVideopressEnabled()); 
                 
+                if (position == 0) {
+                    mMediaAddFragment.launchCamera();
+                } else if (position == 1) {
+                    if (isVideoEnabled) {
+                        mMediaAddFragment.launchVideoCamera();
+                    } else {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        String title = getString(R.string.media_no_video_title);
+                        String message = getString(R.string.media_no_video_message);
+                        WPAlertDialogFragment.newInstance(message, title, false).show(ft, "alert");
+                    }
+                } else if (position == 2) {
+                    if (isVideoEnabled)
+                        mMediaAddFragment.launchPictureVideoLibrary();
+                    else
+                        mMediaAddFragment.launchPictureLibrary();
+                }
+
                 mAddMediaPopup.dismiss();
+                
             };
         });
 
@@ -163,7 +199,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public void onBlogChanged() {
         super.onBlogChanged();
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.refreshMediaFromServer(0);
+            mMediaGridFragment.refreshMediaFromServer(0, false);
             startAnimatingRefreshButton();
         }
     };
@@ -270,7 +306,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             View view = findViewById(R.id.menu_new_media);
             int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
             mAddMediaPopup.showAsDropDown(view, 0, y_offset);
-
+            
             return true;
         } else if (itemId == R.id.menu_search) {
 
@@ -285,7 +321,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (itemId == R.id.menu_refresh) {
 
             if (mMediaGridFragment != null) {
-                mMediaGridFragment.refreshMediaFromServer(0);
+                mMediaGridFragment.refreshMediaFromServer(0, false);
                 startAnimatingRefreshButton();
             }
             return true;
@@ -433,7 +469,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
-        if (mMenuDrawer.isShown()) {
+        if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (isInMultiSelect()) {
             cancelMultiSelect();

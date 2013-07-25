@@ -8,21 +8,11 @@
     android:paddingRight="1dp"
     android:paddingTop="0.5dp" >
 
-    <org.wordpress.android.ui.FadeInNetworkImageView
-        android:id="@+id/media_grid_item_image"
+    <ViewStub
+        android:id="@+id/media_grid_image_stub"
+        android:inflatedId="@+id/media_grid_item_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter" />
-
-    <CheckBox
-        android:id="@+id/media_grid_item_checkstate"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/media_grid_item_checkstate_selector"
-        android:button="@android:color/transparent"
-        android:clickable="false"
-        android:duplicateParentState="true"
-        android:focusable="false" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/media_grid_item_upload_state"
@@ -34,6 +24,16 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:visibility="gone" />
+    
+    <CheckBox
+        android:id="@+id/media_grid_item_checkstate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/media_grid_item_checkstate_selector"
+        android:button="@android:color/transparent"
+        android:clickable="false"
+        android:duplicateParentState="true"
+        android:focusable="false" />
 
     <RelativeLayout
         android:layout_width="match_parent"
