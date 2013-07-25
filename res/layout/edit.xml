@@ -64,10 +64,6 @@
             <org.wordpress.android.util.FlowLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" android:id="@+id/sectionCategories" android:paddingLeft="8dp">
-                <TextView android:id="@+id/textView"
-                          android:layout_width="wrap_content" android:layout_height="fill_parent"
-                          android:text="@string/selected_categories"
-                          android:paddingTop="10dp" />
             </org.wordpress.android.util.FlowLayout>
             <RelativeLayout
                 android:id="@+id/sectionLocation"
