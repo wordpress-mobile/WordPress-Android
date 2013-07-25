@@ -222,6 +222,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
         if (mCursor != null) {
+            if (mCursor.getCount() == 0) {
+                refreshMediaFromServer(0, true);
+            }
+                
             mGridAdapter = new MediaGridAdapter(getActivity(), mCursor, 0, mCheckedItems);
             mGridAdapter.setCallback(this);
             mGridView.setAdapter(mGridAdapter);
