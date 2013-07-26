@@ -50,7 +50,7 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
         super.setOnItemLongClickListener(this);
     }
 
-    private boolean isInMultiSelectMode(){
+    public boolean isInMultiSelectMode(){
         return mIsInMultiSelectMode ;
 //        return getSelectedItems().size() > 0;
     }
