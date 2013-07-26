@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -206,6 +207,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         // Return string
         String returnString = "";
 
+        // Save selected categories
+        categoriesCSV = selectedCategoriesToCSV();
+
         // Store the parameters for wp.addCategory
         Map<String, Object> struct = new HashMap<String, Object>();
         struct.put("name", category_name);
@@ -329,25 +333,20 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         super.onBackPressed();
     }
 
-    private void saveAndFinish() {
-        String selectedCategories = "";
-
+    private String selectedCategoriesToCSV() {
+        ArrayList<String> selectedCategories = new ArrayList<String>();
         SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-
         for (int i = 0; i < selectedItems.size(); i++) {
-            if (selectedItems.get(selectedItems.keyAt(i)) == true) {
-                String categoryName = mCategoryLevels.get(selectedItems.keyAt(i)).getName();
-                selectedCategories += categoryName + ",";
+            if (selectedItems.get(selectedItems.keyAt(i))) {
+                selectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
             }
         }
+        return TextUtils.join(",", selectedCategories);
+    }
 
+    private void saveAndFinish() {
         Bundle bundle = new Bundle();
-        selectedCategories = selectedCategories.trim();
-        if (selectedCategories.endsWith(",")) {
-            selectedCategories = selectedCategories.substring(0, selectedCategories.length() - 1);
-        }
-
-        bundle.putString("selectedCategories", selectedCategories);
+        bundle.putString("selectedCategories", selectedCategoriesToCSV());
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
