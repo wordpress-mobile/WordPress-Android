@@ -1376,6 +1376,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             if (uncategorizedAlone) {
                 buttonCategory.setCompoundDrawables(null, null, null, null);
                 buttonCategory.setEnabled(false);
+                buttonCategory.setPadding(buttonCategory.getPaddingLeft(), buttonCategory.getPaddingTop(),
+                        buttonCategory.getPaddingLeft(), buttonCategory.getPaddingBottom());
             }
             sectionCategories.addView(buttonCategory);
         }
