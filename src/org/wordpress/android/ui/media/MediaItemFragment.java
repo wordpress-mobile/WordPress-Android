@@ -161,7 +161,7 @@ public class MediaItemFragment extends SherlockFragment {
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         mIsLocal = MediaUtils.isLocalFile(state);
         if (mIsLocal)
-            getActivity().invalidateOptionsMenu(); // don't allow editing for local files
+            getSherlockActivity().invalidateOptionsMenu(); // don't allow editing for local files
 
         inflateImageView();
         

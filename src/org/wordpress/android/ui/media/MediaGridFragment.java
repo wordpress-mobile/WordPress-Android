@@ -318,7 +318,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     public void setFilter(Filter filter) {
         mFilter = filter;
-//        mSpinner.setSelection(mFilter.ordinal());
         mCursor = filterItems(mFilter);
 
         if (mCursor != null && mCursor.getCount() > 0 && mGridAdapter != null) {
@@ -346,9 +345,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, startDate.getTimeInMillis(),
                 endDate.getTimeInMillis());
+        mGridAdapter.swapCursor(mCursor);
 
         if (mCursor != null && mCursor.getCount() > 0 && mGridAdapter != null) {
-            mGridAdapter.swapCursor(mCursor);
             mResultView.setVisibility(View.VISIBLE);
 
             SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
