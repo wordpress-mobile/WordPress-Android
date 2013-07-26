@@ -12,17 +12,19 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 
 import org.wordpress.android.ui.media.MediaGridAdapter;
+import org.wordpress.android.util.Utils;
 
 /**
  * A GridView implementation that aims to do multiselect on GridViews since
  * multi-select isn't supported pre-API 11. 
  *
  */
-public class MultiSelectGridView extends GridView implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class MultiSelectGridView extends GridView implements  AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
 
     private OnItemClickListener mOnItemClickListener;
     private MultiSelectListener mMultiSelectListener;
     private MediaGridAdapter mAdapter;
+    private boolean mIsInMultiSelectMode ;
     
     public interface MultiSelectListener {
         public void onMultiSelectChange(int count);
@@ -49,22 +51,28 @@ public class MultiSelectGridView extends GridView implements AdapterView.OnItemL
     }
 
     private boolean isInMultiSelectMode(){
-        return getSelectedItems().size() > 0;
+        return mIsInMultiSelectMode ;
+//        return getSelectedItems().size() > 0;
     }
     
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        CheckableFrameLayout frameLayout = ((CheckableFrameLayout) view);
         
         // run the default behavior if not in multiselect mode
-        if (!isInMultiSelectMode()) {
+        if (!isInMultiSelectMode()) {            
+            getSelectedItems().clear();
+            notifyMultiSelectCountChanged();
+            frameLayout.setChecked(true);
             mOnItemClickListener.onItemClick(parent, view, position, id);
+            mAdapter.notifyDataSetChanged();
             return;
         }
         
         Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
         String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
-        CheckableFrameLayout frameLayout = ((CheckableFrameLayout) view);        
+                
         
         if (getSelectedItems().contains(mediaId)) {
             // unselect item
@@ -81,11 +89,15 @@ public class MultiSelectGridView extends GridView implements AdapterView.OnItemL
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if (isInMultiSelectMode())
             return false;
+        
+        mIsInMultiSelectMode = true;
 
         Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
         String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         
-        getSelectedItems().add(mediaId);
+        getSelectedItems().clear();
+        if (!getSelectedItems().contains(mediaId))
+            getSelectedItems().add(mediaId);
         notifyMultiSelectCountChanged();
         
         ((CheckableFrameLayout) view).setChecked(true);
@@ -94,8 +106,12 @@ public class MultiSelectGridView extends GridView implements AdapterView.OnItemL
     }
 
     private void notifyMultiSelectCountChanged() {
-        if (mMultiSelectListener != null)
+        if (mMultiSelectListener != null) {
             mMultiSelectListener.onMultiSelectChange(getSelectedItems().size());
+            if (getSelectedItems().size() == 0) {
+                mIsInMultiSelectMode = false;
+            }
+        }
     }
 
     @Override

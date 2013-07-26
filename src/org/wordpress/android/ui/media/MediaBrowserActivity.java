@@ -219,6 +219,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             if (fm.getBackStackEntryCount() == 0) {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mMediaGridFragment);
+                mMediaGridFragment.clearCheckedItems();
                 setupBaseLayout();
                 
                 mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
