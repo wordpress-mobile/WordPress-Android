@@ -237,11 +237,13 @@ public class MediaItemFragment extends SherlockFragment {
 
     private void inflateImageView() {
         ViewStub viewStub = (ViewStub) mView.findViewById(R.id.media_listitem_details_stub);
-        if (mIsLocal)
-            viewStub.setLayoutResource(R.layout.media_grid_image_local);
-        else
-            viewStub.setLayoutResource(R.layout.media_grid_image_network);
-        viewStub.inflate();
+        if (viewStub != null) {
+            if (mIsLocal)
+                viewStub.setLayoutResource(R.layout.media_grid_image_local);
+            else
+                viewStub.setLayoutResource(R.layout.media_grid_image_network);
+            viewStub.inflate();
+        }
         
         mImageView = (ImageView) mView.findViewById(R.id.media_listitem_details_image);
     }
