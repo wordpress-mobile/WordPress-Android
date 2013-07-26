@@ -261,6 +261,7 @@ abstract public class GraphView extends LinearLayout {
 	private double manualMinYValue;
 	private GraphViewStyle graphViewStyle;
 	private final GraphViewContentView graphViewContentView;
+	private CustomLabelFormatter customLabelFormatter;
 
 	public GraphView(Context context, AttributeSet attrs) {
 		this(context, attrs.getAttributeValue(null, "title"));
@@ -371,6 +372,12 @@ abstract public class GraphView extends LinearLayout {
 	 * @return value to display
 	 */
 	protected String formatLabel(double value, boolean isValueX) {
+		if (customLabelFormatter != null) {
+			String label = customLabelFormatter.formatLabel(value, isValueX);
+			if (label != null) {
+				return label;
+			}
+		}
 		int i = isValueX ? 1 : 0;
 		if (numberformatter[i] == null) {
 			numberformatter[i] = NumberFormat.getNumberInstance();
@@ -423,6 +430,10 @@ abstract public class GraphView extends LinearLayout {
 			labels[numLabels-i] = formatLabel(min + ((max-min)*i/numLabels), false);
 		}
 		return labels;
+	}
+
+	public CustomLabelFormatter getCustomLabelFormatter() {
+		return customLabelFormatter;
 	}
 
 	public GraphViewStyle getGraphViewStyle() {
@@ -594,6 +605,10 @@ abstract public class GraphView extends LinearLayout {
 		double max = getMaxX(true);
 		viewportStart = max-viewportSize;
 		redrawAll();
+	}
+
+	public void setCustomLabelFormatter(CustomLabelFormatter customLabelFormatter) {
+		this.customLabelFormatter = customLabelFormatter;
 	}
 
 	/**
