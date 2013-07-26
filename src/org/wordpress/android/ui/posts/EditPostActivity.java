@@ -46,7 +46,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -92,7 +91,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_LOADING = 2;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
-    private static final String UNCATEGORIZED_LABEL = "Uncategorized";
 
     private Blog mBlog;
     private Post mPost;
@@ -416,7 +414,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         }
 
-        // if mCategories is empty or if mIsNew, we want to add an "Uncategorized" category
         populateSelectedCategories();
 
         registerForContextMenu(mAddPictureButton);
@@ -1336,17 +1333,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private void populateSelectedCategories() {
         ViewGroup sectionCategories = ((ViewGroup) findViewById(R.id.sectionCategories));
-        boolean uncategorizedAlone = false;
-
-        // We want an "Uncategorized" if no category selected
-        if (mCategories.size() == 0) {
-            mCategories.add(UNCATEGORIZED_LABEL);
-            uncategorizedAlone = true;
-        } else { // Check for an alone "Uncategorized"
-            if (mCategories.size() == 1 && mCategories.get(0).equals(UNCATEGORIZED_LABEL)) {
-                uncategorizedAlone = true;
-            }
-        }
 
         // Remove previous category buttons if any + select category button
         List<View> viewsToRemove = new ArrayList<View>();
@@ -1365,25 +1351,22 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         // New category buttons
         LayoutInflater layoutInflater = getLayoutInflater();
-        List<View> categoryButtons = new ArrayList<View>();
         for (int i = 0; i < mCategories.size(); i++) {
             String categoryName = mCategories.get(i);
             Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
             buttonCategory.setText(categoryName);
             buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
             buttonCategory.setOnClickListener(this);
-            // Special case for Uncategorized, remove drawable left and disable
-            if (uncategorizedAlone) {
-                buttonCategory.setCompoundDrawables(null, null, null, null);
-                buttonCategory.setEnabled(false);
-                buttonCategory.setPadding(buttonCategory.getPaddingLeft(), buttonCategory.getPaddingTop(),
-                        buttonCategory.getPaddingLeft(), buttonCategory.getPaddingBottom());
-            }
             sectionCategories.addView(buttonCategory);
         }
 
         // Add select category button
-        View selectCategory = layoutInflater.inflate(R.layout.category_select_button, null);
+        Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
+        if (mCategories.size() == 0) {
+            selectCategory.setText(getResources().getText(R.string.category));
+        } else {
+            selectCategory.setText("");
+        }
         selectCategory.setOnClickListener(this);
         sectionCategories.addView(selectCategory);
     }

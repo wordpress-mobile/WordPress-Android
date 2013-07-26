@@ -241,6 +241,7 @@
   <string name="media">Media</string>
 
   <!-- category management -->
+  <string name="category">Category</string>
   <string name="add_new_category">Add New Category</string>
   <string name="category_name">Category Name</string>
   <string name="category_slug">Category Slug (optional)</string>
