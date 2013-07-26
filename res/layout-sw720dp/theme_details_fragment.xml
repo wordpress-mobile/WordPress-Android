@@ -11,10 +11,37 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.4" >
 
+        <RelativeLayout
+            android:id="@+id/theme_details_fragment_current_theme_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingBottom="5dp" >
+
+            <ImageView
+                android:id="@+id/theme_details_fragment_current_theme_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/theme_icon_current" />
+
+            <TextView
+                android:id="@+id/theme_details_fragment_current_theme_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_toRightOf="@id/theme_details_fragment_current_theme_image"
+                android:paddingLeft="10dp"
+                android:text="@string/theme_current_theme"
+                android:textColor="@color/wordpress_blue" />
+        </RelativeLayout>
+
         <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/theme_details_fragment_image"
             android:layout_width="300dp"
             android:layout_height="225dp"
+            android:layout_below="@id/theme_details_fragment_current_theme_container"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="12dp" />
@@ -60,9 +87,8 @@
                 android:background="@drawable/theme_activate_button_selector"
                 android:padding="10dp"
                 android:text="@string/view_site"
-                android:visibility="gone"
                 android:textColor="@color/theme_details_button"
-                />
+                android:visibility="gone" />
         </LinearLayout>
     </RelativeLayout>
 

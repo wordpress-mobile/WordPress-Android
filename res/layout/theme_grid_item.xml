@@ -13,12 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
-    
-    <TextView 
-        android:id="@+id/theme_grid_current_theme_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+    <ImageView 
+        android:id="@+id/theme_grid_current_theme_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="Current theme"/>
+        android:background="@drawable/theme_icon_tag_current"
+        android:layout_gravity="top|right"
+        />
 
 </FrameLayout>

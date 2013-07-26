@@ -699,7 +699,8 @@ public class ApiHelper {
             
             Boolean result = null;
             try {
-                result = (Boolean) client.call("wp.deletePost", apiParams);
+                if (client != null)
+                    result = (Boolean) client.call("wp.deletePost", apiParams);
             } catch (XMLRPCException e) {
                 Log.e("WordPress", "XMLRPCException: " + e.getMessage());
             }

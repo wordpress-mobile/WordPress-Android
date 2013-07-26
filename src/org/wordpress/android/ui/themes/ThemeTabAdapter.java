@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.GridView;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -39,7 +39,7 @@ public class ThemeTabAdapter extends CursorAdapter {
         
         final int isCurrentTheme = cursor.getInt(cursor.getColumnIndex("isCurrentTheme"));
         
-        TextView currentThemeView = (TextView) view.findViewById(R.id.theme_grid_current_theme_text);
+        ImageView currentThemeView = (ImageView) view.findViewById(R.id.theme_grid_current_theme_image);
         if (isCurrentTheme != 0) {
             currentThemeView.setVisibility(View.VISIBLE);
         } else {

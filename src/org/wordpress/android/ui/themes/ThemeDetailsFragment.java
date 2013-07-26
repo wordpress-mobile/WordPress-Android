@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -48,6 +49,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
     private ThemeDetailsFragmentCallback mCallback;
     private Button mViewSiteButton;
+    private View mCurrentThemeView;
 
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
@@ -107,6 +109,8 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         mImageView = (NetworkImageView) view.findViewById(R.id.theme_details_fragment_image);
         mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
 
+        mCurrentThemeView = (View) view.findViewById(R.id.theme_details_fragment_current_theme_container);
+        
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
         mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
         
@@ -153,6 +157,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         mLivePreviewButton.setVisibility(View.GONE);
         mActivateThemeButton.setVisibility(View.GONE);
         mViewSiteButton.setVisibility(View.VISIBLE);
+        mCurrentThemeView.setVisibility(View.VISIBLE);
     }
 
     @Override

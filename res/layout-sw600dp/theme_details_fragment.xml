@@ -14,7 +14,34 @@
         android:layout_weight="0.4"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
+        
+        <RelativeLayout
+            android:id="@+id/theme_details_fragment_current_theme_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingBottom="10dp" >
 
+            <ImageView
+                android:id="@+id/theme_details_fragment_current_theme_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/theme_icon_current" />
+
+            <TextView
+                android:id="@+id/theme_details_fragment_current_theme_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_toRightOf="@id/theme_details_fragment_current_theme_image"
+                android:paddingLeft="10dp"
+                android:text="@string/theme_current_theme"
+                android:textColor="@color/wordpress_blue"
+			 />
+        </RelativeLayout>
+        
         <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/theme_details_fragment_image"
             android:layout_width="300dp"
