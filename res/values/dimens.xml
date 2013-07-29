@@ -12,4 +12,5 @@
     <dimen name="menu_shadow_width">4dp</dimen>
     <dimen name="add_account_width">-1dp</dimen>
     <dimen name="refresh_icon_padding">12dp</dimen>
+    <dimen name="category_row_height">60dp</dimen>
 </resources>

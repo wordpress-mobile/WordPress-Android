@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.CategoryNode;
 
 public class AddCategoryActivity extends Activity {
     private int id;
@@ -100,33 +101,29 @@ public class AddCategoryActivity extends Activity {
                  finish();
             }
         });
-
     }
 
     private void loadCategories() {
         ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
-        loadTextArray.clear();
-        List<?> categoriesVector = WordPress.wpDB.loadCategories(id);
-        if (categoriesVector.size() > 0)
-        {
-
+        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(id);
+        ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
+        if (categoryLevels.size() > 0) {
             loadTextArray.add(getResources().getText(R.string.none));
-
-            for(int i=0; i < categoriesVector.size(); i++)
-            {
-                loadTextArray.add(categoriesVector.get(i).toString());
+            for (int i = 0; i < categoryLevels.size(); i++) {
+                CategoryNode currentCategory = categoryLevels.get(i);
+                String name = "";
+                for (int j = 1; j < currentCategory.getLevel(); j++) {
+                    name += "  ";
+                }
+                name += currentCategory.getName();
+                loadTextArray.add(name);
             }
-
-            ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_dropdown_item_1line, loadTextArray);
+            ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this,
+                    android.R.layout.simple_dropdown_item_1line, loadTextArray);
             categories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
             Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
-
-
             sCategories.setAdapter(categories);
-
         }
-
     }
 
     @Override

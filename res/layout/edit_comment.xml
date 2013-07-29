@@ -17,7 +17,7 @@
         android:paddingTop="8dp" >
 
         <RelativeLayout
-            android:id="@+id/section1"
+            android:id="@+id/sectionContent"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

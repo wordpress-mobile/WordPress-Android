@@ -253,7 +253,7 @@ public class PostUploadService extends Service {
             if (mediaError)
                 return false;
 
-            JSONArray categories = post.getCategories();
+            JSONArray categories = post.getJSONCategories();
             String[] theCategories = null;
             if (categories != null) {
                 theCategories = new String[categories.length()];

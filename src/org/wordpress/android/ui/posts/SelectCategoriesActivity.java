@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.posts;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,8 +9,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,29 +20,26 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.wordpress.android.models.CategoryNode;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.EscapeUtils;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
-    /** Called when the activity is first created. */
     String categoriesCSV = "";
-    long[] checkedCategories;
     private XMLRPCClient client;
-    String finalResult = "", addCategoryResult = "";
+    String finalResult = "";
     ProgressDialog pd;
     public String categoryErrorMsg = "";
-    public ArrayList<CharSequence> textArray = new ArrayList<CharSequence>();
-    public ArrayList<CharSequence> loadTextArray = new ArrayList<CharSequence>();
-    public ArrayList<CharSequence> formattedTextArray = new ArrayList<CharSequence>();
     private final Handler mHandler = new Handler();
     private Blog blog;
-    private int id;
     private ListView lv;
+    private CategoryNode mCategories;
+    private ArrayList<CategoryNode> mCategoryLevels;
+    private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -65,56 +58,44 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            id = extras.getInt("id");
+            int blogId = extras.getInt("id");
             try {
-                blog = new Blog(id);
+                blog = new Blog(blogId);
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
-            checkedCategories = extras.getLongArray("checkedCategories");
             categoriesCSV = extras.getString("categoriesCSV");
         }
 
-        loadCategories();
+        populateOrFetchCategories();
     }
 
-    private void loadCategories() {
-        loadTextArray.clear();
-        formattedTextArray.clear();
-        List<?> categoriesVector = WordPress.wpDB.loadCategories(id);
-        if (categoriesVector.size() > 0) {
+    private void populateCategoryList() {
+        mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
+        for (int i = 0; i < mCategoryLevels.size(); i++) {
+            mCategoryNames.put(mCategoryLevels.get(i).getName(), i);
+        }
 
-            for (int i = 0; i < categoriesVector.size(); i++) {
-                loadTextArray.add(categoriesVector.get(i).toString());
-                formattedTextArray.add(EscapeUtils.unescapeHtml(categoriesVector.get(i).toString()));
-            }
-
-            ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this, R.layout.categories_row, formattedTextArray);
-
-            this.setListAdapter(categories);
-
-            if (checkedCategories != null) {
-                ListView lv = getListView();
-                for (int i = 0; i < checkedCategories.length; i++) {
-
-                    lv.setItemChecked((int) checkedCategories[i], true);
-
-                }
-
-            } else if (categoriesCSV != null) {
-                String catsArray[] = categoriesCSV.split(",");
-                ListView lv = getListView();
-                for (int i = 0; i < loadTextArray.size(); i++) {
-
-                    for (int x = 0; x < catsArray.length; x++) {
-                        if (catsArray[x].equals(loadTextArray.get(i).toString())) {
-                            lv.setItemChecked(i, true);
-                        }
-                    }
-
+        CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
+        this.setListAdapter(categoryAdapter);
+        if (categoriesCSV != null) {
+            String catsArray[] = categoriesCSV.split(",");
+            ListView lv = getListView();
+            for (String selectedCategory : catsArray) {
+                if (mCategoryNames.keySet().contains(selectedCategory)) {
+                    lv.setItemChecked(mCategoryNames.get(selectedCategory), true);
                 }
             }
+        }
+    }
+
+
+    private void populateOrFetchCategories() {
+        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getId());
+
+        if (mCategories.getChildren().size() > 0) {
+            populateCategoryList();
         } else {
             refreshCategories();
         }
@@ -127,7 +108,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                     pd.dismiss();
                 }
 
-                loadCategories();
+                populateOrFetchCategories();
 
                 Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
             }
@@ -152,7 +133,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 if (pd.isShowing()) {
                     pd.dismiss();
                 }
-                loadCategories();
+                populateOrFetchCategories();
                 Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
             } else if (finalResult.equals("FAIL")) {
                 if (pd.isShowing()) {
@@ -175,14 +156,14 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         }
     };
 
-    public String getCategories() {
-        // gets the categories via xmlrpc call to wp blog
-        String returnMessage = "";
-
+    /**
+     * Gets the categories via a xmlrpc call
+     * @return result message
+     */
+    public String fetchCategories() {
+        String returnMessage;
         Object result[] = null;
-
         Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), };
-
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
 
         boolean success = false;
@@ -195,30 +176,22 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         }
 
         if (success) {
-            int size = result.length;
-
             // wipe out the categories table
-            WordPress.wpDB.clearCategories(id);
+            WordPress.wpDB.clearCategories(blog.getId());
 
-            for (int i = 0; i < size; i++) {
-                Map<?, ?> curHash = (Map<?, ?>) result[i];
-
+            for (Object aResult : result) {
+                Map<?, ?> curHash = (Map<?, ?>) aResult;
                 String categoryName = curHash.get("categoryName").toString();
                 String categoryID = curHash.get("categoryId").toString();
-
+                String categoryParentID = curHash.get("parentId").toString();
                 int convertedCategoryID = Integer.parseInt(categoryID);
-
-                WordPress.wpDB.insertCategory(id, convertedCategoryID, categoryName);
-
-                // populate the spinner with the category names
-                textArray.add(categoryName);
+                int convertedCategoryParentID = Integer.parseInt(categoryParentID);
+                WordPress.wpDB.insertCategory(blog.getId(), convertedCategoryID, convertedCategoryParentID, categoryName);
             }
-
             returnMessage = "gotCategories";
         } else {
             returnMessage = "FAIL";
         }
-
         return returnMessage;
     }
 
@@ -233,6 +206,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public String addCategory(String category_name, String category_slug, String category_desc, int parent_id) {
         // Return string
         String returnString = "";
+
+        // Save selected categories
+        categoriesCSV = selectedCategoriesToCSV();
 
         // Store the parameters for wp.addCategory
         Map<String, Object> struct = new HashMap<String, Object>();
@@ -260,7 +236,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             // Convert "result" (= category_id) from type Object to int
             int category_id = Integer.parseInt(result.toString());
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(id, category_id, category_name);
+            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, category_name);
 
             returnString = "addCategory_success";
         }
@@ -276,10 +252,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             final Bundle extras = data.getExtras();
 
             switch (requestCode) {
-            case 0:
-
-                // Add category
-
+            case 0: // Add category
                 // Does the user want to continue, or did he press "dismiss"?
                 if (extras.getString("continue").equals("TRUE")) {
                     // Get name, slug and desc from Intent
@@ -288,19 +261,14 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                     final String category_desc = extras.getString("category_desc");
                     final int parent_id = extras.getInt("parent_id");
 
-                    if (loadTextArray.contains(category_name)) {
-                        // A category with the specified name already exists
-                    } else {
-                        // Add the category
-                        pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.cat_adding_category),
+                    // Check if the category name already exists
+                    if (!mCategoryNames.keySet().contains(category_name)) {
+                        pd = ProgressDialog.show(SelectCategoriesActivity.this,
+                                getResources().getText(R.string.cat_adding_category),
                                 getResources().getText(R.string.cat_attempt_add_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
-
-                                if (finalResult.equals("addCategory_success"))
-                                    loadTextArray.add(category_name);
-
                                 mHandler.post(mUpdateResults);
                             }
                         };
@@ -328,7 +296,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             return true;
         } else if (itemId == R.id.menu_new_category) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", id);
+            bundle.putInt("id", blog.getId());
             Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
             i.putExtras(bundle);
             startActivityForResult(i, 0);
@@ -346,10 +314,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 getResources().getText(R.string.attempting_categories_refresh), true, true);
         Thread th = new Thread() {
             public void run() {
-                finalResult = getCategories();
-
+                finalResult = fetchCategories();
                 mHandler.post(mUpdateResults);
-
             }
         };
         th.start();
@@ -367,37 +333,23 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         super.onBackPressed();
     }
 
-    private void saveAndFinish() {
-        String selectedCategories = "";
-
+    private String selectedCategoriesToCSV() {
+        ArrayList<String> selectedCategories = new ArrayList<String>();
         SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
-        List<Integer> rCheckedItems = new Vector<Integer>();
-
         for (int i = 0; i < selectedItems.size(); i++) {
-            if (selectedItems.get(selectedItems.keyAt(i)) == true) {
-                rCheckedItems.add(selectedItems.keyAt(i));
-                selectedCategories += loadTextArray.get(selectedItems.keyAt(i)).toString() + ",";
+            if (selectedItems.get(selectedItems.keyAt(i))) {
+                selectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
             }
         }
+        return TextUtils.join(",", selectedCategories);
+    }
 
-        long finalCheckedItems[] = new long[rCheckedItems.size()];
-
-        for (int x = 0; x < rCheckedItems.size(); x++) {
-            finalCheckedItems[x] = Long.parseLong(rCheckedItems.get(x).toString());
-        }
-
+    private void saveAndFinish() {
         Bundle bundle = new Bundle();
-        selectedCategories = selectedCategories.trim();
-        if (selectedCategories.endsWith(",")) {
-            selectedCategories = selectedCategories.substring(0, selectedCategories.length() - 1);
-        }
-
-        bundle.putString("selectedCategories", selectedCategories);
-        bundle.putLongArray("checkedItems", finalCheckedItems);
+        bundle.putString("selectedCategories", selectedCategoriesToCSV());
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
         finish();
     }
-
 }

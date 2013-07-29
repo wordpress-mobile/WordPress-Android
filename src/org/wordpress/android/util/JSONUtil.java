@@ -6,6 +6,9 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class JSONUtil {
     private static String QUERY_SEPERATOR=".";
     private static String QUERY_ARRAY_INDEX_START="[";
@@ -123,5 +126,20 @@ public class JSONUtil {
             return defaultObject;
         }
 
+    }
+
+    /**
+     * Convert a JSONArray (expected to contain strings) in a string list
+     */
+    public static List<String> fromJSONArrayToStringList(JSONArray jsonArray) {
+        List<String> stringList = new ArrayList<String>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                stringList.add(jsonArray.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return stringList;
     }
 }
