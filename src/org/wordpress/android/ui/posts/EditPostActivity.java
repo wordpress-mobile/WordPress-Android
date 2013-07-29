@@ -1362,11 +1362,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         // Add select category button
         Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        if (mCategories.size() == 0) {
-            selectCategory.setText(getResources().getText(R.string.category));
-        } else {
-            selectCategory.setText("");
-        }
         selectCategory.setOnClickListener(this);
         sectionCategories.addView(selectCategory);
     }

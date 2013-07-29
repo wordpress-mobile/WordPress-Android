@@ -59,12 +59,20 @@
                     android:hint="@string/tags_separate_with_commas"
                     android:inputType="textAutoCorrect" />
 
+                <TextView
+                        android:id="@+id/categoryLabel"
+                        style="@style/WordPressSubHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/category" />
+
             </LinearLayout>
 
             <org.wordpress.android.util.FlowLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" android:id="@+id/sectionCategories" android:paddingLeft="8dp">
             </org.wordpress.android.util.FlowLayout>
+
             <RelativeLayout
                 android:id="@+id/sectionLocation"
                 android:layout_width="fill_parent"
