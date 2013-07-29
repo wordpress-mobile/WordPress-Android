@@ -240,6 +240,12 @@ public class MediaEditFragment extends SherlockFragment {
     private void setMediaUpdating(boolean isUpdating) {
         mIsMediaUpdating = isUpdating;
         mSaveButton.setEnabled(!isUpdating);
+        
+        if (isUpdating) {
+            mSaveButton.setText("Saving..");
+        } else {
+            mSaveButton.setText(R.string.save);
+        }
     }
     
     private boolean isMediaUpdating() {
@@ -348,7 +354,9 @@ public class MediaEditFragment extends SherlockFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_media) {
+            item.setActionView(R.layout.progressbar);
             editMedia();
+
         }
         return super.onOptionsItemSelected(item);
     }

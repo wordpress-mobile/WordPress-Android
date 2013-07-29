@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -61,13 +62,26 @@ public class MediaGridAdapter extends CursorAdapter {
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
         // upload state
+        
+        View uploadStateView = (View) view.findViewById(R.id.media_grid_item_upload_state_container);
+        ProgressBar progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
+        
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
         if (stateTextView != null) {
             if (state != null && state.length() > 0) {
                 
+                // show the progressbar only when the state is uploading
+                if (state.equals("failed") || state.equals("uploaded")) {
+                    progressUpload.setVisibility(View.GONE);
+                } else {
+                    progressUpload.setVisibility(View.VISIBLE);
+
+                }
+                
                 // add onclick to retry failed uploads 
                 if (state.equals("failed")) {
+                    
                     state = "retry";
                     stateTextView.setOnClickListener(new OnClickListener() {
                         
@@ -83,9 +97,9 @@ public class MediaGridAdapter extends CursorAdapter {
                 }
                 
                 stateTextView.setText(state);
-                stateTextView.setVisibility(View.VISIBLE);
+                uploadStateView.setVisibility(View.VISIBLE);
             } else {
-                stateTextView.setVisibility(View.GONE);
+                uploadStateView.setVisibility(View.GONE);
             }
         }
 

@@ -72,15 +72,36 @@
             android:textSize="12sp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/media_grid_item_upload_state"
+    <RelativeLayout
+        android:id="@+id/media_grid_item_upload_state_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
         android:background="@color/wordpress_blue"
-        android:padding="6dp"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        android:paddingBottom="6dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="6dp"
+        android:paddingTop="6dp"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/media_grid_item_upload_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp" />
+
+        <TextView
+            android:id="@+id/media_grid_item_upload_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/media_grid_item_upload_progress"
+            android:gravity="right"
+            android:paddingLeft="3dp"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
 </org.wordpress.android.ui.CheckableFrameLayout>

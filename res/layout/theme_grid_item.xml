@@ -14,13 +14,28 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
 
-    <ImageView 
+    <ImageView
         android:id="@+id/theme_grid_current_theme_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="@drawable/theme_icon_tag_current"
         android:layout_gravity="top|right"
-        />
+        android:background="@drawable/theme_icon_tag_current"
+        android:visibility="gone" />
+
+   <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/media_gallery_grid_label_bg"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/theme_grid_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/media_gallery_grid_label" />
+    </RelativeLayout>
 
 </FrameLayout>

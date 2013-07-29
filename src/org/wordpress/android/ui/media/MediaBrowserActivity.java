@@ -465,7 +465,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     private boolean isInMultiSelect() {
 //        return mMultiSelectCount > 0;
-        return mMediaGridFragment.isInMultiSelect();
+        if (mMediaGridFragment != null)
+            return mMediaGridFragment.isInMultiSelect();
+        return false;
     }
     
     @Override
