@@ -142,7 +142,7 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         private int mPosition;
         
         @SuppressLint("DefaultLocale")
-        public CharSequence getText() {
+		public CharSequence getText() {
             return mText.toUpperCase();
         }
 

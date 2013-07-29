@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -30,15 +29,11 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
 
 public class WordPress extends Application {
@@ -63,6 +58,7 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static JSONObject latestNotes;
+    public static BitmapLruCache localImageCache;
 
     private static Context mContext;
     
@@ -81,6 +77,9 @@ public class WordPress extends Application {
         // Use a small slice of available memory for the image cache
         int cacheSize = maxMemory / 32;
         imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+
+        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
+        localImageCache = new BitmapLruCache(cacheSize / 2);
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)

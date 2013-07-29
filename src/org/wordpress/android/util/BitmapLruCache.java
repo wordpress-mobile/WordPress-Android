@@ -20,10 +20,15 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
 
     @Override
     protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-        if (!oldValue.isRecycled()) {
-            oldValue.recycle();
-            oldValue = null;
-        }
+        
+        // commenting this out due to "Cannot draw recycled Bitmap errors"
+        // see CommonsWare's comment on the accepted answer at:
+        // http://stackoverflow.com/questions/12218976/cannot-draw-recycled-bitmaps-when-displaying-bitmaps-in-gallery-attached-to-ad
+        
+        // if (!oldValue.isRecycled()) {
+        // oldValue.recycle();
+        // oldValue = null;
+        // }
     }
 
     @Override

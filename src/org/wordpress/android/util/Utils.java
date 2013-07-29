@@ -3,6 +3,10 @@ package org.wordpress.android.util;
 import java.util.Comparator;
 import java.util.Map;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.util.DisplayMetrics;
+
 public class Utils {
 
     public static Comparator<Object> BlogNameComparator = new Comparator<Object>() {
@@ -27,5 +31,16 @@ public class Utils {
         }
  
     };
+ 
+    // logic below based on login in WPActionBarActivity.java
+    public static boolean isXLarge(Context context) {
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            return true;
+        return false;
+    }
     
+    public static boolean isLandscape(Context context) {
+        return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
 }

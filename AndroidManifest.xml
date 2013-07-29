@@ -123,11 +123,11 @@
         <activity
             android:name=".ui.posts.PostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--             <intent-filter> -->
+<!--                 <action android:name="android.intent.action.MAIN" /> -->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+<!--             </intent-filter> -->
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
@@ -140,16 +140,23 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.posts.ViewPostActivity" />
 
-        
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity" >
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Media Activities -->
+        <activity android:name=".ui.media.MediaBrowserActivity" >
+        </activity>
         
+        <!-- Theme Activities -->
+        <activity android:name=".ui.themes.ThemeBrowserActivity" >
+        </activity>
+                
         <!-- Other activities -->
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
@@ -184,6 +191,16 @@
             android:label="Post Upload Service" >
         </service>
         
+        <service
+            android:name=".util.MediaUploadService"
+            android:label="Media Upload Service" >
+        </service>
+
+        <service
+            android:name=".util.MediaDeleteService"
+            android:label="Media Delete Service" >
+        </service>
+                
         <service android:name="org.wordpress.android.GCMIntentService" />
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"

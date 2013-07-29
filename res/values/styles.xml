@@ -148,7 +148,7 @@
     </style>
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
-        <item name="mdMenuSize">250dp</item>
+        <item name="mdMenuSize">@dimen/menu_drawer_width</item>
     </style>
 
     <style name="MenuDrawer.Button">

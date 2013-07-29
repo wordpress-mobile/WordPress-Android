@@ -1,5 +1,10 @@
 package org.wordpress.android.models;
 
+import java.util.Date;
+import java.util.Map;
+
+import android.webkit.MimeTypeMap;
+
 import org.wordpress.android.WordPress;
 
 public class MediaFile {
@@ -9,9 +14,8 @@ public class MediaFile {
     protected String filePath = null; //path of the file into disk
     protected String fileName = null; //name of the file into the server
     protected String title = null;
-    protected String caption = null;
     protected String description = null;
-    protected String fileURL = null;
+    protected String caption = null;
     protected int horizontalAlignment; //0 = none, 1 = left, 2 = center, 3 = right
     protected boolean verticalAligment = false; //false = bottom, true = top
     protected int width = 500, height;
@@ -20,6 +24,50 @@ public class MediaFile {
     protected boolean featured = false;
     protected boolean isVideo = false;
     protected boolean featuredInPost;
+    protected String fileURL = null; // url of the file to download
+    protected String thumbnailURL = null;  // url of the thumbnail to download
+    private String blogId;
+    private long dateCreatedGmt;
+    private String uploadState = null;
+    private String mediaId;
+
+
+    public MediaFile(String blogId, Map<?, ?> resultMap) {
+        
+        setBlogId(blogId);
+        setMediaId(resultMap.get("attachment_id").toString());
+        setPostID(Long.parseLong(resultMap.get("parent").toString()));
+        setTitle(resultMap.get("title").toString());
+        setCaption(resultMap.get("caption").toString());
+        setDescription(resultMap.get("description").toString());
+        
+        // get the file name from the link - TODO: may have problem with unicode names
+        String link = resultMap.get("link").toString();
+        setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
+        
+        String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
+        setMIMEType(mimeType);
+        
+        setFileURL(resultMap.get("link").toString());
+        String thumbnailURL = resultMap.get("thumbnail").toString();
+        if(thumbnailURL != null && thumbnailURL.startsWith("http"))
+            setThumbnailURL(thumbnailURL);
+
+        Date date = (Date) resultMap.get("date_created_gmt");
+        setDateCreatedGMT(date.getTime());
+        
+        Object meta = resultMap.get("metadata");
+        if(meta != null && meta instanceof Map) {
+            Map<?, ?> metadata = (Map<?, ?>) meta;
+            setWidth(Integer.parseInt(metadata.get("width").toString()));
+            setHeight(Integer.parseInt(metadata.get("height").toString()));
+        }
+    }
+    
+    public MediaFile() {
+        // TODO Auto-generated constructor stub
+    }
 
     public int getId() {
         return id;
@@ -29,6 +77,14 @@ public class MediaFile {
         this.id = id;
     }
 
+    public String getMediaId() {
+        return mediaId;
+    }
+    
+    public void setMediaId(String id) {
+        mediaId = id;
+    }
+    
     public boolean isFeatured() {
         return featured;
     }
@@ -85,6 +141,14 @@ public class MediaFile {
         this.fileURL = fileURL;
     }
 
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
+
+    public void setThumbnailURL(String thumbnailURL) {
+        this.thumbnailURL = thumbnailURL;
+    }
+    
     public boolean isVerticalAlignmentOnTop() {
         return verticalAligment;
     }
@@ -159,6 +223,32 @@ public class MediaFile {
 
     public void save() {
         WordPress.wpDB.saveMediaFile(this);
+    }
+
+    public String getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
+        
+    }
+
+    public void setDateCreatedGMT(long date_created_gmt) {
+        this.dateCreatedGmt = date_created_gmt;
+    }
+    
+
+    public long getDateCreatedGMT() {
+        return dateCreatedGmt;
+    }
+
+    public void setUploadState(String uploadState) {
+        this.uploadState = uploadState;
+    }
+    
+    public String getUploadState() {
+        return uploadState;
     }
 
 }
