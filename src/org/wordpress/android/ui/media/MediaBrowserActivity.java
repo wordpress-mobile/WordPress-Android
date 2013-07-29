@@ -219,6 +219,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             if (fm.getBackStackEntryCount() == 0) {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mMediaGridFragment);
+                mMediaGridFragment.clearCheckedItems();
                 setupBaseLayout();
                 
                 mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
@@ -463,7 +464,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
     
     private boolean isInMultiSelect() {
-        return mMultiSelectCount > 0;
+//        return mMultiSelectCount > 0;
+        return mMediaGridFragment.isInMultiSelect();
     }
     
     @Override

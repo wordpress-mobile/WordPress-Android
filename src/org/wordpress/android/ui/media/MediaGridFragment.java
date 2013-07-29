@@ -357,6 +357,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
             mResultView.setText("Displaying media from " + formattedStart + " to " + formattedEnd);
         } else {
+
             mResultView.setVisibility(View.VISIBLE);
             mResultView.setText(getResources().getString(R.string.empty_fields));
 
@@ -478,8 +479,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mListener.onMultiSelectChange(count);
     }
 
-    private boolean isInMultiSelect() {
-        return mCheckedItems.size() > 0;
+    public boolean isInMultiSelect() {
+        return mGridView.isInMultiSelectMode();
     }
 
     public ArrayList<String> getCheckedItems() {
