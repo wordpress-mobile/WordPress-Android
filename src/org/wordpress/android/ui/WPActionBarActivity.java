@@ -159,7 +159,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         Blog currentBlog = WordPress.getCurrentBlog();
-
+            
         if (currentBlog != null && mListView != null && mListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getId()) {
@@ -766,6 +766,13 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(WPActionBarActivity.this, ThemeBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
+        }
+        
+        @Override
+        public Boolean isVisible() {
+            if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())
+                return true;
+            return false;
         }
     }
     

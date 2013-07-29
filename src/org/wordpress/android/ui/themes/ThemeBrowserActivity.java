@@ -4,6 +4,7 @@ package org.wordpress.android.ui.themes;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
@@ -66,6 +68,14 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
             finish();
             return;
+        }
+        
+        // if a self-hosted blog, themes api is not available, so launch into posts
+        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
+            Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+            finish();
         }
 
         setTitle(R.string.themes);
