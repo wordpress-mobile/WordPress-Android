@@ -10,21 +10,42 @@
 
     <ViewStub
         android:id="@+id/media_grid_image_stub"
-        android:inflatedId="@+id/media_grid_item_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/media_grid_item_image" />
 
-    <TextView
-        android:id="@+id/media_grid_item_upload_state"
+    <RelativeLayout
+        android:id="@+id/media_grid_item_upload_state_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
         android:background="@color/wordpress_blue"
-        android:padding="6dp"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:visibility="gone" />
-    
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="6dp"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/media_grid_item_upload_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp" />
+
+        <TextView
+            android:id="@+id/media_grid_item_upload_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/media_grid_item_upload_progress"
+            android:gravity="right"
+            android:paddingLeft="3dp"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
     <CheckBox
         android:id="@+id/media_grid_item_checkstate"
         android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -34,8 +35,11 @@ public class ThemeTabAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         
         final String screenshotURL =  cursor.getString(cursor.getColumnIndex("screenshotURL"));
+        final String name = cursor.getString(cursor.getColumnIndex("name"));
         
         final NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+        final TextView nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
+        nameView.setText(name);
         
         final int isCurrentTheme = cursor.getInt(cursor.getColumnIndex("isCurrentTheme"));
         
