@@ -13,6 +13,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +30,9 @@ import org.json.JSONException;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.Stat;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.stats.Stats;
 import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
@@ -57,6 +60,9 @@ public class WordPressDB {
     private static final String POSTS_TABLE = "posts";
     private static final String COMMENTS_TABLE = "comments";
 
+    private static final String STATS_TABLE = "stats";
+    private static final String CREATE_TABLE_STATS = "create table if not exists " + STATS_TABLE + " (_id integer primary key autoincrement, blogId text, category text, entryType text, entry text, total integer, timeframe integer, url text, imageUrl text);";
+    
     // eula
     private static final String EULA_TABLE = "eula";
 
@@ -181,6 +187,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(CREATE_TABLE_STATS);
                 migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -518,6 +525,10 @@ public class WordPressDB {
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 16) {
                 migrateWPComAccount();
+                db.setVersion(DATABASE_VERSION);
+            } else if (db.getVersion() == 17) {
+                migrateWPComAccount();
+                db.execSQL(CREATE_TABLE_STATS);
                 db.setVersion(DATABASE_VERSION);
             }
         } catch (SQLException e) {
@@ -1912,6 +1923,27 @@ public class WordPressDB {
         c.close();
 
         return false;
+    }
+
+    public void saveStat(Stat stat) {
+        ContentValues values = new ContentValues();
+        values.put("blogId", stat.getBlogId());
+        values.put("category", stat.getCategory());
+        values.put("entryType", stat.getEntryType());
+        values.put("entry", stat.getEntry());
+        values.put("total", stat.getTotal());
+        values.put("timeframe", stat.getTimeframe());
+        values.put("imageUrl", stat.getImageUrl());
+        values.put("url", stat.getUrl());
+        synchronized (this) {
+            db.insert(STATS_TABLE, null, values);
+        }        
+    }
+    
+    @SuppressLint("DefaultLocale")
+	public Cursor getStats(String blogId, Stats.Category category, int timeframe) {
+        return db.rawQuery("SELECT * FROM " + STATS_TABLE + " WHERE blogId=? AND category=? AND timeframe=?", 
+                new String [] { blogId, category.name().toLowerCase(), timeframe + "" });
     }
 
 }

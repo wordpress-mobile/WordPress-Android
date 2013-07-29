@@ -64,12 +64,16 @@ public class WordPress extends Application {
     public static ImageLoader imageLoader;
     public static JSONObject latestNotes;
 
+    private static Context mContext;
+    
     public static final String TAG="WordPress";
 
     @Override
     public void onCreate() {
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
+        
+        mContext = this;
         
         // Volley networking setup
         requestQueue = Volley.newRequestQueue(this);
@@ -87,6 +91,10 @@ public class WordPress extends Application {
         
         loadNotifications(this);
         super.onCreate();
+    }
+    
+    public static Context getContext(){
+        return mContext;
     }
     
     public static void registerForCloudMessaging(Context ctx) {

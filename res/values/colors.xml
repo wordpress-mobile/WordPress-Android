@@ -15,4 +15,10 @@
     <color name="wordpress_blue">#21759B</color>
     <color name="light_gray">#E5E5E5</color>
     <color name="gray">#CCC</color>
+    
+    
+    <!-- Horizontal Tab View colors -->
+    <color name="tab_divider">#565656</color>
+    <color name="tab_background">#363636</color>
+    <color name="tab_text">#FFFFFF</color>
 </resources>

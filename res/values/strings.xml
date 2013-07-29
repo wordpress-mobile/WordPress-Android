@@ -280,6 +280,7 @@
   <string name="open_source_licenses">Open Source Licenses</string>
 
   <!-- stats -->
+  <string name="stats">Stats</string>
   <string name="username_password_required">Username and Password are required fields.</string>
   <string name="help_stats">Need help?</string>
   <string name="stats_username">Username</string>
@@ -289,6 +290,37 @@
   <string name="site_not_found">or site not found.</string>
   <string name="stats_service_error">Sorry. There was an error trying to connect to your stats. Please try again.</string>
 
+  <!-- stats: labels for the views -->
+  <string name="stats_view_visitors_and_views">Visitors and Views</string>
+  <string name="stats_view_views_by_country">Views by Country</string>
+  <string name="stats_view_top_posts_and_pages">Top Posts and Pages</string>
+  <string name="stats_view_totals_followers_and_shares">Totals, Followers, &amp; Shares</string>
+  <string name="stats_view_clicks">Clicks</string>
+  <string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
+  <string name="stats_view_top_authors">Top Authors</string>
+  <string name="stats_view_referrers">Referrers</string>
+  <string name="stats_view_video_plays">Video Plays</string>
+  <string name="stats_view_comments">Comments</string>
+  <string name="stats_view_search_engine_terms">Search Engine Terms</string>
+  
+  <!-- stats: label for the entries -->
+  <string name="stats_category_country">Country</string>
+  <string name="stats_category_posts_and_pages">Title</string>
+  <string name="stats_category_clicks_url">URL</string>
+  <string name="stats_category_tags_and_categories">Topic</string>
+  <string name="stats_category_authors">Author</string>
+  <string name="stats_category_referrers">Referrer</string>
+  <string name="stats_category_video_plays">Video Name</string>
+  <string name="stats_category_top_commentor">Commentor</string>
+  <string name="stats_category_most_commented">Posts</string>
+  <string name="stats_category_search_engine_terms">Search</string>
+  
+  <!-- stats: label for the totals -->
+  <string name="stats_totals_views">Views</string>
+  <string name="stats_totals_clicks">Clicks</string>
+  <string name="stats_totals_plays">Plays</string>
+  <string name="stats_totals_comments">Comments</string>
+  
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>
   <string name="link"><u>link</u></string>

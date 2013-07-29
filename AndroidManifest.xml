@@ -140,6 +140,16 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.posts.ViewPostActivity" />
 
+        
+        <!-- Stats Activities -->
+        <activity android:name=".ui.stats.StatsActivity" >
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
         <!-- Other activities -->
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
