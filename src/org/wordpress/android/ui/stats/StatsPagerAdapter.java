@@ -19,7 +19,7 @@ public class StatsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return new Fragment();
+        return StatsAbsCategoryFragment.newInstance(mViewType, mTimeframes[i]);
     }
 
     @Override

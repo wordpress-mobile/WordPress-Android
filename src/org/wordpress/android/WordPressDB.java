@@ -2231,7 +2231,7 @@ public class WordPressDB {
     }
     
     public Cursor getThemes(String blogId, String searchTerm) {
-        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"}); 
+        return db.rawQuery("SELECT _id,  themeId, name, screenshotURL, isCurrentTheme FROM " + THEMES_TABLE + " WHERE blogId=? AND (name LIKE ? OR description LIKE ?) ORDER BY name ASC", new String[] {blogId, "%" + searchTerm + "%", "%" + searchTerm + "%"}); 
         
     }
     

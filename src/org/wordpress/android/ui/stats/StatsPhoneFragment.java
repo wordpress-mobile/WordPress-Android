@@ -9,16 +9,18 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.HorizontalTabView;
+import org.wordpress.android.ui.HorizontalTabView.Tab;
+import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.stats.Stats.Timeframe;
 
-public class StatsListFragment extends Fragment {
+public class StatsPhoneFragment extends Fragment implements TabListener {
 
-    public static final String TAG = StatsListFragment.class.getSimpleName();
+    public static final String TAG = StatsPhoneFragment.class.getSimpleName();
     
     private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
     
-    public static StatsListFragment newInstance(Stats.ViewType statsViewType) {
-        StatsListFragment fragment = new StatsListFragment();
+    public static StatsPhoneFragment newInstance(Stats.ViewType statsViewType) {
+        StatsPhoneFragment fragment = new StatsPhoneFragment();
         
 
         Bundle args = new Bundle();
@@ -45,16 +47,11 @@ public class StatsListFragment extends Fragment {
         });
                 
         mTabView = (HorizontalTabView) view.findViewById(R.id.stats_tabs);
+        mTabView.setTabListener(this);
 
         refreshViews();   
         return view;
     }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
 
     private Stats.ViewType getStatsViewType() {
         return Stats.ViewType.values()[getArguments().getInt(ARGS_VIEW_TYPE)];
@@ -62,24 +59,6 @@ public class StatsListFragment extends Fragment {
     
     private void refreshViews() {
         mStatsViewType = getStatsViewType();
-        switch (mStatsViewType) {
-            case VISITORS_AND_VIEWS:
-                // do something
-            case TOTALS_FOLLOWERS_AND_SHARES:
-                // do something
-            case TOP_AUTHORS:
-            case COMMENTS:
-            case TOP_POSTS_AND_PAGES:
-            case VIEWS_BY_COUNTRY:
-            case REFERRERS:
-            case CLICKS:
-            case SEARCH_ENGINE_TERMS:
-            case TAGS_AND_CATEGORIES:
-            case VIDEO_PLAYS:
-                // do something
-                
-        }
-        
         Stats.Timeframe[] timeframes = new Stats.Timeframe[] { Timeframe.TODAY, Timeframe.YESTERDAY };
         mViewPager.setAdapter(new StatsPagerAdapter(getChildFragmentManager(), mStatsViewType, timeframes));
         
@@ -88,6 +67,11 @@ public class StatsListFragment extends Fragment {
             mTabView.addTab(mTabView.newTab().setText(title));
         }
         mTabView.setSelectedTab(0);
+    }
+
+    @Override
+    public void onTabSelected(Tab tab) {
+        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     

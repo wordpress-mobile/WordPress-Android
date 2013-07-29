@@ -33,6 +33,14 @@ public class Stats {
         public String getLabel() {
             return WordPress.getContext().getString(mLabelResId);
         }
+        
+        public static String[] toStringArray() {
+            String[] types = new String[ViewType.values().length];
+            for (int i = 0; i < ViewType.values().length; i++) {
+                types[i] = ViewType.values()[i].getLabel();
+            }
+            return types;
+        }
     }
     
     
