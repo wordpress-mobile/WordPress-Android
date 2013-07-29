@@ -22,7 +22,6 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
     public static StatsPhoneFragment newInstance(Stats.ViewType statsViewType) {
         StatsPhoneFragment fragment = new StatsPhoneFragment();
         
-
         Bundle args = new Bundle();
         args.putInt(ARGS_VIEW_TYPE, statsViewType.ordinal());
         fragment.setArguments(args);
@@ -33,6 +32,8 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
     private ViewPager mViewPager;
     private HorizontalTabView mTabView;
     private Stats.ViewType mStatsViewType;
+
+    private StatsPagerAdapter mAdapter;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +61,8 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
     private void refreshViews() {
         mStatsViewType = getStatsViewType();
         Stats.Timeframe[] timeframes = new Stats.Timeframe[] { Timeframe.TODAY, Timeframe.YESTERDAY };
-        mViewPager.setAdapter(new StatsPagerAdapter(getChildFragmentManager(), mStatsViewType, timeframes));
+        mAdapter = new StatsPagerAdapter(getChildFragmentManager(), mStatsViewType, timeframes);
+        mViewPager.setAdapter(mAdapter);
         
         for (int i = 0; i < timeframes.length; i++) {
             String title = timeframes[i].getLabel();
@@ -73,6 +75,5 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
     public void onTabSelected(Tab tab) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
-
     
 }

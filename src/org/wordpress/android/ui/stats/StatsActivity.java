@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ArrayAdapter;
@@ -7,6 +8,9 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -59,4 +63,48 @@ public class StatsActivity extends WPActionBarActivity {
         
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.stats, menu);
+        return true;
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        
+        if (itemId == R.id.menu_stats_load_sample_data) {
+            
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    WordPress.wpDB.loadSampleStats();
+                    return null;
+                }
+                
+                @Override
+                protected void onPostExecute(Void result) {
+                    invalidateOptionsMenu();
+                }
+                
+            };
+            task.execute();
+            return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (WordPress.getCurrentBlog() != null) {
+        
+            if (WordPress.wpDB.getStatsCount(WordPress.getCurrentBlog().getBlogId()) > 0)
+                menu.findItem(R.id.menu_stats_load_sample_data).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
 }

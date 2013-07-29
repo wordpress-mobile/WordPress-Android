@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.crypto.Cipher;
@@ -35,6 +36,7 @@ import org.wordpress.android.models.Stat;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.stats.Stats;
+import org.wordpress.android.ui.stats.Stats.Category;
 import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
@@ -2153,8 +2155,54 @@ public class WordPressDB {
     
     @SuppressLint("DefaultLocale")
 	public Cursor getStats(String blogId, Stats.Category category, int timeframe) {
-        return db.rawQuery("SELECT * FROM " + STATS_TABLE + " WHERE blogId=? AND category=? AND timeframe=?", 
+        return db.rawQuery("SELECT * FROM " + STATS_TABLE + " WHERE blogId=? AND category=? AND timeframe=? ORDER BY total DESC, entry ASC", 
                 new String [] { blogId, category.name().toLowerCase(), timeframe + "" });
+    }
+    
+    public int getStatsCount(int blogId) {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + STATS_TABLE + " WHERE blogId=?", new String[] { blogId + "" });
+        return cursor.getCount();
+    }
+    public void loadSampleStats() {
+        if (WordPress.getCurrentBlog() == null)
+            return;
+        
+        String blogId = WordPress.getCurrentBlog().getBlogId() + "";
+        int[] timeframes = new int[] {0, 1};
+        Random random = new Random();
+        
+        String[] word1 = new String[]{"My ", "The ", "This " };
+        String[] word2 = new String[]{"awesome ", "hip ", "cool ", "great ", "funny ", "hilarious ", "geeky ", "trendy "};
+        String[] word3 = new String[]{"video ", "clip ", "screenshot ", "cat picture ", "article ", "website "};
+        String word4 = "is ";
+        String[] word5 = new String[]{"the greatest thing ever!", "full of awesome!", "making me ROFL!", "the new cool thing"};
+        
+        for (Stats.Category category : Stats.Category.values()) {
+            for (int i = 0; i < 10; i++) {
+                ContentValues values = new ContentValues();
+                values.put("blogId", blogId);
+                values.put("category", category.name().toLowerCase());
+
+                if (category == Category.TAGS_AND_CATEGORIES) {
+                    if (random.nextBoolean())
+                        values.put("entryType", "tag");
+                    else
+                        values.put("entryType", "category");
+                }
+                
+                values.put("entry", word1[random.nextInt(word1.length)] + word2[random.nextInt(word2.length)] + word3[random.nextInt(word3.length)] + word4 + word5[random.nextInt(word5.length)]);
+                values.put("total", random.nextInt(999));
+                values.put("timeframe", timeframes[random.nextInt(timeframes.length)]);
+                
+                if(random.nextBoolean())
+                    values.put("imageUrl", "http://placekitten.com/50/50");
+
+                if(random.nextBoolean())
+                    values.put("url", "http://www.google.com");
+                
+                db.insert(STATS_TABLE, null, values);
+            }
+        }
     }
     
     public boolean saveTheme(Theme theme) {

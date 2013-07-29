@@ -80,18 +80,29 @@ public class Stats {
     
     public enum Timeframe {
         
-        TODAY,
-        YESTERDAY,
-        WEEK,
-        MONTH,
-        QUARTER,
-        YEAR,
-        ALL_TIME,
+        TODAY(0),
+        YESTERDAY(1),
+        WEEK(7),
+        MONTH(30),
+        QUARTER(90),
+        YEAR(365),
+        ALL_TIME(-1),
         ;
+        
+        private int mTimeframe;
+
+        private Timeframe(int timeframe) {
+            mTimeframe = timeframe;
+        }
         
         public String getLabel() {
             return name(); 
         }
+        
+        public int toInt() {
+            return mTimeframe;
+        }
+        
     }
 
 }

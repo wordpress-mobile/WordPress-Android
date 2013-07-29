@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import java.util.Locale;
+
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,31 +13,37 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 
 public abstract class StatsAbsListFragment extends StatsAbsCategoryFragment {
 
-    protected Button mViewSummariesBtn;
     protected TextView mEntryLabel;
     protected TextView mTotalsLabel;
     protected ListView mListView;
-    private TextView mDebugText;
+    protected CursorAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
         View view = inflater.inflate(R.layout.stats_list_sub_fragment, container, false);
         
-        mViewSummariesBtn = (Button) view.findViewById(R.id.stats_list_view_summaries_btn);
         mEntryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
-        mEntryLabel.setText(getEntryLabel());
-        mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
-        mTotalsLabel.setText(getTotalsLabel());
-        mListView = (ListView) view.findViewById(R.id.stats_list_listview);
+        mEntryLabel.setText(getEntryLabel().toUpperCase(Locale.getDefault()));
         
-        mDebugText = (TextView) view.findViewById(R.id.stats_list_timeframe_debug);
-        mDebugText.setText(getTimeframe().name());
+        mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
+        mTotalsLabel.setText(getTotalsLabel().toUpperCase(Locale.getDefault()));
+        
+        mListView = (ListView) view.findViewById(R.id.stats_list_listview);
+        mAdapter = new StatsCursorAdapter(getActivity(), null, false, getCategory());
+        mListView.setAdapter(mAdapter);
         
         return view;
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshData();
     }
 
     protected String getEntryLabel() {
@@ -42,5 +52,15 @@ public abstract class StatsAbsListFragment extends StatsAbsCategoryFragment {
 
     protected String getTotalsLabel() {
         return getCategory().getTotalsLabel();
+    }
+    
+    @Override
+    protected void refreshData() {
+        if (WordPress.getCurrentBlog() == null)
+            return;
+        
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        Cursor cursor = WordPress.wpDB.getStats(blogId, getCategory(), getTimeframe().toInt());
+        mAdapter.swapCursor(cursor);
     }
 }
