@@ -2,11 +2,7 @@
 <org.wordpress.android.ui.CheckableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/media_gallery_grid_cell"
-    android:paddingBottom="1dp"
-    android:paddingLeft="0.5dp"
-    android:paddingRight="1dp"
-    android:paddingTop="0.5dp" >
+    android:background="@drawable/media_gallery_grid_cell" >
 
     <ViewStub
         android:id="@+id/media_grid_image_stub"
@@ -20,10 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
         android:background="@color/wordpress_blue"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="6dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
         android:visibility="gone" >
 
         <ProgressBar
@@ -31,8 +27,8 @@
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp" />
 
         <TextView
             android:id="@+id/media_grid_item_upload_state"
@@ -41,7 +37,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/media_grid_item_upload_progress"
             android:gravity="right"
-            android:paddingLeft="3dp"
+            android:paddingLeft="4dp"
             android:textColor="@color/white"
             android:textSize="12sp" />
     </RelativeLayout>
@@ -61,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/media_gallery_grid_label_bg"
-        android:padding="10dp" >
+        android:padding="8dp" >
 
         <TextView
             android:id="@+id/media_grid_item_name"

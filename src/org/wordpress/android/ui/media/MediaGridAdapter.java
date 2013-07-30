@@ -302,8 +302,8 @@ public class MediaGridAdapter extends CursorAdapter {
         int columnCount = context.getResources().getInteger(R.integer.media_grid_num_columns);
         
         if (columnCount > 1) {
-            int dp12 = (int) dpToPx(context, 12);
-            int padding = (columnCount + 1) * dp12;
+            int dp16 = (int) dpToPx(context, 16);
+            int padding = (columnCount + 1) * dp16;
             int width = (maxWidth - padding) / columnCount;
             view.setLayoutParams(new GridView.LayoutParams(width, width));
         }

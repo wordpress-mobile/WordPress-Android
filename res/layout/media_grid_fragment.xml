@@ -10,7 +10,7 @@
         android:background="@drawable/md_list_selector"
         android:clickable="true"
         android:paddingLeft="8dp"
-        android:paddingRight="14dp" >
+        android:paddingRight="16dp" >
 
         <org.wordpress.android.ui.CustomSpinner
             android:id="@+id/media_filter_spinner"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/media_filter_spinner_container"
-        android:padding="7dp"
+        android:padding="8dp"
         android:text="@string/empty_fields"
         android:visibility="gone" />
 
@@ -36,11 +36,11 @@
         android:layout_height="match_parent"
         android:layout_below="@id/media_filter_result_text"
         android:gravity="center"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="8dp"
         android:numColumns="@integer/media_grid_num_columns"
-        android:padding="10dp"
+        android:padding="8dp"
         android:scrollbarStyle="outsideOverlay"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+        android:verticalSpacing="8dp" />
 
 </RelativeLayout>

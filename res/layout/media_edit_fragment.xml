@@ -8,15 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="15dp" >
+        android:padding="16dp" >
 
         <TextView
             android:id="@+id/media_edit_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="12dp"
-            android:textSize="20sp"
-            android:text="@string/media_edit_title_text" />
+            android:text="@string/media_edit_title_text"
+            android:textSize="20sp" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -65,8 +65,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:paddingLeft="12dp"
-            android:textSize="20sp"
-            android:text="@string/media_edit_caption_text" />
+            android:text="@string/media_edit_caption_text"
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/media_edit_fragment_caption"
@@ -81,15 +81,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:paddingLeft="12dp"
-            android:textSize="20sp"
-            android:text="@string/media_edit_description_text" />
+            android:text="@string/media_edit_description_text"
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/media_edit_fragment_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/media_edit_description_hint"
             android:gravity="top|start"
+            android:hint="@string/media_edit_description_hint"
             android:inputType="textCapSentences|textAutoCorrect"
             android:lines="3" />
     </LinearLayout>

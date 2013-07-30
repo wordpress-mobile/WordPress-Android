@@ -152,25 +152,42 @@ public class MediaItemFragment extends SherlockFragment {
     private void refreshViews(Cursor cursor) {
         if (!cursor.moveToFirst())
             return;
-        
-        mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
-        
-        mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
-        mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
 
+        // check whetehr or not to show the edit button
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         mIsLocal = MediaUtils.isLocalFile(state);
         if (mIsLocal)
-            getSherlockActivity().invalidateOptionsMenu(); // don't allow editing for local files
-
-        inflateImageView();
+            getSherlockActivity().invalidateOptionsMenu();
         
+        // title
+        mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
+        
+        // caption
+        String caption = cursor.getString(cursor.getColumnIndex("caption"));
+        if (caption == null || caption.length() == 0) {
+            mCaptionView.setVisibility(View.GONE);
+        } else {
+            mCaptionView.setText(caption);
+            mCaptionView.setVisibility(View.VISIBLE);
+        }
+        
+        // description
+        String desc = cursor.getString(cursor.getColumnIndex("description"));
+        if (desc == null || desc.length() == 0) {
+            mDescriptionView.setVisibility(View.GONE);
+        } else {
+            mDescriptionView.setText(desc);
+            mDescriptionView.setVisibility(View.VISIBLE);
+        }
+
+        // added / upload date
         String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         if (mIsLocal)
             mDateView.setText("Added on: " + date);
         else
             mDateView.setText("Uploaded on: " + date);
         
+        // file name
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
         mFileNameView.setText("File name: " + fileName);
         
@@ -188,6 +205,9 @@ public class MediaItemFragment extends SherlockFragment {
         if (imageUri == null)
             imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
         
+        inflateImageView();
+        
+        // image and dimensions
         if (MediaUtils.isValidImage(imageUri)) {
             
             int width = cursor.getInt(cursor.getColumnIndex("width"));
