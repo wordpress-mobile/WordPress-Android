@@ -105,6 +105,9 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     public void onResume() {
         super.onResume();
         
+        if (getActivity() == null || WordPress.getCurrentBlog() == null)
+            return;
+        
         Cursor cursor = fetchThemes(getThemeSortType());
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         mGridView.setAdapter(mAdapter);
