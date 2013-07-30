@@ -182,5 +182,9 @@
     <style name="WordPressWelcomeStyle">
         <item name="android:layout_gravity">center</item>
     </style>
+    
+    <style name="StatsWhiteBackground">
+        <item name="android:background">@drawable/stats_white_background</item>
+    </style>
 
 </resources>

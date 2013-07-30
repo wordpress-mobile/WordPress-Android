@@ -15,7 +15,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
-public abstract class StatsAbsListFragment extends StatsAbsCategoryFragment {
+public class StatsListFragment extends StatsAbsCategoryFragment {
 
     protected TextView mEntryLabel;
     protected TextView mTotalsLabel;

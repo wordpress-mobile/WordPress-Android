@@ -18,25 +18,25 @@ public abstract class StatsAbsCategoryFragment extends Fragment {
 
         switch (viewType) {
             case VISITORS_AND_VIEWS:
-                // do something
+                fragment = new StatsVisitorsAndViewsFragment();
+                break;
             case TOTALS_FOLLOWERS_AND_SHARES:
                 // do something
             case TOP_AUTHORS:
             case COMMENTS:
+                fragment = new StatsListFragment();
+                break;
             case TOP_POSTS_AND_PAGES:
+                fragment = new StatsTopPostsAndPagesFragment();
+                break;
             case VIEWS_BY_COUNTRY:
             case REFERRERS:
             case CLICKS:
             case SEARCH_ENGINE_TERMS:
             case TAGS_AND_CATEGORIES:
             case VIDEO_PLAYS:
-                // do something
-                
-        }
-        
-        switch (viewType) {
-            default:
-                fragment = new StatsTopPostsAndPagesFragment();
+                fragment = new StatsListFragment();
+                break;
         }
         
         Bundle bundle = new Bundle();

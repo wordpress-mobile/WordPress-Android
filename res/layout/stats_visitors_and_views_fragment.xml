@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:src="@drawable/new_account_logo" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingTop="16dp" >
+
+            <TextView
+                android:id="@+id/stats_visitors_and_views_section1_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="4dp"
+                android:text="TITLE"
+                android:textColor="@color/wordpress_blue"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/stats_visitors_and_views_section1_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/stats_visitors_and_views_section1_label"
+                android:background="@color/wordpress_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_visitors_and_views_section1_line"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/stats_visitors_and_views_section1a"
+                    style="@style/StatsWhiteBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:padding="16dp" >
+
+                    <TextView
+                        android:id="@+id/stats_visitors_and_views_section1a_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="top"
+                        android:text="48"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stats_visitors_and_views_section1a_count"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="bottom"
+                        android:text="Visitors" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/stats_visitors_and_views_section1a"
+                    style="@style/StatsWhiteBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:padding="16dp" >
+
+                    <TextView
+                        android:id="@+id/stats_visitors_and_views_section1a_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="top"
+                        android:text="333"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stats_visitors_and_views_section1a_count"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="bottom"
+                        android:text="Views" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--  -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingTop="16dp" >
+
+            <TextView
+                android:id="@+id/stats_visitors_and_views_section2_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="4dp"
+                android:text="BEST EVER"
+                android:textColor="@color/wordpress_blue"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/stats_visitors_and_views_section2_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/stats_visitors_and_views_section2_label"
+                android:background="@color/wordpress_blue" />
+
+            <RelativeLayout
+                android:id="@+id/stats_visitors_and_views_section2a"
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_visitors_and_views_section2_line"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_visitors_and_views_section1a_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="top"
+                    android:text="48"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stats_visitors_and_views_section1a_count"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="bottom"
+                    android:text="Visitors" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <!--  -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingTop="16dp" >
+
+            <TextView
+                android:id="@+id/stats_visitors_and_views_section3_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="4dp"
+                android:text="ALL TIME"
+                android:textColor="@color/wordpress_blue"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/stats_visitors_and_views_section3_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/stats_visitors_and_views_section3_label"
+                android:background="@color/wordpress_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_visitors_and_views_section3_line"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/stats_visitors_and_views_section3a"
+                    style="@style/StatsWhiteBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:padding="16dp" >
+
+                    <TextView
+                        android:id="@+id/stats_visitors_and_views_section3a_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="top"
+                        android:text="48"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stats_visitors_and_views_section3a_count"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="bottom"
+                        android:text="Visitors" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/stats_visitors_and_views_section3b"
+                    style="@style/StatsWhiteBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:padding="16dp" >
+
+                    <TextView
+                        android:id="@+id/stats_visitors_and_views_section3b_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="top"
+                        android:text="333"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stats_visitors_and_views_section3b_count"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="bottom"
+                        android:text="Views" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>
