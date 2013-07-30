@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:padding="0dp"
+    android:clickable="true" >
+
+    <TextView
+        android:id="@+id/stats_ab_nav_text"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="#FFFFFFFF"
+        android:background="@drawable/spinner_background_ab_wordpress" />
+
+</RelativeLayout>

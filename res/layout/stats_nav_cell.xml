@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/stats_nav_cell_checkmark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="4dp"
+        android:src="@drawable/moderate_approve" />
+
+    <TextView
+        android:id="@+id/stats_nav_cell_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/stats_nav_cell_checkmark"
+        android:paddingBottom="12dp"
+        android:paddingTop="16dp"
+        android:singleLine="true"
+        android:textSize="16sp" >
+    </TextView>
+
+</RelativeLayout>
