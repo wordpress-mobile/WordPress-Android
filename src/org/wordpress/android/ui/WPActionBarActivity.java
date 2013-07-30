@@ -771,7 +771,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         
         @Override
         public Boolean isVisible() {
-            if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())
+            if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isAdmin() && WordPress.getCurrentBlog().isDotcomFlag())
                 return true;
             return false;
         }

@@ -139,6 +139,9 @@ public class WordPressDB {
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
     
+    // add admin flag to blog settings
+    private static final String ADD_ACCOUNTS_ADMIN_FLAG = "alter table accounts add isAdmin boolean default false;";
+    
     // add thumbnailURL, thumbnailPath and fileURL to media
     private static final String ADD_MEDIA_THUMBNAIL_URL = "alter table media add thumbnailURL text default '';";
     private static final String ADD_MEDIA_FILE_URL = "alter table media add fileURL text default '';";
@@ -203,6 +206,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
                 db.execSQL(ADD_MEDIA_FILE_URL);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
@@ -551,6 +555,7 @@ public class WordPressDB {
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 17) {
                 migrateWPComAccount();
+                db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
                 db.execSQL(ADD_MEDIA_FILE_URL);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
@@ -613,7 +618,7 @@ public class WordPressDB {
             String password, String httpuser, String httppassword,
             String imagePlacement, boolean centerThumbnail,
             boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
-            boolean runService, int blogId, boolean wpcom, String wpVersion) {
+            boolean runService, int blogId, boolean wpcom, String wpVersion, boolean isAdmin) {
 
         ContentValues values = new ContentValues();
         values.put("url", url);
@@ -632,6 +637,7 @@ public class WordPressDB {
         values.put("blogId", blogId);
         values.put("dotcomFlag", wpcom);
         values.put("wpVersion", wpVersion);
+        values.put("isAdmin", isAdmin);
         return db.insert(SETTINGS_TABLE, null, values);
     }
 
@@ -741,7 +747,7 @@ public class WordPressDB {
             boolean fullSizeImage, String maxImageWidth, int maxImageWidthId,
             boolean location, boolean isWPCom, String originalUsername,
             String postFormats, String dotcomUsername, String dotcomPassword,
-            String apiBlogID, String apiKey, boolean isScaledImage, int scaledImgWidth, String blogOptions) {
+            String apiBlogID, String apiKey, boolean isScaledImage, int scaledImgWidth, String blogOptions, boolean isAdmin) {
 
         ContentValues values = new ContentValues();
         values.put("url", url);
@@ -764,6 +770,7 @@ public class WordPressDB {
         values.put("isScaledImage", isScaledImage);
         values.put("scaledImgWidth", scaledImgWidth);
         values.put("blog_options", blogOptions);
+        values.put("isAdmin", isAdmin);
 
         boolean returnValue = db.update(SETTINGS_TABLE, values, "id=" + id,
                 null) > 0;
@@ -832,7 +839,7 @@ public class WordPressDB {
                 "maxImageWidth", "maxImageWidthId", "runService", "blogId",
                 "location", "dotcomFlag", "dotcom_username", "dotcom_password",
                 "api_key", "api_blogid", "wpVersion", "postFormats",
-                "lastCommentId","isScaledImage","scaledImgWidth", "homeURL", "blog_options" }, "id=" + id, null, null, null, null);
+                "lastCommentId","isScaledImage","scaledImgWidth", "homeURL", "blog_options", "isAdmin" }, "id=" + id, null, null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
@@ -874,6 +881,7 @@ public class WordPressDB {
                 returnVector.add(c.getInt(23));
                 returnVector.add(c.getString(24));
                 returnVector.add(c.getString(25));
+                returnVector.add(c.getInt(26));
             } else {
                 returnVector = null;
             }
