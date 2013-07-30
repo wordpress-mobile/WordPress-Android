@@ -33,6 +33,7 @@ public class StatsCursorAdapter extends CursorAdapter {
         String imageUrl = cursor.getString(cursor.getColumnIndex("imageUrl"));
         String url = cursor.getString(cursor.getColumnIndex("url"));
 
+        // entries
         TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
         if (url != null && url.length() > 0) {
             Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
@@ -42,6 +43,7 @@ public class StatsCursorAdapter extends CursorAdapter {
             entryTextView.setText(entry);
         }
         
+        // totals
         TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         totalsTextView.setText(total + "");
         
