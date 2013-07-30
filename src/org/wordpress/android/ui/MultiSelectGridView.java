@@ -12,7 +12,6 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 
 import org.wordpress.android.ui.media.MediaGridAdapter;
-import org.wordpress.android.util.Utils;
 
 /**
  * A GridView implementation that aims to do multiselect on GridViews since
@@ -50,9 +49,12 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
         super.setOnItemLongClickListener(this);
     }
 
+    public void setMultiSelectModeEnabled(boolean enabled) {
+        mIsInMultiSelectMode = enabled;
+    }
+    
     public boolean isInMultiSelectMode(){
         return mIsInMultiSelectMode ;
-//        return getSelectedItems().size() > 0;
     }
     
     @Override
@@ -87,15 +89,12 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        if (isInMultiSelectMode())
-            return false;
         
         mIsInMultiSelectMode = true;
 
         Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
         String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         
-        getSelectedItems().clear();
         if (!getSelectedItems().contains(mediaId))
             getSelectedItems().add(mediaId);
         notifyMultiSelectCountChanged();

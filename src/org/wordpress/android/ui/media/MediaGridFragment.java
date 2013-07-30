@@ -147,6 +147,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
             mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
             mListener.onMultiSelectChange(mCheckedItems.size());
+            mGridView.setMultiSelectModeEnabled(mCheckedItems.size() > 0);
         }
         mSavedFirstVisiblePosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0);
     }
