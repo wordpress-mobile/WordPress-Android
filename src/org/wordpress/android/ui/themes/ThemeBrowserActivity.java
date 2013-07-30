@@ -107,7 +107,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
 
     }
-
+    
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             setupBaseLayout();
@@ -393,8 +393,22 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     protected void onPause() {
+        removeViewPagerFragments();
+        
         super.onPause();
         mIsRunning = false;
+    }
+
+    private void removeViewPagerFragments() {
+        // force viewpager fragments to be re-created, otherwise, we won't have any references to them,
+        // since we can't get viewpager fragments by tag or id.
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        for(ThemeTabFragment frag: mTabFragments) {
+            if (frag != null)
+                ft.remove(frag);
+        }
+        ft.commit();
     }
 
     @Override

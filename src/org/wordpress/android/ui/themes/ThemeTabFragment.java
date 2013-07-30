@@ -100,12 +100,12 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
             mSavedScrollPosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSTION, 0);
         }
     }
-
+    
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         
-        if (getActivity() == null || WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null)
             return;
         
         Cursor cursor = fetchThemes(getThemeSortType());
@@ -154,6 +154,9 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
 
     public void refresh() {
         Cursor cursor = fetchThemes(getThemeSortType());
+        if (mAdapter == null) {
+            mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
+        }
         mAdapter.swapCursor(cursor);
     }
     
@@ -191,4 +194,5 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
             }
         }        
     }
+    
 }
