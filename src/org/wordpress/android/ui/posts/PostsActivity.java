@@ -362,7 +362,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 ft.add(R.id.postDetailFragmentContainer, f);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 f.loadPost(post);
