@@ -489,7 +489,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             Thread shake = new Thread() {
                                 public void run() {
                                     Animation shake = AnimationUtils.loadAnimation(AccountSetupActivity.this, R.anim.shake);
-                                    findViewById(R.id.section1).startAnimation(shake);
+                                    findViewById(R.id.sectionContent).startAnimation(shake);
                                     Toast.makeText(AccountSetupActivity.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
                                 }
                             };
