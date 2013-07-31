@@ -6,9 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:orientation="vertical" >
+        android:paddingTop="16dp" >
 
         <ImageView
             android:layout_width="match_parent"
@@ -24,13 +24,12 @@
 
             <TextView
                 android:id="@+id/stats_visitors_and_views_section1_label"
+                style="@style/StatsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="4dp"
-                android:text="TITLE"
-                android:textColor="@color/wordpress_blue"
-                android:textSize="12sp" />
+                android:text="@string/stats_visitors_and_views_header_title" />
 
             <View
                 android:id="@+id/stats_visitors_and_views_section1_line"
@@ -43,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stats_visitors_and_views_section1_line"
+                android:baselineAligned="false"
                 android:orientation="horizontal" >
 
                 <RelativeLayout
@@ -57,24 +57,21 @@
 
                     <TextView
                         android:id="@+id/stats_visitors_and_views_section1a_count"
+                        style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="top"
-                        android:text="48"
-                        android:textSize="20sp" />
+                        android:text="48" />
 
                     <TextView
+                        style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/stats_visitors_and_views_section1a_count"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="bottom"
-                        android:text="Visitors" />
+                        android:text="@string/stats_totals_visitors" />
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/stats_visitors_and_views_section1a"
+                    android:id="@+id/stats_visitors_and_views_section1b"
                     style="@style/StatsWhiteBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,21 +80,18 @@
                     android:padding="16dp" >
 
                     <TextView
-                        android:id="@+id/stats_visitors_and_views_section1a_count"
+                        android:id="@+id/stats_visitors_and_views_section1b_count"
+                        style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="top"
-                        android:text="333"
-                        android:textSize="20sp" />
+                        android:text="333" />
 
                     <TextView
+                        style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/stats_visitors_and_views_section1a_count"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="bottom"
-                        android:text="Views" />
+                        android:layout_below="@id/stats_visitors_and_views_section1b_count"
+                        android:text="@string/stats_totals_views" />
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -113,13 +107,12 @@
 
             <TextView
                 android:id="@+id/stats_visitors_and_views_section2_label"
+                style="@style/StatsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="4dp"
-                android:text="BEST EVER"
-                android:textColor="@color/wordpress_blue"
-                android:textSize="12sp" />
+                android:text="@string/stats_visitors_and_views_header_best_ever" />
 
             <View
                 android:id="@+id/stats_visitors_and_views_section2_line"
@@ -135,25 +128,21 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stats_visitors_and_views_section2_line"
                 android:layout_marginTop="8dp"
-                android:layout_weight="1"
                 android:padding="16dp" >
 
                 <TextView
-                    android:id="@+id/stats_visitors_and_views_section1a_count"
+                    android:id="@+id/stats_visitors_and_views_section2a_count"
+                    style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="top"
-                    android:text="48"
-                    android:textSize="20sp" />
+                    android:text="48" />
 
                 <TextView
+                    style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/stats_visitors_and_views_section1a_count"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="bottom"
-                    android:text="Visitors" />
+                    android:layout_below="@id/stats_visitors_and_views_section2a_count"
+                    android:text="@string/stats_totals_visitors" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -168,13 +157,12 @@
 
             <TextView
                 android:id="@+id/stats_visitors_and_views_section3_label"
+                style="@style/StatsHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="4dp"
-                android:text="ALL TIME"
-                android:textColor="@color/wordpress_blue"
-                android:textSize="12sp" />
+                android:text="@string/stats_visitors_and_views_header_all_time" />
 
             <View
                 android:id="@+id/stats_visitors_and_views_section3_line"
@@ -187,6 +175,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stats_visitors_and_views_section3_line"
+                android:baselineAligned="false"
                 android:orientation="horizontal" >
 
                 <RelativeLayout
@@ -201,20 +190,17 @@
 
                     <TextView
                         android:id="@+id/stats_visitors_and_views_section3a_count"
+                        style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="top"
-                        android:text="48"
-                        android:textSize="20sp" />
+                        android:text="48" />
 
                     <TextView
+                        style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/stats_visitors_and_views_section3a_count"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="bottom"
-                        android:text="Visitors" />
+                        android:text="@string/stats_totals_views" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -228,20 +214,17 @@
 
                     <TextView
                         android:id="@+id/stats_visitors_and_views_section3b_count"
+                        style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="top"
-                        android:text="333"
-                        android:textSize="20sp" />
+                        android:text="333" />
 
                     <TextView
+                        style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/stats_visitors_and_views_section3b_count"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="bottom"
-                        android:text="Views" />
+                        android:text="@string/stats_totals_comments" />
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>

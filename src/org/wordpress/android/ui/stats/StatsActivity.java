@@ -63,7 +63,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         FragmentManager fm = getSupportFragmentManager();
         mStatsPhoneFragment = (StatsPhoneFragment) fm.findFragmentByTag(StatsPhoneFragment.TAG);
         if (mStatsPhoneFragment == null) { 
-            mStatsPhoneFragment = StatsPhoneFragment.newInstance(ViewType.TOP_POSTS_AND_PAGES);
+            mStatsPhoneFragment = StatsPhoneFragment.newInstance(ViewType.values()[0]);
             fm.beginTransaction().add(R.id.stats_container, mStatsPhoneFragment, StatsPhoneFragment.TAG).commit();
         }
         

@@ -187,4 +187,20 @@
         <item name="android:background">@drawable/stats_white_background</item>
     </style>
 
+    <style name="StatsHeader">
+        <item name="android:textColor">@color/wordpress_blue</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="StatsHeaderTotals">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">top</item>
+    </style>
+    
+    <style name="StatsHeaderTotalsLabel">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">bottom</item>
+    </style>
 </resources>

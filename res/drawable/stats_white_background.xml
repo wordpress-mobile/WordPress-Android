@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
         android:bottom="1dp"
         android:left="-2dp"
@@ -11,11 +12,13 @@
                 android:color="#DADADA" />
 
             <solid android:color="#FFF" />
-                  <padding android:left="5dp"
-            android:right="2dp"
-            android:top="5dp"
-            android:bottom="2dp"
-            ></padding>
+
+            <padding
+                android:bottom="2dp"
+                android:left="5dp"
+                android:right="2dp"
+                android:top="5dp" >
+            </padding>
         </shape>
     </item>
 

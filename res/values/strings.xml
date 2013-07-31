@@ -374,6 +374,12 @@
   <string name="stats_totals_clicks">Clicks</string>
   <string name="stats_totals_plays">Plays</string>
   <string name="stats_totals_comments">Comments</string>
+  <string name="stats_totals_visitors">Visitors</string>
+  
+  <!-- stats: other -->
+  <string name="stats_visitors_and_views_header_title">TITLE</string>
+  <string name="stats_visitors_and_views_header_best_ever">BEST EVER</string>
+  <string name="stats_visitors_and_views_header_all_time">ALL TIME</string>
   
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>
