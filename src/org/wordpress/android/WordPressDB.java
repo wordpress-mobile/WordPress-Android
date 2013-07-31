@@ -1843,12 +1843,13 @@ public class WordPressDB {
         values.put("blogId", mf.getBlogId());
         values.put("date_created_gmt", mf.getDateCreatedGMT());
         values.put("uploadState", mf.getUploadState());
+
         synchronized (this) {
-            int result = db.update(
-                    MEDIA_TABLE,
-                    values,
-                    "blogId=? AND mediaId=?", 
+            int result = 0;
+            if (mf.getMediaId() != null) {
+                result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", 
                     new String[]{ mf.getBlogId(), String.valueOf(mf.getMediaId())});
+            }
             if (result == 0)
                 returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
         }
