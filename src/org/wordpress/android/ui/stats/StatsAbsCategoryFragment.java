@@ -21,7 +21,8 @@ public abstract class StatsAbsCategoryFragment extends Fragment {
                 fragment = new StatsVisitorsAndViewsFragment();
                 break;
             case TOTALS_FOLLOWERS_AND_SHARES:
-                // do something
+                fragment = new StatsTotalsFollowersAndSharesFragment();
+                break;
             case TOP_AUTHORS:
             case COMMENTS:
                 fragment = new StatsListFragment();

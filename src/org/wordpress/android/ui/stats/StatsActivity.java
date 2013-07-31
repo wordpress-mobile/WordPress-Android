@@ -21,6 +21,8 @@ import org.wordpress.android.ui.stats.Stats.ViewType;
 
 public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
 
+    private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
+    
     private StatsPhoneFragment mStatsPhoneFragment;
     private View mActionbarNav;
     private TextView mActionbarNavText;
@@ -44,6 +46,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        
+        restoreState(savedInstanceState);
         
         mActionbarNav = getLayoutInflater().inflate(R.layout.stats_ab_navigation, null, false);
         actionBar.setCustomView(mActionbarNav);
@@ -69,6 +73,20 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
         
+    }
+    
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState == null)
+            return;
+            
+        mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        
+        outState.putInt(SAVED_NAV_POSITION, mNavPosition);
     }
     
     protected void showViews() {
@@ -104,6 +122,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                 @Override
                 protected void onPostExecute(Void result) {
                     invalidateOptionsMenu();
+                    if (mStatsPhoneFragment != null)
+                        mStatsPhoneFragment.refresh();
                 }
                 
             };

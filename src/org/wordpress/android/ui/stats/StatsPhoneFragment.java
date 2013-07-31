@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +32,43 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
 
     private ViewPager mViewPager;
     private HorizontalTabView mTabView;
-    private Stats.ViewType mStatsViewType;
 
     private StatsPagerAdapter mAdapter;
+
+    private StatsAbsCategoryFragment mFragment;
+
+    private Stats.ViewType getStatsViewType() {
+        return Stats.ViewType.values()[getArguments().getInt(ARGS_VIEW_TYPE)];
+    }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
         
-        mViewPager = (ViewPager) view.findViewById(R.id.stats_viewpager);
+        switch (getStatsViewType()) {
+            case TOTALS_FOLLOWERS_AND_SHARES:
+                initTotalsFollowersAndShares(view);
+                break;
+            default:
+                initViewPager(view);
+        }
+        
+        mFragment = (StatsAbsCategoryFragment) getActivity().getSupportFragmentManager().findFragmentByTag(StatsAbsCategoryFragment.TAG);
+        
+        return view;
+    }
+
+    private void initTotalsFollowersAndShares(View view) {
+        if (mFragment == null)
+            mFragment = new StatsTotalsFollowersAndSharesFragment();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.stats_pager_container, mFragment, StatsAbsCategoryFragment.TAG);
+        ft.commit();
+    }
+
+    private void initViewPager(View view) {
+        mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
+        mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -47,28 +76,33 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
             }
         });
                 
-        mTabView = (HorizontalTabView) view.findViewById(R.id.stats_tabs);
+        mTabView = (HorizontalTabView) view.findViewById(R.id.stats_pager_tabs);
+        mTabView.setVisibility(View.VISIBLE);
         mTabView.setTabListener(this);
-
-        refreshViews();   
-        return view;
+        
+        Stats.ViewType viewType = getStatsViewType();
+        Stats.Timeframe[] timeframes = getTimeframe(viewType);
+        initViewPagerAdapter(viewType, timeframes);
+        addTabs(timeframes);
+        
+        mTabView.setSelectedTab(0);
     }
 
-    private Stats.ViewType getStatsViewType() {
-        return Stats.ViewType.values()[getArguments().getInt(ARGS_VIEW_TYPE)];
+    private Stats.Timeframe[] getTimeframe(Stats.ViewType viewtype) {
+        Stats.Timeframe[] timeframes = new Stats.Timeframe[] { Timeframe.TODAY, Timeframe.YESTERDAY };
+        return timeframes;
     }
     
-    private void refreshViews() {
-        mStatsViewType = getStatsViewType();
-        Stats.Timeframe[] timeframes = new Stats.Timeframe[] { Timeframe.TODAY, Timeframe.YESTERDAY };
-        mAdapter = new StatsPagerAdapter(getChildFragmentManager(), mStatsViewType, timeframes);
+    private void initViewPagerAdapter(Stats.ViewType viewType, Stats.Timeframe[] timeframes) {
+        mAdapter = new StatsPagerAdapter(getChildFragmentManager(), viewType, timeframes);
         mViewPager.setAdapter(mAdapter);
-        
+    }
+
+    private void addTabs(Stats.Timeframe[] timeframes) {
         for (int i = 0; i < timeframes.length; i++) {
             String title = timeframes[i].getLabel();
             mTabView.addTab(mTabView.newTab().setText(title));
         }
-        mTabView.setSelectedTab(0);
     }
 
     @Override
@@ -76,4 +110,10 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
         mViewPager.setCurrentItem(tab.getPosition());
     }
     
+    public void refresh() {
+        // TODO: remove this hack. It's only for refreshing sample data
+        Stats.ViewType viewType = getStatsViewType();
+        Stats.Timeframe[] timeframes = getTimeframe(viewType);
+        initViewPagerAdapter(viewType, timeframes);
+    }
 }
