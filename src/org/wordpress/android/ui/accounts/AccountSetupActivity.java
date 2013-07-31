@@ -57,6 +57,7 @@ import org.wordpress.android.util.Utils;
 public class AccountSetupActivity extends Activity implements OnClickListener {
 
     private static final String URL_WORDPRESS = "http://wordpress.com";
+    private static final String DEFAULT_IMAGE_SIZE = "2000";
 
     private XMLRPCClient mClient;
     private String mBlogURL, mXmlrpcURL;
@@ -355,7 +356,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                             blogID = WordPress.wpDB.checkMatch(blogNames[rowID], urls[rowID], username, password);
                                             if (blogID == -1) {
                                                 blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, mHttpuser,
-                                                        mHttppassword, "Above Text", false, false, "2000", 20, false, blogIds[rowID],
+                                                        mHttppassword, "Above Text", false, false, DEFAULT_IMAGE_SIZE, 20, false, blogIds[rowID],
                                                         wpcoms[rowID], wpVersions[rowID]);
                                             }
                                             //Set the first blog in the list to the currentBlog
@@ -380,7 +381,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                         blogID = WordPress.wpDB.checkMatch(blogNames[i], urls[i], username, password);
                                         if (blogID == -1) {
                                             blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, mHttpuser, mHttppassword,
-                                                    "Above Text", false, false, "500", 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+                                                    "Above Text", false, false, DEFAULT_IMAGE_SIZE, 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
                                         }
                                         //Set the first blog in the list to the currentBlog
                                         if (i == 0) {
@@ -424,7 +425,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             blogID = WordPress.wpDB.checkMatch(blogNames[0], urls[0], username, password);
                             if (blogID == -1) {
                                 blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, mHttpuser, mHttppassword, "Above Text",
-                                    false, false, "500", 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                                    false, false, DEFAULT_IMAGE_SIZE, 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
                             }
                             if (blogID >= 0) {
                                 WordPress.setCurrentBlog((int) blogID);
