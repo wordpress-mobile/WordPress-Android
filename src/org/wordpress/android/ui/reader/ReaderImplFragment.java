@@ -89,7 +89,8 @@ public class ReaderImplFragment extends ReaderBaseFragment {
             
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                ((ReaderActivity) getActivity()).stopAnimatingButton();
+                if (getActivity() != null && !getActivity().isFinishing())
+                    ((ReaderActivity) getActivity()).stopAnimatingButton();
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
 
