@@ -1274,6 +1274,7 @@ public class WordPressDB {
             values.put("latitude", post.getLatitude());
             values.put("longitude", post.getLongitude());
             values.put("isLocalChange", post.isLocalChange());
+            values.put("mt_excerpt", post.getMt_excerpt());
 
             returnValue = db.insert(POSTS_TABLE, null, values);
 
@@ -1312,6 +1313,7 @@ public class WordPressDB {
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getWP_post_format());
             values.put("isLocalChange", post.isLocalChange());
+            values.put("mt_excerpt", post.getMt_excerpt());
 
             int pageInt = 0;
             if (post.isPage())

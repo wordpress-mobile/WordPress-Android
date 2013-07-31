@@ -31,17 +31,29 @@
                     android:layout_marginTop="4dp"
                     android:hint="@string/title"
                     android:inputType="textCapSentences|textAutoCorrect" />
-
-                <org.wordpress.android.util.WPEditText
+		    
+		<org.wordpress.android.util.WPEditText
                     android:id="@+id/postContent"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/content_edit_padding"
+                    android:layout_marginTop="8dp"
                     android:gravity="top"
                     android:hint="@string/post_content"
                     android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                     android:minLines="@integer/content_editor_min_lines"
                     android:textColorLink="#21759b" />
+                <EditText 
+                    android:id="@+id/postExcerpt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/content_edit_padding"
+                    android:layout_marginTop="8dp"
+                    android:gravity="top"
+                    android:hint="@string/post_excerpt"
+                    android:inputType="textCapSentences|textAutoCorrect"
+                    android:minLines="1"
+                    android:textColorLink="#21759b" />
+		    
             </LinearLayout>
 
             <LinearLayout
