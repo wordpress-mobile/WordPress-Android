@@ -1851,7 +1851,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 (String) mediaData.get("orientation"), true);
 
         if (finalBytes == null) {
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.file_error_encountered), Toast.LENGTH_SHORT).show();
             return null;
         }
 
