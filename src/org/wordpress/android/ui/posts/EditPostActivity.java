@@ -98,7 +98,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
-    private EditText mTitleEditText, mPasswordEditText, mTagsEditText;
+    private EditText mTitleEditText, mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
@@ -224,6 +224,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         setContentView(R.layout.edit);
         mContentEditText = (WPEditText) findViewById(R.id.postContent);
         mTitleEditText = (EditText) findViewById(R.id.title);
+        mExcerptEditText= (EditText) findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) findViewById(R.id.post_password);
         mLocationText = (TextView) findViewById(R.id.locationText);
         mBoldToggleButton = (ToggleButton) findViewById(R.id.bold);
@@ -327,6 +328,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         } else {
             mTitleEditText.setText(mPost.getTitle());
+            mExcerptEditText.setText(mPost.getMt_excerpt());
 
             if (mPost.isUploaded()) {
                 items = new String[] {
@@ -1394,7 +1396,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String title = mTitleEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String pubDate = mPubDateText.getText().toString();
+        String excerpt = mExcerptEditText.getText().toString();
         String content = "";
+        
+        if(excerpt.matches("")){
+           excerpt="";            
+        }
 
         if (mLocalDraft || mIsNew && !isAutoSave) {
             Editable e = mContentEditText.getText();
@@ -1521,7 +1528,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (mIsNew) {
-                mPost = new Post(mBlogID, title, content, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
+                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
                         latitude, longitude, mIsPage, postFormat, true, false);
                 mPost.setLocalDraft(true);
 

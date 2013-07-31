@@ -186,7 +186,7 @@ public class Post {
         this.localDraft = localDraft;
     }
 
-    public JSONArray getCategories() {
+    public JSONArray getJSONCategories() {
         JSONArray jArray = null;
         if (categories == null)
             categories = "";
@@ -197,7 +197,7 @@ public class Post {
         return jArray;
     }
 
-    public void setCategories(JSONArray categories) {
+    public void setJSONCategories(JSONArray categories) {
         this.categories = categories.toString();
     }
 
