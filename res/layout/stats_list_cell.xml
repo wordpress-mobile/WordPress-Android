@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="4dp" >
 
-    <org.wordpress.android.ui.FadeInNetworkImageView 
+    <org.wordpress.android.ui.FadeInNetworkImageView
         android:id="@+id/stats_list_cell_image"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -26,6 +26,7 @@
         android:layout_marginRight="12dp"
         android:layout_toLeftOf="@id/stats_list_cell_total"
         android:layout_toRightOf="@id/stats_list_cell_image"
+        android:drawablePadding="8dp"
         android:textSize="14sp" />
 
 </RelativeLayout>

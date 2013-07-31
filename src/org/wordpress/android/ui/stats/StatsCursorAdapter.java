@@ -45,6 +45,16 @@ public class StatsCursorAdapter extends CursorAdapter {
             entryTextView.setText(entry);
         }
         
+        if (mCategory == Category.TAGS_AND_CATEGORIES) {
+            if (entryType.equals("tag")) {
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_tag, 0, 0, 0);
+            } else if (entryType.equals("category")) {
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_category, 0, 0, 0);
+            } else {
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+        }
+        
         // totals
         TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         totalsTextView.setText(total + "");
@@ -52,16 +62,10 @@ public class StatsCursorAdapter extends CursorAdapter {
         NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
         imageView.setImageUrl(imageUrl, WordPress.imageLoader);
         
-        switch (mCategory) {
-            case POSTS_AND_PAGES:
-            case VIDEO_PLAYS:
-            case MOST_COMMENTED:
-            case SEARCH_ENGINE_TERMS:
-                imageView.setVisibility(View.GONE);
-                break;
-            default:
-                imageView.setVisibility(View.VISIBLE);
-        }
+        if (mCategory.hasImage())
+            imageView.setVisibility(View.VISIBLE);
+        else
+            imageView.setVisibility(View.GONE);
     }
 
     @Override

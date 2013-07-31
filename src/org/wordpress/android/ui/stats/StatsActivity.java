@@ -115,7 +115,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    WordPress.wpDB.loadSampleStats();
+                    WordPress.wpStatsDB.loadSampleStats();
                     return null;
                 }
                 
@@ -138,7 +138,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (WordPress.getCurrentBlog() != null) {
         
-            if (WordPress.wpDB.getStatsCount(WordPress.getCurrentBlog().getBlogId()) > 0)
+            if (WordPress.wpStatsDB.getStatsCount(WordPress.getCurrentBlog().getBlogId()) > 0)
                 menu.findItem(R.id.menu_stats_load_sample_data).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);

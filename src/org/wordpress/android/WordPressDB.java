@@ -64,9 +64,6 @@ public class WordPressDB {
     private static final String POSTS_TABLE = "posts";
     private static final String COMMENTS_TABLE = "comments";
 
-    private static final String STATS_TABLE = "stats";
-    private static final String CREATE_TABLE_STATS = "create table if not exists " + STATS_TABLE + " (_id integer primary key autoincrement, blogId text, category text, entryType text, entry text, total integer, timeframe integer, url text, imageUrl text);";
-
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
             + "themeId text, name text, description text, screenshotURL text, price integer default 0, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrentTheme boolean default false);";
@@ -214,7 +211,6 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_DATE_GMT);
                 db.execSQL(ADD_MEDIA_UPLOAD_STATE);
                 db.execSQL(CREATE_TABLE_THEMES);
-                db.execSQL(CREATE_TABLE_STATS);
                 migratePasswords();
                 db.setVersion(DATABASE_VERSION); // set to latest revision
             } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
@@ -562,7 +558,6 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_BLOG_ID);
                 db.execSQL(ADD_MEDIA_DATE_GMT);
                 db.execSQL(ADD_MEDIA_UPLOAD_STATE);
-                db.execSQL(CREATE_TABLE_STATS);
                 db.execSQL(CREATE_TABLE_THEMES);
                 db.setVersion(DATABASE_VERSION);
                 migrateWPComAccount();
@@ -2145,105 +2140,6 @@ public class WordPressDB {
         c.close();
 
         return false;
-    }
-
-    public void saveStat(Stat stat) {
-        ContentValues values = new ContentValues();
-        values.put("blogId", stat.getBlogId());
-        values.put("category", stat.getCategory());
-        values.put("entryType", stat.getEntryType());
-        values.put("entry", stat.getEntry());
-        values.put("total", stat.getTotal());
-        values.put("timeframe", stat.getTimeframe());
-        values.put("imageUrl", stat.getImageUrl());
-        values.put("url", stat.getUrl());
-        synchronized (this) {
-            db.insert(STATS_TABLE, null, values);
-        }        
-    }
-    
-    @SuppressLint("DefaultLocale")
-	public Cursor getStats(String blogId, Stats.Category category, int timeframe) {
-        return db.rawQuery("SELECT * FROM " + STATS_TABLE + " WHERE blogId=? AND category=? AND timeframe=? ORDER BY total DESC, entry ASC", 
-                new String [] { blogId, category.name().toLowerCase(), timeframe + "" });
-    }
-    
-    public int getStatsCount(int blogId) {
-        Cursor cursor = db.rawQuery("SELECT * FROM " + STATS_TABLE + " WHERE blogId=?", new String[] { blogId + "" });
-        return cursor.getCount();
-    }
-    public void loadSampleStats() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-        
-        String blogId = WordPress.getCurrentBlog().getBlogId() + "";
-        int[] timeframes = new int[] {0, 1};
-        Random random = new Random();
-        
-        String[] titles = new String[]{"My awesome video", "My awesome clip", "My awesome website", "My awesome trip", "My awesome article", "My awesome experience", 
-                "My awesome cat gif", "My awesome weekend", "My awesome adventure", "My awesome holiday", "My awesome idea" };
-        String[] countries = new String[] {"Canada", "United States", "Mexico", "Austrailia", "New Zealand", "France", "Germany", "Sweden", "Iceland", "Japan"};
-        String[] tags = new String[] {"Uncategorized", "android", "ios", "web", "java", "c++", "windows", "blackberry", "ruby", "reader" };
-        String[] referrers = new String[] {"WordPress.com", "Google.com", "Yahoo.com", "Bing.com", "WordPress.org", "Ask.com", "Stackoverflow.com", "Gmail.com", "Github.com", "Xtremelabs.com"};
-        String[] authors = new String[] {"Anne", "Bob", "Cathy", "David", "Erin", "Fiona", "Greg", "Hanna", "Ivan", "Joanne" };
-        
-        Stats.Category[] categories = new Stats.Category[] { 
-                Stats.Category.COUNTRY, Stats.Category.POSTS_AND_PAGES, Stats.Category.CLICKS, Stats.Category.TAGS_AND_CATEGORIES, Stats.Category.AUTHORS,
-                Stats.Category.REFERRERS, Stats.Category.VIDEO_PLAYS, Stats.Category.SEARCH_ENGINE_TERMS, Stats.Category.TOP_COMMENTER, Stats.Category.MOST_COMMENTED
-        };
-        
-        for (Stats.Category category : categories) {
-            for (int i = 0; i < 10; i++) {
-                ContentValues values = new ContentValues();
-                values.put("blogId", blogId);
-                values.put("category", category.name().toLowerCase());
-
-                if (category == Category.TAGS_AND_CATEGORIES) {
-                    if (random.nextBoolean())
-                        values.put("entryType", "tag");
-                    else
-                        values.put("entryType", "category");
-                }
-                
-                if (category == Stats.Category.COUNTRY)
-                    values.put("entry", countries[i]);
-                else if (category == Stats.Category.CLICKS || category == Stats.Category.SEARCH_ENGINE_TERMS)
-                    values.put("entry", "https://www.google.ca/search?q=test_" + i);
-                else if (category == Stats.Category.VIDEO_PLAYS)
-                    values.put("entry", tags[i] + " video");
-                else if (category == Stats.Category.POSTS_AND_PAGES || category == Stats.Category.MOST_COMMENTED)
-                    values.put("entry", titles[i]);
-                else if (category == Stats.Category.TAGS_AND_CATEGORIES)
-                    values.put("entry", tags[i]);
-                else if (category == Stats.Category.REFERRERS)
-                    values.put("entry", referrers[i]);
-                else if (category == Stats.Category.AUTHORS || category == Stats.Category.TOP_COMMENTER)
-                    values.put("entry", authors[i]);
-                
-                values.put("total", random.nextInt(999));
-                
-                if (category == Stats.Category.TAGS_AND_CATEGORIES)
-                    values.put("timeframe", 7);
-                else
-                    values.put("timeframe", timeframes[random.nextInt(timeframes.length)]);
-                
-                if(category == Stats.Category.COUNTRY || category == Stats.Category.TOP_COMMENTER || category == Stats.Category.CLICKS || category == Stats.Category.REFERRERS || category == Stats.Category.AUTHORS)
-                    values.put("imageUrl", "http://placekitten.com/50/50");
-
-                // never any url
-                if (category == Stats.Category.AUTHORS || category == Stats.Category.COUNTRY || category == Stats.Category.SEARCH_ENGINE_TERMS)
-                    values.putNull("url");
-                // always a url
-                else if (category == Stats.Category.POSTS_AND_PAGES || category == Stats.Category.CLICKS || category == Stats.Category.VIDEO_PLAYS || 
-                        category == Stats.Category.TOP_COMMENTER || category == Stats.Category.MOST_COMMENTED || category == Stats.Category.TAGS_AND_CATEGORIES)
-                    values.put("url", "http://www.google.com");
-                // sometimes a url
-                else if(category == Stats.Category.REFERRERS && random.nextBoolean())
-                    values.put("url", "http://www.google.com");
-                
-                db.insert(STATS_TABLE, null, values);
-            }
-        }
     }
     
     public boolean saveTheme(Theme theme) {

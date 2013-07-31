@@ -59,7 +59,7 @@ public class StatsListFragment extends StatsAbsCategoryFragment {
             return;
         
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        Cursor cursor = WordPress.wpDB.getStats(blogId, getCategory(), getTimeframe().toInt());
+        Cursor cursor = WordPress.wpStatsDB.getStats(blogId, getCategory(), getTimeframe().toInt());
         mAdapter.swapCursor(cursor);
     }
 }

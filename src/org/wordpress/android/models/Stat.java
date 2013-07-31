@@ -98,6 +98,6 @@ public class Stat {
     }
     
     public void save() {
-        WordPress.wpDB.saveStat(this);
+        WordPress.wpStatsDB.saveStat(this);
     }
 }

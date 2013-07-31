@@ -51,6 +51,7 @@ public class WordPress extends Application {
     public static Comment currentComment;
     public static Post currentPost;
     public static WordPressDB wpDB;
+    public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
@@ -68,6 +69,8 @@ public class WordPress extends Application {
     public void onCreate() {
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
+        
+        wpStatsDB = new WordPressStatsDB(this);
         
         mContext = this;
         
