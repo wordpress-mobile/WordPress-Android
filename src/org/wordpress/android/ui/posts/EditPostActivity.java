@@ -241,16 +241,17 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mFormatBar = (RelativeLayout) findViewById(R.id.formatBar);
 
         // Set header labels to upper case
+        ((TextView) findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
         ((TextView) findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
 
         if (mIsPage) { // remove post specific views
-            ((LinearLayout) findViewById(R.id.sectionTags)).setVisibility(View.GONE);
-            ((FlowLayout) findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
-            ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
-            ((Spinner) findViewById(R.id.postFormat)).setVisibility(View.GONE);
+            (findViewById(R.id.sectionTags)).setVisibility(View.GONE);
+            (findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
+            (findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
+            (findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
+            (findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
             if (mBlog.getPostFormats().equals("")) {
                 List<Object> args = new Vector<Object>();

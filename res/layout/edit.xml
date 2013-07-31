@@ -48,7 +48,7 @@
                 android:id="@+id/sectionTags"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="vertical">
 
                 <EditText
@@ -64,7 +64,7 @@
                         style="@style/WordPressSubHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/category" />
+                        android:text="@string/categories" />
 
             </LinearLayout>
 
