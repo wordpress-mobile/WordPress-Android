@@ -666,6 +666,9 @@ public class WordPressDB {
 
     public long checkMatch(String blogName, String blogURL, String username, String password) {
 
+        if (blogName == null || blogURL == null || username == null || password == null)
+            return -1;
+
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
                 "blogName='" + addSlashes(blogName) + "' AND url='"
                         + addSlashes(blogURL) + "'" + " AND username='"
