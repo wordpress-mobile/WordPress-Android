@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="4dp" >
 
-    <ImageView
+    <org.wordpress.android.ui.FadeInNetworkImageView 
         android:id="@+id/stats_list_cell_image"
         android:layout_width="24dp"
         android:layout_height="24dp"

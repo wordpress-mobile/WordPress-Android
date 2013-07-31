@@ -49,6 +49,9 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
             case TOTALS_FOLLOWERS_AND_SHARES:
                 initTotalsFollowersAndShares(view);
                 break;
+            case TAGS_AND_CATEGORIES:
+                initTagsAndCategories(view);
+                break;
             default:
                 initViewPager(view);
         }
@@ -66,6 +69,14 @@ public class StatsPhoneFragment extends Fragment implements TabListener {
         ft.commit();
     }
 
+    private void initTagsAndCategories(View view) {
+        if (mFragment == null)
+            mFragment = StatsAbsCategoryFragment.newInstance(getStatsViewType(), Timeframe.WEEK);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.stats_pager_container, mFragment, StatsAbsCategoryFragment.TAG);
+        ft.commit();
+    }
+    
     private void initViewPager(View view) {
         mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
         mViewPager.setVisibility(View.VISIBLE);

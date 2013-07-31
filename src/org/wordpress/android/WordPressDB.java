@@ -2180,13 +2180,19 @@ public class WordPressDB {
         int[] timeframes = new int[] {0, 1};
         Random random = new Random();
         
-        String[] word1 = new String[]{"My ", "The ", "This " };
-        String[] word2 = new String[]{"awesome ", "hip ", "cool ", "great ", "funny ", "hilarious ", "geeky ", "trendy "};
-        String[] word3 = new String[]{"video ", "clip ", "screenshot ", "cat picture ", "article ", "website "};
-        String word4 = "is ";
-        String[] word5 = new String[]{"the greatest thing ever!", "full of awesome!", "making me ROFL!", "the new cool thing"};
+        String[] titles = new String[]{"My awesome video", "My awesome clip", "My awesome website", "My awesome trip", "My awesome article", "My awesome experience", 
+                "My awesome cat gif", "My awesome weekend", "My awesome adventure", "My awesome holiday", "My awesome idea" };
+        String[] countries = new String[] {"Canada", "United States", "Mexico", "Austrailia", "New Zealand", "France", "Germany", "Sweden", "Iceland", "Japan"};
+        String[] tags = new String[] {"Uncategorized", "android", "ios", "web", "java", "c++", "windows", "blackberry", "ruby", "reader" };
+        String[] referrers = new String[] {"WordPress.com", "Google.com", "Yahoo.com", "Bing.com", "WordPress.org", "Ask.com", "Stackoverflow.com", "Gmail.com", "Github.com", "Xtremelabs.com"};
+        String[] authors = new String[] {"Anne", "Bob", "Cathy", "David", "Erin", "Fiona", "Greg", "Hanna", "Ivan", "Joanne" };
         
-        for (Stats.Category category : Stats.Category.values()) {
+        Stats.Category[] categories = new Stats.Category[] { 
+                Stats.Category.COUNTRY, Stats.Category.POSTS_AND_PAGES, Stats.Category.CLICKS, Stats.Category.TAGS_AND_CATEGORIES, Stats.Category.AUTHORS,
+                Stats.Category.REFERRERS, Stats.Category.VIDEO_PLAYS, Stats.Category.SEARCH_ENGINE_TERMS, Stats.Category.TOP_COMMENTER, Stats.Category.MOST_COMMENTED
+        };
+        
+        for (Stats.Category category : categories) {
             for (int i = 0; i < 10; i++) {
                 ContentValues values = new ContentValues();
                 values.put("blogId", blogId);
@@ -2199,14 +2205,40 @@ public class WordPressDB {
                         values.put("entryType", "category");
                 }
                 
-                values.put("entry", word1[random.nextInt(word1.length)] + word2[random.nextInt(word2.length)] + word3[random.nextInt(word3.length)] + word4 + word5[random.nextInt(word5.length)]);
-                values.put("total", random.nextInt(999));
-                values.put("timeframe", timeframes[random.nextInt(timeframes.length)]);
+                if (category == Stats.Category.COUNTRY)
+                    values.put("entry", countries[i]);
+                else if (category == Stats.Category.CLICKS || category == Stats.Category.SEARCH_ENGINE_TERMS)
+                    values.put("entry", "https://www.google.ca/search?q=test_" + i);
+                else if (category == Stats.Category.VIDEO_PLAYS)
+                    values.put("entry", tags[i] + " video");
+                else if (category == Stats.Category.POSTS_AND_PAGES || category == Stats.Category.MOST_COMMENTED)
+                    values.put("entry", titles[i]);
+                else if (category == Stats.Category.TAGS_AND_CATEGORIES)
+                    values.put("entry", tags[i]);
+                else if (category == Stats.Category.REFERRERS)
+                    values.put("entry", referrers[i]);
+                else if (category == Stats.Category.AUTHORS || category == Stats.Category.TOP_COMMENTER)
+                    values.put("entry", authors[i]);
                 
-                if(random.nextBoolean())
+                values.put("total", random.nextInt(999));
+                
+                if (category == Stats.Category.TAGS_AND_CATEGORIES)
+                    values.put("timeframe", 7);
+                else
+                    values.put("timeframe", timeframes[random.nextInt(timeframes.length)]);
+                
+                if(category == Stats.Category.COUNTRY || category == Stats.Category.TOP_COMMENTER || category == Stats.Category.CLICKS || category == Stats.Category.REFERRERS || category == Stats.Category.AUTHORS)
                     values.put("imageUrl", "http://placekitten.com/50/50");
 
-                if(random.nextBoolean())
+                // never any url
+                if (category == Stats.Category.AUTHORS || category == Stats.Category.COUNTRY || category == Stats.Category.SEARCH_ENGINE_TERMS)
+                    values.putNull("url");
+                // always a url
+                else if (category == Stats.Category.POSTS_AND_PAGES || category == Stats.Category.CLICKS || category == Stats.Category.VIDEO_PLAYS || 
+                        category == Stats.Category.TOP_COMMENTER || category == Stats.Category.MOST_COMMENTED || category == Stats.Category.TAGS_AND_CATEGORIES)
+                    values.put("url", "http://www.google.com");
+                // sometimes a url
+                else if(category == Stats.Category.REFERRERS && random.nextBoolean())
                     values.put("url", "http://www.google.com");
                 
                 db.insert(STATS_TABLE, null, values);

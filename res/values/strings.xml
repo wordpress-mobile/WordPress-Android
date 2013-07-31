@@ -377,7 +377,7 @@
   <string name="stats_totals_visitors">Visitors</string>
   
   <!-- stats: views and visitors -->
-  <string name="stats_visitors_and_views_header_title">TITLE</string>
+  <string name="stats_visitors_and_views_header_title">TODAY</string>
   <string name="stats_visitors_and_views_header_best_ever">BEST EVER</string>
   <string name="stats_visitors_and_views_header_all_time">ALL TIME</string>
   
