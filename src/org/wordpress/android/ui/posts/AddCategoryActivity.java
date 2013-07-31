@@ -50,7 +50,7 @@ public class AddCategoryActivity extends Activity {
                 Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
                 String parent_category = "";
                 if (sCategories.getSelectedItem() != null)
-                    parent_category = sCategories.getSelectedItem().toString();
+                    parent_category = sCategories.getSelectedItem().toString().trim();
                 int parent_id = 0;
                 if (sCategories.getSelectedItemPosition() != 0){
                     parent_id = WordPress.wpDB.getCategoryId(id, parent_category);
