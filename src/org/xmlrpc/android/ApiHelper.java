@@ -252,7 +252,9 @@ public class ApiHelper {
 
     public static Map<Integer, Map<?, ?>> refreshComments(Context ctx,
             Object[] commentParams) throws XMLRPCException {
-        Blog blog = WordPress.currentBlog;
+        Blog blog = WordPress.getCurrentBlog();
+        if (blog == null)
+            return null;
         client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
                 blog.getHttppassword());
         String author, postID, comment, status, authorEmail, authorURL, postTitle;
