@@ -4,13 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,12 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextWatcher;
+import android.text.*;
 import android.text.format.DateUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
@@ -108,7 +97,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private Location mCurrentLocation;
     private LocationHelper mLocationHelper;
     private Handler mAutoSaveHandler;
-    private List<String> mCategories;
+    private ArrayList<String> mCategories;
 
     private boolean mIsPage = false;
     private boolean mIsNew = false;
@@ -595,7 +584,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             Bundle bundle = new Bundle();
             bundle.putInt("id", mBlogID);
             if (mCategories.size() > 0) {
-                bundle.putString("categoriesCSV", getCategoriesCSV());
+                bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
             Intent i1 = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
             i1.putExtras(bundle);
@@ -1295,16 +1284,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 break;
             case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                 extras = data.getExtras();
-                String cats = extras.getString("selectedCategories");
-                String[] splitCats = cats.split(",");
-                mCategories = new ArrayList<String>();
-                if (splitCats.length >= 1) {
-                    for (int i = 0; i < splitCats.length; i++) {
-                        if (!splitCats[i].isEmpty()) {
-                            mCategories.add(splitCats[i]);
-                        }
-                    }
-                }
+                mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
                 populateSelectedCategories();
                 break;
             }
@@ -1869,17 +1849,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append("\n");
         return ssb;
-    }
-
-    private String getCategoriesCSV() {
-        String csv = "";
-        if (mCategories.size() > 0) {
-            for (int i = 0; i < mCategories.size(); i++) {
-                csv += EscapeUtils.unescapeHtml(mCategories.get(i)) + ",";
-            }
-            csv = csv.substring(0, csv.length() - 1);
-        }
-        return csv;
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {

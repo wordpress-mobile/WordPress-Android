@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,7 +28,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
-    String categoriesCSV = "";
     private XMLRPCClient client;
     String finalResult = "";
     ProgressDialog pd;
@@ -37,6 +35,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView lv;
+    private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
@@ -65,7 +64,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
-            categoriesCSV = extras.getString("categoriesCSV");
+            mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
         }
 
         populateOrFetchCategories();
@@ -79,10 +78,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
         this.setListAdapter(categoryAdapter);
-        if (categoriesCSV != null) {
-            String catsArray[] = categoriesCSV.split(",");
+        if (mSelectedCategories != null) {
             ListView lv = getListView();
-            for (String selectedCategory : catsArray) {
+            for (String selectedCategory : mSelectedCategories) {
                 if (mCategoryNames.keySet().contains(selectedCategory)) {
                     lv.setItemChecked(mCategoryNames.get(selectedCategory), true);
                 }
@@ -208,7 +206,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         String returnString = "";
 
         // Save selected categories
-        categoriesCSV = selectedCategoriesToCSV();
+        updateSelectedCategoryList();
 
         // Store the parameters for wp.addCategory
         Map<String, Object> struct = new HashMap<String, Object>();
@@ -310,6 +308,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     }
 
     private void refreshCategories() {
+        updateSelectedCategoryList();
         pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
                 getResources().getText(R.string.attempting_categories_refresh), true, true);
         Thread th = new Thread() {
@@ -336,17 +335,21 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private String selectedCategoriesToCSV() {
         ArrayList<String> selectedCategories = new ArrayList<String>();
         SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
+    private void updateSelectedCategoryList() {
+        SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
         for (int i = 0; i < selectedItems.size(); i++) {
             if (selectedItems.get(selectedItems.keyAt(i))) {
-                selectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+                mSelectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+            } else {
+                mSelectedCategories.remove(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
             }
         }
-        return TextUtils.join(",", selectedCategories);
     }
 
     private void saveAndFinish() {
         Bundle bundle = new Bundle();
-        bundle.putString("selectedCategories", selectedCategoriesToCSV());
+        updateSelectedCategoryList();
+        bundle.putSerializable("selectedCategories", new ArrayList<String>(mSelectedCategories));
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
