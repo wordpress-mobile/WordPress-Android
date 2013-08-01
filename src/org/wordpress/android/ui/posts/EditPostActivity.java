@@ -46,14 +46,34 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -62,7 +82,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.wordpress.android.util.*;
 import org.xmlrpc.android.ApiHelper;
 
 import org.wordpress.android.Constants;
@@ -72,7 +91,18 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPEditText;
+import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -1582,6 +1612,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 mPost.setTitle(title);
+                mPost.setMt_excerpt(excerpt);
                 // split up the post content if there's a more tag
                 if (mLocalDraft && content.indexOf(moreTag) >= 0) {
                     mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
@@ -1599,6 +1630,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mPost.setLatitude(latitude);
                 mPost.setLongitude(longitude);
                 mPost.setWP_post_form(postFormat);
+                
                 if (!mPost.isLocalDraft())
                     mPost.setLocalChange(true);
                 success = mPost.update();
@@ -1645,6 +1677,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         Intent intent = getIntent();
         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+        
         if (text != null) {
 
             if (title != null) {
