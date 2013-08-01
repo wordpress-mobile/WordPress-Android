@@ -108,7 +108,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     /** Get the feature set for a wordpress.com hosted blog **/
     private void getFeatureSet() {
-        new ApiHelper.GetFeatures(new Callback() {
+        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
 
             @Override
             public void onResult(FeatureSet featureSet) {
@@ -116,6 +116,11 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             }
             
         });
+        
+        List<Object> apiArgs = new ArrayList<Object>();
+        apiArgs.add(WordPress.getCurrentBlog());
+        task.execute(apiArgs) ;
+        
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {

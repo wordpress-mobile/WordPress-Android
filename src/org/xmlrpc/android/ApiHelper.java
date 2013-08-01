@@ -689,6 +689,10 @@ public class ApiHelper {
             if (blog == null)
                 return false;
             
+
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
             
             Object[] apiParams = new Object[] {
                     blog.getBlogId(),
@@ -740,6 +744,10 @@ public class ApiHelper {
             
             if (blog == null)
                 return null;
+
+            client = new XMLRPCClient(blog.getUrl(),
+                    blog.getHttpuser(),
+                    blog.getHttppassword());
             
             Object[] apiParams = new Object[] {
                     blog.getBlogId(),
