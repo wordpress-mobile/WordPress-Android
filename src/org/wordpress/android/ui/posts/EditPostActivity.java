@@ -1355,7 +1355,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         for (int i = 0; i < mCategories.size(); i++) {
             String categoryName = mCategories.get(i);
             Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
-            buttonCategory.setText(categoryName);
+            buttonCategory.setText(Html.fromHtml(categoryName));
             buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
             buttonCategory.setOnClickListener(this);
             sectionCategories.addView(buttonCategory);
