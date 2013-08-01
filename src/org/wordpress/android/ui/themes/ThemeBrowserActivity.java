@@ -236,6 +236,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         inflater.inflate(R.menu.theme, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
+        if (mFetchingThemes) {
+            startAnimatingRefreshButton();
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
