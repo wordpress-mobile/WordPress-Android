@@ -45,7 +45,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stats_totals_followers_shares_posts_count"
-                android:text="@string/stats_totals_followers_shares_label_posts" />
+                android:text="@string/stats_totals_followers_shares_label_posts" 
+                android:drawableLeft="@drawable/stats_icon_posts"
+                android:drawablePadding="8dp"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -74,8 +76,12 @@
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/stats_totals_followers_shares_categories_count"
-                    android:text="@string/stats_totals_followers_shares_label_categories" />
+                    android:layout_below="@+id/stats_totals_followers_shares_categories_count"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/stats_totals_followers_shares_label_categories"
+                    android:drawableLeft="@drawable/stats_icon_categories"
+                    android:drawablePadding="8dp" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -99,6 +105,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_tags_count"
+                    android:drawableLeft="@drawable/stats_icon_tags"
+                    android:drawablePadding="8dp"
                     android:text="@string/stats_totals_followers_shares_label_tags" />
             </RelativeLayout>
         </LinearLayout>
@@ -145,7 +153,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_followers_count"
-                    android:text="@string/stats_totals_followers_shares_label_blog" />
+                    android:text="@string/stats_totals_followers_shares_label_blog"
+                    android:drawableLeft="@drawable/stats_icon_plus"
+                    android:drawablePadding="8dp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -169,7 +179,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_comments_count"
-                    android:text="@string/stats_totals_followers_shares_label_comments" />
+                    android:text="@string/stats_totals_followers_shares_label_comments"
+                    android:drawableLeft="@drawable/stats_icon_plus"
+                    android:drawablePadding="8dp" />
             </RelativeLayout>
         </LinearLayout>
 

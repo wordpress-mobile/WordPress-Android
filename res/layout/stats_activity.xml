@@ -40,7 +40,7 @@
                 android:id="@+id/stats_header_comments_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/note_icon_comment"
+                android:drawableLeft="@drawable/stats_phone_icon_comment"
                 android:drawablePadding="8dp"
                 android:text="18"
                 android:textSize="17sp" />
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:drawableLeft="@drawable/note_icon_like"
+                android:drawableLeft="@drawable/stats_phone_icon_fav"
                 android:drawablePadding="8dp"
                 android:text="45"
                 android:textSize="17sp" />
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:drawableLeft="@drawable/note_icon_reblog"
+                android:drawableLeft="@drawable/stats_phone_icon_reblog"
                 android:drawablePadding="8dp"
                 android:text="8"
                 android:textSize="17sp" />
