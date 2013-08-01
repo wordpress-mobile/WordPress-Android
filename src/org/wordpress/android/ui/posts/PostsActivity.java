@@ -279,6 +279,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
+
+        if (isPage) {
+            menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
+        }
+
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(refreshMenuItem);
