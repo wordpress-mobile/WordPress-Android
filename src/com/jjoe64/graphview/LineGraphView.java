@@ -2,6 +2,7 @@ package com.jjoe64.graphview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
@@ -21,17 +22,17 @@ public class LineGraphView extends GraphView {
 
 	public LineGraphView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
+
 		paintBackground = new Paint();
-		paintBackground.setARGB(255, 20, 40, 60);
+		paintBackground.setColor(Color.rgb(20, 40, 60));
 		paintBackground.setStrokeWidth(4);
 	}
-	
+
 	public LineGraphView(Context context, String title) {
 		super(context, title);
 
 		paintBackground = new Paint();
-		paintBackground.setARGB(255, 20, 40, 60);
+		paintBackground.setColor(Color.rgb(20, 40, 60));
 		paintBackground.setStrokeWidth(4);
 	}
 
@@ -104,8 +105,17 @@ public class LineGraphView extends GraphView {
 		}
 	}
 
+	public int getBackgroundColor() {
+		return paintBackground.getColor();
+	}
+
 	public boolean getDrawBackground() {
 		return drawBackground;
+	}
+
+	@Override
+	public void setBackgroundColor(int color) {
+		paintBackground.setColor(color);
 	}
 
 	/**
