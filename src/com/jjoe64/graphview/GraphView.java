@@ -153,8 +153,8 @@ abstract public class GraphView extends LinearLayout {
 				}
 
 				// labels have to be regenerated
-				horlabels = null;
-				verlabels = null;
+				if (!staticHorizontalLabels) horlabels = null;
+				if (!staticVerticalLabels) verlabels = null;
 				viewVerLabels.invalidate();
 			}
 			invalidate();
@@ -296,6 +296,8 @@ abstract public class GraphView extends LinearLayout {
 	private Integer textHeight;
 	private Integer textWidth;
 	private final Rect textBounds = new Rect();
+	private boolean staticHorizontalLabels;
+	private boolean staticVerticalLabels;
 
 	public GraphView(Context context, AttributeSet attrs) {
 		this(context, attrs.getAttributeValue(null, "title"));
@@ -608,8 +610,8 @@ abstract public class GraphView extends LinearLayout {
 	}
 
 	public void redrawAll() {
-		verlabels = null;
-		horlabels = null;
+		if (!staticVerticalLabels) verlabels = null;
+		if (!staticHorizontalLabels) horlabels = null;
 		numberformatter[0] = null;
 		numberformatter[1] = null;
 		textHeight = null;
@@ -673,6 +675,7 @@ abstract public class GraphView extends LinearLayout {
 	 * @param horlabels if null, labels were generated automatically
 	 */
 	public void setHorizontalLabels(String[] horlabels) {
+		staticHorizontalLabels = horlabels != null;
 		this.horlabels = horlabels;
 	}
 
@@ -758,14 +761,15 @@ abstract public class GraphView extends LinearLayout {
 	}
 
 	public void setTitle(String title) {
-      this.title = title;
-    }
+		this.title = title;
+	}
 
 	/**
 	 * set's static vertical labels (from top to bottom)
 	 * @param verlabels if null, labels were generated automatically
 	 */
 	public void setVerticalLabels(String[] verlabels) {
+		staticVerticalLabels = verlabels != null;
 		this.verlabels = verlabels;
 	}
 
