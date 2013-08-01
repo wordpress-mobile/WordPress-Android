@@ -367,16 +367,16 @@
   <string name="stats_timeframe_all_time">ALL_TIME</string>
   
   <!-- stats: label for the entries -->
-  <string name="stats_category_country">Country</string>
-  <string name="stats_category_posts_and_pages">Title</string>
-  <string name="stats_category_clicks_url">URL</string>
-  <string name="stats_category_tags_and_categories">Topic</string>
-  <string name="stats_category_authors">Author</string>
-  <string name="stats_category_referrers">Referrer</string>
-  <string name="stats_category_video_plays">Video Name</string>
-  <string name="stats_category_top_commentor">Commentor</string>
-  <string name="stats_category_most_commented">Posts</string>
-  <string name="stats_category_search_engine_terms">Search</string>
+  <string name="stats_entry_country">Country</string>
+  <string name="stats_entry_posts_and_pages">Title</string>
+  <string name="stats_entry_clicks_url">URL</string>
+  <string name="stats_entry_tags_and_categories">Topic</string>
+  <string name="stats_entry_authors">Author</string>
+  <string name="stats_entry_referrers">Referrer</string>
+  <string name="stats_entry_video_plays">Video Name</string>
+  <string name="stats_entry_top_commenter">Commenter</string>
+  <string name="stats_entry_most_commented">Posts</string>
+  <string name="stats_entry_search_engine_terms">Search</string>
   
   <!-- stats: label for the totals -->
   <string name="stats_totals_views">Views</string>

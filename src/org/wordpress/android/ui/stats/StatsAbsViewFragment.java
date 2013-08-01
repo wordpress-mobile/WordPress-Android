@@ -8,7 +8,7 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
     
     public static final String TAG = StatsAbsViewFragment.class.getSimpleName();
 
-    public static StatsAbsViewFragment newInstance(Stats.ViewType viewType) {
+    public static StatsAbsViewFragment newInstance(StatsViewType viewType) {
         StatsAbsViewFragment fragment = null;
         
         switch (viewType) {
@@ -57,9 +57,9 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
 
     protected static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
     
-    protected Stats.ViewType getViewType() {
+    protected StatsViewType getViewType() {
         int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
-        return Stats.ViewType.values()[ordinal];
+        return StatsViewType.values()[ordinal];
     }
     
     public abstract String getTitle();

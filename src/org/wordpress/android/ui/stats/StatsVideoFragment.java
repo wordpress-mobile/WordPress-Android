@@ -1,61 +1,29 @@
 package org.wordpress.android.ui.stats;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.HorizontalTabView;
-import org.wordpress.android.ui.HorizontalTabView.Tab;
+import org.wordpress.android.datasets.StatsVideosTable;
+import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.Stats.Timeframe;
 
-public class StatsVideoFragment extends StatsAbsViewFragment  implements TabListener {
-
-    private ViewPager mViewPager;
-    private HorizontalTabView mTabView;
-    private CustomPagerAdapter mAdapter;
+public class StatsVideoFragment extends StatsAbsListViewFragment  implements TabListener {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
-        
-        mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
-        mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mTabView.setSelectedTab(position);
-            }
-        });
-                
-        mAdapter = new CustomPagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(mAdapter);
-        
-        mTabView = (HorizontalTabView) view.findViewById(R.id.stats_pager_tabs);
-        mTabView.setVisibility(View.VISIBLE);
-        mTabView.setTabListener(this);
-        
-        addTabs(new Stats.Timeframe[]{ Stats.Timeframe.TODAY, Stats.Timeframe.YESTERDAY });
-        mTabView.setSelectedTab(0);
-        
-        return view;
-    }
-    
-    private void addTabs(Timeframe[] timeframes) {
-        for (Timeframe timeframe : timeframes) {
-            mTabView.addTab(mTabView.newTab().setText(timeframe.getLabel()));
-        }
-    }
-
-    @Override
-    public void onTabSelected(Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
+    public FragmentPagerAdapter getAdapter() {
+        return new CustomPagerAdapter(getChildFragmentManager());
     }
 
     private class CustomPagerAdapter extends FragmentPagerAdapter {
@@ -66,7 +34,12 @@ public class StatsVideoFragment extends StatsAbsViewFragment  implements TabList
 
         @Override
         public Fragment getItem(int position) {
-            return new Fragment();
+            int entryLabelResId = R.string.stats_entry_video_plays;
+            int totalsLabelResId = R.string.stats_totals_plays;
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId);
+            mFragmentMap.put(position, fragment);
+            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+            return fragment;
         }
 
         @Override
@@ -77,15 +50,51 @@ public class StatsVideoFragment extends StatsAbsViewFragment  implements TabList
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0)
-                return Stats.Timeframe.TODAY.getLabel();
+                return StatsTimeframe.TODAY.getLabel();
             else if (position == 1)
-                return Stats.Timeframe.YESTERDAY.getLabel();
+                return StatsTimeframe.YESTERDAY.getLabel();
             else 
                 return ""; 
         }
         
     }
 
+    public class CustomCursorAdapter extends CursorAdapter {
+
+        public CustomCursorAdapter(Context context, Cursor c) {
+            super(context, c, true);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            
+            String entry = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.NAME));
+            String url = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.URL));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsVideosTable.Columns.PLAYS));
+
+            // entries
+            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+            if (url != null && url.length() > 0) {
+                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
+                entryTextView.setText(link);
+                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            } else {
+                entryTextView.setText(entry);
+            }
+            
+            // totals
+            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
+            totalsTextView.setText(total + "");
+            
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup root) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return inflater.inflate(R.layout.stats_list_cell, root, false);
+        }
+
+    }
 
     @Override
     public String getTitle() {

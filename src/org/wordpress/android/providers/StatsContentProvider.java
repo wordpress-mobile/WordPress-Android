@@ -1,14 +1,12 @@
 package org.wordpress.android.providers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.SparseArray;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SQLTable;
@@ -54,12 +52,10 @@ public class StatsContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private int URI_MATCH = 0;
-    private Map<Integer, SQLTable> mUriMatchToSQLTableMap;
+    private static SparseArray<SQLTable> sUriMatchToSQLTableMap = new SparseArray<SQLTable>();
     
     @Override
     public synchronized boolean onCreate() {
-        mUriMatchToSQLTableMap = new HashMap<Integer, SQLTable>();
-        
         registerTable(Paths.CLICKS, StatsClicksTable.getInstance());
         registerTable(Paths.GEOVIEWS, StatsGeoviewsTable.getInstance());
         registerTable(Paths.MOST_COMMENTED, StatsMostCommentedTable.getInstance());
@@ -74,9 +70,9 @@ public class StatsContentProvider extends ContentProvider {
     }
     
     private void registerTable(String path, SQLTable table) {
-        final int match = URI_MATCH ++;
+        final int match = URI_MATCH++;
         sUriMatcher.addURI(AUTHORITY, path, match);
-        mUriMatchToSQLTableMap.put(match, table);
+        sUriMatchToSQLTableMap.put(match, table);
     }
 
     @Override
@@ -126,10 +122,11 @@ public class StatsContentProvider extends ContentProvider {
         return 0;
     }
     
-    private synchronized SQLTable getSQLTable(Uri uri) {
+    public static synchronized SQLTable getSQLTable(Uri uri) {
         int uriMatch = sUriMatcher.match(uri);
-        if (mUriMatchToSQLTableMap.containsKey(uriMatch))
-                return mUriMatchToSQLTableMap.get(uriMatch);
+        
+        if (sUriMatchToSQLTableMap.indexOfKey(uriMatch) >= 0)
+            return sUriMatchToSQLTableMap.get(uriMatch);
         
         return null;
     }

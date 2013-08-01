@@ -58,7 +58,7 @@ public class StatsNavDialogFragment extends SherlockDialogFragment implements On
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         ListView lv = (ListView) inflater.inflate(R.layout.stats_nav_list, container, false);
-        mAdapter = new CustomAdapter(Stats.ViewType.toStringArray());
+        mAdapter = new CustomAdapter(StatsViewType.toStringArray());
         lv.setAdapter(mAdapter);
         lv.setOnItemClickListener(this);
         

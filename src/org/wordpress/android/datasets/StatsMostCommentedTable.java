@@ -11,7 +11,7 @@ import org.wordpress.android.models.StatsMostCommented;
 
 public class StatsMostCommentedTable extends SQLTable {
 
-    private static final String NAME = "top_post_and_pages";
+    private static final String NAME = "most_commented";
 
     public static final class Columns {
         public static final String BLOG_ID = "blogId";

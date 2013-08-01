@@ -17,7 +17,6 @@ import com.actionbarsherlock.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.stats.Stats.ViewType;
 
 public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
 
@@ -53,7 +52,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         actionBar.setCustomView(mActionbarNav);
         
         mActionbarNavText = (TextView) mActionbarNav.findViewById(R.id.stats_ab_nav_text);
-        mActionbarNavText.setText(ViewType.values()[mNavPosition].getLabel());
+        mActionbarNavText.setText(StatsViewType.values()[mNavPosition].getLabel());
         mActionbarNavText.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -67,7 +66,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         FragmentManager fm = getSupportFragmentManager();
         mStatsViewFragment = (StatsAbsViewFragment) fm.findFragmentByTag(StatsAbsViewFragment.TAG);
         if (mStatsViewFragment == null) { 
-            mStatsViewFragment = StatsAbsViewFragment.newInstance(ViewType.values()[0]);
+            mStatsViewFragment = StatsAbsViewFragment.newInstance(StatsViewType.values()[0]);
             fm.beginTransaction().add(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
         }
         
@@ -94,7 +93,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
         if (mNavFragment == null)
             mNavFragment = StatsNavDialogFragment.newInstance(mNavPosition);
-        mNavFragment.show(getSupportFragmentManager(), StatsNavDialogFragment.TAG);
+        if (!mNavFragment.isVisible())
+            mNavFragment.show(getSupportFragmentManager(), StatsNavDialogFragment.TAG);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     @Override
     public void onItemClick(int position) {
         mNavPosition = position;
-        ViewType viewType = ViewType.values()[mNavPosition];
+        StatsViewType viewType = StatsViewType.values()[mNavPosition];
         mActionbarNavText.setText(viewType.getLabel());
 
         FragmentManager fm = getSupportFragmentManager();
