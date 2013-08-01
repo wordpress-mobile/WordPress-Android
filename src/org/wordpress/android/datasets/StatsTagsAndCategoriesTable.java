@@ -4,6 +4,8 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.database.sqlite.SQLiteDatabase;
+
 public class StatsTagsAndCategoriesTable extends SQLTable {
 
     private static final String NAME = "tags_and_categories";
@@ -49,7 +51,7 @@ public class StatsTagsAndCategoriesTable extends SQLTable {
     }
 
     @Override
-    public void onUpgrade(int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
     }

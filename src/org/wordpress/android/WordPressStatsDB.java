@@ -28,9 +28,9 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "wordpress_stats";
     
-    private SQLiteDatabase db;
+    private SQLiteDatabase mDB;
 
-    private Context context;
+    private Context mContext;
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -53,21 +53,21 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         onCreate(db);
         db = getWritableDatabase();
         
-        StatsClicksTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsGeoviewsTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsMostCommentedTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsReferrersTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsSearchEngineTermsTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsTagsAndCategoriesTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsTopAuthorsTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsTopCommentersTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsTopPostsAndPagesTable.getInstance().onUpgrade(oldVersion, newVersion);
-        StatsVideosTable.getInstance().onUpgrade(oldVersion, newVersion);
+        StatsClicksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsGeoviewsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsMostCommentedTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsReferrersTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsSearchEngineTermsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsTagsAndCategoriesTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsTopAuthorsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsTopCommentersTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsTopPostsAndPagesTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsVideosTable.getInstance().onUpgrade(db, oldVersion, newVersion);
     }
     
     public WordPressStatsDB(Context ctx) {
         super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = ctx;
+        this.mContext = ctx;
     }
     
 

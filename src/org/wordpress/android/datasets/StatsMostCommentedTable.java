@@ -4,6 +4,8 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.database.sqlite.SQLiteDatabase;
+
 public class StatsMostCommentedTable extends SQLTable {
 
     private static final String NAME = "top_post_and_pages";
@@ -49,7 +51,7 @@ public class StatsMostCommentedTable extends SQLTable {
     }
 
     @Override
-    public void onUpgrade(int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
     }

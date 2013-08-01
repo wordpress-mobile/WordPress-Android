@@ -4,6 +4,8 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.database.sqlite.SQLiteDatabase;
+
 public class StatsReferrersTable extends SQLTable {
 
     private static final String NAME = "referrers";
@@ -51,7 +53,7 @@ public class StatsReferrersTable extends SQLTable {
     }
 
     @Override
-    public void onUpgrade(int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
     }

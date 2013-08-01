@@ -3,6 +3,8 @@ package org.wordpress.android.datasets;
 
 import java.util.Map;
 
+import android.database.sqlite.SQLiteDatabase;
+
 public abstract class SQLTable {
 
     public abstract String getName();
@@ -29,6 +31,6 @@ public abstract class SQLTable {
         return createStr;
     }
 
-    public abstract void onUpgrade(int oldVersion, int newVersion);
+    public abstract void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
     
 }

@@ -4,6 +4,8 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.database.sqlite.SQLiteDatabase;
+
 public class StatsSearchEngineTermsTable extends SQLTable {
 
     private static final String NAME = "search_engine_terms";
@@ -45,7 +47,7 @@ public class StatsSearchEngineTermsTable extends SQLTable {
     }
 
     @Override
-    public void onUpgrade(int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
     }
