@@ -131,8 +131,8 @@ public class JSONUtil {
     /**
      * Convert a JSONArray (expected to contain strings) in a string list
      */
-    public static List<String> fromJSONArrayToStringList(JSONArray jsonArray) {
-        List<String> stringList = new ArrayList<String>();
+    public static ArrayList<String> fromJSONArrayToStringList(JSONArray jsonArray) {
+        ArrayList<String> stringList = new ArrayList<String>();
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 stringList.add(jsonArray.getString(i));
