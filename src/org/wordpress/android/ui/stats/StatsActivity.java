@@ -105,6 +105,11 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_stats_load_sample_data).setVisible(!WordPress.wpStatsDB.hasSampleData());
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -115,15 +120,13 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    // TODO: load sample stats
+                    WordPress.wpStatsDB.generateSampleData();
                     return null;
                 }
                 
                 @Override
                 protected void onPostExecute(Void result) {
                     invalidateOptionsMenu();
-//                    if (mStatsViewFragment != null)
-//                        mStatsViewFragment.refresh();
                 }
                 
             };

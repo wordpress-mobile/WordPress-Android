@@ -4,7 +4,10 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.wordpress.android.models.StatsMostCommented;
 
 public class StatsMostCommentedTable extends SQLTable {
 
@@ -54,6 +57,16 @@ public class StatsMostCommentedTable extends SQLTable {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
+    }
+    
+    public static ContentValues getContentValues(StatsMostCommented item) {
+        ContentValues values = new ContentValues();
+        values.put(Columns.BLOG_ID, item.getBlogId());
+        values.put(Columns.POST_ID, item.getPostId());
+        values.put(Columns.POST, item.getPost());
+        values.put(Columns.COMMENTS, item.getComments());
+        values.put(Columns.URL, item.getUrl());
+        return values;
     }
 
 }

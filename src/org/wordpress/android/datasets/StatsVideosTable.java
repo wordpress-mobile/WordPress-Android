@@ -4,7 +4,10 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.wordpress.android.models.StatsVideo;
 
 public class StatsVideosTable extends SQLTable {
 
@@ -58,4 +61,14 @@ public class StatsVideosTable extends SQLTable {
         
     }
 
+    public static ContentValues getContentValues(StatsVideo item) {
+        ContentValues values = new ContentValues();
+        values.put(Columns.BLOG_ID, item.getBlogId());
+        values.put(Columns.DATE, item.getDate());
+        values.put(Columns.VIDEO_ID, item.getVideoId());
+        values.put(Columns.NAME, item.getName());
+        values.put(Columns.PLAYS, item.getPlays());
+        values.put(Columns.URL, item.getUrl());
+        return values;
+    }
 }

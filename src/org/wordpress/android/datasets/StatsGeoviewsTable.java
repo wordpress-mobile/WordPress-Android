@@ -4,7 +4,10 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.wordpress.android.models.StatsGeoview;
 
 public class StatsGeoviewsTable extends SQLTable {
 
@@ -15,6 +18,7 @@ public class StatsGeoviewsTable extends SQLTable {
         public static final String DATE = "date";
         public static final String COUNTRY = "country";
         public static final String VIEWS = "views";
+        public static final String IMAGE_URL = "imageUrl";
     }
 
     private static final class Holder {
@@ -45,6 +49,7 @@ public class StatsGeoviewsTable extends SQLTable {
         map.put(Columns.DATE, "DATE");
         map.put(Columns.COUNTRY, "TEXT");
         map.put(Columns.VIEWS, "INTEGER");
+        map.put(Columns.IMAGE_URL, "TEXT");
         return map;
     }
 
@@ -53,5 +58,14 @@ public class StatsGeoviewsTable extends SQLTable {
         // TODO Auto-generated method stub
         
     }
-
+    
+    public static ContentValues getContentValues(StatsGeoview item) {
+        ContentValues values = new ContentValues();
+        values.put(Columns.BLOG_ID, item.getBlogId());
+        values.put(Columns.DATE, item.getDate());
+        values.put(Columns.COUNTRY, item.getCountry());
+        values.put(Columns.VIEWS, item.getViews());
+        values.put(Columns.IMAGE_URL, item.getImageUrl());
+        return values;
+    }
 }
