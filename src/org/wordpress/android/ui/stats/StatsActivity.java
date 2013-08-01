@@ -23,7 +23,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     
-    private StatsPhoneFragment mStatsPhoneFragment;
+    private StatsAbsViewFragment mStatsViewFragment;
     private View mActionbarNav;
     private TextView mActionbarNavText;
     private DialogFragment mNavFragment;
@@ -65,10 +65,10 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         });
         
         FragmentManager fm = getSupportFragmentManager();
-        mStatsPhoneFragment = (StatsPhoneFragment) fm.findFragmentByTag(StatsPhoneFragment.TAG);
-        if (mStatsPhoneFragment == null) { 
-            mStatsPhoneFragment = StatsPhoneFragment.newInstance(ViewType.values()[0]);
-            fm.beginTransaction().add(R.id.stats_container, mStatsPhoneFragment, StatsPhoneFragment.TAG).commit();
+        mStatsViewFragment = (StatsAbsViewFragment) fm.findFragmentByTag(StatsAbsViewFragment.TAG);
+        if (mStatsViewFragment == null) { 
+            mStatsViewFragment = StatsAbsViewFragment.newInstance(ViewType.values()[0]);
+            fm.beginTransaction().add(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
         }
         
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
@@ -115,15 +115,15 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    WordPress.wpStatsDB.loadSampleStats();
+                    // TODO: load sample stats
                     return null;
                 }
                 
                 @Override
                 protected void onPostExecute(Void result) {
                     invalidateOptionsMenu();
-                    if (mStatsPhoneFragment != null)
-                        mStatsPhoneFragment.refresh();
+//                    if (mStatsViewFragment != null)
+//                        mStatsViewFragment.refresh();
                 }
                 
             };
@@ -132,16 +132,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         }
         
         return super.onOptionsItemSelected(item);
-    }
-    
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (WordPress.getCurrentBlog() != null) {
-        
-            if (WordPress.wpStatsDB.getStatsCount(WordPress.getCurrentBlog().getBlogId()) > 0)
-                menu.findItem(R.id.menu_stats_load_sample_data).setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -155,7 +145,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         if (navFragment != null)
             navFragment.dismissAllowingStateLoss();
         
-        mStatsPhoneFragment = StatsPhoneFragment.newInstance(viewType);
-        fm.beginTransaction().replace(R.id.stats_container, mStatsPhoneFragment, StatsPhoneFragment.TAG).commit();
+        mStatsViewFragment = StatsAbsViewFragment.newInstance(viewType);
+        fm.beginTransaction().replace(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
     }
 }

@@ -97,7 +97,4 @@ public class Stat {
         this.imageUrl = imageUrl;
     }
     
-    public void save() {
-        WordPress.wpStatsDB.saveStat(this);
-    }
 }

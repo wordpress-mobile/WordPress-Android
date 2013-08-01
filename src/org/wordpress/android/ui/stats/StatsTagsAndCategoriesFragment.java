@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,8 +15,7 @@ import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.stats.Stats.Timeframe;
 
-
-public class StatsTopPostsAndPagesFragment extends StatsAbsViewFragment  implements TabListener {
+public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment  implements TabListener {
 
     private ViewPager mViewPager;
     private HorizontalTabView mTabView;
@@ -88,11 +86,10 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsViewFragment  impleme
         
     }
 
-
+    
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_top_posts_and_pages);
+        return getString(R.string.stats_view_tags_and_categories);
     }
-    
 
 }

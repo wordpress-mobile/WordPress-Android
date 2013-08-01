@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 
-public class StatsTotalsFollowersAndSharesFragment extends StatsAbsCategoryFragment {
+public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
 
     private TextView mPostsCountView;
     private TextView mCategoriesCountView;
@@ -16,12 +16,6 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsCategoryFragm
     private TextView mFollowersCountView;
     private TextView mCommentsCountView;
     private TextView mSharesCountView;
-
-    @Override
-    protected void refreshData() {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,5 +29,10 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsCategoryFragm
         mSharesCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_shares_count);
         
         return view;
+    }
+
+    @Override
+    public String getTitle() {
+        return getString(R.string.stats_view_totals_followers_and_shares);
     }
 }

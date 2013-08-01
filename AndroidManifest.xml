@@ -212,6 +212,11 @@
                 <category android:name="org.wordpress.android" />
             </intent-filter>
         </receiver>
+            
+        <provider
+            android:name=".providers.StatsContentProvider"
+            android:authorities="org.wordpress.android.providers.StatsContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

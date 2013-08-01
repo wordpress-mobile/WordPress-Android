@@ -6,24 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 
-public class StatsVisitorsAndViewsFragment extends StatsAbsCategoryFragment {
-
-    @Override
-    protected void refreshData() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-        
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-
-    }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshData();
-    }
+public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +15,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsCategoryFragment {
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
         
         return view;
+    }
+
+    @Override
+    public String getTitle() {
+        return getString(R.string.stats_view_visitors_and_views);
     }
 
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,11 +13,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.Stats.Timeframe;
 
+public class StatsCommentsFragment extends StatsAbsViewFragment implements TabListener {
 
-public class StatsTopPostsAndPagesFragment extends StatsAbsViewFragment  implements TabListener {
-
+    private static final String[] TITLES = new String[] { "Top Recent Commenters", "Most Commented", "Summary" };
+    
     private ViewPager mViewPager;
     private HorizontalTabView mTabView;
     private CustomPagerAdapter mAdapter;
@@ -43,15 +42,15 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsViewFragment  impleme
         mTabView.setVisibility(View.VISIBLE);
         mTabView.setTabListener(this);
         
-        addTabs(new Stats.Timeframe[]{ Stats.Timeframe.TODAY, Stats.Timeframe.YESTERDAY });
+        addTabs(TITLES);
         mTabView.setSelectedTab(0);
         
         return view;
     }
     
-    private void addTabs(Timeframe[] timeframes) {
-        for (Timeframe timeframe : timeframes) {
-            mTabView.addTab(mTabView.newTab().setText(timeframe.getLabel()));
+    private void addTabs(String[] titles) {
+        for (String title : titles) {
+            mTabView.addTab(mTabView.newTab().setText(title));
         }
     }
 
@@ -73,26 +72,18 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsViewFragment  impleme
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0)
-                return Stats.Timeframe.TODAY.getLabel();
-            else if (position == 1)
-                return Stats.Timeframe.YESTERDAY.getLabel();
-            else 
-                return ""; 
+            return TITLES[position];
         }
         
     }
-
-
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_top_posts_and_pages);
+        return getString(R.string.stats_view_comments);
     }
-    
 
 }
