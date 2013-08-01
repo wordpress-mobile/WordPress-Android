@@ -36,7 +36,8 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
     private String mMediaCapturePath = "";
     private MediaAddFragmentCallback mCallback;
-    
+    public static final String TAG = MediaAddFragment.class.getName();
+
     public interface MediaAddFragmentCallback {
         public void onMediaAdded(String mediaId);
     }
@@ -44,6 +45,12 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // This view doesn't really matter as this fragment is invisible
+        
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getString("mediaCapturePath") != null)
+                mMediaCapturePath = savedInstanceState.getString("mediaCapturePath");
+        }
+        
         return inflater.inflate(R.layout.actionbar_add_media_cell, container, false);
     }
     
@@ -56,6 +63,13 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragment.class.getSimpleName());
         }
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!mMediaCapturePath.equals(""))
+            outState.putString("mediaCapturePath", mMediaCapturePath);
     }
     
     @Override
