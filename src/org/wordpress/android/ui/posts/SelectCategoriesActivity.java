@@ -235,8 +235,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             int category_id = Integer.parseInt(result.toString());
             // Insert the new category into database
             WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, category_name);
-
             returnString = "addCategory_success";
+            // auto select new category
+            mSelectedCategories.add(category_name);
         }
 
         return returnString;
