@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
+import org.wordpress.android.R;
 import org.wordpress.android.ui.media.MediaGridAdapter;
 
 /**
@@ -59,7 +60,7 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
     
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CheckableFrameLayout frameLayout = ((CheckableFrameLayout) view);
+        CheckableFrameLayout frameLayout = ((CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout));
         
         // run the default behavior if not in multiselect mode
         if (!isInMultiSelectMode()) {            
@@ -99,7 +100,7 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
             getSelectedItems().add(mediaId);
         notifyMultiSelectCountChanged();
         
-        ((CheckableFrameLayout) view).setChecked(true);
+        ((CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout)).setChecked(true);
         
         return true;
     }

@@ -46,7 +46,7 @@ public class CheckableFrameLayout extends FrameLayout implements Checkable {
             mIsChecked = checked;
             refreshDrawableState();
             if(mOnCheckedChangeListener != null) {
-                mOnCheckedChangeListener.onCheckedChanged(this, checked);
+                mOnCheckedChangeListener.onCheckedChanged((CheckableFrameLayout) this.findViewById(R.id.media_grid_frame_layout), checked);
             }
         }
     }

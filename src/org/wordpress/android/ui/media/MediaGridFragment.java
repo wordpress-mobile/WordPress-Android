@@ -456,7 +456,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             }
         }
 
-        CheckableFrameLayout layout = (CheckableFrameLayout) view;
+        CheckableFrameLayout layout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
         if (layout != null) {
             layout.setOnCheckedChangeListener(null);
         }

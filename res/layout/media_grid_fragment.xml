@@ -36,11 +36,9 @@
         android:layout_height="match_parent"
         android:layout_below="@id/media_filter_result_text"
         android:gravity="center"
-        android:horizontalSpacing="8dp"
         android:numColumns="@integer/media_grid_num_columns"
-        android:padding="8dp"
         android:scrollbarStyle="outsideOverlay"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="8dp" />
+         />
 
 </RelativeLayout>

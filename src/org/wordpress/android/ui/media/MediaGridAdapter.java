@@ -172,7 +172,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
         
         // multi-select highlighting
-        CheckableFrameLayout frameLayout = (CheckableFrameLayout) view;
+        CheckableFrameLayout frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
         frameLayout.setTag(mediaId);
         frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             
