@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.SparseBooleanArray;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,14 +29,15 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
-    String categoriesCSV = "";
     private XMLRPCClient client;
     String finalResult = "";
     ProgressDialog pd;
     public String categoryErrorMsg = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
-    private ListView lv;
+    private ListView mListView;
+    private int mListViewScrollStateOffset, mListViewScrollStateIndex;
+    private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
@@ -52,9 +53,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        lv = getListView();
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        lv.setItemsCanFocus(false);
+        mListView = getListView();
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mListView.setItemsCanFocus(false);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -65,7 +66,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
-            categoriesCSV = extras.getString("categoriesCSV");
+            mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
         }
 
         populateOrFetchCategories();
@@ -79,15 +80,15 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
         this.setListAdapter(categoryAdapter);
-        if (categoriesCSV != null) {
-            String catsArray[] = categoriesCSV.split(",");
+        if (mSelectedCategories != null) {
             ListView lv = getListView();
-            for (String selectedCategory : catsArray) {
+            for (String selectedCategory : mSelectedCategories) {
                 if (mCategoryNames.keySet().contains(selectedCategory)) {
                     lv.setItemChecked(mCategoryNames.get(selectedCategory), true);
                 }
             }
         }
+        restoreScrollOffset();
     }
 
 
@@ -208,7 +209,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         String returnString = "";
 
         // Save selected categories
-        categoriesCSV = selectedCategoriesToCSV();
+        updateSelectedCategoryList();
+        saveScrollOffset();
 
         // Store the parameters for wp.addCategory
         Map<String, Object> struct = new HashMap<String, Object>();
@@ -237,8 +239,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             int category_id = Integer.parseInt(result.toString());
             // Insert the new category into database
             WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, category_name);
-
             returnString = "addCategory_success";
+            // auto select new category
+            mSelectedCategories.add(category_name);
         }
 
         return returnString;
@@ -310,6 +313,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     }
 
     private void refreshCategories() {
+        saveScrollOffset();
+        updateSelectedCategoryList();
         pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
                 getResources().getText(R.string.attempting_categories_refresh), true, true);
         Thread th = new Thread() {
@@ -333,20 +338,34 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         super.onBackPressed();
     }
 
-    private String selectedCategoriesToCSV() {
-        ArrayList<String> selectedCategories = new ArrayList<String>();
-        SparseBooleanArray selectedItems = lv.getCheckedItemPositions();
+    private void saveScrollOffset() {
+        mListViewScrollStateIndex = mListView.getFirstVisiblePosition();
+        View view = mListView.getChildAt(0);
+        mListViewScrollStateOffset = 0;
+        if (view != null) {
+            mListViewScrollStateOffset = view.getTop();
+        }
+    }
+
+    private void restoreScrollOffset() {
+        mListView.setSelectionFromTop(mListViewScrollStateIndex, mListViewScrollStateOffset);
+    }
+
+    private void updateSelectedCategoryList() {
+        SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
         for (int i = 0; i < selectedItems.size(); i++) {
             if (selectedItems.get(selectedItems.keyAt(i))) {
-                selectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+                mSelectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+            } else {
+                mSelectedCategories.remove(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
             }
         }
-        return TextUtils.join(",", selectedCategories);
     }
 
     private void saveAndFinish() {
         Bundle bundle = new Bundle();
-        bundle.putString("selectedCategories", selectedCategoriesToCSV());
+        updateSelectedCategoryList();
+        bundle.putSerializable("selectedCategories", new ArrayList<String>(mSelectedCategories));
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
