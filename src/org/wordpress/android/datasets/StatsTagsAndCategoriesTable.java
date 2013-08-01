@@ -4,7 +4,10 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.wordpress.android.models.StatsTagsandCategories;
 
 public class StatsTagsAndCategoriesTable extends SQLTable {
 
@@ -54,6 +57,16 @@ public class StatsTagsAndCategoriesTable extends SQLTable {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
+    }
+    
+    public static ContentValues getContentValues(StatsTagsandCategories item) {
+        ContentValues values = new ContentValues();
+        values.put(Columns.BLOG_ID, item.getBlogId());
+        values.put(Columns.DATE, item.getDate());
+        values.put(Columns.TOPIC, item.getTopic());
+        values.put(Columns.TYPE, item.getType());
+        values.put(Columns.VIEWS, item.getViews());
+        return values;
     }
 
 }

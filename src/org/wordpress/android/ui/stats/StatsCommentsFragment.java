@@ -1,64 +1,37 @@
 package org.wordpress.android.ui.stats;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.HorizontalTabView;
-import org.wordpress.android.ui.HorizontalTabView.Tab;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.StatsMostCommentedTable;
+import org.wordpress.android.datasets.StatsTopCommentersTable;
+import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
-public class StatsCommentsFragment extends StatsAbsViewFragment implements TabListener {
+public class StatsCommentsFragment extends StatsAbsListViewFragment implements TabListener {
 
     private static final String[] TITLES = new String[] { "Top Recent Commenters", "Most Commented", "Summary" };
     
-    private ViewPager mViewPager;
-    private HorizontalTabView mTabView;
-    private CustomPagerAdapter mAdapter;
-
+    private static final int TOP_COMMENTERS = 0;
+    private static final int MOST_COMMENTED = 1;
+    
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
-        
-        mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
-        mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mTabView.setSelectedTab(position);
-            }
-        });
-                
-        mAdapter = new CustomPagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(mAdapter);
-        
-        mTabView = (HorizontalTabView) view.findViewById(R.id.stats_pager_tabs);
-        mTabView.setVisibility(View.VISIBLE);
-        mTabView.setTabListener(this);
-        
-        addTabs(TITLES);
-        mTabView.setSelectedTab(0);
-        
-        return view;
+    public FragmentPagerAdapter getAdapter() {
+        return new CustomPagerAdapter(getChildFragmentManager());
     }
     
-    private void addTabs(String[] titles) {
-        for (String title : titles) {
-            mTabView.addTab(mTabView.newTab().setText(title));
-        }
-    }
-
-    @Override
-    public void onTabSelected(Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
     private class CustomPagerAdapter extends FragmentPagerAdapter {
 
         public CustomPagerAdapter(FragmentManager fm) {
@@ -67,7 +40,25 @@ public class StatsCommentsFragment extends StatsAbsViewFragment implements TabLi
 
         @Override
         public Fragment getItem(int position) {
-            return new Fragment();
+            if (position == 0) {
+                int entryLabelResId = R.string.stats_entry_top_commenter;
+                int totalsLabelResId = R.string.stats_totals_comments;
+                StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId);
+                mFragmentMap.put(position, fragment);
+                fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
+                return fragment;
+            } else if (position == 1) {
+                int entryLabelResId = R.string.stats_entry_most_commented;
+                int totalsLabelResId = R.string.stats_totals_comments;
+                StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId);
+                fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
+                mFragmentMap.put(position, fragment);
+                return fragment;
+            } else {
+                Fragment fragment = new Fragment();
+                mFragmentMap.put(position, fragment);
+                return fragment;
+            }
         }
 
         @Override
@@ -81,6 +72,60 @@ public class StatsCommentsFragment extends StatsAbsViewFragment implements TabLi
         }
         
     }
+    
+    public class CustomCursorAdapter extends CursorAdapter {
+
+        private int mType;
+
+        public CustomCursorAdapter(Context context, Cursor c, int type) {
+            super(context, c, true);
+            mType = type;
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            
+            // entry
+            String entry;
+            if (mType == TOP_COMMENTERS)
+                entry = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.NAME));
+            else 
+                entry = cursor.getString(cursor.getColumnIndex(StatsMostCommentedTable.Columns.POST));
+
+            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+            entryTextView.setText(entry);
+
+            
+            // totals
+            int total;
+            if (mType == TOP_COMMENTERS)
+                total = cursor.getInt(cursor.getColumnIndex(StatsTopCommentersTable.Columns.COMMENTS));
+            else 
+                total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
+            
+            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
+            totalsTextView.setText(total + "");
+            
+            // image 
+            String imageUrl;
+            if (mType == TOP_COMMENTERS) {
+                imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
+                
+                NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageUrl(imageUrl, WordPress.imageLoader);
+            }
+            
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup root) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return inflater.inflate(R.layout.stats_list_cell, root, false);
+        }
+
+    }
+    
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_comments);

@@ -4,7 +4,10 @@ package org.wordpress.android.datasets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.wordpress.android.models.StatsTopCommenter;
 
 public class StatsTopCommentersTable extends SQLTable {
 
@@ -54,6 +57,16 @@ public class StatsTopCommentersTable extends SQLTable {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         
+    }
+    
+    public static ContentValues getContentValues(StatsTopCommenter item) {
+        ContentValues values = new ContentValues();
+        values.put(Columns.BLOG_ID, item.getBlogId());
+        values.put(Columns.USER_ID, item.getUserId());
+        values.put(Columns.NAME, item.getName());
+        values.put(Columns.COMMENTS, item.getComments());
+        values.put(Columns.IMAGE_URL, item.getImageUrl());
+        return values;
     }
 
 }

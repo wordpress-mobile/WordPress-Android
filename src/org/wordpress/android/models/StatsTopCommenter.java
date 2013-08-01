@@ -1,0 +1,60 @@
+
+package org.wordpress.android.models;
+
+public class StatsTopCommenter {
+
+    private String mBlogId;
+    private int mUserId;
+    private String mName;
+    private int mComments;
+    private String mImageUrl;
+
+    public StatsTopCommenter(String blogId, int userId, String name, int comments, String imageUrl) {
+        this.mBlogId = blogId;
+        this.mUserId = userId;
+        this.mName = name;
+        this.mComments = comments;
+        this.mImageUrl = imageUrl;
+    }
+
+    public String getBlogId() {
+        return mBlogId;
+    }
+
+    public void setBlogId(String blogId) {
+        this.mBlogId = blogId;
+    }
+
+    public int getUserId() {
+        return mUserId;
+    }
+
+    public void setUserId(int userId) {
+        this.mUserId = userId;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public int getComments() {
+        return mComments;
+    }
+
+    public void setComments(int comments) {
+        this.mComments = comments;
+    }
+
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.mImageUrl = imageUrl;
+    }
+
+}

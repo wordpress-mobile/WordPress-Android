@@ -1,92 +1,83 @@
+
 package org.wordpress.android.ui.stats;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.HorizontalTabView;
-import org.wordpress.android.ui.HorizontalTabView.Tab;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.Stats.Timeframe;
+import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
+import org.wordpress.android.models.StatsTagsandCategories.Type;
+import org.wordpress.android.providers.StatsContentProvider;
 
-public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment  implements TabListener {
-
-    private ViewPager mViewPager;
-    private HorizontalTabView mTabView;
-    private CustomPagerAdapter mAdapter;
+public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
+
+        FragmentManager fm = getChildFragmentManager();
         
-        mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
-        mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mTabView.setSelectedTab(position);
-            }
-        });
-                
-        mAdapter = new CustomPagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(mAdapter);
-        
-        mTabView = (HorizontalTabView) view.findViewById(R.id.stats_pager_tabs);
-        mTabView.setVisibility(View.VISIBLE);
-        mTabView.setTabListener(this);
-        
-        addTabs(new Stats.Timeframe[]{ Stats.Timeframe.TODAY, Stats.Timeframe.YESTERDAY });
-        mTabView.setSelectedTab(0);
+        int entryLabelResId = R.string.stats_entry_tags_and_categories;
+        int totalsLabelResId = R.string.stats_totals_views;
+
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId);
+        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.stats_pager_container, fragment, StatsCursorFragment.TAG);
+        ft.commit();
         
         return view;
     }
-    
-    private void addTabs(Timeframe[] timeframes) {
-        for (Timeframe timeframe : timeframes) {
-            mTabView.addTab(mTabView.newTab().setText(timeframe.getLabel()));
-        }
-    }
 
-    @Override
-    public void onTabSelected(Tab tab) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
+    public class CustomCursorAdapter extends CursorAdapter {
 
-    private class CustomPagerAdapter extends FragmentPagerAdapter {
-
-        public CustomPagerAdapter(FragmentManager fm) {
-            super(fm);
+        public CustomCursorAdapter(Context context, Cursor c) {
+            super(context, c, true);
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return new Fragment();
+        public void bindView(View view, Context context, Cursor cursor) {
+            
+            String entry = cursor.getString(cursor.getColumnIndex(StatsTagsAndCategoriesTable.Columns.TOPIC));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsTagsAndCategoriesTable.Columns.VIEWS));
+            String type = cursor.getString(cursor.getColumnIndex(StatsTagsAndCategoriesTable.Columns.TYPE));
+
+            // entries
+            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+            entryTextView.setText(entry);
+
+            // tag and category icons
+            if (type.equals(Type.CATEGORY.getLabel())) {
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_category, 0, 0, 0);
+            } else if (type.equals(Type.STAT.getLabel())) {
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_tag, 0, 0, 0);
+            } else {
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+            
+            // totals
+            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
+            totalsTextView.setText(total + "");
+            
         }
 
         @Override
-        public int getCount() {
-            return 2;
+        public View newView(Context context, Cursor cursor, ViewGroup root) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return inflater.inflate(R.layout.stats_list_cell, root, false);
         }
-        
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (position == 0)
-                return Stats.Timeframe.TODAY.getLabel();
-            else if (position == 1)
-                return Stats.Timeframe.YESTERDAY.getLabel();
-            else 
-                return ""; 
-        }
-        
+
     }
 
-    
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_tags_and_categories);
