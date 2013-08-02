@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
         View rowView = inflater.inflate(R.layout.categories_row, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
         ImageView levelIndicatorView = (ImageView) rowView.findViewById(R.id.categoryRowLevelIndicator);
-        textView.setText(EscapeUtils.escapeHtml(getItem(position).getName()));
+        textView.setText(Html.fromHtml(getItem(position).getName()));
         int level = getItem(position).getLevel();
         if (level == 1) { // hide ImageView
             levelIndicatorView.setVisibility(View.GONE);

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -115,7 +116,7 @@ public class AddCategoryActivity extends Activity {
                 for (int j = 1; j < currentCategory.getLevel(); j++) {
                     name += "  ";
                 }
-                name += currentCategory.getName();
+                name += Html.fromHtml(currentCategory.getName());
                 loadTextArray.add(name);
             }
             ArrayAdapter<CharSequence> categories = new ArrayAdapter<CharSequence>(this,
