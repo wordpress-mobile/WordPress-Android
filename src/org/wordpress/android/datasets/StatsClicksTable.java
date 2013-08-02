@@ -5,7 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import org.wordpress.android.models.StatsClick;
 
@@ -67,6 +69,11 @@ public class StatsClicksTable extends SQLTable {
         values.put(Columns.URL, item.getUrl());
         values.put(Columns.IMAGE_URL, item.getImageUrl());
         return values;
+    }
+    
+    @Override
+    public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        return super.query(database, uri, projection, selection, selectionArgs, Columns.CLICKS + " DESC, " + Columns.URL + " ASC" );
     }
 
 }

@@ -5,7 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import org.wordpress.android.models.StatsSearchEngineTerm;
 
@@ -66,4 +68,8 @@ public class StatsSearchEngineTermsTable extends SQLTable {
         return values;
     }
 
+    @Override
+    public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        return super.query(database, uri, projection, selection, selectionArgs, Columns.VIEWS + " DESC, " + Columns.SEARCH + " ASC");
+    }
 }
