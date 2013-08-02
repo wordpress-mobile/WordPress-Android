@@ -39,18 +39,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
 
         @Override
         public Fragment getItem(int position) {
-            if (position < 2) {
-                int entryLabelResId = R.string.stats_entry_video_plays;
-                int totalsLabelResId = R.string.stats_totals_plays;
-                StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId);
-                mFragmentMap.put(position, fragment);
-                fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-                return fragment;
-            } else {
-                VideoSummaryFragment fragment = new VideoSummaryFragment();
-                mFragmentMap.put(position, fragment);
-                return fragment;
-            }
+            return getFragment(position);
             
         }
 
@@ -66,6 +55,20 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
 
     }
 
+    @Override
+    protected Fragment getFragment(int position) {
+        if (position < 2) {
+            int entryLabelResId = R.string.stats_entry_video_plays;
+            int totalsLabelResId = R.string.stats_totals_plays;
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId);
+            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+            return fragment;
+        } else {
+            VideoSummaryFragment fragment = new VideoSummaryFragment();
+            return fragment;
+        }
+    }
+    
     public class CustomCursorAdapter extends CursorAdapter {
 
         public CustomCursorAdapter(Context context, Cursor c) {
@@ -133,5 +136,10 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
             return view;
         }
         
+    }
+
+    @Override
+    public String[] getTabTitles() {
+        return TITLES;
     }
 }

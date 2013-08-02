@@ -23,7 +23,9 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
 public class StatsReferrersFragment extends StatsAbsListViewFragment  implements TabListener {
-
+    
+    private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
@@ -37,12 +39,7 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
 
         @Override
         public Fragment getItem(int position) {
-            int entryLabelResId = R.string.stats_entry_referrers;
-            int totalsLabelResId = R.string.stats_totals_views;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_REFERRERS_URI, entryLabelResId, totalsLabelResId);
-            mFragmentMap.put(position, fragment);
-            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-            return fragment;
+            return getFragment(position);
         }
 
         @Override
@@ -52,14 +49,18 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
         
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0)
-                return StatsTimeframe.TODAY.getLabel();
-            else if (position == 1)
-                return StatsTimeframe.YESTERDAY.getLabel();
-            else 
-                return ""; 
+            return TITLES[position];
         }
 
+    }
+
+    @Override
+    protected Fragment getFragment(int position) {
+        int entryLabelResId = R.string.stats_entry_referrers;
+        int totalsLabelResId = R.string.stats_totals_views;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_REFERRERS_URI, entryLabelResId, totalsLabelResId);
+        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+        return fragment;
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
@@ -108,6 +109,11 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_referrers);
+    }
+
+    @Override
+    public String[] getTabTitles() {
+        return TITLES;
     }
 
 }

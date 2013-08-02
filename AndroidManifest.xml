@@ -123,11 +123,11 @@
         <activity
             android:name=".ui.posts.PostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--             </intent-filter> -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.posts.PagesActivity"
@@ -142,13 +142,10 @@
 
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
+        <activity android:name=".ui.stats.StatsActivityTablet" >
+        </activity>
+        
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >
         </activity>

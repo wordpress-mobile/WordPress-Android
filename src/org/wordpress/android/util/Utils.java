@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 
+import org.wordpress.android.R;
+
 public class Utils {
 
     public static Comparator<Object> BlogNameComparator = new Comparator<Object>() {
@@ -43,4 +45,7 @@ public class Utils {
         return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
+    public static boolean isTablet(Context context) {
+        return context.getResources().getInteger(R.integer.isTablet) == 1;
+    }
 }

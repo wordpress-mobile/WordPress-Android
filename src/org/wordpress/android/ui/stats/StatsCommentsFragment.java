@@ -42,25 +42,7 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
-                int entryLabelResId = R.string.stats_entry_top_commenter;
-                int totalsLabelResId = R.string.stats_totals_comments;
-                StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId);
-                mFragmentMap.put(position, fragment);
-                fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
-                return fragment;
-            } else if (position == 1) {
-                int entryLabelResId = R.string.stats_entry_most_commented;
-                int totalsLabelResId = R.string.stats_totals_comments;
-                StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId);
-                fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
-                mFragmentMap.put(position, fragment);
-                return fragment;
-            } else {
-                CommentsSummaryFragment fragment = new CommentsSummaryFragment();
-                mFragmentMap.put(position, fragment);
-                return fragment;
-            }
+            return getFragment(position);
         }
 
         @Override
@@ -73,6 +55,27 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
             return TITLES[position];
         }
         
+    }
+
+
+    @Override
+    protected Fragment getFragment(int position) {
+        if (position == 0) {
+            int entryLabelResId = R.string.stats_entry_top_commenter;
+            int totalsLabelResId = R.string.stats_totals_comments;
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId);
+            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
+            return fragment;
+        } else if (position == 1) {
+            int entryLabelResId = R.string.stats_entry_most_commented;
+            int totalsLabelResId = R.string.stats_totals_comments;
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId);
+            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
+            return fragment;
+        } else {
+            CommentsSummaryFragment fragment = new CommentsSummaryFragment();
+            return fragment;
+        }
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
@@ -155,5 +158,9 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         }
         
     }
-    
+
+    @Override
+    public String[] getTabTitles() {
+        return TITLES;
+    }
 }

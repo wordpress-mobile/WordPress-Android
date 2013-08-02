@@ -6,20 +6,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.Utils;
 
-public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener {
+public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener {
 
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
-    protected SparseArray<Fragment> mFragmentMap;
     protected FragmentStatePagerAdapter mAdapter;
     
     @Override
@@ -28,8 +33,49 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         
         setRetainInstance(true);
         
-        mFragmentMap = new SparseArray<Fragment>();
+        if (Utils.isTablet(getActivity())) {
+            initTabletLayout(view);
+        } else {
+            initPhoneLayout(view);
+        }
         
+        
+        return view;
+    }
+
+    private void initTabletLayout(View view) {
+        
+        TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
+        titleView.setText(getTitle());
+        
+        String[] titles = getTabTitles();
+        
+        RadioGroup rg = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        rg.setOnCheckedChangeListener(this);
+        
+        for (int i = 0; i < titles.length; i++) {
+            RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+            int dp4 = (int) dpToPx(4);
+            params.setMargins(dp4, 0, dp4, 0);
+            rb.setLayoutParams(params);
+            rb.setText(titles[i]);
+            rg.addView(rb);
+            if (i == 0)
+                rb.setChecked(true);
+        }
+        
+        Fragment fragment = getFragment(0);
+        getChildFragmentManager().beginTransaction().add(R.id.stats_pager_container, fragment).commit();
+        
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        // TODO
+    }
+    
+    private void initPhoneLayout(View view) {
         mViewPager = (ViewPager) view.findViewById(R.id.stats_pager_viewpager);
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -47,8 +93,6 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         mViewPager.setAdapter(mAdapter);
         addTabs();
         mTabView.setSelectedTab(0);
-        
-        return view;
     }
     
     private void addTabs() {
@@ -63,5 +107,12 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     }
 
     public abstract FragmentStatePagerAdapter getAdapter();
+
+    public abstract String[] getTabTitles();
+
+    protected abstract Fragment getFragment(int position);
     
+    private float dpToPx(int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }    
 }

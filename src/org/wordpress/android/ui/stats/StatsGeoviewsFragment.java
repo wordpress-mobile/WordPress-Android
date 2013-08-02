@@ -21,7 +21,11 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
 public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements TabListener {
-
+    
+    private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
+    
+    public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
@@ -35,12 +39,7 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
 
         @Override
         public Fragment getItem(int position) {
-            int entryLabelResId = R.string.stats_entry_country;
-            int totalsLabelResId = R.string.stats_totals_views;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_GEOVIEWS_URI, entryLabelResId, totalsLabelResId);
-            mFragmentMap.put(position, fragment);
-            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-            return fragment;
+            return getFragment(position);
         }
 
         @Override
@@ -50,17 +49,21 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
         
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0)
-                return StatsTimeframe.TODAY.getLabel();
-            else if (position == 1)
-                return StatsTimeframe.YESTERDAY.getLabel();
-            else 
-                return ""; 
+            return TITLES[position]; 
         }
 
     }
 
-    public class CustomCursorAdapter extends CursorAdapter {
+    @Override
+    protected Fragment getFragment(int position) {
+        int entryLabelResId = R.string.stats_entry_country;
+        int totalsLabelResId = R.string.stats_totals_views;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_GEOVIEWS_URI, entryLabelResId, totalsLabelResId);
+        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+        return fragment;
+    }
+    
+    public static class CustomCursorAdapter extends CursorAdapter {
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
@@ -99,5 +102,10 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_views_by_country);
+    }
+
+    @Override
+    public String[] getTabTitles() {
+        return TITLES;
     }
 }

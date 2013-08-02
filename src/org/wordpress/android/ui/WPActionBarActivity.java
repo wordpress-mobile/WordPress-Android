@@ -54,9 +54,11 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsActivityTablet;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.Utils;
 
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
@@ -784,13 +786,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof StatsActivity;
+            return WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof StatsActivity))
+            if (!(WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
+            
+            Intent intent;
+            if (Utils.isTablet(WPActionBarActivity.this)) 
+                intent = new Intent(WPActionBarActivity.this, StatsActivityTablet.class);
+            else 
+                intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
             intent.putExtra("id", WordPress.currentBlog.getId());
             intent.putExtra("isNew",
                     true);

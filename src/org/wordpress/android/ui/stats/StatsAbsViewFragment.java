@@ -64,4 +64,5 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
     
     public abstract String getTitle();
     
+    
 }
