@@ -9,8 +9,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -48,8 +49,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         TabListener {
 
+    public static final String THEME_REFRESH_INTENT_NOTIFICATION = "THEME_REFRESH_INTENT_NOTIFICATION"; 
+    
     private HorizontalTabView mTabView;
-    private ThemeTabFragment[] mTabFragments;
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
     private ThemeSearchFragment mSearchFragment;
@@ -75,7 +77,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         createMenuDrawer(R.layout.theme_browser_activity);
 
         mThemePagerAdapter = new ThemePagerAdapter(getSupportFragmentManager());
-        mTabFragments = new ThemeTabFragment[mThemePagerAdapter.getCount()];
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -153,7 +154,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
-    public class ThemePagerAdapter extends FragmentPagerAdapter {
+    public class ThemePagerAdapter extends FragmentStatePagerAdapter {
 
         public ThemePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -161,8 +162,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         @Override
         public Fragment getItem(int i) {
-            mTabFragments[i] = ThemeTabFragment.newInstance(ThemeSortType.getTheme(i));
-            return mTabFragments[i];
+            return ThemeTabFragment.newInstance(ThemeSortType.getTheme(i));
         }
 
         @Override
@@ -364,14 +364,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             stopAnimatingRefreshButton(refreshMenuItem);
     }
 
-    private void refreshViewPager() {
-        for (int i = 0; i < mTabFragments.length; i++) {
-            ThemeTabFragment fragment = mTabFragments[i];
-            if (fragment != null)
-                fragment.refresh();
-        }
-    }
-
     @Override
     public void onThemeSelected(String themeId) {
         FragmentManager fm = getSupportFragmentManager();
@@ -407,22 +399,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     protected void onPause() {
-        removeViewPagerFragments();
-        
         super.onPause();
         mIsRunning = false;
-    }
-
-    private void removeViewPagerFragments() {
-        // force viewpager fragments to be re-created, otherwise, we won't have any references to them,
-        // since we can't get viewpager fragments by tag or id.
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        for(ThemeTabFragment frag: mTabFragments) {
-            if (frag != null)
-                ft.remove(frag);
-        }
-        ft.commit();
     }
 
     @Override
@@ -517,4 +495,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         setupBaseLayout();
     }
 
+    private void refreshViewPager() {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        Intent intent = new Intent(THEME_REFRESH_INTENT_NOTIFICATION);
+        lbm.sendBroadcast(intent);
+    }
 }
