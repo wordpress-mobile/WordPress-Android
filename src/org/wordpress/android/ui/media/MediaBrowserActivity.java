@@ -434,6 +434,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (count == 0 && mActionMode != null) {
             mActionMode.finish();
         }
+
+        if (count > 0 && mActionMode != null)
+            mActionMode.setTitle(count + "");
+            
         invalidateOptionsMenu();
     }
     
