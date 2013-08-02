@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +92,8 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         
         View view = inflater.inflate(R.layout.theme_tab_fragment, container, false);
         
+        setRetainInstance(true);
+        
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
         
@@ -94,6 +101,34 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         
         return view;
     }
+    
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(ThemeBrowserActivity.THEME_REFRESH_INTENT_NOTIFICATION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(ThemeBrowserActivity.THEME_REFRESH_INTENT_NOTIFICATION)) {
+                refresh();
+            }
+        }
+    };
     
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -152,7 +187,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         
     }
 
-    public void refresh() {
+    private void refresh() {
         Cursor cursor = fetchThemes(getThemeSortType());
         if (mAdapter == null) {
             mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
