@@ -39,7 +39,7 @@ public class BarGraphView extends GraphView {
 	}
 
 	@Override
-	public void drawSeries(Canvas canvas, GraphViewData[] values, float graphwidth, float graphheight,
+	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values, float graphwidth, float graphheight,
 			float border, double minX, double minY, double diffX, double diffY,
 			float horstart, GraphViewSeriesStyle style) {
 		float colwidth = (graphwidth - (2 * border)) / values.length;
@@ -49,7 +49,7 @@ public class BarGraphView extends GraphView {
 
 		// draw data
 		for (int i = 0; i < values.length; i++) {
-			float valY = (float) (values[i].valueY - minY);
+			float valY = (float) (values[i].getY() - minY);
 			float ratY = (float) (valY / diffY);
 			float y = graphheight * ratY;
 

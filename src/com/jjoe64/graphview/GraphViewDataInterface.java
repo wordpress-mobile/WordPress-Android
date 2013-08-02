@@ -19,7 +19,7 @@
 
 package com.jjoe64.graphview;
 
-
-public interface ValueDependentColor {
-	public int get(GraphViewDataInterface data);
+public interface GraphViewDataInterface {
+	public double getX();
+	public double getY();
 }

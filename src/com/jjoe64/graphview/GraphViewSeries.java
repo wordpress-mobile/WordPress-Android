@@ -22,8 +22,6 @@ package com.jjoe64.graphview;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-
 public class GraphViewSeries {
 	/**
 	 * graph series style: color and thickness
@@ -51,16 +49,16 @@ public class GraphViewSeries {
 
 	final String description;
 	final GraphViewSeriesStyle style;
-	GraphViewData[] values;
+	GraphViewDataInterface[] values;
 	private final List<GraphView> graphViews = new ArrayList<GraphView>();
 
-	public GraphViewSeries(GraphViewData[] values) {
+	public GraphViewSeries(GraphViewDataInterface[] values) {
 		description = null;
 		style = new GraphViewSeriesStyle();
 		this.values = values;
 	}
 
-	public GraphViewSeries(String description, GraphViewSeriesStyle style, GraphViewData[] values) {
+	public GraphViewSeries(String description, GraphViewSeriesStyle style, GraphViewDataInterface[] values) {
 		super();
 		this.description = description;
 		if (style == null) {
@@ -83,8 +81,8 @@ public class GraphViewSeries {
 	 * @param value the new data to append
 	 * @param scrollToEnd true => graphview will scroll to the end (maxX)
 	 */
-	public void appendData(GraphViewData value, boolean scrollToEnd) {
-		GraphViewData[] newValues = new GraphViewData[values.length + 1];
+	public void appendData(GraphViewDataInterface value, boolean scrollToEnd) {
+		GraphViewDataInterface[] newValues = new GraphViewDataInterface[values.length + 1];
 		int offset = values.length;
 		System.arraycopy(values, 0, newValues, 0, offset);
 
@@ -106,7 +104,7 @@ public class GraphViewSeries {
 	 * redraws the graphview(s)
 	 * @param values new data
 	 */
-	public void resetData(GraphViewData[] values) {
+	public void resetData(GraphViewDataInterface[] values) {
 		this.values = values;
 		for (GraphView g : graphViews) {
 			g.redrawAll();
