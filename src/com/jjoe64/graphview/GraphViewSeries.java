@@ -20,7 +20,10 @@
 package com.jjoe64.graphview;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import android.util.Log;
 
 public class GraphViewSeries {
 	/**
@@ -80,7 +83,9 @@ public class GraphViewSeries {
 	 * add one data to current data
 	 * @param value the new data to append
 	 * @param scrollToEnd true => graphview will scroll to the end (maxX)
+	 * @deprecated please use {@link #appendData(GraphViewDataInterface, boolean, int)} to avoid memory overflow
 	 */
+	@Deprecated
 	public void appendData(GraphViewDataInterface value, boolean scrollToEnd) {
 		GraphViewDataInterface[] newValues = new GraphViewDataInterface[values.length + 1];
 		int offset = values.length;
@@ -88,6 +93,41 @@ public class GraphViewSeries {
 
 		newValues[values.length] = value;
 		values = newValues;
+		for (GraphView g : graphViews) {
+			if (scrollToEnd) {
+				g.scrollToEnd();
+			}
+		}
+	}
+
+	/**
+	 * add one data to current data
+	 * @param value the new data to append
+	 * @param scrollToEnd true => graphview will scroll to the end (maxX)
+	 * @param maxDataCount if max data count is reached, the oldest data value will be lost
+	 */
+	public void appendData(GraphViewDataInterface value, boolean scrollToEnd, int maxDataCount) {
+		synchronized (values) {
+			int curDataCount = values.length;
+			GraphViewDataInterface[] newValues;
+			if (curDataCount < maxDataCount) {
+				// enough space
+				newValues = new GraphViewDataInterface[curDataCount + 1];
+				System.arraycopy(values, 0, newValues, 0, curDataCount);
+				// append new data
+				newValues[curDataCount] = value;
+			} else {
+				// we have to trim one data
+				newValues = new GraphViewDataInterface[maxDataCount];
+				System.arraycopy(values, 1, newValues, 0, curDataCount-1);
+				// append new data
+				newValues[maxDataCount-1] = value;
+				Log.d("GraphViewSeries", Arrays.toString(newValues));
+			}
+			values = newValues;
+		}
+
+		// update linked graph views
 		for (GraphView g : graphViews) {
 			if (scrollToEnd) {
 				g.scrollToEnd();

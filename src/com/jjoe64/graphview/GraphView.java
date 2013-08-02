@@ -361,28 +361,30 @@ abstract public class GraphView extends LinearLayout {
 
 	private GraphViewDataInterface[] _values(int idxSeries) {
 		GraphViewDataInterface[] values = graphSeries.get(idxSeries).values;
-		if (viewportStart == 0 && viewportSize == 0) {
-			// all data
-			return values;
-		} else {
-			// viewport
-			List<GraphViewDataInterface> listData = new ArrayList<GraphViewDataInterface>();
-			for (int i=0; i<values.length; i++) {
-				if (values[i].getX() >= viewportStart) {
-					if (values[i].getX() > viewportStart+viewportSize) {
-						listData.add(values[i]); // one more for nice scrolling
-						break;
+		synchronized (values) {
+			if (viewportStart == 0 && viewportSize == 0) {
+				// all data
+				return values;
+			} else {
+				// viewport
+				List<GraphViewDataInterface> listData = new ArrayList<GraphViewDataInterface>();
+				for (int i=0; i<values.length; i++) {
+					if (values[i].getX() >= viewportStart) {
+						if (values[i].getX() > viewportStart+viewportSize) {
+							listData.add(values[i]); // one more for nice scrolling
+							break;
+						} else {
+							listData.add(values[i]);
+						}
 					} else {
-						listData.add(values[i]);
+						if (listData.isEmpty()) {
+							listData.add(values[i]);
+						}
+						listData.set(0, values[i]); // one before, for nice scrolling
 					}
-				} else {
-					if (listData.isEmpty()) {
-						listData.add(values[i]);
-					}
-					listData.set(0, values[i]); // one before, for nice scrolling
 				}
+				return listData.toArray(new GraphViewDataInterface[listData.size()]);
 			}
-			return listData.toArray(new GraphViewDataInterface[listData.size()]);
 		}
 	}
 
