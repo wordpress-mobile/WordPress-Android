@@ -401,6 +401,21 @@
   <string name="stats_totals_followers_shares_label_comments">Comments</string>
   <string name="stats_totals_followers_shares_label_shares">Shares</string>
   
+  <!-- stats: comments summary -->
+  <string name="stats_comments_summary_header_comments">COMMENTS</string>
+  <string name="stats_comments_summary_header_recent">RECENT</string>
+  <string name="stats_comments_summary_label_per_month">Per Month</string>
+  <string name="stats_comments_summary_label_total">Total</string>
+  <string name="stats_comments_summary_label_most_active_day">Most active recent day</string>
+  <string name="stats_comments_summary_label_most_active_time">Most active time of day</string>
+  <string name="stats_comments_summary_label_most_commented">Most commented post</string>
+  <string name="stats_comments_summary_footer">* Based on the 1000 most recent comments</string>
+  
+  <!-- stats: video summary -->
+  <string name="stats_video_summary_label_plays">Plays</string>
+  <string name="stats_video_summary_label_impressions">Impressions</string>
+  <string name="stats_video_summary_label_bandwidth">Bandwidth</string>
+  
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>
   <string name="link"><u>link</u></string>

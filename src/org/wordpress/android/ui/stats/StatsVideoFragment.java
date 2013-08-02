@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -14,13 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
 public class StatsVideoFragment extends StatsAbsListViewFragment  implements TabListener {
-
+    
+    private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel(), "Summary" };
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
@@ -34,27 +39,29 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
 
         @Override
         public Fragment getItem(int position) {
-            int entryLabelResId = R.string.stats_entry_video_plays;
-            int totalsLabelResId = R.string.stats_totals_plays;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId);
-            mFragmentMap.put(position, fragment);
-            fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-            return fragment;
+            if (position < 2) {
+                int entryLabelResId = R.string.stats_entry_video_plays;
+                int totalsLabelResId = R.string.stats_totals_plays;
+                StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId);
+                mFragmentMap.put(position, fragment);
+                fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+                return fragment;
+            } else {
+                VideoSummaryFragment fragment = new VideoSummaryFragment();
+                mFragmentMap.put(position, fragment);
+                return fragment;
+            }
+            
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override
         public CharSequence getPageTitle(int position) {
-            if (position == 0)
-                return StatsTimeframe.TODAY.getLabel();
-            else if (position == 1)
-                return StatsTimeframe.YESTERDAY.getLabel();
-            else 
-                return ""; 
+            return TITLES[position]; 
         }
 
     }
@@ -101,4 +108,30 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
         return getString(R.string.stats_view_video_plays);
     }
 
+    
+    public static class VideoSummaryFragment extends SherlockFragment {
+        
+        private TextView mHeader;
+        private TextView mPlays;
+        private TextView mImpressions;
+        private TextView mPlaybackTotals;
+        private TextView mPlaybackUnit;
+        private TextView mBandwidth;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.stats_video_summary, container, false); 
+            
+            mHeader = (TextView) view.findViewById(R.id.stats_video_summary_header);
+            mHeader.setText("Aggregated stat for August 2013");
+            mPlays = (TextView) view.findViewById(R.id.stats_video_summary_plays_total);
+            mImpressions = (TextView) view.findViewById(R.id.stats_video_summary_impressions_total);
+            mPlaybackTotals = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_total);
+            mPlaybackUnit = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_unit);
+            mBandwidth = (TextView) view.findViewById(R.id.stats_video_summary_bandwidth_total);
+            
+            return view;
+        }
+        
+    }
 }

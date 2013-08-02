@@ -20,7 +20,6 @@
             android:text="@string/stats_totals_followers_shares_header_totals" />
 
         <View
-            android:id="@+id/stats_totals_followers_shares_section1_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/wordpress_blue" />
@@ -45,9 +44,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stats_totals_followers_shares_posts_count"
-                android:text="@string/stats_totals_followers_shares_label_posts" 
                 android:drawableLeft="@drawable/stats_icon_posts"
-                android:drawablePadding="8dp"/>
+                android:drawablePadding="8dp"
+                android:text="@string/stats_totals_followers_shares_label_posts" />
         </RelativeLayout>
 
         <LinearLayout
@@ -78,14 +77,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/stats_totals_followers_shares_categories_count"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/stats_totals_followers_shares_label_categories"
                     android:drawableLeft="@drawable/stats_icon_categories"
-                    android:drawablePadding="8dp" />
-
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_categories" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/stats_totals_followers_shares_section1b"
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,7 +117,6 @@
             android:text="@string/stats_totals_followers_shares_header_followers" />
 
         <View
-            android:id="@+id/stats_totals_followers_shares_section2_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/wordpress_blue" />
@@ -132,7 +128,6 @@
             android:orientation="horizontal" >
 
             <RelativeLayout
-                android:id="@+id/stats_totals_followers_shares_section3a"
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,13 +148,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_followers_count"
-                    android:text="@string/stats_totals_followers_shares_label_blog"
                     android:drawableLeft="@drawable/stats_icon_plus"
-                    android:drawablePadding="8dp" />
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_blog" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/stats_totals_followers_shares_section3b"
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -179,9 +173,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_comments_count"
-                    android:text="@string/stats_totals_followers_shares_label_comments"
                     android:drawableLeft="@drawable/stats_icon_plus"
-                    android:drawablePadding="8dp" />
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_comments" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -194,13 +188,11 @@
             android:text="@string/stats_totals_followers_shares_header_shares" />
 
         <View
-            android:id="@+id/stats_totals_followers_shares_section3_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/wordpress_blue" />
 
         <RelativeLayout
-            android:id="@+id/stats_totals_followers_shares_section2a"
             style="@style/StatsWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

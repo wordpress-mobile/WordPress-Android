@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -55,7 +57,7 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
                 mFragmentMap.put(position, fragment);
                 return fragment;
             } else {
-                Fragment fragment = new Fragment();
+                CommentsSummaryFragment fragment = new CommentsSummaryFragment();
                 mFragmentMap.put(position, fragment);
                 return fragment;
             }
@@ -131,4 +133,27 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         return getString(R.string.stats_view_comments);
     }
 
+    public static class CommentsSummaryFragment extends SherlockFragment {
+        
+        private TextView mPerMonthText;
+        private TextView mTotalText;
+        private TextView mActiveDayText;
+        private TextView mActiveTimeText;
+        private TextView mMostCommentedText;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
+            
+            mPerMonthText = (TextView) view.findViewById(R.id.stats_comments_summary_per_month_count);
+            mTotalText = (TextView) view.findViewById(R.id.stats_comments_summary_total_count);
+            mActiveDayText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_day_text);
+            mActiveTimeText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_time_text);
+            mMostCommentedText = (TextView) view.findViewById(R.id.stats_comments_summary_most_commented_text);
+            
+            return view;
+        }
+        
+    }
+    
 }

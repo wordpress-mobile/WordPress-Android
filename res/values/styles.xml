@@ -196,6 +196,7 @@
         <item name="android:textSize">24sp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">top</item>
+        <item name="android:singleLine">true</item>
     </style>
     
     <style name="StatsHeaderTotalsLabel">
