@@ -20,10 +20,7 @@
 package com.jjoe64.graphview;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import android.util.Log;
 
 public class GraphViewSeries {
 	/**
@@ -122,7 +119,6 @@ public class GraphViewSeries {
 				System.arraycopy(values, 1, newValues, 0, curDataCount-1);
 				// append new data
 				newValues[maxDataCount-1] = value;
-				Log.d("GraphViewSeries", Arrays.toString(newValues));
 			}
 			values = newValues;
 		}
