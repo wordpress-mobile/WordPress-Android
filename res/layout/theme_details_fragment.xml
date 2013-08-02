@@ -12,7 +12,7 @@
             android:id="@+id/theme_details_fragment_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="20dp"
             android:text="This is a text"
             android:textColor="@color/theme_details_name"
@@ -23,14 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_name"
-            android:visibility="gone"
-            android:paddingBottom="10dp" >
+            android:paddingBottom="10dp"
+            android:visibility="gone" >
 
             <ImageView
                 android:id="@+id/theme_details_fragment_current_theme_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/theme_icon_current" />
 
@@ -40,10 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_toRightOf="@id/theme_details_fragment_current_theme_image"
-                android:paddingLeft="10dp"
+                android:paddingLeft="16dp"
                 android:text="@string/theme_current_theme"
-                android:textColor="@color/wordpress_blue"
-			 />
+                android:textColor="@color/wordpress_blue" />
         </RelativeLayout>
 
         <org.wordpress.android.ui.FadeInNetworkImageView
@@ -52,6 +51,8 @@
             android:layout_height="225dp"
             android:layout_below="@id/theme_details_fragment_current_theme_container"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="12dp" />
 
         <LinearLayout
@@ -111,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_divider"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="18dp"
             android:text="@string/themes_details_label"
             android:textColor="@color/black"
@@ -123,8 +124,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_details_label"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="normal" />
