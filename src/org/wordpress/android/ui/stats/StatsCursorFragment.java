@@ -73,7 +73,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().restartLoader(0, null, this);
     }
     
     @Override

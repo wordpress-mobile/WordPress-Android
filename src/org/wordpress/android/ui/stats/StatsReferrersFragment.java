@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -25,11 +25,11 @@ import org.wordpress.android.ui.HorizontalTabView.TabListener;
 public class StatsReferrersFragment extends StatsAbsListViewFragment  implements TabListener {
 
     @Override
-    public FragmentPagerAdapter getAdapter() {
+    public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
 
-    private class CustomPagerAdapter extends FragmentPagerAdapter {
+    private class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -59,7 +59,7 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
             else 
                 return ""; 
         }
-        
+
     }
     
     public class CustomCursorAdapter extends CursorAdapter {

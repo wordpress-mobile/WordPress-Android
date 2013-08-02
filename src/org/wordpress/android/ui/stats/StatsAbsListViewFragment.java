@@ -3,8 +3,7 @@ package org.wordpress.android.ui.stats;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -21,11 +20,13 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
     protected SparseArray<Fragment> mFragmentMap;
-    protected FragmentPagerAdapter mAdapter;
+    protected FragmentStatePagerAdapter mAdapter;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
+        
+        setRetainInstance(true);
         
         mFragmentMap = new SparseArray<Fragment>();
         
@@ -61,24 +62,6 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
-    @Override
-    public void onPause() {
-        removeFragments();
-        super.onPause();
-    }
-
-    private void removeFragments() {
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        
-        for (int i = 0; i < mAdapter.getCount(); i++) {
-            Fragment fragment = mFragmentMap.get(i);
-            if (fragment != null)
-                ft.remove(fragment);
-        }
-        ft.commit();
-        mFragmentMap.clear();
-    }
-    
-    public abstract FragmentPagerAdapter getAdapter();
+    public abstract FragmentStatePagerAdapter getAdapter();
     
 }
