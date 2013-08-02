@@ -235,8 +235,10 @@ public class MediaItemFragment extends SherlockFragment {
             
             if (width > screenWidth) {
                 height = (int) (height / (width/screenWidth));
+                width = (int) screenWidth;
             } else if (height > screenHeight) {
                 width = (int) (width / (height/screenHeight));
+                height = (int) screenHeight;
             }
             
             if (mIsLocal) {
