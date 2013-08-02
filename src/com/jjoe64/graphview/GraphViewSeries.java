@@ -131,6 +131,10 @@ public class GraphViewSeries {
 		}
 	}
 
+	public GraphViewSeriesStyle getStyle() {
+		return style;
+	}
+
 	public void removeGraphView(GraphView graphView) {
 		graphViews.remove(graphView);
 	}
