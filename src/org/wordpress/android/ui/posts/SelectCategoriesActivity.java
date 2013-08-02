@@ -57,6 +57,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
 
+        mSelectedCategories = new HashSet<String>();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("id");
@@ -66,7 +68,8 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
-            mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
+            if (extras.containsKey("categories"))
+                mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
         }
 
         populateOrFetchCategories();
