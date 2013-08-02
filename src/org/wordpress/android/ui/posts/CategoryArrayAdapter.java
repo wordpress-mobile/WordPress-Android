@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.util.EscapeUtils;
 
 import java.util.List;
 
