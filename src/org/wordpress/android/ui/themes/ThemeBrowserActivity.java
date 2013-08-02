@@ -4,6 +4,7 @@ package org.wordpress.android.ui.themes;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.themes.ThemeDetailsFragment.ThemeDetailsFragmentCallback;
 import org.wordpress.android.ui.themes.ThemePreviewFragment.ThemePreviewFragmentCallback;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
@@ -67,7 +69,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             finish();
             return;
         }
-        
+
         setTitle(R.string.themes);
 
         createMenuDrawer(R.layout.theme_browser_activity);
@@ -107,6 +109,16 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
 
     }
+
+    private boolean areThemesAccessible() {
+        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
+            Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
+            return false;
+        }
+        return true;
+    }
     
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
@@ -129,9 +141,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mIsRunning = true;
-        if (WordPress.getCurrentBlog() != null && WordPress.wpDB.getThemeCount(getBlogId()) == 0)
-            fetchThemes();
+        if (areThemesAccessible()) {
+            mIsRunning = true;
+            if (WordPress.getCurrentBlog() != null && WordPress.wpDB.getThemeCount(getBlogId()) == 0)
+                fetchThemes();
+        }
     };
 
     @Override
@@ -194,8 +208,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     ft.commitAllowingStateLoss();
                     Log.d("WordPress", "Failed to fetch themes: failed authenticate user");
                 } else {
-                    Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed,
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
                     Log.d("WordPress", "Failed to fetch themes: " + response.toString());
                 }
 
@@ -332,11 +345,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mProgressBar.setVisibility(View.GONE);
             stopAnimatingRefreshButton();
             if (result == null) {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success, Toast.LENGTH_SHORT).show();
             }
             refreshViewPager();
         }
@@ -438,8 +449,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
                     @Override
                     public void onResponse(JSONObject arg0) {
-                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success,
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_set_success, Toast.LENGTH_LONG).show();
 
                         
                         WordPress.wpDB.setCurrentTheme(siteId, currentThemeId);
@@ -468,8 +478,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         if (mDetailsFragment.isVisible())
                             mDetailsFragment.onThemeActivated(false);
 
-                        Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(ref.get(), R.string.theme_set_failed, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -478,7 +487,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        fetchThemes();
+        if (areThemesAccessible()) {
+            fetchThemes();
+        }
     };
 
     @Override

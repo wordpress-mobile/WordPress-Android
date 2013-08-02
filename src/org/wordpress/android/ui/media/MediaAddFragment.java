@@ -68,7 +68,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (!mMediaCapturePath.equals(""))
+        if (mMediaCapturePath != null && !mMediaCapturePath.equals(""))
             outState.putString("mediaCapturePath", mMediaCapturePath);
     }
     
