@@ -202,7 +202,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     public void onThemeActivated(boolean activated) {
         mActivateThemeButton.setEnabled(true);
         mActivateThemeButton.setText(R.string.theme_activate_button);
-        
-        showViewSite();
+        if (activated)
+            showViewSite();
     }
 }
