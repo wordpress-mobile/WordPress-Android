@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.SparseBooleanArray;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ import android.widget.Toast;
 
 import org.apache.http.conn.HttpHostConnectException;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -51,7 +53,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AlertUtil;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.Utils;
 
 public class AccountSetupActivity extends Activity implements OnClickListener {
@@ -277,7 +278,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         blogIds[mBlogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
                         String blogURL = urls[mBlogCtr];
 
-                        mBlogNames.add(EscapeUtils.unescapeHtml(blogNames[mBlogCtr]));
+                        mBlogNames.add(StringUtils.unescapeHTML(blogNames[mBlogCtr].toString()));
 
                         boolean wpcomFlag = false;
                         // check for wordpress.com

@@ -14,7 +14,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class ViewPostFragment extends Fragment {
@@ -146,7 +145,7 @@ public class ViewPostFragment extends Fragment {
         if (post.getTitle().equals(""))
             title.setText("(" + getResources().getText(R.string.untitled) + ")");
         else
-            title.setText(EscapeUtils.unescapeHtml(post.getTitle()));
+            title.setText(StringUtils.unescapeHTML(post.getTitle()));
 
         WebView webView = (WebView) getActivity().findViewById(
                 R.id.viewPostWebView);

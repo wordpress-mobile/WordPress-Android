@@ -53,7 +53,7 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringUtils;
 
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
@@ -410,7 +410,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             Map<String, Object> account = accounts.get(i);
             String name;
             if (account.get("blogName") != null) {
-                name = EscapeUtils.unescapeHtml(account.get("blogName").toString());
+                name = StringUtils.unescapeHTML(account.get("blogName").toString());
             } else {
                 name = account.get("url").toString();
             }

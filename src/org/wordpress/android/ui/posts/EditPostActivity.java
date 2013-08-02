@@ -153,7 +153,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         } else {
             initBlog();
             if (extras != null) {
-                mAccountName = EscapeUtils.unescapeHtml(extras.getString("accountName"));
+                mAccountName = StringUtils.unescapeHTML(extras.getString("accountName"));
                 mPostID = extras.getLong("postID");
                 mLocalDraft = extras.getBoolean("localDraft", false);
                 mIsPage = extras.getBoolean("isPage", false);
@@ -202,10 +202,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
             if (mIsNew) {
                 mLocalDraft = true;
-                setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
+                setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName()) + " - "
                         + getString((mIsPage) ? R.string.new_page : R.string.new_post));
             } else {
-                setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
+                setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName()) + " - "
                         + getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
             }
         }
@@ -586,9 +586,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             if (mCategories.size() > 0) {
                 bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
-            Intent i1 = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
-            i1.putExtras(bundle);
-            startActivityForResult(i1, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+            Intent categoriesIntent = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
+            categoriesIntent.putExtras(bundle);
+            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
         } else if (id == R.id.post) {
@@ -866,7 +866,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                 Map<String, Object> curHash = accounts.get(i);
                 try {
-                    blogNames[i] = EscapeUtils.unescapeHtml(curHash.get("blogName").toString());
+                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
                 } catch (Exception e) {
                     blogNames[i] = curHash.get("url").toString();
                 }
@@ -895,7 +895,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         WordPress.currentBlog = mBlog;
                         WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
                         mAccountName = blogNames[item];
-                        setTitle(EscapeUtils.unescapeHtml(mAccountName) + " - "
+                        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
                                 + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
                     }
                 });
@@ -912,7 +912,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 WordPress.currentBlog = mBlog;
                 WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
                 mAccountName = blogNames[0];
-                setTitle(EscapeUtils.unescapeHtml(mAccountName) + " - "
+                setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
                         + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
             };
             return true;
@@ -1387,7 +1387,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         e.removeSpan(style[i]);
                 }
             }
-            content = EscapeUtils.unescapeHtml(WPHtml.toHtml(e));
+            content = StringUtils.unescapeHTML(WPHtml.toHtml(e));
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -1460,7 +1460,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             s.removeSpan(wpIS);
                             s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                             if (mLocalDraft)
-                                content = EscapeUtils.unescapeHtml(WPHtml.toHtml(s));
+                                content = StringUtils.unescapeHTML(WPHtml.toHtml(s));
                             else
                                 content = s.toString();
                         }

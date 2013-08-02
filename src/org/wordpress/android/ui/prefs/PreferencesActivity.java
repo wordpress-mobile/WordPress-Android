@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.WPComXMLRPCApi;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCException;
@@ -48,7 +49,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.EscapeUtils;
 
 @SuppressWarnings("deprecation")
 public class PreferencesActivity extends SherlockPreferenceActivity {
@@ -158,7 +158,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
         int order = 0;
         for (Map<String, Object> account : accounts) {
-            String blogName = EscapeUtils.unescapeHtml(account.get("blogName").toString());
+            String blogName = StringUtils.unescapeHTML(account.get("blogName").toString());
             int accountId = (Integer) account.get("id");
 
             Preference blogSettingsPreference = new Preference(this);
@@ -461,7 +461,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                         blogName = (String) blogMap.get("url");
                     CheckBoxPreference blogPreference = new CheckBoxPreference(this);
                     blogPreference.setChecked(!blogMap.get("value").toString().equals("1"));
-                    blogPreference.setTitle(EscapeUtils.unescapeHtml(blogName));
+                    blogPreference.setTitle(StringUtils.unescapeHTML(blogName));
                     blogPreference.setOnPreferenceChangeListener(mMuteBlogChangeListener);
                     selectBlogsCategory.addPreference(blogPreference);
                 }

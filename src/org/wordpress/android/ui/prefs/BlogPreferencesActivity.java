@@ -25,7 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
-import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -65,7 +65,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         }
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(EscapeUtils.unescapeHtml(blog.getBlogName()));
+        actionBar.setTitle(StringUtils.unescapeHTML(blog.getBlogName()));
         actionBar.setDisplayHomeAsUpEnabled(true);
         
         mUsernameET = (EditText) findViewById(R.id.username);

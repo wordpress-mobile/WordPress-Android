@@ -29,8 +29,10 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -259,7 +261,7 @@ public class PostUploadService extends Service {
                 theCategories = new String[categories.length()];
                 for (int i = 0; i < categories.length(); i++) {
                     try {
-                        theCategories[i] = categories.getString(i);
+                        theCategories[i] = TextUtils.htmlEncode(categories.getString(i));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -706,7 +708,7 @@ public class PostUploadService extends Service {
 
                     if (!mf.getCaption().equals("")) {
                         content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-                                alignment, mf.getWidth(), EscapeUtils.escapeHtml(mf.getCaption()), content);
+                                alignment, mf.getWidth(), TextUtils.htmlEncode(mf.getCaption()), content);
                     }
                 }
             }// end image stuff
