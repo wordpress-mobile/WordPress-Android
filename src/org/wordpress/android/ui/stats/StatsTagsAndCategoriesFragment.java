@@ -57,9 +57,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
 
             // tag and category icons
             if (type.equals(Type.CATEGORY.getLabel())) {
-                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_category, 0, 0, 0);
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_icon_categories, 0, 0, 0);
             } else if (type.equals(Type.STAT.getLabel())) {
-                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_tag, 0, 0, 0);
+                entryTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.stats_icon_tags, 0, 0, 0);
             } else {
                 entryTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
