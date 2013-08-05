@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPHtml;
 
 public class ViewPostFragment extends Fragment {
     /** Called when the activity is first created. */
@@ -158,21 +159,19 @@ public class ViewPostFragment extends Fragment {
         ImageButton addCommentButton = (ImageButton) getActivity().findViewById(
                 R.id.addComment);
 
-        tv.setVisibility(View.GONE);
-        webView.setVisibility(View.VISIBLE);
-        String html = StringUtils.addPTags(post.getDescription()
-                + "\n\n" + post.getMt_text_more());
-
-        String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
-                + html + "</div></body></html>";
-        webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
-                "text/html", "utf-8", null);
+        String postContent = post.getDescription() + "\n\n" + post.getMt_text_more();
 
         if (post.isLocalDraft()) {
+            tv.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
             shareURLButton.setVisibility(View.GONE);
             viewPostButton.setVisibility(View.GONE);
             addCommentButton.setVisibility(View.GONE);
+
+            tv.setText(WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity().getBaseContext(), post));
         } else {
+            tv.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
             shareURLButton.setVisibility(View.VISIBLE);
             viewPostButton.setVisibility(View.VISIBLE);
             if (post.isMt_allow_comments()) {
@@ -180,6 +179,11 @@ public class ViewPostFragment extends Fragment {
             } else {
                 addCommentButton.setVisibility(View.GONE);
             }
+
+            String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">"
+                    + StringUtils.addPTags(postContent) + "</div></body></html>";
+            webView.loadDataWithBaseURL("file:///android_asset/", htmlText,
+                    "text/html", "utf-8", null);
         }
 
     }
