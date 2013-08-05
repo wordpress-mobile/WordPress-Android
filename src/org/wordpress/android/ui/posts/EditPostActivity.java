@@ -35,6 +35,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -83,6 +84,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private Blog mBlog;
     private Post mPost;
+    // Used to restore post content if 'Discard' is chosen when leaving the editor.
+    private Post mOriginalPost;
 
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
@@ -105,8 +108,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private boolean mIsCustomPubDate = false;
     private boolean mIsBackspace = false;
     private boolean mScrollDetected = false;
-    private boolean mIsNewDraft = false;
-    private boolean mIsExternalInstance = false;
 
     private String mAccountName = "";
     private int mQuickMediaType = -1;
@@ -146,8 +147,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // we arrived here from a share action
-            mIsExternalInstance = true;
+            // We arrived here from a share action
             if (!selectBlogForShareAction())
                 return;
         } else {
@@ -168,7 +168,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 if (extras.getBoolean("isQuickPress")) {
-                    mIsExternalInstance = true;
                     mBlogID = extras.getInt("id");
                 } else {
                     mBlogID = WordPress.currentBlog.getId();
@@ -192,6 +191,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             return;
                         } else {
                             WordPress.currentPost = mPost;
+                            mOriginalPost = new Post(mBlogID, mPostID, mIsPage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -819,6 +819,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         });
         dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                // When discard options is chosen, restore existing post or delete new post if it was autosaved.
+                if (mOriginalPost != null) {
+                    mOriginalPost.update();
+                    WordPress.currentPost = mOriginalPost;
+                } else if (mPost != null && mIsNew) {
+                    mPost.delete();
+                    WordPress.currentPost = null;
+                }
                 finish();
             }
         });
@@ -1515,7 +1523,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                 if (success) {
                     mIsNew = false;
-                    mIsNewDraft = true;
                 }
 
                 mPost.deleteMediaFiles();
