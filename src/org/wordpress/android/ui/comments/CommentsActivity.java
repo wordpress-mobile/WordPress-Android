@@ -79,6 +79,8 @@ public class CommentsActivity extends WPActionBarActivity implements
         if (fromNotification)
             commentList.refreshComments(false, false, false);
 
+        if (savedInstanceState != null)
+            popCommentDetail();
     }
 
     @Override

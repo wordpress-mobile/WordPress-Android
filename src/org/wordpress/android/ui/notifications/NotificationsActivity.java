@@ -119,7 +119,9 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (savedInstanceState == null)
             launchWithNoteId();
         refreshNotes();
-        
+
+        if (savedInstanceState != null)
+            popNoteDetail();
     }
     
     @Override

@@ -135,7 +135,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
          });
 
-        attemptToSelectPost();
+        if (savedInstanceState != null)
+            popPostDetail();
     }
     
     private void showPostUploadErrorAlert(String errorMessage) {
