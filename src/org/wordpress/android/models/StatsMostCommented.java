@@ -1,6 +1,9 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class StatsMostCommented {
     private String mBlogId;
     private int mPostId;
@@ -14,6 +17,14 @@ public class StatsMostCommented {
         this.mPost = post;
         this.mComments = comments;
         this.mUrl = url;
+    }
+
+    public StatsMostCommented(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setPostId(result.getInt("postId"));
+        setPost(result.getString("post"));
+        setComments(result.getInt("comments"));
+        setUrl(result.getString("url"));
     }
 
     public String getBlogId() {

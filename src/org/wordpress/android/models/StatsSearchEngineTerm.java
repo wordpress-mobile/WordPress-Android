@@ -1,6 +1,11 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.wordpress.android.util.StatUtils;
+
 public class StatsSearchEngineTerm {
 
     private String mBlogId;
@@ -13,6 +18,13 @@ public class StatsSearchEngineTerm {
         this.mDate = date;
         this.mSearch = search;
         this.mViews = views;
+    }
+
+    public StatsSearchEngineTerm(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setDate(StatUtils.toMs(result.getString("date")));
+        setSearch(result.getString("search"));
+        setViews(result.getInt("views"));
     }
 
     public String getBlogId() {

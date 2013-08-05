@@ -1,6 +1,9 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class StatsTopCommenter {
 
     private String mBlogId;
@@ -15,6 +18,15 @@ public class StatsTopCommenter {
         this.mName = name;
         this.mComments = comments;
         this.mImageUrl = imageUrl;
+    }
+
+    public StatsTopCommenter(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setUserId(result.getInt("userId"));
+        setName(result.getString("name"));
+        setComments(result.getInt("comments"));
+        if (result.has("imageUrl"))
+            setImageUrl(result.getString("imageUrl"));
     }
 
     public String getBlogId() {

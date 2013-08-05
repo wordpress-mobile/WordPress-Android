@@ -1,6 +1,11 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.wordpress.android.util.StatUtils;
+
 public class StatsTopAuthor {
 
     private String mBlogId;
@@ -17,6 +22,16 @@ public class StatsTopAuthor {
         this.mName = name;
         this.mViews = views;
         this.mImageUrl = imageUrl;
+    }
+
+    public StatsTopAuthor(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setDate(StatUtils.toMs(result.getString("date")));
+        setUserId(result.getInt("userId"));
+        setName(result.getString("name"));
+        setViews(result.getInt("views"));
+        if (result.has("imageUrl"))
+            setImageUrl(result.getString("imageUrl"));
     }
 
     public String getBlogId() {

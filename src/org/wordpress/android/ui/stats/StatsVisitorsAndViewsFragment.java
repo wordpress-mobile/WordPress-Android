@@ -22,4 +22,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment {
         return getString(R.string.stats_view_visitors_and_views);
     }
 
+    @Override
+    public void refresh() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

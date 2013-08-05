@@ -3,8 +3,14 @@
  */
 package org.wordpress.android.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import android.os.AsyncTask;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
@@ -16,6 +22,9 @@ import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
@@ -186,6 +195,150 @@ public class WPRestClient {
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/themes/mine", siteId);
         get(path, listener, errorListener);
+    }
+    
+    /**
+     * Get a site's stats for clicks
+     */
+    public void getStatsClicks(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/clicks";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for geoviews (views by country)
+     */
+    public void getStatsGeoviews(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/geoviews";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for most commented posts
+     */
+    public void getStatsMostCommented(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/most_commented";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for top commenters
+     */
+    public void getStatsTopCommenters(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/top_commenters";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for referrers
+     */
+    public void getStatsReferrers(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/referrers";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for search engine terms
+     */
+    public void getStatsSearchEngineTerms(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/search_engine_terms";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for tags and categories
+     */
+    public void getStatsTagsAndCategories(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/tags_and_categories";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for top authors
+     */
+    public void getStatsTopAuthors(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/top_authors";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for top posts and pages
+     */
+    public void getStatsTopPosts(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/top_posts";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats for video plays
+     */
+    public void getStatsVideoPlays(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/video_plays";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+    
+    public void getXL(String path, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
+        path = "https://simulator.xlstudio.com/apis/32/" + path;
+
+        final String url_path = path;
+        
+        new AsyncTask<Void, Void, JSONObject>() {
+
+            @Override
+            protected JSONObject doInBackground(Void... params) {
+
+                URL url;
+                HttpURLConnection conn;
+                BufferedReader rd;
+                String line;
+                String result = "";
+                
+                try {
+                    url = new URL(url_path);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.addRequestProperty("X-SIMULATOR-ACCESS-KEY", "bc88864498a705657486edb636196e31");
+                    rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    while ((line = rd.readLine()) != null) {
+                       result += line;
+                    }
+                    rd.close();
+                    
+                    return new JSONObject(result);
+                 } catch (JSONException e) {
+                     e.printStackTrace();
+                 } catch (Exception e) {
+                    e.printStackTrace();
+                 }
+                return null;
+            }
+            
+            protected void onPostExecute(JSONObject result) {
+                listener.onResponse(result);
+            };
+            
+        }.execute();
+        
     }
     
     /**

@@ -1,6 +1,11 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.wordpress.android.util.StatUtils;
+
 public class StatsGeoview {
 
     private String mBlogId;
@@ -15,6 +20,14 @@ public class StatsGeoview {
         this.mCountry = country;
         this.mViews = views;
         this.mImageUrl = imageUrl;
+    }
+
+    public StatsGeoview(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setDate(StatUtils.toMs(result.getString("date")));
+        setCountry(result.getString("country"));
+        setViews(result.getInt("views"));
+        setImageUrl(result.getString("imageUrl"));
     }
 
     public String getBlogId() {

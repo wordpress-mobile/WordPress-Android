@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,4 +114,13 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     private float dpToPx(int dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }    
+    
+    @Override
+    public void refresh() {
+        for (int i = 0; i < mAdapter.getCount(); i++){
+            refresh(i);
+        }
+    }
+    
+    public abstract void refresh(int position);
 }

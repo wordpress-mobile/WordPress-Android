@@ -1,24 +1,18 @@
 package org.wordpress.android.ui.stats;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.stats.StatsClicksFragment.CustomCursorAdapter;
 
 public class StatsActivityTablet extends WPActionBarActivity {
 
@@ -121,45 +115,12 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
     }
     
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
         return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_stats_load_sample_data).setVisible(!WordPress.wpStatsDB.hasSampleData());
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        
-        if (itemId == R.id.menu_stats_load_sample_data) {
-            
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    WordPress.wpStatsDB.generateSampleData();
-                    return null;
-                }
-                
-                @Override
-                protected void onPostExecute(Void result) {
-                    invalidateOptionsMenu();
-                }
-                
-            };
-            task.execute();
-            return true;
-        }
-        
-        return super.onOptionsItemSelected(item);
     }
     
 }

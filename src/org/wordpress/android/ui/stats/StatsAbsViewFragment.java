@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import org.wordpress.android.WordPress;
+
 public abstract class StatsAbsViewFragment extends SherlockFragment {
     
     public static final String TAG = StatsAbsViewFragment.class.getSimpleName();
@@ -63,6 +65,18 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
     }
     
     public abstract String getTitle();
+ 
+    public abstract void refresh();
     
+    protected String getCurrentBlogId() {
+        if (WordPress.getCurrentBlog() != null)
+            return String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        return null;
+    }
     
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
 }

@@ -1,17 +1,19 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class StatsTagsandCategories {
 
     private String mBlogId;
-    private long mDate;
     private String mTopic;
     private String mType;
     private int mViews;
 
     public enum Type {
-        STAT("stat"), CATEGORY("category");
+        TAG("tag"), CATEGORY("category");
         
         private String mLabel;
 
@@ -24,12 +26,21 @@ public class StatsTagsandCategories {
         }
     }
     
-    public StatsTagsandCategories(String blogId, long date, String topic, Type type, int views) {
+    public StatsTagsandCategories(String blogId, String topic, Type type, int views) {
         this.mBlogId = blogId;
-        this.mDate = date;
         this.mTopic = topic;
         this.mType = type.getLabel();
         this.mViews = views;
+    }
+
+    public StatsTagsandCategories(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setTopic(result.getString("topic"));
+        if (result.get("type").equals(Type.CATEGORY.getLabel()))
+            setType(Type.CATEGORY);
+        else
+            setType(Type.TAG);
+        setViews(result.getInt("views"));
     }
 
     public String getBlogId() {
@@ -38,14 +49,6 @@ public class StatsTagsandCategories {
 
     public void setBlogId(String blogId) {
         this.mBlogId = blogId;
-    }
-
-    public long getDate() {
-        return mDate;
-    }
-
-    public void setDate(long date) {
-        this.mDate = date;
     }
 
     public String getTopic() {

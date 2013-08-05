@@ -35,4 +35,10 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     public String getTitle() {
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
+
+    @Override
+    public void refresh() {
+        // TODO Auto-generated method stub
+        
+    }
 }

@@ -1,28 +1,44 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.wordpress.rest.RestRequest.ErrorListener;
+import com.wordpress.rest.RestRequest.Listener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
+import org.wordpress.android.models.StatsMostCommented;
+import org.wordpress.android.models.StatsTopCommenter;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
 public class StatsCommentsFragment extends StatsAbsListViewFragment implements TabListener {
+
+    private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
+    private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
 
     private static final String[] TITLES = new String[] { "Top Recent Commenters", "Most Commented", "Summary" };
     
@@ -63,13 +79,13 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         if (position == 0) {
             int entryLabelResId = R.string.stats_entry_top_commenter;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
             return fragment;
         } else if (position == 1) {
             int entryLabelResId = R.string.stats_entry_most_commented;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(StatsContentProvider.STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {
@@ -163,4 +179,99 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
     public String[] getTabTitles() {
         return TITLES;
     }
+
+    @Override
+    public void refresh(final int position) {
+        final String blogId = getCurrentBlogId();
+        if (getCurrentBlogId() == null)
+            return;
+
+        if (position == MOST_COMMENTED) {
+            WordPress.restClient.getStatsMostCommented(blogId, 
+                    new Listener() {
+                        
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            new ParseJsonTask().execute(blogId, response, position);
+                        }
+                    }, 
+                    new ErrorListener() {
+                        
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("WordPress Stats", StatsCommentsFragment.class.getSimpleName() + ": " + error.toString());
+                        }
+                    });
+        } else if (position == TOP_COMMENTERS) {
+            WordPress.restClient.getStatsTopCommenters(blogId, 
+                    new Listener() {
+                        
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            new ParseJsonTask().execute(blogId, response, position);
+                        }
+                    }, 
+                    new ErrorListener() {
+                        
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("WordPress Stats", StatsCommentsFragment.class.getSimpleName() + ": " + error.toString());
+                        }
+                    });
+        }
+    }
+    
+    private static class ParseJsonTask extends AsyncTask<Object, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            String blogId = (String) params[0];
+            JSONObject response = (JSONObject) params[1];
+            int position = (Integer) params[2];
+            
+            if (response.has("result")) {
+                try {
+                    JSONArray results = response.getJSONArray("result");
+                    
+                    if (position == TOP_COMMENTERS) {
+                        parseTopCommenters(blogId, results);
+                    } else if (position == MOST_COMMENTED) {
+                        parseMostCommented(blogId, results);            
+                    }
+                    
+                    
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                
+            }
+            return null;
+        }
+
+        private void parseTopCommenters(String blogId, JSONArray results) throws JSONException {
+
+            Context context = WordPress.getContext();
+            
+            for (int i = 0; i < results.length(); i++ ) {
+                JSONObject result = results.getJSONObject(i);
+                StatsTopCommenter stat = new StatsTopCommenter(blogId, result);
+                ContentValues values = StatsTopCommentersTable.getContentValues(stat);
+                context.getContentResolver().insert(STATS_TOP_COMMENTERS_URI, values);
+            }
+        }
+        
+        private void parseMostCommented(String blogId, JSONArray results) throws JSONException {
+
+            Context context = WordPress.getContext();
+            
+            for (int i = 0; i < results.length(); i++ ) {
+                JSONObject result = results.getJSONObject(i);
+                StatsMostCommented stat = new StatsMostCommented(blogId, result);
+                ContentValues values = StatsMostCommentedTable.getContentValues(stat);
+                context.getContentResolver().insert(STATS_MOST_COMMENTED_URI, values);
+            }
+        }
+    }
+    
+    
 }

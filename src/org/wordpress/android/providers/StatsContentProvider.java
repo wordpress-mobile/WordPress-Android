@@ -85,7 +85,9 @@ public class StatsContentProvider extends ContentProvider {
         
         SQLTable table = getSQLTable(uri);
         if (table != null) {
-            return table.delete(getDB(), uri, selection, selectionArgs);
+            int count = table.delete(getDB(), uri, selection, selectionArgs); 
+            getContext().getContentResolver().notifyChange(uri, null);
+            return count;
         }
         
         return 0;
@@ -96,7 +98,9 @@ public class StatsContentProvider extends ContentProvider {
         SQLTable table = getSQLTable(uri);
         if (table != null) {
             long rowId = table.insert(getDB(), uri, values);
-            return Uri.parse(uri + "/" + rowId);
+            Uri result = Uri.parse(uri + "/" + rowId);
+            getContext().getContentResolver().notifyChange(result, null);
+            return result;
         }
         
         return null;
@@ -116,7 +120,9 @@ public class StatsContentProvider extends ContentProvider {
     public synchronized int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         SQLTable table = getSQLTable(uri);
         if (table != null) {
-            return table.update(getDB(), uri, values, selection, selectionArgs);
+            int count = table.update(getDB(), uri, values, selection, selectionArgs);
+            getContext().getContentResolver().notifyChange(uri, null);
+            return count;
         }
         
         return 0;

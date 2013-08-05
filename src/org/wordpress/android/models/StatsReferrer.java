@@ -1,6 +1,11 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.wordpress.android.util.StatUtils;
+
 public class StatsReferrer {
 
     private String mBlogId;
@@ -17,6 +22,16 @@ public class StatsReferrer {
         this.mViews = views;
         this.mUrl = url;
         this.mImageUrl = imageUrl;
+    }
+
+    public StatsReferrer(String blogId, JSONObject result) throws JSONException {
+        setBlogId(blogId);
+        setDate(StatUtils.toMs(result.getString("date")));
+        setTitle(result.getString("title"));
+        setViews(result.getInt("views"));
+        setUrl(result.getString("url"));
+        if (result.has("imageUrl"))
+            setImageUrl(result.getString("imageUrl"));
     }
 
     public String getBlogId() {

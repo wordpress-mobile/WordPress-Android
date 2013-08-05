@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -30,6 +32,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private ListView mListView;
 
     private CursorAdapter mAdapter;
+    private ContentObserver mContentObserver = new MyObserver(new Handler());
 
     public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId) {
         
@@ -96,5 +99,28 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
 
     public void setListAdapter(CursorAdapter adapter) {
         mAdapter = adapter;
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+    }
+    
+    class MyObserver extends ContentObserver {      
+       public MyObserver(Handler handler) {
+          super(handler);           
+       }
+
+       @Override
+       public void onChange(boolean selfChange) {
+           getLoaderManager().restartLoader(0, null, StatsCursorFragment.this);           
+       }        
     }
 }
