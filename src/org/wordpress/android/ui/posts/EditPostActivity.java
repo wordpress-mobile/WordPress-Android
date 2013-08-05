@@ -35,14 +35,34 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -51,7 +71,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.wordpress.android.util.*;
 import org.xmlrpc.android.ApiHelper;
 
 import org.wordpress.android.Constants;
@@ -61,7 +80,18 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPEditText;
+import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -87,7 +117,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
-    private EditText mTitleEditText, mPasswordEditText, mTagsEditText;
+    private EditText mTitleEditText, mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
@@ -213,6 +243,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         setContentView(R.layout.edit);
         mContentEditText = (WPEditText) findViewById(R.id.postContent);
         mTitleEditText = (EditText) findViewById(R.id.title);
+        mExcerptEditText= (EditText) findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) findViewById(R.id.post_password);
         mLocationText = (TextView) findViewById(R.id.locationText);
         mBoldToggleButton = (ToggleButton) findViewById(R.id.bold);
@@ -316,6 +347,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         } else {
             mTitleEditText.setText(mPost.getTitle());
+            mExcerptEditText.setText(mPost.getMt_excerpt());
 
             if (mPost.isUploaded()) {
                 items = new String[] {
@@ -1374,7 +1406,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String title = mTitleEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String pubDate = mPubDateText.getText().toString();
+        String excerpt = mExcerptEditText.getText().toString();
         String content = "";
+        
+        if(excerpt.matches("")){
+           excerpt="";            
+        }
 
         if (mLocalDraft || mIsNew && !isAutoSave) {
             Editable e = mContentEditText.getText();
@@ -1501,7 +1538,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (mIsNew) {
-                mPost = new Post(mBlogID, title, content, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
+                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
                         latitude, longitude, mIsPage, postFormat, true, false);
                 mPost.setLocalDraft(true);
 
@@ -1555,6 +1592,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 mPost.setTitle(title);
+                mPost.setMt_excerpt(excerpt);
                 // split up the post content if there's a more tag
                 if (mLocalDraft && content.indexOf(moreTag) >= 0) {
                     mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
@@ -1572,6 +1610,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mPost.setLatitude(latitude);
                 mPost.setLongitude(longitude);
                 mPost.setWP_post_form(postFormat);
+                
                 if (!mPost.isLocalDraft())
                     mPost.setLocalChange(true);
                 success = mPost.update();
@@ -1618,6 +1657,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         Intent intent = getIntent();
         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+        
         if (text != null) {
 
             if (title != null) {

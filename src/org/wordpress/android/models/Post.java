@@ -124,6 +124,34 @@ public class Post {
         this.longitude = longitude;
         this.isLocalChange = isLocalChange;
     }
+    
+    public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
+            String password, double latitude, double longitude, boolean isPage, String postFormat,
+            boolean createBlogReference, boolean isLocalChange) {
+        // create a new post
+        if (createBlogReference) {
+            try {
+                this.blog = new Blog(blog_id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        this.blogID = blog_id;
+        this.title = title;
+        this.description = content;
+        this.mt_excerpt = excerpt;
+        this.mediaPaths = picturePaths;
+        this.date_created_gmt = date;
+        this.categories = categories;
+        this.mt_keywords = tags;
+        this.post_status = status;
+        this.wp_password = password;
+        this.isPage = isPage;
+        this.wp_post_format = postFormat;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.isLocalChange = isLocalChange;
+    }
 
     public long getId() {
         return id;
