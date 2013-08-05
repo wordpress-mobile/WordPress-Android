@@ -1395,7 +1395,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         e.removeSpan(style[i]);
                 }
             }
-            content = StringUtils.unescapeHTML(WPHtml.toHtml(e));
+            content = WPHtml.toHtml(e);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -1468,7 +1468,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             s.removeSpan(wpIS);
                             s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                             if (mLocalDraft)
-                                content = StringUtils.unescapeHTML(WPHtml.toHtml(s));
+                                content = WPHtml.toHtml(s);
                             else
                                 content = s.toString();
                         }
