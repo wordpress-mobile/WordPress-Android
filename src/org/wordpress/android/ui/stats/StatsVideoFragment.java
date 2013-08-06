@@ -140,7 +140,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
             View view = inflater.inflate(R.layout.stats_video_summary, container, false); 
             
             mHeader = (TextView) view.findViewById(R.id.stats_video_summary_header);
-            mHeader.setText("Aggregated stat for August 2013");
+            mHeader.setText("Aggregated stats for August 2013"); // TODO
             mPlays = (TextView) view.findViewById(R.id.stats_video_summary_plays_total);
             mImpressions = (TextView) view.findViewById(R.id.stats_video_summary_impressions_total);
             mPlaybackTotals = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_total);

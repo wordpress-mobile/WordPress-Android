@@ -197,12 +197,14 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">top</item>
         <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
     
     <style name="StatsHeaderTotalsLabel">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">bottom</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
     
     <style name="StatsTabletRadioButton">

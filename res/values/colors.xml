@@ -28,13 +28,6 @@
     <color name="media_gallery_image_bg">#FFFFFF</color>
     <color name="media_gallery_shadow">#E2E2E2</color>
     
-    <!-- Media Gallery Upload colors -->
-    <color name="media_upload_btn_text">#FFFFFF</color>
-    <color name="media_upload_btn_upload">#FFBB33</color>
-    <color name="media_upload_btn_edit">#2179AE</color>
-    <color name="media_upload_btn_retry">#669900</color>
-    <color name="media_upload_btn_queued">#FF8800</color>
-
     <!-- Theme Details colors -->
     <color name="theme_details_name">@color/black</color>
     <color name="theme_details_button">#FFFFFF</color>

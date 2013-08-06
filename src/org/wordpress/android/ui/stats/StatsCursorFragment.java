@@ -120,7 +120,8 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
 
        @Override
        public void onChange(boolean selfChange) {
-           getLoaderManager().restartLoader(0, null, StatsCursorFragment.this);           
+           if (isAdded())
+               getLoaderManager().restartLoader(0, null, StatsCursorFragment.this);           
        }        
     }
 }

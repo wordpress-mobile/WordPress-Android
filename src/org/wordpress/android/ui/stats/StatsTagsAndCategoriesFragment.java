@@ -1,6 +1,8 @@
 
 package org.wordpress.android.ui.stats;
 
+import java.util.Locale;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,6 +32,7 @@ import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
 import org.wordpress.android.models.StatsTagsandCategories;
 import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.Utils;
 
 public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
 
@@ -39,6 +42,11 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
 
+        if (Utils.isTablet(getActivity())) {
+            TextView tv = (TextView) view.findViewById(R.id.stats_pager_title);
+            tv.setText(getTitle().toUpperCase(Locale.getDefault()));
+        }
+        
         FragmentManager fm = getChildFragmentManager();
         
         int entryLabelResId = R.string.stats_entry_tags_and_categories;

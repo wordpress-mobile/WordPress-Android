@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats;
 
 
+import java.util.Locale;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -45,11 +47,12 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     private void initTabletLayout(View view) {
         
         TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
-        titleView.setText(getTitle());
+        titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
         
         String[] titles = getTabTitles();
         
         RadioGroup rg = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        rg.setVisibility(View.VISIBLE);
         rg.setOnCheckedChangeListener(this);
         
         for (int i = 0; i < titles.length; i++) {
@@ -117,7 +120,8 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     
     @Override
     public void refresh() {
-        for (int i = 0; i < mAdapter.getCount(); i++){
+        int count = getTabTitles().length;
+        for (int i = 0; i < count; i++){
             refresh(i);
         }
     }
