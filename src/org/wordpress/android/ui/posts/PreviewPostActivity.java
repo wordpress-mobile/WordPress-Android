@@ -15,11 +15,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
-import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringUtils;
 
 /**
  * Activity for previewing a post or page in a webview. Currently this activity can only preview the
- * {@link WordPress.currentPost}.
+ * current post.
  */
 public class PreviewPostActivity extends AuthenticatedWebViewActivity {
 
@@ -29,10 +29,10 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
 
         boolean isPage = getIntent().getBooleanExtra("isPage", false);
         if (isPage) {
-            this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName())
+            this.setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName())
                     + " - " + getResources().getText(R.string.preview_page));
         } else {
-            this.setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName())
+            this.setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName())
                     + " - " + getResources().getText(R.string.preview_post));
         }
 

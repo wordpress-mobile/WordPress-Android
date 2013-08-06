@@ -135,7 +135,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
          });
 
-        attemptToSelectPost();
+        if (savedInstanceState != null)
+            popPostDetail();
     }
     
     private void showPostUploadErrorAlert(String errorMessage) {
@@ -279,6 +280,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
+
+        if (isPage) {
+            menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
+        }
+
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;
             startAnimatingRefreshButton(refreshMenuItem);
@@ -362,7 +368,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
                 ft.add(R.id.postDetailFragmentContainer, f);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
                 f.loadPost(post);

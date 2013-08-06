@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.text.Html;
 import android.util.Log;
 
 public class StringUtils {
@@ -84,5 +85,12 @@ public class StringUtils {
             Log.e("MD5", e.getLocalizedMessage());
             return null;
         }
+    }
+
+    public static String unescapeHTML(String html) {
+        if (html != null)
+            return Html.fromHtml(html).toString();
+        else
+            return "";
     }
 }

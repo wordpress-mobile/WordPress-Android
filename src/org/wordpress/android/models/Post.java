@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.text.Html;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -7,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.StringUtils;
 
 public class Post {
 
@@ -158,18 +161,19 @@ public class Post {
         this.localDraft = localDraft;
     }
 
-    public JSONArray getCategories() {
+    public JSONArray getJSONCategories() {
         JSONArray jArray = null;
         if (categories == null)
             categories = "";
         try {
+            categories = StringUtils.unescapeHTML(categories);
             jArray = new JSONArray(categories);
         } catch (JSONException e) {
         }
         return jArray;
     }
 
-    public void setCategories(JSONArray categories) {
+    public void setJSONCategories(JSONArray categories) {
         this.categories = categories.toString();
     }
 

@@ -27,7 +27,6 @@ import org.xmlrpc.android.WPComXMLRPCApi;
 
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.StringUtils;
 
@@ -62,7 +61,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         String title = extras.getString("title");
         if (title == null)
             title = "WordPress";
-        String message = EscapeUtils.unescapeHtml(extras.getString("msg"));
+        String message = StringUtils.unescapeHTML(extras.getString("msg"));
 
         String note_id = extras.getString("note_id");
         

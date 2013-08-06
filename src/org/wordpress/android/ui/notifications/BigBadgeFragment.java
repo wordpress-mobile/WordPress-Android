@@ -32,15 +32,18 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
         
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
         bodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
-        String noteHTML = JSONUtil.queryJSON(getNote().toJSONObject(), "body.html", "");
-        if (noteHTML.equals(""))
-            noteHTML = getNote().getSubject();
-        bodyTextView.setText(Html.fromHtml(noteHTML));
-        
-        // Get the badge
-        String iconURL = getNote().getIconURL();
-        if (!iconURL.equals("")) {
-            mBadgeImageView.setImageUrl(iconURL, WordPress.imageLoader);
+
+        if (getNote() != null) {
+            String noteHTML = JSONUtil.queryJSON(getNote().toJSONObject(), "body.html", "");
+            if (noteHTML.equals(""))
+                noteHTML = getNote().getSubject();
+            bodyTextView.setText(Html.fromHtml(noteHTML));
+
+            // Get the badge
+            String iconURL = getNote().getIconURL();
+            if (!iconURL.equals("")) {
+                mBadgeImageView.setImageUrl(iconURL, WordPress.imageLoader);
+            }
         }
         
         return view;

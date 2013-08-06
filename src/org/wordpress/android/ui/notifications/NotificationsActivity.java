@@ -115,10 +115,13 @@ public class NotificationsActivity extends WPActionBarActivity {
         });
         
         GCMIntentService.activeNotificationsMap.clear();
-        
-        launchWithNoteId();
+
+        if (savedInstanceState == null)
+            launchWithNoteId();
         refreshNotes();
-        
+
+        if (savedInstanceState != null)
+            popNoteDetail();
     }
     
     @Override
@@ -126,7 +129,8 @@ public class NotificationsActivity extends WPActionBarActivity {
         super.onNewIntent(intent);
         
         GCMIntentService.activeNotificationsMap.clear();
-        
+
+        launchWithNoteId();
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -140,7 +144,7 @@ public class NotificationsActivity extends WPActionBarActivity {
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
     private void launchWithNoteId(){
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
             // find it/load it etc
             Map<String, String> params = new HashMap<String, String>();
@@ -262,7 +266,7 @@ public class NotificationsActivity extends WPActionBarActivity {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
             transaction.addToBackStack(null);
         }
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
     
     public void moderateComment(String siteId, String commentId, String status, final Note originalNote) {
@@ -475,6 +479,7 @@ public class NotificationsActivity extends WPActionBarActivity {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+        outState.remove(NOTE_ID_EXTRA);
         super.onSaveInstanceState(outState);
     }
 }

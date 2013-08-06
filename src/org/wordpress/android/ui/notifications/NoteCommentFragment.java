@@ -34,21 +34,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.JSONUtil;
 
 public class NoteCommentFragment extends Fragment implements NotificationFragment {
@@ -169,7 +166,7 @@ public class NoteCommentFragment extends Fragment implements NotificationFragmen
             mDetailHeader.setUrl(url);
         }
         JSONObject followAction = getNote().queryJSON("body.items[last].action", new JSONObject());
-        mFollowRow.setDefaultText(EscapeUtils.unescapeHtml(getNote().queryJSON("body.items[-1].header_text", "")));
+        mFollowRow.setDefaultText(Html.fromHtml(getNote().queryJSON("body.items[-1].header_text", "")));
         mFollowRow.setAction(followAction);
         mFollowRow.setListener(new FollowListener(getActivity().getApplicationContext()));
         Bundle arguments = getArguments();

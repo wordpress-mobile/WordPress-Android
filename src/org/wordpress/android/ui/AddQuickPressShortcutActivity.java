@@ -33,7 +33,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
@@ -130,7 +129,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         dialogBuilder.setTitle(R.string.quickpress_add_alert_title);
 
         final EditText quickPressShortcutName = new EditText(AddQuickPressShortcutActivity.this);
-        quickPressShortcutName.setText("QP " + EscapeUtils.unescapeHtml(accountNames.get(position)));
+        quickPressShortcutName.setText("QP " + StringUtils.unescapeHTML(accountNames.get(position)));
         dialogBuilder.setView(quickPressShortcutName);
 
         dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
@@ -145,7 +144,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     shortcutIntent.putExtra("id", accountIDs[position]);
                     shortcutIntent.putExtra("isQuickPress", true);
-                    shortcutIntent.putExtra("accountName", EscapeUtils.unescapeHtml(accountNames.get(position)));
+                    shortcutIntent.putExtra("accountName", StringUtils.unescapeHTML(accountNames.get(position)));
                     shortcutIntent.putExtra("isNew", true);
 
                     Intent addIntent = new Intent();
@@ -228,9 +227,9 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             NetworkImageView blavatar = (NetworkImageView)view.findViewById(R.id.blavatar);
             
             blogName.setText(
-                    EscapeUtils.unescapeHtml(blogNames[position]));
+                    StringUtils.unescapeHTML(blogNames[position]));
             blogUsername.setText(
-                    EscapeUtils.unescapeHtml(username));
+                    StringUtils.unescapeHTML(username));
             blavatar.setImageUrl(blavatars[position], WordPress.imageLoader);
             
             return view;

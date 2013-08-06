@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,7 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
-import org.wordpress.android.util.EscapeUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -66,7 +65,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         }
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(EscapeUtils.unescapeHtml(blog.getBlogName()));
+        actionBar.setTitle(StringUtils.unescapeHTML(blog.getBlogName()));
         actionBar.setDisplayHomeAsUpEnabled(true);
         
         mUsernameET = (EditText) findViewById(R.id.username);
@@ -81,7 +80,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         
         if (blog.isDotcomFlag()) {
             // Hide credentials section
-            RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.section1);
+            RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
             credentialsRL.setVisibility(View.GONE);
         }
         
@@ -274,7 +273,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             mLocationCB.setChecked(blog.isLocation());
         } else {
             mLocationCB.setChecked(false);
-            RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.section3);
+            RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.sectionLocation);
             locationLayout.setVisibility(View.GONE);
         }
 

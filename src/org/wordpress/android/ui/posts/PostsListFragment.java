@@ -40,7 +40,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -197,7 +196,7 @@ public class PostsListFragment extends ListFragment {
             Date d = new Date();
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
-                mTitles[i] = EscapeUtils.unescapeHtml(contentHash.get("title")
+                mTitles[i] = StringUtils.unescapeHTML(contentHash.get("title")
                         .toString());
 
                 mPostIDs[i] = contentHash.get("id").toString();
@@ -463,7 +462,7 @@ public class PostsListFragment extends ListFragment {
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
                 mDraftIDs[i] = contentHash.get("id").toString();
-                mDraftTitles[i] = EscapeUtils.unescapeHtml(contentHash.get(
+                mDraftTitles[i] = StringUtils.unescapeHTML(contentHash.get(
                         "title").toString());
                 mDraftDateCreated[i] = "";
                 mUploaded[i] = (Integer) contentHash.get("uploaded");

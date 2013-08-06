@@ -36,7 +36,7 @@ import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
 
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
@@ -131,6 +131,9 @@ public class WordPressDB {
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
     
+    // add category parent id to keep track of category hierarchy
+    private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
+    
     // add admin flag to blog settings
     private static final String ADD_ACCOUNTS_ADMIN_FLAG = "alter table accounts add isAdmin boolean default false;";
     
@@ -198,6 +201,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
                 db.execSQL(ADD_MEDIA_FILE_URL);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
@@ -238,6 +242,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -270,6 +275,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -299,6 +305,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -328,6 +335,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -382,6 +390,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -400,6 +409,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -417,6 +427,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -434,6 +445,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePasswords();
                 migratePreferences(ctx);
                 migrateWPComAccount();
@@ -506,6 +518,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePreferences(ctx);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
@@ -516,6 +529,7 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePreferences(ctx);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
@@ -523,29 +537,36 @@ public class WordPressDB {
                 db.execSQL(ADD_FEATURED_IN_POST);
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePreferences(ctx);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 13) {
                 db.execSQL(ADD_HOME_URL);
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePreferences(ctx);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 14) {
                 db.execSQL(ADD_BLOG_OPTIONS);
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePreferences(ctx);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 15) {
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migratePreferences(ctx);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 16) {
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 migrateWPComAccount();
                 db.setVersion(DATABASE_VERSION);
             } else if (db.getVersion() == 17) {
-                migrateWPComAccount();
+                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
+                db.setVersion(DATABASE_VERSION);
+            } else if (db.getVersion() == 18) {
                 db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
                 db.execSQL(ADD_MEDIA_FILE_URL);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
@@ -555,7 +576,6 @@ public class WordPressDB {
                 db.execSQL(ADD_MEDIA_UPLOAD_STATE);
                 db.execSQL(CREATE_TABLE_THEMES);
                 db.setVersion(DATABASE_VERSION);
-                migrateWPComAccount();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -681,6 +701,9 @@ public class WordPressDB {
     
 
     public long checkMatch(String blogName, String blogURL, String username, String password) {
+
+        if (blogName == null || blogURL == null || username == null || password == null)
+            return -1;
 
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "blogName", "url" },
                 "blogName='" + addSlashes(blogName) + "' AND url='"
@@ -1268,10 +1291,10 @@ public class WordPressDB {
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMt_text_more());
 
-            if (post.getCategories() != null) {
+            if (post.getJSONCategories() != null) {
                 JSONArray jsonArray = null;
                 try {
-                    jsonArray = new JSONArray(post.getCategories().toString());
+                    jsonArray = new JSONArray(post.getJSONCategories().toString());
                     values.put("categories", jsonArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1309,10 +1332,10 @@ public class WordPressDB {
                 values.put("mt_text_more", post.getMt_text_more());
             values.put("uploaded", post.isUploaded());
 
-            if (post.getCategories() != null) {
+            if (post.getJSONCategories() != null) {
                 JSONArray jsonArray = null;
                 try {
-                    jsonArray = new JSONArray(post.getCategories().toString());
+                    jsonArray = new JSONArray(post.getJSONCategories().toString());
                     values.put("categories", jsonArray.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1593,12 +1616,13 @@ public class WordPressDB {
     }
 
     // categories
-    public boolean insertCategory(int id, int wp_id, String category_name) {
+    public boolean insertCategory(int id, int wp_id, int parent_id, String category_name) {
 
         ContentValues values = new ContentValues();
         values.put("blog_id", id);
         values.put("wp_id", wp_id);
         values.put("category_name", category_name.toString());
+        values.put("parent_id", parent_id);
         boolean returnValue = false;
         synchronized (this) {
             returnValue = db.insert(CATEGORIES_TABLE, null, values) > 0;
@@ -1638,6 +1662,18 @@ public class WordPressDB {
         categoryID = c.getInt(0);
 
         return categoryID;
+    }
+
+    public int getCategoryParentId(int id, String category) {
+        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "parent_id" },
+                "category_name=\"" + category + "\" AND blog_id=" + id, null,
+                null, null, null);
+        if (c.getCount() == 0)
+            return -1;
+        c.moveToFirst();
+        int categoryParentID = c.getInt(0);
+
+        return categoryParentID;
     }
 
     public void clearCategories(int id) {

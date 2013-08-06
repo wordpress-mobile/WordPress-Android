@@ -52,7 +52,6 @@ import org.xmlrpc.android.XMLRPCFault;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -355,20 +354,20 @@ public class CommentsListFragment extends ListFragment {
                 Map<String, Object> contentHash = loadedComments.get(i);
                 allComments.put((Integer)contentHash.get("commentID"),
                         contentHash);
-                author = EscapeUtils.unescapeHtml(contentHash.get("author")
+                author = StringUtils.unescapeHTML(contentHash.get("author")
                         .toString());
                 commentID = (Integer)contentHash.get("commentID");
                 postID = contentHash.get("postID").toString();
-                comment = EscapeUtils.unescapeHtml(contentHash.get("comment")
+                comment = StringUtils.unescapeHTML(contentHash.get("comment")
                         .toString());
                 dateCreatedFormatted = contentHash.get("commentDateFormatted")
                         .toString();
                 status = contentHash.get("status").toString();
-                authorEmail = EscapeUtils.unescapeHtml(contentHash.get("email")
+                authorEmail = StringUtils.unescapeHTML(contentHash.get("email")
                         .toString());
-                authorURL = EscapeUtils.unescapeHtml(contentHash.get("url")
+                authorURL = StringUtils.unescapeHTML(contentHash.get("url")
                         .toString());
-                postTitle = EscapeUtils.unescapeHtml(contentHash.get(
+                postTitle = StringUtils.unescapeHTML(contentHash.get(
                         "postTitle").toString());
 
                 if (model == null) {

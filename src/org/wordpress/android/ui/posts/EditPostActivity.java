@@ -4,13 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,12 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextWatcher;
+import android.text.*;
 import android.text.format.DateUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
@@ -46,34 +35,15 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.view.ContextMenu;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.util.Log;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -82,7 +52,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.json.JSONException;
+import org.wordpress.android.util.*;
 import org.xmlrpc.android.ApiHelper;
 
 import org.wordpress.android.Constants;
@@ -96,16 +66,9 @@ import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.EscapeUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
-import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPEditText;
-import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPUnderlineSpan;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -119,14 +82,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_TIME = 1;
     private static final int ID_DIALOG_LOADING = 2;
 
+    private static final String CATEGORY_PREFIX_TAG = "category-";
+
     private Blog mBlog;
     private Post mPost;
+    // Used to restore post content if 'Discard' is chosen when leaving the editor.
+    private Post mOriginalPost;
 
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
     private EditText mTitleEditText, mPasswordEditText, mTagsEditText;
-    private TextView mLocationText, mCategoriesText, mPubDateText;
+    private TextView mLocationText, mPubDateText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
     private Button mPubDateButton, mLinkButton, mMoreButton;
@@ -135,7 +102,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private Location mCurrentLocation;
     private LocationHelper mLocationHelper;
     private Handler mAutoSaveHandler;
-    private JSONArray mCategories;
+    private ArrayList<String> mCategories;
 
     private boolean mIsPage = false;
     private boolean mIsNew = false;
@@ -143,10 +110,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private boolean mIsCustomPubDate = false;
     private boolean mIsBackspace = false;
     private boolean mScrollDetected = false;
-    private boolean mIsNewDraft = false;
-    private boolean mIsExternalInstance = false;
 
-    private List<String> mSelectedCategories;
     private String mAccountName = "";
     private int mQuickMediaType = -1;
     private String mMediaCapturePath = "";
@@ -180,20 +144,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        mCategories = new JSONArray();
+        mCategories = new ArrayList<String>();
         mAutoSaveHandler = new Handler();
-        mSelectedCategories = new Vector<String>();
 
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // we arrived here from a share action
-            mIsExternalInstance = true;
+            // We arrived here from a share action
             if (!selectBlogForShareAction())
                 return;
         } else {
             initBlog();
             if (extras != null) {
-                mAccountName = EscapeUtils.unescapeHtml(extras.getString("accountName"));
+                mAccountName = StringUtils.unescapeHTML(extras.getString("accountName"));
                 mPostID = extras.getLong("postID");
                 mLocalDraft = extras.getBoolean("localDraft", false);
                 mIsPage = extras.getBoolean("isPage", false);
@@ -208,7 +170,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 if (extras.getBoolean("isQuickPress")) {
-                    mIsExternalInstance = true;
                     mBlogID = extras.getInt("id");
                 } else {
                     mBlogID = WordPress.currentBlog.getId();
@@ -232,6 +193,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             return;
                         } else {
                             WordPress.currentPost = mPost;
+                            mOriginalPost = new Post(mBlogID, mPostID, mIsPage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -242,10 +204,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
             if (mIsNew) {
                 mLocalDraft = true;
-                setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
+                setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName()) + " - "
                         + getString((mIsPage) ? R.string.new_page : R.string.new_post));
             } else {
-                setTitle(EscapeUtils.unescapeHtml(WordPress.currentBlog.getBlogName()) + " - "
+                setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName()) + " - "
                         + getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
             }
         }
@@ -260,7 +222,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mBquoteToggleButton = (ToggleButton) findViewById(R.id.bquote);
         mUnderlineToggleButton = (ToggleButton) findViewById(R.id.underline);
         mStrikeToggleButton = (ToggleButton) findViewById(R.id.strike);
-        mCategoriesText = (TextView) findViewById(R.id.selectedCategories);
         mAddPictureButton = (ImageButton) findViewById(R.id.addPictureButton);
         mPubDateButton = (Button) findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) findViewById(R.id.pubDate);
@@ -271,15 +232,17 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mFormatBar = (RelativeLayout) findViewById(R.id.formatBar);
 
         // Set header labels to upper case
+        ((TextView) findViewById(R.id.categoryLabel)).setText(getResources().getString(R.string.categories).toUpperCase());
         ((TextView) findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
 
         if (mIsPage) { // remove post specific views
-            ((LinearLayout) findViewById(R.id.section2)).setVisibility(View.GONE);
-            ((RelativeLayout) findViewById(R.id.section3)).setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
-            ((Spinner) findViewById(R.id.postFormat)).setVisibility(View.GONE);
+            (findViewById(R.id.sectionTags)).setVisibility(View.GONE);
+            (findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
+            (findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
+            (findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
+            (findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
             if (mBlog.getPostFormats().equals("")) {
                 List<Object> args = new Vector<Object>();
@@ -430,21 +393,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (!mIsPage) {
-                if (mPost.getCategories() != null) {
-                    mCategories = mPost.getCategories();
-                    if (!mCategories.equals("")) {
-
-                        for (int i = 0; i < mCategories.length(); i++) {
-                            try {
-                                mSelectedCategories.add(mCategories.getString(i));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        mCategoriesText.setVisibility(View.VISIBLE);
-                        mCategoriesText.setText(getString(R.string.selected_categories) + " "
-                                + getCategoriesCSV());
-                    }
+                if (mPost.getJSONCategories() != null) {
+                    mCategories = JSONUtil.fromJSONArrayToStringList(mPost.getJSONCategories());
                 }
 
                 Double latitude = mPost.getLatitude();
@@ -454,17 +404,13 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     new getAddressTask().execute(latitude, longitude);
                 }
             }
-
             String tags = mPost.getMt_keywords();
             if (!tags.equals("")) {
                 mTagsEditText.setText(tags);
             }
         }
 
-        if (!mIsPage) {
-            Button selectCategories = (Button) findViewById(R.id.selectCategories);
-            selectCategories.setOnClickListener(this);
-        }
+        populateSelectedCategories();
 
         registerForContextMenu(mAddPictureButton);
         mContentEditText.setOnSelectionChangedListener(this);
@@ -583,20 +529,20 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
     }
-    
+
     @Override
     public void onImeBack(WPEditText ctrl, String text) {
         if (mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
     }
-    
+
     private void showFormatBar() {
         mFormatBar.setVisibility(View.VISIBLE);
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
         fadeInAnimation.setDuration(500);
         mFormatBar.startAnimation(fadeInAnimation);
     }
-    
+
     private void hideFormatBar() {
         AlphaAnimation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
         fadeOutAnimation.setDuration(500);
@@ -643,12 +589,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", mBlogID);
-            if (mCategories.length() > 0) {
-                bundle.putString("categoriesCSV", getCategoriesCSV());
+            if (mCategories.size() > 0) {
+                bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
-            Intent i1 = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
-            i1.putExtras(bundle);
-            startActivityForResult(i1, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+            Intent categoriesIntent = new Intent(EditPostActivity.this, SelectCategoriesActivity.class);
+            categoriesIntent.putExtras(bundle);
+            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+        } else if (id == R.id.categoryButton) {
+            onCategoryButtonClick(v);
         } else if (id == R.id.post) {
             if (mAutoSaveHandler != null)
                 mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
@@ -660,7 +608,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_CAMERA || mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                             mPost.setQuickPostType("QuickVideo");
                     }
-                    
+
                     WordPress.currentPost = mPost;
                     startService(new Intent(this, PostUploadService.class));
                 }
@@ -696,10 +644,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        
+
         if (mFormatBar.getVisibility() != View.VISIBLE)
             showFormatBar();
-        
+
         float pos = event.getY();
 
         if (event.getAction() == 0)
@@ -877,6 +825,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         });
         dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                // When discard options is chosen, restore existing post or delete new post if it was autosaved.
+                if (mOriginalPost != null) {
+                    mOriginalPost.update();
+                    WordPress.currentPost = mOriginalPost;
+                } else if (mPost != null && mIsNew) {
+                    mPost.delete();
+                    WordPress.currentPost = null;
+                }
                 finish();
             }
         });
@@ -912,7 +868,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
         mIsNew = true;
         mLocalDraft = true;
-        
+
         List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
 
         if (accounts.size() > 0) {
@@ -924,7 +880,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                 Map<String, Object> curHash = accounts.get(i);
                 try {
-                    blogNames[i] = EscapeUtils.unescapeHtml(curHash.get("blogName").toString());
+                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
                 } catch (Exception e) {
                     blogNames[i] = curHash.get("url").toString();
                 }
@@ -953,7 +909,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         WordPress.currentBlog = mBlog;
                         WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
                         mAccountName = blogNames[item];
-                        setTitle(EscapeUtils.unescapeHtml(mAccountName) + " - "
+                        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
                                 + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
                     }
                 });
@@ -970,7 +926,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 WordPress.currentBlog = mBlog;
                 WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
                 mAccountName = blogNames[0];
-                setTitle(EscapeUtils.unescapeHtml(mAccountName) + " - "
+                setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
                         + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
             };
             return true;
@@ -1200,7 +1156,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private void enableLBSButtons() {
         mLocationHelper = new LocationHelper();
-        ((RelativeLayout) findViewById(R.id.section3)).setVisibility(View.VISIBLE);
+        ((RelativeLayout) findViewById(R.id.sectionLocation)).setVisibility(View.VISIBLE);
         Button viewMap = (Button) findViewById(R.id.viewMap);
         Button updateLocation = (Button) findViewById(R.id.updateLocation);
         Button removeLocation = (Button) findViewById(R.id.removeLocation);
@@ -1313,19 +1269,67 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 break;
             case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                 extras = data.getExtras();
-                String cats = extras.getString("selectedCategories");
-                String[] splitCats = cats.split(",");
-                if (splitCats.length < 1)
-                    return;
-                mCategories = new JSONArray();
-                for (int i = 0; i < splitCats.length; i++) {
-                    mCategories.put(splitCats[i]);
-                }
-                mCategoriesText.setVisibility(View.VISIBLE);
-                mCategoriesText.setText(getString(R.string.selected_categories) + " " + getCategoriesCSV());
+                mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                populateSelectedCategories();
                 break;
             }
         }// end null check
+    }
+
+    private void onCategoryButtonClick(View v) {
+        // Get category name by removing prefix from the tag
+        boolean listChanged = false;
+        String categoryName = (String) v.getTag();
+        categoryName = categoryName.replaceFirst(CATEGORY_PREFIX_TAG, "");
+
+        // Remove clicked category from list
+        for (int i = 0; i < mCategories.size(); i++) {
+            if (mCategories.get(i).equals(categoryName)) {
+                mCategories.remove(i);
+                listChanged = true;
+                break;
+            }
+        }
+
+        // Recreate category views
+        if (listChanged) {
+            populateSelectedCategories();
+        }
+    }
+
+    private void populateSelectedCategories() {
+        ViewGroup sectionCategories = ((ViewGroup) findViewById(R.id.sectionCategories));
+
+        // Remove previous category buttons if any + select category button
+        List<View> viewsToRemove = new ArrayList<View>();
+        for (int i = 0; i < sectionCategories.getChildCount(); i++) {
+            View v = sectionCategories.getChildAt(i);
+            Object tag = v.getTag();
+            if (tag != null && tag.getClass() == String.class &&
+                    (((String) tag).startsWith(CATEGORY_PREFIX_TAG) || tag.equals("select-category"))) {
+                viewsToRemove.add(v);
+            }
+        }
+        for (int i = 0; i < viewsToRemove.size(); i++) {
+            sectionCategories.removeView(viewsToRemove.get(i));
+        }
+        viewsToRemove.clear();
+
+        // New category buttons
+        LayoutInflater layoutInflater = getLayoutInflater();
+        for (int i = 0; i < mCategories.size(); i++) {
+            String categoryName = mCategories.get(i);
+            Button buttonCategory = (Button) layoutInflater.inflate(R.layout.category_button, null);
+            buttonCategory.setText(Html.fromHtml(categoryName));
+            buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+            buttonCategory.setOnClickListener(this);
+            sectionCategories.addView(buttonCategory);
+        }
+
+        // Add select category button
+        Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
+        selectCategory.setOnClickListener(this);
+        sectionCategories.addView(selectCategory);
     }
 
     @Override
@@ -1368,7 +1372,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         e.removeSpan(style[i]);
                 }
             }
-            content = EscapeUtils.unescapeHtml(WPHtml.toHtml(e));
+            content = WPHtml.toHtml(e);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -1441,7 +1445,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             s.removeSpan(wpIS);
                             s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                             if (mLocalDraft)
-                                content = EscapeUtils.unescapeHtml(WPHtml.toHtml(s));
+                                content = WPHtml.toHtml(s);
                             else
                                 content = s.toString();
                         }
@@ -1496,7 +1500,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                 if (success) {
                     mIsNew = false;
-                    mIsNewDraft = true;
                 }
 
                 mPost.deleteMediaFiles();
@@ -1546,7 +1549,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
                 mPost.setMediaPaths(images);
                 mPost.setDate_created_gmt(pubDateTimestamp);
-                mPost.setCategories(mCategories);
+                mPost.setJSONCategories(new JSONArray(mCategories));
                 mPost.setMt_keywords(tags);
                 mPost.setPost_status(status);
                 mPost.setWP_password(password);
@@ -1668,28 +1671,28 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
         String imageWidth = WordPress.currentBlog.getMaxImageWidth();
         int imageWidthBlogSetting = Integer.MAX_VALUE;
-        
+
         if (!imageWidth.equals("Original Size")) {
             try {
                 imageWidthBlogSetting = Integer.valueOf(imageWidth);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-        } 
-        
+        }
+
         int[] dimensions = ImageHelper.getImageSize(curStream, EditPostActivity.this);
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
-        
+
         if ( Math.min(imageWidthPictureSetting, imageWidthBlogSetting) ==  Integer.MAX_VALUE ) {
             is.setWidth(1024); //Default value in case of errors reading the picture size and the blog settings is set to Original size
         } else {
             is.setWidth(Math.min(imageWidthPictureSetting, imageWidthBlogSetting));
         }
     }
-    
-    
+
+
     private void addMedia(String imgPath, Uri curStream) {
-        
+
         if (mFormatBar.getVisibility() == View.VISIBLE)
             hideFormatBar();
 
@@ -1812,7 +1815,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 (String) mediaData.get("orientation"), true);
 
         if (finalBytes == null) {
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.file_error_encountered), Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -1831,21 +1833,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append("\n");
         return ssb;
-    }
-
-    private String getCategoriesCSV() {
-        String csv = "";
-        if (mCategories.length() > 0) {
-            for (int i = 0; i < mCategories.length(); i++) {
-                try {
-                    csv += EscapeUtils.unescapeHtml(mCategories.getString(i)) + ",";
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            csv = csv.substring(0, csv.length() - 1);
-        }
-        return csv;
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {

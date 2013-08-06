@@ -14,7 +14,7 @@
         android:paddingRight="@dimen/settings_padding" >
 
         <RelativeLayout
-            android:id="@+id/section1"
+            android:id="@+id/sectionContent"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
@@ -69,10 +69,10 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/section2"
+            android:id="@+id/sectionTags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/section1"
+            android:layout_below="@id/sectionContent"
             android:layout_marginTop="8dp" >
 
             <TextView
@@ -131,10 +131,10 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/section3"
+            android:id="@+id/sectionLocation"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/section2"
+            android:layout_below="@id/sectionTags"
             android:layout_marginTop="8dp" >
 
             <TextView
@@ -153,10 +153,10 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/section4"
+            android:id="@+id/sectionSettings"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/section3"
+            android:layout_below="@id/sectionLocation"
             android:layout_marginTop="8dp" >
 
             <TextView
