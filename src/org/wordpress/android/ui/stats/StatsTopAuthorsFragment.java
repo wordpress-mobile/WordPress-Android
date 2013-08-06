@@ -36,6 +36,8 @@ public class StatsTopAuthorsFragment extends StatsAbsListViewFragment  implement
     private static final Uri STATS_TOP_AUTHORS_URI = StatsContentProvider.STATS_TOP_AUTHORS_URI;
     private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
     
+    public static final String TAG = StatsTopAuthorsFragment.class.getSimpleName();
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());

@@ -39,6 +39,8 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
     private static final Uri STATS_REFERRERS_URI = StatsContentProvider.STATS_REFERRERS_URI;
     private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
     
+    public static final String TAG = StatsReferrersFragment.class.getSimpleName();
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());

@@ -34,7 +34,7 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         
         setRetainInstance(true);
         
-        if (Utils.isTablet(getActivity())) {
+        if (Utils.isTablet()) {
             initTabletLayout(view);
         } else {
             initPhoneLayout(view);

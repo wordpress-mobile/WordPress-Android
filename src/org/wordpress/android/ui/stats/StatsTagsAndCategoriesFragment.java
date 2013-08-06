@@ -38,11 +38,13 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
 
     private static final Uri STATS_TAGS_AND_CATEGORIES_URI = StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI;
 
+    public static final String TAG = StatsTagsAndCategoriesFragment.class.getSimpleName();
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
 
-        if (Utils.isTablet(getActivity())) {
+        if (Utils.isTablet()) {
             TextView tv = (TextView) view.findViewById(R.id.stats_pager_title);
             tv.setText(getTitle().toUpperCase(Locale.getDefault()));
         }

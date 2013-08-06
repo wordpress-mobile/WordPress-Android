@@ -45,70 +45,101 @@ public class StatsActivityTablet extends WPActionBarActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         
-        StatsAbsViewFragment fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
-        ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+        StatsAbsViewFragment fragment;
         
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
-        ft.replace(R.id.stats_comments_container, fragment); 
+        if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
+            ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
+        }
         
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
-        ft.replace(R.id.stats_geoviews_container, fragment);
-        
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
-        ft.replace(R.id.stats_searchengine_container, fragment);
+        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
+            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+        }
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
-        ft.replace(R.id.stats_tags_and_categories_container, fragment);
-        
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
-        ft.replace(R.id.stats_top_authors_container, fragment);
-        
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
-        ft.replace(R.id.stats_totals_followers_shares_container, fragment);
-        
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
-        ft.replace(R.id.stats_top_posts_container, fragment);
-        
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
-        ft.replace(R.id.stats_video_container, fragment);
+        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsSearchEngineTermsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
+            ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
+            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsTopAuthorsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
+            ft.replace(R.id.stats_top_authors_container, fragment, StatsTopAuthorsFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsTotalsFollowersAndSharesFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
+            ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
+            ft.replace(R.id.stats_video_container, fragment, StatsVideoFragment.TAG);
+        }
+
+        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null) {
+            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+        }
         
         ft.commit();
+        
+        FrameLayout frameView;
 
-        FrameLayout frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
+        mFragmentContainer.removeView(frameView);
+        mColumnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_totals_followers_shares_container);
+        mFragmentContainer.removeView(frameView);
+        mColumnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_referrers_container);
+        mFragmentContainer.removeView(frameView);
+        mColumnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
+        mFragmentContainer.removeView(frameView);
+        mColumnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
+        mFragmentContainer.removeView(frameView);
+        mColumnLeft.addView(frameView);
+
+        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
         mFragmentContainer.removeView(frameView);
         mColumnRight.addView(frameView);
 
         frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
         mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
-
-        frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
-        mFragmentContainer.removeView(frameView);
         mColumnRight.addView(frameView);
         
-        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
         mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
-        
+        mColumnRight.addView(frameView);
+
         frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
         mFragmentContainer.removeView(frameView);
         mColumnRight.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
+        frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
         mFragmentContainer.removeView(frameView);
         mColumnRight.addView(frameView);
-        
-        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
-        
-        frameView = (FrameLayout) findViewById(R.id.stats_totals_followers_shares_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
-        
-        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
         
     }
     

@@ -37,6 +37,17 @@
         android:layout_marginRight="16dp"
         android:background="@color/wordpress_blue" />
 
+    <LinearLayout
+        android:id="@+id/stats_list_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:visibility="gone" >
+    </LinearLayout>
+
     <ListView
         android:id="@+id/stats_list_listview"
         android:layout_width="match_parent"
@@ -44,7 +55,8 @@
         android:listSelector="@android:color/transparent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:scrollbarStyle="outsideOverlay" >
+        android:scrollbarStyle="outsideOverlay"
+        android:visibility="gone" >
     </ListView>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 
 public class Utils {
 
@@ -45,7 +46,7 @@ public class Utils {
         return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
-    public static boolean isTablet(Context context) {
-        return context.getResources().getInteger(R.integer.isTablet) == 1;
+    public static boolean isTablet() {
+        return WordPress.getContext().getResources().getInteger(R.integer.isTablet) == 1;
     }
 }

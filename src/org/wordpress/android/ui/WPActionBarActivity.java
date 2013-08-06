@@ -794,7 +794,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
             
             Intent intent;
-            if (Utils.isTablet(WPActionBarActivity.this)) 
+            if (Utils.isTablet()) 
                 intent = new Intent(WPActionBarActivity.this, StatsActivityTablet.class);
             else 
                 intent = new Intent(WPActionBarActivity.this, StatsActivity.class);

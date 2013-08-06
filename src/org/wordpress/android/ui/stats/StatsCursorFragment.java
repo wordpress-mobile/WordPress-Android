@@ -12,15 +12,18 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.Utils;
 
 public class StatsCursorFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final int MAX_ITEMS_ON_TABLET = 10;
     private static final String ARGS_URI = "ARGS_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
@@ -30,6 +33,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private TextView mEntryLabel;
     private TextView mTotalsLabel;
     private ListView mListView;
+    private LinearLayout mLinearLayout;
 
     private CursorAdapter mAdapter;
     private ContentObserver mContentObserver = new MyObserver(new Handler());
@@ -59,8 +63,15 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         mEntryLabel.setText(getEntryLabelResId());
         mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
         mTotalsLabel.setText(getTotalsLabelResId());
-        mListView = (ListView) view.findViewById(R.id.stats_list_listview);
-        mListView.setAdapter(mAdapter);
+        
+        if (isTablet()) {
+            mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
+            mLinearLayout.setVisibility(View.VISIBLE);
+        } else {
+            mListView = (ListView) view.findViewById(R.id.stats_list_listview);
+            mListView.setAdapter(mAdapter);
+            mListView.setVisibility(View.VISIBLE);
+        }
         
         return view;
     }
@@ -89,16 +100,40 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (mAdapter != null)
             mAdapter.swapCursor(data);
+        if (isTablet()) {
+            reloadLinearLayout();
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (mAdapter != null)
             mAdapter.swapCursor(null);
+        if (isTablet()) {
+            reloadLinearLayout();
+        }
     }
 
     public void setListAdapter(CursorAdapter adapter) {
         mAdapter = adapter;
+        if (isTablet()) {
+            reloadLinearLayout();
+        }
+    }
+
+    private void reloadLinearLayout() {
+        if (mLinearLayout == null || mAdapter == null)
+            return; 
+        
+        mLinearLayout.removeAllViews();
+        
+        // limit number of items to show otherwise it would cause performance issues on the linearlayout
+        int count = Math.min(mAdapter.getCount(), MAX_ITEMS_ON_TABLET);
+        for (int i=0; i < count; i++) {
+            View view = mAdapter.getView(i, null, mLinearLayout);
+            mLinearLayout.addView(view);
+        }
+        
     }
     
     @Override
@@ -123,5 +158,9 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
            if (isAdded())
                getLoaderManager().restartLoader(0, null, StatsCursorFragment.this);           
        }        
+    }
+    
+    private boolean isTablet() {
+        return Utils.isTablet();
     }
 }

@@ -10,6 +10,8 @@ import org.wordpress.android.R;
 
 public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
 
+    public static final String TAG = StatsTotalsFollowersAndSharesFragment.class.getSimpleName();
+    
     private TextView mPostsCountView;
     private TextView mCategoriesCountView;
     private TextView mTagsCountView;

@@ -38,7 +38,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  imp
     
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
     private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
-    
+
+    public static final String TAG = StatsTopPostsAndPagesFragment.class.getSimpleName();
+
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());

@@ -40,6 +40,9 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;
     private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel(), "Summary" };
     
+    public static final String TAG = StatsVideoFragment.class.getSimpleName();
+    
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());

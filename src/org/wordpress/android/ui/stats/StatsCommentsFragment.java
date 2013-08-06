@@ -40,6 +40,8 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
 
+    public static final String TAG = StatsCommentsFragment.class.getSimpleName();
+    
     private static final String[] TITLES = new String[] { "Top Recent Commenters", "Most Commented", "Summary" };
     
     private static final int TOP_COMMENTERS = 0;

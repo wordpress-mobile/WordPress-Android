@@ -35,6 +35,8 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
     private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
     
+    public static final String TAG = StatsSearchEngineTermsFragment.class.getSimpleName();
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
