@@ -1,16 +1,22 @@
 package org.wordpress.android.ui.posts;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
+import org.apache.commons.net.io.Util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Layout;
@@ -46,6 +53,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -81,6 +89,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.http.client.utils.URIUtils;
 import org.json.JSONArray;
 import org.xmlrpc.android.ApiHelper;
 
@@ -171,7 +180,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-
+        
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -1246,6 +1255,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                 Uri imageUri = data.getData();
                 String imgPath = imageUri.toString();
+                Log.e("picasa", imgPath);
+                verifyImage(imageUri);
                 addMedia(imgPath, imageUri);
                 break;
             case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
@@ -1341,6 +1352,78 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 break;
             }
         }// end null check
+    }
+
+    private void verifyImage(Uri imageUri) {
+        // check if the imageUri returned is of picassa or not
+        if (imageUri.toString().startsWith("content://com.android.gallery3d.provider"))  {
+            // use the com.google provider for devices prior to 3.0
+            imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d","com.google.android.gallery3d"));
+        }
+        final Uri tempUri = imageUri;
+        final String path="/mnt/sdcard/WordPress/images/aagams.jpg";
+        if (imageUri.toString().startsWith("content://com.google.android.gallery3d")){
+                // Do this in a background thread, since we are fetching a large image from the web
+            Thread t = new Thread() {
+                public void run() {
+                    fetchImage(tempUri);
+                }
+             };
+             t.start();
+             try {
+                t.join();
+            } catch (InterruptedException e) {
+                
+            }
+                addMedia(path, tempUri);
+            }
+         else { // it is a regular local image file
+            String filePath = imageUri.toString();
+            addMedia(filePath, imageUri);
+        }
+        
+        
+        
+    }
+
+    private void fetchImage(Uri imageUri) {
+        // Downloading the picassa image from web
+        File cacheDir;
+        String pathName="";
+        // if the device has an SD card
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+            cacheDir=new File(android.os.Environment.getExternalStorageDirectory()+"/WordPress/images");
+        } else {
+            // if no  SD card
+            cacheDir=this.getCacheDir();
+        }
+        if(!cacheDir.exists())
+                cacheDir.mkdirs();
+        Random r = new Random();
+        File f=new File(cacheDir, "aagams.jpg");
+
+        try {
+            Bitmap bitmap=null;
+            InputStream is = null;
+            if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+                is=getContentResolver().openInputStream(imageUri);
+            } else {
+                is=new URL(imageUri.toString()).openStream();
+            }
+            OutputStream os = new FileOutputStream(f);
+            org.apache.commons.net.io.Util.copyStream(is, os);
+            os.close();
+            pathName = f.getPath();
+            Log.e("SUCESS", "picassa-"+pathName);
+            
+            
+            
+        } catch (Exception ex) {
+            //Log.d(Utils.DEBUG_TAG, "Exception: " + ex.getMessage());
+           Log.e("error", "picassa");
+        }
+        
+        
     }
 
     private void onCategoryButtonClick(View v) {
