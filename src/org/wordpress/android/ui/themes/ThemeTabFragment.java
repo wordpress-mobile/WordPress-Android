@@ -30,10 +30,8 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
 
     public enum ThemeSortType {
         TRENDING("Trending"), 
-        A_Z("A-Z"), 
-        POPULAR("Popular"), 
         NEWEST("Newest"),
-        FRIENDS_OF_WP("Friends of WP");
+        POPULAR("Popular"); 
         
         private String mTitle;
 
@@ -171,10 +169,6 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         String blogId = getBlogId();
         
         switch(themeSortType) {
-            case A_Z:
-                return WordPress.wpDB.getThemesAtoZ(blogId);
-            case FRIENDS_OF_WP:
-                return WordPress.wpDB.getThemesFriendsOfWP(blogId);
             case POPULAR:
                 return WordPress.wpDB.getThemesPopularity(blogId);
             case NEWEST:

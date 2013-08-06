@@ -29,7 +29,7 @@ public class ThemeSearchFragment extends ThemeTabFragment
         
         // db calls use a-z sort
         Bundle args = new Bundle();
-        args.putInt(ARGS_SORT, ThemeSortType.A_Z.ordinal());
+        args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
         fragment.setArguments(args);
         
         return fragment;

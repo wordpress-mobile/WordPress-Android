@@ -8,12 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="0dp"
         android:numColumns="@integer/themes_grid_num_columns"
-        android:padding="10dp"
         android:scrollbarStyle="outsideOverlay"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" >
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:stretchMode="columnWidth">
     </GridView>
 
 </RelativeLayout>

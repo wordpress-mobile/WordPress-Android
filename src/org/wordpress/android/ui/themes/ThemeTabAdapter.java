@@ -79,8 +79,8 @@ public class ThemeTabAdapter extends CursorAdapter {
     private int getGridWidth(Context context) {
         // Padding is 12 dp between the grid columns and on the outside
         int columnCount = getColumnCount(context);
-        int dp12 = (int) dpToPx(context, 12);
-        int padding = (columnCount + 1) * dp12;
+        int dp4 = (int) dpToPx(context, 4);
+        int padding = (columnCount + 1) * dp4;
         
         // the max width of the themes is either:
         // = width of entire screen (phone and tablet portrait)
