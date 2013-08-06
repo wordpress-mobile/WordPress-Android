@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="4dp" >
+    android:layout_height="32dp" >
 
     <org.wordpress.android.ui.FadeInNetworkImageView
         android:id="@+id/stats_list_cell_image"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
+        android:paddingLeft="4dp"
         android:visibility="gone" />
 
     <TextView
@@ -16,6 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="4dp"
         android:textSize="14sp" />
 
     <TextView
@@ -23,10 +26,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
         android:layout_toLeftOf="@id/stats_list_cell_total"
         android:layout_toRightOf="@id/stats_list_cell_image"
-        android:drawablePadding="8dp"
+        android:drawablePadding="4dp"
+        android:paddingLeft="4dp"
         android:textSize="14sp" />
+
+    <View
+        android:id="@+id/stats_list_cell_div"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/stats_div_color"
+        android:visibility="gone" />
 
 </RelativeLayout>
