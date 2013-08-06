@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="@color/wordpress_blue"
-    android:dividerHeight="1dp"
+    android:dividerHeight="0.5dp"
     android:padding="20dp" >
 
 </ListView>

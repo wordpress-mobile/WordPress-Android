@@ -358,13 +358,13 @@
   <string name="stats_view_search_engine_terms">Search Engine Terms</string>
   
   <!-- stats: labels for timeframes -->
-  <string name="stats_timeframe_today">TODAY</string>
-  <string name="stats_timeframe_yesterday">YESTERDAY</string>
-  <string name="stats_timeframe_week">WEEK</string>
-  <string name="stats_timeframe_month">MONTH</string>
-  <string name="stats_timeframe_quarter">QUARTER</string>
-  <string name="stats_timeframe_year">YEAR</string>
-  <string name="stats_timeframe_all_time">ALL_TIME</string>
+  <string name="stats_timeframe_today">Today</string>
+  <string name="stats_timeframe_yesterday">Yesterday</string>
+  <string name="stats_timeframe_week">Week</string>
+  <string name="stats_timeframe_month">Month</string>
+  <string name="stats_timeframe_quarter">Quarter</string>
+  <string name="stats_timeframe_year">Year</string>
+  <string name="stats_timeframe_all_time">All Time</string>
   
   <!-- stats: label for the entries -->
   <string name="stats_entry_country">Country</string>
