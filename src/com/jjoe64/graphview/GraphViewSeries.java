@@ -22,6 +22,10 @@ package com.jjoe64.graphview;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * a graphview series.
+ * holds the data, description and styles
+ */
 public class GraphViewSeries {
 	/**
 	 * graph series style: color and thickness
@@ -39,9 +43,16 @@ public class GraphViewSeries {
 			this.color = color;
 			this.thickness = thickness;
 		}
+		
 		public ValueDependentColor getValueDependentColor() {
 			return valueDependentColor;
 		}
+		
+		/**
+		 * the color depends on the value of the data.
+		 * only possible in BarGraphView
+		 * @param valueDependentColor
+		 */
 		public void setValueDependentColor(ValueDependentColor valueDependentColor) {
 			this.valueDependentColor = valueDependentColor;
 		}
@@ -131,10 +142,17 @@ public class GraphViewSeries {
 		}
 	}
 
+	/**
+	 * @return series styles. never null
+	 */
 	public GraphViewSeriesStyle getStyle() {
 		return style;
 	}
 
+	/**
+	 * you should use {@link GraphView#removeSeries(GraphViewSeries)}
+	 * @param graphView
+	 */
 	public void removeGraphView(GraphView graphView) {
 		graphViews.remove(graphView);
 	}
