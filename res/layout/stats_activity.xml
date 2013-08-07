@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/stats_header_views_total"
             android:layout_marginLeft="16dp"
-            android:text="Views"
+            android:text="@string/stats_totals_views"
             android:textSize="12sp" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:layout_toRightOf="@id/stats_header_views_label"
-            android:text="123,345"
+            android:text="0"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/stats_phone_icon_comment"
                 android:drawablePadding="8dp"
-                android:text="18"
+                android:text="0"
                 android:textSize="17sp" />
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_marginLeft="16dp"
                 android:drawableLeft="@drawable/stats_phone_icon_fav"
                 android:drawablePadding="8dp"
-                android:text="45"
+                android:text="0"
                 android:textSize="17sp" />
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_marginLeft="16dp"
                 android:drawableLeft="@drawable/stats_phone_icon_reblog"
                 android:drawablePadding="8dp"
-                android:text="8"
+                android:text="0"
                 android:textSize="17sp" />
         </LinearLayout>
     </RelativeLayout>

@@ -417,6 +417,7 @@
   <string name="stats_video_summary_label_plays">Plays</string>
   <string name="stats_video_summary_label_impressions">Impressions</string>
   <string name="stats_video_summary_label_bandwidth">Bandwidth</string>
+  <string name="stats_video_summary_header">Aggregated stats for %s</string>
   
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>

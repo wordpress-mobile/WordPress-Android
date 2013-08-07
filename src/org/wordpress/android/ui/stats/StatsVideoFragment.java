@@ -32,8 +32,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideo;
+import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.StatUtils;
 
 public class StatsVideoFragment extends StatsAbsListViewFragment  implements TabListener {
     
@@ -127,34 +129,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
     public String getTitle() {
         return getString(R.string.stats_view_video_plays);
     }
-
     
-    public static class VideoSummaryFragment extends SherlockFragment {
-        
-        private TextView mHeader;
-        private TextView mPlays;
-        private TextView mImpressions;
-        private TextView mPlaybackTotals;
-        private TextView mPlaybackUnit;
-        private TextView mBandwidth;
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.stats_video_summary, container, false); 
-            
-            mHeader = (TextView) view.findViewById(R.id.stats_video_summary_header);
-            mHeader.setText("Aggregated stats for August 2013"); // TODO
-            mPlays = (TextView) view.findViewById(R.id.stats_video_summary_plays_total);
-            mImpressions = (TextView) view.findViewById(R.id.stats_video_summary_impressions_total);
-            mPlaybackTotals = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_total);
-            mPlaybackUnit = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_unit);
-            mBandwidth = (TextView) view.findViewById(R.id.stats_video_summary_bandwidth_total);
-            
-            return view;
-        }
-        
-    }
-
     @Override
     public String[] getTabTitles() {
         return TITLES;
@@ -166,7 +141,13 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
         final String blogId = getCurrentBlogId();
         if (getCurrentBlogId() == null)
             return;
-                    
+ 
+        if (position == 0 || position == 1)
+            refreshVideoStats(position, blogId);
+    }
+
+
+    private void refreshVideoStats(final int position, final String blogId) {
         WordPress.restClient.getStatsVideoPlays(blogId, 
                 new Listener() {
                     
@@ -210,5 +191,120 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
             }
             return null;
         }        
+    }
+    
+    /**
+     * Fragment used for video summary
+     */
+    public static class VideoSummaryFragment extends SherlockFragment {
+        
+        private TextView mHeader;
+        private TextView mPlays;
+        private TextView mImpressions;
+        private TextView mPlaybackTotals;
+        private TextView mPlaybackUnit;
+        private TextView mBandwidth;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.stats_video_summary, container, false); 
+            
+            mHeader = (TextView) view.findViewById(R.id.stats_video_summary_header);
+            mHeader.setText("");
+            mPlays = (TextView) view.findViewById(R.id.stats_video_summary_plays_total);
+            mImpressions = (TextView) view.findViewById(R.id.stats_video_summary_impressions_total);
+            mPlaybackTotals = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_total);
+            mPlaybackUnit = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_unit);
+            mBandwidth = (TextView) view.findViewById(R.id.stats_video_summary_bandwidth_total);
+            
+            return view;
+        }
+        
+        @Override
+        public void onResume() {
+            super.onResume();
+            refreshSummary();
+        }
+
+        private void refreshSummary() {
+
+            if (WordPress.getCurrentBlog() == null)
+                return; 
+
+            String blogId = String.valueOf(WordPress.getCurrentBlog());
+            
+            new AsyncTask<String, Void, StatsVideoSummary>() {
+
+                @Override
+                protected StatsVideoSummary doInBackground(String... params) {
+                    final String blogId = params[0];
+                    
+                    StatsVideoSummary stats = StatUtils.getVideoSummary(blogId);
+                    if (stats == null || StatUtils.isDayOld(stats.getDate())) {
+                        refreshStatsFromServer(blogId);
+                    }
+                    
+                    return stats;
+                }
+                
+                protected void onPostExecute(StatsVideoSummary result) {
+                    refreshSummaryViews(result);
+                };
+            }.execute(blogId);
+        }
+
+
+        private void refreshStatsFromServer(final String blogId) {
+            WordPress.restClient.getStatsVideoSummary(blogId, 
+                    new Listener() {
+                        
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            StatUtils.saveVideoSummary(blogId, response);
+                            if (getActivity() != null)
+                                getActivity().runOnUiThread(new Runnable() {
+                                    
+                                    @Override
+                                    public void run() {
+                                        refreshSummary();
+                                        
+                                    }
+                                });
+                        }
+                    }, 
+                    new ErrorListener() {
+                        
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+                            
+                        }
+                    });
+        }
+        
+        protected void refreshSummaryViews(StatsVideoSummary result) {
+
+            String header = "";
+            int plays = 0;
+            int impressions = 0;
+            int playbackTotals = 0;
+            String bandwidth = "0 MB";
+            
+            if (result != null) {
+                plays = result.getPlays();
+                impressions = result.getImpressions();
+                playbackTotals = result.getMinutes();
+                bandwidth = result.getBandwidth();
+                header = String.format(getString(R.string.stats_video_summary_header), result.getTimeframe());
+            }
+
+            mHeader.setText(header);
+            mPlays.setText(plays + "");
+            mImpressions.setText(impressions + "");
+            mPlaybackTotals.setText(playbackTotals + "");
+            mBandwidth.setText(bandwidth);
+        }
+
+        
     }
 }

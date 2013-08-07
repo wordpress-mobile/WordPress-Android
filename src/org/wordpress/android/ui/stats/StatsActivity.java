@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -11,10 +13,17 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest.ErrorListener;
+import com.wordpress.rest.RestRequest.Listener;
+
+import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.StatUtils;
 
 public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
 
@@ -25,6 +34,11 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private TextView mActionbarNavText;
     private DialogFragment mNavFragment;
     private int mNavPosition = 0;
+
+    private TextView mViewsTotalText;
+    private TextView mCommentsTotalText;
+    private TextView mFavsTotalText;
+    private TextView mReblogTotalText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,9 +83,15 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         }
         
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
+
+        mViewsTotalText = (TextView) findViewById(R.id.stats_header_views_total);
+        mCommentsTotalText = (TextView) findViewById(R.id.stats_header_comments_total);
+        mFavsTotalText = (TextView) findViewById(R.id.stats_header_favs_total);
+        mReblogTotalText = (TextView) findViewById(R.id.stats_header_reblog_total);
         
+        refreshStats();
     }
-    
+
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
@@ -117,4 +137,79 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         mStatsViewFragment = StatsAbsViewFragment.newInstance(viewType);
         fm.beginTransaction().replace(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
     }
+    
+    private void refreshStats() {
+        if (WordPress.getCurrentBlog() == null)
+            return; 
+        
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        new AsyncTask<String, Void, StatsSummary>() {
+
+            @Override
+            protected StatsSummary doInBackground(String... params) {
+                final String blogId = params[0];
+                
+                StatsSummary stats = StatUtils.getSummary(blogId);
+                if (stats == null || StatUtils.isDayOld(stats.getDate())) {
+                    refreshStatsFromServer(blogId);
+                }
+                
+                return stats;
+            }
+            
+            protected void onPostExecute(StatsSummary result) {
+                refreshViews(result);
+            };
+        }.execute(blogId);
+    }
+
+
+    private void refreshStatsFromServer(final String blogId) {
+        WordPress.restClient.getStatsSummary(blogId, 
+                new Listener() {
+                    
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        StatUtils.saveSummary(blogId, response);
+                        runOnUiThread(new Runnable() {
+                            
+                            @Override
+                            public void run() {
+                                refreshStats();
+                                
+                            }
+                        });
+                    }
+                }, 
+                new ErrorListener() {
+                    
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                });
+    }
+    
+    protected void refreshViews(StatsSummary result) {
+        int views = 0;
+        int comments = 0;
+        int favs = 0;
+        int reblogs = 0;
+        
+        if (result != null) {
+            views = result.getViews();
+            comments = result.getComments();
+            favs = result.getFavorites();
+            reblogs = result.getReblogs();
+        }
+        
+        mViewsTotalText.setText(views + "");
+        mCommentsTotalText.setText(comments + "");
+        mFavsTotalText.setText(favs + "");
+        mReblogTotalText.setText(reblogs + "");
+        
+    }
+
 }

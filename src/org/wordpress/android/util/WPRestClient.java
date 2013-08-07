@@ -297,7 +297,58 @@ public class WPRestClient {
         getXL(path, params, listener, errorListener);
     }
     
-    public void getXL(String path, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
+    /**
+     * Get a site's stats summary
+     */
+    public void getStatsSummary(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/summary";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats summary for visitors and views
+     */
+    public void getStatsVisitorsAndViewsSummary(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/visitors_and_views_summary";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+    
+
+    /**
+     * Get a site's stats summary for videos
+     */
+    public void getStatsVideoSummary(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/video_summary";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats summary for comments
+     */
+    public void getStatsCommentsSummary(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/comments_summary";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's stats totals, followers and shares
+     */
+    public void getStatsTotalsFollowersAndShares(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/totals_followers_shares";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+    
+    public void getXL(String path, Map<String, String> params, final Listener listener, final ErrorListener errorListener) {
         path = "https://simulator.xlstudio.com/apis/32/" + path;
 
         final String url_path = path;
@@ -334,7 +385,10 @@ public class WPRestClient {
             }
             
             protected void onPostExecute(JSONObject result) {
-                listener.onResponse(result);
+                if (result != null)
+                    listener.onResponse(result);
+                else
+                    errorListener.onErrorResponse(new VolleyError("JSONObject null"));
             };
             
         }.execute();

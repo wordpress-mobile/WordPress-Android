@@ -17,8 +17,7 @@
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:text="Aggregated Stats for " />
+            android:layout_marginLeft="4dp" />
 
         <View
             android:layout_width="match_parent"
@@ -45,7 +44,7 @@
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="123" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/StatsHeaderTotalsLabel"
@@ -68,7 +67,7 @@
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="150" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/StatsHeaderTotalsLabel"
@@ -91,7 +90,7 @@
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="360" />
+                android:text="0" />
 
             <TextView
                 android:id="@+id/stats_video_summary_playback_length_unit"
@@ -114,7 +113,7 @@
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1.7 GB" />
+                android:text="0 MB" />
 
             <TextView
                 style="@style/StatsHeaderTotalsLabel"

@@ -37,7 +37,7 @@
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1234" />
+                android:text="0" />
 
             <TextView
                 style="@style/StatsHeaderTotalsLabel"
@@ -69,7 +69,7 @@
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/StatsHeaderTotalsLabel"
@@ -95,7 +95,7 @@
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="333" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/StatsHeaderTotalsLabel"
@@ -141,7 +141,7 @@
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="48" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/StatsHeaderTotalsLabel"
@@ -166,7 +166,7 @@
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1003" />
+                    android:text="0" />
 
                 <TextView
                     style="@style/StatsHeaderTotalsLabel"
@@ -204,7 +204,7 @@
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="48" />
+                android:text="0" />
 
             <TextView
                 style="@style/StatsHeaderTotalsLabel"

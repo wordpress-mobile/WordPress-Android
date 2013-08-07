@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +33,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
+import org.wordpress.android.models.StatsCommentsSummary;
 import org.wordpress.android.models.StatsMostCommented;
 import org.wordpress.android.models.StatsTopCommenter;
+import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.StatUtils;
 
 public class StatsCommentsFragment extends StatsAbsListViewFragment implements TabListener {
 
@@ -154,29 +160,6 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         return getString(R.string.stats_view_comments);
     }
 
-    public static class CommentsSummaryFragment extends SherlockFragment {
-        
-        private TextView mPerMonthText;
-        private TextView mTotalText;
-        private TextView mActiveDayText;
-        private TextView mActiveTimeText;
-        private TextView mMostCommentedText;
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
-            
-            mPerMonthText = (TextView) view.findViewById(R.id.stats_comments_summary_per_month_count);
-            mTotalText = (TextView) view.findViewById(R.id.stats_comments_summary_total_count);
-            mActiveDayText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_day_text);
-            mActiveTimeText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_time_text);
-            mMostCommentedText = (TextView) view.findViewById(R.id.stats_comments_summary_most_commented_text);
-            
-            return view;
-        }
-        
-    }
-
     @Override
     public String[] getTabTitles() {
         return TITLES;
@@ -275,5 +258,119 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         }
     }
     
+    /** Fragment used for summary view **/
+    public static class CommentsSummaryFragment extends SherlockFragment {
+        
+        private TextView mPerMonthText;
+        private TextView mTotalText;
+        private TextView mActiveDayText;
+        private TextView mActiveTimeText;
+        private TextView mMostCommentedText;
+        
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
+            
+            mPerMonthText = (TextView) view.findViewById(R.id.stats_comments_summary_per_month_count);
+            mTotalText = (TextView) view.findViewById(R.id.stats_comments_summary_total_count);
+            mActiveDayText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_day_text);
+            mActiveTimeText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_time_text);
+            mMostCommentedText = (TextView) view.findViewById(R.id.stats_comments_summary_most_commented_text);
+            
+            return view;
+        }
+        
+        @Override
+        public void onResume() {
+            super.onResume();
+            refreshStats();
+        }
+
+        protected void refreshStats() {
+            if (WordPress.getCurrentBlog() == null)
+                return; 
+    
+            String blogId = String.valueOf(WordPress.getCurrentBlog());
+            
+            new AsyncTask<String, Void, StatsCommentsSummary>() {
+    
+                @Override
+                protected StatsCommentsSummary doInBackground(String... params) {
+                    final String blogId = params[0];
+                    
+                    StatsCommentsSummary stats = StatUtils.getCommentsSummary(blogId);
+                    if (stats == null || StatUtils.isDayOld(stats.getDate())) {
+                        refreshStatsFromServer(blogId);
+                    }
+                    
+                    return stats;
+                }
+                
+                protected void onPostExecute(StatsCommentsSummary result) {
+                    refreshSummaryViews(result);
+                };
+            }.execute(blogId);
+        }
+
+
+        private void refreshStatsFromServer(final String blogId) {
+            WordPress.restClient.getStatsCommentsSummary(blogId, 
+                    new Listener() {
+                        
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            StatUtils.saveCommentsSummary(blogId, response);
+                            if (getActivity() != null)
+                                getActivity().runOnUiThread(new Runnable() {
+                                    
+                                    @Override
+                                    public void run() {
+                                        refreshStats();
+                                        
+                                    }
+                                });
+                        }
+                    }, 
+                    new ErrorListener() {
+                        
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+                            
+                        }
+                    });
+        }
+        
+        protected void refreshSummaryViews(StatsCommentsSummary result) {
+    
+            int perMonth = 0;
+            int total = 0;
+            String activeDay = "";
+            String activeTime = "";
+            String activePost = "";
+            String activePostUrl = "";
+            
+            if (result != null) {
+                perMonth = result.getCommentsPerMonth();
+                total = result.getCommentsTotal();
+                activeDay = result.getRecentMostActiveDay();
+                activeTime = result.getRecentMostActiveTime();
+                activePost = result.getRecentMostActivePost();
+                activePostUrl = result.getRecentMostActivePostUrl();
+            }
+    
+
+            mPerMonthText.setText(perMonth + "");
+            mTotalText.setText(total + "");
+            mActiveDayText.setText(activeDay);
+            mActiveTimeText.setText(activeTime);
+            
+            Spanned link = Html.fromHtml("<a href=\"" + activePostUrl + "\">" + activePost + "</a>");
+            mMostCommentedText.setText(link);
+            mMostCommentedText.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
+        
+    }
     
 }
