@@ -231,7 +231,7 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
             JSONObject response = (JSONObject) params[1];
             int position = (Integer) params[2];
             
-            if (response.has("result")) {
+            if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
                     

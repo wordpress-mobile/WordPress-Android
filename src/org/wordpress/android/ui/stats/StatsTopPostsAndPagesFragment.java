@@ -158,7 +158,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  imp
             
             Context context = WordPress.getContext();
             
-            if (response.has("result")) {
+            if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
                     for (int i = 0; i < results.length(); i++ ) {
