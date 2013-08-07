@@ -24,6 +24,10 @@ import org.wordpress.android.util.Utils;
 
 public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener {
 
+    private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
+    
+    private int mSelectedButtonIndex = 0;
+    
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
     protected FragmentStatePagerAdapter mAdapter;
@@ -40,8 +44,16 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
             initPhoneLayout(view);
         }
         
+        restoreState(savedInstanceState);
         
         return view;
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState == null)
+            return;
+        
+        mSelectedButtonIndex = savedInstanceState.getInt(SELECTED_BUTTON_INDEX);
     }
 
     private void initTabletLayout(View view) {
@@ -63,7 +75,8 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
             rg.addView(rb);
-            if (i == 0)
+            
+            if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
         
@@ -74,7 +87,7 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        // TODO
+        mSelectedButtonIndex  = group.indexOfChild(group.findViewById(checkedId));
     }
     
     private void initPhoneLayout(View view) {
@@ -108,12 +121,6 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
-    public abstract FragmentStatePagerAdapter getAdapter();
-
-    public abstract String[] getTabTitles();
-
-    protected abstract Fragment getFragment(int position);
-    
     private float dpToPx(int dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }    
@@ -125,6 +132,18 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
             refresh(i);
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
+    }
     
+    public abstract FragmentStatePagerAdapter getAdapter();
+
+    public abstract String[] getTabTitles();
+
+    protected abstract Fragment getFragment(int position);
+        
     public abstract void refresh(int position);
 }
