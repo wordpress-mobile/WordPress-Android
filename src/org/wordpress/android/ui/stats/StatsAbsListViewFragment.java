@@ -81,7 +81,7 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         }
         
         Fragment fragment = getFragment(0);
-        getChildFragmentManager().beginTransaction().add(R.id.stats_pager_container, fragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment).commit();
         
     }
 
