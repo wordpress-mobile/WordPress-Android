@@ -69,7 +69,8 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
     protected Fragment getFragment(int position) {
         int entryLabelResId = R.string.stats_entry_search_engine_terms;
         int totalsLabelResId = R.string.stats_totals_views;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_SEARCH_ENGINE_TERMS_URI, entryLabelResId, totalsLabelResId);
+        int emptyLabelResId = R.string.stats_empty_search_engine_terms;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_SEARCH_ENGINE_TERMS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }

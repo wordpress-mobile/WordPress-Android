@@ -53,8 +53,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
         
         int entryLabelResId = R.string.stats_entry_tags_and_categories;
         int totalsLabelResId = R.string.stats_totals_views;
-
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId);
+        int emptyLabelResId = R.string.stats_empty_tags_and_categories;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
 
         FragmentTransaction ft = fm.beginTransaction();

@@ -79,7 +79,8 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
         if (position < 2) {
             int entryLabelResId = R.string.stats_entry_video_plays;
             int totalsLabelResId = R.string.stats_totals_plays;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId);
+            int emptyLabelResId = R.string.stats_empty_video;
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             return fragment;
         } else {

@@ -117,7 +117,8 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
     protected Fragment getFragment(int position) {
         int entryLabelResId = R.string.stats_entry_clicks_url;
         int totalsLabelResId = R.string.stats_totals_clicks;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_CLICKS_URI, entryLabelResId, totalsLabelResId);
+        int emptyLabelResId = R.string.stats_empty_clicks;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_CLICKS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }

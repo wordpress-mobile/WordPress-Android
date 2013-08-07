@@ -73,7 +73,8 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
     protected Fragment getFragment(int position) {
         int entryLabelResId = R.string.stats_entry_referrers;
         int totalsLabelResId = R.string.stats_totals_views;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_REFERRERS_URI, entryLabelResId, totalsLabelResId);
+        int emptyLabelResId = R.string.stats_empty_referrers;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_REFERRERS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }

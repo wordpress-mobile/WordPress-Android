@@ -70,7 +70,8 @@ public class StatsTopAuthorsFragment extends StatsAbsListViewFragment  implement
     protected Fragment getFragment(int position) {
         int entryLabelResId = R.string.stats_entry_authors;
         int totalsLabelResId = R.string.stats_totals_views;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_AUTHORS_URI, entryLabelResId, totalsLabelResId);
+        int emptyLabelResId = R.string.stats_empty_top_authors;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_AUTHORS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }

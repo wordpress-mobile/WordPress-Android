@@ -72,7 +72,8 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
     protected Fragment getFragment(int position) {
         int entryLabelResId = R.string.stats_entry_country;
         int totalsLabelResId = R.string.stats_totals_views;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_GEOVIEWS_URI, entryLabelResId, totalsLabelResId);
+        int emptyLabelResId = R.string.stats_empty_geoviews;
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_GEOVIEWS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }

@@ -9,6 +9,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +28,20 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private static final String ARGS_URI = "ARGS_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
+    private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
     
     private TextView mEntryLabel;
     private TextView mTotalsLabel;
+    private TextView mEmptyLabel;
     private ListView mListView;
     private LinearLayout mLinearLayout;
 
     private CursorAdapter mAdapter;
     private ContentObserver mContentObserver = new MyObserver(new Handler());
 
-    public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId) {
+    public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
         
         StatsCursorFragment fragment = new StatsCursorFragment();
         
@@ -46,6 +49,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         args.putString(ARGS_URI, uri.toString());
         args.putInt(ARGS_ENTRY_LABEL, entryLabelResId);
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
+        args.putInt(ARGS_EMPTY_LABEL, emptyLabelResId);
         fragment.setArguments(args);
         
         return fragment;
@@ -63,6 +67,9 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         mEntryLabel.setText(getEntryLabelResId());
         mTotalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
         mTotalsLabel.setText(getTotalsLabelResId());
+        mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
+        mEmptyLabel.setText(Html.fromHtml(getString(getEmptyLabelResId())));
+        configureEmptyLabel();
         
         if (isTablet()) {
             mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
@@ -84,6 +91,10 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         return getArguments().getInt(ARGS_TOTALS_LABEL);
     }
 
+    private int getEmptyLabelResId() {
+        return getArguments().getInt(ARGS_EMPTY_LABEL);
+    }
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -100,6 +111,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (mAdapter != null)
             mAdapter.swapCursor(data);
+        configureEmptyLabel();
         if (isTablet()) {
             reloadLinearLayout();
         }
@@ -109,6 +121,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     public void onLoaderReset(Loader<Cursor> loader) {
         if (mAdapter != null)
             mAdapter.swapCursor(null);
+        configureEmptyLabel();
         if (isTablet()) {
             reloadLinearLayout();
         }
@@ -165,5 +178,12 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     
     private boolean isTablet() {
         return Utils.isTablet();
+    }
+
+    private void configureEmptyLabel() {
+        if (mAdapter == null || mAdapter.getCount() == 0)
+            mEmptyLabel.setVisibility(View.VISIBLE);
+        else
+            mEmptyLabel.setVisibility(View.GONE);
     }
 }

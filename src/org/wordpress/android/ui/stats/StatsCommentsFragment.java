@@ -36,7 +36,6 @@ import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.models.StatsCommentsSummary;
 import org.wordpress.android.models.StatsMostCommented;
 import org.wordpress.android.models.StatsTopCommenter;
-import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
@@ -84,16 +83,17 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
 
     @Override
     protected Fragment getFragment(int position) {
+        int emptyLabelResId = R.string.stats_empty_comments;
         if (position == 0) {
             int entryLabelResId = R.string.stats_entry_top_commenter;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
             return fragment;
         } else if (position == 1) {
             int entryLabelResId = R.string.stats_entry_most_commented;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {

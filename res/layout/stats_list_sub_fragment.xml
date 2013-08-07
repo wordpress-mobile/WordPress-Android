@@ -51,7 +51,7 @@
     <ListView
         android:id="@+id/stats_list_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:listSelector="@android:color/transparent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -59,4 +59,10 @@
         android:visibility="gone" >
     </ListView>
 
+    <TextView 
+        android:id="@+id/stats_list_empty_text"
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 </LinearLayout>
