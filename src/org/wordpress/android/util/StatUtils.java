@@ -60,24 +60,10 @@ public class StatUtils {
         return sdf.format(new Date());
     }
     
-    /** Parses date into form MMMMM d, yyyy (e.g. June 13, 2013) from timestamp of the form yyyy-MM-dd HH:mm (e.g. 2013-07-13 13:01) **/
+    /** Parses date into form MMMMM d, yyyy (e.g. July 13, 2013) from timestamp of the form yyyy-MM-dd (e.g. 2013-07-13) **/
     public static String parseDate(String timestamp) {
-        SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat to = new SimpleDateFormat("MMMMM d, yyyy");
-        try {
-            Date date = from.parse(timestamp);
-            return to.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    
-
-    /** Parses time in the form HH:mm (e.g. 13:01) from timestamp of the form yyyy-MM-dd HH:mm (e.g. 2013-07-13 13:01) **/
-    public static String parseTime(String timestamp) {
-        SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        SimpleDateFormat to = new SimpleDateFormat("HH:mm");
         try {
             Date date = from.parse(timestamp);
             return to.format(date);
@@ -282,9 +268,8 @@ public class StatUtils {
             String recentMostActivePostUrl = object.getString("recent_most_active_post_url");
             String date = object.getString("date");
 
-            String recentMostActiveTimestamp = object.getString("recent_most_active_timestamp");
-            String recentMostActiveDay = parseDate(recentMostActiveTimestamp);
-            String recentMostActiveTime = parseTime(recentMostActiveTimestamp);
+            String recentMostActiveDay = parseDate(object.getString("recent_most_active_date"));
+            String recentMostActiveTime = object.getString("recent_most_active_time");
             
             stat = new StatsCommentsSummary(commentsPerMonth, commentsTotal, recentMostActiveDay, recentMostActiveTime, recentMostActivePost, recentMostActivePostUrl, date);
             
