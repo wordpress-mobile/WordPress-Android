@@ -1257,7 +1257,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 String imgPath = imageUri.toString();
                 Log.e("picasa", imgPath);
                 verifyImage(imageUri);
-                addMedia(imgPath, imageUri);
+                //addMedia(imgPath, imageUri);
                 break;
             case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {

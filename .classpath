@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="libs/httpmime-4.1.2.jar"/>
-	<classpathentry kind="lib" path="libs/tagsoup-1.2.1.jar"/>
-	<classpathentry kind="lib" path="libs/gson-2.2.2.jar"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="/ActionBarSherlock/libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/httpmime-4.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tagsoup-1.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/gson-2.2.2.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="libs/volley.jar"/>
-	<classpathentry kind="lib" path="libs/gcm.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/volley.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/gcm.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/star/adt-bundle-linux-x86_64/wordpress/libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/star/adt-bundle-linux-x86_64/wordpress/libs/wordpresscom-android-rest-v0.0.3.jar"/>
+	<classpathentry exported="true" kind="src" path="/actionbarsherlock"/>
+	<classpathentry exported="true" kind="src" path="/library"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry exported="true" kind="lib" path="/home/star/adt-bundle-linux-x86_64/commons-net-3.3/commons-net-3.3.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
