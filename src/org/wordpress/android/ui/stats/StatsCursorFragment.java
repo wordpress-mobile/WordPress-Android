@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Utils;
 
 public class StatsCursorFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -103,7 +104,8 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, null, null, null);
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
         return cursorLoader;
     }
 

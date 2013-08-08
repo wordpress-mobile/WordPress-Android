@@ -286,7 +286,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 if (response != null && response.has("result")) {
                     try {
                         JSONArray results = response.getJSONArray("result");
-                        for (int i = 0; i < results.length(); i++ ) {
+                        
+                        int count = results.length();
+                        
+                        // delete old stats and insert new ones
+                        if (count > 0)
+                            context.getContentResolver().delete(uri, "blogId=?", new String[] { blogId });
+                        
+                        for (int i = 0; i < count; i++ ) {
                             JSONObject result = results.getJSONObject(i);
                             
                             ContentValues values = null;
@@ -303,8 +310,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                                 values = StatsBarChartMonthsTable.getContentValues(stat);
                             }
                             
-                            if (values != null && uri != null)
+                            if (values != null && uri != null) {
                                 context.getContentResolver().insert(uri, values);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
