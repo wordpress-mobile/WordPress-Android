@@ -3,7 +3,6 @@ package org.wordpress.android.ui.themes;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,9 +76,9 @@ public class ThemeTabAdapter extends CursorAdapter {
     // Then we'll determine the height based on the width and the 0.75 ratio
     
     private int getGridWidth(Context context) {
-        // Padding is 12 dp between the grid columns and on the outside
+        // Padding is 4 dp between the grid columns and on the outside
         int columnCount = getColumnCount(context);
-        int dp4 = (int) dpToPx(context, 4);
+        int dp4 = (int) Utils.dpToPx(4);
         int padding = (columnCount + 1) * dp4;
         
         // the max width of the themes is either:
@@ -103,9 +102,5 @@ public class ThemeTabAdapter extends CursorAdapter {
     static class ViewHolder {
         String requestURL;
     }
-
-    private float dpToPx(Context context, int dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-   }
     
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -49,4 +49,13 @@ public class Utils {
     public static boolean isTablet() {
         return WordPress.getContext().getResources().getInteger(R.integer.isTablet) == 1;
     }
+    
+    public static float dpToPx(float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, WordPress.getContext().getResources().getDisplayMetrics());
+    }
+    
+    public static float spToPx(float sp) {
+        float scaledDensity = WordPress.getContext().getResources().getDisplayMetrics().scaledDensity;
+        return sp * scaledDensity;
+   }
 }

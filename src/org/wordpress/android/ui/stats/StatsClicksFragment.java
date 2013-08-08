@@ -57,13 +57,12 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = getTabTitles();
-            return titles[position];
+            return TITLES[position];
         }
         
     }

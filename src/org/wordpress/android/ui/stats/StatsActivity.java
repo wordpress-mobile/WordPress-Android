@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.stats;
 
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private TextView mCommentsTotalText;
     private TextView mFavsTotalText;
     private TextView mReblogTotalText;
+
+    private View mStatsHeader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,12 +87,26 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
 
+        mStatsHeader = findViewById(R.id.stats_header);
+        hideHeaderIfLandscape();
+        
         mViewsTotalText = (TextView) findViewById(R.id.stats_header_views_total);
         mCommentsTotalText = (TextView) findViewById(R.id.stats_header_comments_total);
         mFavsTotalText = (TextView) findViewById(R.id.stats_header_favs_total);
         mReblogTotalText = (TextView) findViewById(R.id.stats_header_reblog_total);
         
         refreshStats();
+    }
+
+    private void hideHeaderIfLandscape() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        if (point.y < point.x) {
+            mStatsHeader.setVisibility(View.GONE);
+        } else {
+            mStatsHeader.setVisibility(View.VISIBLE);
+        }
     }
 
     private void restoreState(Bundle savedInstanceState) {

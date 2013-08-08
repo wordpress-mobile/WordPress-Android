@@ -9,10 +9,52 @@
         android:orientation="vertical"
         android:padding="16dp" >
 
-        <ImageView
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center_vertical"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp" >
+
+            <View
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@color/stats_bar_graph_views"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:paddingLeft="8dp"
+                android:paddingRight="16dp"
+                android:text="@string/stats_totals_views"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@color/stats_bar_graph_visitors"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/stats_totals_visitors"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/stats_visitors_and_views_bar_graph_layout"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:src="@drawable/new_account_logo" />
+            android:layout_height="128dp"
+            android:orientation="vertical" />
 
         <TextView
             style="@style/StatsHeader"

@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/stats_phone_icon_comment"
-                android:drawablePadding="8dp"
+                android:drawablePadding="4dp"
                 android:text="0"
                 android:textSize="17sp" />
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:drawableLeft="@drawable/stats_phone_icon_fav"
-                android:drawablePadding="8dp"
+                android:drawablePadding="4dp"
                 android:text="0"
                 android:textSize="17sp" />
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:drawableLeft="@drawable/stats_phone_icon_reblog"
-                android:drawablePadding="8dp"
+                android:drawablePadding="4dp"
                 android:text="0"
                 android:textSize="17sp" />
         </LinearLayout>

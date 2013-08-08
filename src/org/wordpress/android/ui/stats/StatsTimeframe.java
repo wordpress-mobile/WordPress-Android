@@ -12,7 +12,11 @@ public enum StatsTimeframe {
     MONTH(R.string.stats_timeframe_month),
     QUARTER(R.string.stats_timeframe_quarter),
     YEAR(R.string.stats_timeframe_year),
-    ALL_TIME(R.string.stats_timeframe_all_time), ;
+    ALL_TIME(R.string.stats_timeframe_all_time),
+    DAYS(R.string.stats_timeframe_days),
+    WEEKS(R.string.stats_timeframe_weeks),
+    MONTHS(R.string.stats_timeframe_months),
+    ;
 
     private int mLabelResId;
 

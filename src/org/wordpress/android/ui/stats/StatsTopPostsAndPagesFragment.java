@@ -59,7 +59,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  imp
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override

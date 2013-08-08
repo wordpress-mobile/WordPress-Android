@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.Utils;
 
 public class HorizontalTabView extends HorizontalScrollView implements OnClickListener {
 
@@ -71,11 +72,11 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         tab.setPosition(mTabs.size());
         mTabs.add(tab);
         
-        int divWidth = (int) dpToPx(1);
-        int divTopMargin = (int) dpToPx(12);
-        int divHeight = (int) dpToPx(24);
+        int divWidth = (int) Utils.dpToPx(1);
+        int divTopMargin = (int) Utils.dpToPx(12);
+        int divHeight = (int) Utils.dpToPx(24);
         
-        int tabPad = (int) dpToPx(16);
+        int tabPad = (int) Utils.dpToPx(16);
         
         int fontSizeSp = 12;
         
@@ -229,10 +230,6 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
 
         mSelectedLayout = (LinearLayout)layout;
         mSelectedLayout.setSelected(true);
-    }
-    
-    private float dpToPx(int dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getContext().getResources().getDisplayMetrics());
     }
     
 }

@@ -55,7 +55,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override

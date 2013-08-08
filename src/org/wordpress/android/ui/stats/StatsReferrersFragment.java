@@ -59,7 +59,7 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override

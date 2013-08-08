@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            int dp4 = (int) dpToPx(4);
+            int dp4 = (int) Utils.dpToPx(4);
             params.setMargins(dp4, 0, dp4, 0);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
@@ -120,10 +119,6 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     public void onTabSelected(Tab tab) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
-
-    private float dpToPx(int dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
-    }    
     
     @Override
     public void refresh() {

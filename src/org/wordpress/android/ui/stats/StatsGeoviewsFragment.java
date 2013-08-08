@@ -58,7 +58,7 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override

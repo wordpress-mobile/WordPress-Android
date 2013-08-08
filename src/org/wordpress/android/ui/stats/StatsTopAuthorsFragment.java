@@ -56,7 +56,7 @@ public class StatsTopAuthorsFragment extends StatsAbsListViewFragment  implement
 
         @Override
         public int getCount() {
-            return 2;
+            return TITLES.length;
         }
         
         @Override
