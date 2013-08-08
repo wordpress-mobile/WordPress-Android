@@ -1623,6 +1623,8 @@ public class WordPressDB {
         int categoryID = 0;
         categoryID = c.getInt(0);
 
+        c.close();
+
         return categoryID;
     }
 
@@ -1634,6 +1636,8 @@ public class WordPressDB {
             return -1;
         c.moveToFirst();
         int categoryParentID = c.getInt(0);
+
+        c.close();
 
         return categoryParentID;
     }
