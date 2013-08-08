@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:paddingTop="16dp" >
 
         <TextView
@@ -30,20 +30,13 @@
             android:text="VIEWS" />
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/wordpress_blue" />
+    <include layout="@layout/stats_header_line" />
 
     <LinearLayout
         android:id="@+id/stats_list_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:scrollbarStyle="outsideOverlay"
         android:visibility="gone" >
     </LinearLayout>
@@ -53,16 +46,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:listSelector="@android:color/transparent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:scrollbarStyle="outsideOverlay"
         android:visibility="gone" >
     </ListView>
 
-    <TextView 
+    <TextView
         android:id="@+id/stats_list_empty_text"
-        android:padding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:padding="16dp"
+        android:visibility="gone" />
+
 </LinearLayout>

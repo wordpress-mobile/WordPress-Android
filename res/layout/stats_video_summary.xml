@@ -19,10 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wordpress_blue" />
+        <include layout="@layout/stats_header_line"/>
 
         <LinearLayout
             android:layout_width="match_parent"

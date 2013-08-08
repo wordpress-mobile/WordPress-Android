@@ -64,10 +64,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/stats_visitors_and_views_header_title" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wordpress_blue" />
+        <include layout="@layout/stats_header_line" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,10 +128,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/stats_visitors_and_views_header_best_ever" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wordpress_blue" />
+        <include layout="@layout/stats_header_line" />
 
         <RelativeLayout
             style="@style/StatsWhiteBackground"
@@ -166,10 +160,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/stats_visitors_and_views_header_all_time" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/wordpress_blue" />
+        <include layout="@layout/stats_header_line" />
 
         <LinearLayout
             android:layout_width="match_parent"
