@@ -14,7 +14,6 @@ public class Theme {
     
     private String themeId = null;
     private String screenshotURL = "";
-    private int price = 0;
     private String name = "";
     private String description = "";
     private int trendingRank = 0;
@@ -29,10 +28,9 @@ public class Theme {
         
     }
 
-    public Theme(String themeId, String screenshotURL, int price, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL) {
+    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL) {
         setThemeId(themeId);
         setScreenshotURL(screenshotURL);
-        setPrice(price);
         setName(name);
         setDescription(description);
         setTrendingRank(trendingRank);
@@ -56,14 +54,6 @@ public class Theme {
 
     public void setScreenshotURL(String screenshotURL) {
         this.screenshotURL = screenshotURL;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public String getName() {
@@ -140,7 +130,6 @@ public class Theme {
         
         String themeId = object.getString("id");
         String screenshotURL = object.getString("screenshot") ;
-        int price = object.getInt("price");
         String name = object.getString("name");
         String description = object.getString("description");
         int trendingRank = object.getInt("trending_rank");
@@ -152,7 +141,7 @@ public class Theme {
         // if the theme is not free, set the blogId to the current blog
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        return new Theme(themeId, screenshotURL, price, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL);        
+        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL);        
     }
 
     public void setIsCurrentTheme(boolean isCurrentTheme) {

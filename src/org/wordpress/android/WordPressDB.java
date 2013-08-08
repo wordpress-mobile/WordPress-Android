@@ -61,7 +61,7 @@ public class WordPressDB {
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "themeId text, name text, description text, screenshotURL text, price integer default 0, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrentTheme boolean default false);";
+            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrentTheme boolean default false);";
     
     // eula
     private static final String EULA_TABLE = "eula";
@@ -2181,7 +2181,6 @@ public class WordPressDB {
         values.put("name", theme.getName());
         values.put("description", theme.getDescription());
         values.put("screenshotURL", theme.getScreenshotURL());
-        values.put("price", theme.getPrice());
         values.put("trendingRank", theme.getTrendingRank());
         values.put("popularityRank", theme.getPopularityRank());
         values.put("launchDate", theme.getLaunchDateMs());
