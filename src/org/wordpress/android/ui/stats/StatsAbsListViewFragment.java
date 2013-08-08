@@ -82,14 +82,18 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
                 rb.setChecked(true);
         }
         
-        Fragment fragment = getFragment(0);
-        getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment).commit();
-        
+        loadFragmentIndex(mSelectedButtonIndex);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         mSelectedButtonIndex  = group.indexOfChild(group.findViewById(checkedId));
+        loadFragmentIndex(mSelectedButtonIndex);
+    }
+    
+    private void loadFragmentIndex(int index) {
+        Fragment fragment = getFragment(index);
+        getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment).commit();
     }
     
     private void initPhoneLayout(View view) {
