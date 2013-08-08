@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,8 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
             int dp4 = (int) Utils.dpToPx(4);
             params.setMargins(dp4, 0, dp4, 0);
+            rb.setMinimumWidth((int) Utils.dpToPx(100));
+            rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
             rg.addView(rb);

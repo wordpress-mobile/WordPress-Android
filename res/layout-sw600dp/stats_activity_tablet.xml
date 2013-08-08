@@ -10,10 +10,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <!-- <fragment -->
-        <!-- android:id="@+id/statsGraphFragment" -->
-        <!-- android:layout_width="match_parent" -->
-        <!-- android:layout_height="wrap_content" /> -->
+        <FrameLayout
+            android:id="@+id/stats_visitors_and_views_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/stats_row_container"

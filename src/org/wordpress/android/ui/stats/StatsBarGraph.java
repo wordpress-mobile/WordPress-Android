@@ -10,7 +10,6 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.Utils;
 
 /**
  * Based on BarGraph from the GraphView library. 
@@ -26,10 +25,29 @@ public class StatsBarGraph extends GraphView {
 	private void setProperties() {
         getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
         getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-        getGraphViewStyle().setTextSize(Utils.spToPx(8));
+        getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
         getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
         getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
         getGraphViewStyle().setNumVerticalLabels(6);
+
+        setCustomLabelFormatter(new CustomLabelFormatter() {
+
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if(isValueX)
+                    return null;
+                
+                if (value < 1000) {
+                    return null;
+                } else if (value < 1000000) { // thousands
+                    return Math.round(value / 1000) + "K";
+                } else if (value < 1000000000) { // millions
+                    return Math.round(value / 1000000) + "M";
+                } else {
+                    return null;
+                }
+            }
+        });
     }
 
     @Override
@@ -64,25 +82,6 @@ public class StatsBarGraph extends GraphView {
 			
 			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
 		}
-		
-		setCustomLabelFormatter(new CustomLabelFormatter() {
-
-			@Override
-			public String formatLabel(double value, boolean isValueX) {
-				if(isValueX)
-					return null;
-				
-				if (value < 1000) {
-					return null;
-				} else if (value < 1000000) { // thousands
-					return (value / 1000) + "K";
-				} else if (value < 1000000000) { // millions
-					return (value / 1000000) + "M";
-				} else {
-					return null;
-				}
-			}
-		});
 	}
 
 	@Override

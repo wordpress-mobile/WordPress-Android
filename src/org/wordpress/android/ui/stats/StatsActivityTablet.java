@@ -47,6 +47,11 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         StatsAbsViewFragment fragment;
         
+        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
+            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+        }
+        
         if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);

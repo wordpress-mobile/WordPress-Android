@@ -49,6 +49,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
     private static final String[] TITLES = new String [] { StatsTimeframe.DAYS.getLabel(), StatsTimeframe.WEEKS.getLabel(), StatsTimeframe.MONTHS.getLabel() };
 
+    public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
+    
     @Override
     public FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
