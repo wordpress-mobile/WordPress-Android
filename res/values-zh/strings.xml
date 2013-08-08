@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="notifications_turn_off">关闭</string>
-	<string name="notifications_turn_off_1hr">关闭 1 小时</string>
-	<string name="notifications_turn_off_8hr">关闭 8 小时</string>
-	<string name="tap_to_reply">轻按可回复</string>
-	<string name="notification_replying">正在发表回复</string>
-	<string name="note_reply_successful">回复已发表</string>
-	<string name="follow">关注</string>
-	<string name="unfollow">取消关注</string>
-	<string name="new_notifications">%d 条新通知</string>
-	<string name="more_notifications">以及其他 %d 人。</string>
-	<string name="tap_to_view">轻按可查看。</string>
-	<string name="moderate_comment">管理评论</string>
-	<string name="tooltip_follow">关注或取消关注该博客</string>
-	<string name="error_following_blog">抱歉，尝试关注该博客时发生了一个错误。请稍候再试。</string>
+	<string name="category">分类</string>
+	<string name="remote_changes">您所修改的博文尚未上传。是否继续刷新操作，并覆盖本地改动?</string>
+	<string name="upload">上传</string>
+	<string name="error_load_comment">抱歉，无法加载评论。请稍后再试。</string>
+	<string name="manage">管理</string>
+	<string name="dashboard_tip">轻按返回键可回到应用界面。</string>
+	<string name="discard">舍弃</string>
+	<string name="prompt_save_changes">是否希望保存您的更改?</string>
+	<string name="retry_reply">回复失败。轻按可重试。</string>
+	<string name="reply_failed">回复失败。</string>
+	<string name="tap_retry">轻按可重试。</string>
+	<string name="error_parsing_response">抱歉，装取数据时发生了一个错误。请稍后再试。</string>
 	<string name="sure_sign_out">你确定要从 WordPress.com 退出登录吗?</string>
 	<string name="sign_out_confirm">你确定要退出吗?</string>
 	<string name="please_sign_in">请再次登录。</string>
@@ -29,6 +27,20 @@
 	<string name="enable_notifications">启用通知</string>
 	<string name="types">类型</string>
 	<string name="options">选项</string>
+	<string name="notifications_turn_off">关闭</string>
+	<string name="notifications_turn_off_1hr">关闭 1 小时</string>
+	<string name="notifications_turn_off_8hr">关闭 8 小时</string>
+	<string name="tap_to_reply">轻按可回复</string>
+	<string name="notification_replying">正在发表回复</string>
+	<string name="note_reply_successful">回复已发表</string>
+	<string name="follow">关注</string>
+	<string name="unfollow">取消关注</string>
+	<string name="new_notifications">%d 条新通知</string>
+	<string name="more_notifications">以及其他 %d 人。</string>
+	<string name="tap_to_view">轻按可查看。</string>
+	<string name="moderate_comment">管理评论</string>
+	<string name="tooltip_follow">关注或取消关注该博客</string>
+	<string name="error_following_blog">抱歉，尝试关注该博客时发生了一个错误。请稍候再试。</string>
 	<string name="add_comment_send">发送评论</string>
 	<string name="add_comment_enter">输入评论:</string>
 	<string name="comment_added">评论已成功添加</string>
@@ -77,6 +89,7 @@
 	<string name="out_of_memory">设备内存已满。</string>
 	<string name="file_not_found">无法找到要上传的媒体文件。是不是已经删除或移动到其他地方了?</string>
 	<string name="featured">用作精选图像</string>
+	<string name="featured_in_post">在博文内容中包含图像</string>
 	<string name="no_blogs_message">该账号下不存在 %s 博客。</string>
 	<string name="additional">其他</string>
 	<string name="add_all">添加所有</string>
@@ -90,7 +103,6 @@
 	<string name="caption">说明 (可选)</string>
 	<string name="no_site_error">抱歉，无法连接到 WordPress 网站。请稍后再试。</string>
 	<string name="width">宽度</string>
-	<string name="featured_in_post">在博文内容中包含图像</string>
 	<string name="posts">博文</string>
 	<string name="anonymous">匿名</string>
 	<string name="no_blogs_found">未找到博客</string>
@@ -109,7 +121,6 @@
 	<string name="ok">确定</string>
 	<string name="sure_to_cancel_edit_comment">是否确定要取消编辑该评论?</string>
 	<string name="xmlrpc_error">无法连接。请输入您网站上 xmlrpc.php 的完整路径再试。</string>
-	<string name="remote_changes">您有尚未保存的更改。继续刷新并覆盖修改？</string>
 	<string name="local_changes">本地修改</string>
 	<string name="upload_scaled_image">上传并创建缩略图链接</string>
 	<string name="scaled_image_error">请输入有效的缩放宽度值</string>
@@ -159,8 +170,8 @@
 	<string name="invalid_url_message">请检查所输博客 URL 是否有效。</string>
 	<string name="view_in_browser">在浏览器中查看</string>
 	<string name="untitled">无标题</string>
-	<string name="empty_fields">未找到内容</string>
 	<string name="title_post_required">请输入一些博文内容或附加媒体对象。</string>
+	<string name="empty_fields">未找到内容</string>
 	<string name="edit">编辑</string>
 	<string name="post_id">文章</string>
 	<string name="page_id">页面</string>
@@ -187,14 +198,15 @@
 	<string name="load_settings">立即加载设置？</string>
 	<string name="invalid_login">登录信息错误</string>
 	<string name="site_not_found">或者站点未找到。</string>
-	<string name="new_to_wp">在 WordPress.com 新建一个博客</string>
 	<string name="url_username_password_required">请填写所有字段后再提交。</string>
+	<string name="new_to_wp">在 WordPress.com 新建一个博客</string>
 	<string name="view_comment_from">评论作者</string>
 	<string name="stats_password">密码</string>
 	<string name="stats_username">用户名</string>
+	<string name="username_password_required">“用户名”与“密码”为必填字段。</string>
 	<string name="title">标题</string>
 	<string name="tags_separate_with_commas">标签（多个标签请以英文逗号“,”隔开）</string>
-	<string name="username_password_required">“用户名”与“密码”为必填字段。</string>
+	<string name="categories">分类</string>
 	<string name="moderating_comments">正在审核评论</string>
 	<string name="load_more">加载更多</string>
 	<string name="tab_stats">统计</string>
@@ -215,17 +227,17 @@
 	<string name="notification_vibrate">振动</string>
 	<string name="location_toast">位置数据尚不可用，请稍候。</string>
 	<string name="status">状态</string>
+	<string name="sdcard_message">上传媒体需要已装载的 SD 卡。</string>
 	<string name="location">位置</string>
 	<string name="take_video">拍摄新视频</string>
 	<string name="sdcard_title">需要 SD 卡</string>
 	<string name="select_video">从媒体库选择视频</string>
-	<string name="sdcard_message">上传媒体需要已装载的 SD 卡。</string>
 	<string name="preview_page">查看页面</string>
 	<string name="preview_post">查看文章</string>
 	<string name="account_details">账号详细信息</string>
 	<string name="media">媒体</string>
-	<string name="select_a_blog">选择博客</string>
 	<string name="no_account">未找到 WordPress 账号，请添加一个账号后再试。</string>
+	<string name="select_a_blog">选择博客</string>
 	<string name="adding_cat_failed_check">请检查设置后再试。</string>
 	<string name="adding_cat_success">已成功添加分类。</string>
 	<string name="cat_name_required">“分类名称”必填。</string>
@@ -244,9 +256,9 @@
 	<string name="select_categories">选择分类</string>
 	<string name="blog_removed_successfully">博客已成功移除</string>
 	<string name="remove_account">移除博客</string>
+	<string name="sure_to_remove_account">是否确定要移除该博客?</string>
 	<string name="blogs">博客</string>
 	<string name="could_not_remove_account">无法移除博客。</string>
-	<string name="sure_to_remove_account">是否确定要移除该博客?</string>
 	<string name="select_photo">从媒体库选择照片</string>
 	<string name="take_photo">拍摄新的照片</string>
 	<string name="error">错误</string>
@@ -261,19 +273,24 @@
 	<string name="refreshing_categories">正在刷新分类</string>
 	<string name="attempting_categories_refresh">正在尝试刷新分类</string>
 	<string name="connection_error">连接错误</string>
+	<string name="connection_error_occured">发生连接错误。请稍后再试。</string>
 	<string name="categories_refreshed">分类已刷新</string>
 	<string name="category_refresh_error">分类刷新错误</string>
 	<string name="cancel_edit">取消编辑</string>
+	<string name="sure_to_cancel_edit">是否确定要取消编辑该博文?</string>
 	<string name="new_account">新建账号</string>
 	<string name="tab_comments">评论</string>
 	<string name="tab_posts">文章</string>
 	<string name="tab_pages">页面</string>
+	<string name="sure_to_cancel_edit_page">是否确定要取消编辑该页面?</string>
 	<string name="new_page">新页面</string>
 	<string name="local_drafts">本地草稿</string>
 	<string name="new_post">新文章</string>
 	<string name="reply_enter">输入回复：</string>
 	<string name="reply_send">发送回复</string>
 	<string name="reply_to_comment">回复评论</string>
+	<string name="reply_please_enter">请在回复字段输入一些内容。</string>
+	<string name="preview">预览</string>
 	<string name="on">于</string>
 	<string name="approved">已通过</string>
 	<string name="unapproved">未通过</string>
@@ -297,9 +314,22 @@
 	<string name="publish">发布?</string>
 	<string name="yes">是</string>
 	<string name="no">否</string>
-	<string name="connection_error_occured">发生连接错误。请稍后再试。</string>
-	<string name="sure_to_cancel_edit">是否确定要取消编辑该博文?</string>
-	<string name="sure_to_cancel_edit_page">是否确定要取消编辑该页面?</string>
-	<string name="preview">预览</string>
-	<string name="reply_please_enter">请在回复字段输入一些内容。</string>
+	<string-array name="alignment_array">
+		<item>不对齐</item>
+		<item>居左</item>
+		<item>居中</item>
+		<item>居右</item>
+	</string-array>
+	<string-array name="post_formats_array">
+		<item>笔记</item>
+		<item>音频</item>
+		<item>聊天</item>
+		<item>图库</item>
+		<item>图像</item>
+		<item>链接</item>
+		<item>引用</item>
+		<item>标准</item>
+		<item>状态</item>
+		<item>视频</item>
+	</string-array>
 </resources>
