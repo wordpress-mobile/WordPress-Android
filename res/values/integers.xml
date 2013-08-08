@@ -7,4 +7,5 @@
     <integer name="gone">2</integer>
     <integer name="media_editor_save_button_visibility">@integer/gone</integer>
     <integer name="isTablet">0</integer>
+    <integer name="smallest_width_dp">320</integer>
 </resources>

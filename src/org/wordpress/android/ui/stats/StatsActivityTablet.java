@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -13,9 +15,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.Utils;
 
 public class StatsActivityTablet extends WPActionBarActivity {
 
+    private static final int TABLET_720DP = 720;
+    private static final int TABLET_600DP = 600;
     private LinearLayout mFragmentContainer;
     private LinearLayout mColumnLeft;
     private LinearLayout mColumnRight;
@@ -104,6 +109,23 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         ft.commit();
         
+        if (Utils.getSmallestWidthDP() >= TABLET_720DP || (Utils.getSmallestWidthDP() == TABLET_600DP && isInLandscape()))
+            loadSplitLayout();
+        
+    }
+
+    private boolean isInLandscape() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        if (point.y < point.x) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void loadSplitLayout() {
         FrameLayout frameView;
 
         frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);

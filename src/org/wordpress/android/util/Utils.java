@@ -58,4 +58,8 @@ public class Utils {
         float scaledDensity = WordPress.getContext().getResources().getDisplayMetrics().scaledDensity;
         return sp * scaledDensity;
    }
+    
+    public static int getSmallestWidthDP() {
+        return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
+    }
 }
