@@ -160,7 +160,9 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
             if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
-                    for (int i = 0; i < results.length(); i++ ) {
+
+                    int count = results.length();
+                    for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsGeoview stat = new StatsGeoview(blogId, result);
                         ContentValues values = StatsGeoviewsTable.getContentValues(stat);

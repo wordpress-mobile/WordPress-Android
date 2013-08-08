@@ -95,7 +95,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         mTabView = (HorizontalTabView) findViewById(R.id.horizontalTabView1);
         mTabView.setTabListener(this);
-        for (int i = 0; i < ThemeSortType.values().length; i++) {
+        
+        int count = ThemeSortType.values().length;
+        for (int i = 0; i < count; i++) {
             String title = ThemeSortType.values()[i].getTitle();
 
             mTabView.addTab(mTabView.newTab().setText(title));
@@ -317,7 +319,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
                     if (array != null) {
 
-                        for (int i = 0; i < array.length(); i++) {
+                        int count = array.length();
+                        for (int i = 0; i < count; i++) {
                             JSONObject object = array.getJSONObject(i);
                             Theme theme = Theme.fromJSON(object);
                             theme.save();

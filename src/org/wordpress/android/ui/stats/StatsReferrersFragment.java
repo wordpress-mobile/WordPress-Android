@@ -168,7 +168,9 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
             if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
-                    for (int i = 0; i < results.length(); i++ ) {
+
+                    int count = results.length();
+                    for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsReferrer stat = new StatsReferrer(blogId, result);
                         ContentValues values = StatsReferrersTable.getContentValues(stat);

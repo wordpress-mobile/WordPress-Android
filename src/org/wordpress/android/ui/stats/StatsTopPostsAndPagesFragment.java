@@ -162,7 +162,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  imp
             if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
-                    for (int i = 0; i < results.length(); i++ ) {
+
+                    int count = results.length();
+                    for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsTopPostsAndPages stat = new StatsTopPostsAndPages(blogId, result);
                         ContentValues values = StatsTopPostsAndPagesTable.getContentValues(stat);

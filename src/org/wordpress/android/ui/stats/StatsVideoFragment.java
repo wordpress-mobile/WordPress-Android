@@ -179,7 +179,9 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
             if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
-                    for (int i = 0; i < results.length(); i++ ) {
+
+                    int count = results.length();
+                    for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsVideo stat = new StatsVideo(blogId, result);
                         ContentValues values = StatsVideosTable.getContentValues(stat);

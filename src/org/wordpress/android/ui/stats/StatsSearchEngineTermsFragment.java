@@ -151,7 +151,9 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
             if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
-                    for (int i = 0; i < results.length(); i++ ) {
+
+                    int count = results.length();
+                    for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsSearchEngineTerm stat = new StatsSearchEngineTerm(blogId, result);
                         ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);

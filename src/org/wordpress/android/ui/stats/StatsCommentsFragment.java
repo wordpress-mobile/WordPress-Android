@@ -237,7 +237,8 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
 
             Context context = WordPress.getContext();
             
-            for (int i = 0; i < results.length(); i++ ) {
+            int count = results.length();
+            for (int i = 0; i < count; i++ ) {
                 JSONObject result = results.getJSONObject(i);
                 StatsTopCommenter stat = new StatsTopCommenter(blogId, result);
                 ContentValues values = StatsTopCommentersTable.getContentValues(stat);
@@ -248,8 +249,9 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         private void parseMostCommented(String blogId, JSONArray results) throws JSONException {
 
             Context context = WordPress.getContext();
-            
-            for (int i = 0; i < results.length(); i++ ) {
+
+            int count = results.length();
+            for (int i = 0; i < count; i++ ) {
                 JSONObject result = results.getJSONObject(i);
                 StatsMostCommented stat = new StatsMostCommented(blogId, result);
                 ContentValues values = StatsMostCommentedTable.getContentValues(stat);

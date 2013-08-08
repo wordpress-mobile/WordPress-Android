@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import org.wordpress.android.datasets.StatsBarChartDaysTable.Columns;
 import org.wordpress.android.models.StatsBarChartMonth;
 
 public class StatsBarChartMonthsTable extends SQLTable {

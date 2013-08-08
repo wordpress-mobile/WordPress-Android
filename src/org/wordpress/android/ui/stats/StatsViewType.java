@@ -29,8 +29,10 @@ public enum StatsViewType {
     }
 
     public static String[] toStringArray() {
-        String[] types = new String[StatsViewType.values().length];
-        for (int i = 0; i < StatsViewType.values().length; i++) {
+        int count = StatsViewType.values().length;
+        
+        String[] types = new String[count];
+        for (int i = 0; i < count; i++) {
             types[i] = StatsViewType.values()[i].getLabel();
         }
         return types;

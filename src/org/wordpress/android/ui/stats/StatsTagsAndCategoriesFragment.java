@@ -144,7 +144,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
             if (response != null && response.has("result")) {
                 try {
                     JSONArray results = response.getJSONArray("result");
-                    for (int i = 0; i < results.length(); i++ ) {
+
+                    int count = results.length();
+                    for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsTagsandCategories stat = new StatsTagsandCategories(blogId, result);
                         ContentValues values = StatsTagsAndCategoriesTable.getContentValues(stat);
