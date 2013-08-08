@@ -62,10 +62,7 @@
                     android:text="@string/stats_totals_followers_shares_label_posts" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/stats_div_color" />
+            <include layout="@layout/stats_vertical_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -94,10 +91,7 @@
                     android:text="@string/stats_totals_followers_shares_label_categories" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/stats_div_color" />
+            <include layout="@layout/stats_vertical_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -165,10 +159,7 @@
                     android:text="@string/stats_totals_followers_shares_label_blog" />
             </RelativeLayout>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/stats_div_color" />
+            <include layout="@layout/stats_vertical_line" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
