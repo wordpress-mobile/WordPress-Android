@@ -348,6 +348,36 @@ public class WPRestClient {
         getXL(path, params, listener, errorListener);
     }
     
+    /**
+     * Get a site's views and visitors stats for the recent days  
+     */
+    public void getStatsBarChartDays(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/visitors_and_views/days";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's views and visitors stats for the recent weeks
+     */
+    public void getStatsBarChartWeeks(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/visitors_and_views/weeks";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+
+    /**
+     * Get a site's views and visitors stats for the recent months  
+     */
+    public void getStatsBarChartMonths(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = "stats/visitors_and_views/months";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("blog", siteId);
+        getXL(path, params, listener, errorListener);
+    }
+    
     public void getXL(String path, Map<String, String> params, final Listener listener, final ErrorListener errorListener) {
         path = "https://simulator.xlstudio.com/apis/32/" + path;
 

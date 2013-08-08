@@ -1,13 +1,20 @@
 package org.wordpress.android.ui.stats;
 
-import java.util.Random;
-
-import android.graphics.Color;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +23,25 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.StatsBarChartDaysTable;
+import org.wordpress.android.datasets.StatsBarChartMonthsTable;
+import org.wordpress.android.datasets.StatsBarChartWeeksTable;
+import org.wordpress.android.models.StatsBarChartDay;
+import org.wordpress.android.models.StatsBarChartMonth;
+import org.wordpress.android.models.StatsBarChartWeek;
 import org.wordpress.android.models.StatsVisitorsAndViewsSummary;
+import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
@@ -45,7 +61,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        return new InnerFragment();
+        StatsTimeframe timeframe = StatsTimeframe.DAYS;
+        if (position == 1)
+            timeframe = StatsTimeframe.WEEKS;
+        else if (position == 2) 
+            timeframe = StatsTimeframe.MONTHS;
+        return InnerFragment.newInstance(timeframe);
     }
     
     @Override
@@ -81,18 +102,31 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         return getString(R.string.stats_view_visitors_and_views);
     }
 
-    public static class InnerFragment extends Fragment {
+    public static class InnerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+        private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
         private LinearLayout mBarGraphLayout;
         private GraphView graphView;
-        private GraphViewSeries exampleSeries1;
-        private GraphViewSeries exampleSeries2;
+        private GraphViewSeries viewsSeries;
+        private GraphViewSeries visitorsSeries;
         
         private TextView mVisitorsToday;
         private TextView mViewsToday;
         private TextView mVisitorsBestEver;
         private TextView mViewsAllTime;
         private TextView mCommentsAllTime;
+        private ContentObserver mContentObserver = new MyObserver(new Handler());
+        
+        public static InnerFragment newInstance(StatsTimeframe timeframe) {
+            
+            InnerFragment fragment = new InnerFragment();
+            
+            Bundle args = new Bundle();
+            args.putInt(ARGS_TIMEFRAME, timeframe.ordinal());
+            fragment.setArguments(args);
+            
+            return fragment;
+        }
         
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,7 +149,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         public void onResume() {
             super.onResume();
             refreshSummary();
-            refreshBarGraph();
+            refreshChartsFromServer();
+            getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
+        }
+
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+        }
+        
+        private int getTimeframeOrdinal() {
+            return getArguments().getInt(ARGS_TIMEFRAME);
         }
 
         private void refreshSummary() {
@@ -195,46 +241,209 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             mCommentsAllTime.setText(commentsAllTime + "");
         }
 
-
-        private void refreshBarGraph() {
-
-            Random random = new Random();
-            int range = 50;
+        private void refreshChartsFromServer() {
+            if (WordPress.getCurrentBlog() == null)
+                return;
             
-            int numPoints = 30;
-            GraphViewData[] data1 = new GraphViewData[numPoints];
-            GraphViewData[] data2 = new GraphViewData[numPoints];
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            
+            Listener listener = new Listener() {
+                
+                @Override
+                public void onResponse(JSONObject response) {
+                    new ParseJsonTask().execute(blogId, response, getUri());
+                }
+            }; 
+            
+            ErrorListener errorListener = new ErrorListener() {
+                
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("WordPress Stats", StatsVisitorsAndViewsFragment.class.getSimpleName() + ": " + error.toString());
+                }
+            };
+            
+            int ordinal = getTimeframeOrdinal();
+            if (ordinal == StatsTimeframe.DAYS.ordinal())
+                WordPress.restClient.getStatsBarChartDays(blogId, listener, errorListener);
+            else if (ordinal == StatsTimeframe.WEEKS.ordinal())
+                WordPress.restClient.getStatsBarChartWeeks(blogId, listener, errorListener);
+            else if (ordinal == StatsTimeframe.MONTHS.ordinal())
+                WordPress.restClient.getStatsBarChartMonths(blogId, listener, errorListener);
+                    
+        }
+        
+        private class ParseJsonTask extends AsyncTask<Object, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                String blogId = (String) params[0];
+                JSONObject response = (JSONObject) params[1];
+                Uri uri = (Uri) params[2];
+                
+                Context context = WordPress.getContext();
+                
+                if (response != null && response.has("result")) {
+                    try {
+                        JSONArray results = response.getJSONArray("result");
+                        for (int i = 0; i < results.length(); i++ ) {
+                            JSONObject result = results.getJSONObject(i);
+                            
+                            ContentValues values = null;
+                            
+                            int ordinal = getTimeframeOrdinal();
+                            if (ordinal == StatsTimeframe.DAYS.ordinal()) {
+                                StatsBarChartDay stat = new StatsBarChartDay(blogId, result);
+                                values = StatsBarChartDaysTable.getContentValues(stat);
+                            } else if (ordinal == StatsTimeframe.WEEKS.ordinal()) {
+                                StatsBarChartWeek stat = new StatsBarChartWeek(blogId, result);
+                                values = StatsBarChartWeeksTable.getContentValues(stat);
+                            } else if (ordinal == StatsTimeframe.MONTHS.ordinal()) {
+                                StatsBarChartMonth stat = new StatsBarChartMonth(blogId, result);
+                                values = StatsBarChartMonthsTable.getContentValues(stat);
+                            }
+                            
+                            if (values != null && uri != null)
+                                context.getContentResolver().insert(uri, values);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    
+                }
+                return null;
+            }        
+        }
+
+        
+        
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            getLoaderManager().restartLoader(getTimeframeOrdinal(), null, this);
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            return new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
+        }
+
+        private Uri getUri() {
+            int ordinal = getTimeframeOrdinal();
+            Uri uri = null;
+            
+            if (ordinal == StatsTimeframe.DAYS.ordinal()) 
+                uri = StatsContentProvider.STATS_BAR_CHART_DAYS_URI;
+            else if (ordinal == StatsTimeframe.WEEKS.ordinal())
+                uri = StatsContentProvider.STATS_BAR_CHART_WEEKS_URI;
+            else if (ordinal == StatsTimeframe.MONTHS.ordinal())
+                uri = StatsContentProvider.STATS_BAR_CHART_MONTHS_URI;
+            return uri;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+            if (!cursor.moveToFirst())
+                return;
+            
+            int numPoints = Math.min(30, cursor.getCount());
+            
+            GraphViewData[] views = new GraphViewData[numPoints];
+            GraphViewData[] visitors = new GraphViewData[numPoints];
             String[] horLabels = new String[numPoints];
-            for(int i = 0; i < numPoints; i++) {
-                data1[i] = new GraphViewData(i, random.nextInt(range));
-                data2[i] = new GraphViewData(i, random.nextInt(range/5));
-                horLabels[i] = "" + i;
+            
+            for(int i = numPoints - 1; i >= 0; i--) {
+                views[i] = new GraphViewData(i, getViews(cursor));
+                visitors[i] = new GraphViewData(i, getVisitors(cursor));
+                horLabels[i] = getDate(cursor);
+                cursor.moveToNext();
             }
             
-            exampleSeries1 = new GraphViewSeries(data1);
-            exampleSeries2 = new GraphViewSeries(data2);
+            viewsSeries = new GraphViewSeries(views);
+            visitorsSeries = new GraphViewSeries(visitors);
 
-            exampleSeries1.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-            exampleSeries1.getStyle().padding = Utils.dpToPx(1);
-            exampleSeries2.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
-            exampleSeries2.getStyle().padding = Utils.dpToPx(3);
+            viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+            viewsSeries.getStyle().padding = Utils.dpToPx(1);
+            visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
+            visitorsSeries.getStyle().padding = Utils.dpToPx(3);
             
             graphView = new StatsBarGraph(getActivity(), "");
-            graphView.addSeries(exampleSeries1);
-            graphView.addSeries(exampleSeries2);
+            graphView.addSeries(viewsSeries);
+            graphView.addSeries(visitorsSeries);
 
-            graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
-            graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-            graphView.getGraphViewStyle().setNumHorizontalLabels(data1.length);
-            graphView.getGraphViewStyle().setTextSize(Utils.spToPx(8));
-            graphView.getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
-            graphView.getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
-            graphView.getGraphViewStyle().setNumVerticalLabels(6);
-            graphView.getGraphViewStyle().setNumHorizontalLabels(horLabels.length/3);
+            graphView.getGraphViewStyle().setNumHorizontalLabels(horLabels.length / 5);
             graphView.setHorizontalLabels(horLabels);
             
             mBarGraphLayout.removeAllViews();
             mBarGraphLayout.addView(graphView);   
+        }
+
+        private int getViews(Cursor cursor) {
+            int timeframe = getTimeframeOrdinal();
+            int views = 0;
+            
+            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
+                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.VIEWS));
+            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
+                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.VIEWS));
+            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
+                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.VIEWS));
+            }
+            
+            return views;
+        }
+
+        private int getVisitors(Cursor cursor) {
+            int timeframe = getTimeframeOrdinal();
+            int visitors = 0;
+            
+            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
+                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.VISITORS));
+            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
+                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.VISITORS));
+            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
+                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.VISITORS));
+            }
+            
+            return visitors;
+        }
+
+        private String getDate(Cursor cursor) {
+            int timeframe = getTimeframeOrdinal();
+            
+            String date = "";
+            
+            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
+                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.DATE));
+                date = StatUtils.parseDate(temp, "yyyy-MM-dd", "MMM d");
+            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
+                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.DATE));
+                date = StatUtils.parseDate(temp, "yyyy-'W'ww", "'Week' w");
+            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
+                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.DATE));
+                date = StatUtils.parseDate(temp, "yyyy-MM", "MMM yyyy");
+            }
+            
+            return date;
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> cursor) {
+            mBarGraphLayout.removeAllViews();
+        }
+        
+        class MyObserver extends ContentObserver {      
+           public MyObserver(Handler handler) {
+              super(handler);           
+           }
+
+           @Override
+           public void onChange(boolean selfChange) {
+               if (isAdded())
+                   getLoaderManager().restartLoader(0, null, InnerFragment.this);           
+           }        
         }
     }
 

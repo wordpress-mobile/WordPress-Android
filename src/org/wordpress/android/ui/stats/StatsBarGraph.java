@@ -2,11 +2,15 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+
+import org.wordpress.android.R;
+import org.wordpress.android.util.Utils;
 
 /**
  * Based on BarGraph from the GraphView library. 
@@ -15,9 +19,20 @@ public class StatsBarGraph extends GraphView {
 
 	public StatsBarGraph(Context context, String title) {
 		super(context, title);
+
+        setProperties();
 	}
 
-	@Override
+	private void setProperties() {
+        getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
+        getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+        getGraphViewStyle().setTextSize(Utils.spToPx(8));
+        getGraphViewStyle().setGridXColor(Color.TRANSPARENT);
+        getGraphViewStyle().setGridYColor(getResources().getColor(R.color.stats_bar_graph_grid));
+        getGraphViewStyle().setNumVerticalLabels(6);
+    }
+
+    @Override
 	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values,
 			float graphwidth, float graphheight, float border, double minX,
 			double minY, double diffX, double diffY, float horstart,

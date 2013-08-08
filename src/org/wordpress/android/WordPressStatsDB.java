@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.wordpress.android.datasets.StatsBarChartDaysTable;
+import org.wordpress.android.datasets.StatsBarChartMonthsTable;
+import org.wordpress.android.datasets.StatsBarChartWeeksTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
@@ -40,6 +43,9 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         db.execSQL(StatsTopCommentersTable.getInstance().toCreateQuery());
         db.execSQL(StatsTopPostsAndPagesTable.getInstance().toCreateQuery());
         db.execSQL(StatsVideosTable.getInstance().toCreateQuery());
+        db.execSQL(StatsBarChartDaysTable.getInstance().toCreateQuery());
+        db.execSQL(StatsBarChartWeeksTable.getInstance().toCreateQuery());
+        db.execSQL(StatsBarChartMonthsTable.getInstance().toCreateQuery());
     }
 
     @Override
@@ -57,6 +63,9 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         StatsTopCommentersTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsTopPostsAndPagesTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsVideosTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsBarChartDaysTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsBarChartWeeksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsBarChartMonthsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
     }
 
 }

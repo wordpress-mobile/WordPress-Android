@@ -37,6 +37,11 @@
     <color name="tab_background">#363636</color>
     <color name="tab_text">@color/white</color>
     
+    <!-- Stats bar graph colors -->
+    <color name="stats_bar_graph_views">#7CABC1</color>
+    <color name="stats_bar_graph_visitors">#124277</color>
+    <color name="stats_bar_graph_grid">#D9D9D9</color>
+    
     <!-- Stats Tablet header -->
     <color name="stats_tablet_header_title">#434343</color>
     <color name="stats_alt_row">#EEF6F8</color>

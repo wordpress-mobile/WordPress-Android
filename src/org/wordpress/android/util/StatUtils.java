@@ -73,6 +73,18 @@ public class StatUtils {
         return "";
     }
     
+    public static String parseDate(String timestamp, String fromFormat, String toFormat) {
+        SimpleDateFormat from = new SimpleDateFormat(fromFormat);
+        SimpleDateFormat to = new SimpleDateFormat(toFormat);
+        try {
+            Date date = from.parse(timestamp);
+            return to.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    
     public static void saveSummary(String blogId, JSONObject stat) {
         try {
             stat.put("date", getCurrentDate());

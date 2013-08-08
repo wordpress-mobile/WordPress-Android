@@ -367,6 +367,9 @@
   <string name="stats_timeframe_quarter">Quarter</string>
   <string name="stats_timeframe_year">Year</string>
   <string name="stats_timeframe_all_time">All Time</string>
+  <string name="stats_timeframe_days">Days</string>
+  <string name="stats_timeframe_weeks">Weeks</string>
+  <string name="stats_timeframe_months">Months</string>
   
   <!-- stats: label for the entries -->
   <string name="stats_entry_country">Country</string>
