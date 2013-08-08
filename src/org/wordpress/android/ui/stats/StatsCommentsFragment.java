@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -140,9 +141,20 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
             if (mType == TOP_COMMENTERS) {
                 imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
                 
+                view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
+                
                 NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-                imageView.setVisibility(View.VISIBLE);
-                imageView.setImageUrl(imageUrl, WordPress.imageLoader);
+                ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
+                if (imageUrl != null && imageUrl.length() > 0) {
+                    imageView.setErrorImageResId(R.drawable.stats_blank_image);
+                    imageView.setDefaultImageResId(R.drawable.stats_blank_image);
+                    imageView.setImageUrl(imageUrl, WordPress.imageLoader);
+                    imageView.setVisibility(View.VISIBLE);
+                    errorImageView.setVisibility(View.GONE);
+                } else {
+                    imageView.setVisibility(View.GONE);
+                    errorImageView.setVisibility(View.VISIBLE);
+                }
             }
             
         }
