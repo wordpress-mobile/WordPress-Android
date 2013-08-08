@@ -370,6 +370,8 @@
   <string name="stats_timeframe_days">Days</string>
   <string name="stats_timeframe_weeks">Weeks</string>
   <string name="stats_timeframe_months">Months</string>
+  <string name="stats_timeframe_none"> </string>
+  <string name="stats_summary">Summary</string>
   
   <!-- stats: label for the entries -->
   <string name="stats_entry_country">Country</string>
@@ -391,9 +393,9 @@
   <string name="stats_totals_visitors">Visitors</string>
   
   <!-- stats: views and visitors -->
-  <string name="stats_visitors_and_views_header_title">TODAY</string>
-  <string name="stats_visitors_and_views_header_best_ever">BEST EVER</string>
-  <string name="stats_visitors_and_views_header_all_time">ALL TIME</string>
+  <string name="stats_visitors_and_views_header_today">Today</string>
+  <string name="stats_visitors_and_views_header_best_ever">Best Ever</string>
+  <string name="stats_visitors_and_views_header_all_time">All Time</string>
   
   <!-- stats: totals, followers, and shares -->
   <string name="stats_totals_followers_shares_header_content">Content</string>
