@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="32dp" >
+    android:layout_height="wrap_content"
+    android:padding="4dp" >
 
     <FrameLayout
         android:id="@+id/stats_list_cell_image_frame"
@@ -48,13 +49,5 @@
         android:drawablePadding="4dp"
         android:paddingLeft="4dp"
         android:textSize="14sp" />
-
-    <View
-        android:id="@+id/stats_list_cell_div"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/stats_div_color"
-        android:visibility="gone" />
 
 </RelativeLayout>

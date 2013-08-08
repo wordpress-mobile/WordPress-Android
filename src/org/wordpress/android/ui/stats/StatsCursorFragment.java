@@ -146,10 +146,12 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         int count = Math.min(mAdapter.getCount(), MAX_ITEMS_ON_TABLET);
         for (int i = 0; i < count; i++) {
             View view = mAdapter.getView(i, null, mLinearLayout);
-            view.findViewById(R.id.stats_list_cell_div).setVisibility(View.VISIBLE);
             if (i % 2 == 1)
                 view.setBackgroundColor(getResources().getColor(R.color.stats_alt_row));
             mLinearLayout.addView(view);
+
+            // add divider
+            getActivity().getLayoutInflater().inflate(R.layout.stats_list_divider, mLinearLayout, true);
         }
         
     }

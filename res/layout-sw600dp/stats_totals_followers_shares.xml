@@ -137,7 +137,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:padding="8dp" >
 
                 <TextView
@@ -185,12 +185,6 @@
                     android:drawablePadding="8dp"
                     android:text="@string/stats_totals_followers_shares_label_comments" />
             </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:visibility="invisible" />
         </LinearLayout>
 
         <TextView
