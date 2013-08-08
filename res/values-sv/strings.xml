@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="remote_changes">Du har gjort ändringar i ett inlägg som inte har laddats upp än. Vill du fortsätta att uppdatera och skriva över dina ändringar?</string>
+	<string name="upload">Ladda upp</string>
+	<string name="error_load_comment">Kunde inte ladda kommentaren. Vänligen försök igen.</string>
+	<string name="manage">Hantera</string>
+	<string name="dashboard_tip">Tryck på tillbaka-knappen för att återvända till appen.</string>
+	<string name="discard">Kasta bort</string>
+	<string name="prompt_save_changes">Vill du spara dina ändringar?</string>
+	<string name="retry_reply">Svar misslyckades. Knacka för att försöka igen.</string>
+	<string name="reply_failed">Svar misslyckades.</string>
+	<string name="tap_retry">Knacka för att försöka igen.</string>
+	<string name="error_parsing_response">Beklagar, ett fel uppstod när data skulle hämtas. Vänligen försök igen senare.</string>
+	<string name="sure_sign_out">Är du säker på att du vill logga ut från WordPress.com?</string>
+	<string name="sign_out_confirm">Är du säker på att du vill logga ut?</string>
+	<string name="please_sign_in">Vänligen logga in igen.</string>
+	<string name="wpcom">WordPress.com</string>
 	<string name="sign_in">Logga in</string>
 	<string name="sign_out">Logga ut</string>
 	<string name="confirm_delete">Bekräfta radering</string>
@@ -11,10 +26,6 @@
 	<string name="enable_notifications">Aktivera notifikationer</string>
 	<string name="types">Typer</string>
 	<string name="options">Inställningar</string>
-	<string name="sure_sign_out">Är du säker på att du vill logga ut från WordPress.com?</string>
-	<string name="sign_out_confirm">Är du säker på att du vill logga ut?</string>
-	<string name="please_sign_in">Vänligen logga in igen.</string>
-	<string name="wpcom">WordPress.com</string>
 	<string name="notifications_turn_off">Stäng av</string>
 	<string name="notifications_turn_off_1hr">Stäng av i 1 timma</string>
 	<string name="notifications_turn_off_8hr">Stäng av i 8 timmar</string>
@@ -54,10 +65,10 @@
 	<string name="file_error_create">Kunde inte skapa temporär fil för uppladdning. Vänligen kontrollera så att det finns tillräckligt med utrymme på din enhet.</string>
 	<string name="error_media_upload">Ett fel uppstod vid uppladdning av media</string>
 	<string name="share_link">Dela länk</string>
+	<string name="post_content">Innehåll (knacka för att lägga till text och media)</string>
 	<string name="publish_date">Publicera</string>
 	<string name="post_format">Inläggsformat</string>
 	<string name="content_description_add_media">Lägg till media</string>
-	<string name="post_content">Innehåll (knacka för att lägga till text och media)</string>
 	<string name="incorrect_credentials">Felaktigt användarnamn eller lösenord.</string>
 	<string name="error_delete_post">Beklagar, ett fel uppstod vid försök att radera %s.</string>
 	<string name="error_generic">Beklagar, ett fel uppstod. Försök igen senare.</string>
@@ -74,8 +85,8 @@
 	<string name="category_desc">Beskrivning för kategori (valfritt)</string>
 	<string name="add_account_blog_url">URL för blogg</string>
 	<string name="reader">Läsare</string>
-	<string name="file_not_found">Kunde inte hitta mediafilen för uppladdning. Har den raderats eller flyttats?</string>
 	<string name="out_of_memory">Enheten har slut på minne.</string>
+	<string name="file_not_found">Kunde inte hitta mediafilen för uppladdning. Har den raderats eller flyttats?</string>
 	<string name="featured">Använd som utvald bild</string>
 	<string name="featured_in_post">Inkludera bild i inlägget</string>
 	<string name="no_blogs_message">Inga %s-bloggar kunde hittas för det kontot.</string>
@@ -86,34 +97,33 @@
 	<string name="no_network_title">Inget nätverk tillgängligt</string>
 	<string name="no_network_message">Inget nätverk tillgängligt. Vänligen anslut till ett nätverk och försök igen.</string>
 	<string name="error_refresh">Beklagar, %s kunde inte uppdateras för tillfället. Vänligen försök igen senare.</string>
+	<string name="stats_service_error">Beklagar. Ett problem uppstod vi anslutning till din statistik. Försök igen.</string>
 	<string name="pages">Sidor</string>
 	<string name="caption">Bildtext (valfritt)</string>
+	<string name="no_site_error">Beklagar, kunde inte ansluta till WordPress-installationen. Vänligen försök igen senare.</string>
 	<string name="width">Bredd</string>
 	<string name="posts">Inlägg</string>
 	<string name="anonymous">Anonym</string>
 	<string name="no_blogs_found">Inga bloggar funna</string>
 	<string name="page">Sida</string>
-	<string name="post">Inlägg</string>
-	<string name="horizontal_alignment">Horisontal justering</string>
 	<string name="invalid_jp_login">Felaktig inloggning eller så finns det ingen blogg länkat till detta konto på WordPress.com.</string>
-	<string name="stats_service_error">Beklagar. Ett problem uppstod vi anslutning till din statistik. Försök igen.</string>
-	<string name="no_site_error">Beklagar, kunde inte ansluta till WordPress-installationen. Vänligen försök igen senare.</string>
+	<string name="horizontal_alignment">Horisontal justering</string>
+	<string name="post">Inlägg</string>
+	<string name="posted_from_blackberry">Postat med WordPress for Blackberry</string>
 	<string name="blogusername">användarnamn</string>
 	<string name="column_1">Kolumn 1</string>
 	<string name="column_2">Kolumn 2</string>
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="image_settings">Bildinställningar</string>
+	<string name="app_title_blackberry">WordPress for Blackberry</string>
+	<string name="content">Peka för att lägga till text och media</string>
 	<string name="ok">OK</string>
 	<string name="sure_to_cancel_edit_comment">Är du säker på att du vill avbryta redigeringen av denna kommentar?</string>
-	<string name="content">Peka för att lägga till text och media</string>
-	<string name="app_title_blackberry">WordPress for Blackberry</string>
-	<string name="posted_from_blackberry">Postat med WordPress for Blackberry</string>
 	<string name="xmlrpc_error">Kunde inte ansluta. Ange fullständig sökväg till xmlrpc.php för din webbplats och försök igen.</string>
-	<string name="remote_changes">Du har gjort ändringar i ett uppladdat inlägg som inte sparats än. Fortsätt uppdatera och skriv över lokala ändringar?</string>
 	<string name="local_changes">Lokala ändringar</string>
-	<string name="scaled_image">Välj bredd för bild</string>
 	<string name="upload_scaled_image">Ladda upp och länka till skalad bild</string>
 	<string name="scaled_image_error">Ange ett giltigt värde för skalad bildbredd</string>
+	<string name="scaled_image">Välj bredd för bild</string>
 	<string name="comment_content">Kommentarsinnehåll</string>
 	<string name="author_name">Namn</string>
 	<string name="author_email">E-post</string>
@@ -156,14 +166,14 @@
 	<string name="quick_video">Snabbvideo</string>
 	<string name="gallery_error">Beklagar, mediafilen kunde inte hämtas från galleriet.</string>
 	<string name="upload_failed">Uppladdningen misslyckades</string>
-	<string name="view_in_browser">Visa i webbläsaren</string>
 	<string name="invalid_url_message">Kontrollera att bloggadressen som angivits är giltig.</string>
-	<string name="empty_fields">Inget innehåll hittades</string>
-	<string name="title_post_required">Var vänlig ange något att publicera eller bifoga en mediafil.</string>
+	<string name="view_in_browser">Visa i webbläsaren</string>
 	<string name="untitled">Utan titel</string>
+	<string name="title_post_required">Var vänlig ange något att publicera eller bifoga en mediafil.</string>
+	<string name="empty_fields">Inget innehåll hittades</string>
 	<string name="edit">Redigera</string>
-	<string name="page_id">Sida</string>
 	<string name="post_id">Inlägg</string>
+	<string name="page_id">Sida</string>
 	<string name="post_password">Lösenord (valfritt)</string>
 	<string name="immediately">Omedelbart</string>
 	<string name="quickpress_add_alert_title">Ange genvägsnamn</string>
@@ -173,12 +183,12 @@
 	<string name="post_not_published">Inläggsstatus är inte publicerad</string>
 	<string name="page_not_published">Sidstatus är inte publicerad</string>
 	<string name="attempting_fetch_url">Försöker att hämta URL</string>
-	<string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
 	<string name="quickpress_window_title">Välj blogg för QuickPress-genväg</string>
+	<string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
 	<string name="publish_post">Publicera</string>
+	<string name="pending_review">Väntar på granskning</string>
 	<string name="draft">Utkast</string>
 	<string name="post_private">Privat</string>
-	<string name="pending_review">Väntar på granskning</string>
 	<string name="upload_full_size_image">Ladda upp och länka till originalbild</string>
 	<string name="invalid_url">Ogiltig bloggurl</string>
 	<string name="i_have_wp_blog">Lägg till en blogg på WordPress.com</string>
@@ -195,6 +205,7 @@
 	<string name="username_password_required">Användarnamn och lösenord är obligatoriska fält.</string>
 	<string name="title">Titel</string>
 	<string name="tags_separate_with_commas">Etiketter (separera etiketter med kommatecken)</string>
+	<string name="categories">Kategorier</string>
 	<string name="moderating_comments">Modererar kommentarer</string>
 	<string name="load_more">Ladda fler</string>
 	<string name="tab_stats">Statistik</string>
@@ -202,26 +213,26 @@
 	<string name="comments_moderated">Kommentarer modererade</string>
 	<string name="preferences">Inställningar</string>
 	<string name="post_deleted">Inlägg raderat</string>
+	<string name="attempt_delete_post">Försöker radera inlägg</string>
 	<string name="delete_sure_post">Är du säker på att du vill ta bort inlägget</string>
 	<string name="delete_post">Radera inlägg</string>
 	<string name="page_deleted">Sida raderad</string>
 	<string name="delete_sure_page">Är du säker på att du vill radera sidan</string>
-	<string name="delete_page">Radera sida</string>
-	<string name="attempt_delete_post">Försöker radera inlägg</string>
 	<string name="attempt_delete_page">Försöker radera sida</string>
+	<string name="delete_page">Radera sida</string>
 	<string name="file_error_encountered">Ett fel uppstod vid inrättandet av skapad media.</string>
-	<string name="notification_sound">Spela notifikationsljud</string>
 	<string name="notification_blink">Blinka notifikationslampa</string>
+	<string name="notification_sound">Spela notifikationsljud</string>
 	<string name="notification_vibrate">Vibrera</string>
 	<string name="location_toast">Lokaliseringsuppgifter ännu inte tillgänglig, var god vänta.</string>
 	<string name="status">Status</string>
 	<string name="sdcard_message">Ett monterat SD-kort krävs för att ladda upp media.</string>
+	<string name="location">Plats</string>
 	<string name="take_video">Spela in en ny video</string>
 	<string name="sdcard_title">SD-kort krävs</string>
 	<string name="select_video">Välj en video från galleriet</string>
-	<string name="location">Plats</string>
-	<string name="preview_post">Visa inlägg</string>
 	<string name="preview_page">Visa sida</string>
+	<string name="preview_post">Visa inlägg</string>
 	<string name="account_details">Detaljer för konto</string>
 	<string name="media">Media</string>
 	<string name="no_account">Inget WordPresskonto hittades, lägg till ett konto och försöka igen.</string>
@@ -242,64 +253,82 @@
 	<string name="category_parent">Moderkategori (valfritt):</string>
 	<string name="required_fields">Obligatoriska fält</string>
 	<string name="select_categories">Välj kategorier</string>
-	<string name="blogs">Bloggar</string>
-	<string name="sure_to_remove_account">Är du säker på att du vill ta bort den här bloggen?</string>
-	<string name="remove_account">Ta bort blogg</string>
 	<string name="blog_removed_successfully">Bloggen har tagits bort</string>
+	<string name="remove_account">Ta bort blogg</string>
+	<string name="sure_to_remove_account">Är du säker på att du vill ta bort den här bloggen?</string>
+	<string name="blogs">Bloggar</string>
 	<string name="could_not_remove_account">Kunde inte ta bort bloggen.</string>
 	<string name="select_photo">Välj en bild från galleri</string>
 	<string name="take_photo">Ta ett nytt foto</string>
-	<string name="connection_error_occured">Ett problem med anslutningen har uppstått. Var vänlig försök senare.</string>
-	<string name="cancel_draft">Avsluta utkast</string>
-	<string name="tab_comments">Kommentarer</string>
-	<string name="reply_send">Skicka svar</string>
-	<string name="reply_to_comment">Svara på kommentar</string>
-	<string name="reply_please_enter">Var vänlig skriv något i svarsfältet.</string>
-	<string name="reply_enter">Ange svar:</string>
-	<string name="comment_actions">Åtgärder för kommentarer</string>
-	<string name="reply">Svara</string>
-	<string name="comment_moderated">Kommentar modererad</string>
-	<string name="reply_added">Svaret har lagts till</string>
-	<string name="tab_posts">Inlägg</string>
-	<string name="refreshing_categories">Uppdaterar kategorier</string>
-	<string name="connection_error">Anslutningsfel</string>
-	<string name="sure_to_cancel_edit">Är du säker på att du vill avbryta redigeringen av det här inlägget?</string>
+	<string name="error">Fel</string>
+	<string name="selected_categories">Valda kategorier</string>
+	<string name="dont_yet_have_a_blog">Har du ingen blogg än?</string>
+	<string name="get_free_blog">Skaffa en gratis blogg på WordPress.com</string>
 	<string name="cancel">Avbryt</string>
 	<string name="save">Spara</string>
 	<string name="add">Lägg till</string>
+	<string name="edit_page">Redigera sida</string>
+	<string name="edit_post">Redigera inlägg</string>
+	<string name="refreshing_categories">Uppdaterar kategorier</string>
+	<string name="attempting_categories_refresh">Försöker uppdatera kategorier</string>
+	<string name="connection_error">Anslutningsfel</string>
+	<string name="connection_error_occured">Ett problem med anslutningen har uppstått. Var vänlig försök senare.</string>
 	<string name="categories_refreshed">Kategorier uppdaterade</string>
 	<string name="category_refresh_error">Fel vid uppdatering av kategorier</string>
 	<string name="cancel_edit">Avbryt redigering</string>
+	<string name="sure_to_cancel_edit">Är du säker på att du vill avbryta redigeringen av det här inlägget?</string>
 	<string name="new_account">Nytt konto</string>
+	<string name="tab_comments">Kommentarer</string>
+	<string name="tab_posts">Inlägg</string>
 	<string name="tab_pages">Sidor</string>
+	<string name="sure_to_cancel_edit_page">Är du säker på att du vill avbryta redigeringen av denna sida?</string>
 	<string name="new_page">Ny sida</string>
+	<string name="local_drafts">Lokala utkast</string>
 	<string name="new_post">Nytt inlägg</string>
+	<string name="reply_enter">Ange svar:</string>
+	<string name="reply_send">Skicka svar</string>
+	<string name="reply_to_comment">Svara på kommentar</string>
+	<string name="reply_please_enter">Var vänlig skriv något i svarsfältet.</string>
+	<string name="preview">Förhandsgranska</string>
+	<string name="on">den</string>
 	<string name="approved">Godkända</string>
 	<string name="unapproved">Icke godkända</string>
 	<string name="spam">Skräppost</string>
+	<string name="moderating_comment">Granskar kommentar</string>
+	<string name="replying_comment">Svara på kommentar</string>
+	<string name="comment_moderated">Kommentar modererad</string>
+	<string name="reply_added">Svaret har lagts till</string>
+	<string name="draft_actions">Åtgärder för utkast</string>
 	<string name="edit_draft">Redigera utkast</string>
 	<string name="delete_draft">Ta bort utkast</string>
 	<string name="delete_sure">Är du säker på att du vill radera utkastet</string>
-	<string name="selected_categories">Valda kategorier</string>
+	<string name="page_actions">Åtgärder för sida</string>
+	<string name="post_actions">Åtgärder för inlägg</string>
+	<string name="comment_actions">Åtgärder för kommentarer</string>
+	<string name="mark_approved">Markera som godkänd</string>
+	<string name="mark_unapproved">Markera som väntande</string>
+	<string name="reply">Svara</string>
+	<string name="account_setup">Kontoinställningar</string>
+	<string name="cancel_draft">Avsluta utkast</string>
+	<string name="publish">Publicera?</string>
 	<string name="yes">Ja</string>
 	<string name="no">Nej</string>
-	<string name="publish">Publicera?</string>
-	<string name="error">Fel</string>
-	<string name="get_free_blog">Skaffa en gratis blogg på WordPress.com</string>
-	<string name="edit_page">Redigera sida</string>
-	<string name="attempting_categories_refresh">Försöker uppdatera kategorier</string>
-	<string name="sure_to_cancel_edit_page">Är du säker på att du vill avbryta redigeringen av denna sida?</string>
-	<string name="moderating_comment">Granskar kommentar</string>
-	<string name="replying_comment">Svara på kommentar</string>
-	<string name="mark_approved">Markera som godkänd</string>
-	<string name="account_setup">Kontoinställningar</string>
-	<string name="on">den</string>
-	<string name="dont_yet_have_a_blog">Har du ingen blogg än?</string>
-	<string name="edit_post">Redigera inlägg</string>
-	<string name="post_actions">Åtgärder för inlägg</string>
-	<string name="page_actions">Åtgärder för sida</string>
-	<string name="draft_actions">Åtgärder för utkast</string>
-	<string name="mark_unapproved">Markera som väntande</string>
-	<string name="local_drafts">Lokala utkast</string>
-	<string name="preview">Förhandsgranska</string>
+	<string-array name="alignment_array">
+		<item>Ingen</item>
+		<item>Vänster</item>
+		<item>Centrera</item>
+		<item>Höger</item>
+	</string-array>
+	<string-array name="post_formats_array">
+		<item>Notering</item>
+		<item>Ljud</item>
+		<item>Chat</item>
+		<item>Galleri</item>
+		<item>Bild</item>
+		<item>Länk</item>
+		<item>Citat</item>
+		<item>Standard</item>
+		<item>Status</item>
+		<item>Video</item>
+	</string-array>
 </resources>
