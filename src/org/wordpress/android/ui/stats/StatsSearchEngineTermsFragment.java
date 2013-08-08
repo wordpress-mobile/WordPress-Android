@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,11 +30,12 @@ import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 
-public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  implements TabListener {
+public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  implements TabListener, StatsCursorFragmentCallback {
 
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
-    private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel() };
+    private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
     
     public static final String TAG = StatsSearchEngineTermsFragment.class.getSimpleName();
     
@@ -55,12 +57,12 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
 
         @Override
         public int getCount() {
-            return TITLES.length;
+            return TIMEFRAMES.length;
         }
         
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLES[position];
+            return TIMEFRAMES[position].getLabel();
         }
 
     }
@@ -70,7 +72,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
         int entryLabelResId = R.string.stats_entry_search_engine_terms;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_search_engine_terms;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_SEARCH_ENGINE_TERMS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_SEARCH_ENGINE_TERMS_URI, TIMEFRAMES[position], entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
@@ -112,7 +114,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
 
     @Override
     public String[] getTabTitles() {
-        return TITLES;
+        return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
 
     @Override
@@ -166,6 +168,12 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
             }
             return null;
         }        
+    }
+
+    @Override
+    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

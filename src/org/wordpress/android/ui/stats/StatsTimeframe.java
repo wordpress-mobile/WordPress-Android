@@ -16,6 +16,8 @@ public enum StatsTimeframe {
     DAYS(R.string.stats_timeframe_days),
     WEEKS(R.string.stats_timeframe_weeks),
     MONTHS(R.string.stats_timeframe_months),
+    NONE(R.string.stats_timeframe_none),
+    SUMMARY(R.string.stats_summary),
     ;
 
     private int mLabelResId;
@@ -26,6 +28,16 @@ public enum StatsTimeframe {
 
     public String getLabel() {
         return WordPress.getContext().getString(mLabelResId);
+    }
+    
+    public static String[] toStringArray(StatsTimeframe[] timeframes) {
+        String[] titles = new String[timeframes.length];
+        
+        for (int i = 0; i < timeframes.length; i++) {
+            titles[i] = timeframes[i].getLabel();
+        }
+        
+        return titles;
     }
 
 }

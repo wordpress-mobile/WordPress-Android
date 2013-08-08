@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -35,12 +36,13 @@ import org.wordpress.android.models.StatsVideo;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 import org.wordpress.android.util.StatUtils;
 
-public class StatsVideoFragment extends StatsAbsListViewFragment  implements TabListener {
+public class StatsVideoFragment extends StatsAbsListViewFragment  implements TabListener, StatsCursorFragmentCallback {
     
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;
-    private static final String[] TITLES = new String[] { StatsTimeframe.TODAY.getLabel(), StatsTimeframe.YESTERDAY.getLabel(), "Summary" };
+    private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY, StatsTimeframe.SUMMARY };
     
     public static final String TAG = StatsVideoFragment.class.getSimpleName();
     
@@ -64,12 +66,12 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
 
         @Override
         public int getCount() {
-            return TITLES.length;
+            return TIMEFRAMES.length;
         }
         
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLES[position]; 
+            return TIMEFRAMES[position].getLabel();
         }
 
     }
@@ -80,7 +82,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
             int entryLabelResId = R.string.stats_entry_video_plays;
             int totalsLabelResId = R.string.stats_totals_plays;
             int emptyLabelResId = R.string.stats_empty_video;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_VIDEOS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_VIDEOS_URI, TIMEFRAMES[position], entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             return fragment;
         } else {
@@ -133,7 +135,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
     
     @Override
     public String[] getTabTitles() {
-        return TITLES;
+        return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
     
 
@@ -309,5 +311,11 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
         }
 
         
+    }
+
+    @Override
+    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

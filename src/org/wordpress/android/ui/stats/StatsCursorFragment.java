@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -30,6 +31,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
     private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
+    private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
     
@@ -42,7 +44,13 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private CursorAdapter mAdapter;
     private ContentObserver mContentObserver = new MyObserver(new Handler());
 
-    public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
+    public interface StatsCursorFragmentCallback {
+        public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe);
+    }
+    
+    private StatsCursorFragmentCallback mCallback;
+    
+    public static StatsCursorFragment newInstance(Uri uri, StatsTimeframe timeframe, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
         
         StatsCursorFragment fragment = new StatsCursorFragment();
         
@@ -51,6 +59,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         args.putInt(ARGS_ENTRY_LABEL, entryLabelResId);
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
         args.putInt(ARGS_EMPTY_LABEL, emptyLabelResId);
+        args.putInt(ARGS_TIMEFRAME, timeframe.ordinal());
         fragment.setArguments(args);
         
         return fragment;
@@ -58,6 +67,21 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     
     public Uri getUri() {
         return Uri.parse(getArguments().getString(ARGS_URI));
+    }
+
+    private StatsTimeframe getTimeframe() {
+        return StatsTimeframe.values()[getArguments().getInt(ARGS_TIMEFRAME)];
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (StatsCursorFragmentCallback) getParentFragment();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorFragmentCallback.class.getSimpleName());
+        }
     }
     
     @Override
@@ -107,6 +131,8 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
         return cursorLoader;
+        
+//        return mCallback.getCursorLoader(getUri(), getTimeframe());
     }
 
     @Override
