@@ -396,9 +396,17 @@
   <string name="stats_visitors_and_views_header_all_time">ALL TIME</string>
   
   <!-- stats: totals, followers, and shares -->
-  <string name="stats_totals_followers_shares_header_totals">TOTALS</string>
-  <string name="stats_totals_followers_shares_header_followers">FOLLOWERS</string>
-  <string name="stats_totals_followers_shares_header_shares">SHARES</string>
+  <string name="stats_totals_followers_shares_header_content">Content</string>
+  <string name="stats_totals_followers_shares_header_followers">Followers</string>
+  <string name="stats_totals_followers_shares_header_followers_publicize">
+      <![CDATA[
+      	Followers 
+      	<font color="#9E9E9E">(includes </font>
+      	<font color="#0F4A6D"><a href="http://support.wordpress.com/publicize/">Publicize</a></font>
+      	<font color="#9E9E9E">)</font>
+    	]]>
+  </string>
+  <string name="stats_totals_followers_shares_header_shares">Shares</string>
   <string name="stats_totals_followers_shares_label_posts">Posts</string>
   <string name="stats_totals_followers_shares_label_categories">Categories</string>
   <string name="stats_totals_followers_shares_label_tags">Tags</string>

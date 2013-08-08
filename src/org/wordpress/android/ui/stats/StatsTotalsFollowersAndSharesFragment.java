@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,12 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         mFollowersCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_followers_count);
         mCommentsCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_comments_count);
         mSharesCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_shares_count);
+        
+        TextView followersHeader = (TextView) view.findViewById(R.id.stats_totals_followers_shares_header_followers);
+        if (followersHeader != null) {
+            followersHeader.setText(Html.fromHtml(getString(R.string.stats_totals_followers_shares_header_followers_publicize)));
+            followersHeader.setMovementMethod(LinkMovementMethod.getInstance());
+        }
         
         return view;
     }

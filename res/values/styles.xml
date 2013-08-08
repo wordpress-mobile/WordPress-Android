@@ -190,6 +190,7 @@
     <style name="StatsHeader">
         <item name="android:textColor">@color/wordpress_blue</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
     
     <style name="StatsHeaderTotals">
