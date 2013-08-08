@@ -483,9 +483,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             case R.id.media_multiselect_actionbar_post:
                 handleMultiSelectPost();
                 return true;
-            case R.id.media_multiselect_actionbar_share:
-                handleMultiSelectShare();
-                return true;
             case R.id.media_multiselect_actionbar_trash:
                 handleMultiSelectDelete();
                 return true;
@@ -520,10 +517,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         .setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void handleMultiSelectShare() {
-        // TODO Auto-generated method stub
     }
 
     private void handleMultiSelectPost() {
