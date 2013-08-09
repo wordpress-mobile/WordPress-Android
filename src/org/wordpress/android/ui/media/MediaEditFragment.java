@@ -253,12 +253,12 @@ public class MediaEditFragment extends SherlockFragment {
 
     private void refreshViews(Cursor cursor) {
         if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
-            mScrollView.setVisibility(View.GONE);
+            mLinearLayout.setVisibility(View.GONE);
             return;
         }
         
-        mScrollView.setVisibility(View.VISIBLE);
-        
+        mLinearLayout.setVisibility(View.VISIBLE);
+
         mScrollView.scrollTo(0, 0);
         
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
