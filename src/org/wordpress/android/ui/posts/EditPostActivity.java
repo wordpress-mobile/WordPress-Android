@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.util.*;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -26,7 +20,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.*;
+import android.text.Editable;
+import android.text.Html;
+import android.text.Layout;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
@@ -35,14 +35,34 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -51,9 +71,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.wordpress.android.util.*;
-import org.xmlrpc.android.ApiHelper;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -61,7 +78,36 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPEditText;
+import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
+import org.xmlrpc.android.ApiHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -78,6 +124,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_DATE = 0;
     private static final int ID_DIALOG_TIME = 1;
     private static final int ID_DIALOG_LOADING = 2;
+    private static final int ID_DIALOG_DOWNLOAD = 3;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -1214,8 +1261,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             switch (requestCode) {
                 case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    String imgPath = imageUri.toString();
-                    addMedia(imgPath, imageUri);
+                    verifyImage(imageUri);
                     break;
                 case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1303,6 +1349,88 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }// end null check
     }
 
+    private void verifyImage(Uri imageUri) {
+        // Check if the imageUri returned is of picasa or not
+        if (imageUri.toString().startsWith("content://com.android.gallery3d.provider")) {
+            // Use the com.google provider for devices prior to 3.0
+            imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d", "com.google.android.gallery3d"));
+        }
+
+        if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+            // Create an AsyncTask to download the file
+            new DownloadImageTask().execute(imageUri);
+        } else {
+            // It is a regular local image file
+            String filePath = imageUri.toString();
+            addMedia(filePath, imageUri);
+        }
+    }
+
+    private class DownloadImageTask extends AsyncTask<Uri, Integer, Uri> {
+
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+            Uri imageUri = uris[0];
+            File cacheDir;
+
+            // If the device has an SD card
+            if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
+            else {
+                // If no SD card
+                cacheDir = getApplicationContext().getCacheDir();
+            }
+
+            if (!cacheDir.exists())
+                cacheDir.mkdirs();
+            Random r = new Random();
+            final String path = "wp-" + r.nextInt(400) + r.nextInt(400) + ".jpg";
+
+            File f = new File(cacheDir, path);
+
+            try {
+                InputStream input;
+                // Download the file
+                if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+                    input = getContentResolver().openInputStream(imageUri);
+                } else {
+                    input = new URL(imageUri.toString()).openStream();
+                }
+                OutputStream output = new FileOutputStream(f);
+
+                byte data[] = new byte[1024];
+                int count;
+                while ((count = input.read(data)) != -1) {
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+
+                Uri newUri = Uri.fromFile(f);
+                return newUri;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showDialog(ID_DIALOG_DOWNLOAD);
+        }
+
+        protected void onPostExecute(Uri newUri) {
+            dismissDialog(ID_DIALOG_DOWNLOAD);
+            if (newUri != null)
+                addMedia(newUri.toString(), newUri);
+            else
+                Toast.makeText(getApplicationContext(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void onCategoryButtonClick(View v) {
         // Get category name by removing prefix from the tag
         boolean listChanged = false;
@@ -1377,6 +1505,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 loadingDialog.setIndeterminate(true);
                 loadingDialog.setCancelable(true);
                 return loadingDialog;
+            case ID_DIALOG_DOWNLOAD:
+                ProgressDialog downloadDialog = new ProgressDialog(this);
+                downloadDialog.setMessage(getResources().getText(R.string.download));
+                downloadDialog.setIndeterminate(true);
+                downloadDialog.setCancelable(false);
+                return downloadDialog;
         }
         return super.onCreateDialog(id);
     }
