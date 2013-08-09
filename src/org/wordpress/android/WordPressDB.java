@@ -443,7 +443,7 @@ public class WordPressDB {
                     for (int i = 0; i < numRows; ++i) {
                         if (c.getString(0) != null) {
                             Post post = new Post(c.getInt(0), c.getString(1),
-                                    c.getString(2), c.getString(3),
+                                    c.getString(2), "", c.getString(3),
                                     c.getLong(4), c.getString(5),
                                     c.getString(6), c.getString(7),
                                     c.getString(8), c.getDouble(9),
@@ -469,7 +469,7 @@ public class WordPressDB {
                     for (int i = 0; i < numRows; ++i) {
                         if (c.getString(0) != null) {
                             Post post = new Post(c.getInt(0), c.getString(1),
-                                    c.getString(2), c.getString(3),
+                                    c.getString(2), "", c.getString(3),
                                     c.getLong(4), c.getString(5), "", "",
                                     c.getString(6), 0, 0, true, "", false, false);
                             post.setLocalDraft(true);
@@ -1274,6 +1274,7 @@ public class WordPressDB {
             values.put("latitude", post.getLatitude());
             values.put("longitude", post.getLongitude());
             values.put("isLocalChange", post.isLocalChange());
+            values.put("mt_excerpt", post.getMt_excerpt());
 
             returnValue = db.insert(POSTS_TABLE, null, values);
 
@@ -1312,6 +1313,7 @@ public class WordPressDB {
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getWP_post_format());
             values.put("isLocalChange", post.isLocalChange());
+            values.put("mt_excerpt", post.getMt_excerpt());
 
             int pageInt = 0;
             if (post.isPage())

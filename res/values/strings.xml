@@ -130,6 +130,7 @@
   <string name="featured_in_post">Include image in post content</string>
   <string name="out_of_memory">Device out of memory.</string>
   <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
+  <string name="post_excerpt">Excerpt</string>
 
   <!-- page view -->
   <string name="page_id">Page</string>

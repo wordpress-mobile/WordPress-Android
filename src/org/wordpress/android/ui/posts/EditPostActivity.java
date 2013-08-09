@@ -35,7 +35,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -90,7 +89,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
-    private EditText mTitleEditText, mPasswordEditText, mTagsEditText;
+    private EditText mTitleEditText, mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
@@ -213,6 +212,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         setContentView(R.layout.edit);
         mContentEditText = (WPEditText) findViewById(R.id.postContent);
         mTitleEditText = (EditText) findViewById(R.id.title);
+        mExcerptEditText = (EditText) findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) findViewById(R.id.post_password);
         mLocationText = (TextView) findViewById(R.id.locationText);
         mBoldToggleButton = (ToggleButton) findViewById(R.id.bold);
@@ -236,6 +236,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         ((TextView) findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
 
         if (mIsPage) { // remove post specific views
+            mExcerptEditText.setVisibility(View.GONE);
             (findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
             (findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
@@ -248,13 +249,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 args.add(this);
                 new ApiHelper.getPostFormatsTask().execute(args);
                 mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-                String defaultPostFormatTitles[] = { "aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
-                        "video" };
+                String defaultPostFormatTitles[] = {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
+                        "video"};
                 mPostFormats = defaultPostFormatTitles;
             } else {
                 try {
                     Gson gson = new Gson();
-                    Type type = new TypeToken<Map<String, String>>(){}.getType();
+                    Type type = new TypeToken<Map<String, String>>() {
+                    }.getType();
                     Map<String, String> jsonPostFormats = gson.fromJson(mBlog.getPostFormats(), type);
                     mPostFormats = new String[jsonPostFormats.size()];
                     mPostFormatTitles = new String[jsonPostFormats.size()];
@@ -292,8 +294,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 setContent();
         }
 
-        String[] items = new String[] { getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private) };
+        String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
+                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -316,9 +318,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         } else {
             mTitleEditText.setText(mPost.getTitle());
+            mExcerptEditText.setText(mPost.getMt_excerpt());
 
             if (mPost.isUploaded()) {
-                items = new String[] {
+                items = new String[]{
                         getResources().getString(R.string.publish_post),
                         getResources().getString(R.string.draft),
                         getResources().getString(R.string.pending_review),
@@ -449,7 +452,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenu.ContextMenuInfo menuInfo) {
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
         if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
@@ -463,18 +466,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case 0:
-            launchPictureLibrary();
-            return true;
-        case 1:
-            launchCamera();
-            return true;
-        case 2:
-            launchVideoLibrary();
-            return true;
-        case 3:
-            launchVideoCamera();
-            return true;
+            case 0:
+                launchPictureLibrary();
+                return true;
+            case 1:
+                launchCamera();
+                return true;
+            case 2:
+                launchVideoLibrary();
+                return true;
+            case 3:
+                launchVideoCamera();
+                return true;
         }
         return false;
     }
@@ -723,7 +726,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                         alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
 
-                        seekBar.setMax(span.getWidth() / 10 );
+                        seekBar.setMax(span.getWidth() / 10);
                         if (span.getWidth() != 0)
                             seekBar.setProgress(span.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -922,7 +925,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mAccountName = blogNames[0];
                 setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
                         + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
-            };
+            }
+            ;
             return true;
         } else {
             // no account, load main view to load new account view
@@ -1208,93 +1212,93 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             Bundle extras;
 
             switch (requestCode) {
-            case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-                Uri imageUri = data.getData();
-                String imgPath = imageUri.toString();
-                addMedia(imgPath, imageUri);
-                break;
-            case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
-                if (resultCode == Activity.RESULT_OK) {
+                case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                    Uri imageUri = data.getData();
+                    String imgPath = imageUri.toString();
+                    addMedia(imgPath, imageUri);
+                    break;
+                case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            File f = new File(mMediaCapturePath);
+                            Uri capturedImageUri = Uri.fromFile(f);
+                            f = null;
+                            addMedia(capturedImageUri.toString(), capturedImageUri);
+                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                                    + Environment.getExternalStorageDirectory())));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } catch (OutOfMemoryError e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                    Uri videoUri = data.getData();
+                    String videoPath = videoUri.toString();
+                    addMedia(videoPath, videoUri);
+                    break;
+                case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        Uri capturedVideo = data.getData();
+                        addMedia(capturedVideo.toString(), capturedVideo);
+                    }
+                    break;
+                case ACTIVITY_REQUEST_CODE_CREATE_LINK:
                     try {
-                        File f = new File(mMediaCapturePath);
-                        Uri capturedImageUri = Uri.fromFile(f);
-                        f = null;
-                        addMedia(capturedImageUri.toString(), capturedImageUri);
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                + Environment.getExternalStorageDirectory())));
+                        extras = data.getExtras();
+                        String linkURL = extras.getString("linkURL");
+                        if (!linkURL.equals("http://") && !linkURL.equals("")) {
+
+                            if (mSelectionStart > mSelectionEnd) {
+                                int temp = mSelectionEnd;
+                                mSelectionEnd = mSelectionStart;
+                                mSelectionStart = temp;
+                            }
+                            Editable str = mContentEditText.getText();
+                            if (mLocalDraft) {
+                                if (extras.getString("linkText") == null) {
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    str.insert(mSelectionStart, linkURL);
+                                    str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
+                                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    mContentEditText.setSelection(mSelectionStart + linkURL.length());
+                                } else {
+                                    String linkText = extras.getString("linkText");
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    str.insert(mSelectionStart, linkText);
+                                    str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
+                                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    mContentEditText.setSelection(mSelectionStart + linkText.length());
+                                }
+                            } else {
+                                if (extras.getString("linkText") == null) {
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    String urlHTML = "<a href=\"" + linkURL + "\">" + linkURL + "</a>";
+                                    str.insert(mSelectionStart, urlHTML);
+                                    mContentEditText.setSelection(mSelectionStart + urlHTML.length());
+                                } else {
+                                    String linkText = extras.getString("linkText");
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    String urlHTML = "<a href=\"" + linkURL + "\">" + linkText + "</a>";
+                                    str.insert(mSelectionStart, urlHTML);
+                                    mContentEditText.setSelection(mSelectionStart + urlHTML.length());
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    } catch (OutOfMemoryError e) {
-                        e.printStackTrace();
                     }
-                }
-                break;
-            case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
-                Uri videoUri = data.getData();
-                String videoPath = videoUri.toString();
-                addMedia(videoPath, videoUri);
-                break;
-            case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri capturedVideo = data.getData();
-                    addMedia(capturedVideo.toString(), capturedVideo);
-                }
-                break;
-            case ACTIVITY_REQUEST_CODE_CREATE_LINK:
-                try {
+                    break;
+                case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
-                    String linkURL = extras.getString("linkURL");
-                    if (!linkURL.equals("http://") && !linkURL.equals("")) {
-
-                        if (mSelectionStart > mSelectionEnd) {
-                            int temp = mSelectionEnd;
-                            mSelectionEnd = mSelectionStart;
-                            mSelectionStart = temp;
-                        }
-                        Editable str = mContentEditText.getText();
-                        if (mLocalDraft) {
-                            if (extras.getString("linkText") == null) {
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                str.insert(mSelectionStart, linkURL);
-                                str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                mContentEditText.setSelection(mSelectionStart + linkURL.length());
-                            } else {
-                                String linkText = extras.getString("linkText");
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                str.insert(mSelectionStart, linkText);
-                                str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                mContentEditText.setSelection(mSelectionStart + linkText.length());
-                            }
-                        } else {
-                            if (extras.getString("linkText") == null) {
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                String urlHTML = "<a href=\"" + linkURL + "\">" + linkURL + "</a>";
-                                str.insert(mSelectionStart, urlHTML);
-                                mContentEditText.setSelection(mSelectionStart + urlHTML.length());
-                            } else {
-                                String linkText = extras.getString("linkText");
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                String urlHTML = "<a href=\"" + linkURL + "\">" + linkText + "</a>";
-                                str.insert(mSelectionStart, urlHTML);
-                                mContentEditText.setSelection(mSelectionStart + urlHTML.length());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
-                extras = data.getExtras();
-                mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
-                populateSelectedCategories();
-                break;
+                    mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                    populateSelectedCategories();
+                    break;
             }
         }// end null check
     }
@@ -1359,20 +1363,20 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     protected Dialog onCreateDialog(int id) {
 
         switch (id) {
-        case ID_DIALOG_DATE:
-            DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
-            dpd.setTitle("");
-            return dpd;
-        case ID_DIALOG_TIME:
-            TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
-            tpd.setTitle("");
-            return tpd;
-        case ID_DIALOG_LOADING:
-            ProgressDialog loadingDialog = new ProgressDialog(this);
-            loadingDialog.setMessage(getResources().getText(R.string.loading));
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(true);
-            return loadingDialog;
+            case ID_DIALOG_DATE:
+                DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
+                dpd.setTitle("");
+                return dpd;
+            case ID_DIALOG_TIME:
+                TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
+                tpd.setTitle("");
+                return tpd;
+            case ID_DIALOG_LOADING:
+                ProgressDialog loadingDialog = new ProgressDialog(this);
+                loadingDialog.setMessage(getResources().getText(R.string.loading));
+                loadingDialog.setIndeterminate(true);
+                loadingDialog.setCancelable(true);
+                return loadingDialog;
         }
         return super.onCreateDialog(id);
     }
@@ -1382,6 +1386,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String title = mTitleEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String pubDate = mPubDateText.getText().toString();
+        String excerpt = mExcerptEditText.getText().toString();
         String content = "";
 
         if (mLocalDraft || mIsNew && !isAutoSave) {
@@ -1481,18 +1486,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             String status = "";
 
             switch (selectedStatus) {
-            case 0:
-                status = "publish";
-                break;
-            case 1:
-                status = "draft";
-                break;
-            case 2:
-                status = "pending";
-                break;
-            case 3:
-                status = "private";
-                break;
+                case 0:
+                    status = "publish";
+                    break;
+                case 1:
+                    status = "draft";
+                    break;
+                case 2:
+                    status = "pending";
+                    break;
+                case 3:
+                    status = "private";
+                    break;
             }
 
             Double latitude = 0.0;
@@ -1509,7 +1514,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (mIsNew) {
-                mPost = new Post(mBlogID, title, content, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
+                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
                         latitude, longitude, mIsPage, postFormat, true, false);
                 mPost.setLocalDraft(true);
 
@@ -1562,6 +1567,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 mPost.setTitle(title);
+                mPost.setMt_excerpt(excerpt);
                 // split up the post content if there's a more tag
                 if (mLocalDraft && content.indexOf(moreTag) >= 0) {
                     mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
@@ -1706,7 +1712,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         int[] dimensions = ImageHelper.getImageSize(curStream, EditPostActivity.this);
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
 
-        if ( Math.min(imageWidthPictureSetting, imageWidthBlogSetting) ==  Integer.MAX_VALUE ) {
+        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
             is.setWidth(1024); //Default value in case of errors reading the picture size and the blog settings is set to Original size
         } else {
             is.setWidth(Math.min(imageWidthPictureSetting, imageWidthBlogSetting));
