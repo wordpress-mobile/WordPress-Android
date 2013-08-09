@@ -171,17 +171,16 @@ public class MediaEditFragment extends SherlockFragment {
         if (blog != null && getActivity() != null) {
             String blogId = String.valueOf(blog.getBlogId());
 
-            Cursor cursor;
+            Cursor cursor = null;
 
-            // if the id is null, get the first media item in the database
-            if (mMediaId == null) {
-                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
-            } else {
+            if (mMediaId != null) {
                 cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
+                refreshViews(cursor);
+                cursor.close();
+            } else {
+                refreshViews(null);
             }
 
-            refreshViews(cursor);
-            cursor.close();
         }
     }
 
@@ -253,19 +252,12 @@ public class MediaEditFragment extends SherlockFragment {
     }
 
     private void refreshViews(Cursor cursor) {
-        if (!cursor.moveToFirst()) {
-            // hide all the views
-            for (int i = 0; i < mScrollView.getChildCount();  i++){
-                View view = mScrollView.getChildAt(i);
-                view.setVisibility(View.GONE);
-            }
+        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
+            mScrollView.setVisibility(View.GONE);
             return;
         }
         
-        for (int i = 0; i < mScrollView.getChildCount();  i++){
-            View view = mScrollView.getChildAt(i);
-            view.setVisibility(View.VISIBLE);
-        }
+        mScrollView.setVisibility(View.VISIBLE);
         
         mScrollView.scrollTo(0, 0);
         

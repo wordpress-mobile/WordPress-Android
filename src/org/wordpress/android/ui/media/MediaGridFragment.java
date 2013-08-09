@@ -47,7 +47,9 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
     
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
+    private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
+    private static final String BUNDLE_HAS_RETREIEVED_ALL_MEDIA = "BUNDLE_HAS_RETREIEVED_ALL_MEDIA";
 
     private Cursor mCursor;
     private Filter mFilter = Filter.ALL;
@@ -61,6 +63,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private boolean mIsRefreshing = false;
     
     private int mSavedFirstVisiblePosition = 0;
+    private boolean mHasRetrievedAllMedia;
 
     private View mSpinnerContainer;
     private TextView mResultView;
@@ -145,11 +148,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         if (savedInstanceState == null)
             return;
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
+            boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
             mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
-            mListener.onMultiSelectChange(mCheckedItems.size());
-            mGridView.setMultiSelectModeEnabled(mCheckedItems.size() > 0);
+            if (isInMultiSelectMode)
+                mListener.onMultiSelectChange(mCheckedItems.size());
+            mGridView.setMultiSelectModeEnabled(isInMultiSelectMode);
         }
         mSavedFirstVisiblePosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0);
+        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, false);
     }
 
     @Override
@@ -161,6 +167,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private void saveState(Bundle outState) {
         outState.putStringArrayList(BUNDLE_CHECKED_STATES, mCheckedItems);
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
+        outState.putBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
+        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
     }
 
     private void setupSpinnerAdapter() {
@@ -223,15 +231,18 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
         if (mCursor != null) {
-            if (mCursor.getCount() == 0) {
+            if (mCursor.getCount() == 0 && !mHasRetrievedAllMedia) {
                 refreshMediaFromServer(0, true);
             }
                 
-            mGridAdapter = new MediaGridAdapter(getActivity(), mCursor, 0, mCheckedItems);
-            mGridAdapter.setCallback(this);
-            mGridView.setAdapter(mGridAdapter);
-            mGridView.setSelection(mSavedFirstVisiblePosition);
+            if (mGridAdapter == null) {
+                mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems);
+                mGridAdapter.setCallback(this);
+                mGridView.setAdapter(mGridAdapter);
+                mGridView.setSelection(mSavedFirstVisiblePosition);
+            }
         }
+        mGridAdapter.swapCursor(mCursor);
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
@@ -250,11 +261,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                 @Override
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                    if (count == 0) {
-                        adapter.setHasRetrieviedAll(true);
-                    } else {
-                        adapter.setHasRetrieviedAll(false);
-                    }
+                    mHasRetrievedAllMedia = (count == 0);
+                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
                     
                     mIsRefreshing = false;
 
@@ -321,7 +329,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mFilter = filter;
         mCursor = filterItems(mFilter);
 
-        if (mCursor != null && mCursor.getCount() > 0 && mGridAdapter != null) {
+        if (mGridAdapter != null) {
             mGridAdapter.swapCursor(mCursor);
             mResultView.setVisibility(View.GONE);
         } else {
@@ -429,7 +437,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     @Override
     public void fetchMoreData(int offset) {
-        refreshMediaFromServer(offset, true);
+        if (!mHasRetrievedAllMedia)
+            refreshMediaFromServer(offset, true);
     }
 
     @Override
@@ -495,6 +504,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     @Override
     public void onRetryUpload(String mediaId) {
         mListener.onRetryUpload(mediaId);
+    }
+    
+    public boolean hasRetrievedAllMediaFromServer() {
+        return mHasRetrievedAllMedia;
     }
 
 }

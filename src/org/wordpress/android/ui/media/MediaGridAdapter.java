@@ -66,16 +66,15 @@ public class MediaGridAdapter extends CursorAdapter {
         ProgressBar progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
         
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
-        TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
+        final TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
         if (stateTextView != null) {
             if (state != null && state.length() > 0) {
                 
                 // show the progressbar only when the state is uploading
-                if (state.equals("failed") || state.equals("uploaded")) {
-                    progressUpload.setVisibility(View.GONE);
-                } else {
+                if (state.equals("uploading")) {
                     progressUpload.setVisibility(View.VISIBLE);
-
+                } else {
+                    progressUpload.setVisibility(View.GONE);
                 }
                 
                 // add onclick to retry failed uploads 
@@ -87,8 +86,8 @@ public class MediaGridAdapter extends CursorAdapter {
                         @Override
                         public void onClick(View v) {
                             if (!inMultiSelect()) {
+                                stateTextView.setText("queued");
                                 mCallback.onRetryUpload(mediaId);
-                                notifyDataSetChanged();
                             }
                         }
 

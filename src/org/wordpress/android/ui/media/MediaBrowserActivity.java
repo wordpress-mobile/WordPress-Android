@@ -203,7 +203,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        if (mMediaGridFragment != null) {
+        if (mMediaGridFragment != null && !mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
             mMediaGridFragment.refreshMediaFromServer(0, false);
             startAnimatingRefreshButton();
         }
@@ -344,7 +344,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                     ArrayList<String> ids = new ArrayList<String>(1);
                     ids.add(mediaId);
                     onDeleteMedia(ids);
-                    mMediaEditFragment.loadMedia(null);
             }
         })
         .setNegativeButton(R.string.cancel, null);
@@ -439,6 +438,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         // mark items for delete without actually deleting items yet,
         // and then refresh the grid
         WordPress.wpDB.setMediaFilesMarkedForDelete(blogId, ids);
+        
+        if (mMediaEditFragment != null) {
+            String mediaId = mMediaEditFragment.getMediaId();
+            for (String id : ids) {
+                if (id.equals(mediaId)) {
+                    mMediaEditFragment.loadMedia(null);
+                    break;
+                }
+            }
+        }
+        mMediaGridFragment.clearCheckedItems();
         mMediaGridFragment.refreshMediaFromDB();
 
         startMediaDeleteService();
@@ -545,7 +555,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
                 onDeleteMedia(ids);
-                mMediaGridFragment.clearCheckedItems();
                 mMediaGridFragment.refreshSpinnerAdapter();
             }
         })
