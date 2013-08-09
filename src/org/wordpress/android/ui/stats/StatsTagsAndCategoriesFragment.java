@@ -32,9 +32,10 @@ import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
 import org.wordpress.android.models.StatsTagsandCategories;
 import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentInterface;
 import org.wordpress.android.util.Utils;
 
-public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
+public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment implements StatsCursorFragmentInterface {
 
     private static final Uri STATS_TAGS_AND_CATEGORIES_URI = StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI;
 
@@ -159,6 +160,11 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
             }
             return null;
         }        
+    }
+
+    @Override
+    public void onCursorLoaded(Uri uri, Cursor cursor) {
+        // do nothing
     }
 
 }

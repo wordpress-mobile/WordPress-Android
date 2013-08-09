@@ -41,6 +41,11 @@ public class StatUtils {
         return -1;
     }
 
+    public static String msToString(long ms, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(new Date(ms));
+    }
+    
     public static boolean isDayOld(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -58,6 +63,10 @@ public class StatUtils {
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date());
+    }
+    
+    public static long getCurrentDateMs() {
+        return toMs(getCurrentDate());
     }
     
     /** Parses date into form MMMMM d, yyyy (e.g. July 13, 2013) from timestamp of the form yyyy-MM-dd (e.g. 2013-07-13) **/

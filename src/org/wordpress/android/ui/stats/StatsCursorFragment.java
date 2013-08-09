@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Activity;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -42,6 +43,12 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private CursorAdapter mAdapter;
     private ContentObserver mContentObserver = new MyObserver(new Handler());
     
+    public interface StatsCursorFragmentInterface {
+        public void onCursorLoaded(Uri uri, Cursor cursor);
+    }
+    
+    private StatsCursorFragmentInterface mCallback;
+    
     public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
         
         StatsCursorFragment fragment = new StatsCursorFragment();
@@ -58,6 +65,17 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     
     public Uri getUri() {
         return Uri.parse(getArguments().getString(ARGS_URI));
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        try {
+            mCallback = (StatsCursorFragmentInterface) getParentFragment();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorFragmentInterface.class.getSimpleName());
+        }
     }
     
     @Override
@@ -111,6 +129,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCallback.onCursorLoaded(getUri(), data);
         if (mAdapter != null)
             mAdapter.swapCursor(data);
         configureEmptyLabel();

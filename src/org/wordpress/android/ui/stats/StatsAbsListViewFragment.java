@@ -3,6 +3,8 @@ package org.wordpress.android.ui.stats;
 
 import java.util.Locale;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -20,9 +22,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentInterface;
+import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
-public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener {
+public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorFragmentInterface {
 
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
     
@@ -31,6 +35,8 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
     protected FragmentStatePagerAdapter mAdapter;
+
+    private RadioGroup mRadioGroup;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,9 +69,9 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         
         String[] titles = getTabTitles();
         
-        RadioGroup rg = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
-        rg.setVisibility(View.VISIBLE);
-        rg.setOnCheckedChangeListener(this);
+        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        mRadioGroup.setVisibility(View.VISIBLE);
+        mRadioGroup.setOnCheckedChangeListener(this);
         
         for (int i = 0; i < titles.length; i++) {
             RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
@@ -76,7 +82,7 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
-            rg.addView(rb);
+            mRadioGroup.addView(rb);
             
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
@@ -148,4 +154,50 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     protected abstract Fragment getFragment(int position);
         
     public abstract void refresh(int position);
+    
+    @Override
+    public void onCursorLoaded(Uri uri, Cursor cursor) {
+        if (!cursor.moveToFirst())
+            return;
+        
+        if (cursor.getColumnIndex("date") == -1)
+            return;
+        
+        if (uri.getQueryParameter("timeframe") == null)
+            return;
+        
+        String timeframe = uri.getQueryParameter("timeframe");
+        long date = cursor.getLong(cursor.getColumnIndex("date"));
+        long currentDate = StatUtils.getCurrentDateMs();
+        
+        if (timeframe.equals(StatsTimeframe.TODAY.name())) {
+            String label;
+            if (date < currentDate) // old stats
+                label = StatUtils.msToString(date, "MMM d");
+            else 
+                label = StatsTimeframe.TODAY.getLabel();
+
+            setLabel(0, label);
+        } else if (timeframe.equals(StatsTimeframe.YESTERDAY.name())) {
+            
+            currentDate -= 24 * 60 * 60 * 1000; // subtract one day
+            
+            String label;
+            if (date < currentDate) // old stats
+                label = StatUtils.msToString(date, "MMM d");
+            else
+                label = StatsTimeframe.YESTERDAY.getLabel();
+        
+            setLabel(1, label);
+        }
+        
+        
+    }
+
+    private void setLabel(int position, String label) {
+        if (mTabView != null)
+            mTabView.setTabText(position, label.toUpperCase(Locale.getDefault()));
+        if (mRadioGroup != null) 
+            ((RadioButton) mRadioGroup.getChildAt(position)).setText(label);
+    }
 }

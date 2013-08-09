@@ -209,6 +209,11 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         }
     }
     
+    public void setTabText(int position, String text) {
+        mTabs.get(position).mText = text;
+        mTextViews.get(position).setText(text);
+    }
+    
     private void scrollToTab(int position) {
         int tabWidth = getTabParent(position).getWidth();
         int parentWidth = ((View) this.getParent()).getWidth();
