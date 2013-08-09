@@ -46,6 +46,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
+import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener, MediaItemFragmentCallback, 
@@ -319,11 +320,45 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             if (mSearchView != null)
                 mSearchView.clearFocus();
 
+        } else if (itemId == R.id.menu_delete) {
+            String mediaId = mMediaEditFragment.getMediaId();
+            launchConfirmDeleteDialog(mediaId);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    
+    
+    private void launchConfirmDeleteDialog(final String mediaId) {
+        if (mediaId == null)
+            return;
+        
+        Builder builder = new AlertDialog.Builder(this)
+        .setMessage(R.string.confirm_delete_media)
+        .setCancelable(true)
+        .setPositiveButton(R.string.delete, new OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    ArrayList<String> ids = new ArrayList<String>(1);
+                    ids.add(mediaId);
+                    onDeleteMedia(ids);
+                    mMediaEditFragment.loadMedia(null);
+            }
+        })
+        .setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();   
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_delete).setVisible(Utils.isTablet());
+        return super.onPrepareOptionsMenu(menu);
+    }
+    
+    
     @Override
     public void onMediaItemListDownloaded() {
 
