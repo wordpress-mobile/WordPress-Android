@@ -28,6 +28,8 @@ import org.wordpress.android.util.Utils;
 
 public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorFragmentInterface {
 
+    private static final int ONE_DAY = 24 * 60 * 60 * 1000;
+
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
     
     private int mSelectedButtonIndex = 0;
@@ -171,16 +173,20 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         long currentDate = StatUtils.getCurrentDateMs();
         
         if (timeframe.equals(StatsTimeframe.TODAY.name())) {
-            String label;
-            if (date < currentDate) // old stats
-                label = StatUtils.msToString(date, "MMM d");
-            else 
-                label = StatsTimeframe.TODAY.getLabel();
+            String label1, label2;
+            if (date < currentDate) { // old stats
+                label1 = StatUtils.msToString(date, "MMM d");
+                label2 = StatUtils.msToString(date - ONE_DAY, "MMM d"); // assume the second set of stats is also old, and one day behind
+            } else { 
+                label1 = StatsTimeframe.TODAY.getLabel();
+                label2 = StatsTimeframe.YESTERDAY.getLabel();
+            }
 
-            setLabel(0, label);
+            setLabel(0, label1);
+            setLabel(1, label2);
         } else if (timeframe.equals(StatsTimeframe.YESTERDAY.name())) {
             
-            currentDate -= 24 * 60 * 60 * 1000; // subtract one day
+            currentDate -= ONE_DAY; 
             
             String label;
             if (date < currentDate) // old stats
