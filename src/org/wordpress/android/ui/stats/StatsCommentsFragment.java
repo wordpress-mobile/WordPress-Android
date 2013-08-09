@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -40,10 +39,9 @@ import org.wordpress.android.models.StatsMostCommented;
 import org.wordpress.android.models.StatsTopCommenter;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 import org.wordpress.android.util.StatUtils;
 
-public class StatsCommentsFragment extends StatsAbsListViewFragment implements TabListener, StatsCursorFragmentCallback {
+public class StatsCommentsFragment extends StatsAbsListViewFragment implements TabListener {
 
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
@@ -90,13 +88,13 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         if (position == 0) {
             int entryLabelResId = R.string.stats_entry_top_commenter;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, StatsTimeframe.NONE, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
             return fragment;
         } else if (position == 1) {
             int entryLabelResId = R.string.stats_entry_most_commented;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, StatsTimeframe.NONE, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {
@@ -389,11 +387,4 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         
     }
 
-
-    @Override
-    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
 }

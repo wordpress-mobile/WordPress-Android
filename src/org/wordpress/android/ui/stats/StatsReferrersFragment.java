@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -35,9 +34,8 @@ import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 
-public class StatsReferrersFragment extends StatsAbsListViewFragment  implements TabListener, StatsCursorFragmentCallback {
+public class StatsReferrersFragment extends StatsAbsListViewFragment  implements TabListener {
     
     private static final Uri STATS_REFERRERS_URI = StatsContentProvider.STATS_REFERRERS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -77,7 +75,10 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
         int entryLabelResId = R.string.stats_entry_referrers;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_referrers;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_REFERRERS_URI, TIMEFRAMES[position], entryLabelResId, totalsLabelResId, emptyLabelResId);
+        
+        Uri uri = Uri.parse(STATS_REFERRERS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
@@ -196,12 +197,6 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
             }
             return null;
         }        
-    }
-
-    @Override
-    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

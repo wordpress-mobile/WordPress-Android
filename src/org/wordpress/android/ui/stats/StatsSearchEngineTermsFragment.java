@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +29,8 @@ import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 
-public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  implements TabListener, StatsCursorFragmentCallback {
+public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  implements TabListener {
 
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -72,7 +70,10 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
         int entryLabelResId = R.string.stats_entry_search_engine_terms;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_search_engine_terms;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_SEARCH_ENGINE_TERMS_URI, TIMEFRAMES[position], entryLabelResId, totalsLabelResId, emptyLabelResId);
+        
+        Uri uri = Uri.parse(STATS_SEARCH_ENGINE_TERMS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
@@ -168,12 +169,6 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
             }
             return null;
         }        
-    }
-
-    @Override
-    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

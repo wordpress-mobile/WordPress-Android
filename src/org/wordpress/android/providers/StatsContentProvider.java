@@ -109,10 +109,8 @@ public class StatsContentProvider extends ContentProvider {
     public synchronized Uri insert(Uri uri, ContentValues values) {
         SQLTable table = getSQLTable(uri);
         if (table != null) {
-            long rowId = table.insert(getDB(), uri, values);
-            Uri result = Uri.parse(uri + "/" + rowId);
-            getContext().getContentResolver().notifyChange(result, null);
-            return result;
+            table.insert(getDB(), uri, values);
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         
         return null;

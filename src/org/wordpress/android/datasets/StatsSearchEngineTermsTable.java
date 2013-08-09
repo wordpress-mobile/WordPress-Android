@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import org.wordpress.android.models.StatsSearchEngineTerm;
+import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class StatsSearchEngineTermsTable extends SQLTable {
 
@@ -70,6 +71,27 @@ public class StatsSearchEngineTermsTable extends SQLTable {
 
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return super.query(database, uri, projection, selection, selectionArgs, Columns.VIEWS + " DESC, " + Columns.SEARCH + " ASC");
+        String sort = NAME + "." + Columns.VIEWS + " DESC, " + NAME + "." + Columns.SEARCH + " ASC";
+        
+        String timeframe = uri.getQueryParameter("timeframe");
+        if (timeframe == null)
+            return super.query(database, uri, projection, selection, selectionArgs, sort);
+        
+        // get the latest for "Today", and the next latest for "Yesterday"
+        if (timeframe.equals(StatsTimeframe.TODAY.name())) {
+            return database.rawQuery("SELECT * FROM " + NAME +", " +
+                            "(SELECT MAX(date) AS date FROM " + NAME + ") AS temp " +
+                            "WHERE temp.date = " + NAME + ".date ORDER BY " + sort, null);
+
+        } else if (timeframe.equals(StatsTimeframe.YESTERDAY.name())) {
+            return database.rawQuery(
+                    "SELECT * FROM " + NAME + ", " +
+                            "(SELECT MAX(date) AS date FROM " + NAME + ", " +
+                                "( SELECT MAX(date) AS max FROM " + NAME + ")" +
+                            " WHERE " + NAME + ".date < max) AS temp " + 
+                    "WHERE " + NAME + ".date = temp.date ORDER BY " + sort, null);
+        }
+
+        return super.query(database, uri, projection, selection, selectionArgs, sort);
     }
 }

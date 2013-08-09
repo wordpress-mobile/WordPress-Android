@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,9 +32,8 @@ import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.models.StatsGeoview;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 
-public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements TabListener, StatsCursorFragmentCallback {
+public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements TabListener {
     
     private static final Uri STATS_GEOVIEWS_URI = StatsContentProvider.STATS_GEOVIEWS_URI;
 
@@ -76,7 +74,10 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
         int entryLabelResId = R.string.stats_entry_country;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_geoviews;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_GEOVIEWS_URI, TIMEFRAMES[position], entryLabelResId, totalsLabelResId, emptyLabelResId);
+        
+        Uri uri = Uri.parse(STATS_GEOVIEWS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
@@ -190,9 +191,4 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
         }        
     }
 
-    @Override
-    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

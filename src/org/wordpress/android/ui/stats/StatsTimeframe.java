@@ -16,7 +16,6 @@ public enum StatsTimeframe {
     DAYS(R.string.stats_timeframe_days),
     WEEKS(R.string.stats_timeframe_weeks),
     MONTHS(R.string.stats_timeframe_months),
-    NONE(R.string.stats_timeframe_none),
     SUMMARY(R.string.stats_summary),
     ;
 

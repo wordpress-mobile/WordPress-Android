@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,10 +32,9 @@ import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
 import org.wordpress.android.models.StatsTagsandCategories;
 import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 import org.wordpress.android.util.Utils;
 
-public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment implements StatsCursorFragmentCallback {
+public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment {
 
     private static final Uri STATS_TAGS_AND_CATEGORIES_URI = StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI;
 
@@ -56,7 +54,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
         int entryLabelResId = R.string.stats_entry_tags_and_categories;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_tags_and_categories;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, StatsTimeframe.NONE, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
 
         FragmentTransaction ft = fm.beginTransaction();
@@ -163,9 +161,4 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
         }        
     }
 
-    @Override
-    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

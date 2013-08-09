@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -34,9 +33,8 @@ import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentCallback;
 
-public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  implements TabListener, StatsCursorFragmentCallback {
+public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  implements TabListener {
     
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -76,7 +74,10 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  imp
         int entryLabelResId = R.string.stats_entry_posts_and_pages;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_top_posts;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_POSTS_AND_PAGES_URI, TIMEFRAMES[position], entryLabelResId, totalsLabelResId, emptyLabelResId);
+        
+        Uri uri = Uri.parse(STATS_TOP_POSTS_AND_PAGES_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
@@ -179,12 +180,6 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  imp
             }
             return null;
         }        
-    }
-
-    @Override
-    public CursorLoader getCursorLoader(Uri uri, StatsTimeframe timeframe) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }
