@@ -43,7 +43,7 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
     public static final String TAG = StatsReferrersFragment.class.getSimpleName();
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
 
@@ -142,7 +142,7 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
     }
 
     @Override
-    public String[] getTabTitles() {
+    protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
     

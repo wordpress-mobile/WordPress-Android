@@ -46,7 +46,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
     
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
 
@@ -135,7 +135,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
     }
     
     @Override
-    public String[] getTabTitles() {
+    protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
     

@@ -42,7 +42,7 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
     public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
 
@@ -134,7 +134,7 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
     }
 
     @Override
-    public String[] getTabTitles() {
+    protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
 

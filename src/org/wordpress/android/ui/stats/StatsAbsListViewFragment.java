@@ -141,9 +141,9 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
         outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
     }
     
-    public abstract FragmentStatePagerAdapter getAdapter();
+    protected abstract FragmentStatePagerAdapter getAdapter();
 
-    public abstract String[] getTabTitles();
+    protected abstract String[] getTabTitles();
 
     protected abstract Fragment getFragment(int position);
         

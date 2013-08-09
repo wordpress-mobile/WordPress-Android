@@ -30,7 +30,6 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
     private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
-    private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
     

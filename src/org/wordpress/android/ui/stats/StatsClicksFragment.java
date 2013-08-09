@@ -41,7 +41,7 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
     public static final String TAG = StatsClicksFragment.class.getSimpleName();
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
     
@@ -68,7 +68,8 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
         
     }
     
-    public String[] getTabTitles() {
+    @Override
+    protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
 

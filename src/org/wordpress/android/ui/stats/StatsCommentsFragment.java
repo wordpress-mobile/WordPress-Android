@@ -54,7 +54,7 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
     private static final int MOST_COMMENTED = 1;
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
     
@@ -173,7 +173,7 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
     }
 
     @Override
-    public String[] getTabTitles() {
+    protected String[] getTabTitles() {
         return TITLES;
     }
 

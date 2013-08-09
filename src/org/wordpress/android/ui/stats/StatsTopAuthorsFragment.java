@@ -40,7 +40,7 @@ public class StatsTopAuthorsFragment extends StatsAbsListViewFragment  implement
     public static final String TAG = StatsTopAuthorsFragment.class.getSimpleName();
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
 
@@ -132,7 +132,7 @@ public class StatsTopAuthorsFragment extends StatsAbsListViewFragment  implement
     }
 
     @Override
-    public String[] getTabTitles() {
+    protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
 

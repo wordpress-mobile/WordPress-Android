@@ -38,7 +38,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
     public static final String TAG = StatsSearchEngineTermsFragment.class.getSimpleName();
     
     @Override
-    public FragmentStatePagerAdapter getAdapter() {
+    protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
     
@@ -114,7 +114,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
     }
 
     @Override
-    public String[] getTabTitles() {
+    protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
 
