@@ -107,9 +107,9 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     private void hideHeaderIfLandscape() {
         Display display = getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        if (point.y < point.x) {
+        int width = display.getWidth();
+        int height = display.getHeight();
+        if (height < width) {
             mStatsHeader.setVisibility(View.GONE);
         } else {
             mStatsHeader.setVisibility(View.VISIBLE);

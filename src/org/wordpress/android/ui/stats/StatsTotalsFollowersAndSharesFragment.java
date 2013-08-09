@@ -91,7 +91,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         if (WordPress.getCurrentBlog() == null)
             return; 
 
-        final String blogId = String.valueOf(WordPress.getCurrentBlog());
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
         WordPress.restClient.getStatsTotalsFollowersAndShares(blogId, 
                 new Listener() {
