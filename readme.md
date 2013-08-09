@@ -8,10 +8,10 @@ If you're just looking to install WordPress for Android, you can find it on
 
 ## Helpful Resources ##
 
-Developer Blog: <http://dev.android.wordpress.org>  
-Source Code: <http://android.svn.wordpress.org>  
-Issue Tracker and Code Browser: <http://android.trac.wordpress.org/>  
-WordPress Mobile Developer Handbook: <http://make.wordpress.org/mobile/handbook/>  
+Developer Blog: <http://dev.android.wordpress.org>
+Source Code: <http://android.svn.wordpress.org>
+Issue Tracker and Code Browser: <http://android.trac.wordpress.org/>
+WordPress Mobile Developer Handbook: <http://make.wordpress.org/mobile/handbook/>
 
 
 
@@ -46,3 +46,8 @@ Also see the full Android documentation, [Building and Running from the Command
 Line][command-line].
 
 [command-line]: http://developer.android.com/tools/building/building-cmdline.html
+
+## Run Unittests ##
+
+    cd tests
+    ant debug && ant installd && ant test
