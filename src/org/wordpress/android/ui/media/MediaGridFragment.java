@@ -147,13 +147,18 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
+        
+        boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
+        
         if (savedInstanceState.containsKey(BUNDLE_CHECKED_STATES)) {
-            boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
             mCheckedItems = savedInstanceState.getStringArrayList(BUNDLE_CHECKED_STATES);
-            if (isInMultiSelectMode)
+            if (isInMultiSelectMode) {
                 mListener.onMultiSelectChange(mCheckedItems.size());
+                onMultiSelectChange(mCheckedItems.size());
+            }
             mGridView.setMultiSelectModeEnabled(isInMultiSelectMode);
         }
+        
         mSavedFirstVisiblePosition = savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0);
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, false);
     }
@@ -352,8 +357,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, startDay);
         GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, endDay);
 
-        mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, startDate.getTimeInMillis(),
-                endDate.getTimeInMillis());
+        long one_day = 24 * 60 * 60 * 1000;
+        mCursor = WordPress.wpDB.getMediaFilesForBlog(blogId, startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day);
         mGridAdapter.swapCursor(mCursor);
 
         if (mCursor != null && mCursor.getCount() > 0 && mGridAdapter != null) {

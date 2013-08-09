@@ -61,21 +61,19 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CheckableFrameLayout frameLayout = ((CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout));
+
+        Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
+        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         
         // run the default behavior if not in multiselect mode
         if (!isInMultiSelectMode()) {            
             getSelectedItems().clear();
-            notifyMultiSelectCountChanged();
+            getSelectedItems().add(mediaId);
             frameLayout.setChecked(true);
             mOnItemClickListener.onItemClick(parent, view, position, id);
             mAdapter.notifyDataSetChanged();
             return;
         }
-        
-        Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
-        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
-
-                
         
         if (getSelectedItems().contains(mediaId)) {
             // unselect item

@@ -358,6 +358,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+            if (getActivity() == null)
+                return;
+            
             if (!cursor.moveToFirst())
                 return;
             
