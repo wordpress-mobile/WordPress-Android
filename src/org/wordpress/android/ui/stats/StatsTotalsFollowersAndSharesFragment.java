@@ -57,6 +57,12 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refreshStatsFromServer();
+    }
+    
+    @Override
     public void refresh() {
         if (WordPress.getCurrentBlog() == null)
             return; 
@@ -70,10 +76,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                 final String blogId = params[0];
                 
                 StatsTotalsFollowersAndShares stats = StatUtils.getTotalsFollowersShares(blogId);
-                if (stats == null || StatUtils.isDayOld(stats.getDate())) {
-                    refreshStatsFromServer(blogId);
-                }
-                
+
                 return stats;
             }
             
@@ -84,7 +87,12 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     }
 
 
-    private void refreshStatsFromServer(final String blogId) {
+    private void refreshStatsFromServer() {
+        if (WordPress.getCurrentBlog() == null)
+            return; 
+
+        final String blogId = String.valueOf(WordPress.getCurrentBlog());
+        
         WordPress.restClient.getStatsTotalsFollowersAndShares(blogId, 
                 new Listener() {
                     

@@ -95,7 +95,14 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         mFavsTotalText = (TextView) findViewById(R.id.stats_header_favs_total);
         mReblogTotalText = (TextView) findViewById(R.id.stats_header_reblog_total);
         
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         refreshStats();
+        refreshStatsFromServer();
     }
 
     private void hideHeaderIfLandscape() {
@@ -168,9 +175,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                 final String blogId = params[0];
                 
                 StatsSummary stats = StatUtils.getSummary(blogId);
-                if (stats == null || StatUtils.isDayOld(stats.getDate())) {
-                    refreshStatsFromServer(blogId);
-                }
                 
                 return stats;
             }
@@ -182,7 +186,12 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     }
 
 
-    private void refreshStatsFromServer(final String blogId) {
+    private void refreshStatsFromServer() {
+        if (WordPress.getCurrentBlog() == null)
+            return; 
+        
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
         WordPress.restClient.getStatsSummary(blogId, 
                 new Listener() {
                     

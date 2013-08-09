@@ -151,6 +151,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         public void onResume() {
             super.onResume();
             refreshSummary();
+            refreshSummaryFromServer();
             refreshChartsFromServer();
             getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
         }
@@ -179,9 +180,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                     final String blogId = params[0];
                     
                     StatsVisitorsAndViewsSummary stats = StatUtils.getVisitorsAndViewsSummary(blogId);
-                    if (stats == null || StatUtils.isDayOld(stats.getDate())) {
-                        refreshStatsFromServer(blogId);
-                    }
                     
                     return stats;
                 }
@@ -193,7 +191,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         }
 
 
-        private void refreshStatsFromServer(final String blogId) {
+        private void refreshSummaryFromServer() {
+            if (WordPress.getCurrentBlog() == null)
+                return; 
+            
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            
             WordPress.restClient.getStatsVisitorsAndViewsSummary(blogId, 
                     new Listener() {
                         

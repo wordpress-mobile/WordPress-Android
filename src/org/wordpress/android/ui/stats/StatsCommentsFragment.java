@@ -298,6 +298,7 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         public void onResume() {
             super.onResume();
             refreshStats();
+            refreshStatsFromServer();
         }
 
         protected void refreshStats() {
@@ -313,9 +314,6 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
                     final String blogId = params[0];
                     
                     StatsCommentsSummary stats = StatUtils.getCommentsSummary(blogId);
-                    if (stats == null || StatUtils.isDayOld(stats.getDate())) {
-                        refreshStatsFromServer(blogId);
-                    }
                     
                     return stats;
                 }
@@ -327,7 +325,12 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         }
 
 
-        private void refreshStatsFromServer(final String blogId) {
+        private void refreshStatsFromServer() {
+            if (WordPress.getCurrentBlog() == null)
+                return; 
+    
+            final String blogId = String.valueOf(WordPress.getCurrentBlog());
+            
             WordPress.restClient.getStatsCommentsSummary(blogId, 
                     new Listener() {
                         

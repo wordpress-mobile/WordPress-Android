@@ -230,6 +230,7 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
         public void onResume() {
             super.onResume();
             refreshSummary();
+            refreshStatsFromServer();
         }
 
         private void refreshSummary() {
@@ -246,9 +247,6 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
                     final String blogId = params[0];
                     
                     StatsVideoSummary stats = StatUtils.getVideoSummary(blogId);
-                    if (stats == null || StatUtils.isDayOld(stats.getDate())) {
-                        refreshStatsFromServer(blogId);
-                    }
                     
                     return stats;
                 }
@@ -260,7 +258,13 @@ public class StatsVideoFragment extends StatsAbsListViewFragment  implements Tab
         }
 
 
-        private void refreshStatsFromServer(final String blogId) {
+        private void refreshStatsFromServer() {
+
+            if (WordPress.getCurrentBlog() == null)
+                return; 
+
+            final String blogId = String.valueOf(WordPress.getCurrentBlog());
+                        
             WordPress.restClient.getStatsVideoSummary(blogId, 
                     new Listener() {
                         

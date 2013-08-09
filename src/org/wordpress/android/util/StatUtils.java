@@ -46,20 +46,6 @@ public class StatUtils {
         return sdf.format(new Date(ms));
     }
     
-    public static boolean isDayOld(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            long time = sdf.parse(date).getTime();
-            long currentTime = System.currentTimeMillis();
-            
-            return (currentTime - time) >= 24 * 60 * 60 * 1000;
-            
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-    
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date());
