@@ -85,7 +85,7 @@
   <string name="immediately">Immediately</string>
   <string name="uploading">Uploading</string>
   <string name="uploading_media_item">Uploading media item #</string>
-  <string name="gallery_error">Sorry, the media item could not be retrieved from the Gallery.</string>
+  <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
   <string name="refresh">Refresh</string>
   <string name="home">Home</string>
   <string name="more_tag">More</string>

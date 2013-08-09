@@ -1269,7 +1269,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                             File f = new File(mMediaCapturePath);
                             Uri capturedImageUri = Uri.fromFile(f);
                             f = null;
-                            addMedia(capturedImageUri.toString(), capturedImageUri);
+                            if (!addMedia(capturedImageUri, null))
+                                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
                         } catch (Exception e) {
@@ -1281,13 +1282,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     break;
                 case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
-                    String videoPath = videoUri.toString();
-                    addMedia(videoPath, videoUri);
+                    if (!addMedia(videoUri, null))
+                        Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     break;
                 case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideo = data.getData();
-                        addMedia(capturedVideo.toString(), capturedVideo);
+                        Uri capturedVideoUri = data.getData();
+                        if (!addMedia(capturedVideoUri, null))
+                            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case ACTIVITY_REQUEST_CODE_CREATE_LINK:
@@ -1350,20 +1352,27 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     private void verifyImage(Uri imageUri) {
+        if (isPicasaImage(imageUri)) {
+            // Create an AsyncTask to download the file
+            new DownloadImageTask().execute(imageUri);
+        } else {
+            // It is a regular local image file
+            if (!addMedia(imageUri, null))
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isPicasaImage(Uri imageUri) {
         // Check if the imageUri returned is of picasa or not
         if (imageUri.toString().startsWith("content://com.android.gallery3d.provider")) {
             // Use the com.google provider for devices prior to 3.0
             imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d", "com.google.android.gallery3d"));
         }
 
-        if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
-            // Create an AsyncTask to download the file
-            new DownloadImageTask().execute(imageUri);
-        } else {
-            // It is a regular local image file
-            String filePath = imageUri.toString();
-            addMedia(filePath, imageUri);
-        }
+        if (imageUri.toString().startsWith("content://com.google.android.gallery3d"))
+            return true;
+        else
+            return false;
     }
 
     private class DownloadImageTask extends AsyncTask<Uri, Integer, Uri> {
@@ -1371,50 +1380,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         @Override
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];
-            File cacheDir;
-
-            // If the device has an SD card
-            if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-                cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
-            else {
-                // If no SD card
-                cacheDir = getApplicationContext().getCacheDir();
-            }
-
-            if (!cacheDir.exists())
-                cacheDir.mkdirs();
-            Random r = new Random();
-            final String path = "wp-" + r.nextInt(400) + r.nextInt(400) + ".jpg";
-
-            File f = new File(cacheDir, path);
-
-            try {
-                InputStream input;
-                // Download the file
-                if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
-                    input = getContentResolver().openInputStream(imageUri);
-                } else {
-                    input = new URL(imageUri.toString()).openStream();
-                }
-                OutputStream output = new FileOutputStream(f);
-
-                byte data[] = new byte[1024];
-                int count;
-                while ((count = input.read(data)) != -1) {
-                    output.write(data, 0, count);
-                }
-
-                output.flush();
-                output.close();
-                input.close();
-
-                Uri newUri = Uri.fromFile(f);
-                return newUri;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
+            return downloadExternalImage(imageUri);
         }
 
         @Override
@@ -1425,10 +1391,57 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         protected void onPostExecute(Uri newUri) {
             dismissDialog(ID_DIALOG_DOWNLOAD);
             if (newUri != null)
-                addMedia(newUri.toString(), newUri);
+                addMedia(newUri, null);
             else
                 Toast.makeText(getApplicationContext(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private Uri downloadExternalImage(Uri imageUri) {
+        File cacheDir;
+
+        // If the device has an SD card
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
+        else {
+            // If no SD card
+            cacheDir = getApplicationContext().getCacheDir();
+        }
+
+        if (!cacheDir.exists())
+            cacheDir.mkdirs();
+        Random r = new Random();
+        final String path = "wp-" + r.nextInt(400) + r.nextInt(400) + ".jpg";
+
+        File f = new File(cacheDir, path);
+
+        try {
+            InputStream input;
+            // Download the file
+            if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+                input = getContentResolver().openInputStream(imageUri);
+            } else {
+                input = new URL(imageUri.toString()).openStream();
+            }
+            OutputStream output = new FileOutputStream(f);
+
+            byte data[] = new byte[1024];
+            int count;
+            while ((count = input.read(data)) != -1) {
+                output.write(data, 0, count);
+            }
+
+            output.flush();
+            output.close();
+            input.close();
+
+            Uri newUri = Uri.fromFile(f);
+            return newUri;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private void onCategoryButtonClick(View v) {
@@ -1809,20 +1822,19 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             String type = (String) args[0].get(1);
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             for (int i = 0; i < multi_stream.size(); i++) {
-                Uri curStream = (Uri) multi_stream.get(i);
-                if (curStream != null && type != null) {
-                    String imgPath = curStream.getEncodedPath();
-                    ssb = addMediaFromShareAction(imgPath, curStream, ssb);
+                Uri imageUri = (Uri) multi_stream.get(i);
+                if (imageUri != null && type != null) {
+                    addMedia(imageUri, ssb);
                 }
             }
             return ssb;
         }
 
-        protected void onPostExecute(SpannableStringBuilder result) {
+        protected void onPostExecute(SpannableStringBuilder ssb) {
             dismissDialog(ID_DIALOG_LOADING);
-            if (result != null) {
-                if (result.length() > 0) {
-                    mContentEditText.setText(result);
+            if (ssb != null) {
+                if (ssb.length() > 0) {
+                    mContentEditText.setText(ssb);
                 }
             } else {
                 Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
@@ -1853,11 +1865,13 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }
     }
 
+    private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
 
-    private void addMedia(String imgPath, Uri curStream) {
+        //if (mFormatBar.getVisibility() == View.VISIBLE)
+        //    hideFormatBar();
 
-        if (mFormatBar.getVisibility() == View.VISIBLE)
-            hideFormatBar();
+        if (ssb != null && isPicasaImage(imageUri))
+            imageUri = downloadExternalImage(imageUri);
 
         Bitmap resizedBitmap = null;
         ImageHelper ih = new ImageHelper();
@@ -1867,12 +1881,11 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         if (width > height)
             width = height;
 
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPostActivity.this);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), EditPostActivity.this);
 
         if (mediaData == null) {
             // data stream not returned
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -1889,113 +1902,79 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 (String) mediaData.get("orientation"), true);
 
         if (finalBytes == null) {
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
-            return;
+            //Toast.makeText(EditPostActivity.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
 
-        int selectionStart = mContentEditText.getSelectionStart();
-        mStyleStart = selectionStart;
-        int selectionEnd = mContentEditText.getSelectionEnd();
+        if (ssb != null) {
+            WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);
 
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
+            setWPImageSpanWidth(imageUri, is);
+
+            is.setTitle((String) mediaData.get("title"));
+            is.setImageSource(imageUri);
+            is.setVideo(imageUri.getEncodedPath().contains("video"));
+            ssb.append(" ");
+            ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.append("\n");
+        } else {
+            int selectionStart = mContentEditText.getSelectionStart();
+            mStyleStart = selectionStart;
+            int selectionEnd = mContentEditText.getSelectionEnd();
+
+            if (selectionStart > selectionEnd) {
+                int temp = selectionEnd;
+                selectionEnd = selectionStart;
+                selectionStart = temp;
+            }
+
+            Editable s = mContentEditText.getText();
+            WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);
+
+            setWPImageSpanWidth(imageUri, is);
+
+            is.setTitle((String) mediaData.get("title"));
+            is.setImageSource(imageUri);
+            if (imageUri.getEncodedPath().contains("video")) {
+                is.setVideo(true);
+            }
+
+            int line = 0, column = 0;
+            try {
+                line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+            } catch (Exception ex) {
+            }
+
+            WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            if (image_spans.length != 0) {
+                // insert a few line breaks if the cursor is already on an image
+                s.insert(selectionEnd, "\n\n");
+                selectionStart = selectionStart + 2;
+                selectionEnd = selectionEnd + 2;
+            } else if (column != 0) {
+                // insert one line break if the cursor is not at the first column
+                s.insert(selectionEnd, "\n");
+                selectionStart = selectionStart + 1;
+                selectionEnd = selectionEnd + 1;
+            }
+
+            s.insert(selectionStart, " ");
+            s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.insert(selectionEnd + 1, "\n");
+            try {
+                mContentEditText.setSelection(s.length());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-        Editable s = mContentEditText.getText();
-        WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
-
-        setWPImageSpanWidth(curStream, is);
-
-        is.setTitle((String) mediaData.get("title"));
-        is.setImageSource(curStream);
-        if (imgPath.contains("video")) {
-            is.setVideo(true);
-        }
-
-        int line = 0, column = 0;
-        try {
-            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        } catch (Exception ex) {
-        }
-
-        WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-        if (image_spans.length != 0) {
-            // insert a few line breaks if the cursor is already on an image
-            s.insert(selectionEnd, "\n\n");
-            selectionStart = selectionStart + 2;
-            selectionEnd = selectionEnd + 2;
-        } else if (column != 0) {
-            // insert one line break if the cursor is not at the first column
-            s.insert(selectionEnd, "\n");
-            selectionStart = selectionStart + 1;
-            selectionEnd = selectionEnd + 1;
-        }
-
-        s.insert(selectionStart, " ");
-        s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.insert(selectionEnd + 1, "\n\n");
-        try {
-            mContentEditText.setSelection(s.length());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public SpannableStringBuilder addMediaFromShareAction(String imgPath, Uri curStream, SpannableStringBuilder ssb) {
-        initBlog();
-        Bitmap resizedBitmap = null;
-        String imageTitle = "";
-
-        ImageHelper ih = new ImageHelper();
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPostActivity.this);
-
-        if (mediaData == null) {
-            // data stream not returned
-            return null;
-        }
-
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        byte[] bytes = (byte[]) mediaData.get("bytes");
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-        float conversionFactor = 0.25f;
-
-        if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.40f;
-
-        byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf((int) (width * conversionFactor)),
-                (String) mediaData.get("orientation"), true);
-
-        if (finalBytes == null) {
-            return null;
-        }
-
-        resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
-
-        WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
-
-        setWPImageSpanWidth(curStream, is);
-
-        is.setTitle(imageTitle);
-        is.setImageSource(curStream);
-        is.setVideo(imgPath.contains("video"));
-        ssb.append(" ");
-        ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssb.append("\n");
-        return ssb;
+        return true;
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
