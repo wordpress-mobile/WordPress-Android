@@ -129,12 +129,15 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_DATE = 0;
     private static final int ID_DIALOG_TIME = 1;
     private static final int ID_DIALOG_LOADING = 2;
+    private static final int ID_DIALOG_DOWNLOAD = 3;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
     private Blog mBlog;
     private Post mPost;
-
+    private String pathPicassa="";
+    private Uri u=null;
+    
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
@@ -1351,9 +1354,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         }// end null check
     }
-    public String pathPicassa="";
-    public Uri u=null;
-    public ProgressDialog pDialog;
+
     private void verifyImage(Uri imageUri) {
         // check if the imageUri returned is of picassa or not
         if (imageUri.toString().startsWith("content://com.android.gallery3d.provider"))  {
@@ -1365,11 +1366,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         if (tempUri.toString().startsWith("content://com.google.android.gallery3d")){
                 // Creating AsyncTask to download the file
             
-                pDialog = new ProgressDialog(this);
-                pDialog.setMessage("Downloading file. Please wait...");
-                pDialog.setIndeterminate(false);
-                pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                pDialog.setCancelable(false);
                 new DownloadImage().execute(tempUri);
             }
         
@@ -1430,13 +1426,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.show();
+            showDialog(ID_DIALOG_DOWNLOAD);
         }
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            pDialog.dismiss();
-            Log.e("log", newUri.toString());
+            dismissDialog(ID_DIALOG_DOWNLOAD);
             if(result=="success")
                 addMedia(newUri.toString(), newUri);
             else
@@ -1518,6 +1513,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             loadingDialog.setIndeterminate(true);
             loadingDialog.setCancelable(true);
             return loadingDialog;
+        case ID_DIALOG_DOWNLOAD:
+            ProgressDialog downloadDialog = new ProgressDialog(this);
+            downloadDialog.setMessage(getResources().getText(R.string.download));
+            downloadDialog.setIndeterminate(true);
+            downloadDialog.setCancelable(false);
+            return downloadDialog;
         }
         return super.onCreateDialog(id);
     }
