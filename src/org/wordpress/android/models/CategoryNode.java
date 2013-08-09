@@ -79,7 +79,7 @@ public class CategoryNode {
             if (category.getParentId() == 0) { // root node
                 currentRootNode = rootCategory;
             } else {
-                currentRootNode = categoryMap.get(category.getParentId());
+                currentRootNode = categoryMap.get(category.getParentId(), rootCategory);
             }
             currentRootNode.children.put(category.getName(), categoryMap.get(category.getCategoryId()));
         }
