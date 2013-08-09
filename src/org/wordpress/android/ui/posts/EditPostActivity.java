@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1254,10 +1255,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             switch (requestCode) {
             case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                 Uri imageUri = data.getData();
-                String imgPath = imageUri.toString();
-                Log.e("picasa", imgPath);
                 verifyImage(imageUri);
-                //addMedia(imgPath, imageUri);
                 break;
             case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
@@ -1353,7 +1351,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         }// end null check
     }
-
+    public String pathPicassa="";
+    public Uri u=null;
+    public ProgressDialog pDialog;
     private void verifyImage(Uri imageUri) {
         // check if the imageUri returned is of picassa or not
         if (imageUri.toString().startsWith("content://com.android.gallery3d.provider"))  {
@@ -1361,72 +1361,90 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d","com.google.android.gallery3d"));
         }
         final Uri tempUri = imageUri;
-        final String path="/mnt/sdcard/WordPress/images/aagams.jpg";
-        if (imageUri.toString().startsWith("content://com.google.android.gallery3d")){
-                // Do this in a background thread, since we are fetching a large image from the web
-            Thread t = new Thread() {
-                public void run() {
-                    fetchImage(tempUri);
-                }
-             };
-             t.start();
-             try {
-                t.join();
-            } catch (InterruptedException e) {
-                
+        
+        if (tempUri.toString().startsWith("content://com.google.android.gallery3d")){
+                // Creating AsyncTask to download the file
+            
+                pDialog = new ProgressDialog(this);
+                pDialog.setMessage("Downloading file. Please wait...");
+                pDialog.setIndeterminate(false);
+                pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pDialog.setCancelable(false);
+                new DownloadImage().execute(tempUri);
             }
-                addMedia(path, tempUri);
-            }
+        
+        
          else { // it is a regular local image file
             String filePath = imageUri.toString();
+            Log.e("before add normal",filePath);
             addMedia(filePath, imageUri);
         }
         
         
         
     }
+    
+    private class DownloadImage extends AsyncTask<Uri, Integer, String> {
 
-    private void fetchImage(Uri imageUri) {
-        // Downloading the picassa image from web
-        File cacheDir;
-        String pathName="";
-        // if the device has an SD card
-        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            cacheDir=new File(android.os.Environment.getExternalStorageDirectory()+"/WordPress/images");
-        } else {
-            // if no  SD card
-            cacheDir=this.getCacheDir();
-        }
-        if(!cacheDir.exists())
-                cacheDir.mkdirs();
-        Random r = new Random();
-        File f=new File(cacheDir, "aagams.jpg");
-
-        try {
-            Bitmap bitmap=null;
-            InputStream is = null;
-            if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
-                is=getContentResolver().openInputStream(imageUri);
-            } else {
-                is=new URL(imageUri.toString()).openStream();
+        public Uri newUri;
+        @Override
+        protected String doInBackground(Uri... uris) {
+            Uri imageUri = uris[0];
+            
+            File cacheDir = null;
+            
+            // if the device has an SD card
+            if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) 
+                cacheDir=new File(android.os.Environment.getExternalStorageDirectory()+"/WordPress/images");
+             else {
+                // if no  SD card
+                cacheDir=getApplicationContext().getCacheDir();
             }
-            OutputStream os = new FileOutputStream(f);
-            org.apache.commons.net.io.Util.copyStream(is, os);
-            os.close();
-            pathName = f.getPath();
-            Log.e("SUCESS", "picassa-"+pathName);
             
+            if(!cacheDir.exists())
+                    cacheDir.mkdirs();
+            Random r =new Random();
+            final String path="wp-"+r.nextInt(400)+""+r.nextInt(400)+".jpg";
             
-            
-        } catch (Exception ex) {
-            //Log.d(Utils.DEBUG_TAG, "Exception: " + ex.getMessage());
-           Log.e("error", "picassa");
+            File f=new File(cacheDir, path);
+
+            try {
+                InputStream is = null;
+                if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+                    is=getContentResolver().openInputStream(imageUri);
+                } else {
+                    is=new URL(imageUri.toString()).openStream();
+                }
+                OutputStream os = new FileOutputStream(f);
+                org.apache.commons.net.io.Util.copyStream(is, os);
+                os.close();
+                newUri=Uri.fromFile(f);
+                
+            }
+            catch (Exception ex) {
+               return "error";  
+            }
+            return "success";
         }
         
-        
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.show();
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pDialog.dismiss();
+            Log.e("log", newUri.toString());
+            if(result=="success")
+                addMedia(newUri.toString(), newUri);
+            else
+                Toast.makeText(getApplicationContext(), "Error Fetching Image", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void onCategoryButtonClick(View v) {
+   private void onCategoryButtonClick(View v) {
         // Get category name by removing prefix from the tag
         boolean listChanged = false;
         String categoryName = (String) v.getTag();
@@ -1792,6 +1810,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             new processAttachmentsTask().execute(params);
         }
     }
+    
 
     private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
 
