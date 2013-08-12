@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -207,7 +208,9 @@ public class MediaGridAdapter extends CursorAdapter {
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         
-        if (thumbnailURL != null) { 
+        Uri uri = Uri.parse(thumbnailURL);
+        
+        if (thumbnailURL != null && MediaUtils.isValidImage(uri.getLastPathSegment())) { 
             imageView.setTag(thumbnailURL);
             imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
         }

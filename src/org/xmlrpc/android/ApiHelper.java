@@ -1,10 +1,7 @@
 package org.xmlrpc.android;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Date;
@@ -598,12 +595,10 @@ public class ApiHelper {
                     blog.getHttpuser(),
                     blog.getHttppassword());
          
-            byte[] bits = readFile(new File(mMediaFile.getFilePath()));
-            
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("name", mMediaFile.getFileName());
             data.put("type", mMediaFile.getMIMEType());
-            data.put("bits", bits);
+            data.put("bits", mMediaFile);
             data.put("overwrite", true);
             
             Object[] apiParams = { 
@@ -650,23 +645,6 @@ public class ApiHelper {
             }
         }
 
-        private byte[] readFile(File file) {
-            
-            try {
-                byte fileContent[] = new byte[(int)file.length()];
-                DataInputStream dis = new DataInputStream((new FileInputStream(file)));
-                dis.readFully(fileContent);
-                dis.close();
-                return fileContent;
-                
-            } catch (FileNotFoundException e) {
-                Log.e("WordPress", "Failed to upload media: file not found.");
-            } catch (IOException ioe) {
-                Log.e("WordPress", "Failed to upload media: " + ioe);
-            }
-            
-            return null;
-        }        
     }
 
     public static class DeleteMediaTask extends AsyncTask<List<?>, Void, Boolean> {
