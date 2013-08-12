@@ -11,6 +11,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -66,6 +67,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private FeatureSet mFeatureSet;
     private ActionMode mActionMode;
     
+    private Handler mHandler;
+    private View mProgressFooter;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +80,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return;
         }
 
+        mHandler = new Handler();
+        
         setTitle(R.string.media);
 
         createMenuDrawer(R.layout.media_browser_activity);
@@ -88,6 +94,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         FragmentTransaction ft = fm.beginTransaction();
         setupBaseLayout();
 
+        mProgressFooter = findViewById(R.id.media_grid_progress_footer);
+        
         mMediaAddFragment = (MediaAddFragment) fm.findFragmentById(R.id.mediaAddFragment);
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
         
@@ -360,7 +368,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     @Override
     public void onMediaItemListDownloaded() {
-
+        mProgressFooter.setVisibility(View.GONE);
         stopAnimatingRefreshButton();
 
         if (mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
@@ -370,7 +378,17 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemListDownloadStart() {
-        startAnimatingRefreshButton();
+        mProgressFooter.setVisibility(View.VISIBLE);
+        
+        // start animation delayed to prevent glitch where the progress spinner
+        // disappears when it is started and stopped and then restarted too quickly in succession
+        mHandler.postDelayed(new Runnable() {
+            
+            @Override
+            public void run() {
+                startAnimatingRefreshButton();
+            }
+        }, 500);
     }
 
     @Override
