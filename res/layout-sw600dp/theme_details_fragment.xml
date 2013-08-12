@@ -78,19 +78,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <ProgressBar
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyleSmallTitle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="8dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/theme_activating_button"
-                    android:textColor="@color/theme_details_button" />
+                    android:textColor="@color/theme_details_button"
+                    android:textSize="18sp" />
             </LinearLayout>
         </FrameLayout>
 
