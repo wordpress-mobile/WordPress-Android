@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -63,12 +64,12 @@ public class ThemeTabAdapter extends CursorAdapter {
         }
 
         // load image in this way to get it sized properly for the imageview
-        FrameLayout.LayoutParams params = (LayoutParams) imageView.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
         params.width = getGridWidth(context);
         params.height = getGridHeight(context);
         
         imageView.setImageUrl(screenshotURL + "?w=" + params.width, WordPress.imageLoader);
-        view.setLayoutParams(new GridView.LayoutParams(params.width, params.height));
+        view.setLayoutParams(new GridView.LayoutParams(params.width, params.height + ((int) Utils.dpToPx(32))));
     }
 
     // The theme previews are 600x450 px, resulting in a ratio of 0.75

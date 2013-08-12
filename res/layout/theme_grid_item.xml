@@ -3,48 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <FrameLayout
+    <RelativeLayout
+        android:id="@+id/theme_grid_image_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/media_gallery_grid_cell"
-        android:paddingBottom="1dp"
-        android:paddingLeft="0.5dp"
-        android:paddingRight="1dp"
-        android:paddingTop="0.5dp" 
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp">
+        android:layout_margin="4dp"
+        android:background="@drawable/media_gallery_grid_cell" >
 
         <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/theme_grid_item_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter" />
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/theme_grid_current_theme_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/theme_icon_tag_current"
             android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/theme_grid_item_image"
             android:layout_gravity="bottom"
-            android:background="@color/media_gallery_grid_label_bg"
-            android:padding="10dp" >
+            android:background="@color/media_gallery_grid_label_bg" >
 
             <TextView
                 android:id="@+id/theme_grid_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:padding="4dp"
                 android:singleLine="true"
-                android:textColor="@color/media_gallery_grid_label" />
+                android:textColor="@color/media_gallery_grid_label"
+                android:textSize="12sp" />
         </RelativeLayout>
-    </FrameLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
