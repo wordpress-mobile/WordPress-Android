@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.util.*;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -26,7 +20,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.*;
+import android.text.Editable;
+import android.text.Html;
+import android.text.Layout;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
@@ -35,15 +35,34 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -52,9 +71,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.wordpress.android.util.*;
-import org.xmlrpc.android.ApiHelper;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -67,20 +83,51 @@ import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPEditText;
+import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPImageSpan;
+import org.wordpress.android.util.WPUnderlineSpan;
+import org.xmlrpc.android.ApiHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
+    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
+    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
+    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
+    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
     private static final int ID_DIALOG_DATE = 0;
     private static final int ID_DIALOG_TIME = 1;
     private static final int ID_DIALOG_LOADING = 2;
+    private static final int ID_DIALOG_DOWNLOAD = 3;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -92,7 +139,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private WPEditText mContentEditText;
     private ImageButton mAddPictureButton;
     private Spinner mStatusSpinner;
-    private EditText mTitleEditText, mPasswordEditText, mTagsEditText;
+    private EditText mTitleEditText, mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ToggleButton mBoldToggleButton, mEmToggleButton, mBquoteToggleButton;
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
@@ -215,6 +262,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         setContentView(R.layout.edit);
         mContentEditText = (WPEditText) findViewById(R.id.postContent);
         mTitleEditText = (EditText) findViewById(R.id.title);
+        mExcerptEditText = (EditText) findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) findViewById(R.id.post_password);
         mLocationText = (TextView) findViewById(R.id.locationText);
         mBoldToggleButton = (ToggleButton) findViewById(R.id.bold);
@@ -238,6 +286,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         ((TextView) findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
 
         if (mIsPage) { // remove post specific views
+            mExcerptEditText.setVisibility(View.GONE);
             (findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
             (findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
@@ -250,13 +299,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 args.add(this);
                 new ApiHelper.getPostFormatsTask().execute(args);
                 mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-                String defaultPostFormatTitles[] = { "aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
-                        "video" };
+                String defaultPostFormatTitles[] = {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
+                        "video"};
                 mPostFormats = defaultPostFormatTitles;
             } else {
                 try {
                     Gson gson = new Gson();
-                    Type type = new TypeToken<Map<String, String>>(){}.getType();
+                    Type type = new TypeToken<Map<String, String>>() {
+                    }.getType();
                     Map<String, String> jsonPostFormats = gson.fromJson(mBlog.getPostFormats(), type);
                     mPostFormats = new String[jsonPostFormats.size()];
                     mPostFormatTitles = new String[jsonPostFormats.size()];
@@ -294,8 +344,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 setContent();
         }
 
-        String[] items = new String[] { getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private) };
+        String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
+                getResources().getString(R.string.pending_review), getResources().getString(R.string.post_private)};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -322,9 +372,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         } else {
             mTitleEditText.setText(mPost.getTitle());
+            mExcerptEditText.setText(mPost.getMt_excerpt());
 
             if (mPost.isUploaded()) {
-                items = new String[] {
+                items = new String[]{
                         getResources().getString(R.string.publish_post),
                         getResources().getString(R.string.draft),
                         getResources().getString(R.string.pending_review),
@@ -455,7 +506,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenu.ContextMenuInfo menuInfo) {
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
         if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
@@ -469,18 +520,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case 0:
-            launchPictureLibrary();
-            return true;
-        case 1:
-            launchCamera();
-            return true;
-        case 2:
-            launchVideoLibrary();
-            return true;
-        case 3:
-            launchVideoCamera();
-            return true;
+            case 0:
+                launchPictureLibrary();
+                return true;
+            case 1:
+                launchCamera();
+                return true;
+            case 2:
+                launchVideoLibrary();
+                return true;
+            case 3:
+                launchVideoCamera();
+                return true;
         }
         return false;
     }
@@ -729,7 +780,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
                         alignmentSpinner.setSelection(span.getHorizontalAlignment(), true);
 
-                        seekBar.setMax(span.getWidth() / 10 );
+                        seekBar.setMax(span.getWidth() / 10);
                         if (span.getWidth() != 0)
                             seekBar.setProgress(span.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -928,7 +979,8 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 mAccountName = blogNames[0];
                 setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
                         + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
-            };
+            }
+            ;
             return true;
         } else {
             // no account, load main view to load new account view
@@ -1185,95 +1237,189 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             Bundle extras;
 
             switch (requestCode) {
-            case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
-                Uri imageUri = data.getData();
-                String imgPath = imageUri.toString();
-                addMedia(imgPath, imageUri);
-                break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
-                if (resultCode == Activity.RESULT_OK) {
+                case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                    Uri imageUri = data.getData();
+                    verifyImage(imageUri);
+                    break;
+                case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            File f = new File(mMediaCapturePath);
+                            Uri capturedImageUri = Uri.fromFile(f);
+                            f = null;
+                            if (!addMedia(capturedImageUri, null))
+                                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                                    + Environment.getExternalStorageDirectory())));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } catch (OutOfMemoryError e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                    Uri videoUri = data.getData();
+                    if (!addMedia(videoUri, null))
+                        Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                    break;
+                case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        Uri capturedVideoUri = data.getData();
+                        if (!addMedia(capturedVideoUri, null))
+                            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case ACTIVITY_REQUEST_CODE_CREATE_LINK:
                     try {
-                        File f = new File(mMediaCapturePath);
-                        Uri capturedImageUri = Uri.fromFile(f);
-                        f = null;
-                        addMedia(capturedImageUri.toString(), capturedImageUri);
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                + Environment.getExternalStorageDirectory())));
+                        extras = data.getExtras();
+                        String linkURL = extras.getString("linkURL");
+                        if (!linkURL.equals("http://") && !linkURL.equals("")) {
+
+                            if (mSelectionStart > mSelectionEnd) {
+                                int temp = mSelectionEnd;
+                                mSelectionEnd = mSelectionStart;
+                                mSelectionStart = temp;
+                            }
+                            Editable str = mContentEditText.getText();
+                            if (mLocalDraft) {
+                                if (extras.getString("linkText") == null) {
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    str.insert(mSelectionStart, linkURL);
+                                    str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
+                                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    mContentEditText.setSelection(mSelectionStart + linkURL.length());
+                                } else {
+                                    String linkText = extras.getString("linkText");
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    str.insert(mSelectionStart, linkText);
+                                    str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
+                                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    mContentEditText.setSelection(mSelectionStart + linkText.length());
+                                }
+                            } else {
+                                if (extras.getString("linkText") == null) {
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    String urlHTML = "<a href=\"" + linkURL + "\">" + linkURL + "</a>";
+                                    str.insert(mSelectionStart, urlHTML);
+                                    mContentEditText.setSelection(mSelectionStart + urlHTML.length());
+                                } else {
+                                    String linkText = extras.getString("linkText");
+                                    if (mSelectionStart < mSelectionEnd)
+                                        str.delete(mSelectionStart, mSelectionEnd);
+                                    String urlHTML = "<a href=\"" + linkURL + "\">" + linkText + "</a>";
+                                    str.insert(mSelectionStart, urlHTML);
+                                    mContentEditText.setSelection(mSelectionStart + urlHTML.length());
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    } catch (OutOfMemoryError e) {
-                        e.printStackTrace();
                     }
-                }
-                break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
-                Uri videoUri = data.getData();
-                String videoPath = videoUri.toString();
-                addMedia(videoPath, videoUri);
-                break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri capturedVideo = data.getData();
-                    addMedia(capturedVideo.toString(), capturedVideo);
-                }
-                break;
-            case ACTIVITY_REQUEST_CODE_CREATE_LINK:
-                try {
+                    break;
+                case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
-                    String linkURL = extras.getString("linkURL");
-                    if (!linkURL.equals("http://") && !linkURL.equals("")) {
-
-                        if (mSelectionStart > mSelectionEnd) {
-                            int temp = mSelectionEnd;
-                            mSelectionEnd = mSelectionStart;
-                            mSelectionStart = temp;
-                        }
-                        Editable str = mContentEditText.getText();
-                        if (mLocalDraft) {
-                            if (extras.getString("linkText") == null) {
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                str.insert(mSelectionStart, linkURL);
-                                str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkURL.length(),
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                mContentEditText.setSelection(mSelectionStart + linkURL.length());
-                            } else {
-                                String linkText = extras.getString("linkText");
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                str.insert(mSelectionStart, linkText);
-                                str.setSpan(new URLSpan(linkURL), mSelectionStart, mSelectionStart + linkText.length(),
-                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                mContentEditText.setSelection(mSelectionStart + linkText.length());
-                            }
-                        } else {
-                            if (extras.getString("linkText") == null) {
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                String urlHTML = "<a href=\"" + linkURL + "\">" + linkURL + "</a>";
-                                str.insert(mSelectionStart, urlHTML);
-                                mContentEditText.setSelection(mSelectionStart + urlHTML.length());
-                            } else {
-                                String linkText = extras.getString("linkText");
-                                if (mSelectionStart < mSelectionEnd)
-                                    str.delete(mSelectionStart, mSelectionEnd);
-                                String urlHTML = "<a href=\"" + linkURL + "\">" + linkText + "</a>";
-                                str.insert(mSelectionStart, urlHTML);
-                                mContentEditText.setSelection(mSelectionStart + urlHTML.length());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
-                extras = data.getExtras();
-                mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
-                populateSelectedCategories();
-                break;
+                    mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                    populateSelectedCategories();
+                    break;
             }
         }// end null check
+    }
+
+    private void verifyImage(Uri imageUri) {
+        if (isPicasaImage(imageUri)) {
+            // Create an AsyncTask to download the file
+            new DownloadImageTask().execute(imageUri);
+        } else {
+            // It is a regular local image file
+            if (!addMedia(imageUri, null))
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isPicasaImage(Uri imageUri) {
+        // Check if the imageUri returned is of picasa or not
+        if (imageUri.toString().startsWith("content://com.android.gallery3d.provider")) {
+            // Use the com.google provider for devices prior to 3.0
+            imageUri = Uri.parse(imageUri.toString().replace("com.android.gallery3d", "com.google.android.gallery3d"));
+        }
+
+        if (imageUri.toString().startsWith("content://com.google.android.gallery3d"))
+            return true;
+        else
+            return false;
+    }
+
+    private class DownloadImageTask extends AsyncTask<Uri, Integer, Uri> {
+
+        @Override
+        protected Uri doInBackground(Uri... uris) {
+            Uri imageUri = uris[0];
+            return downloadExternalImage(imageUri);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showDialog(ID_DIALOG_DOWNLOAD);
+        }
+
+        protected void onPostExecute(Uri newUri) {
+            dismissDialog(ID_DIALOG_DOWNLOAD);
+            if (newUri != null)
+                addMedia(newUri, null);
+            else
+                Toast.makeText(getApplicationContext(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Uri downloadExternalImage(Uri imageUri) {
+        File cacheDir;
+
+        // If the device has an SD card
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
+        else {
+            // If no SD card
+            cacheDir = getApplicationContext().getCacheDir();
+        }
+
+        if (!cacheDir.exists())
+            cacheDir.mkdirs();
+        Random r = new Random();
+        final String path = "wp-" + r.nextInt(400) + r.nextInt(400) + ".jpg";
+
+        File f = new File(cacheDir, path);
+
+        try {
+            InputStream input;
+            // Download the file
+            if (imageUri.toString().startsWith("content://com.google.android.gallery3d")) {
+                input = getContentResolver().openInputStream(imageUri);
+            } else {
+                input = new URL(imageUri.toString()).openStream();
+            }
+            OutputStream output = new FileOutputStream(f);
+
+            byte data[] = new byte[1024];
+            int count;
+            while ((count = input.read(data)) != -1) {
+                output.write(data, 0, count);
+            }
+
+            output.flush();
+            output.close();
+            input.close();
+
+            Uri newUri = Uri.fromFile(f);
+            return newUri;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private void onCategoryButtonClick(View v) {
@@ -1336,20 +1482,26 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     protected Dialog onCreateDialog(int id) {
 
         switch (id) {
-        case ID_DIALOG_DATE:
-            DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
-            dpd.setTitle("");
-            return dpd;
-        case ID_DIALOG_TIME:
-            TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
-            tpd.setTitle("");
-            return tpd;
-        case ID_DIALOG_LOADING:
-            ProgressDialog loadingDialog = new ProgressDialog(this);
-            loadingDialog.setMessage(getResources().getText(R.string.loading));
-            loadingDialog.setIndeterminate(true);
-            loadingDialog.setCancelable(true);
-            return loadingDialog;
+            case ID_DIALOG_DATE:
+                DatePickerDialog dpd = new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
+                dpd.setTitle("");
+                return dpd;
+            case ID_DIALOG_TIME:
+                TimePickerDialog tpd = new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
+                tpd.setTitle("");
+                return tpd;
+            case ID_DIALOG_LOADING:
+                ProgressDialog loadingDialog = new ProgressDialog(this);
+                loadingDialog.setMessage(getResources().getText(R.string.loading));
+                loadingDialog.setIndeterminate(true);
+                loadingDialog.setCancelable(true);
+                return loadingDialog;
+            case ID_DIALOG_DOWNLOAD:
+                ProgressDialog downloadDialog = new ProgressDialog(this);
+                downloadDialog.setMessage(getResources().getText(R.string.download));
+                downloadDialog.setIndeterminate(true);
+                downloadDialog.setCancelable(false);
+                return downloadDialog;
         }
         return super.onCreateDialog(id);
     }
@@ -1359,6 +1511,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String title = mTitleEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String pubDate = mPubDateText.getText().toString();
+        String excerpt = mExcerptEditText.getText().toString();
         String content = "";
 
         if (mLocalDraft || mIsNew && !isAutoSave) {
@@ -1458,18 +1611,18 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             String status = "";
 
             switch (selectedStatus) {
-            case 0:
-                status = "publish";
-                break;
-            case 1:
-                status = "draft";
-                break;
-            case 2:
-                status = "pending";
-                break;
-            case 3:
-                status = "private";
-                break;
+                case 0:
+                    status = "publish";
+                    break;
+                case 1:
+                    status = "draft";
+                    break;
+                case 2:
+                    status = "pending";
+                    break;
+                case 3:
+                    status = "private";
+                    break;
             }
 
             Double latitude = 0.0;
@@ -1486,7 +1639,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (mIsNew) {
-                mPost = new Post(mBlogID, title, content, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
+                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
                         latitude, longitude, mIsPage, postFormat, true, false);
                 mPost.setLocalDraft(true);
 
@@ -1539,6 +1692,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 }
 
                 mPost.setTitle(title);
+                mPost.setMt_excerpt(excerpt);
                 // split up the post content if there's a more tag
                 if (mLocalDraft && content.indexOf(moreTag) >= 0) {
                     mPost.setDescription(content.substring(0, content.indexOf(moreTag)));
@@ -1646,20 +1800,19 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             String type = (String) args[0].get(1);
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             for (int i = 0; i < multi_stream.size(); i++) {
-                Uri curStream = (Uri) multi_stream.get(i);
-                if (curStream != null && type != null) {
-                    String imgPath = curStream.getEncodedPath();
-                    ssb = addMediaFromShareAction(imgPath, curStream, ssb);
+                Uri imageUri = (Uri) multi_stream.get(i);
+                if (imageUri != null && type != null) {
+                    addMedia(imageUri, ssb);
                 }
             }
             return ssb;
         }
 
-        protected void onPostExecute(SpannableStringBuilder result) {
+        protected void onPostExecute(SpannableStringBuilder ssb) {
             dismissDialog(ID_DIALOG_LOADING);
-            if (result != null) {
-                if (result.length() > 0) {
-                    mContentEditText.setText(result);
+            if (ssb != null) {
+                if (ssb.length() > 0) {
+                    mContentEditText.setText(ssb);
                 }
             } else {
                 Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
@@ -1683,18 +1836,20 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         int[] dimensions = ImageHelper.getImageSize(curStream, EditPostActivity.this);
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
 
-        if ( Math.min(imageWidthPictureSetting, imageWidthBlogSetting) ==  Integer.MAX_VALUE ) {
+        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
             is.setWidth(1024); //Default value in case of errors reading the picture size and the blog settings is set to Original size
         } else {
             is.setWidth(Math.min(imageWidthPictureSetting, imageWidthBlogSetting));
         }
     }
 
+    private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
 
-    private void addMedia(String imgPath, Uri curStream) {
+        //if (mFormatBar.getVisibility() == View.VISIBLE)
+        //    hideFormatBar();
 
-        if (mFormatBar.getVisibility() == View.VISIBLE)
-            hideFormatBar();
+        if (ssb != null && isPicasaImage(imageUri))
+            imageUri = downloadExternalImage(imageUri);
 
         Bitmap resizedBitmap = null;
         ImageHelper ih = new ImageHelper();
@@ -1704,12 +1859,11 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         if (width > height)
             width = height;
 
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPostActivity.this);
+        Map<String, Object> mediaData = ih.getImageBytesForPath(imageUri.getEncodedPath(), EditPostActivity.this);
 
         if (mediaData == null) {
             // data stream not returned
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -1726,113 +1880,79 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 (String) mediaData.get("orientation"), true);
 
         if (finalBytes == null) {
-            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
-            return;
+            //Toast.makeText(EditPostActivity.this, getResources().getText(R.string.out_of_memory), Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
 
-        int selectionStart = mContentEditText.getSelectionStart();
-        mStyleStart = selectionStart;
-        int selectionEnd = mContentEditText.getSelectionEnd();
+        if (ssb != null) {
+            WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);
 
-        if (selectionStart > selectionEnd) {
-            int temp = selectionEnd;
-            selectionEnd = selectionStart;
-            selectionStart = temp;
+            setWPImageSpanWidth(imageUri, is);
+
+            is.setTitle((String) mediaData.get("title"));
+            is.setImageSource(imageUri);
+            is.setVideo(imageUri.getEncodedPath().contains("video"));
+            ssb.append(" ");
+            ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.append("\n");
+        } else {
+            int selectionStart = mContentEditText.getSelectionStart();
+            mStyleStart = selectionStart;
+            int selectionEnd = mContentEditText.getSelectionEnd();
+
+            if (selectionStart > selectionEnd) {
+                int temp = selectionEnd;
+                selectionEnd = selectionStart;
+                selectionStart = temp;
+            }
+
+            Editable s = mContentEditText.getText();
+            WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, imageUri);
+
+            setWPImageSpanWidth(imageUri, is);
+
+            is.setTitle((String) mediaData.get("title"));
+            is.setImageSource(imageUri);
+            if (imageUri.getEncodedPath().contains("video")) {
+                is.setVideo(true);
+            }
+
+            int line = 0, column = 0;
+            try {
+                line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+            } catch (Exception ex) {
+            }
+
+            WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            if (image_spans.length != 0) {
+                // insert a few line breaks if the cursor is already on an image
+                s.insert(selectionEnd, "\n\n");
+                selectionStart = selectionStart + 2;
+                selectionEnd = selectionEnd + 2;
+            } else if (column != 0) {
+                // insert one line break if the cursor is not at the first column
+                s.insert(selectionEnd, "\n");
+                selectionStart = selectionStart + 1;
+                selectionEnd = selectionEnd + 1;
+            }
+
+            s.insert(selectionStart, " ");
+            s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.insert(selectionEnd + 1, "\n");
+            try {
+                mContentEditText.setSelection(s.length());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-        Editable s = mContentEditText.getText();
-        WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
-
-        setWPImageSpanWidth(curStream, is);
-
-        is.setTitle((String) mediaData.get("title"));
-        is.setImageSource(curStream);
-        if (imgPath.contains("video")) {
-            is.setVideo(true);
-        }
-
-        int line = 0, column = 0;
-        try {
-            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
-        } catch (Exception ex) {
-        }
-
-        WPImageSpan[] image_spans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-        if (image_spans.length != 0) {
-            // insert a few line breaks if the cursor is already on an image
-            s.insert(selectionEnd, "\n\n");
-            selectionStart = selectionStart + 2;
-            selectionEnd = selectionEnd + 2;
-        } else if (column != 0) {
-            // insert one line break if the cursor is not at the first column
-            s.insert(selectionEnd, "\n");
-            selectionStart = selectionStart + 1;
-            selectionEnd = selectionEnd + 1;
-        }
-
-        s.insert(selectionStart, " ");
-        s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.insert(selectionEnd + 1, "\n\n");
-        try {
-            mContentEditText.setSelection(s.length());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public SpannableStringBuilder addMediaFromShareAction(String imgPath, Uri curStream, SpannableStringBuilder ssb) {
-        initBlog();
-        Bitmap resizedBitmap = null;
-        String imageTitle = "";
-
-        ImageHelper ih = new ImageHelper();
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-
-        Map<String, Object> mediaData = ih.getImageBytesForPath(imgPath, EditPostActivity.this);
-
-        if (mediaData == null) {
-            // data stream not returned
-            return null;
-        }
-
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        byte[] bytes = (byte[]) mediaData.get("bytes");
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.length, opts);
-
-        float conversionFactor = 0.25f;
-
-        if (opts.outWidth > opts.outHeight)
-            conversionFactor = 0.40f;
-
-        byte[] finalBytes = ih.createThumbnail((byte[]) mediaData.get("bytes"), String.valueOf((int) (width * conversionFactor)),
-                (String) mediaData.get("orientation"), true);
-
-        if (finalBytes == null) {
-            return null;
-        }
-
-        resizedBitmap = BitmapFactory.decodeByteArray(finalBytes, 0, finalBytes.length);
-
-        WPImageSpan is = new WPImageSpan(EditPostActivity.this, resizedBitmap, curStream);
-
-        setWPImageSpanWidth(curStream, is);
-
-        is.setTitle(imageTitle);
-        is.setImageSource(curStream);
-        is.setVideo(imgPath.contains("video"));
-        ssb.append(" ");
-        ssb.setSpan(is, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-        ssb.setSpan(as, ssb.length() - 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssb.append("\n");
-        return ssb;
+        return true;
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
