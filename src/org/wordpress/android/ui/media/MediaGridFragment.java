@@ -272,7 +272,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                     mIsRefreshing = false;
 
                     if (MediaGridFragment.this.isVisible()) {
-                        Toast.makeText(getActivity(), "Refreshed content", Toast.LENGTH_SHORT).show();
                         refreshSpinnerAdapter();
                         setFilter(mFilter);
                         if (!auto)
@@ -291,10 +290,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                 @Override
                 public void onFailure() {
                     mIsRefreshing = false;
-                    
-                    if (MediaGridFragment.this.isVisible()) {
-                        Toast.makeText(getActivity(), "Failed to refresh content", Toast.LENGTH_SHORT).show();
-                    }
                     mListener.onMediaItemListDownloaded();
                 }
             };

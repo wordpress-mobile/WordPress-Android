@@ -68,6 +68,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private ActionMode mActionMode;
     
     private Handler mHandler;
+    private View mProgressFooter;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         FragmentTransaction ft = fm.beginTransaction();
         setupBaseLayout();
 
+        mProgressFooter = findViewById(R.id.media_grid_progress_footer);
+        
         mMediaAddFragment = (MediaAddFragment) fm.findFragmentById(R.id.mediaAddFragment);
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
         
@@ -365,7 +368,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     @Override
     public void onMediaItemListDownloaded() {
-
+        mProgressFooter.setVisibility(View.GONE);
         stopAnimatingRefreshButton();
 
         if (mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
@@ -375,6 +378,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemListDownloadStart() {
+        mProgressFooter.setVisibility(View.VISIBLE);
+        
         // start animation delayed to prevent glitch where the progress spinner
         // disappears when it is started and stopped and then restarted too quickly in succession
         mHandler.postDelayed(new Runnable() {
