@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -48,6 +49,8 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     private ThemeDetailsFragmentCallback mCallback;
     private Button mViewSiteButton;
     private View mCurrentThemeView;
+    private View mActivatingProgressView;
+    private FrameLayout mActivateThemeContainer;
 
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
@@ -111,6 +114,8 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
         mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
+        mActivatingProgressView = (View) view.findViewById(R.id.theme_details_fragment_activating_progress);
+        mActivateThemeContainer = (FrameLayout) view.findViewById(R.id.theme_details_fragment_activate_button_container);
         
         mViewSiteButton = (Button) view.findViewById(R.id.theme_details_fragment_view_site_button);
         mViewSiteButton.setOnClickListener(new OnClickListener() {
@@ -140,7 +145,9 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
                 if (themeId != null) {
                     mCallback.onActivateThemeClicked(themeId, ThemeDetailsFragment.this);
                     mActivateThemeButton.setEnabled(false);
-                    mActivateThemeButton.setText(R.string.theme_activating_button);
+                    mActivateThemeButton.setText("");
+                    mActivatingProgressView.setVisibility(View.VISIBLE);
+                    
                 }
 
             }
@@ -153,7 +160,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     
     public void showViewSite() {
         mLivePreviewButton.setVisibility(View.GONE);
-        mActivateThemeButton.setVisibility(View.GONE);
+        mActivateThemeContainer.setVisibility(View.GONE);
         mViewSiteButton.setVisibility(View.VISIBLE);
         mCurrentThemeView.setVisibility(View.VISIBLE);
     }
@@ -202,6 +209,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     public void onThemeActivated(boolean activated) {
         mActivateThemeButton.setEnabled(true);
         mActivateThemeButton.setText(R.string.theme_activate_button);
+        mActivatingProgressView.setVisibility(View.GONE);
         if (activated)
             showViewSite();
     }
