@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,9 +56,10 @@ public class StatsNavDialogFragment extends SherlockDialogFragment implements On
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
-        ListView lv = (ListView) inflater.inflate(R.layout.stats_nav_list, container, false);
+        View view = inflater.inflate(R.layout.stats_nav_list, container, false);
+        ListView lv = (ListView) view.findViewById(R.id.stats_nav_listview);  
         mAdapter = new CustomAdapter(StatsViewType.toStringArray());
         lv.setAdapter(mAdapter);
         lv.setOnItemClickListener(this);
@@ -65,7 +67,7 @@ public class StatsNavDialogFragment extends SherlockDialogFragment implements On
         mPosition = getArgsPosition();
         lv.setSelection(mPosition);
         
-        return lv;
+        return view;
     }
 
     private int getArgsPosition() {

@@ -44,6 +44,7 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
+        android:textColorLink="@color/wordpress_blue"
         android:layout_toLeftOf="@id/stats_list_cell_total"
         android:layout_toRightOf="@id/stats_list_cell_image_frame"
         android:drawablePadding="4dp"
