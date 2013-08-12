@@ -40,14 +40,20 @@ public class ThemeTabAdapter extends CursorAdapter {
         final NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.theme_grid_item_image);
         final TextView nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
         nameView.setText(name);
+
+        ImageView themeAttr = (ImageView) view.findViewById(R.id.theme_grid_attributes);
         
-        final int isCurrentTheme = cursor.getInt(cursor.getColumnIndex("isCurrentTheme"));
+        final int isPremiumTheme = cursor.getInt(cursor.getColumnIndex("isPremium"));
+        final int isCurrentTheme = cursor.getInt(cursor.getColumnIndex("isCurrent"));
         
-        ImageView currentThemeView = (ImageView) view.findViewById(R.id.theme_grid_current_theme_image);
         if (isCurrentTheme != 0) {
-            currentThemeView.setVisibility(View.VISIBLE);
+            themeAttr.setVisibility(View.VISIBLE);
+            themeAttr.setImageResource(R.drawable.theme_icon_tag_current);
+        } else if (isPremiumTheme != 0) { 
+            themeAttr.setVisibility(View.VISIBLE);
+            themeAttr.setImageResource(R.drawable.theme_icon_tag_premium);
         } else {
-            currentThemeView.setVisibility(View.GONE);
+            themeAttr.setVisibility(View.GONE);
         }
 
         ViewHolder holder = (ViewHolder) imageView.getTag();

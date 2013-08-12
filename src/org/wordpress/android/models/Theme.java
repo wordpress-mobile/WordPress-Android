@@ -22,13 +22,14 @@ public class Theme {
     private long launchDateMs = 0;
     private String blogId;
     private String previewURL = "";
-    private boolean isCurrentTheme = false;
+    private boolean isCurrent = false;
+    private boolean isPremium = false;
     
     public Theme() {
         
     }
 
-    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL) {
+    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium) {
         setThemeId(themeId);
         setScreenshotURL(screenshotURL);
         setName(name);
@@ -38,6 +39,7 @@ public class Theme {
         setLaunchDate(launchDate);
         setBlogId(blogId);
         setPreviewURL(previewURL);
+        setPremium(isPremium);
     }
 
     public String getThemeId() {
@@ -136,20 +138,37 @@ public class Theme {
         int popularityRank = object.getInt("popularity_rank");
         String launchDate = object.getString("launch_date");
         String previewURL = object.has("preview_url") ? object.getString("preview_url") : ""; // we don't receive preview_url when we fetch current theme
-
+        
+        // parse cost, e.g
+        // "cost": {
+        //   "display": "$80",
+        //   "number": 80,
+        //   "currency": "USD"
+        // },
+        JSONObject costObject = object.getJSONObject("cost");
+        boolean isPremium = costObject.getInt("number") > 0;
+        
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL);        
+        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium);        
     }
 
-    public void setIsCurrentTheme(boolean isCurrentTheme) {
-        this.isCurrentTheme = isCurrentTheme;
+    public void setCurrent(boolean isCurrent) {
+        this.isCurrent = isCurrent;
     }
     
-    public boolean getIsCurrentTheme() {
-        return isCurrentTheme;
+    public boolean isCurrent() {
+        return isCurrent;
+    }
+
+    public boolean isPremium() {
+        return isPremium;
+    }
+
+    public void setPremium(boolean isPremium) {
+        this.isPremium = isPremium;
     }
 
 }

@@ -156,6 +156,7 @@
   <string name="theme_auth_error_title">Failed to fetch themes</string>
   <string name="theme_auth_error_message">Ensure you have the privilege to set themes.</string>
   <string name="theme_current_theme">Current Theme</string>
+  <string name="theme_premium_theme">Premium Theme</string>
 
   <!-- link view -->
   <string name="link_enter_url">URL</string>

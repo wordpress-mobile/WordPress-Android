@@ -18,38 +18,43 @@
             android:textColor="@color/theme_details_name"
             android:textSize="22sp" />
 
-        <RelativeLayout
-            android:id="@+id/theme_details_fragment_current_theme_container"
+        <LinearLayout
+            android:id="@+id/theme_details_fragment_attributes_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/theme_details_fragment_name"
-            android:paddingBottom="10dp"
-            android:visibility="gone" >
-
-            <ImageView
-                android:id="@+id/theme_details_fragment_current_theme_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/theme_icon_current" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/theme_details_fragment_current_theme_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_toRightOf="@id/theme_details_fragment_current_theme_image"
-                android:paddingLeft="16dp"
+                android:drawableLeft="@drawable/theme_icon_current"
+                android:drawablePadding="8dp"
+                android:paddingRight="16dp"
                 android:text="@string/theme_current_theme"
-                android:textColor="@color/wordpress_blue" />
-        </RelativeLayout>
+                android:textColor="@color/wordpress_blue"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/theme_details_fragment_premium_theme_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/theme_icon_premium"
+                android:drawablePadding="8dp"
+                android:text="@string/theme_premium_theme"
+                android:textColor="@color/theme_details_premium"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/theme_details_fragment_image"
             android:layout_width="300dp"
             android:layout_height="225dp"
-            android:layout_below="@id/theme_details_fragment_current_theme_container"
+            android:layout_below="@id/theme_details_fragment_attributes_container"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
@@ -88,7 +93,6 @@
                     android:id="@+id/theme_details_fragment_activate_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:background="@drawable/theme_activate_button_selector"
                     android:padding="10dp"
                     android:text="@string/theme_activate_button"
@@ -124,7 +128,6 @@
                 android:id="@+id/theme_details_fragment_view_site_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/theme_activate_button_selector"
                 android:padding="10dp"

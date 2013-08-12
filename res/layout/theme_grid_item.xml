@@ -18,13 +18,13 @@
             android:scaleType="centerCrop" />
 
         <ImageView
-            android:id="@+id/theme_grid_current_theme_image"
+            android:id="@+id/theme_grid_attributes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/theme_icon_tag_current"
-            android:visibility="gone" />
+            android:src="@drawable/theme_icon_tag_current"
+            android:visibility="visible" />
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -51,6 +51,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     private View mCurrentThemeView;
     private View mActivatingProgressView;
     private FrameLayout mActivateThemeContainer;
+    private View mPremiumThemeView;
 
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
@@ -110,7 +111,8 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         mImageView = (NetworkImageView) view.findViewById(R.id.theme_details_fragment_image);
         mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
 
-        mCurrentThemeView = (View) view.findViewById(R.id.theme_details_fragment_current_theme_container);
+        mCurrentThemeView = (View) view.findViewById(R.id.theme_details_fragment_current_theme_text);
+        mPremiumThemeView = (View) view.findViewById(R.id.theme_details_fragment_premium_theme_text);
         
         mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
         mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
@@ -189,7 +191,13 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
             mPreviewURL = theme.getPreviewURL();
             
-            if (theme.getIsCurrentTheme()) {
+            if (theme.isPremium()) {
+                mPremiumThemeView.setVisibility(View.VISIBLE);
+            } else {
+                mPremiumThemeView.setVisibility(View.GONE);
+            }
+            
+            if (theme.isCurrent()) {
                 showViewSite();
             }
 
