@@ -98,7 +98,7 @@ public class Post {
         }
     }
 
-    public Post(int blog_id, String title, String content, String picturePaths, long date, String categories, String tags, String status,
+    public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
             String password, double latitude, double longitude, boolean isPage, String postFormat,
             boolean createBlogReference, boolean isLocalChange) {
         // create a new post
@@ -112,6 +112,7 @@ public class Post {
         this.blogID = blog_id;
         this.title = title;
         this.description = content;
+        this.mt_excerpt = excerpt;
         this.mediaPaths = picturePaths;
         this.date_created_gmt = date;
         this.categories = categories;

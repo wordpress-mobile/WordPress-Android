@@ -87,7 +87,7 @@
   <string name="immediately">Immediately</string>
   <string name="uploading">Uploading</string>
   <string name="uploading_media_item">Uploading media item #</string>
-  <string name="gallery_error">Sorry, the media item could not be retrieved from the Gallery.</string>
+  <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
   <string name="refresh">Refresh</string>
   <string name="home">Home</string>
   <string name="more_tag">More</string>
@@ -185,6 +185,8 @@
   <string name="featured_in_post">Include image in post content</string>
   <string name="out_of_memory">Device out of memory.</string>
   <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
+  <string name="post_excerpt">Excerpt</string>
+    <string name="download">Downloading Image</string>
 
   <!-- page view -->
   <string name="page_id">Page</string>
@@ -582,5 +584,6 @@
     <string name="dashboard_tip">Tap the back key to return to the app.</string>
     <string name="discard">Discard</string>
     <string name="prompt_save_changes">Would you like to save your changes?</string>
+    <string name="error_downloading_image">Error downloading image. Please try again.</string>
 
 </resources>

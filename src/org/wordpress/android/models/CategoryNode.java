@@ -60,11 +60,14 @@ public class CategoryNode {
     }
 
     public static CategoryNode createCategoryTreeFromDB(int blogId) {
+        CategoryNode rootCategory = new CategoryNode(-1, -1, "");
+        if (WordPress.wpDB == null) {
+            return rootCategory;
+        }
         List<String> stringCategories = WordPress.wpDB.loadCategories(blogId);
 
         // First pass instantiate CategoryNode objects
         SparseArray<CategoryNode> categoryMap = new SparseArray<CategoryNode>();
-        CategoryNode rootCategory = new CategoryNode(-1, -1, "");
         CategoryNode currentRootNode;
         for (String name : stringCategories) {
             int categoryId = WordPress.wpDB.getCategoryId(blogId, name);
@@ -79,7 +82,7 @@ public class CategoryNode {
             if (category.getParentId() == 0) { // root node
                 currentRootNode = rootCategory;
             } else {
-                currentRootNode = categoryMap.get(category.getParentId());
+                currentRootNode = categoryMap.get(category.getParentId(), rootCategory);
             }
             currentRootNode.children.put(category.getName(), categoryMap.get(category.getCategoryId()));
         }
