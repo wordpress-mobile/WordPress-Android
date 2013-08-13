@@ -175,13 +175,15 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     protected void onResume() {
         super.onResume();
         startMediaDeleteService();
-        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())
-            getFeatureSet();
+        getFeatureSet();
     };
     
 
     /** Get the feature set for a wordpress.com hosted blog **/
     private void getFeatureSet() {
+        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag())
+            return;
+        
         ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
 
             @Override
@@ -212,6 +214,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.refreshMediaFromServer(0, false);
             startAnimatingRefreshButton();
         }
+
+        getFeatureSet();
     };
 
     @Override
