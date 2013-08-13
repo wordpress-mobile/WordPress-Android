@@ -366,7 +366,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
     @Override
     public Cursor swapCursor(Cursor newCursor) {
-
+        if (newCursor == null)
+            return super.swapCursor(newCursor);
+        
         mCursorDataCount = newCursor.getCount();
 
         // to mimic the infinite the notification's infinite scroll ui 

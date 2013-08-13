@@ -331,7 +331,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mFilter = filter;
         mCursor = filterItems(mFilter);
 
-        if (mGridAdapter != null) {
+        if (mGridAdapter != null && mCursor != null) {
             mGridAdapter.swapCursor(mCursor);
             mResultView.setVisibility(View.GONE);
         } else {
