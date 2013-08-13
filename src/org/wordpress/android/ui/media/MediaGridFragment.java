@@ -23,7 +23,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
@@ -235,18 +234,18 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
-        if (mCursor != null) {
-            if (mCursor.getCount() == 0 && !mHasRetrievedAllMedia) {
-                refreshMediaFromServer(0, true);
-            }
-                
-            if (mGridAdapter == null) {
-                mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems);
-                mGridAdapter.setCallback(this);
-                mGridView.setAdapter(mGridAdapter);
-                mGridView.setSelection(mSavedFirstVisiblePosition);
-            }
+
+        if (mGridAdapter == null) {
+            mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, mCheckedItems);
+            mGridAdapter.setCallback(this);
+            mGridView.setAdapter(mGridAdapter);
+            mGridView.setSelection(mSavedFirstVisiblePosition);
         }
+        
+        if (mCursor != null && mCursor.getCount() == 0 && !mHasRetrievedAllMedia) {
+            refreshMediaFromServer(0, true);
+        }
+        
         mGridAdapter.swapCursor(mCursor);
     }
 
@@ -257,6 +256,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         if(offset == 0 || !mIsRefreshing) {
             mIsRefreshing = true;
             mListener.onMediaItemListDownloadStart();
+            mGridAdapter.setRefreshing(true);
 
             List<Object> apiArgs = new ArrayList<Object>();
             apiArgs.add(WordPress.getCurrentBlog());
@@ -285,12 +285,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                     }
 
                     mListener.onMediaItemListDownloaded();
+                    mGridAdapter.setRefreshing(false);
                 }
 
                 @Override
                 public void onFailure() {
                     mIsRefreshing = false;
                     mListener.onMediaItemListDownloaded();
+                    mGridAdapter.setRefreshing(false);
                 }
             };
             

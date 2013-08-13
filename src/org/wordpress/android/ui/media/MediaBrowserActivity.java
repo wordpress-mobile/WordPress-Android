@@ -68,7 +68,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private ActionMode mActionMode;
     
     private Handler mHandler;
-    private View mProgressFooter;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +92,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         FragmentTransaction ft = fm.beginTransaction();
         setupBaseLayout();
-
-        mProgressFooter = findViewById(R.id.media_grid_progress_footer);
         
         mMediaAddFragment = (MediaAddFragment) fm.findFragmentById(R.id.mediaAddFragment);
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
@@ -107,29 +104,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
             ft.hide(mMediaItemFragment);
         
-        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())
-            getFeatureSet();
-        
         ft.commit();
         
         setupAddMenuPopup();
-    }
-
-    /** Get the feature set for a wordpress.com hosted blog **/
-    private void getFeatureSet() {
-        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
-
-            @Override
-            public void onResult(FeatureSet featureSet) {
-                mFeatureSet = featureSet;
-            }
-            
-        });
-        
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs) ;
-        
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -198,7 +175,27 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     protected void onResume() {
         super.onResume();
         startMediaDeleteService();
+        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())
+            getFeatureSet();
     };
+    
+
+    /** Get the feature set for a wordpress.com hosted blog **/
+    private void getFeatureSet() {
+        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
+
+            @Override
+            public void onResult(FeatureSet featureSet) {
+                mFeatureSet = featureSet;
+            }
+            
+        });
+        
+        List<Object> apiArgs = new ArrayList<Object>();
+        apiArgs.add(WordPress.getCurrentBlog());
+        task.execute(apiArgs) ;
+        
+    }
     
     @Override
     protected void onPause() {
@@ -368,7 +365,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     
     @Override
     public void onMediaItemListDownloaded() {
-        mProgressFooter.setVisibility(View.GONE);
         stopAnimatingRefreshButton();
 
         if (mMediaItemFragment != null && mMediaItemFragment.isInLayout()) {
@@ -378,8 +374,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemListDownloadStart() {
-        mProgressFooter.setVisibility(View.VISIBLE);
-        
         // start animation delayed to prevent glitch where the progress spinner
         // disappears when it is started and stopped and then restarted too quickly in succession
         mHandler.postDelayed(new Runnable() {

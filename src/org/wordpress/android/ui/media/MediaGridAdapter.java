@@ -7,6 +7,8 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
@@ -36,6 +38,9 @@ public class MediaGridAdapter extends CursorAdapter {
     private ArrayList<String> mCheckedItems;
     private Set<String> mLocalImageRequestQueue;
     private boolean mHasRetrievedAll;
+    private boolean mIsRefreshing;
+    private int mCursorDataCount;
+    private View mProgressBar;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -43,7 +48,7 @@ public class MediaGridAdapter extends CursorAdapter {
     }
     
     private static enum ViewTypes {
-        LOCAL, NETWORK
+        LOCAL, NETWORK, PROGRESS, SPACER
     }
     
     public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
@@ -56,9 +61,29 @@ public class MediaGridAdapter extends CursorAdapter {
         return mCheckedItems;
     }
     
-    @SuppressLint("DefaultLocale")
+	@SuppressLint("DefaultLocale")
 	@Override
     public void bindView(final View view, Context context, Cursor cursor) {
+        
+        int itemViewType = getItemViewType(cursor.getPosition());
+        
+        if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
+            if (mIsRefreshing) {
+                view.setVisibility(View.VISIBLE);
+                mProgressBar = view;
+                int height = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_progress_height);
+                view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, height));
+            } else { 
+                view.setVisibility(View.GONE);
+                view.setLayoutParams(new GridView.LayoutParams(0, 0));
+            }
+            return;
+        } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
+            view.setVisibility(View.INVISIBLE);
+            updateGridWidth(context, view);
+            return;
+        }
+        
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
         // upload state
@@ -195,9 +220,10 @@ public class MediaGridAdapter extends CursorAdapter {
         
         // if we are near the end, make a call to fetch more
         int position = cursor.getPosition();
-        if (position == cursor.getCount() - 1 && !mHasRetrievedAll) {
-            if (mCallback != null)
+        if (position == mCursorDataCount - 1 && !mHasRetrievedAll) {
+            if (mCallback != null) {
                 mCallback.fetchMoreData(cursor.getCount());
+            }
         }
     }
 
@@ -251,6 +277,15 @@ public class MediaGridAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup root) {
         LayoutInflater inflater = LayoutInflater.from(context);
         
+        int itemViewType = getItemViewType(cursor.getPosition());
+        
+        // spacer and progress spinner views
+        if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
+            return inflater.inflate(R.layout.media_grid_progress, root, false);
+        } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
+            return new View(context);
+        }
+        
         View view =  inflater.inflate(R.layout.media_grid_item, root, false);
         
         ViewStub imageStub = (ViewStub) view.findViewById(R.id.media_grid_image_stub);
@@ -262,7 +297,7 @@ public class MediaGridAdapter extends CursorAdapter {
         // The other option would be to inflate multiple layouts, but that would lead
         // to extra near-duplicate xml files that would need to be maintained.
         
-        if (getItemViewType(cursor.getPosition()) == ViewTypes.LOCAL.ordinal())
+        if (itemViewType == ViewTypes.LOCAL.ordinal())
             imageStub.setLayoutResource(R.layout.media_grid_image_local);
         else
             imageStub.setLayoutResource(R.layout.media_grid_image_network);
@@ -281,11 +316,77 @@ public class MediaGridAdapter extends CursorAdapter {
     public int getItemViewType(int position) {
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
+        
+        // spacer / progress cells
+        int _id = cursor.getInt(cursor.getColumnIndex("_id"));
+        if (_id < 0) {
+            if (_id == Integer.MIN_VALUE)
+                return ViewTypes.PROGRESS.ordinal();
+            else 
+                return ViewTypes.SPACER.ordinal();
+        }
+        
+        // regular cells
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         if (MediaUtils.isLocalFile(state))
             return ViewTypes.LOCAL.ordinal();
         else
             return ViewTypes.NETWORK.ordinal();
+    }
+    
+    /** Updates the width of a cell to max out the space available, for phones **/
+    private void updateGridWidth(Context context, View view) {
+
+        int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
+        int columnCount = getColumnCount(context);
+        
+        if (columnCount > 1) {
+
+            // use 16 dp as padding on the left, right and in between columns
+            int dp16 = (int) Utils.dpToPx(16);
+            int padding = (columnCount + 1) * dp16;
+            int width = (maxWidth - padding) / columnCount;
+            view.setLayoutParams(new GridView.LayoutParams(width, width));
+        }
+        
+    }
+
+    @Override
+    public Cursor swapCursor(Cursor newCursor) {
+
+        mCursorDataCount = newCursor.getCount();
+
+        // to mimic the infinite the notification's infinite scroll ui 
+        // (with a progress spinner on the bottom of the list), we'll need to add
+        // extra cells in the gridview:
+        // - spacer cells as fillers to place the progress spinner on the first cell (_id < 0)
+        // - progress spinner cell (_id = Integer.MIN_VALUE)
+
+        // use a matrix cursor to create the extra rows
+        MatrixCursor matrixCursor = new MatrixCursor(new String[] { "_id" });
+
+        // add spacer cells
+        int columnCount = getColumnCount(mContext);
+        int remainder = newCursor.getCount() % columnCount;
+        if (remainder > 0) {
+            int spaceCount = columnCount - remainder; 
+            for (int i = 0; i < spaceCount; i++ ) {
+                int id = i - spaceCount;
+                matrixCursor.addRow(new Object[] {id + ""});
+            }
+        }
+
+        // add progress spinner cell
+        matrixCursor.addRow(new Object[] { Integer.MIN_VALUE });
+        
+        // use a merge cursor to place merge the extra rows at the bottom of the newly swapped cursor
+        MergeCursor mergeCursor = new MergeCursor(new Cursor[] { newCursor, matrixCursor });
+        return super.swapCursor(mergeCursor);
+    }
+
+    /** Return the number of columns in the media grid **/
+    private int getColumnCount(Context context) {
+        return context.getResources().getInteger(R.integer.media_grid_num_columns);
     }
     
     public void setCallback(MediaGridAdapterCallback callback) {
@@ -296,18 +397,14 @@ public class MediaGridAdapter extends CursorAdapter {
         mHasRetrievedAll = b;
     }
     
-    /** Updates the width of a cell to max out the space available, for phones **/
-    private void updateGridWidth(Context context, View view) {
-
-        int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
-        int columnCount = context.getResources().getInteger(R.integer.media_grid_num_columns);
-        
-        if (columnCount > 1) {
-            int dp16 = (int) Utils.dpToPx(16);
-            int padding = (columnCount + 1) * dp16;
-            int width = (maxWidth - padding) / columnCount;
-            view.setLayoutParams(new GridView.LayoutParams(width, width));
+    public void setRefreshing(boolean refreshing) {
+        mIsRefreshing = refreshing;
+        if (mProgressBar != null) {
+            if (mIsRefreshing) {
+                mProgressBar.setVisibility(View.VISIBLE);
+            } else {
+                mProgressBar.setVisibility(View.GONE);
+            }
         }
-        
     }
 }

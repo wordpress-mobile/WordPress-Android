@@ -30,39 +30,10 @@
         android:text="@string/empty_fields"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:id="@+id/media_grid_progress_footer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:minHeight="50dip"
-        android:visibility="gone" >
-
-        <ProgressBar
-            android:id="@+id/progressbar"
-            style="?android:attr/progressBarStyleInverse"
-            android:layout_width="20dip"
-            android:layout_height="20dip"
-            android:layout_centerVertical="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/progressbar"
-            android:gravity="center"
-            android:padding="10dip"
-            android:text="@string/loading"
-            android:textColor="#FF464646"
-            android:textSize="16sp" />
-    </RelativeLayout>
-
     <org.wordpress.android.ui.MultiSelectGridView
         android:id="@+id/media_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/media_grid_progress_footer"
         android:layout_below="@id/media_filter_result_text"
         android:gravity="left"
         android:numColumns="@integer/media_grid_num_columns"
