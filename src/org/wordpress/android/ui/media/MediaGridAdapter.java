@@ -20,6 +20,7 @@ import android.view.ViewStub;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -69,64 +70,25 @@ public class MediaGridAdapter extends CursorAdapter {
         
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
             if (mIsRefreshing) {
-                view.setVisibility(View.VISIBLE);
                 mProgressBar = view;
                 int height = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_progress_height);
                 view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, height));
+                view.setVisibility(View.VISIBLE);
             } else { 
-                view.setVisibility(View.GONE);
                 view.setLayoutParams(new GridView.LayoutParams(0, 0));
+                view.setVisibility(View.GONE);
             }
             return;
         } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
+            CheckableFrameLayout frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
+            updateGridWidth(context, frameLayout);
             view.setVisibility(View.INVISIBLE);
-            updateGridWidth(context, view);
             return;
         }
         
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
-        // upload state
-        
-        View uploadStateView = (View) view.findViewById(R.id.media_grid_item_upload_state_container);
-        ProgressBar progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
-        
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
-        final TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
-        if (stateTextView != null) {
-            if (state != null && state.length() > 0) {
-                
-                // show the progressbar only when the state is uploading
-                if (state.equals("uploading")) {
-                    progressUpload.setVisibility(View.VISIBLE);
-                } else {
-                    progressUpload.setVisibility(View.GONE);
-                }
-                
-                // add onclick to retry failed uploads 
-                if (state.equals("failed")) {
-                    
-                    state = "retry";
-                    stateTextView.setOnClickListener(new OnClickListener() {
-                        
-                        @Override
-                        public void onClick(View v) {
-                            if (!inMultiSelect()) {
-                                stateTextView.setText("queued");
-                                mCallback.onRetryUpload(mediaId);
-                            }
-                        }
-
-                    });
-                }
-                
-                stateTextView.setText(state);
-                uploadStateView.setVisibility(View.VISIBLE);
-            } else {
-                uploadStateView.setVisibility(View.GONE);
-            }
-        }
-
         boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
@@ -216,7 +178,51 @@ public class MediaGridAdapter extends CursorAdapter {
         frameLayout.setChecked(mCheckedItems.contains(mediaId));
         
         // resizing layout to fit nicely into grid view
-        updateGridWidth(context, view);        
+        updateGridWidth(context, frameLayout);        
+        
+        
+        // show upload state
+        final TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
+        final ProgressBar progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
+        final RelativeLayout uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
+        
+        if (stateTextView != null) {
+            
+            
+            if (state != null && state.length() > 0) {
+                
+                // show the progressbar only when the state is uploading
+                if (state.equals("uploading")) {
+                    progressUpload.setVisibility(View.VISIBLE);
+                } else {
+                    progressUpload.setVisibility(View.GONE);
+                }
+
+                // add onclick to retry failed uploads 
+                if (state.equals("failed")) {
+                    
+                    state = "retry";
+                    stateTextView.setOnClickListener(new OnClickListener() {
+                        
+                        @Override
+                        public void onClick(View v) {
+                            if (!inMultiSelect()) {
+                                stateTextView.setText("queued");
+                                stateTextView.setOnClickListener(null);
+                                mCallback.onRetryUpload(mediaId);
+                            }
+                        }
+
+                    });
+                }
+                
+                stateTextView.setText(state);
+                uploadStateView.setVisibility(View.VISIBLE);
+            } else {
+                uploadStateView.setVisibility(View.GONE);
+            }
+        }
+        
         
         // if we are near the end, make a call to fetch more
         int position = cursor.getPosition();
@@ -285,7 +291,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
             return inflater.inflate(R.layout.media_grid_progress, root, false);
         } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
-            return new View(context);
+            return inflater.inflate(R.layout.media_grid_item, root, false);
         }
         
         View view =  inflater.inflate(R.layout.media_grid_item, root, false);
@@ -344,11 +350,16 @@ public class MediaGridAdapter extends CursorAdapter {
         
         if (columnCount > 1) {
 
-            // use 16 dp as padding on the left, right and in between columns
-            int dp16 = (int) Utils.dpToPx(16);
-            int padding = (columnCount + 1) * dp16;
+            // use 8 dp as padding on the left, right and in between columns
+            int dp8 = (int) Utils.dpToPx(8);
+            int padding = (columnCount + 1) * dp8;
             int width = (maxWidth - padding) / columnCount;
-            view.setLayoutParams(new GridView.LayoutParams(width, width));
+            
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
+            int margins = (int) Utils.dpToPx(8);
+            params.setMargins(0, margins, 0, margins);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+            view.setLayoutParams(params);
         }
         
     }

@@ -38,6 +38,8 @@
         android:gravity="center"
         android:numColumns="@integer/media_grid_num_columns"
         android:scrollbarStyle="outsideOverlay"
-        android:stretchMode="columnWidth" />
+        android:stretchMode="columnWidth"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp" />
 
 </RelativeLayout>
