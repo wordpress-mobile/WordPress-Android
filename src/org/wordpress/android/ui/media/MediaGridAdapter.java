@@ -239,6 +239,8 @@ public class MediaGridAdapter extends CursorAdapter {
         if (thumbnailURL != null && MediaUtils.isValidImage(uri.getLastPathSegment())) { 
             imageView.setTag(thumbnailURL);
             imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
+        } else {
+            imageView.setImageUrl(null, null);
         }
         
     }
