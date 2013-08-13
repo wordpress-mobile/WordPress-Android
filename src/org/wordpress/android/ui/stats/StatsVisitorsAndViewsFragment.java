@@ -108,15 +108,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
         private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
         private LinearLayout mBarGraphLayout;
-        private GraphView graphView;
-        private GraphViewSeries viewsSeries;
-        private GraphViewSeries visitorsSeries;
         
         private TextView mVisitorsToday;
         private TextView mViewsToday;
         private TextView mVisitorsBestEver;
         private TextView mViewsAllTime;
         private TextView mCommentsAllTime;
+        private View mLegend;
         private ContentObserver mContentObserver = new MyObserver(new Handler());
         
         public static InnerFragment newInstance(StatsTimeframe timeframe) {
@@ -361,10 +359,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             if (getActivity() == null)
                 return;
             
-            if (!cursor.moveToFirst())
+            if (!cursor.moveToFirst() || cursor.getCount() == 0) {
+                Context context = mBarGraphLayout.getContext();
+                LayoutInflater inflater = LayoutInflater.from(context);
+                mBarGraphLayout.addView(inflater.inflate(R.layout.stats_bar_graph_empty, mBarGraphLayout, false));
+                mLegend.setVisibility(View.GONE);
+                
                 return;
+            }
             
-            int numPoints = Math.min(30, cursor.getCount());
+            int numPoints = Math.min(getNumOfPoints(), cursor.getCount());
             
             GraphViewData[] views = new GraphViewData[numPoints];
             GraphViewData[] visitors = new GraphViewData[numPoints];
@@ -377,23 +381,49 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 cursor.moveToNext();
             }
             
-            viewsSeries = new GraphViewSeries(views);
-            visitorsSeries = new GraphViewSeries(visitors);
+            GraphViewSeries viewsSeries = new GraphViewSeries(views);
+            GraphViewSeries visitorsSeries = new GraphViewSeries(visitors);
 
             viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
             viewsSeries.getStyle().padding = Utils.dpToPx(1);
             visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
             visitorsSeries.getStyle().padding = Utils.dpToPx(3);
             
-            graphView = new StatsBarGraph(getActivity(), "");
+            GraphView graphView = new StatsBarGraph(getActivity(), "");
             graphView.addSeries(viewsSeries);
             graphView.addSeries(visitorsSeries);
 
-            graphView.getGraphViewStyle().setNumHorizontalLabels(horLabels.length / 5);
+            graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
             graphView.setHorizontalLabels(horLabels);
             
             mBarGraphLayout.removeAllViews();
             mBarGraphLayout.addView(graphView);   
+            mLegend.setVisibility(View.VISIBLE);
+        }
+
+        private int getNumOfPoints() {
+            int ordinal = getTimeframeOrdinal();
+            
+            if (Utils.isTablet()) {
+                return 30; 
+            } 
+            
+            if (ordinal == StatsTimeframe.DAYS.ordinal()) 
+                return 7;
+            else
+                return 12;
+        }
+        
+        private int getNumOfHorizontalLabels(int numPoints) {
+            if (Utils.isTablet()) {
+                return numPoints / 5;
+            }
+
+            int ordinal = getTimeframeOrdinal();
+            if (ordinal == StatsTimeframe.DAYS.ordinal())
+                return numPoints / 2;
+            else
+                return numPoints / 3;
         }
 
         private int getViews(Cursor cursor) {

@@ -21,7 +21,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="right"
                 android:paddingBottom="4dp"
-                android:paddingTop="4dp" >
+                android:paddingTop="4dp" 
+                android:visibility="gone">
 
                 <View
                     android:id="@+id/stats_bar_graph_legend_marker_views"

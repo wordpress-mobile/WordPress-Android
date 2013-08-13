@@ -10,12 +10,14 @@
         android:padding="16dp" >
 
         <LinearLayout
+            android:id="@+id/stats_bar_graph_legend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:gravity="center_vertical"
             android:paddingBottom="4dp"
-            android:paddingTop="4dp" >
+            android:paddingTop="4dp"
+            android:visibility="gone" >
 
             <View
                 android:layout_width="12dp"

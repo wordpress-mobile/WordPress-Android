@@ -444,6 +444,7 @@
   <string name="stats_empty_video">No videos have been played yet.</string>
   <string name="stats_empty_search_engine_terms"><![CDATA[<b>No search terms.</b> Search terms are words or phrases users find you with when they search.]]></string>
   <string name="stats_empty_comments">No comments yet.</string>
+  <string name="stats_bar_graph_empty">No stats available.</string>
   
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>
