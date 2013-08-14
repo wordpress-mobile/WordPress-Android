@@ -1291,14 +1291,9 @@ public class WordPressDB {
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMt_text_more());
 
-            if (post.getJSONCategories() != null) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(post.getJSONCategories().toString());
-                    values.put("categories", jsonArray.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            JSONArray categoriesJsonArray = post.getJSONCategories();
+            if (categoriesJsonArray != null) {
+                values.put("categories", categoriesJsonArray.toString());
             }
 
             values.put("localDraft", post.isLocalDraft());
@@ -1333,14 +1328,9 @@ public class WordPressDB {
                 values.put("mt_text_more", post.getMt_text_more());
             values.put("uploaded", post.isUploaded());
 
-            if (post.getJSONCategories() != null) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(post.getJSONCategories().toString());
-                    values.put("categories", jsonArray.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            JSONArray categoriesJsonArray = post.getJSONCategories();
+            if (categoriesJsonArray != null) {
+                values.put("categories", categoriesJsonArray.toString());
             }
 
             values.put("localDraft", post.isLocalDraft());

@@ -255,13 +255,13 @@ public class PostUploadService extends Service {
             if (mediaError)
                 return false;
 
-            JSONArray categories = post.getJSONCategories();
+            JSONArray categoriesJsonArray = post.getJSONCategories();
             String[] theCategories = null;
-            if (categories != null) {
-                theCategories = new String[categories.length()];
-                for (int i = 0; i < categories.length(); i++) {
+            if (categoriesJsonArray != null) {
+                theCategories = new String[categoriesJsonArray.length()];
+                for (int i = 0; i < categoriesJsonArray.length(); i++) {
                     try {
-                        theCategories[i] = TextUtils.htmlEncode(categories.getString(i));
+                        theCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -321,10 +321,9 @@ public class PostUploadService extends Service {
                 if (post.getMt_keywords() != "") {
                     contentStruct.put("mt_keywords", post.getMt_keywords());
                 }
-                if (theCategories != null) {
-                    if (theCategories.length > 0)
-                        contentStruct.put("categories", theCategories);
-                }
+                
+                if (theCategories != null && theCategories.length > 0)
+                    contentStruct.put("categories", theCategories);
             }
 
             if (post.getMt_excerpt() != null)
@@ -457,6 +456,10 @@ public class PostUploadService extends Service {
 
                             thumbData = cur.getString(dataColumn);
                             mimeType = cur.getString(mimeTypeColumn);
+                            if ( mimeType.equalsIgnoreCase( "video/mp4v-es" ) ) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
+                                mimeType = "video/mp4";
+                            }
+                                                    
                             fVideo = new File(thumbData);
                             mf.setFilePath(fVideo.getPath());
                             String resolution = cur.getString(resolutionColumn);

@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import android.text.Html;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Vector;
@@ -170,6 +170,7 @@ public class Post {
             categories = StringUtils.unescapeHTML(categories);
             jArray = new JSONArray(categories);
         } catch (JSONException e) {
+            Log.e("WordPress - getJSONCategories", e.getLocalizedMessage());
         }
         return jArray;
     }
