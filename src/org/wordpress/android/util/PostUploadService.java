@@ -457,6 +457,10 @@ public class PostUploadService extends Service {
 
                             thumbData = cur.getString(dataColumn);
                             mimeType = cur.getString(mimeTypeColumn);
+                            if ( mimeType.equalsIgnoreCase( "video/mp4v-es" ) ) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
+                                mimeType = "video/mp4";
+                            }
+                                                    
                             fVideo = new File(thumbData);
                             mf.setFilePath(fVideo.getPath());
                             String resolution = cur.getString(resolutionColumn);
