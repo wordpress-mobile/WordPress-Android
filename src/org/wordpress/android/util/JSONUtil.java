@@ -142,4 +142,17 @@ public class JSONUtil {
         }
         return stringList;
     }
+    
+    /**
+     * Convert a string list in a JSONArray
+     */
+    public static JSONArray fromStringListToJSONArray(ArrayList<String> stringList) {
+        JSONArray jsonArray = new JSONArray();
+        if(stringList != null)
+            for (int i = 0; i < stringList.size(); i++) {
+                jsonArray.put(stringList.get(i));
+            }
+        
+        return jsonArray;
+    }
 }

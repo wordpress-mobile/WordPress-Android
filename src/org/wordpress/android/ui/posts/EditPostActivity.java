@@ -71,6 +71,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -1661,7 +1663,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
 
             if (mIsNew) {
-                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, mCategories.toString(), tags, status, password,
+                
+                JSONArray categorisList = JSONUtil.fromStringListToJSONArray(mCategories);
+                mPost = new Post(mBlogID, title, content, excerpt, images, pubDateTimestamp, categorisList.toString(), tags, status, password,
                         latitude, longitude, mIsPage, postFormat, true, false);
                 mPost.setLocalDraft(true);
 
