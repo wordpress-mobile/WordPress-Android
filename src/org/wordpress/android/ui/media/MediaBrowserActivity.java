@@ -210,11 +210,29 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
-        if (mMediaGridFragment != null && !mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
-            mMediaGridFragment.refreshMediaFromServer(0, false);
-            startAnimatingRefreshButton();
+        
+        if (mMediaEditFragment != null) {
+            mMediaEditFragment.loadMedia(null);
+
+            // hide if in phone
+            if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible())
+                getSupportFragmentManager().popBackStack();
         }
 
+        getSupportFragmentManager().executePendingTransactions();
+        if (mMediaItemFragment != null && mMediaItemFragment.isVisible())
+            getSupportFragmentManager().popBackStack();
+        
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.reset();
+            
+            if (!mMediaGridFragment.hasRetrievedAllMediaFromServer()) {
+                mMediaGridFragment.refreshMediaFromServer(0, false);
+                startAnimatingRefreshButton();
+            }
+        }
+        
+        
         getFeatureSet();
     };
 

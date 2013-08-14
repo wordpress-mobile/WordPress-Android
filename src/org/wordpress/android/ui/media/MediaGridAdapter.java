@@ -41,7 +41,6 @@ public class MediaGridAdapter extends CursorAdapter {
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
-    private View mProgressBar;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -70,7 +69,6 @@ public class MediaGridAdapter extends CursorAdapter {
         
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
             if (mIsRefreshing) {
-                mProgressBar = view;
                 int height = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_progress_height);
                 view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, height));
                 view.setVisibility(View.VISIBLE);
@@ -207,8 +205,8 @@ public class MediaGridAdapter extends CursorAdapter {
                         @Override
                         public void onClick(View v) {
                             if (!inMultiSelect()) {
-                                stateTextView.setText("queued");
-                                stateTextView.setOnClickListener(null);
+                                ((TextView) v).setText("queued");
+                                v.setOnClickListener(null);
                                 mCallback.onRetryUpload(mediaId);
                             }
                         }
@@ -228,7 +226,7 @@ public class MediaGridAdapter extends CursorAdapter {
         int position = cursor.getPosition();
         if (position == mCursorDataCount - 1 && !mHasRetrievedAll) {
             if (mCallback != null) {
-                mCallback.fetchMoreData(cursor.getCount());
+                mCallback.fetchMoreData(mCursorDataCount);
             }
         }
     }
@@ -366,8 +364,10 @@ public class MediaGridAdapter extends CursorAdapter {
 
     @Override
     public Cursor swapCursor(Cursor newCursor) {
-        if (newCursor == null)
+        if (newCursor == null) {
+            mCursorDataCount = 0;
             return super.swapCursor(newCursor);
+        }
         
         mCursorDataCount = newCursor.getCount();
 
@@ -414,12 +414,6 @@ public class MediaGridAdapter extends CursorAdapter {
     
     public void setRefreshing(boolean refreshing) {
         mIsRefreshing = refreshing;
-        if (mProgressBar != null) {
-            if (mIsRefreshing) {
-                mProgressBar.setVisibility(View.VISIBLE);
-            } else {
-                mProgressBar.setVisibility(View.GONE);
-            }
-        }
+        notifyDataSetChanged();
     }
 }

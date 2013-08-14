@@ -190,6 +190,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         updateFilterText();
         updateSpinnerAdapter();
     }
+    
+    public void resetSpinnerAdapter() {
+        setFiltersText(0, 0, 0);
+        updateSpinnerAdapter();
+    }
 
     private void updateFilterText() {
         if (WordPress.currentBlog == null)
@@ -201,6 +206,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         int countImages = WordPress.wpDB.getMediaCountImages(blogId);
         int countUnattached = WordPress.wpDB.getMediaCountUnattached(blogId);
 
+        setFiltersText(countAll, countImages, countUnattached);
+    }
+
+    private void setFiltersText(int countAll, int countImages, int countUnattached) {
         mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
         mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
         mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
@@ -512,4 +521,20 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         return mHasRetrievedAllMedia;
     }
 
+    public void reset() {
+        mCheckedItems.clear();
+        mGridView.setSelection(0);
+        mGridView.requestFocusFromTouch();
+        mGridView.setSelection(0);
+        if (mGridAdapter != null) {
+            mGridAdapter.swapCursor(null);
+        }
+
+        resetSpinnerAdapter();
+        
+        clearCheckedItems();
+        
+        mHasRetrievedAllMedia = false;
+    }
+    
 }

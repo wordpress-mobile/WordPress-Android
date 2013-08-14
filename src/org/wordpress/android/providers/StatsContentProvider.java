@@ -59,9 +59,8 @@ public class StatsContentProvider extends ContentProvider {
     }
     
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-    private int URI_MATCH = 0;
     private static SparseArray<SQLTable> sUriMatchToSQLTableMap = new SparseArray<SQLTable>();
+    private int URI_MATCH = 0;
     
     @Override
     public synchronized boolean onCreate() {
@@ -138,7 +137,7 @@ public class StatsContentProvider extends ContentProvider {
         return 0;
     }
     
-    public static synchronized SQLTable getSQLTable(Uri uri) {
+    private static synchronized SQLTable getSQLTable(Uri uri) {
         int uriMatch = sUriMatcher.match(uri);
         
         if (sUriMatchToSQLTableMap.indexOfKey(uriMatch) >= 0)

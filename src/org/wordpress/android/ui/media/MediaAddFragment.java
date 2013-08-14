@@ -33,9 +33,9 @@ import org.wordpress.android.util.MediaUploadService;
  */
 public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
+    private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
     private String mMediaCapturePath = "";
     private MediaAddFragmentCallback mCallback;
-    public static final String TAG = MediaAddFragment.class.getName();
 
     public interface MediaAddFragmentCallback {
         public void onMediaAdded(String mediaId);
@@ -45,10 +45,8 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // This view doesn't really matter as this fragment is invisible
         
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getString("mediaCapturePath") != null)
-                mMediaCapturePath = savedInstanceState.getString("mediaCapturePath");
-        }
+        if (savedInstanceState != null && savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH) != null)
+            mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         
         return inflater.inflate(R.layout.actionbar_add_media_cell, container, false);
     }
@@ -60,7 +58,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         try {
             mCallback = (MediaAddFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragment.class.getSimpleName());
+            throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragmentCallback.class.getSimpleName());
         }
     }
     
@@ -68,7 +66,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mMediaCapturePath != null && !mMediaCapturePath.equals(""))
-            outState.putString("mediaCapturePath", mMediaCapturePath);
+            outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
     }
     
     @Override
