@@ -29,6 +29,7 @@ import org.xmlrpc.android.XMLRPCException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.StringUtils;
 
 public class SelectCategoriesActivity extends SherlockListActivity {
     private XMLRPCClient client;
@@ -94,7 +95,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private void populateCategoryList() {
         mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
-            mCategoryNames.put(mCategoryLevels.get(i).getName(), i);
+            mCategoryNames.put( StringUtils.unescapeHTML( mCategoryLevels.get(i).getName() ), i);
         }
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
@@ -373,10 +374,11 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private void updateSelectedCategoryList() {
         SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
         for (int i = 0; i < selectedItems.size(); i++) {
+            String currentName = StringUtils.unescapeHTML(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
             if (selectedItems.get(selectedItems.keyAt(i))) {
-                mSelectedCategories.add(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+                mSelectedCategories.add(currentName);
             } else {
-                mSelectedCategories.remove(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+                mSelectedCategories.remove(currentName);
             }
         }
     }
