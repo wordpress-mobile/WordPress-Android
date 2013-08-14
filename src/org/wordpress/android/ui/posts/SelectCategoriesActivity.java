@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,6 +59,20 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                if ( mListView.getCheckedItemCount() > 1 ) {
+                    boolean uncategorizedNeedToBeSelected = false;
+                    for (int i = 0; i < mCategoryLevels.size(); i++) {
+                        if ( mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized") ) {
+                            mListView.setItemChecked(i, uncategorizedNeedToBeSelected);
+                        }
+                    }
+                }
+            }
+        });
+        
         mSelectedCategories = new HashSet<String>();
 
         Bundle extras = getIntent().getExtras();
