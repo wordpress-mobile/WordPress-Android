@@ -275,6 +275,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             fetchThemes();
             return true;
         } else if (itemId == R.id.menu_search) {
+            stopAnimatingRefreshButton(refreshMenuItem);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             if (mSearchFragment == null) {
                 mSearchFragment = ThemeSearchFragment.newInstance();

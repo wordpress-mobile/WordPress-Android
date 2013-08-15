@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
@@ -59,6 +60,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected GridView mGridView;
+    protected TextView mNoResultText;
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
@@ -91,6 +93,8 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         View view = inflater.inflate(R.layout.theme_tab_fragment, container, false);
         
         setRetainInstance(true);
+        
+        mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
         
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
@@ -186,6 +190,9 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         if (mAdapter == null) {
             mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         }
+        
+        if (mNoResultText.isShown())
+            mNoResultText.setVisibility(View.GONE);
         mAdapter.swapCursor(cursor);
     }
     
