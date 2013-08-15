@@ -16,3 +16,5 @@
 -keep interface com.actionbarsherlock.** { *; }
 
 -keepattributes *Annotation*
+
+-optimizations !code/allocation/variable

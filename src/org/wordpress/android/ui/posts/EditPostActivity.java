@@ -1971,7 +1971,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
             s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            s.insert(selectionEnd + 1, "\n");
+            s.insert(selectionEnd + 1, "\n\n");
             try {
                 mContentEditText.setSelection(s.length());
             } catch (Exception e) {
