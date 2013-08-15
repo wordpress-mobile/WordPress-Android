@@ -569,5 +569,21 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         
         mHasRetrievedAllMedia = false;
     }
+
+    public void checkSelection(String mediaId) {
+        if (WordPress.getCurrentBlog() == null || mediaId == null)
+            return;
+        
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+        
+        // if the mediaId is not in the db, remove it from checked items
+        if (cursor == null || !cursor.moveToFirst()) {
+            mCheckedItems.remove(mediaId);
+            mListener.onMultiSelectChange(mCheckedItems.size());
+            onMultiSelectChange(mCheckedItems.size());
+        }
+    }
     
 }
