@@ -537,6 +537,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaAdded(String mediaId) {
+        mMediaGridFragment.checkSelection(mediaId);
         mMediaGridFragment.refreshMediaFromDB();
     }
 
