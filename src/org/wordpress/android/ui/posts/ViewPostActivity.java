@@ -13,7 +13,7 @@ public class ViewPostActivity extends FragmentActivity {
             // During initial setup, plug in the details fragment.
             ViewPostFragment postFragment = new ViewPostFragment();
             getSupportFragmentManager().beginTransaction().add(
-                    android.R.id.content, postFragment).commit();
+                    android.R.id.content, postFragment).commitAllowingStateLoss();
         }
     }
 
