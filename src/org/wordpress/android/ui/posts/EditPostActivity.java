@@ -250,10 +250,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
             if (mIsNew) {
                 mLocalDraft = true;
-                setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName()) + " - "
+                setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()) + " - "
                         + getString((mIsPage) ? R.string.new_page : R.string.new_post));
             } else {
-                setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName()) + " - "
+                setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()) + " - "
                         + getString((mIsPage) ? R.string.edit_page : R.string.edit_post));
             }
         }
@@ -735,7 +735,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         final CheckBox featuredInPostCheckBox = (CheckBox) alertView.findViewById(R.id.featuredInPost);
 
                         // show featured image checkboxes if theme support it
-                        if (WordPress.currentBlog.isFeaturedImageCapable()) {
+                        if (WordPress.getCurrentBlog().isFeaturedImageCapable()) {
                             featuredCheckBox.setVisibility(View.VISIBLE);
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
                         }
@@ -1848,7 +1848,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     //Calculate the minimun width between the blog setting and picture real width
     private void setWPImageSpanWidth(Uri curStream, WPImageSpan is) {
-        String imageWidth = WordPress.currentBlog.getMaxImageWidth();
+        String imageWidth = WordPress.getCurrentBlog().getMaxImageWidth();
         int imageWidthBlogSetting = Integer.MAX_VALUE;
 
         if (!imageWidth.equals("Original Size")) {
