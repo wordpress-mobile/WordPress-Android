@@ -24,7 +24,6 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.util.FloatMath;
-import android.util.Log;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;

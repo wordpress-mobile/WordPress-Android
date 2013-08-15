@@ -348,8 +348,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 mSearchView.clearFocus();
 
         } else if (itemId == R.id.menu_delete) {
-            String mediaId = mMediaEditFragment.getMediaId();
-            launchConfirmDeleteDialog(mediaId);
+            if (mMediaEditFragment != null && mMediaEditFragment.isInLayout()) {
+                String mediaId = mMediaEditFragment.getMediaId();
+                launchConfirmDeleteDialog(mediaId);
+            }
         }
 
         return super.onOptionsItemSelected(item);

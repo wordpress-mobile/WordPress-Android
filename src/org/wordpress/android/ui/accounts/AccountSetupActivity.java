@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -396,6 +397,13 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
 
                                     setResult(RESULT_OK);
                                     finish();
+                                }
+                            });
+                            dialogBuilder.setOnCancelListener(new OnCancelListener() {
+                                
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    mBlogNames.clear();
                                 }
                             });
                             dialogBuilder.setCancelable(true);

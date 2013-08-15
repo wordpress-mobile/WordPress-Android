@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.internal.widget.IcsAdapterView;
 import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
@@ -31,6 +32,7 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask;
 import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
 import org.wordpress.android.R;
@@ -67,6 +69,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private View mSpinnerContainer;
     private TextView mResultView;
     private CustomSpinner mSpinner;
+
+    private int mOldMediaSyncOffset;
 
     private boolean mUserClickedCustomDateFilter = false;
 
@@ -263,6 +267,13 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             return; 
         
         if(offset == 0 || !mIsRefreshing) {
+            
+            if (offset == mOldMediaSyncOffset) {
+                // we're pulling the same data again for some reason. Pull from the beginning.
+                offset = 0;
+            }
+            mOldMediaSyncOffset = offset;
+            
             mIsRefreshing = true;
             mListener.onMediaItemListDownloadStart();
             mGridAdapter.setRefreshing(true);
@@ -280,28 +291,49 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                     
                     mIsRefreshing = false;
 
-                    if (MediaGridFragment.this.isVisible()) {
-                        refreshSpinnerAdapter();
-                        setFilter(mFilter);
-                        if (!auto)
-                            mGridView.post(new Runnable() {
-                                
-                                @Override
-                                public void run() {
+                    if (getActivity() != null  && MediaGridFragment.this.isVisible()) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            
+                            @Override
+                            public void run() {
+                                refreshSpinnerAdapter();
+                                setFilter(mFilter);
+                                if (!auto)
                                     mGridView.setSelection(0);
-                                }
-                            });
+                                
+
+                                mListener.onMediaItemListDownloaded();
+                                mGridAdapter.setRefreshing(false);
+                            }
+                        });
+                        
                     }
 
-                    mListener.onMediaItemListDownloaded();
-                    mGridAdapter.setRefreshing(false);
                 }
 
                 @Override
-                public void onFailure() {
-                    mIsRefreshing = false;
-                    mListener.onMediaItemListDownloaded();
-                    mGridAdapter.setRefreshing(false);
+                public void onFailure(int errorCode) {
+
+                    if (errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP) {
+                        Toast.makeText(getActivity(), "You do not have permission to view the media library", Toast.LENGTH_SHORT).show();
+                        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+                        mHasRetrievedAllMedia = true;
+                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                    }
+                    
+                    if (getActivity() != null  && MediaGridFragment.this.isVisible()) {
+                        getActivity().runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                mIsRefreshing = false;
+                                mListener.onMediaItemListDownloaded();
+                                mGridAdapter.setRefreshing(false);            
+                            }
+                            
+                        });
+                    }
+                    
                 }
             };
             
@@ -500,6 +532,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mListener.onMultiSelectChange(count);
     }
 
+    @Override
     public boolean isInMultiSelect() {
         return mGridView.isInMultiSelectMode();
     }

@@ -134,6 +134,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private String getRealPathFromURI(Uri contentUri) {
+        if (contentUri == null)
+            return null;
+        
         String[] proj = { MediaStore.Images.Media.DATA };
         CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();

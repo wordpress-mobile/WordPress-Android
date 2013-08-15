@@ -45,6 +45,7 @@ public class MediaGridAdapter extends CursorAdapter {
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
         public void onRetryUpload(String mediaId);
+        public boolean isInMultiSelect();
     }
     
     private static enum ViewTypes {
@@ -232,7 +233,7 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     private boolean inMultiSelect() {
-        return mCheckedItems.size() > 0;
+        return mCallback.isInMultiSelect();
     }
     
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {

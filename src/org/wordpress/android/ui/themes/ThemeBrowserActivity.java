@@ -204,10 +204,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     String errorTitle = getString(R.string.theme_auth_error_title);
                     String errorMsg = getString(R.string.theme_auth_error_message);
 
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    WPAlertDialogFragment fragment = WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false);
-                    ft.add(fragment, "alert");
-                    ft.commitAllowingStateLoss();
+                    if (!isDestroyed()) {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        WPAlertDialogFragment fragment = WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false);
+                        ft.add(fragment, "alert");
+                        ft.commitAllowingStateLoss();
+                    }
                     Log.d("WordPress", "Failed to fetch themes: failed authenticate user");
                 } else {
                     Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_LONG).show();
@@ -343,16 +345,24 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Theme> result) {
-            mFetchingThemes = false;
-            mProgressBar.setVisibility(View.GONE);
-            stopAnimatingRefreshButton();
-            if (result == null) {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success, Toast.LENGTH_SHORT).show();
-            }
-            refreshViewPager();
+        protected void onPostExecute(final ArrayList<Theme> result) {
+            
+            runOnUiThread(new Runnable() {
+                
+                @Override
+                public void run() {
+                    mFetchingThemes = false;
+                    mProgressBar.setVisibility(View.GONE);
+                    stopAnimatingRefreshButton();
+                    if (result == null) {
+                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_failed, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ThemeBrowserActivity.this, R.string.theme_fetch_success, Toast.LENGTH_SHORT).show();
+                    }
+                    refreshViewPager();        
+                }
+            });
+            
         }
 
     }

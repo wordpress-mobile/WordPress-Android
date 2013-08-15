@@ -326,6 +326,7 @@ public class MediaItemFragment extends SherlockFragment {
                     .setNegativeButton(R.string.cancel, null);
             AlertDialog dialog = builder.create();
             dialog.show();
+            return true;
         }
         
         return super.onOptionsItemSelected(item);

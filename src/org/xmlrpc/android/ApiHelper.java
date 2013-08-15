@@ -328,9 +328,12 @@ public class ApiHelper {
     
     public static class SyncMediaLibraryTask extends AsyncTask<List<?>, Void, Integer> {
 
+        public static final int NO_UPLOAD_FILES_CAP = -401; // error code is 401
+        public static final int UNKNOWN_ERROR = -1;
+
         public interface Callback {
             public void onSuccess(int count);
-            public void onFailure();
+            public void onFailure(int error_code);
         }
         
         private Callback mCallback;
@@ -367,7 +370,7 @@ public class ApiHelper {
             filter.put("offset", mOffset);
             
             if (mFilter == Filter.IMAGES)
-                filter.put("mime_type","images/*");
+                filter.put("mime_type","image/*");
             else if(mFilter == Filter.UNATTACHED)
                 filter.put("parent_id", 0);
                 
@@ -384,6 +387,9 @@ public class ApiHelper {
                 results = (Object[]) client.call("wp.getMediaLibrary", apiParams);
             } catch (XMLRPCException e) {
                 Log.e("WordPress", e.getMessage());
+                if (e.getMessage().contains("401")) { // user does not have permission to view media gallery
+                    return NO_UPLOAD_FILES_CAP;
+                }
             }
             
             if(results != null && blogId != null) {
@@ -407,16 +413,16 @@ public class ApiHelper {
                 return results.length;
             }
             
-            return -1;
+            return UNKNOWN_ERROR;
         }
         
         @Override
-        protected void onPostExecute(Integer resultCount) {
+        protected void onPostExecute(Integer result) {
             if(mCallback != null) {
-                if(resultCount == null || resultCount == -1)
-                    mCallback.onFailure();
+                if(result == null || result < 0)
+                    mCallback.onFailure(result);
                 else
-                    mCallback.onSuccess(resultCount);
+                    mCallback.onSuccess(result);
             }
         }
         
