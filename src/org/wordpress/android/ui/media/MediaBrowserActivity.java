@@ -9,6 +9,7 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -537,8 +538,33 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaAdded(String mediaId) {
-        mMediaGridFragment.checkSelection(mediaId);
-        mMediaGridFragment.refreshMediaFromDB();
+        if (WordPress.getCurrentBlog() == null || mediaId == null)
+            return;
+        
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+        
+        if (cursor == null || !cursor.moveToFirst()) {
+            mMediaGridFragment.removeFromMultiSelect(mediaId);
+            mMediaGridFragment.refreshMediaFromDB();
+            
+            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mediaId.equals(mMediaEditFragment.getMediaId())) {
+                    
+                if (mMediaEditFragment.isInLayout()) {
+                    mMediaEditFragment.loadMedia(null);
+                } else {
+                    getSupportFragmentManager().popBackStack();                
+                }
+    
+            }
+            
+            if (cursor != null)
+                cursor.close();
+        } else {
+            mMediaGridFragment.refreshMediaFromDB();
+            cursor.close();
+        }
+        
     }
 
     @Override
