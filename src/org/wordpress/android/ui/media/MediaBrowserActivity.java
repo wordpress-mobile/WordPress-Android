@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -287,8 +288,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private void stopAnimatingRefreshButton() {
         if (mRefreshMenuItem != null)
             stopAnimatingRefreshButton(mRefreshMenuItem);
-        if (mAddMediaPopup != null)
-            mAddMediaPopup.dismiss();
     }
 
     @Override
@@ -305,7 +304,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (itemId == R.id.menu_new_media) {
             View view = findViewById(R.id.menu_new_media);
             int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-            mAddMediaPopup.showAsDropDown(view, 0, y_offset);
+            int[] loc = new int[2];
+            view.getLocationOnScreen(loc);
+            mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0], loc[1] + view.getHeight() + y_offset);
             
             return true;
         } else if (itemId == R.id.menu_search) {
