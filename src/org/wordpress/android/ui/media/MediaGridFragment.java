@@ -54,6 +54,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
     
     private static final String BUNDLE_DATE_FILTER_SET = "BUNDLE_DATE_FILTER_SET";
+    private static final String BUNDLE_DATE_FILTER_VISIBLE = "BUNDLE_DATE_FILTER_VISIBLE";
     private static final String BUNDLE_DATE_FILTER_START_YEAR = "BUNDLE_DATE_FILTER_START_YEAR";
     private static final String BUNDLE_DATE_FILTER_START_MONTH = "BUNDLE_DATE_FILTER_START_MONTH";
     private static final String BUNDLE_DATE_FILTER_START_DAY = "BUNDLE_DATE_FILTER_START_DAY";
@@ -79,6 +80,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private int mOldMediaSyncOffset = 0;
 
     private boolean mIsDateFilterSet = false;
+    private boolean mSpinnerHasLaunched = false;
 
     private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth, mEndDay;
     private AlertDialog mDatePickerDialog;
@@ -106,9 +108,15 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         @Override
         public void onItemSelected(IcsAdapterView<?> parent, View view, int position, long id) {
+            // need this to stop the bug where onItemSelected is called during initialization, before user input
+            if (!mSpinnerHasLaunched) {
+                return;
+            }
+            
             if (position == Filter.CUSTOM_DATE.ordinal()) {
                 mIsDateFilterSet = true;
             }
+            
             setFilter(Filter.getFilter(position));
 
         }
@@ -148,6 +156,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             @Override
             public void onClick(View v) {
                 if (!isInMultiSelect()) {
+                    mSpinnerHasLaunched = true;
                     mSpinner.performClick();
                 }
             }
@@ -187,6 +196,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mEndDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_DAY);
         mEndMonth = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_MONTH);
         mEndYear = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_YEAR);
+        
+        boolean datePickerShowing = savedInstanceState.getBoolean(BUNDLE_DATE_FILTER_VISIBLE);
+        if (datePickerShowing)
+            showDatePicker();
     }
 
     @Override
@@ -203,6 +216,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         
         outState.putBoolean(BUNDLE_DATE_FILTER_SET, mIsDateFilterSet);
+        outState.putBoolean(BUNDLE_DATE_FILTER_VISIBLE, (mDatePickerDialog != null && mDatePickerDialog.isShowing())); 
         outState.putInt(BUNDLE_DATE_FILTER_START_DAY, mStartDay);
         outState.putInt(BUNDLE_DATE_FILTER_START_MONTH, mStartMonth);
         outState.putInt(BUNDLE_DATE_FILTER_START_YEAR, mStartYear);
@@ -287,6 +301,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
+        
+        // do not refresh if custom date filter is shown
         if(WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE)
             return; 
         
@@ -456,7 +472,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             case UNATTACHED:
                 return WordPress.wpDB.getMediaUnattachedForBlog(blogId);
             case CUSTOM_DATE:
-                hideDatePicker();
                 // show date picker only when the user clicks on the spinner, not when we are doing syncing
                 if (mIsDateFilterSet) {
                     mIsDateFilterSet = false;
@@ -500,11 +515,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         // Create and show the dialog
         mDatePickerDialog = builder.create();
         mDatePickerDialog.show();
-    }
-
-    public void hideDatePicker() {
-        if (mDatePickerDialog != null)
-            mDatePickerDialog.dismiss();
     }
     
     @Override
