@@ -513,7 +513,7 @@ public class PostsListFragment extends ListFragment {
             pv.setTag(R.id.row_post_id, mPostIDs[position]);
             pv.setId(Integer.valueOf(mPostIDs[position]));
             String titleText = mTitles[position];
-            if (titleText == "")
+            if (titleText.equals(""))
                 titleText = "(" + getResources().getText(R.string.untitled) + ")";
             wrapper.getTitle().setText(titleText);
             wrapper.getDate().setText(date);

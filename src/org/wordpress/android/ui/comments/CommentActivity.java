@@ -13,7 +13,7 @@ public class CommentActivity extends FragmentActivity {
             // During initial setup, plug in the details fragment.
             CommentFragment commentFragment = new CommentFragment();
             getSupportFragmentManager().beginTransaction().add(
-                    android.R.id.content, commentFragment).commit();
+                    android.R.id.content, commentFragment).commitAllowingStateLoss();
             //commentFragment.loadComment(WordPress.currentComment);
         }
     }
