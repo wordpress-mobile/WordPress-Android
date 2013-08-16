@@ -254,7 +254,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
         
-        if (mGridAdapter.getCount() == 0  && !mHasRetrievedAllMedia) {
+        if (mGridAdapter.getDataCount() == 0  && !mHasRetrievedAllMedia) {
             refreshMediaFromServer(0, true);
         }
         

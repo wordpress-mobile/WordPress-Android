@@ -417,4 +417,8 @@ public class MediaGridAdapter extends CursorAdapter {
         mIsRefreshing = refreshing;
         notifyDataSetChanged();
     }
+    
+    public int getDataCount() {
+        return mCursorDataCount;
+    }
 }
