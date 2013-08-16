@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -142,6 +143,12 @@ public class ThemeSearchFragment extends ThemeTabFragment
         } else {   
             mAdapter.swapCursor(cursor);   
             mGridView.invalidateViews();
+            
+            if (cursor == null || cursor.getCount() == 0) {
+                mNoResultText.setVisibility(View.VISIBLE);
+            } else {
+                mNoResultText.setVisibility(View.GONE);
+            }
         }             
     }
 }

@@ -157,6 +157,7 @@
   <string name="theme_auth_error_message">Ensure you have the privilege to set themes.</string>
   <string name="theme_current_theme">Current Theme</string>
   <string name="theme_premium_theme">Premium Theme</string>
+  <string name="theme_no_search_result_found">No results found.</string>
 
   <!-- link view -->
   <string name="link_enter_url">URL</string>
