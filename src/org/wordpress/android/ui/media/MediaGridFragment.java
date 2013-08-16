@@ -52,6 +52,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
     private static final String BUNDLE_HAS_RETREIEVED_ALL_MEDIA = "BUNDLE_HAS_RETREIEVED_ALL_MEDIA";
     private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
+    
+    private static final String BUNDLE_DATE_FILTER_SET = "BUNDLE_DATE_FILTER_SET";
+    private static final String BUNDLE_DATE_FILTER_START_YEAR = "BUNDLE_DATE_FILTER_START_YEAR";
+    private static final String BUNDLE_DATE_FILTER_START_MONTH = "BUNDLE_DATE_FILTER_START_MONTH";
+    private static final String BUNDLE_DATE_FILTER_START_DAY = "BUNDLE_DATE_FILTER_START_DAY";
+    private static final String BUNDLE_DATE_FILTER_END_YEAR = "BUNDLE_DATE_FILTER_END_YEAR";
+    private static final String BUNDLE_DATE_FILTER_END_MONTH = "BUNDLE_DATE_FILTER_END_MONTH";
+    private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
@@ -70,8 +78,11 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
     private int mOldMediaSyncOffset = 0;
 
-    private boolean mUserClickedCustomDateFilter = false;
+    private boolean mIsDateFilterSet = false;
 
+    private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth, mEndDay;
+    private AlertDialog mDatePickerDialog;
+    
     public interface MediaGridListener {
         public void onMediaItemListDownloadStart();
         public void onMediaItemListDownloaded();
@@ -96,7 +107,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         @Override
         public void onItemSelected(IcsAdapterView<?> parent, View view, int position, long id) {
             if (position == Filter.CUSTOM_DATE.ordinal()) {
-                mUserClickedCustomDateFilter = true;
+                mIsDateFilterSet = true;
             }
             setFilter(Filter.getFilter(position));
 
@@ -168,6 +179,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
+        
+        mIsDateFilterSet = savedInstanceState.getBoolean(BUNDLE_DATE_FILTER_SET, false);
+        mStartDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_DAY);
+        mStartMonth = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_MONTH);
+        mStartYear = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_YEAR);
+        mEndDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_DAY);
+        mEndMonth = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_MONTH);
+        mEndYear = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_YEAR);
     }
 
     @Override
@@ -182,6 +201,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         outState.putBoolean(BUNDLE_HAS_RETREIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
+        
+        outState.putBoolean(BUNDLE_DATE_FILTER_SET, mIsDateFilterSet);
+        outState.putInt(BUNDLE_DATE_FILTER_START_DAY, mStartDay);
+        outState.putInt(BUNDLE_DATE_FILTER_START_MONTH, mStartMonth);
+        outState.putInt(BUNDLE_DATE_FILTER_START_YEAR, mStartYear);
+        outState.putInt(BUNDLE_DATE_FILTER_END_DAY, mEndDay);
+        outState.putInt(BUNDLE_DATE_FILTER_END_MONTH, mEndMonth);
+        outState.putInt(BUNDLE_DATE_FILTER_END_YEAR, mEndYear);
     }
 
     private void setupSpinnerAdapter() {
@@ -246,7 +273,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-
         refreshSpinnerAdapter();
         refreshMediaFromDB();
     }
@@ -261,7 +287,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
-        if(WordPress.getCurrentBlog() == null)
+        if(WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE)
             return; 
         
         if(offset == 0 || !mIsRefreshing) {
@@ -390,8 +416,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         String blogId = String.valueOf(blog.getBlogId());
 
-        GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, startDay);
-        GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, endDay);
+        GregorianCalendar startDate = new GregorianCalendar(mStartYear, mStartMonth, mStartDay);
+        GregorianCalendar endDate = new GregorianCalendar(mEndYear, mEndMonth, mEndDay);
 
         long one_day = 24 * 60 * 60 * 1000;
         Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day);
@@ -430,9 +456,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
             case UNATTACHED:
                 return WordPress.wpDB.getMediaUnattachedForBlog(blogId);
             case CUSTOM_DATE:
+                hideDatePicker();
                 // show date picker only when the user clicks on the spinner, not when we are doing syncing
-                if (mUserClickedCustomDateFilter) {
-                    mUserClickedCustomDateFilter = false;
+                if (mIsDateFilterSet) {
+                    mIsDateFilterSet = false;
                     showDatePicker();
                 } else {
                     setDateFilter();
@@ -441,8 +468,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         }
         return null;
     }
-
-    private int startYear, startMonth, startDay, endYear, endMonth, endDay;
 
     public void showDatePicker() {
         // Inflate your custom layout containing 2 DatePickers
@@ -460,12 +485,12 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startYear = dpStartDate.getYear();
-                startMonth = dpStartDate.getMonth();
-                startDay = dpStartDate.getDayOfMonth();
-                endYear = dpEndDate.getYear();
-                endMonth = dpEndDate.getMonth();
-                endDay = dpEndDate.getDayOfMonth();
+                mStartYear = dpStartDate.getYear();
+                mStartMonth = dpStartDate.getMonth();
+                mStartDay = dpStartDate.getDayOfMonth();
+                mEndYear = dpEndDate.getYear();
+                mEndMonth = dpEndDate.getMonth();
+                mEndDay = dpEndDate.getDayOfMonth();
                 setDateFilter();
 
                 dialog.dismiss();
@@ -473,9 +498,15 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         });
 
         // Create and show the dialog
-        builder.create().show();
+        mDatePickerDialog = builder.create();
+        mDatePickerDialog.show();
     }
 
+    public void hideDatePicker() {
+        if (mDatePickerDialog != null)
+            mDatePickerDialog.dismiss();
+    }
+    
     @Override
     public void fetchMoreData(int offset) {
         if (!mHasRetrievedAllMedia)
