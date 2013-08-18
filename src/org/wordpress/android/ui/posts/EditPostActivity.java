@@ -1518,7 +1518,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 ProgressDialog loadingDialog = new ProgressDialog(this);
                 loadingDialog.setMessage(getResources().getText(R.string.loading));
                 loadingDialog.setIndeterminate(true);
-                loadingDialog.setCancelable(true);
+                loadingDialog.setCancelable(false);
                 return loadingDialog;
             case ID_DIALOG_DOWNLOAD:
                 ProgressDialog downloadDialog = new ProgressDialog(this);
