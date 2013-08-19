@@ -1877,6 +1877,10 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         if (ssb != null && isPicasaImage(imageUri))
             imageUri = downloadExternalImage(imageUri);
 
+        if (imageUri == null) {
+            return false;
+        }
+
         Bitmap resizedBitmap = null;
         ImageHelper ih = new ImageHelper();
         Display display = getWindowManager().getDefaultDisplay();
