@@ -116,21 +116,14 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
                 queueFileForUpload(path);
                 break;
             case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
                     path = mMediaCapturePath;
                     mMediaCapturePath = null;
                     queueFileForUpload(path);
                 }
                 break;
-            case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri videoUri = data.getData();
-                    path = getRealPathFromURI(videoUri);
-                    queueFileForUpload(path);
-                }
-                break;
             }
-            
             
         }
     }
@@ -199,7 +192,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     public void launchVideoCamera() {
-        MediaUtils.launchVideoCamera(this);
+        MediaUtils.launchVideoCamera(this, this);
     }
     
     public void launchPictureVideoLibrary() {

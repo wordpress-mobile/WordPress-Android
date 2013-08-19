@@ -1,5 +1,23 @@
 package org.wordpress.android.ui.posts;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -8,6 +26,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -35,6 +54,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -71,7 +91,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.json.JSONException;
+import org.xmlrpc.android.ApiHelper;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -94,35 +114,16 @@ import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
-import org.xmlrpc.android.ApiHelper;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
 
 public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
-    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
-    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
-    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
-    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
+//    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
+//    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
+//    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
+//    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
@@ -1189,7 +1190,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private void launchVideoCamera() {
         mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-        MediaUtils.launchVideoCamera(this);
+        MediaUtils.launchVideoCamera(this, new LaunchCameraCallback() {
+            
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+                mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
+            }
+        });
     }
 
     private LocationResult locationResult = new LocationResult() {
@@ -1239,11 +1247,11 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             Bundle extras;
 
             switch (requestCode) {
-                case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     verifyImage(imageUri);
                     break;
-                case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
@@ -1260,14 +1268,17 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         }
                     }
                     break;
-                case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     if (!addMedia(videoUri, null))
                         Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     break;
-                case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = data.getData();
+                        
+                        File f = new File(mMediaCapturePath);
+                        Uri capturedVideoUri = Uri.fromFile(f);
+                        f = null;
                         if (!addMedia(capturedVideoUri, null))
                             Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     }
