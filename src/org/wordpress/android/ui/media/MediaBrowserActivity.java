@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -11,6 +12,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -40,8 +42,10 @@ import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -49,6 +53,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -109,8 +114,105 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         ft.commit();
         
         setupAddMenuPopup();
+        
+        String action = getIntent().getAction(); 
+        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            // We arrived here from a share action
+            if (!selectBlogForShareAction())
+                return;
+        }
     }
 
+    private boolean selectBlogForShareAction() {
+        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
+        
+        if (accounts.size() > 0) {
+
+            final String blogNames[] = new String[accounts.size()];
+            final int accountIDs[] = new int[accounts.size()];
+
+            Blog blog;
+            
+            for (int i = 0; i < accounts.size(); i++) {
+
+                Map<String, Object> curHash = accounts.get(i);
+                try {
+                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
+                } catch (Exception e) {
+                    blogNames[i] = curHash.get("url").toString();
+                }
+                accountIDs[i] = (Integer) curHash.get("id");
+                try {
+                    blog = new Blog(accountIDs[i]);
+                } catch (Exception e) {
+                    showBlogErrorAndFinish();
+                    return false;
+                }
+            }
+
+            // Don't prompt if they have one blog only
+            if (accounts.size() > 1) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MediaBrowserActivity.this);
+                builder.setCancelable(false);
+                builder.setTitle(getResources().getText(R.string.select_a_blog));
+                builder.setItems(blogNames, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        try {
+                            WordPress.currentBlog = new Blog(accountIDs[item]);
+                        } catch (Exception e) {
+                            showBlogErrorAndFinish();
+                        }
+                        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
+                        updateMenuDrawer();
+                        refreshMenuDrawer();
+                        uploadSharedFiles();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                try {
+                    WordPress.currentBlog = new Blog(accountIDs[0]);
+                } catch (Exception e) {
+                    showBlogErrorAndFinish();
+                }
+                WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
+                updateMenuDrawer();
+                refreshMenuDrawer();
+                uploadSharedFiles();
+            }
+
+            return true;
+        } else {
+            // no account, load main view to load new account view
+            Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, NewAccountActivity.class));
+            finish();
+            return false;
+        }
+    }
+    
+    private void uploadSharedFiles() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        final List<Uri> multi_stream;
+        if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+        } else {
+            multi_stream = new ArrayList<Uri>();
+            multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        }
+        mMediaAddFragment.uploadList(multi_stream);
+        
+        // clear the intent's action, so that in case the user rotates, we don't re-upload the same files
+        getIntent().setAction(null);
+    }
+
+    private void showBlogErrorAndFinish() {
+        Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+        finish();
+    }
+    
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             setupBaseLayout();
@@ -125,6 +227,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
     }
 
+    /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void setupAddMenuPopup() {
 
         String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
@@ -141,6 +244,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
                 
+                // Support video only if you are self-hosted or are a dot-com blog with the video press upgrade
                 boolean selfHosted = !WordPress.getCurrentBlog().isDotcomFlag();
                 boolean isVideoEnabled = selfHosted || (mFeatureSet != null && mFeatureSet.isVideopressEnabled()); 
                 
@@ -150,10 +254,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                     if (isVideoEnabled) {
                         mMediaAddFragment.launchVideoCamera();
                     } else {
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        String title = getString(R.string.media_no_video_title);
-                        String message = getString(R.string.media_no_video_message);
-                        WPAlertDialogFragment.newInstance(message, title, false).show(ft, "alert");
+                        showVideoPressUpgradeDialog();
                     }
                 } else if (position == 2) {
                     if (isVideoEnabled)
@@ -164,7 +265,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
                 mAddMediaPopup.dismiss();
                 
-            };
+            }
+
         });
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
@@ -172,6 +274,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         mAddMediaPopup = new PopupWindow(layoutView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mAddMediaPopup.setBackgroundDrawable(new ColorDrawable());
     }
+    
+
+    private void showVideoPressUpgradeDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String title = getString(R.string.media_no_video_title);
+        String message = getString(R.string.media_no_video_message);
+        WPAlertDialogFragment.newInstance(message, title, false).show(ft, "alert");
+    };
     
     @Override
     protected void onResume() {

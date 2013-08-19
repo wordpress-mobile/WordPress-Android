@@ -602,7 +602,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         resetSpinnerAdapter();
         
-        clearCheckedItems();
         
         mHasRetrievedAllMedia = false;
     }

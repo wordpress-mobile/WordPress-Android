@@ -151,10 +151,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        refreshUI();
+        refreshMenuDrawer();
     }
 
-    private void refreshUI(){
+    protected void refreshMenuDrawer(){
         // the current blog may have changed while we were away
         setupCurrentBlog();
         if (mMenuDrawer != null) {
@@ -545,7 +545,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
                             WordPress.signOut(WPActionBarActivity.this);
-                            refreshUI();
+                            refreshMenuDrawer();
                         }
                     });
             dialogBuilder.setNegativeButton(R.string.cancel,

@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -37,25 +38,29 @@ public class MediaGridAdapter extends CursorAdapter {
     
     private MediaGridAdapterCallback mCallback;
     private ArrayList<String> mCheckedItems;
-    private Set<String> mLocalImageRequestQueue;
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
+    Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
         public void onRetryUpload(String mediaId);
         public boolean isInMultiSelect();
     }
+
+    interface BitmapReadyCallback {
+        void onBitmapReady(Bitmap bitmap);
+    }
     
     private static enum ViewTypes {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
-    
+
     public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems) {
         super(context, c, flags);
         mCheckedItems = checkedItems;
-        mLocalImageRequestQueue = new HashSet<String>();
+        mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
     }
     
     public ArrayList<String> getCheckedItems() {
@@ -179,7 +184,6 @@ public class MediaGridAdapter extends CursorAdapter {
         // resizing layout to fit nicely into grid view
         updateGridWidth(context, frameLayout);        
         
-        
         // show upload state
         final TextView stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
         final ProgressBar progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
@@ -249,10 +253,12 @@ public class MediaGridAdapter extends CursorAdapter {
         }
         
     }
-
+    
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
 
         final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
+        
+        
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
             
@@ -260,24 +266,54 @@ public class MediaGridAdapter extends CursorAdapter {
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
+                imageView.setImageBitmap(null);
                 
-                if (mLocalImageRequestQueue.contains(filePath))
-                    return;
+                boolean shouldFetch = false;
                 
-                mLocalImageRequestQueue.add(filePath);
-            
-                int maxWidth = mContext.getResources().getDisplayMetrics().widthPixels;
-                int width = (int) (maxWidth * 11.0f / 24.0f);
-                BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, width, new BitmapWorkerCallback() {
+                List<BitmapReadyCallback> list;
+                if (mFilePathToCallbackMap.containsKey(filePath)) {
+                    list = mFilePathToCallbackMap.get(filePath);
+                } else {
+                    list = new ArrayList<MediaGridAdapter.BitmapReadyCallback>();
+                    shouldFetch = true;
+                    mFilePathToCallbackMap.put(filePath, list);
+                }
+                list.add(new BitmapReadyCallback() {
                     
                     @Override
-                    public void onBitmapReady(String path, Bitmap bitmap) {
-                        WordPress.localImageCache.put(path, bitmap);
+                    public void onBitmapReady(Bitmap bitmap) {
+                        if (imageView.getTag().equals(filePath))
+                            imageView.setImageBitmap(bitmap);
                     }
                 });
-                task.execute(filePath);
+                
+
+                if (shouldFetch) {
+                    fetchBitmap(filePath);
+                }
             }
         }        
+    }
+
+    private void fetchBitmap(final String filePath) {
+        int width = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
+        
+        BitmapWorkerTask task = new BitmapWorkerTask(null, width, width, new BitmapWorkerCallback() {
+            
+            @Override
+            public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
+                
+                List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
+                for (BitmapReadyCallback callback : callbacks) {
+                    callback.onBitmapReady(bitmap);
+                }
+                
+                WordPress.localImageCache.put(path, bitmap);
+                callbacks.clear();
+                mFilePathToCallbackMap.remove(path);
+            }
+        });
+        task.execute(filePath);
     }
 
     @Override

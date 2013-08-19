@@ -282,7 +282,8 @@ public class MediaItemFragment extends SherlockFragment {
                 BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
                     
                     @Override
-                    public void onBitmapReady(String path, Bitmap bitmap) {
+                    public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
+                        imageView.setImageBitmap(bitmap);
                         WordPress.localImageCache.put(path, bitmap);
                     }
                 });

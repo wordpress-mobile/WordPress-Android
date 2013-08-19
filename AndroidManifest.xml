@@ -109,7 +109,7 @@
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" >
-            <intent-filter>
+            <intent-filter android:label="@string/new_post">
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -148,6 +148,16 @@
         
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >
+            <intent-filter android:label="@string/new_media">
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
         </activity>
         
         <!-- Theme Activities -->

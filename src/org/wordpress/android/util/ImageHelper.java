@@ -386,7 +386,7 @@ public class ImageHelper {
 
 
     public interface BitmapWorkerCallback {
-        public void onBitmapReady(String filePath, Bitmap bitmap); 
+        public void onBitmapReady(String filePath, ImageView imageView, Bitmap bitmap); 
     }
     
     public static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
@@ -426,16 +426,9 @@ public class ImageHelper {
                 return;
 
             final ImageView imageView = imageViewReference.get();
-            if (imageView == null)
-                return;
-            
-            String tag = imageView.getTag().toString();    
-            if (tag.equals(path)) {
-                imageView.setImageBitmap(bitmap);
-            }
             
             if (callback != null) 
-                callback.onBitmapReady(path, bitmap);
+                callback.onBitmapReady(path, imageView, bitmap);
             
         }
     }

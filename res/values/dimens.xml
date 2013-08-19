@@ -14,7 +14,8 @@
     <dimen name="refresh_icon_padding">12dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
 	<dimen name="menu_drawer_width">250dp</dimen>
-    
+
+	<dimen name="media_grid_local_image_width">160dp</dimen>
 	<dimen name="media_grid_progress_height">50dp</dimen>
 	
     <dimen name="theme_details_fragment_width">650dp</dimen>

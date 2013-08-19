@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.media;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -212,6 +214,14 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
         startMediaUploadService();
+    }
+    
+    public void uploadList(List<Uri> uriList) {
+        String path;
+        for (Uri uri : uriList) {
+            path = getRealPathFromURI(uri);
+            queueFileForUpload(path);
+        }
     }
     
 }

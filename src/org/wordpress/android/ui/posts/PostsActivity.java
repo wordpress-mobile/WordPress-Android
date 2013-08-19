@@ -377,17 +377,22 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     @Override
-    public void onRefresh(boolean start) {
-        if (start) {
-            attemptToSelectPost();
-            shouldAnimateRefreshButton = true;
-            startAnimatingRefreshButton(refreshMenuItem);
-            isRefreshing = true;
-        } else {
-            stopAnimatingRefreshButton(refreshMenuItem);
-            isRefreshing = false;
-        }
-
+    public void onRefresh(final boolean start) {
+        runOnUiThread(new Runnable() {
+            
+            @Override
+            public void run() {
+                if (start) {
+                    attemptToSelectPost();
+                    shouldAnimateRefreshButton = true;
+                    startAnimatingRefreshButton(refreshMenuItem);
+                    isRefreshing = true;
+                } else {
+                    stopAnimatingRefreshButton(refreshMenuItem);
+                    isRefreshing = false;
+                }     
+            }
+        });
     }
 
     @Override
