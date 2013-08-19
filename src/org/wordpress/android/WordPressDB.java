@@ -25,7 +25,6 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -1605,9 +1604,8 @@ public class WordPressDB {
     }
 
     public int getCategoryId(int id, String category) {
-
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
-                "category_name=\"" + category + "\" AND blog_id=" + id, null,
+                "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},
                 null, null, null);
         if (c.getCount() == 0)
             return 0;
@@ -1622,7 +1620,7 @@ public class WordPressDB {
 
     public int getCategoryParentId(int id, String category) {
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "parent_id" },
-                "category_name=\"" + category + "\" AND blog_id=" + id, null,
+                "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},
                 null, null, null);
         if (c.getCount() == 0)
             return -1;
