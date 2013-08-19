@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -63,7 +64,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                if ( mListView.getCheckedItemCount() > 1 ) {
+                if (getCheckedItemCount(mListView) > 1) {
                     boolean uncategorizedNeedToBeSelected = false;
                     for (int i = 0; i < mCategoryLevels.size(); i++) {
                         if ( mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized") ) {
@@ -391,5 +392,17 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
         finish();
+    }
+
+    private int getCheckedItemCount(ListView listView)
+    {
+        if (Build.VERSION.SDK_INT >= 11) return listView.getCheckedItemCount();
+        else
+        {
+            int count = 0;
+            for (int i = listView.getCount() - 1; i >= 0; i--)
+                if (listView.isItemChecked(i)) count++;
+            return count;
+        }
     }
 }
