@@ -29,7 +29,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.content.IntentCompat;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -45,7 +44,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 
@@ -57,8 +55,6 @@ public class PostUploadService extends Service {
     private static NotificationManager nm;
     private static int notificationID;
     private static Notification n;
-
-    private static int featuredImageID = -1;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -88,6 +84,7 @@ public class PostUploadService extends Service {
         private Post post;
         String error = "";
         boolean mediaError = false;
+        private int featuredImageID = -1;
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
