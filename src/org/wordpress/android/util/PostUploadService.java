@@ -49,7 +49,6 @@ import org.wordpress.android.ui.posts.PostsActivity;
 
 public class PostUploadService extends Service {
 
-    public Post post;
     public static Context context;
 
     private static NotificationManager nm;
@@ -64,18 +63,16 @@ public class PostUploadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        post = WordPress.currentPost;
         context = this.getApplicationContext();
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
-        if (post == null || context == null) {
+        if (WordPress.currentPost == null || context == null) {
             this.stopSelf();
             return;
         } else {
-            new uploadPostTask().execute(post);
+            new uploadPostTask().execute(WordPress.currentPost);
         }
     }
 
