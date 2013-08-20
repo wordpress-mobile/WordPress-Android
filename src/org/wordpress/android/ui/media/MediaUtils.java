@@ -13,10 +13,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
 
 import org.wordpress.android.R;
 
@@ -95,7 +97,7 @@ public class MediaUtils {
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             showSDCardRequiredDialog(fragment.getActivity());
         } else {
-            Intent intent = prepareLaunchCameraIntent(callback, false);
+            Intent intent = prepareLaunchCameraIntent(callback);
             fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
         }
     }
@@ -105,26 +107,17 @@ public class MediaUtils {
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             showSDCardRequiredDialog(activity);
         } else {
-            Intent intent = prepareLaunchCameraIntent(callback, false);
+            Intent intent = prepareLaunchCameraIntent(callback);
             activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
         }
     }
 
-    private static Intent prepareLaunchCameraIntent(LaunchCameraCallback callback, boolean isVideo) {
+    private static Intent prepareLaunchCameraIntent(LaunchCameraCallback callback) {
         
-        String ext = ".jpg";
-        String action = MediaStore.ACTION_IMAGE_CAPTURE;
-        if (isVideo) {
-            ext = ".3gp";
-            action = MediaStore.ACTION_VIDEO_CAPTURE;
-        }
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         
-        String dcimFolderName = Environment.DIRECTORY_DCIM;
-        if (dcimFolderName == null)
-            dcimFolderName = "DCIM";
-        String mediaCapturePath = Environment.getExternalStorageDirectory() + File.separator + dcimFolderName + File.separator + "Camera"
-                + File.separator + "wp-" + System.currentTimeMillis() + ext;
-        Intent intent = new Intent(action);
+        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mediaCapturePath)));
 
         if (callback != null) {
@@ -184,24 +177,14 @@ public class MediaUtils {
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY);
     }
     
-    public static void launchVideoCamera(Activity activity, LaunchCameraCallback callback) {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            showSDCardRequiredDialog(activity);
-        } else {
-            Intent intent = prepareLaunchCameraIntent(callback, true);
-            activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
-        }
+    public static void launchVideoCamera(Activity activity) {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
     }
     
-    public static void launchVideoCamera(Fragment fragment, LaunchCameraCallback callback) {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            showSDCardRequiredDialog(fragment.getActivity());
-        } else {
-            Intent intent = prepareLaunchCameraIntent(callback, true);
-            fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
-        }
+    public static void launchVideoCamera(Fragment fragment) {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
     }
 
     public static boolean isSupportedFile(String filePath) {
@@ -221,6 +204,19 @@ public class MediaUtils {
             return true;
         
         return false;
+    }
+    
+    public static Uri getLastRecordedVideoUri(Activity activity) {
+        String[] proj = { MediaStore.Video.Media._ID };
+        Uri contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        String sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC";
+        CursorLoader loader = new CursorLoader(activity, contentUri, proj, null, null, sortOrder);
+        Cursor cursor = loader.loadInBackground();
+        cursor.moveToFirst();
+        
+        Uri uri = Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
+        
+        return uri;
     }
     
 }

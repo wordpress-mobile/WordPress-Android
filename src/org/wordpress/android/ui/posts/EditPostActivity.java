@@ -26,7 +26,6 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -38,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Layout;
@@ -54,7 +52,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -1190,14 +1187,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
     private void launchVideoCamera() {
         mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-        MediaUtils.launchVideoCamera(this, new LaunchCameraCallback() {
-            
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-            }
-        });
+        MediaUtils.launchVideoCamera(this);
     }
 
     private LocationResult locationResult = new LocationResult() {
@@ -1275,10 +1265,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     break;
                 case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
-                        
-                        File f = new File(mMediaCapturePath);
-                        Uri capturedVideoUri = Uri.fromFile(f);
-                        f = null;
+                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
                         if (!addMedia(capturedVideoUri, null))
                             Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     }
@@ -1341,7 +1328,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         }// end null check
     }
-
+    
     private void verifyImage(Uri imageUri) {
         if (isPicasaImage(imageUri)) {
             // Create an AsyncTask to download the file
