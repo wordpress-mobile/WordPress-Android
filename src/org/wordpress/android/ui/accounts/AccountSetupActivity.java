@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -215,6 +216,16 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
             mProgressDialog.dismiss();
             AlertUtil.showAlert(AccountSetupActivity.this, R.string.error, R.string.no_site_error);
         } else {
+            
+            //Valide the URL found before calling the client. Prevent a crash that can occur during the setup of self-hosted sites.
+            try {
+                URI.create(mXmlrpcURL);
+            } catch (Exception e1) {
+                mProgressDialog.dismiss();
+                AlertUtil.showAlert(AccountSetupActivity.this, R.string.error, R.string.no_site_error);
+                return;
+            }
+            
             // verify settings
             mClient = new XMLRPCClient(mXmlrpcURL, mHttpuser, mHttppassword);
 
