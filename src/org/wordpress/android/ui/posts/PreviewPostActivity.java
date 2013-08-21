@@ -18,15 +18,15 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * Activity for previewing a post or page in a webview. Currently this activity can only preview the
- * current post.
+ * Activity for previewing a post or page in a webview.
  */
 public class PreviewPostActivity extends AuthenticatedWebViewActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle extras = getIntent().getExtras();
+        
         boolean isPage = getIntent().getBooleanExtra("isPage", false);
         if (isPage) {
             this.setTitle(StringUtils.unescapeHTML(WordPress.currentBlog.getBlogName())
@@ -39,6 +39,17 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
         mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
         
+        if (extras != null) {
+            long mPostID = extras.getLong("postID");
+            int mBlogID = extras.getInt("blogID");
+            
+            Post post = new Post(mBlogID, mPostID, isPage);
+
+            if (post.getId() < 0)
+                Toast.makeText(this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
+            else
+                loadPostPreview(post);
+        } else
         if (WordPress.currentPost != null)
             loadPostPreview(WordPress.currentPost);
         else {
