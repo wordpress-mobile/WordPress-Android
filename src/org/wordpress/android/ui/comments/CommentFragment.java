@@ -138,9 +138,11 @@ public class CommentFragment extends Fragment {
         Button approve = (Button) getActivity().findViewById(R.id.approveComment);
         Button unapprove = (Button) getActivity().findViewById(R.id.unapproveComment);
         Button spam = (Button) getActivity().findViewById(R.id.markSpam);
-
+        View commentOptionsMenu = getActivity().findViewById(R.id.comment_options_menu);
+        
         // hide buttons based on comment status
         if (WordPress.currentComment != null) {
+            commentOptionsMenu.setVisibility(View.VISIBLE);
             if (WordPress.currentComment.status.equals("hold")) {
                 unapprove.setVisibility(View.GONE);
                 approve.setVisibility(View.VISIBLE);
@@ -154,6 +156,8 @@ public class CommentFragment extends Fragment {
                 approve.setVisibility(View.VISIBLE);
                 unapprove.setVisibility(View.VISIBLE);
             }
+        } else {
+            commentOptionsMenu.setVisibility(View.GONE);
         }
 
     }
