@@ -27,6 +27,7 @@
     <color name="media_gallery_grid_label">#FFFFFF</color>
     <color name="media_gallery_image_bg">#FFFFFF</color>
     <color name="media_gallery_shadow">#E2E2E2</color>
+	<color name="media_gallery_bg">#75797C</color>
     
     <!-- Theme Details colors -->
     <color name="theme_details_name">@color/black</color>

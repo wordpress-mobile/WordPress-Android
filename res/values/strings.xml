@@ -108,6 +108,20 @@
   <string name="media_add_popup_capture_video">Capture video</string>
   <string name="media_add_popup_pick_from_gallery">Pick from gallery</string>
   
+  <!-- Media Gallery -->
+  <string name="media_gallery_settings_title">Gallery Settings</string>
+  <string name="media_gallery_image_order">Image Order</string>
+  <string name="media_gallery_image_order_custom">Custom</string>
+  <string name="media_gallery_image_order_random">Random</string>
+  <string name="media_gallery_image_order_reverse">Reverse</string>
+  <string name="media_gallery_num_columns">Number of Columns</string>
+  <string name="media_gallery_type">Type</string>
+  <string name="media_gallery_type_squares">Squares</string>
+  <string name="media_gallery_type_tiled">Tiled</string>
+  <string name="media_gallery_type_circles">Circles</string>
+  <string name="media_gallery_type_slideshow">Slideshow</string>
+  
+  
   <!-- Upload Media -->
   <string name="media_upload_title">Upload New Media</string>
   <string name="media_upload_image_button">Image</string>

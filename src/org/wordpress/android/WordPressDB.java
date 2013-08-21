@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import java.text.StringCharacterIterator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
@@ -1973,6 +1975,17 @@ public class WordPressDB {
     /** For a given blogId, get all the media files for upload **/
     public Cursor getMediaFilesForUpload(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND uploadState IN ('uploaded', 'queued', 'failed', 'uploading') ORDER BY date_created_gmt ASC", new String[] { blogId });
+    }
+    
+    public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
+        
+        String mediaIdsStr = "(";
+        for (String mediaId : mediaIds) {
+            mediaIdsStr += "'" + mediaId + "',";
+        }
+        mediaIdsStr = mediaIdsStr.subSequence(0, mediaIdsStr.length() - 1) + ")";
+        
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId IN " + mediaIdsStr, new String[] { blogId });
     }
     
     public boolean deleteMediaFile(MediaFile mf) {

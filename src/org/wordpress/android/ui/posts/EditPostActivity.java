@@ -37,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Layout;
@@ -82,7 +83,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -97,6 +98,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.media.MediaGallerySettingsFragment;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
@@ -112,11 +114,12 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
 
-public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
+public class EditPostActivity extends SherlockFragmentActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
+    // Handled by MediaUtils
 //    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
 //    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
 //    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
@@ -130,6 +133,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_DOWNLOAD = 3;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
+
+    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
+    public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
 
     private Blog mBlog;
     private Post mPost;
@@ -342,6 +348,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
                 setContent();
+            else if (NEW_MEDIA_GALLERY.equals(action))
+                prepareMediaGallery();
+            
         }
 
         String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
@@ -365,10 +374,6 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 else if (mQuickMediaType == Constants.QUICK_POST_VIDEO_LIBRARY)
                     launchVideoLibrary();
                 mLocalDraft = extras.getBoolean("localDraft");
-            }
-            
-            if (extras.containsKey("content")) {
-                mContentEditText.setText(extras.getString("content"));
             }
         } else {
             mTitleEditText.setText(mPost.getTitle());
@@ -478,6 +483,19 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mStrikeToggleButton.setOnClickListener(this);
         mBquoteToggleButton.setOnClickListener(this);
         mMoreButton.setOnClickListener(this);
+    }
+
+    private void prepareMediaGallery() {
+        ArrayList<String> mediaIds = getIntent().getStringArrayListExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
+        EditMediaGalleryFragment mEditMediaGalleryFragment = EditMediaGalleryFragment.newInstance(mediaIds);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.edit_fragment_container, mEditMediaGalleryFragment);
+        ft.commit();
+        
+//        MediaGallerySettingsFragment gallerySettingsFragment = new MediaGallerySettingsFragment();
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.edit_fragment_container, gallerySettingsFragment);
+//        ft.commit();
     }
 
     @Override
