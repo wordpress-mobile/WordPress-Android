@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,12 +50,17 @@ import org.wordpress.android.ui.posts.PostsActivity;
 
 public class PostUploadService extends Service {
 
-    public static Context context;
-
+    private static Context context;
+    private static ArrayList<Post> listOfPosts = new ArrayList<Post>();
     private static NotificationManager nm;
-    private static int notificationID;
-    private static Notification n;
-
+    private UploadPostTask currentTask = null;
+        
+    public static void addPostToUpload(Post currentPost) {
+        synchronized (listOfPosts) {
+            listOfPosts.add(currentPost);
+        }
+    }
+    
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -68,21 +74,47 @@ public class PostUploadService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        if (WordPress.currentPost == null || context == null) {
-            this.stopSelf();
-            return;
-        } else {
-            new uploadPostTask().execute(WordPress.currentPost);
+        synchronized (listOfPosts) {
+            if (listOfPosts.size() == 0 || context == null) {
+                this.stopSelf();
+                return;
+            }
+        }
+        uploadNextPost();
+    }
+
+    private void uploadNextPost(){
+        synchronized (listOfPosts) {
+            if( currentTask == null ){ //make sure nothing is running
+                if ( listOfPosts.size() > 0 ) {
+                    Post currentPost = listOfPosts.remove(0);
+                    currentTask = new UploadPostTask();
+                    currentTask.execute(currentPost);
+                } else {
+                    this.stopSelf();
+                }
+            }
         }
     }
 
-    public class uploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
+    private void postUploaded() {
+        synchronized (listOfPosts) {
+            currentTask = null;
+        }
+        uploadNextPost();
+    }
+    
+    
+    private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
 
         private Post post;
         String error = "";
         boolean mediaError = false;
         private int featuredImageID = -1;
 
+        private int notificationID;
+        private Notification n;
+        
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
 
@@ -110,8 +142,8 @@ public class PostUploadService extends Service {
 
                 nm.notify(notificationID, n); // needs a unique id
             }
-
-            stopSelf();
+            
+            postUploaded();
         }
 
         @Override
@@ -137,7 +169,7 @@ public class PostUploadService extends Service {
 
             n.setLatestEventInfo(context, message, message, pendingIntent);
 
-            notificationID = 22 + Integer.valueOf(post.getBlogID());
+            notificationID = (new Random()).nextInt() + Integer.valueOf(post.getBlogID());
             nm.notify(notificationID, n); // needs a unique id
 
             if (post.getPost_status() == null) {
