@@ -345,14 +345,16 @@ public class PostsListFragment extends ListFragment {
                                 menu.setHeaderTitle(getResources().getText(R.string.page_actions));
                                 menu.add(2, 0, 0, getResources().getText(R.string.edit_page));
                                 menu.add(2, 1, 0, getResources().getText( R.string.delete_page));
-                                menu.add(2, 2, 0, getResources().getText(R.string.share_url_page));
-                                if (allowComments) menu.add(2, 3, 0, getResources().getText(R.string.add_comment));
+                                menu.add(2, 2, 0, getResources().getText(R.string.preview_page));
+                                menu.add(2, 3, 0, getResources().getText(R.string.share_url_page));
+                                if (allowComments) menu.add(2, 4, 0, getResources().getText(R.string.add_comment));
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
                                 menu.add(0, 0, 0, getResources().getText(R.string.edit_post));
                                 menu.add(0, 1, 0, getResources().getText(R.string.delete_post));
-                                menu.add(0, 2, 0, getResources().getText(R.string.share_url));
-                                if (allowComments) menu.add(0, 3, 0, getResources().getText(R.string.add_comment));
+                                menu.add(0, 2, 0, getResources().getText(R.string.preview_post));
+                                menu.add(0, 3, 0, getResources().getText(R.string.share_url));
+                                if (allowComments) menu.add(0, 4, 0, getResources().getText(R.string.add_comment));
                             }
                         }
                     }
@@ -539,68 +541,46 @@ public class PostsListFragment extends ListFragment {
             return false;
         }
 
+        int itemGroupID = item.getGroupId();
         /* Switch on the ID of the item, to get what the user selected. */
-        if (item.getGroupId() == 0) {
+        if (itemGroupID == 0 || itemGroupID == 1 || itemGroupID == 2 ) {
             switch (item.getItemId()) {
             case 0:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
                         EditPostActivity.class);
                 i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
-                startActivityForResult(i2, 0);
-                return true;
-            case 1:
-                mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
-                return true;
-            case 2:
-                mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
-                return true;
-            case 3:
-                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
-                return true;
-            }
-
-        } else if (item.getGroupId() == 2) {
-            switch (item.getItemId()) {
-            case 0:
-                Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
-                i2.putExtra("isPage", true);
-                startActivityForResult(i2, 0);
-                return true;
-            case 1:
-                mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
-                return true;
-            case 2:
-                mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
-                return true;
-            case 3:
-                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
-                return true;
-            }
-
-        } else {
-            switch (item.getItemId()) {
-            case 0:
-                Intent i2 = new Intent(getActivity().getApplicationContext(),
-                        EditPostActivity.class);
-                i2.putExtra("postID", mSelectedID);
-                i2.putExtra("id", WordPress.currentBlog.getId());
-                if (isPage) {
+                
+                if( itemGroupID == 2 ){ //page synced with the server
                     i2.putExtra("isPage", true);
+                } else if ( itemGroupID == 1 ) { //local draft
+                    if (isPage) 
+                        i2.putExtra("isPage", true);
+                    i2.putExtra("localDraft", true);
                 }
-                i2.putExtra("localDraft", true);
+                
                 startActivityForResult(i2, 0);
                 return true;
             case 1:
-
                 mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
+            case 2:
+                Intent i = new Intent(getActivity(), PreviewPostActivity.class);
+                i.putExtra("isPage", itemGroupID == 2 ? true : false);
+                i.putExtra("postID", mSelectedID);
+                i.putExtra("blogID", WordPress.currentBlog.getId());
+                startActivity(i);
+                return true;
+            case 3:
+                mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
+                return true;
+            case 4:
+                mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
+                return true;
+            default:
+                return false;
             }
         }
-
         return false;
     }
 

@@ -559,6 +559,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         mPost.setQuickPostType("QuickVideo");
                 }
                 WordPress.currentPost = mPost;
+                PostUploadService.addPostToUpload(mPost);
                 startService(new Intent(this, PostUploadService.class));
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
@@ -661,6 +662,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     }
 
                     WordPress.currentPost = mPost;
+                    PostUploadService.addPostToUpload(mPost);
                     startService(new Intent(this, PostUploadService.class));
                 }
                 finish();
