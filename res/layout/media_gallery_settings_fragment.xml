@@ -17,8 +17,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white" />
 
     <TextView
@@ -30,8 +30,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white" />
 
     <TextView
@@ -40,18 +40,74 @@
         android:layout_height="wrap_content"
         android:text="@string/media_gallery_num_columns" />
 
+    
     <LinearLayout
         android:id="@+id/media_gallery_num_columns_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"/>
+        
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8"/>
+        <Button
+            style="@style/MediaGalleryText"
+            android:id="@+id/media_gallery_col9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white" />
 
     <TextView

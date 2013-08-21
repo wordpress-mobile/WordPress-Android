@@ -98,6 +98,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
@@ -486,16 +487,22 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
 
     private void prepareMediaGallery() {
-        ArrayList<String> mediaIds = getIntent().getStringArrayListExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
-        EditMediaGalleryFragment mEditMediaGalleryFragment = EditMediaGalleryFragment.newInstance(mediaIds);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.edit_fragment_container, mEditMediaGalleryFragment);
-        ft.commit();
+//        ArrayList<String> mediaIds = getIntent().getStringArrayListExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
+//        EditMediaGalleryFragment mEditMediaGalleryFragment = EditMediaGalleryFragment.newInstance(mediaIds);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.edit_fragment_container, mEditMediaGalleryFragment);
+//        ft.commit();
         
 //        MediaGallerySettingsFragment gallerySettingsFragment = new MediaGallerySettingsFragment();
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.add(R.id.edit_fragment_container, gallerySettingsFragment);
 //        ft.commit();
+        
+        Intent i = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
+        startActivity(i);
+        
+        
+        
     }
 
     @Override

@@ -120,6 +120,7 @@
   <string name="media_gallery_type_tiled">Tiled</string>
   <string name="media_gallery_type_circles">Circles</string>
   <string name="media_gallery_type_slideshow">Slideshow</string>
+  <string name="media_gallery_edit">Edit Gallery</string>
   
   
   <!-- Upload Media -->

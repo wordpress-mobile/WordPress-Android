@@ -42,7 +42,7 @@ public class EditMediaGalleryFragment extends SherlockFragment implements MediaG
         View view = inflater.inflate(R.layout.edit_media_gallery_fragment, container, false);
         
         mGridView = (DraggableGridView) view.findViewById(R.id.edit_media_gallery_gridview);
-        addViews(mGridView);
+//        addViews(mGridView);
         
         return view;
     }

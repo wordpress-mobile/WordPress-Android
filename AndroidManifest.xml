@@ -159,6 +159,9 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.media.MediaGalleryActivity">
+        </activity>
         
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
