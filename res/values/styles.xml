@@ -183,6 +183,10 @@
         <item name="android:layout_gravity">center</item>
     </style>
     
+    <style name="ThemeDetailsHeader">
+        <item name="android:textStyle">bold</item>
+    </style>
+    
     <style name="StatsWhiteBackground">
         <item name="android:background">@drawable/stats_white_background</item>
     </style>

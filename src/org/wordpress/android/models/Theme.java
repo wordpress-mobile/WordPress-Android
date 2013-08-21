@@ -2,13 +2,16 @@ package org.wordpress.android.models;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.ThemeHelper;
 
 public class Theme {
     
@@ -24,12 +27,13 @@ public class Theme {
     private String previewURL = "";
     private boolean isCurrent = false;
     private boolean isPremium = false;
+    private String features;
     
     public Theme() {
         
     }
 
-    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium) {
+    public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium, String features) {
         setThemeId(themeId);
         setScreenshotURL(screenshotURL);
         setName(name);
@@ -40,8 +44,27 @@ public class Theme {
         setBlogId(blogId);
         setPreviewURL(previewURL);
         setPremium(isPremium);
+        setFeatures(features);
     }
 
+    public void setFeatures(String features) {
+        this.features = features; 
+    }
+    
+    public ArrayList<String> getFeaturesArray() {
+        ArrayList<String> features = new ArrayList<String>();
+        String [] arr = this.features.split(",");
+        for (String feature : arr) {
+            features.add(feature);
+        }
+
+        return features;
+    }
+
+    public String getFeatures() {
+        return this.features;
+    }
+    
     public String getThemeId() {
         return themeId;
     }
@@ -152,7 +175,18 @@ public class Theme {
         // if the theme is not free, set the blogId to the current blog
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium);        
+        String features = "";
+        JSONArray tags = object.getJSONArray("tags");
+        for (int i = 0; i < tags.length(); i++ ) {
+            String tag = tags.getString(i);
+            String label = ThemeHelper.getLabel(tag);
+            if (label != null) {
+                features += label + ",";
+            }
+        }
+        features = features.substring(0, features.length() - 1);
+        
+        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium, features);        
     }
 
     public void setCurrent(boolean isCurrent) {

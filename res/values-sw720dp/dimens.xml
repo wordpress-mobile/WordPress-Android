@@ -12,4 +12,6 @@
     <dimen name="format_bar_font_size">17dp</dimen>
     <dimen name="format_bar_button_padding">4dp</dimen>
     <dimen name="format_bar_height">50dp</dimen>
+    <dimen name="theme_details_dialog_min_width">650dp</dimen>
+    <dimen name="theme_details_dialog_height">500dp</dimen>
 </resources>

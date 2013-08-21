@@ -1,18 +1,28 @@
 
 package org.wordpress.android.ui.themes;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -23,6 +33,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
+import org.wordpress.android.util.Utils;
 
 public class ThemeDetailsFragment extends SherlockDialogFragment {
 
@@ -52,6 +63,9 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     private View mActivatingProgressView;
     private FrameLayout mActivateThemeContainer;
     private View mPremiumThemeView;
+    private LinearLayout mFeaturesContainer;
+    private View mLeftContainer;
+    private View mParentView;
 
     public interface ThemeDetailsFragmentCallback {
         public void onResume(Fragment fragment);
@@ -105,21 +119,24 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.theme_details_fragment, container, false);
+        mParentView = inflater.inflate(R.layout.theme_details_fragment, container, false);
 
-        mNameView = (TextView) view.findViewById(R.id.theme_details_fragment_name);
-        mImageView = (NetworkImageView) view.findViewById(R.id.theme_details_fragment_image);
-        mDescriptionView = (TextView) view.findViewById(R.id.theme_details_fragment_details_description);
+        mNameView = (TextView) mParentView.findViewById(R.id.theme_details_fragment_name);
+        mImageView = (NetworkImageView) mParentView.findViewById(R.id.theme_details_fragment_image);
+        mDescriptionView = (TextView) mParentView.findViewById(R.id.theme_details_fragment_details_description);
 
-        mCurrentThemeView = (View) view.findViewById(R.id.theme_details_fragment_current_theme_text);
-        mPremiumThemeView = (View) view.findViewById(R.id.theme_details_fragment_premium_theme_text);
+        mCurrentThemeView = (View) mParentView.findViewById(R.id.theme_details_fragment_current_theme_text);
+        mPremiumThemeView = (View) mParentView.findViewById(R.id.theme_details_fragment_premium_theme_text);
         
-        mLivePreviewButton = (Button) view.findViewById(R.id.theme_details_fragment_preview_button);
-        mActivateThemeButton = (Button) view.findViewById(R.id.theme_details_fragment_activate_button);
-        mActivatingProgressView = (View) view.findViewById(R.id.theme_details_fragment_activating_progress);
-        mActivateThemeContainer = (FrameLayout) view.findViewById(R.id.theme_details_fragment_activate_button_container);
+        mLivePreviewButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_preview_button);
+        mActivateThemeButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_activate_button);
+        mActivatingProgressView = (View) mParentView.findViewById(R.id.theme_details_fragment_activating_progress);
+        mActivateThemeContainer = (FrameLayout) mParentView.findViewById(R.id.theme_details_fragment_activate_button_container);
         
-        mViewSiteButton = (Button) view.findViewById(R.id.theme_details_fragment_view_site_button);
+        mFeaturesContainer = (LinearLayout) mParentView.findViewById(R.id.theme_details_fragment_features_container);
+        mLeftContainer = (View) mParentView.findViewById(R.id.theme_details_fragment_left_container);
+        
+        mViewSiteButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_view_site_button);
         mViewSiteButton.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -157,7 +174,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
         loadTheme(getThemeId());
 
-        return view;
+        return mParentView;
     }
     
     public void showViewSite() {
@@ -191,6 +208,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
             mPreviewURL = theme.getPreviewURL();
             
+            loadFeatureView(theme.getFeaturesArray());
             if (theme.isPremium()) {
                 mPremiumThemeView.setVisibility(View.VISIBLE);
             } else {
@@ -206,6 +224,101 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             }
         }
 
+    }
+    
+    private void loadFeatureView(ArrayList<String> featuresArray) {
+        int size = featuresArray.size();
+        View views[] = new View[size];
+        
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        
+        for (int i = 0; i < size; i++) {
+             TextView tv = (TextView) inflater.inflate(R.layout.theme_feature_text, mFeaturesContainer, false);
+             tv.setText(featuresArray.get(i));
+             views[i] = tv;
+        }
+        populateViews(mFeaturesContainer, views, getActivity());
+    }
+
+    /**
+     * Copyright 2011 Sherif 
+     * Updated by Karim Varela to handle LinearLayouts with other views on either side.
+     * @param linearLayout
+     * @param views : The views to wrap within LinearLayout
+     * @param context
+     * @author Karim Varela
+     **/
+    private void populateViews(LinearLayout linearLayout, View[] views, Context context)
+    {
+
+
+        RelativeLayout.LayoutParams llParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
+        
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        linearLayout.removeAllViews();
+        
+        int maxWidth = display.getWidth() - llParams.leftMargin - llParams.rightMargin - mParentView.getPaddingLeft() - mParentView.getPaddingRight();
+
+
+        if (Utils.isXLarge(getActivity())) {
+
+            int minDialogWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
+            int dialogWidth = Math.max((int) (display.getWidth() * 0.6), minDialogWidth);
+            maxWidth = dialogWidth / 2 - llParams.leftMargin - llParams.rightMargin;
+            
+        } else if (Utils.isTablet() && mLeftContainer != null) {
+            int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+            mLeftContainer.measure(spec, spec);
+
+            LinearLayout.LayoutParams params = (LayoutParams) mLeftContainer.getLayoutParams();
+            
+            maxWidth -= mLeftContainer.getMeasuredWidth() + params.rightMargin + params.leftMargin;
+        }
+        
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout.LayoutParams params;
+        LinearLayout newLL = new LinearLayout(context);
+        newLL.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        newLL.setGravity(Gravity.LEFT);
+        newLL.setOrientation(LinearLayout.HORIZONTAL);
+
+        int widthSoFar = 0;
+
+        int dp4 = (int) Utils.dpToPx(4);
+        int dp2 = (int) Utils.dpToPx(2);
+        
+        for (int i = 0; i < views.length; i++)
+        {
+            LinearLayout LL = new LinearLayout(context);
+            LL.setOrientation(LinearLayout.HORIZONTAL);
+            LL.setLayoutParams(new ListView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+
+            views[i].measure(0, 0);
+            params = new LinearLayout.LayoutParams(views[i].getMeasuredWidth(), LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, dp2, dp4, dp2);
+
+            LL.addView(views[i], params);
+            LL.measure(0, 0);
+            widthSoFar += views[i].getMeasuredWidth() + views[i].getPaddingLeft() + views[i].getPaddingRight();
+            if (widthSoFar >= maxWidth)
+            {
+                linearLayout.addView(newLL);
+
+                newLL = new LinearLayout(context);
+                newLL.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+                newLL.setOrientation(LinearLayout.HORIZONTAL);
+                newLL.setGravity(Gravity.LEFT);
+                params = new LinearLayout.LayoutParams(LL.getMeasuredWidth(), LL.getMeasuredHeight());
+                newLL.addView(LL, params);
+                widthSoFar = LL.getMeasuredWidth();
+            }
+            else
+            {
+                newLL.addView(LL);
+            }
+        }
+        linearLayout.addView(newLL);
     }
     
     @Override

@@ -60,7 +60,7 @@ public class WordPressDB {
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
-            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false);";
+            + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false, features text);";
     
     // eula
     private static final String EULA_TABLE = "eula";
@@ -2182,6 +2182,7 @@ public class WordPressDB {
         values.put("blogId", theme.getBlogId());
         values.put("isCurrent", theme.isCurrent());
         values.put("isPremium", theme.isPremium());
+        values.put("features", theme.getFeatures());
         
         synchronized (this) {
             int result = db.update(
@@ -2246,7 +2247,7 @@ public class WordPressDB {
     }
     
     public Theme getTheme(String blogId, String themeId) {
-        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL, previewURL, isCurrent, isPremium FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId=?", new String[] { blogId, themeId });
+        Cursor cursor = db.rawQuery("SELECT name, description, screenshotURL, previewURL, isCurrent, isPremium, features FROM " + THEMES_TABLE + " WHERE blogId=? AND themeId=?", new String[] { blogId, themeId });
         if (cursor.moveToFirst()) {
             String name = cursor.getString(0);
             String description = cursor.getString(1);
@@ -2254,6 +2255,7 @@ public class WordPressDB {
             String previewURL = cursor.getString(3);
             boolean isCurrent = cursor.getInt(4) == 1;
             boolean isPremium = cursor.getInt(5) == 1;
+            String features = cursor.getString(6);
             
             Theme theme = new Theme();
             theme.setThemeId(themeId);
@@ -2263,6 +2265,7 @@ public class WordPressDB {
             theme.setPreviewURL(previewURL);
             theme.setCurrent(isCurrent);
             theme.setPremium(isPremium);
+            theme.setFeatures(features);
             
             cursor.close();
             
