@@ -42,16 +42,16 @@ public class PreviewPostActivity extends AuthenticatedWebViewActivity {
         if (extras != null) {
             long mPostID = extras.getLong("postID");
             int mBlogID = extras.getInt("blogID");
-            
+
             Post post = new Post(mBlogID, mPostID, isPage);
 
             if (post.getId() < 0)
                 Toast.makeText(this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
             else
                 loadPostPreview(post);
-        } else
-        if (WordPress.currentPost != null)
+        } else if (WordPress.currentPost != null) {
             loadPostPreview(WordPress.currentPost);
+        }
         else {
             Toast.makeText(this, R.string.post_not_found, Toast.LENGTH_SHORT).show();
         }
