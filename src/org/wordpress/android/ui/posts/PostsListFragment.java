@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import org.xmlrpc.android.ApiHelper;
@@ -269,28 +270,35 @@ public class PostsListFragment extends ListFragment {
 
                 listView.setOnItemClickListener(new OnItemClickListener() {
 
-                    public void onItemClick(AdapterView<?> arg0, View v,
-                            int position, long id) {
-                        if (position < mPostIDs.length) {
-                            if (v != null && !mParentActivity.isRefreshing) {
-                                mSelectedID = v.getId();
-                                Post post = new Post(WordPress.currentBlog
-                                        .getId(), mSelectedID, isPage);
-                                if (post.getId() >= 0) {
-                                    WordPress.currentPost = post;
-                                    mOnPostSelectedListener.onPostSelected(post);
-                                    mPostListAdapter.notifyDataSetChanged();
-                                } else {
-                                    if (!getActivity().isFinishing()) {
-                                        FragmentTransaction ft = getFragmentManager()
-                                                .beginTransaction();
-                                        WPAlertDialogFragment alert = WPAlertDialogFragment
-                                                .newInstance(getString(R.string.post_not_found));
-                                        alert.show(ft, "alert");
-                                    }
+                    public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
+                        
+                        if (position >= mPostIDs.length) //out of bounds
+                            return;
+
+                        if (v == null) //view is gone
+                            return;
+
+                        if( !mParentActivity.isRefreshing ) { 
+                            mSelectedID = v.getId();
+                            Post post = new Post(WordPress.currentBlog
+                                    .getId(), mSelectedID, isPage);
+                            if (post.getId() >= 0) {
+                                WordPress.currentPost = post;
+                                mOnPostSelectedListener.onPostSelected(post);
+                                mPostListAdapter.notifyDataSetChanged();
+                            } else {
+                                if (!getActivity().isFinishing()) {
+                                    FragmentTransaction ft = getFragmentManager()
+                                            .beginTransaction();
+                                    WPAlertDialogFragment alert = WPAlertDialogFragment
+                                            .newInstance(getString(R.string.post_not_found));
+                                    alert.show(ft, "alert");
                                 }
                             }
+                        } else {
+                            Toast.makeText(mParentActivity, R.string.please_wait_refresh_done, Toast.LENGTH_SHORT).show();
                         }
+                        
                     }
                 });
 

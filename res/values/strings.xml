@@ -95,6 +95,7 @@
   <string name="sign_in">Sign in</string>
   <string name="sign_out">Sign out</string>
   <string name="upload">Upload</string>
+  <string name="please_wait_refresh_done">Please wait, loading items.</string>
   
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
@@ -116,7 +117,6 @@
   <!-- posts tab -->
   <string name="untitled">Untitled</string>
   <string name="local_draft">Local Draft</string>
-
   <string name="local_drafts">Local Drafts</string>
 
   <!-- post view -->
