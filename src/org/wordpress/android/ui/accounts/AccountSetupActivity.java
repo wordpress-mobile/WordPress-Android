@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.util.SparseBooleanArray;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -42,8 +41,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.conn.HttpHostConnectException;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -53,7 +50,9 @@ import org.xmlrpc.android.XMLRPCFault;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 public class AccountSetupActivity extends Activity implements OnClickListener {
@@ -510,8 +509,13 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                         } else {
                             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AccountSetupActivity.this);
                             dialogBuilder.setTitle(getString(R.string.connection_error));
-                            if (message.contains("404"))
+                            if (message.contains("404")) {
                                 message = getString(R.string.xmlrpc_error);
+                            } else if (message.contains("425") && mIsWpcom) {//2steps authentication enabled on this .com account
+                                dialogBuilder.setTitle(getString(R.string.info));
+                                message = getString(R.string.account_two_step_auth_enabled);
+                            }
+                            
                             dialogBuilder.setMessage(message);
                             dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
