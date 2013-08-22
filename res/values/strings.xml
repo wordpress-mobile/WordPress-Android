@@ -101,6 +101,7 @@
   <string name="unattached">Unattached</string>
   <string name="custom_date">Custom Date</string>
   <string name="upload">Upload</string>
+  <string name="please_wait_refresh_done">Please wait, loading items.</string>
   
   <!-- Media Gallery Action Bar -->
   <string name="media_add_popup_title">Add to Media Library</string>
@@ -173,7 +174,6 @@
   <!-- posts tab -->
   <string name="untitled">Untitled</string>
   <string name="local_draft">Local Draft</string>
-
   <string name="local_drafts">Local Drafts</string>
 
   <!-- post view -->
