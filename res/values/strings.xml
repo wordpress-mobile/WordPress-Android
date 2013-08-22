@@ -108,6 +108,7 @@
   <string name="media_add_popup_capture_photo">Capture photo</string>
   <string name="media_add_popup_capture_video">Capture video</string>
   <string name="media_add_popup_pick_from_gallery">Pick from gallery</string>
+  <string name="media_add_new_media_gallery">New Media Gallery</string>
   
   <!-- Upload Media -->
   <string name="media_upload_title">Upload New Media</string>
