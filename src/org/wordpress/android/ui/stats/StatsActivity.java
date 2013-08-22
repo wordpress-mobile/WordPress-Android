@@ -179,8 +179,14 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                 return stats;
             }
             
-            protected void onPostExecute(StatsSummary result) {
-                refreshViews(result);
+            protected void onPostExecute(final StatsSummary result) {
+                runOnUiThread(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        refreshViews(result);      
+                    }
+                });
             };
         }.execute(blogId);
     }

@@ -183,8 +183,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                     return stats;
                 }
                 
-                protected void onPostExecute(StatsVisitorsAndViewsSummary result) {
-                    refreshViews(result);
+                protected void onPostExecute(final StatsVisitorsAndViewsSummary result) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            refreshViews(result);      
+                        }
+                    });
                 };
             }.execute(blogId);
         }
