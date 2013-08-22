@@ -64,6 +64,9 @@ public class PostsListFragment extends ListFragment {
     public int numRecords = 20;
     public ViewSwitcher switcher;
     public getRecentPostsTask getPostsTask;
+    
+    private static final int MENU_GROUP_PAGES = 2, MENU_GROUP_POSTS = 0, MENU_GROUP_DRAFTS = 1;
+    private static final int MENU_ITEM_EDIT = 0, MENU_ITEM_DELETE = 1, MENU_ITEM_PREVIEW = 2, MENU_ITEM_SHARE = 3, MENU_ITEM_ADD_COMMENT = 4;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -337,24 +340,24 @@ public class PostsListFragment extends ListFragment {
                         if (totalDrafts > 0 && mRowID < totalDrafts) {
                             menu.clear();
                             menu.setHeaderTitle(getResources().getText(R.string.draft_actions));
-                            menu.add(1, 0, 0, getResources().getText(R.string.edit_draft));
-                            menu.add(1, 1, 0, getResources().getText(R.string.delete_draft));
+                            menu.add(MENU_GROUP_DRAFTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_draft));
+                            menu.add(MENU_GROUP_DRAFTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_draft));
                         } else {
                             menu.clear();
                             if (isPage) {
                                 menu.setHeaderTitle(getResources().getText(R.string.page_actions));
-                                menu.add(2, 0, 0, getResources().getText(R.string.edit_page));
-                                menu.add(2, 1, 0, getResources().getText( R.string.delete_page));
-                                menu.add(2, 2, 0, getResources().getText(R.string.preview_page));
-                                menu.add(2, 3, 0, getResources().getText(R.string.share_url_page));
-                                if (allowComments) menu.add(2, 4, 0, getResources().getText(R.string.add_comment));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_page));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_DELETE, 0, getResources().getText( R.string.delete_page));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_page));
+                                menu.add(MENU_GROUP_PAGES, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url_page));
+                                if (allowComments) menu.add(MENU_GROUP_PAGES, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
                             } else {
                                 menu.setHeaderTitle(getResources().getText(R.string.post_actions));
-                                menu.add(0, 0, 0, getResources().getText(R.string.edit_post));
-                                menu.add(0, 1, 0, getResources().getText(R.string.delete_post));
-                                menu.add(0, 2, 0, getResources().getText(R.string.preview_post));
-                                menu.add(0, 3, 0, getResources().getText(R.string.share_url));
-                                if (allowComments) menu.add(0, 4, 0, getResources().getText(R.string.add_comment));
+                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_EDIT, 0, getResources().getText(R.string.edit_post));
+                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_DELETE, 0, getResources().getText(R.string.delete_post));
+                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_PREVIEW, 0, getResources().getText(R.string.preview_post));
+                                menu.add(MENU_GROUP_POSTS, MENU_ITEM_SHARE, 0, getResources().getText(R.string.share_url));
+                                if (allowComments) menu.add(MENU_GROUP_POSTS, MENU_ITEM_ADD_COMMENT, 0, getResources().getText(R.string.add_comment));
                             }
                         }
                     }
@@ -543,17 +546,17 @@ public class PostsListFragment extends ListFragment {
 
         int itemGroupID = item.getGroupId();
         /* Switch on the ID of the item, to get what the user selected. */
-        if (itemGroupID == 0 || itemGroupID == 1 || itemGroupID == 2 ) {
+        if (itemGroupID == MENU_GROUP_POSTS || itemGroupID == MENU_GROUP_PAGES || itemGroupID == MENU_GROUP_DRAFTS ) {
             switch (item.getItemId()) {
-            case 0:
+            case MENU_ITEM_EDIT:
                 Intent i2 = new Intent(getActivity().getApplicationContext(),
                         EditPostActivity.class);
                 i2.putExtra("postID", mSelectedID);
                 i2.putExtra("id", WordPress.currentBlog.getId());
                 
-                if( itemGroupID == 2 ){ //page synced with the server
+                if( itemGroupID == MENU_GROUP_PAGES ){ //page synced with the server
                     i2.putExtra("isPage", true);
-                } else if ( itemGroupID == 1 ) { //local draft
+                } else if ( itemGroupID == MENU_GROUP_DRAFTS ) { //local draft
                     if (isPage) 
                         i2.putExtra("isPage", true);
                     i2.putExtra("localDraft", true);
@@ -561,20 +564,20 @@ public class PostsListFragment extends ListFragment {
                 
                 startActivityForResult(i2, 0);
                 return true;
-            case 1:
+            case MENU_ITEM_DELETE:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_DELETE, post);
                 return true;
-            case 2:
+            case MENU_ITEM_PREVIEW:
                 Intent i = new Intent(getActivity(), PreviewPostActivity.class);
-                i.putExtra("isPage", itemGroupID == 2 ? true : false);
+                i.putExtra("isPage", itemGroupID == MENU_GROUP_PAGES ? true : false);
                 i.putExtra("postID", mSelectedID);
                 i.putExtra("blogID", WordPress.currentBlog.getId());
                 startActivity(i);
                 return true;
-            case 3:
+            case MENU_ITEM_SHARE:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_SHARE, post);
                 return true;
-            case 4:
+            case MENU_ITEM_ADD_COMMENT:
                 mOnPostActionListener.onPostAction(PostsActivity.POST_COMMENT, post);
                 return true;
             default:
