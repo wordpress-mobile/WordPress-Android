@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -180,6 +179,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             }
             
             protected void onPostExecute(final StatsSummary result) {
+                StatUtils.broadcastSummaryUpdated(StatsActivity.this);
                 runOnUiThread(new Runnable() {
                     
                     @Override
@@ -204,6 +204,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                     @Override
                     public void onResponse(JSONObject response) {
                         StatUtils.saveSummary(blogId, response);
+                        
                         runOnUiThread(new Runnable() {
                             
                             @Override
@@ -231,10 +232,10 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         int reblogs = 0;
         
         if (result != null) {
-            views = result.getViews();
-            comments = result.getComments();
-            favs = result.getFavorites();
-            reblogs = result.getReblogs();
+            views = result.getViewsAllTime();
+            comments = result.getCommentsAllTime();
+//            favs = result.getFavorites(); // TODO
+//            reblogs = result.getReblogs(); // TODO
         }
         
         mViewsTotalText.setText(views + "");

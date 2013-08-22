@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +17,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +44,9 @@ import org.wordpress.android.datasets.StatsBarChartWeeksTable;
 import org.wordpress.android.models.StatsBarChartDay;
 import org.wordpress.android.models.StatsBarChartMonth;
 import org.wordpress.android.models.StatsBarChartWeek;
-import org.wordpress.android.models.StatsVisitorsAndViewsSummary;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.MediaUploadService;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
@@ -111,11 +116,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         
         private TextView mVisitorsToday;
         private TextView mViewsToday;
-        private TextView mVisitorsBestEver;
+        private TextView mViewsBestEver;
         private TextView mViewsAllTime;
         private TextView mCommentsAllTime;
         private View mLegend;
         private ContentObserver mContentObserver = new MyObserver(new Handler());
+        
+        private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+            
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
+                    refreshSummary();
+                }
+            }
+        };
         
         public static InnerFragment newInstance(StatsTimeframe timeframe) {
             
@@ -137,7 +153,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             
             mVisitorsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_visitors_count);
             mViewsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_views_count);
-            mVisitorsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_visitor_count);
+            mViewsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
             mViewsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_view_count);
             mCommentsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_comment_count);
             mLegend = view.findViewById(R.id.stats_bar_graph_legend);
@@ -150,9 +166,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         public void onResume() {
             super.onResume();
             refreshSummary();
-            refreshSummaryFromServer();
             refreshChartsFromServer();
             getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
+            
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
         }
 
 
@@ -160,6 +178,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         public void onPause() {
             super.onPause();
             getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+            
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.unregisterReceiver(mReceiver);
         }
         
         private int getTimeframeOrdinal() {
@@ -172,18 +193,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             
             final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
             
-            new AsyncTask<String, Void, StatsVisitorsAndViewsSummary>() {
+            new AsyncTask<String, Void, StatsSummary>() {
 
                 @Override
-                protected StatsVisitorsAndViewsSummary doInBackground(String... params) {
+                protected StatsSummary doInBackground(String... params) {
                     final String blogId = params[0];
                     
-                    StatsVisitorsAndViewsSummary stats = StatUtils.getVisitorsAndViewsSummary(blogId);
+                    StatsSummary stats = StatUtils.getSummary(blogId);
                     
                     return stats;
                 }
                 
-                protected void onPostExecute(final StatsVisitorsAndViewsSummary result) {
+                protected void onPostExecute(final StatsSummary result) {
+                    if (getActivity() == null)
+                        return;
+                    
                     getActivity().runOnUiThread(new Runnable() {
                         
                         @Override
@@ -195,41 +219,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             }.execute(blogId);
         }
 
-
-        private void refreshSummaryFromServer() {
-            if (WordPress.getCurrentBlog() == null)
-                return; 
-            
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            
-            WordPress.restClient.getStatsVisitorsAndViewsSummary(blogId, 
-                    new Listener() {
-                        
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            StatUtils.saveVisitorsAndViewsSummary(blogId, response);
-                            if (getActivity() != null)
-                                getActivity().runOnUiThread(new Runnable() {
-                                    
-                                    @Override
-                                    public void run() {
-                                        refreshSummary();
-                                        
-                                    }
-                                });
-                        }
-                    }, 
-                    new ErrorListener() {
-                        
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                            
-                        }
-                    });
-        }
-        
-        protected void refreshViews(StatsVisitorsAndViewsSummary result) {
+        protected void refreshViews(StatsSummary result) {
             int visitorsToday = 0;
             int viewsToday = 0;
             int visitorsBestEver = 0;
@@ -239,14 +229,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             if (result != null) {
                 visitorsToday = result.getVisitorsToday();
                 viewsToday = result.getViewsToday();
-                visitorsBestEver = result.getVisitorsBestEver();
+                visitorsBestEver = result.getViewsBestDayTotal();
                 viewsAllTime = result.getViewsAllTime();
                 commentsAllTime = result.getCommentsAllTime();
             }
 
             mVisitorsToday.setText(visitorsToday + "");
             mViewsToday.setText(viewsToday + "");
-            mVisitorsBestEver.setText(visitorsBestEver + "");
+            mViewsBestEver.setText(visitorsBestEver + "");
             mViewsAllTime.setText(viewsAllTime + "");
             mCommentsAllTime.setText(commentsAllTime + "");
         }
@@ -343,6 +333,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            if (WordPress.getCurrentBlog() == null)
+                return null;
+            
             String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
             return new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
         }

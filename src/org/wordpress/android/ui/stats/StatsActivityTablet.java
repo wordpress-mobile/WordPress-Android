@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,10 +12,17 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest.ErrorListener;
+import com.wordpress.rest.RestRequest.Listener;
+
+import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
 public class StatsActivityTablet extends WPActionBarActivity {
@@ -176,6 +184,38 @@ public class StatsActivityTablet extends WPActionBarActivity {
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
         return true;
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshStatsFromServer();
+    }
+    
+
+    private void refreshStatsFromServer() {
+        if (WordPress.getCurrentBlog() == null)
+            return; 
+        
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        WordPress.restClient.getStatsSummary(blogId, 
+                new Listener() {
+                    
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        StatUtils.saveSummary(blogId, response);
+                        StatUtils.broadcastSummaryUpdated(StatsActivityTablet.this);
+                    }
+                }, 
+                new ErrorListener() {
+                    
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                });
     }
     
 }

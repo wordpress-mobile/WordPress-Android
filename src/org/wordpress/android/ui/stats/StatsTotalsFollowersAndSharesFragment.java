@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.StatsTotalsFollowersAndShares;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.util.StatUtils;
 
 public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
@@ -69,18 +69,18 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        new AsyncTask<String, Void, StatsTotalsFollowersAndShares>() {
+        new AsyncTask<String, Void, StatsSummary>() {
 
             @Override
-            protected StatsTotalsFollowersAndShares doInBackground(String... params) {
+            protected StatsSummary doInBackground(String... params) {
                 final String blogId = params[0];
                 
-                StatsTotalsFollowersAndShares stats = StatUtils.getTotalsFollowersShares(blogId);
+                StatsSummary stats = StatUtils.getSummary(blogId);
 
                 return stats;
             }
             
-            protected void onPostExecute(StatsTotalsFollowersAndShares result) {
+            protected void onPostExecute(StatsSummary result) {
                 refreshViews(result);
             };
         }.execute(blogId);
@@ -98,7 +98,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                     
                     @Override
                     public void onResponse(JSONObject response) {
-                        StatUtils.saveTotalsFollowersShares(blogId, response);
+                        StatUtils.saveSummary(blogId, response);
                         if (getActivity() != null)
                             getActivity().runOnUiThread(new Runnable() {
                                 
@@ -120,7 +120,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                 });
     }
     
-    protected void refreshViews(StatsTotalsFollowersAndShares result) {
+    protected void refreshViews(StatsSummary result) {
         int posts = 0;
         int categories = 0;
         int tags = 0;
@@ -132,8 +132,8 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
             posts = result.getPosts();
             categories = result.getCategories();
             tags = result.getTags();
-            followers = result.getFollowers();
-            comments = result.getComments();
+            followers = result.getFollowersBlog();
+            comments = result.getFollowersComments();
             shares = result.getShares();
         }
 

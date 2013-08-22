@@ -301,38 +301,15 @@ public class WPRestClient {
      * Get a site's stats summary
      */
     public void getStatsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+        String path = String.format("sites/%s/stats", siteId);
+        get(path, listener, errorListener);
     }
-
-    /**
-     * Get a site's stats summary for visitors and views
-     */
-    public void getStatsVisitorsAndViewsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/visitors_and_views_summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-    
 
     /**
      * Get a site's stats summary for videos
      */
     public void getStatsVideoSummary(String siteId, Listener listener, ErrorListener errorListener) {
         String path = "stats/video_summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats summary for comments
-     */
-    public void getStatsCommentsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/comments_summary";
         Map<String, String> params = new HashMap<String, String>();
         params.put("blog", siteId);
         getXL(path, params, listener, errorListener);

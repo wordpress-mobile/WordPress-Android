@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
@@ -34,8 +38,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
-import org.wordpress.android.models.StatsCommentsSummary;
 import org.wordpress.android.models.StatsMostCommented;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsTopCommenter;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
@@ -281,6 +285,17 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         private TextView mActiveTimeText;
         private TextView mMostCommentedText;
         
+        private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+            
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
+                    refreshStats();
+                }
+            }
+        };
+        
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
@@ -295,70 +310,47 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
         }
         
         @Override
+        public void onPause() {
+            super.onPause();
+
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.unregisterReceiver(mReceiver);
+        }
+        
+        @Override
         public void onResume() {
             super.onResume();
             refreshStats();
-            refreshStatsFromServer();
+            
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
+
         }
 
         protected void refreshStats() {
             if (WordPress.getCurrentBlog() == null)
                 return; 
     
-            String blogId = String.valueOf(WordPress.getCurrentBlog());
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
             
-            new AsyncTask<String, Void, StatsCommentsSummary>() {
+            new AsyncTask<String, Void, StatsSummary>() {
     
                 @Override
-                protected StatsCommentsSummary doInBackground(String... params) {
+                protected StatsSummary doInBackground(String... params) {
                     final String blogId = params[0];
                     
-                    StatsCommentsSummary stats = StatUtils.getCommentsSummary(blogId);
+                    StatsSummary stats = StatUtils.getSummary(blogId);
                     
                     return stats;
                 }
                 
-                protected void onPostExecute(StatsCommentsSummary result) {
+                protected void onPostExecute(StatsSummary result) {
                     refreshSummaryViews(result);
                 };
             }.execute(blogId);
         }
 
-
-        private void refreshStatsFromServer() {
-            if (WordPress.getCurrentBlog() == null)
-                return; 
-    
-            final String blogId = String.valueOf(WordPress.getCurrentBlog());
-            
-            WordPress.restClient.getStatsCommentsSummary(blogId, 
-                    new Listener() {
-                        
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            StatUtils.saveCommentsSummary(blogId, response);
-                            if (getActivity() != null)
-                                getActivity().runOnUiThread(new Runnable() {
-                                    
-                                    @Override
-                                    public void run() {
-                                        refreshStats();
-                                        
-                                    }
-                                });
-                        }
-                    }, 
-                    new ErrorListener() {
-                        
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                            
-                        }
-                    });
-        }
-        
-        protected void refreshSummaryViews(StatsCommentsSummary result) {
+        protected void refreshSummaryViews(StatsSummary result) {
     
             int perMonth = 0;
             int total = 0;
@@ -369,11 +361,11 @@ public class StatsCommentsFragment extends StatsAbsListViewFragment implements T
             
             if (result != null) {
                 perMonth = result.getCommentsPerMonth();
-                total = result.getCommentsTotal();
-                activeDay = result.getRecentMostActiveDay();
-                activeTime = result.getRecentMostActiveTime();
-                activePost = result.getRecentMostActivePost();
-                activePostUrl = result.getRecentMostActivePostUrl();
+                total = result.getCommentsAllTime();
+                activeDay = result.getCommentsMostActiveRecentDay();
+                activeTime = result.getCommentsMostActiveTime();
+//                activePost = result.getRecentMostActivePost(); // TODO
+//                activePostUrl = result.getRecentMostActivePostUrl(); // TODO
             }
     
 

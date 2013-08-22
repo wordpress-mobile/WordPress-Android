@@ -122,6 +122,9 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (WordPress.getCurrentBlog() == null)
+            return null;
+        
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
         return cursorLoader;
