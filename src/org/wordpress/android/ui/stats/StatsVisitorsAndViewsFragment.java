@@ -140,6 +140,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             mVisitorsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_visitor_count);
             mViewsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_view_count);
             mCommentsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_comment_count);
+            mLegend = view.findViewById(R.id.stats_bar_graph_legend);
             
             return view;
         }
