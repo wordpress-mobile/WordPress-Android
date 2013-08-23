@@ -163,7 +163,7 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
                     
                     @Override
                     public void onResponse(JSONObject response) {
-                        new ParseJsonTask().execute(blogId, response, position);
+                        new ParseJsonTask().execute(blogId, response);
                     }
                 }, 
                 new ErrorListener() {

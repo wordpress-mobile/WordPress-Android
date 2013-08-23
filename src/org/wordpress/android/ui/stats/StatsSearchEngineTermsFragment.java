@@ -29,6 +29,7 @@ import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.StatUtils;
 
 public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  implements TabListener {
 
@@ -124,12 +125,16 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
         if (getCurrentBlogId() == null)
             return;
                     
-        WordPress.restClient.getStatsSearchEngineTerms(blogId, 
+        String date = StatUtils.getCurrentDate();
+        if (position == 1) 
+            date = StatUtils.getYesterdaysDate();
+        
+        WordPress.restClient.getStatsSearchEngineTerms(blogId, date, 
                 new Listener() {
                     
                     @Override
                     public void onResponse(JSONObject response) {
-                        new ParseJsonTask().execute(blogId, response, position);
+                        new ParseJsonTask().execute(blogId, response);
                     }
                 }, 
                 new ErrorListener() {
@@ -147,18 +152,18 @@ public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  im
         protected Void doInBackground(Object... params) {
             String blogId = (String) params[0];
             JSONObject response = (JSONObject) params[1];
-            // int position = (Integer) params[2];
             
             Context context = WordPress.getContext();
             
-            if (response != null && response.has("result")) {
+            if (response != null) {
                 try {
-                    JSONArray results = response.getJSONArray("result");
+                    String date = response.getString("date");
+                    JSONArray results = response.getJSONArray("search-terms");
 
                     int count = results.length();
                     for (int i = 0; i < count; i++ ) {
-                        JSONObject result = results.getJSONObject(i);
-                        StatsSearchEngineTerm stat = new StatsSearchEngineTerm(blogId, result);
+                        JSONArray result = results.getJSONArray(i);
+                        StatsSearchEngineTerm stat = new StatsSearchEngineTerm(blogId, date, result);
                         ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);
                         context.getContentResolver().insert(STATS_SEARCH_ENGINE_TERMS_URI, values);
                     }

@@ -248,11 +248,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for search engine terms
      */
-    public void getStatsSearchEngineTerms(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/search_engine_terms";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsSearchEngineTerms(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/search-terms?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
