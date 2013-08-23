@@ -412,11 +412,10 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     @Override
-    public void changeCursor(Cursor newCursor) {
+    public Cursor swapCursor(Cursor newCursor) {
         if (newCursor == null) {
             mCursorDataCount = 0;
-            super.changeCursor(newCursor);
-            return;
+            return super.swapCursor(newCursor);
         }
         
         mCursorDataCount = newCursor.getCount();
@@ -446,7 +445,7 @@ public class MediaGridAdapter extends CursorAdapter {
         
         // use a merge cursor to place merge the extra rows at the bottom of the newly swapped cursor
         MergeCursor mergeCursor = new MergeCursor(new Cursor[] { newCursor, matrixCursor });
-        super.changeCursor(mergeCursor);
+        return super.swapCursor(mergeCursor);
     }
 
     /** Return the number of columns in the media grid **/
