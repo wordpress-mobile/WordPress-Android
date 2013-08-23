@@ -38,12 +38,8 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsBarChartDaysTable;
-import org.wordpress.android.datasets.StatsBarChartMonthsTable;
-import org.wordpress.android.datasets.StatsBarChartWeeksTable;
-import org.wordpress.android.models.StatsBarChartDay;
-import org.wordpress.android.models.StatsBarChartMonth;
-import org.wordpress.android.models.StatsBarChartWeek;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.MediaUploadService;
@@ -52,7 +48,7 @@ import org.wordpress.android.util.Utils;
 
 public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
-    private static final String[] TITLES = new String [] { StatsTimeframe.DAYS.getLabel(), StatsTimeframe.WEEKS.getLabel(), StatsTimeframe.MONTHS.getLabel() };
+    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     
@@ -68,12 +64,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        StatsTimeframe timeframe = StatsTimeframe.DAYS;
+        StatsBarChartUnit unit = StatsBarChartUnit.DAY;
         if (position == 1)
-            timeframe = StatsTimeframe.WEEKS;
+            unit = StatsBarChartUnit.WEEK;
         else if (position == 2) 
-            timeframe = StatsTimeframe.MONTHS;
-        return InnerFragment.newInstance(timeframe);
+            unit = StatsBarChartUnit.MONTH;
+        return InnerFragment.newInstance(unit);
     }
     
     @Override
@@ -111,7 +107,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
     public static class InnerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-        private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
+        private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
         private LinearLayout mBarGraphLayout;
         
         private TextView mVisitorsToday;
@@ -133,12 +129,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             }
         };
         
-        public static InnerFragment newInstance(StatsTimeframe timeframe) {
+        public static InnerFragment newInstance(StatsBarChartUnit unit) {
             
             InnerFragment fragment = new InnerFragment();
             
             Bundle args = new Bundle();
-            args.putInt(ARGS_TIMEFRAME, timeframe.ordinal());
+            args.putInt(ARGS_BAR_CHART_UNIT, unit.ordinal());
             fragment.setArguments(args);
             
             return fragment;
@@ -183,8 +179,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             lbm.unregisterReceiver(mReceiver);
         }
         
-        private int getTimeframeOrdinal() {
-            return getArguments().getInt(ARGS_TIMEFRAME);
+        private StatsBarChartUnit getBarChartUnit() {
+            int ordinal = getArguments().getInt(ARGS_BAR_CHART_UNIT);
+            return StatsBarChartUnit.values()[ordinal];
         }
 
         private void refreshSummary() {
@@ -263,14 +260,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 }
             };
             
-            int ordinal = getTimeframeOrdinal();
-            if (ordinal == StatsTimeframe.DAYS.ordinal())
-                WordPress.restClient.getStatsBarChartDays(blogId, listener, errorListener);
-            else if (ordinal == StatsTimeframe.WEEKS.ordinal())
-                WordPress.restClient.getStatsBarChartWeeks(blogId, listener, errorListener);
-            else if (ordinal == StatsTimeframe.MONTHS.ordinal())
-                WordPress.restClient.getStatsBarChartMonths(blogId, listener, errorListener);
-                    
+            WordPress.restClient.getStatsBarChartData(blogId, getBarChartUnit(), getNumOfPoints(), listener, errorListener);
         }
         
         private class ParseJsonTask extends AsyncTask<Object, Void, Void> {
@@ -283,32 +273,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 
                 Context context = WordPress.getContext();
                 
-                if (response != null && response.has("result")) {
+                if (response != null && response.has("data")) {
                     try {
-                        JSONArray results = response.getJSONArray("result");
+                        JSONArray results = response.getJSONArray("data");
                         
                         int count = results.length();
-                        
+
+                        StatsBarChartUnit unit = getBarChartUnit();
+                                                
                         // delete old stats and insert new ones
                         if (count > 0)
-                            context.getContentResolver().delete(uri, "blogId=?", new String[] { blogId });
-                        
+                            context.getContentResolver().delete(uri, "blogId=? AND unit=?", new String[] { blogId, unit.name() });
+
                         for (int i = 0; i < count; i++ ) {
-                            JSONObject result = results.getJSONObject(i);
-                            
-                            ContentValues values = null;
-                            
-                            int ordinal = getTimeframeOrdinal();
-                            if (ordinal == StatsTimeframe.DAYS.ordinal()) {
-                                StatsBarChartDay stat = new StatsBarChartDay(blogId, result);
-                                values = StatsBarChartDaysTable.getContentValues(stat);
-                            } else if (ordinal == StatsTimeframe.WEEKS.ordinal()) {
-                                StatsBarChartWeek stat = new StatsBarChartWeek(blogId, result);
-                                values = StatsBarChartWeeksTable.getContentValues(stat);
-                            } else if (ordinal == StatsTimeframe.MONTHS.ordinal()) {
-                                StatsBarChartMonth stat = new StatsBarChartMonth(blogId, result);
-                                values = StatsBarChartMonthsTable.getContentValues(stat);
-                            }
+                            JSONArray result = results.getJSONArray(i);
+                            StatsBarChartData stat = new StatsBarChartData(blogId, unit, result);
+                            ContentValues values = StatsBarChartDataTable.getContentValues(stat);
                             
                             if (values != null && uri != null) {
                                 context.getContentResolver().insert(uri, values);
@@ -328,7 +308,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            getLoaderManager().restartLoader(getTimeframeOrdinal(), null, this);
+            getLoaderManager().restartLoader(getBarChartUnit().ordinal(), null, this);
         }
 
         @Override
@@ -337,20 +317,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 return null;
             
             String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            return new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
+            StatsBarChartUnit unit = getBarChartUnit();
+            return new CursorLoader(getActivity(), getUri(), null, "blogId=? AND unit=?", new String[] { blogId, unit.name() }, null);
         }
 
         private Uri getUri() {
-            int ordinal = getTimeframeOrdinal();
-            Uri uri = null;
-            
-            if (ordinal == StatsTimeframe.DAYS.ordinal()) 
-                uri = StatsContentProvider.STATS_BAR_CHART_DAYS_URI;
-            else if (ordinal == StatsTimeframe.WEEKS.ordinal())
-                uri = StatsContentProvider.STATS_BAR_CHART_WEEKS_URI;
-            else if (ordinal == StatsTimeframe.MONTHS.ordinal())
-                uri = StatsContentProvider.STATS_BAR_CHART_MONTHS_URI;
-            return uri;
+            return StatsContentProvider.STATS_BAR_CHART_DATA_URI;
         }
 
         @Override
@@ -363,7 +335,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 Context context = mBarGraphLayout.getContext();
                 LayoutInflater inflater = LayoutInflater.from(context);
                 mBarGraphLayout.addView(inflater.inflate(R.layout.stats_bar_graph_empty, mBarGraphLayout, false));
-                mLegend.setVisibility(View.GONE);
                 
                 return;
             }
@@ -402,13 +373,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         }
 
         private int getNumOfPoints() {
-            int ordinal = getTimeframeOrdinal();
-            
             if (Utils.isTablet()) {
                 return 30; 
             } 
             
-            if (ordinal == StatsTimeframe.DAYS.ordinal()) 
+            if (getBarChartUnit() == StatsBarChartUnit.DAY) 
                 return 7;
             else
                 return 12;
@@ -419,56 +388,32 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 return numPoints / 5;
             }
 
-            int ordinal = getTimeframeOrdinal();
-            if (ordinal == StatsTimeframe.DAYS.ordinal())
+            if (getBarChartUnit() == StatsBarChartUnit.DAY)
                 return numPoints / 2;
             else
                 return numPoints / 3;
         }
 
         private int getViews(Cursor cursor) {
-            int timeframe = getTimeframeOrdinal();
-            int views = 0;
-            
-            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
-                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.VIEWS));
-            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
-                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.VIEWS));
-            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
-                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.VIEWS));
-            }
-            
-            return views;
+            return cursor.getInt(cursor.getColumnIndex(StatsBarChartDataTable.Columns.VIEWS));
         }
 
         private int getVisitors(Cursor cursor) {
-            int timeframe = getTimeframeOrdinal();
-            int visitors = 0;
-            
-            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
-                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.VISITORS));
-            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
-                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.VISITORS));
-            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
-                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.VISITORS));
-            }
-            
-            return visitors;
+            return cursor.getInt(cursor.getColumnIndex(StatsBarChartDataTable.Columns.VISITORS));
         }
 
         private String getDate(Cursor cursor) {
-            int timeframe = getTimeframeOrdinal();
+            StatsBarChartUnit unit = getBarChartUnit();
             
             String date = "";
+
+            String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE));
             
-            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
-                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.DATE));
+            if (unit == StatsBarChartUnit.DAY) {
                 date = StatUtils.parseDate(temp, "yyyy-MM-dd", "MMM d");
-            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
-                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.DATE));
-                date = StatUtils.parseDate(temp, "yyyy-'W'ww", "'Week' w");
-            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
-                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.DATE));
+            } else if (unit == StatsBarChartUnit.WEEK) {
+                date = StatUtils.parseDate(temp, "yyyy'W'ww", "'Week' w");
+            } else if (unit == StatsBarChartUnit.MONTH) {
                 date = StatUtils.parseDate(temp, "yyyy-MM", "MMM yyyy");
             }
             

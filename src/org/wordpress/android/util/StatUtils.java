@@ -9,18 +9,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsVideoSummary;
+import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsBarChartUnit;
 
 public class StatUtils {
 
@@ -81,8 +88,34 @@ public class StatUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        
+        saveGraphData(blogId, stat);
     }
     
+    private static void saveGraphData(String blogId, JSONObject stat) {
+        try {
+            JSONArray data = stat.getJSONObject("visits").getJSONArray("data");
+            Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
+            Context context = WordPress.getContext();
+            
+            int length = data.length();
+            
+            if (length > 0)
+                context.getContentResolver().delete(uri, "blogId=? AND unit=?", new String[] { blogId, StatsBarChartUnit.DAY.name() });
+            
+            for (int i = 0; i < length; i++) {
+                StatsBarChartData item = new StatsBarChartData(blogId, StatsBarChartUnit.DAY, data.getJSONArray(i));
+                ContentValues values = StatsBarChartDataTable.getContentValues(item);
+                
+                if (values != null) {
+                    context.getContentResolver().insert(uri, values);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteSummary(String blogId) {
         WordPress.getContext().deleteFile(STAT_SUMMARY + blogId);
     }
@@ -105,7 +138,7 @@ public class StatUtils {
             stat = gson.fromJson(fileContent.toString(), StatsSummary.class);
             
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // stats haven't been downloaded yet
         } catch (IOException e) {
             e.printStackTrace();
         }

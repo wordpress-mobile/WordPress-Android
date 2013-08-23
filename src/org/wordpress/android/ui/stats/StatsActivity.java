@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -34,13 +33,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private TextView mActionbarNavText;
     private DialogFragment mNavFragment;
     private int mNavPosition = 0;
-
-    private TextView mViewsTotalText;
-    private TextView mCommentsTotalText;
-    private TextView mFavsTotalText;
-    private TextView mReblogTotalText;
-
-    private View mStatsHeader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,15 +77,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         }
         
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
-
-        mStatsHeader = findViewById(R.id.stats_header);
-        hideHeaderIfLandscape();
-        
-        mViewsTotalText = (TextView) findViewById(R.id.stats_header_views_total);
-        mCommentsTotalText = (TextView) findViewById(R.id.stats_header_comments_total);
-        mFavsTotalText = (TextView) findViewById(R.id.stats_header_favs_total);
-        mReblogTotalText = (TextView) findViewById(R.id.stats_header_reblog_total);
-        
     }
     
     @Override
@@ -102,17 +85,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
         refreshStats();
         refreshStatsFromServer();
-    }
-
-    private void hideHeaderIfLandscape() {
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        if (height < width) {
-            mStatsHeader.setVisibility(View.GONE);
-        } else {
-            mStatsHeader.setVisibility(View.VISIBLE);
-        }
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -180,13 +152,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             
             protected void onPostExecute(final StatsSummary result) {
                 StatUtils.broadcastSummaryUpdated(StatsActivity.this);
-                runOnUiThread(new Runnable() {
-                    
-                    @Override
-                    public void run() {
-                        refreshViews(result);      
-                    }
-                });
             };
         }.execute(blogId);
     }
@@ -223,26 +188,6 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                         
                     }
                 });
-    }
-    
-    protected void refreshViews(StatsSummary result) {
-        int views = 0;
-        int comments = 0;
-        int favs = 0;
-        int reblogs = 0;
-        
-        if (result != null) {
-            views = result.getViewsAllTime();
-            comments = result.getCommentsAllTime();
-//            favs = result.getFavorites(); // TODO
-//            reblogs = result.getReblogs(); // TODO
-        }
-        
-        mViewsTotalText.setText(views + "");
-        mCommentsTotalText.setText(comments + "");
-        mFavsTotalText.setText(favs + "");
-        mReblogTotalText.setText(reblogs + "");
-        
     }
 
 }
