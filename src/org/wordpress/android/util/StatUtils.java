@@ -35,7 +35,8 @@ public class StatUtils {
     
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
-
+    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
+    
     /** Converts date in the form of 2013-07-18 to ms **/
     @SuppressLint("SimpleDateFormat")
 	public static long toMs(String date) {
@@ -56,6 +57,11 @@ public class StatUtils {
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date());
+    }
+    
+    public static String getYesterdaysDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(getCurrentDateMs() - ONE_DAY));
     }
     
     public static long getCurrentDateMs() {

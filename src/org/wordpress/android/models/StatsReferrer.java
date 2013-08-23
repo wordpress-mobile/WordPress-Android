@@ -1,6 +1,7 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,28 +11,33 @@ public class StatsReferrer {
 
     private String mBlogId;
     private long mDate;
-    private String mTitle;
-    private int mViews;
+    private String mName;
+    private int mTotal;
     private String mUrl;
-    private String mImageUrl;
+    private String mIcon;
 
-    public StatsReferrer(String blogId, long date, String title, int views, String url, String imageUrl) {
+    public StatsReferrer(String blogId, long date, String name, int total, String url, String icon) {
         this.mBlogId = blogId;
         this.mDate = date;
-        this.mTitle = title;
-        this.mViews = views;
+        this.mName = name;
+        this.mTotal = total;
         this.mUrl = url;
-        this.mImageUrl = imageUrl;
+        this.mIcon = icon;
     }
 
-    public StatsReferrer(String blogId, JSONObject result) throws JSONException {
+    public StatsReferrer(String blogId, String date, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
-        setTitle(result.getString("title"));
-        setViews(result.getInt("views"));
-        setUrl(result.getString("url"));
-        if (result.has("imageUrl"))
-            setImageUrl(result.getString("imageUrl"));
+        setDate(StatUtils.toMs(date));
+        setName(result.getString("name"));
+        setTotal(result.getInt("total"));
+        if (result.has("icon"))
+            setIcon(result.getString("icon"));
+
+        // for now, set the url to be the first result
+        JSONArray array = result.getJSONArray("results");
+        JSONArray firstEntry = array.getJSONArray(0);
+        String url = firstEntry.getString(0);
+        setUrl(url);
     }
 
     public String getBlogId() {
@@ -50,20 +56,20 @@ public class StatsReferrer {
         this.mDate = date;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getName() {
+        return mName;
     }
 
-    public void setTitle(String title) {
-        this.mTitle = title;
+    public void setName(String name) {
+        this.mName = name;
     }
 
-    public int getViews() {
-        return mViews;
+    public int getTotal() {
+        return mTotal;
     }
 
-    public void setViews(int views) {
-        this.mViews = views;
+    public void setTotal(int total) {
+        this.mTotal = total;
     }
 
     public String getUrl() {
@@ -74,11 +80,11 @@ public class StatsReferrer {
         this.mUrl = url;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public String getIcon() {
+        return mIcon;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.mImageUrl = imageUrl;
+    public void setIcon(String icon) {
+        this.mIcon = icon;
     }
 }

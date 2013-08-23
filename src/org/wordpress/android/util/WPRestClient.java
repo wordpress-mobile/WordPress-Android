@@ -242,11 +242,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for referrers
      */
-    public void getStatsReferrers(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/referrers";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsReferrers(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/referrers?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
@@ -317,16 +315,6 @@ public class WPRestClient {
         getXL(path, params, listener, errorListener);
     }
 
-    /**
-     * Get a site's stats totals, followers and shares
-     */
-    public void getStatsTotalsFollowersAndShares(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/totals_followers_shares";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-    
     /**
      * Get a site's views and visitors stats for days, weeks, and months
      * Use -1 to get a default value for quantity

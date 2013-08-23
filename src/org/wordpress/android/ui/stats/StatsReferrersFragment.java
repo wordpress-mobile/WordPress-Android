@@ -34,6 +34,7 @@ import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.StatUtils;
 
 public class StatsReferrersFragment extends StatsAbsListViewFragment  implements TabListener {
     
@@ -92,33 +93,33 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             
-            String entry = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.TITLE));
+            String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
             String url = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.URL));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.VIEWS));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.IMAGE_URL));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
+            String icon = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.ICON));
 
-            // entries
+            // name, url
             TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
             if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
+                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
                 entryTextView.setText(link);
                 entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
-                entryTextView.setText(entry);
+                entryTextView.setText(name);
             }
             
             // totals
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
             totalsTextView.setText(total + "");
 
-            // image
+            // icon
             view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
             NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
             ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
-            if (imageUrl != null && imageUrl.length() > 0) {
+            if (icon != null && icon.length() > 0) {
                 imageView.setErrorImageResId(R.drawable.stats_blank_image);
                 imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                imageView.setImageUrl(imageUrl, WordPress.imageLoader);
+                imageView.setImageUrl(icon, WordPress.imageLoader);
                 imageView.setVisibility(View.VISIBLE);
                 errorImageView.setVisibility(View.GONE);
             } else {
@@ -151,13 +152,17 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
         final String blogId = getCurrentBlogId();
         if (getCurrentBlogId() == null)
             return;
+        
+        String date = StatUtils.getCurrentDate();
+        if (position == 1)
+            date = StatUtils.getYesterdaysDate();
                     
-        WordPress.restClient.getStatsReferrers(blogId, 
+        WordPress.restClient.getStatsReferrers(blogId, date,
                 new Listener() {
                     
                     @Override
                     public void onResponse(JSONObject response) {
-                        new ParseJsonTask().execute(blogId, response, position);
+                        new ParseJsonTask().execute(blogId, response);
                     }
                 }, 
                 new ErrorListener() {
@@ -175,18 +180,18 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
         protected Void doInBackground(Object... params) {
             String blogId = (String) params[0];
             JSONObject response = (JSONObject) params[1];
-            // int position = (Integer) params[2];
             
             Context context = WordPress.getContext();
             
-            if (response != null && response.has("result")) {
+            if (response != null) {
                 try {
-                    JSONArray results = response.getJSONArray("result");
+                    String date = response.getString("date");
+                    JSONArray results = response.getJSONArray("referrers");
 
                     int count = results.length();
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
-                        StatsReferrer stat = new StatsReferrer(blogId, result);
+                        StatsReferrer stat = new StatsReferrer(blogId, date, result);
                         ContentValues values = StatsReferrersTable.getContentValues(stat);
                         context.getContentResolver().insert(STATS_REFERRERS_URI, values);
                     }
