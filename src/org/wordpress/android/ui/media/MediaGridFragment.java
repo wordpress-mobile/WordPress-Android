@@ -413,7 +413,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         Cursor cursor = filterItems(mFilter);
 
         if (cursor != null) {
-            mGridAdapter.swapCursor(cursor);
+            mGridAdapter.changeCursor(cursor);
             mResultView.setVisibility(View.GONE);
         } else {
             if (filter != Filter.CUSTOM_DATE) {
@@ -437,7 +437,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
         long one_day = 24 * 60 * 60 * 1000;
         Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day);
-        mGridAdapter.swapCursor(cursor);
+        mGridAdapter.changeCursor(cursor);
 
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
@@ -598,7 +598,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mGridView.setSelection(0);
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
-        mGridAdapter.swapCursor(null);
+        mGridAdapter.changeCursor(null);
 
         resetSpinnerAdapter();
         

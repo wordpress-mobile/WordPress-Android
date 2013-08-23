@@ -140,7 +140,7 @@ public class ThemeSearchFragment extends ThemeTabFragment
         if (mAdapter == null) {
             return;
         } else {   
-            mAdapter.swapCursor(cursor);   
+            mAdapter.changeCursor(cursor);   
             mGridView.invalidateViews();
             
             if (cursor == null || cursor.getCount() == 0) {

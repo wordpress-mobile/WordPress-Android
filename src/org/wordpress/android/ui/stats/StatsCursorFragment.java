@@ -134,7 +134,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCallback.onCursorLoaded(getUri(), data);
         if (mAdapter != null)
-            mAdapter.swapCursor(data);
+            mAdapter.changeCursor(data);
         configureEmptyLabel();
         if (isTablet()) {
             reloadLinearLayout();
@@ -144,7 +144,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (mAdapter != null)
-            mAdapter.swapCursor(null);
+            mAdapter.changeCursor(null);
         configureEmptyLabel();
         if (isTablet()) {
             reloadLinearLayout();
