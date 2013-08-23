@@ -148,12 +148,6 @@ public class CommentsActivity extends WPActionBarActivity implements
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         if (commentList.getCommentsTask != null)
