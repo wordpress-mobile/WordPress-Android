@@ -1,6 +1,7 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,25 +11,33 @@ public class StatsClick {
 
     private String mBlogId;
     private long mDate;
-    private int mClicks;
+    private String mName;
+    private int mTotal;
     private String mUrl;
-    private String mImageUrl;
+    private String mIcon;
 
-    public StatsClick(String blogId, long date, int clicks, String url, String imageUrl) {
-        this.mBlogId = blogId;
-        this.mDate = date;
-        this.mClicks = clicks;
-        this.mUrl = url;
-        this.mImageUrl = imageUrl;
+    public StatsClick(String blogId, long date, String name, int total, String url, String icon) {
+        this.setBlogId(blogId);
+        this.setDate(date);
+        this.setName(name);
+        this.setTotal(total);
+        this.setUrl(url);
+        this.setIcon(icon);
     }
 
-    public StatsClick(String blogId, JSONObject result) throws JSONException {
+    public StatsClick(String blogId, String date, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
-        setClicks(result.getInt("clicks"));
-        setUrl(result.getString("url"));
-        if (result.has("imageUrl"))
-            setImageUrl(result.getString("imageUrl"));
+        setDate(StatUtils.toMs(date));
+        setTotal(result.getInt("total"));
+        setName(result.getString("name"));
+        if (result.has("icon") && !result.getString("icon").equals("null"))
+            setIcon(result.getString("icon"));
+
+        // for now, set the url to be the first result
+        JSONArray array = result.getJSONArray("results");
+        JSONArray firstEntry = array.getJSONArray(0);
+        String url = firstEntry.getString(0);
+        setUrl(url);
     }
 
     public String getBlogId() {
@@ -47,12 +56,20 @@ public class StatsClick {
         this.mDate = date;
     }
 
-    public int getClicks() {
-        return mClicks;
+    public String getName() {
+        return mName;
     }
 
-    public void setClicks(int clicks) {
-        this.mClicks = clicks;
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public int getTotal() {
+        return mTotal;
+    }
+
+    public void setTotal(int total) {
+        this.mTotal = total;
     }
 
     public String getUrl() {
@@ -63,12 +80,12 @@ public class StatsClick {
         this.mUrl = url;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public String getIcon() {
+        return mIcon;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.mImageUrl = imageUrl;
+    public void setIcon(String icon) {
+        this.mIcon = icon;
     }
 
 }

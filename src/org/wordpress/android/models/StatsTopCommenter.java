@@ -25,7 +25,7 @@ public class StatsTopCommenter {
         setUserId(result.getInt("userId"));
         setName(result.getString("name"));
         setComments(result.getInt("comments"));
-        if (result.has("imageUrl"))
+        if (result.has("imageUrl") && !result.getString("imageUrl").equals("null"))
             setImageUrl(result.getString("imageUrl"));
     }
 

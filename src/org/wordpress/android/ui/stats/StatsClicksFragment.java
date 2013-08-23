@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,7 @@ import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.StatUtils;
 
 public class StatsClicksFragment extends StatsAbsListViewFragment implements TabListener {
 
@@ -87,26 +91,33 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             
-            String entry = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.URL));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsClicksTable.Columns.CLICKS));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.IMAGE_URL));
+            String name = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.NAME));
+            String url = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.URL));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsClicksTable.Columns.TOTAL));
+            String icon = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.ICON));
 
-            // entries
+            // name, url
             TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
+            if (url != null && url.length() > 0) {
+                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
+                entryTextView.setText(link);
+                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            } else {
+                entryTextView.setText(name);
+            }
             
             // totals
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
             totalsTextView.setText(total + "");
             
-            // image
+            // icon
             view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
             NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
             ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
-            if (imageUrl != null && imageUrl.length() > 0) {
+            if (icon != null && icon.length() > 0) {
                 imageView.setErrorImageResId(R.drawable.stats_blank_image);
                 imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                imageView.setImageUrl(imageUrl, WordPress.imageLoader);
+                imageView.setImageUrl(icon, WordPress.imageLoader);
                 imageView.setVisibility(View.VISIBLE);
                 errorImageView.setVisibility(View.GONE);
             } else {
@@ -143,7 +154,11 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
         if (getCurrentBlogId() == null)
             return;
                     
-        WordPress.restClient.getStatsClicks(blogId, 
+        String date = StatUtils.getCurrentDate();
+        if (position == 1)
+            date = StatUtils.getYesterdaysDate();
+        
+        WordPress.restClient.getStatsClicks(blogId, date, 
                 new Listener() {
                     
                     @Override
@@ -169,14 +184,15 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
             
             Context context = WordPress.getContext();
             
-            if (response != null && response.has("result")) {
+            if (response != null) {
                 try {
-                    JSONArray results = response.getJSONArray("result");
+                    String date = response.getString("date");
+                    JSONArray results = response.getJSONArray("clicks");
                     
                     int count = results.length();
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
-                        StatsClick stat = new StatsClick(blogId, result);
+                        StatsClick stat = new StatsClick(blogId, date, result);
                         ContentValues values = StatsClicksTable.getContentValues(stat);
                         context.getContentResolver().insert(STATS_CLICKS_URI, values);
                     }

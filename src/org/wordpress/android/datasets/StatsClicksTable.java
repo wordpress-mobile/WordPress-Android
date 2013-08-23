@@ -19,9 +19,10 @@ public class StatsClicksTable extends SQLTable {
     public static final class Columns {
         public static final String BLOG_ID = "blogId";
         public static final String DATE = "date";
-        public static final String CLICKS = "clicks";
+        public static final String NAME = "name";
+        public static final String TOTAL = "total";
         public static final String URL = "url";
-        public static final String IMAGE_URL = "imageUrl";
+        public static final String ICON = "icon";
     }
     
     private static final class Holder {
@@ -41,7 +42,7 @@ public class StatsClicksTable extends SQLTable {
 
     @Override
     protected String getUniqueConstraint() {
-        return "UNIQUE (" + Columns.BLOG_ID + ", " + Columns.DATE + ", " + Columns.URL + ") ON CONFLICT REPLACE";
+        return "UNIQUE (" + Columns.BLOG_ID + ", " + Columns.DATE + ", " + Columns.NAME + ") ON CONFLICT REPLACE";
     }
 
     @Override
@@ -50,9 +51,10 @@ public class StatsClicksTable extends SQLTable {
         map.put(BaseColumns._ID, "INTEGER PRIMARY KEY AUTOINCREMENT");
         map.put(Columns.BLOG_ID, "TEXT");
         map.put(Columns.DATE, "DATE");
-        map.put(Columns.CLICKS, "INTEGER");
+        map.put(Columns.NAME, "TEXT");
+        map.put(Columns.TOTAL, "INTEGER");
         map.put(Columns.URL, "TEXT");
-        map.put(Columns.IMAGE_URL, "TEXT");
+        map.put(Columns.ICON, "TEXT");
         return map;
     }
 
@@ -66,15 +68,16 @@ public class StatsClicksTable extends SQLTable {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());
         values.put(Columns.DATE, item.getDate());
-        values.put(Columns.CLICKS, item.getClicks());
+        values.put(Columns.NAME, item.getName());
+        values.put(Columns.TOTAL, item.getTotal());
         values.put(Columns.URL, item.getUrl());
-        values.put(Columns.IMAGE_URL, item.getImageUrl());
+        values.put(Columns.ICON, item.getIcon());
         return values;
     }
     
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String sort = NAME + "." + Columns.CLICKS + " DESC, " + NAME + "." + Columns.URL + " ASC";
+        String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.URL + " ASC";
         
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)
@@ -84,7 +87,7 @@ public class StatsClicksTable extends SQLTable {
         if (timeframe.equals(StatsTimeframe.TODAY.name())) {
             return database.rawQuery("SELECT * FROM " + NAME +", " +
             		        "(SELECT MAX(date) AS date FROM " + NAME + ") AS temp " +
-            				"WHERE temp.date = " + NAME + ".date ORDER BY " + sort, null);
+                            "WHERE temp.date = " + NAME + ".date AND " + selection + " ORDER BY " + sort, selectionArgs);
 
         } else if (timeframe.equals(StatsTimeframe.YESTERDAY.name())) {
             return database.rawQuery(
@@ -92,7 +95,7 @@ public class StatsClicksTable extends SQLTable {
                             "(SELECT MAX(date) AS date FROM " + NAME + ", " +
             				    "( SELECT MAX(date) AS max FROM " + NAME + ")" +
         				    " WHERE " + NAME + ".date < max) AS temp " + 
-    				"WHERE " + NAME + ".date = temp.date ORDER BY " + sort, null);
+                            "WHERE temp.date = " + NAME + ".date AND " + selection + " ORDER BY " + sort, selectionArgs);
         }
         
         return super.query(database, uri, projection, selection, selectionArgs, sort);

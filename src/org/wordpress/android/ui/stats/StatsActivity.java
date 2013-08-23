@@ -106,6 +106,9 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         mNavFragment = (DialogFragment) fm.findFragmentByTag(StatsNavDialogFragment.TAG);
         if (mNavFragment == null)
             mNavFragment = StatsNavDialogFragment.newInstance(mNavPosition);
+        else if (mNavFragment.getDialog().isShowing())
+            return;
+            
         if (!mNavFragment.isVisible())
             mNavFragment.show(getSupportFragmentManager(), StatsNavDialogFragment.TAG);
     }

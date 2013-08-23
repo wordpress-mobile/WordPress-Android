@@ -202,11 +202,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for clicks
      */
-    public void getStatsClicks(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/clicks";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsClicks(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/clicks?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**

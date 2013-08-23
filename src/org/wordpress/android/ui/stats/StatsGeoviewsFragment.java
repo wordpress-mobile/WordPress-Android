@@ -27,7 +27,6 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.models.StatsGeoview;
 import org.wordpress.android.providers.StatsContentProvider;
@@ -93,7 +92,7 @@ public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements T
             
             String entry = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.COUNTRY));
             int total = cursor.getInt(cursor.getColumnIndex(StatsGeoviewsTable.Columns.VIEWS));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.IMAGE_URL));
+            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.IMAGE_URL));
 
             // entries
             TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);

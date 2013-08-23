@@ -30,7 +30,7 @@ public class StatsReferrer {
         setDate(StatUtils.toMs(date));
         setName(result.getString("name"));
         setTotal(result.getInt("total"));
-        if (result.has("icon"))
+        if (result.has("icon") && !result.getString("icon").equals("null"))
             setIcon(result.getString("icon"));
 
         // for now, set the url to be the first result
