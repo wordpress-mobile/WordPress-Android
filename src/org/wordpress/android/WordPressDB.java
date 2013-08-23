@@ -1325,13 +1325,13 @@ public class WordPressDB {
                     new String[] { "id", "blogID", "postid", "title",
                             "date_created_gmt", "dateCreated", "post_status" },
                     "blogID=" + blogID + " AND localDraft != 1 AND isPage=1",
-                    null, null, null, null);
+                    null, null, null, "date_created_gmt DESC");
         else
             c = db.query(POSTS_TABLE,
                     new String[] { "id", "blogID", "postid", "title",
                             "date_created_gmt", "dateCreated", "post_status" },
                     "blogID=" + blogID + " AND localDraft != 1 AND isPage=0",
-                    null, null, null, null);
+                    null, null, null, "date_created_gmt DESC");
 
         int numRows = c.getCount();
         c.moveToFirst();
