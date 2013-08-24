@@ -153,7 +153,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Uri uri = getGroupUri();
         
         // cursor is for groups
         if (loader.getId() == LOADER_URI_GROUP_INDEX) {
@@ -171,7 +170,8 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             }
         
 
-            mCallback.onCursorLoaded(uri, data);
+            mCallback.onCursorLoaded(getGroupUri(), data);
+            
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
         } else {

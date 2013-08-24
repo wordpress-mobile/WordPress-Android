@@ -158,6 +158,12 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment  i
             if (response != null) {
                 try {
                     String date = response.getString("date");
+                    long dateMs = StatUtils.toMs(date);
+                    long twoDays = 2 * 24 * 60 * 60 * 1000;
+
+                    // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                    context.getContentResolver().delete(STATS_SEARCH_ENGINE_TERMS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
+                    
                     JSONArray results = response.getJSONArray("search-terms");
 
                     int count = results.length();
