@@ -34,7 +34,7 @@ import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
-public class StatsTopPostsAndPagesFragment extends StatsAbsListViewFragment  implements TabListener {
+public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment  implements TabListener {
     
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };

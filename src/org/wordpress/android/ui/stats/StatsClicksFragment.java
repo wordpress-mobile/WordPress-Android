@@ -36,7 +36,7 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 
-public class StatsClicksFragment extends StatsAbsListViewFragment implements TabListener {
+public class StatsClicksFragment extends StatsAbsPagedViewFragment implements TabListener {
 
     private static final Uri STATS_CLICKS_URI = StatsContentProvider.STATS_CLICKS_URI;
 

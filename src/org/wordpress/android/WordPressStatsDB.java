@@ -8,6 +8,7 @@ import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
+import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
@@ -34,6 +35,7 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         db.execSQL(StatsClicksTable.getInstance().toCreateQuery());
         db.execSQL(StatsGeoviewsTable.getInstance().toCreateQuery());
         db.execSQL(StatsMostCommentedTable.getInstance().toCreateQuery());
+        db.execSQL(StatsReferrerGroupsTable.getInstance().toCreateQuery());
         db.execSQL(StatsReferrersTable.getInstance().toCreateQuery());
         db.execSQL(StatsSearchEngineTermsTable.getInstance().toCreateQuery());
         db.execSQL(StatsTagsAndCategoriesTable.getInstance().toCreateQuery());
@@ -52,6 +54,7 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         StatsClicksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsGeoviewsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsMostCommentedTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsReferrerGroupsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsReferrersTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsSearchEngineTermsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsTagsAndCategoriesTable.getInstance().onUpgrade(db, oldVersion, newVersion);

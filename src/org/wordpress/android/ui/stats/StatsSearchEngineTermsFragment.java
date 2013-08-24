@@ -31,7 +31,7 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 
-public class StatsSearchEngineTermsFragment extends StatsAbsListViewFragment  implements TabListener {
+public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment  implements TabListener {
 
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };

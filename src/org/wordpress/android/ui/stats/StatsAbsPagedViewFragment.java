@@ -22,11 +22,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentInterface;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
-public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorFragmentInterface {
+public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorInterface {
 
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 

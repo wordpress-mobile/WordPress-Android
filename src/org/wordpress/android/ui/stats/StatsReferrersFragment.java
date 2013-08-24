@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,14 +31,17 @@ import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.models.StatsReferrer;
+import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 
-public class StatsReferrersFragment extends StatsAbsListViewFragment  implements TabListener {
+public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implements TabListener {
     
+    private static final Uri STATS_REFERRER_GROUP_URI = StatsContentProvider.STATS_REFERRER_GROUP_URI;
     private static final Uri STATS_REFERRERS_URI = StatsContentProvider.STATS_REFERRERS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
     
@@ -77,31 +81,37 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_referrers;
         
-        Uri uri = Uri.parse(STATS_REFERRERS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        Uri groupUri = Uri.parse(STATS_REFERRER_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        Uri childrenUri = STATS_REFERRERS_URI;
         
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
-        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        CustomAdapter adapter = new CustomAdapter(null, getActivity());
+        adapter.setCursorLoaderCallback(fragment);
+        fragment.setListAdapter(adapter);
         return fragment;
     }
     
-    public class CustomCursorAdapter extends CursorAdapter {
+    public class CustomAdapter extends CursorTreeAdapter {
 
-        public CustomCursorAdapter(Context context, Cursor c) {
-            super(context, c, true);
+        private StatsCursorLoaderCallback mCallback;
+
+        public CustomAdapter(Cursor cursor, Context context) {
+            super(cursor, context, true);
+        }
+
+        public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
+            mCallback = callback;
         }
 
         @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            
+        protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
             String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
-            String url = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
-            String icon = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.ICON));
 
             // name, url
             TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
+            if (name.startsWith("http")) {
+                Spanned link = Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>");
                 entryTextView.setText(link);
                 entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
@@ -112,10 +122,40 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
             totalsTextView.setText(total + "");
 
+            // no icon
+        }
+
+        @Override
+        protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+            String name = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.NAME));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.TOTAL));
+            String url = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.URL));
+            String icon = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.ICON));
+            int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
+
+            boolean urlValid = (url != null && url.length() > 0); 
+            
+            // chevron
+            toggleChevrons(children > 0, isExpanded, view);
+            
+            // name, url
+            TextView entryTextView = (TextView) view.findViewById(R.id.stats_group_cell_entry);
+            if (urlValid) {
+                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
+                entryTextView.setText(link);
+                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            } else {
+                entryTextView.setText(name);
+            }
+            
+            // totals
+            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_group_cell_total);
+            totalsTextView.setText(total + "");
+
             // icon
-            view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
-            NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-            ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
+            view.findViewById(R.id.stats_group_cell_image_frame).setVisibility(View.VISIBLE);
+            NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_group_cell_image);
+            ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_group_cell_blank_image);
             if (icon != null && icon.length() > 0) {
                 imageView.setErrorImageResId(R.drawable.stats_blank_image);
                 imageView.setDefaultImageResId(R.drawable.stats_blank_image);
@@ -125,16 +165,49 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
             } else {
                 imageView.setVisibility(View.GONE);
                 errorImageView.setVisibility(View.VISIBLE);
-            }
-            
+            }   
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
+        protected Cursor getChildrenCursor(Cursor groupCursor) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(StatsCursorLoaderCallback.BUNDLE_DATE, groupCursor.getLong(groupCursor.getColumnIndex("date")));
+            bundle.putString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID, groupCursor.getString(groupCursor.getColumnIndex("groupId")));
+            mCallback.onUriRequested(groupCursor.getPosition(), STATS_REFERRERS_URI, bundle);
+            return null;
+        }
+        
+        @Override
+        protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            return inflater.inflate(R.layout.stats_list_cell, parent, false);
         }
 
+        @Override
+        protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return inflater.inflate(R.layout.stats_group_cell, parent, false);
+        }
+
+        private void toggleChevrons(boolean isVisible, boolean isExpanded, View view) {
+            ImageView chevronUp = (ImageView) view.findViewById(R.id.stats_group_cell_chevron_up);
+            ImageView chevronDown = (ImageView) view.findViewById(R.id.stats_group_cell_chevron_down);
+            View frame = view.findViewById(R.id.stats_group_cell_chevron_frame);
+            
+            if (isVisible) {
+                frame.setVisibility(View.VISIBLE);  
+                if (isExpanded) {
+                    chevronUp.setVisibility(View.VISIBLE);
+                    chevronDown.setVisibility(View.GONE);
+                } else {
+                    chevronUp.setVisibility(View.GONE);
+                    chevronDown.setVisibility(View.VISIBLE);
+                }
+            } else {
+                frame.setVisibility(View.GONE);
+            }
+        }
+        
     }
     
     @Override
@@ -186,14 +259,38 @@ public class StatsReferrersFragment extends StatsAbsListViewFragment  implements
             if (response != null) {
                 try {
                     String date = response.getString("date");
-                    JSONArray results = response.getJSONArray("referrers");
+                    long dateMs = StatUtils.toMs(date);
+                    long twoDays = 2 * 24 * 60 * 60 * 1000;
+                    
+                    // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                    context.getContentResolver().delete(STATS_REFERRER_GROUP_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
+                    
+                    JSONArray groups = response.getJSONArray("referrers");
+                    int groupsCount = groups.length();
+                    
+                    // insert groups
+                    for (int i = 0; i < groupsCount; i++ ) {
+                        JSONObject group = groups.getJSONObject(i);
+                        StatsReferrerGroup statGroup = new StatsReferrerGroup(blogId, date, group);
+                        ContentValues values = StatsReferrerGroupsTable.getContentValues(statGroup);
+                        context.getContentResolver().insert(STATS_REFERRER_GROUP_URI, values);
 
-                    int count = results.length();
-                    for (int i = 0; i < count; i++ ) {
-                        JSONObject result = results.getJSONObject(i);
-                        StatsReferrer stat = new StatsReferrer(blogId, date, result);
-                        ContentValues values = StatsReferrersTable.getContentValues(stat);
-                        context.getContentResolver().insert(STATS_REFERRERS_URI, values);
+                        
+                        // insert children, only if there is more than one entry
+                        JSONArray referrers = group.getJSONArray("results");
+                        int count = referrers.length();
+                        if (count > 1) {
+
+                            // delete data with the same date, and data older than two days ago (keep yesterday's data)
+                            context.getContentResolver().delete(STATS_REFERRERS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
+                            
+                            for (int j = 0; j < count; j++) {
+                                StatsReferrer stat = new StatsReferrer(blogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));
+                                ContentValues v = StatsReferrersTable.getContentValues(stat);
+                                context.getContentResolver().insert(STATS_REFERRERS_URI, v);
+                            }
+                        }
+                        
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

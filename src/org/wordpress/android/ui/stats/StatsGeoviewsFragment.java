@@ -32,7 +32,7 @@ import org.wordpress.android.models.StatsGeoview;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
-public class StatsGeoviewsFragment extends StatsAbsListViewFragment implements TabListener {
+public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment implements TabListener {
     
     private static final Uri STATS_GEOVIEWS_URI = StatsContentProvider.STATS_GEOVIEWS_URI;
 

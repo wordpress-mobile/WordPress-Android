@@ -32,7 +32,7 @@ import org.wordpress.android.models.StatsTopAuthor;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
-public class StatsTopAuthorsFragment extends StatsAbsListViewFragment  implements TabListener {
+public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment  implements TabListener {
 
     private static final Uri STATS_TOP_AUTHORS_URI = StatsContentProvider.STATS_TOP_AUTHORS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };

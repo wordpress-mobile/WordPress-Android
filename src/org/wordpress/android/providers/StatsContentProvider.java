@@ -14,6 +14,7 @@ import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
+import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
@@ -29,6 +30,7 @@ public class StatsContentProvider extends ContentProvider {
     public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICKS);
     public static final Uri STATS_GEOVIEWS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.GEOVIEWS);
     public static final Uri STATS_MOST_COMMENTED_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.MOST_COMMENTED);
+    public static final Uri STATS_REFERRER_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.REFERRER_GROUPS);
     public static final Uri STATS_REFERRERS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.REFERRERS);
     public static final Uri STATS_SEARCH_ENGINE_TERMS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.SEARCH_ENGINE_TERMS);
     public static final Uri STATS_TAGS_AND_CATEGORIES_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TAGS_AND_CATEGORIES);
@@ -42,6 +44,7 @@ public class StatsContentProvider extends ContentProvider {
         private static final String CLICKS = "clicks";
         private static final String GEOVIEWS = "geoviews";
         private static final String MOST_COMMENTED = "most_commented";
+        private static final String REFERRER_GROUPS = "referrer_groups";
         private static final String REFERRERS = "referrers";
         private static final String SEARCH_ENGINE_TERMS = "search_engine_terms";
         private static final String TAGS_AND_CATEGORIES = "tags_and_categories";
@@ -61,6 +64,7 @@ public class StatsContentProvider extends ContentProvider {
         registerTable(Paths.CLICKS, StatsClicksTable.getInstance());
         registerTable(Paths.GEOVIEWS, StatsGeoviewsTable.getInstance());
         registerTable(Paths.MOST_COMMENTED, StatsMostCommentedTable.getInstance());
+        registerTable(Paths.REFERRER_GROUPS, StatsReferrerGroupsTable.getInstance());
         registerTable(Paths.REFERRERS, StatsReferrersTable.getInstance());
         registerTable(Paths.SEARCH_ENGINE_TERMS, StatsSearchEngineTermsTable.getInstance());
         registerTable(Paths.TAGS_AND_CATEGORIES, StatsTagsAndCategoriesTable.getInstance());

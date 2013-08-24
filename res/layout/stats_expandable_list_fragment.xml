@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp" >
+
+        <TextView
+            android:id="@+id/stats_list_entry_label"
+            style="@style/StatsHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="4dp"
+            android:text="TITLE" />
+
+        <TextView
+            android:id="@+id/stats_list_totals_label"
+            style="@style/StatsHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="4dp"
+            android:text="VIEWS" />
+    </RelativeLayout>
+
+    <include layout="@layout/stats_header_line" />
+
+    <LinearLayout
+        android:id="@+id/stats_list_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        android:visibility="gone" >
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/stats_list_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarStyle="outsideOverlay"
+        android:groupIndicator="@null"
+        android:visibility="gone" >
+    </ExpandableListView>
+
+    <TextView
+        android:id="@+id/stats_list_empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:visibility="gone" />
+
+</LinearLayout>

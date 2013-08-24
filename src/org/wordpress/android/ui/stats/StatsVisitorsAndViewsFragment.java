@@ -46,7 +46,7 @@ import org.wordpress.android.util.MediaUploadService;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
-public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
+public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
 
     private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };
 

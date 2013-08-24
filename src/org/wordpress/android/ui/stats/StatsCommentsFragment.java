@@ -45,7 +45,7 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 
-public class StatsCommentsFragment extends StatsAbsListViewFragment implements TabListener {
+public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements TabListener {
 
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
