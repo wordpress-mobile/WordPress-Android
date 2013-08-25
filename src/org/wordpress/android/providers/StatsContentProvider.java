@@ -11,6 +11,7 @@ import android.util.SparseArray;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SQLTable;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.datasets.StatsClickGroupsTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
@@ -27,6 +28,7 @@ public class StatsContentProvider extends ContentProvider {
 
     private static final String AUTHORITY = "org.wordpress.android.providers.StatsContentProvider";
 
+    public static final Uri STATS_CLICK_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICK_GROUPS);
     public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICKS);
     public static final Uri STATS_GEOVIEWS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.GEOVIEWS);
     public static final Uri STATS_MOST_COMMENTED_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.MOST_COMMENTED);
@@ -41,6 +43,7 @@ public class StatsContentProvider extends ContentProvider {
     public static final Uri STATS_BAR_CHART_DATA_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.BAR_CHART_DATA);
     
     private static final class Paths {
+        private static final String CLICK_GROUPS = "click_groups";
         private static final String CLICKS = "clicks";
         private static final String GEOVIEWS = "geoviews";
         private static final String MOST_COMMENTED = "most_commented";
@@ -61,6 +64,7 @@ public class StatsContentProvider extends ContentProvider {
     
     @Override
     public synchronized boolean onCreate() {
+        registerTable(Paths.CLICK_GROUPS, StatsClickGroupsTable.getInstance());
         registerTable(Paths.CLICKS, StatsClicksTable.getInstance());
         registerTable(Paths.GEOVIEWS, StatsGeoviewsTable.getInstance());
         registerTable(Paths.MOST_COMMENTED, StatsMostCommentedTable.getInstance());

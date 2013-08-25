@@ -238,7 +238,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             
             
             if (isExpanded) {
-            int childrenCount = mAdapter.getChildrenCount(i);
+                int childrenCount = mAdapter.getChildrenCount(i);
                 for (int j = 0; j < childrenCount; j++) {
                     boolean isLastChild = (j == childrenCount - 1);
                     View childView = mAdapter.getChildView(i, j, isLastChild, null, mLinearLayout);

@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.util.StatUtils;
 
@@ -11,33 +10,25 @@ public class StatsClick {
 
     private String mBlogId;
     private long mDate;
+    private String mGroupId;
     private String mName;
     private int mTotal;
-    private String mUrl;
-    private String mIcon;
 
-    public StatsClick(String blogId, long date, String name, int total, String url, String icon) {
+    public StatsClick(String blogId, long date, String groupId, String name, int total) {
         this.setBlogId(blogId);
         this.setDate(date);
+        this.setGroupId(groupId);
         this.setName(name);
         this.setTotal(total);
-        this.setUrl(url);
-        this.setIcon(icon);
     }
 
-    public StatsClick(String blogId, String date, JSONObject result) throws JSONException {
+    public StatsClick(String blogId, String date, String groupId, JSONArray result) throws JSONException {
         setBlogId(blogId);
         setDate(StatUtils.toMs(date));
-        setTotal(result.getInt("total"));
-        setName(result.getString("name"));
-        if (result.has("icon") && !result.getString("icon").equals("null"))
-            setIcon(result.getString("icon"));
-
-        // for now, set the url to be the first result
-        JSONArray array = result.getJSONArray("results");
-        JSONArray firstEntry = array.getJSONArray(0);
-        String url = firstEntry.getString(0);
-        setUrl(url);
+        setGroupId(groupId);
+        
+        setName(result.getString(0));
+        setTotal(result.getInt(1));
     }
 
     public String getBlogId() {
@@ -56,12 +47,12 @@ public class StatsClick {
         this.mDate = date;
     }
 
-    public String getName() {
-        return mName;
+    public String getGroupId() {
+        return mGroupId;
     }
 
-    public void setName(String name) {
-        this.mName = name;
+    public void setGroupId(String groupId) {
+        this.mGroupId = groupId;
     }
 
     public int getTotal() {
@@ -72,20 +63,11 @@ public class StatsClick {
         this.mTotal = total;
     }
 
-    public String getUrl() {
-        return mUrl;
+    public String getName() {
+        return mName;
     }
 
-    public void setUrl(String url) {
-        this.mUrl = url;
+    public void setName(String name) {
+        this.mName = name;
     }
-
-    public String getIcon() {
-        return mIcon;
-    }
-
-    public void setIcon(String icon) {
-        this.mIcon = icon;
-    }
-
 }

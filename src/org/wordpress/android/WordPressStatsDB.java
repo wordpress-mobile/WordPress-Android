@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.datasets.StatsClickGroupsTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
@@ -32,6 +33,7 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
     
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(StatsClickGroupsTable.getInstance().toCreateQuery());
         db.execSQL(StatsClicksTable.getInstance().toCreateQuery());
         db.execSQL(StatsGeoviewsTable.getInstance().toCreateQuery());
         db.execSQL(StatsMostCommentedTable.getInstance().toCreateQuery());
@@ -51,6 +53,7 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         
         onCreate(db);
         
+        StatsClickGroupsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsClicksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsGeoviewsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsMostCommentedTable.getInstance().onUpgrade(db, oldVersion, newVersion);

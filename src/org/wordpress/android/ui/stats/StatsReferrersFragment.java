@@ -264,6 +264,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implement
                     
                     // delete data with the same date, and data older than two days ago (keep yesterday's data)
                     context.getContentResolver().delete(STATS_REFERRER_GROUP_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
+                    context.getContentResolver().delete(STATS_REFERRERS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
                     
                     JSONArray groups = response.getJSONArray("referrers");
                     int groupsCount = groups.length();
@@ -280,9 +281,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implement
                         JSONArray referrers = group.getJSONArray("results");
                         int count = referrers.length();
                         if (count > 1) {
-
-                            // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                            context.getContentResolver().delete(STATS_REFERRERS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
                             
                             for (int j = 0; j < count; j++) {
                                 StatsReferrer stat = new StatsReferrer(blogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));

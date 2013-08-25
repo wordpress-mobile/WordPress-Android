@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -9,30 +8,31 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import org.wordpress.android.models.StatsClick;
+import org.wordpress.android.models.StatsClickGroup;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
-public class StatsClicksTable extends SQLTable {
+public class StatsClickGroupsTable extends SQLTable {
 
-    private static final String NAME = "clicks";
-
+    private static final String NAME = "click_groups";
+    
     public static final class Columns {
         public static final String BLOG_ID = "blogId";
         public static final String DATE = "date";
         public static final String GROUP_ID = "groupId";
         public static final String NAME = "name";
         public static final String TOTAL = "total";
+        public static final String URL = "url";
+        public static final String ICON = "icon";
+        public static final String CHILDREN = "children";
     }
-
+    
     private static final class Holder {
-        public static final StatsClicksTable INSTANCE = new StatsClicksTable();
+        public static final StatsClickGroupsTable INSTANCE = new StatsClickGroupsTable();
     }
-
-    public static synchronized StatsClicksTable getInstance() {
+    
+    public static synchronized StatsClickGroupsTable getInstance() {
         return Holder.INSTANCE;
     }
-
-    private StatsClicksTable() {}
     
     @Override
     public String getName() {
@@ -41,7 +41,7 @@ public class StatsClicksTable extends SQLTable {
 
     @Override
     protected String getUniqueConstraint() {
-        return "UNIQUE (" + Columns.BLOG_ID + ", " + Columns.DATE + ", " + Columns.GROUP_ID + ", " + Columns.NAME + ") ON CONFLICT REPLACE";
+        return "UNIQUE (" + Columns.BLOG_ID + ", " + Columns.DATE + ", " + Columns.GROUP_ID + ") ON CONFLICT REPLACE";
     }
 
     @Override
@@ -52,26 +52,33 @@ public class StatsClicksTable extends SQLTable {
         map.put(Columns.DATE, "DATE");
         map.put(Columns.GROUP_ID, "TEXT");
         map.put(Columns.NAME, "TEXT");
-        map.put(Columns.TOTAL, "INTEGER");
+        map.put(Columns.TOTAL, "TOTAL");
+        map.put(Columns.URL, "TEXT");
+        map.put(Columns.ICON, "TEXT");
+        map.put(Columns.CHILDREN, "INTEGER");
         return map;
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        
+
     }
-    
-    public static ContentValues getContentValues(StatsClick item) {
+
+
+    public static ContentValues getContentValues(StatsClickGroup item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());
         values.put(Columns.DATE, item.getDate());
         values.put(Columns.GROUP_ID, item.getGroupId());
         values.put(Columns.NAME, item.getName());
         values.put(Columns.TOTAL, item.getTotal());
+        values.put(Columns.URL, item.getUrl());
+        values.put(Columns.ICON, item.getIcon());
+        values.put(Columns.CHILDREN, item.getChildren());
         return values;
     }
-
+    
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         
