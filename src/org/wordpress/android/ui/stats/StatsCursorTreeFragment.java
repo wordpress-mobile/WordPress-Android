@@ -176,7 +176,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
                 mAdapter.changeCursor(data);
         } else {
             // cursor is for children
-            if (mAdapter != null) {
+            if (mAdapter != null && ((Integer) loader.getId()) != null) {
                 mAdapter.setChildrenCursor(loader.getId(), data);
             }
         }

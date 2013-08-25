@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,7 +16,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,25 +23,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
-import org.wordpress.android.models.StatsMostCommented;
 import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.models.StatsTopCommenter;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StatsRestHelper;
 
 public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements TabListener {
 
@@ -181,101 +171,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
         return TITLES;
     }
 
-    @Override
-    public void refresh(final int position) {
-        final String blogId = getCurrentBlogId();
-        if (getCurrentBlogId() == null)
-            return;
-
-        if (position == MOST_COMMENTED) {
-            WordPress.restClient.getStatsMostCommented(blogId, 
-                    new Listener() {
-                        
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            new ParseJsonTask().execute(blogId, response, position);
-                        }
-                    }, 
-                    new ErrorListener() {
-                        
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("WordPress Stats", StatsCommentsFragment.class.getSimpleName() + ": " + error.toString());
-                        }
-                    });
-        } else if (position == TOP_COMMENTERS) {
-            WordPress.restClient.getStatsTopCommenters(blogId, 
-                    new Listener() {
-                        
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            new ParseJsonTask().execute(blogId, response, position);
-                        }
-                    }, 
-                    new ErrorListener() {
-                        
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("WordPress Stats", StatsCommentsFragment.class.getSimpleName() + ": " + error.toString());
-                        }
-                    });
-        }
-    }
-    
-    private static class ParseJsonTask extends AsyncTask<Object, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            String blogId = (String) params[0];
-            JSONObject response = (JSONObject) params[1];
-            int position = (Integer) params[2];
-            
-            if (response != null && response.has("result")) {
-                try {
-                    JSONArray results = response.getJSONArray("result");
-                    
-                    if (position == TOP_COMMENTERS) {
-                        parseTopCommenters(blogId, results);
-                    } else if (position == MOST_COMMENTED) {
-                        parseMostCommented(blogId, results);            
-                    }
-                    
-                    
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                
-            }
-            return null;
-        }
-
-        private void parseTopCommenters(String blogId, JSONArray results) throws JSONException {
-
-            Context context = WordPress.getContext();
-            
-            int count = results.length();
-            for (int i = 0; i < count; i++ ) {
-                JSONObject result = results.getJSONObject(i);
-                StatsTopCommenter stat = new StatsTopCommenter(blogId, result);
-                ContentValues values = StatsTopCommentersTable.getContentValues(stat);
-                context.getContentResolver().insert(STATS_TOP_COMMENTERS_URI, values);
-            }
-        }
-        
-        private void parseMostCommented(String blogId, JSONArray results) throws JSONException {
-
-            Context context = WordPress.getContext();
-
-            int count = results.length();
-            for (int i = 0; i < count; i++ ) {
-                JSONObject result = results.getJSONObject(i);
-                StatsMostCommented stat = new StatsMostCommented(blogId, result);
-                ContentValues values = StatsMostCommentedTable.getContentValues(stat);
-                context.getContentResolver().insert(STATS_MOST_COMMENTED_URI, values);
-            }
-        }
-    }
-    
     /** Fragment used for summary view **/
     public static class CommentsSummaryFragment extends SherlockFragment {
         
@@ -291,7 +186,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                    refreshStats();
+                    StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
+                    refreshStats(stats);
                 }
             }
         };
@@ -320,37 +216,33 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
         @Override
         public void onResume() {
             super.onResume();
-            refreshStats();
             
             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
             lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
 
+            refreshStatsFromFile();
         }
 
-        protected void refreshStats() {
+        private void refreshStatsFromFile() {
             if (WordPress.getCurrentBlog() == null)
-                return; 
-    
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                return;
             
-            new AsyncTask<String, Void, StatsSummary>() {
-    
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            new AsyncTask<Void, Void, StatsSummary>() {
+
                 @Override
-                protected StatsSummary doInBackground(String... params) {
-                    final String blogId = params[0];
-                    
-                    StatsSummary stats = StatUtils.getSummary(blogId);
-                    
-                    return stats;
+                protected StatsSummary doInBackground(Void... params) {
+                    StatsRestHelper.getStatsSummary(blogId);
+                    return StatUtils.getSummary(blogId);
                 }
                 
                 protected void onPostExecute(StatsSummary result) {
-                    refreshSummaryViews(result);
+                    refreshStats(result);
                 };
-            }.execute(blogId);
+            }.execute();
         }
 
-        protected void refreshSummaryViews(StatsSummary result) {
+        private void refreshStats(StatsSummary stats) {
     
             int perMonth = 0;
             int total = 0;
@@ -359,11 +251,11 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             String activePost = "";
             String activePostUrl = "";
             
-            if (result != null) {
-                perMonth = result.getCommentsPerMonth();
-                total = result.getCommentsAllTime();
-                activeDay = result.getCommentsMostActiveRecentDay();
-                activeTime = result.getCommentsMostActiveTime();
+            if (stats != null) {
+                perMonth = stats.getCommentsPerMonth();
+                total = stats.getCommentsAllTime();
+                activeDay = stats.getCommentsMostActiveRecentDay();
+                activeTime = stats.getCommentsMostActiveTime();
 //                activePost = result.getRecentMostActivePost(); // TODO
 //                activePostUrl = result.getRecentMostActivePostUrl(); // TODO
             }

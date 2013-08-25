@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +10,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,24 +17,14 @@ import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
-import org.wordpress.android.models.StatsReferrer;
-import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.util.StatUtils;
 
 public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implements TabListener {
     
@@ -218,85 +205,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implement
     @Override
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
-    }
-    
-    @Override
-    public void refresh(final int position) {
-        final String blogId = getCurrentBlogId();
-        if (getCurrentBlogId() == null)
-            return;
-        
-        String date = StatUtils.getCurrentDate();
-        if (position == 1)
-            date = StatUtils.getYesterdaysDate();
-                    
-        WordPress.restClient.getStatsReferrers(blogId, date,
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        new ParseJsonTask().execute(blogId, response);
-                    }
-                }, 
-                new ErrorListener() {
-                    
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("WordPress Stats", StatsReferrersFragment.class.getSimpleName() + ": " + error.toString());
-                    }
-                });
-    }
-    
-    private static class ParseJsonTask extends AsyncTask<Object, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            String blogId = (String) params[0];
-            JSONObject response = (JSONObject) params[1];
-            
-            Context context = WordPress.getContext();
-            
-            if (response != null) {
-                try {
-                    String date = response.getString("date");
-                    long dateMs = StatUtils.toMs(date);
-                    long twoDays = 2 * 24 * 60 * 60 * 1000;
-                    
-                    // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                    context.getContentResolver().delete(STATS_REFERRER_GROUP_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
-                    context.getContentResolver().delete(STATS_REFERRERS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - twoDays) + "" });
-                    
-                    JSONArray groups = response.getJSONArray("referrers");
-                    int groupsCount = groups.length();
-                    
-                    // insert groups
-                    for (int i = 0; i < groupsCount; i++ ) {
-                        JSONObject group = groups.getJSONObject(i);
-                        StatsReferrerGroup statGroup = new StatsReferrerGroup(blogId, date, group);
-                        ContentValues values = StatsReferrerGroupsTable.getContentValues(statGroup);
-                        context.getContentResolver().insert(STATS_REFERRER_GROUP_URI, values);
-
-                        
-                        // insert children, only if there is more than one entry
-                        JSONArray referrers = group.getJSONArray("results");
-                        int count = referrers.length();
-                        if (count > 1) {
-                            
-                            for (int j = 0; j < count; j++) {
-                                StatsReferrer stat = new StatsReferrer(blogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));
-                                ContentValues v = StatsReferrersTable.getContentValues(stat);
-                                context.getContentResolver().insert(STATS_REFERRERS_URI, v);
-                            }
-                        }
-                        
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                
-            }
-            return null;
-        }        
     }
 
 }

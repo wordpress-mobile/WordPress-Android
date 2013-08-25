@@ -203,7 +203,7 @@ public class WPRestClient {
      * Get a site's stats for clicks
      */
     public void getStatsClicks(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/clicks?date=%s", siteId, date);
+        String path = String.format("sites/%s/stats/clicks?date=%s&days=30", siteId, date);
         get(path, listener, errorListener);
     }
 
@@ -241,7 +241,7 @@ public class WPRestClient {
      * Get a site's stats for referrers
      */
     public void getStatsReferrers(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/referrers?date=%s", siteId, date);
+        String path = String.format("sites/%s/stats/referrers?date=%s&days=30", siteId, date);
         get(path, listener, errorListener);
     }
 

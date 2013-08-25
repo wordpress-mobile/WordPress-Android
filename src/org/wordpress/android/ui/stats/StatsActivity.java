@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -12,17 +11,12 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONObject;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StatsRestHelper;
 
 public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
 
@@ -82,9 +76,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     @Override
     protected void onResume() {
         super.onResume();
-
         refreshStats();
-        refreshStatsFromServer();
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -122,6 +114,15 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_refresh) {
+            refreshStats();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
     public void onItemClick(int position) {
         mNavPosition = position;
         StatsViewType viewType = StatsViewType.values()[mNavPosition];
@@ -134,63 +135,26 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         
         mStatsViewFragment = StatsAbsViewFragment.newInstance(viewType);
         fm.beginTransaction().replace(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
+        refreshStats();
     }
-    
+
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        refreshStats();
+    }
+
     private void refreshStats() {
         if (WordPress.getCurrentBlog() == null)
-            return; 
+            return;
         
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        new AsyncTask<String, Void, StatsSummary>() {
-
-            @Override
-            protected StatsSummary doInBackground(String... params) {
-                final String blogId = params[0];
-                
-                StatsSummary stats = StatUtils.getSummary(blogId);
-                
-                return stats;
-            }
-            
-            protected void onPostExecute(final StatsSummary result) {
-                StatUtils.broadcastSummaryUpdated(StatsActivity.this);
-            };
-        }.execute(blogId);
+        StatsRestHelper.getStatsSummary(blogId);
+        
+        if (mStatsViewFragment != null) {
+            StatsViewType viewType = mStatsViewFragment.getViewType();
+            StatsRestHelper.getStats(viewType, blogId);
+        }
     }
-
-
-    private void refreshStatsFromServer() {
-        if (WordPress.getCurrentBlog() == null)
-            return; 
-        
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        WordPress.restClient.getStatsSummary(blogId, 
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        StatUtils.saveSummary(blogId, response);
-                        
-                        runOnUiThread(new Runnable() {
-                            
-                            @Override
-                            public void run() {
-                                refreshStats();
-                                
-                            }
-                        });
-                    }
-                }, 
-                new ErrorListener() {
-                    
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                });
-    }
-
 }

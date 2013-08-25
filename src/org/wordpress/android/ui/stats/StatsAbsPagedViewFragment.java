@@ -133,14 +133,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     public void onTabSelected(Tab tab) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
-    
-    @Override
-    public void refresh() {
-        int count = getTabTitles().length;
-        for (int i = 0; i < count; i++){
-            refresh(i);
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -154,8 +146,6 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
 
     protected abstract Fragment getFragment(int position);
         
-    public abstract void refresh(int position);
-    
     @Override
     public void onCursorLoaded(Uri uri, Cursor cursor) {
         if (!cursor.moveToFirst())

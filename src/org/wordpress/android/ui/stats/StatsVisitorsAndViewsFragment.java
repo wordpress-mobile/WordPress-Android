@@ -42,7 +42,6 @@ import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.MediaUploadService;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
@@ -70,11 +69,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
         else if (position == 2) 
             unit = StatsBarChartUnit.MONTH;
         return InnerFragment.newInstance(unit);
-    }
-    
-    @Override
-    public void refresh(int position) {
-
     }
     
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
@@ -124,7 +118,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                    refreshSummary();
+                    StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
+                    refreshViews(summary);
                 }
             }
         };
@@ -161,12 +156,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
         @Override
         public void onResume() {
             super.onResume();
-            refreshSummary();
-            refreshChartsFromServer();
             getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
             
             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-            lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
+            lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
+            
+            refreshChartsFromServer();
         }
 
 
@@ -184,51 +179,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
             return StatsBarChartUnit.values()[ordinal];
         }
 
-        private void refreshSummary() {
-            if (WordPress.getCurrentBlog() == null)
-                return; 
-            
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            
-            new AsyncTask<String, Void, StatsSummary>() {
-
-                @Override
-                protected StatsSummary doInBackground(String... params) {
-                    final String blogId = params[0];
-                    
-                    StatsSummary stats = StatUtils.getSummary(blogId);
-                    
-                    return stats;
-                }
-                
-                protected void onPostExecute(final StatsSummary result) {
-                    if (getActivity() == null)
-                        return;
-                    
-                    getActivity().runOnUiThread(new Runnable() {
-                        
-                        @Override
-                        public void run() {
-                            refreshViews(result);      
-                        }
-                    });
-                };
-            }.execute(blogId);
-        }
-
-        protected void refreshViews(StatsSummary result) {
+        protected void refreshViews(StatsSummary stats) {
             int visitorsToday = 0;
             int viewsToday = 0;
             int visitorsBestEver = 0;
             int viewsAllTime = 0;
             int commentsAllTime = 0;
             
-            if (result != null) {
-                visitorsToday = result.getVisitorsToday();
-                viewsToday = result.getViewsToday();
-                visitorsBestEver = result.getViewsBestDayTotal();
-                viewsAllTime = result.getViewsAllTime();
-                commentsAllTime = result.getCommentsAllTime();
+            if (stats != null) {
+                visitorsToday = stats.getVisitorsToday();
+                viewsToday = stats.getViewsToday();
+                visitorsBestEver = stats.getViewsBestDayTotal();
+                viewsAllTime = stats.getViewsAllTime();
+                commentsAllTime = stats.getCommentsAllTime();
             }
 
             mVisitorsToday.setText(visitorsToday + "");

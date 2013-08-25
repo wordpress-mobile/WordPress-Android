@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -15,9 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.util.MediaUploadService;
 import org.wordpress.android.util.StatUtils;
 
 public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
@@ -37,7 +34,8 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                refresh();
+                StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
+                refreshViews(stats);
             }
         }
     };
@@ -66,7 +64,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         super.onResume();
         
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
     }
 
 
@@ -83,31 +81,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
 
-    @Override
-    public void refresh() {
-        if (WordPress.getCurrentBlog() == null)
-            return; 
-        
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        new AsyncTask<String, Void, StatsSummary>() {
-
-            @Override
-            protected StatsSummary doInBackground(String... params) {
-                final String blogId = params[0];
-                
-                StatsSummary stats = StatUtils.getSummary(blogId);
-
-                return stats;
-            }
-            
-            protected void onPostExecute(StatsSummary result) {
-                refreshViews(result);
-            };
-        }.execute(blogId);
-    }
-
-    protected void refreshViews(StatsSummary result) {
+    protected void refreshViews(StatsSummary stats) {
         int posts = 0;
         int categories = 0;
         int tags = 0;
@@ -115,13 +89,13 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         int comments = 0;
         int shares = 0;
         
-        if (result != null) {
-            posts = result.getPosts();
-            categories = result.getCategories();
-            tags = result.getTags();
-            followers = result.getFollowersBlog();
-            comments = result.getFollowersComments();
-            shares = result.getShares();
+        if (stats != null) {
+            posts = stats.getPosts();
+            categories = stats.getCategories();
+            tags = stats.getTags();
+            followers = stats.getFollowersBlog();
+            comments = stats.getFollowersComments();
+            shares = stats.getShares();
         }
 
          mPostsCountView.setText(posts + "");

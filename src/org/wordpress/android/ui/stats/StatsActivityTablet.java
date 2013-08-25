@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,17 +11,12 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONObject;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.Utils;
 
 public class StatsActivityTablet extends WPActionBarActivity {
@@ -187,35 +181,42 @@ public class StatsActivityTablet extends WPActionBarActivity {
     }
     
     @Override
-    protected void onResume() {
-        super.onResume();
-        refreshStatsFromServer();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_refresh) {
+            refreshStats();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
     
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshStats();
+    }
+    
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        refreshStats();
+    }
 
-    private void refreshStatsFromServer() {
+    private void refreshStats() {
         if (WordPress.getCurrentBlog() == null)
             return; 
         
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        WordPress.restClient.getStatsSummary(blogId, 
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        StatUtils.saveSummary(blogId, response);
-                        StatUtils.broadcastSummaryUpdated(StatsActivityTablet.this);
-                    }
-                }, 
-                new ErrorListener() {
-                    
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                });
+        StatsRestHelper.getStatsSummary(blogId);
+        StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
+        StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
+        StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
+        StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
+        StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
+        StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
+        StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
+        StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
+        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
     }
     
 }

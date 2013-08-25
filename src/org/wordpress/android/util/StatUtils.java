@@ -32,10 +32,12 @@ import org.wordpress.android.ui.stats.StatsBarChartUnit;
 public class StatUtils {
 
     public static final String STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
+    public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
     
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
+
     
     /** Converts date in the form of 2013-07-18 to ms **/
     @SuppressLint("SimpleDateFormat")
@@ -203,9 +205,10 @@ public class StatUtils {
         return stat;
     }
     
-    public static void broadcastSummaryUpdated(Context context) {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+    public static void broadcastSummaryUpdated(StatsSummary stats) {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
         Intent intent = new Intent(STATS_SUMMARY_UPDATED);
+        intent.putExtra(STATS_SUMMARY_UPDATED_EXTRA, stats);
         lbm.sendBroadcast(intent);
     }
     
