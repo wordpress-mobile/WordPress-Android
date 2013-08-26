@@ -47,15 +47,16 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
 
     private PostsListFragment postList;
-    private int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
-    public static int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
+    private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
+    public  static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
     public ProgressDialog loadingDialog;
     public boolean isPage = false;
     public String errorMsg = "";
     public boolean isRefreshing = false;
     private MenuItem refreshMenuItem;
-    private int ACTIVITY_EDIT_POST = 0;
-    private int ACTIVITY_ADD_COMMENT = 1;
+    private static final int ACTIVITY_EDIT_POST = 0;
+    private static final int ACTIVITY_ADD_COMMENT = 1;
+    private static final int ACTIVITY_LOCK_SCREEN = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         // Check if we came from a notification, if so let's launch NotificationsActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
-            startNotificationsAcivity(extras);
+            startNotificationsActivity(extras);
             return;
         }
         
@@ -166,7 +167,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (extras != null) {
             // Check if we came from a notification, if so let's launch NotificationsActivity
             if (extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
-                startNotificationsAcivity(extras);
+                startNotificationsActivity(extras);
                 return;
             }
             
@@ -177,7 +178,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         
     }
 
-    private void startNotificationsAcivity(Bundle extras) {
+    private void startNotificationsActivity(Bundle extras) {
         // Manually set last selection to notifications
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();

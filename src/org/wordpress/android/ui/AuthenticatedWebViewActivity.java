@@ -113,7 +113,11 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
+            // Found a bug on some pages where there is an incorrect
+            // auto-redirect to file:///android_asset/webkit/.
+            if ( !url.equals("file:///android_asset/webkit/") ) {
+                view.loadUrl(url);
+            }
             return true;
         }
 
