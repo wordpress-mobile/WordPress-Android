@@ -1,8 +1,13 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -28,6 +33,33 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private DialogFragment mNavFragment;
     private int mNavPosition = 0;
 
+    private MenuItem mRefreshMenuItem;
+    
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(StatsRestHelper.REFRESH_VIEW_TYPE)) {
+                
+                if (mRefreshMenuItem == null)
+                    return;
+                
+                boolean started = intent.getBooleanExtra(StatsRestHelper.REFRESH_VIEW_TYPE_STARTED, false);
+                int ordinal = intent.getIntExtra(StatsRestHelper.REFRESH_VIEW_TYPE_ORDINAL, -1);
+                if (ordinal == -1 && !started) {
+                    stopAnimatingRefreshButton(mRefreshMenuItem);
+                } else if (mStatsViewFragment != null && mStatsViewFragment.getViewType().ordinal() == ordinal) {
+                    if (started)
+                        startAnimatingRefreshButton(mRefreshMenuItem);
+                    else
+                        stopAnimatingRefreshButton(mRefreshMenuItem);
+                            
+                }
+            }
+        }
+    };
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +108,19 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     @Override
     protected void onResume() {
         super.onResume();
+        
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
+        
         refreshStats();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.unregisterReceiver(mReceiver);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -110,6 +154,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
 

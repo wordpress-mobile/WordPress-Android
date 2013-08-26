@@ -1,9 +1,14 @@
 package org.wordpress.android.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
@@ -52,53 +57,106 @@ public class StatsRestHelper {
     private static final String TAG = "WordPress";
     private static long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
+    // A map to keep track of the number of pending calls for each viewtype.
+    private static Map<StatsViewType, Integer> sRefreshMap;
+    
+    // Listen to this intent for updates on the rest call
+    public static final String REFRESH_VIEW_TYPE = "REFRESH_VIEW_TYPE";
+    public static final String REFRESH_VIEW_TYPE_STARTED = "REFRESH_VIEW_TYPE_STARTED";
+    public static final String REFRESH_VIEW_TYPE_ORDINAL = "REFRESH_VIEW_TYPE_ORDINAL";
+    
     public static void getStats(StatsViewType type, String blogId) {
+        
+        if (sRefreshMap == null) {
+            initRefreshMap();
+        }
         
         String today = StatUtils.getCurrentDate();
         String yesterday = StatUtils.getYesterdaysDate();
         
         switch (type) {
             case CLICKS:
+                // update the refresh map with the number of calls being executed 
+                updateRefreshMap(type, 2);
                 getStatsClicks(blogId, today);
                 getStatsClicks(blogId, yesterday);
                 break;
             case COMMENTS:
+                updateRefreshMap(type, 1);
                 getStatsComments(blogId);
                 break;
             case REFERRERS:
+                updateRefreshMap(type, 2);
                 getStatsReferrers(blogId, today);
                 getStatsReferrers(blogId, yesterday);
                 break;
             case SEARCH_ENGINE_TERMS:
+                updateRefreshMap(type, 2);
                 getStatsSearchEngineTerms(blogId, today);
                 getStatsSearchEngineTerms(blogId, yesterday);
                 break;
             case TAGS_AND_CATEGORIES:
+                updateRefreshMap(type, 1);
                 getStatsTagsAndCategories(blogId);
                 break;
             case TOP_AUTHORS:
+                updateRefreshMap(type, 1);
                 getStatsTopAuthors(blogId);
                 break;
             case TOP_POSTS_AND_PAGES:
+                updateRefreshMap(type, 1);
                 getStatsTopPostsAndPages(blogId);
                 break;
             case TOTALS_FOLLOWERS_AND_SHARES:
-                getStatsSummary(blogId);
+                updateRefreshMap(type, 1);
+                getStatsTotalsFollowersAndShares(blogId);
                 break;
             case VIDEO_PLAYS:
+                updateRefreshMap(type, 1);
                 getStatsVideoPlays(blogId, today);
                 break;
             case VIEWS_BY_COUNTRY:
+                updateRefreshMap(type, 1);
                 getStatsViewsByCountry(blogId, today);
                 break;
             case VISITORS_AND_VIEWS:
-                getStatsSummary(blogId);
+                updateRefreshMap(type, 4);
+                getStatsVisitorsAndViews(blogId);
                 getStatsBarChart(blogId, StatsBarChartUnit.DAY);
                 getStatsBarChart(blogId, StatsBarChartUnit.WEEK);
                 getStatsBarChart(blogId, StatsBarChartUnit.MONTH);
                 break;
             
         }
+    }
+
+    private static void initRefreshMap() {
+        sRefreshMap = new HashMap<StatsViewType, Integer>(StatsViewType.values().length);
+        for (int i = 0; i < StatsViewType.values().length; i++) {
+            sRefreshMap.put(StatsViewType.values()[i], 0);
+        }
+    }
+
+    private static void updateRefreshMap(StatsViewType type, int i) {
+        int count = sRefreshMap.get(type) + i;
+        sRefreshMap.put(type, count);
+        
+        int total = 0;
+        for (StatsViewType viewtype : sRefreshMap.keySet()) {
+            total += sRefreshMap.get(viewtype);
+        }
+        
+        Intent intent = new Intent(REFRESH_VIEW_TYPE);
+        
+        if (total == 0) {
+            intent.putExtra(REFRESH_VIEW_TYPE_STARTED, false);
+        } else {
+            intent.putExtra(REFRESH_VIEW_TYPE_STARTED, count > 0);
+            intent.putExtra(REFRESH_VIEW_TYPE_ORDINAL, type.ordinal());    
+        }
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
+        lbm.sendBroadcast(intent);
     }
 
     private static void getStatsClicks(final String blogId, final String date) {
@@ -115,6 +173,7 @@ public class StatsRestHelper {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "Stats: Failed to fetch clicks");
+                        updateRefreshMap(StatsViewType.CLICKS, -1);
                     }
                 });
     }
@@ -165,7 +224,8 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.CLICKS, -1);
             return null;
         }        
     }
@@ -184,6 +244,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.COMMENTS, -1);
                         Log.e(TAG, "Stats: Failed to fetch most commented");
                     }
                 });
@@ -200,6 +261,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.COMMENTS, -1);
                         Log.e(TAG, "Stats: Failed to fetch top commenters");
                     }
                 });
@@ -235,7 +297,8 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.COMMENTS, -1);
             return null;
         }
     }
@@ -269,7 +332,8 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.COMMENTS, -1);
             return null;
         }
         
@@ -288,6 +352,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.REFERRERS, -1);
                         Log.e(TAG, "Stats: Failed to fetch referrers");
                     }
                 });
@@ -340,7 +405,8 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.REFERRERS, -1);
             return null;
         }        
     }
@@ -359,6 +425,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.SEARCH_ENGINE_TERMS, -1);
                         Log.e(TAG, "Stats: Failed to fetch search engine terms");
                     }
                 });
@@ -397,6 +464,7 @@ public class StatsRestHelper {
                 
             }
 
+            updateRefreshMap(StatsViewType.SEARCH_ENGINE_TERMS, -1);
             return null;
         }        
     }
@@ -415,6 +483,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.TAGS_AND_CATEGORIES, -1);
                         Log.e(TAG, "Stats: Failed to fetch tags and categories");
                     }
                 });
@@ -448,7 +517,8 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.TAGS_AND_CATEGORIES, -1);
             return null;
             
         }        
@@ -468,6 +538,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.TOP_AUTHORS, -1);
                         Log.e(TAG, "Stats: Failed to fetch top authors");
                     }
                 });
@@ -501,7 +572,8 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.TOP_AUTHORS, -1);
             return null;
 
         }        
@@ -521,6 +593,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.TOP_POSTS_AND_PAGES, -1);
                         Log.e(TAG, "Stats: Failed to fetch top posts and pages");
                     }
                 });
@@ -555,6 +628,7 @@ public class StatsRestHelper {
                 
             }
 
+            updateRefreshMap(StatsViewType.TOP_POSTS_AND_PAGES, -1);
             return null;
         }        
     }
@@ -572,6 +646,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.VIDEO_PLAYS, -1);
                         Log.e(TAG, "Stats: Failed to fetch video plays");
                     }
                 });
@@ -606,6 +681,7 @@ public class StatsRestHelper {
                 
             }
 
+            updateRefreshMap(StatsViewType.VIDEO_PLAYS, -1);
             return null;
         }        
     }
@@ -624,6 +700,7 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        updateRefreshMap(StatsViewType.VIEWS_BY_COUNTRY, -1);
                         Log.e("WordPress Stats", StatsGeoviewsFragment.class.getSimpleName() + ": " + error.toString());
                     }
                 });
@@ -657,13 +734,53 @@ public class StatsRestHelper {
                 }
                 
             }
-            
+
+            updateRefreshMap(StatsViewType.VIEWS_BY_COUNTRY, -1);
             return null;
 
         }        
     }
     
+    public static void getStatsTotalsFollowersAndShares(final String blogId) {
+        getStatsSummary(blogId, new StatsSummaryInterface() {
+            
+            @Override
+            public void onSuccess() {
+                updateRefreshMap(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, -1);
+            }
+            
+            @Override
+            public void onFailire() {
+                updateRefreshMap(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, -1);
+            }
+        });
+    }
+    
+    public static void getStatsVisitorsAndViews(final String blogId) {
+        getStatsSummary(blogId, new StatsSummaryInterface() {
+            
+            @Override
+            public void onSuccess() {
+                updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
+            }
+            
+            @Override
+            public void onFailire() {
+                updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
+            }
+        });
+    }
+    
     public static void getStatsSummary(final String blogId) {
+        getStatsSummary(blogId, null);
+    }
+    
+    private static interface StatsSummaryInterface {
+        void onSuccess();
+        void onFailire();
+    }
+    
+    private static void getStatsSummary(final String blogId, final StatsSummaryInterface callback) {
         WordPress.restClient.getStatsSummary(blogId, 
                 new Listener() {
                     
@@ -678,6 +795,8 @@ public class StatsRestHelper {
                             }
                             
                             protected void onPostExecute(StatsSummary result) {
+                                if (callback != null)
+                                    callback.onSuccess();
                                 StatUtils.broadcastSummaryUpdated(result);
                             };
                             
@@ -688,6 +807,8 @@ public class StatsRestHelper {
                     
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        if (callback != null)
+                            callback.onFailire();
                         Log.e(TAG, "Stats: Failed to get summary");
                     }
                 });
@@ -708,6 +829,7 @@ public class StatsRestHelper {
             
             @Override
             public void onErrorResponse(VolleyError error) {
+                updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
                 Log.e(TAG, "Stats: Failed to get bar chart data");
             }
         };
@@ -751,6 +873,8 @@ public class StatsRestHelper {
                 }
                 
             }
+            
+            updateRefreshMap(StatsViewType.VISITORS_AND_VIEWS, -1);
             return null;
         }        
     }

@@ -87,7 +87,7 @@ public class StatsTopAuthorsTable extends SQLTable {
         if (timeframe.equals(StatsTimeframe.TODAY.name())) {
             return database.rawQuery("SELECT * FROM " + NAME +", " +
                             "(SELECT MAX(date) AS date FROM " + NAME + ") AS temp " +
-                            "WHERE temp.date = " + NAME + ".date ORDER BY " + sort, null);
+                            "WHERE temp.date = " + NAME + ".date AND " + selection + " ORDER BY " + sort, selectionArgs);
 
         } else if (timeframe.equals(StatsTimeframe.YESTERDAY.name())) {
             return database.rawQuery(
@@ -95,7 +95,7 @@ public class StatsTopAuthorsTable extends SQLTable {
                             "(SELECT MAX(date) AS date FROM " + NAME + ", " +
                                 "( SELECT MAX(date) AS max FROM " + NAME + ")" +
                             " WHERE " + NAME + ".date < max) AS temp " + 
-                    "WHERE " + NAME + ".date = temp.date ORDER BY " + sort, null);
+                    "WHERE temp.date = " + NAME + ".date AND " + selection + " ORDER BY " + sort, selectionArgs);
         }
 
         return super.query(database, uri, projection, selection, selectionArgs, sort);

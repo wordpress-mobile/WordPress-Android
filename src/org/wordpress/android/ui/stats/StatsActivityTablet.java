@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -27,6 +32,27 @@ public class StatsActivityTablet extends WPActionBarActivity {
     private LinearLayout mColumnLeft;
     private LinearLayout mColumnRight;
 
+    private MenuItem mRefreshMenuItem;
+    
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(StatsRestHelper.REFRESH_VIEW_TYPE)) {
+                
+                if (mRefreshMenuItem == null)
+                    return;
+                
+                boolean started = intent.getBooleanExtra(StatsRestHelper.REFRESH_VIEW_TYPE_STARTED, false);
+                if (started)
+                    startAnimatingRefreshButton(mRefreshMenuItem);
+                else
+                    stopAnimatingRefreshButton(mRefreshMenuItem);
+            }
+        }
+    };
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +72,7 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         loadStatsFragments();
     }
-
+    
     private void loadStatsFragments() {
 
         FragmentManager fm = getSupportFragmentManager();
@@ -178,6 +204,7 @@ public class StatsActivityTablet extends WPActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
     
@@ -189,10 +216,23 @@ public class StatsActivityTablet extends WPActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.unregisterReceiver(mReceiver);
+    }
+    
     
     @Override
     protected void onResume() {
         super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
+
         refreshStats();
     }
     

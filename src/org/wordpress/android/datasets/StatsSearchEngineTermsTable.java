@@ -89,7 +89,7 @@ public class StatsSearchEngineTermsTable extends SQLTable {
                             "(SELECT MAX(date) AS date FROM " + NAME + ", " +
                                 "( SELECT MAX(date) AS max FROM " + NAME + ")" +
                             " WHERE " + NAME + ".date < max) AS temp " + 
-                            "WHERE " + NAME + ".date = temp.date AND " + selection + " ORDER BY " + sort, selectionArgs);
+                    "WHERE " + NAME + ".date = temp.date AND " + selection + " ORDER BY " + sort, selectionArgs);
         }
 
         return super.query(database, uri, projection, selection, selectionArgs, sort);
