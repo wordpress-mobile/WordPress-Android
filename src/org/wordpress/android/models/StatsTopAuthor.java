@@ -30,7 +30,8 @@ public class StatsTopAuthor {
         setUserId(result.getInt("userId"));
         setName(result.getString("name"));
         setViews(result.getInt("views"));
-        if (result.has("imageUrl"))
+
+        if (result.has("imageUrl") && !result.getString("imageUrl").equals("null"))
             setImageUrl(result.getString("imageUrl"));
     }
 

@@ -10,12 +10,12 @@ import android.util.SparseArray;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SQLTable;
-import org.wordpress.android.datasets.StatsBarChartDaysTable;
-import org.wordpress.android.datasets.StatsBarChartMonthsTable;
-import org.wordpress.android.datasets.StatsBarChartWeeksTable;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.datasets.StatsClickGroupsTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
+import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
@@ -28,9 +28,11 @@ public class StatsContentProvider extends ContentProvider {
 
     private static final String AUTHORITY = "org.wordpress.android.providers.StatsContentProvider";
 
+    public static final Uri STATS_CLICK_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICK_GROUPS);
     public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICKS);
     public static final Uri STATS_GEOVIEWS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.GEOVIEWS);
     public static final Uri STATS_MOST_COMMENTED_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.MOST_COMMENTED);
+    public static final Uri STATS_REFERRER_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.REFERRER_GROUPS);
     public static final Uri STATS_REFERRERS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.REFERRERS);
     public static final Uri STATS_SEARCH_ENGINE_TERMS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.SEARCH_ENGINE_TERMS);
     public static final Uri STATS_TAGS_AND_CATEGORIES_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TAGS_AND_CATEGORIES);
@@ -38,14 +40,14 @@ public class StatsContentProvider extends ContentProvider {
     public static final Uri STATS_TOP_COMMENTERS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TOP_COMMENTERS);
     public static final Uri STATS_TOP_POSTS_AND_PAGES_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.TOP_POSTS_AND_PAGES);
     public static final Uri STATS_VIDEOS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.VIDEOS);
-    public static final Uri STATS_BAR_CHART_DAYS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.BAR_CHART_DAYS);
-    public static final Uri STATS_BAR_CHART_WEEKS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.BAR_CHART_WEEKS);
-    public static final Uri STATS_BAR_CHART_MONTHS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.BAR_CHART_MONTHS);
+    public static final Uri STATS_BAR_CHART_DATA_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.BAR_CHART_DATA);
     
     private static final class Paths {
+        private static final String CLICK_GROUPS = "click_groups";
         private static final String CLICKS = "clicks";
         private static final String GEOVIEWS = "geoviews";
         private static final String MOST_COMMENTED = "most_commented";
+        private static final String REFERRER_GROUPS = "referrer_groups";
         private static final String REFERRERS = "referrers";
         private static final String SEARCH_ENGINE_TERMS = "search_engine_terms";
         private static final String TAGS_AND_CATEGORIES = "tags_and_categories";
@@ -53,9 +55,7 @@ public class StatsContentProvider extends ContentProvider {
         private static final String TOP_COMMENTERS = "top_commenters";
         private static final String TOP_POSTS_AND_PAGES = "top_posts_and_pages";
         private static final String VIDEOS = "videos";
-        private static final String BAR_CHART_DAYS = "bar_chart_days";
-        private static final String BAR_CHART_WEEKS = "bar_chart_weeks";
-        private static final String BAR_CHART_MONTHS = "bar_chart_months";
+        private static final String BAR_CHART_DATA = "bar_chart_data";
     }
     
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -64,9 +64,11 @@ public class StatsContentProvider extends ContentProvider {
     
     @Override
     public synchronized boolean onCreate() {
+        registerTable(Paths.CLICK_GROUPS, StatsClickGroupsTable.getInstance());
         registerTable(Paths.CLICKS, StatsClicksTable.getInstance());
         registerTable(Paths.GEOVIEWS, StatsGeoviewsTable.getInstance());
         registerTable(Paths.MOST_COMMENTED, StatsMostCommentedTable.getInstance());
+        registerTable(Paths.REFERRER_GROUPS, StatsReferrerGroupsTable.getInstance());
         registerTable(Paths.REFERRERS, StatsReferrersTable.getInstance());
         registerTable(Paths.SEARCH_ENGINE_TERMS, StatsSearchEngineTermsTable.getInstance());
         registerTable(Paths.TAGS_AND_CATEGORIES, StatsTagsAndCategoriesTable.getInstance());
@@ -74,9 +76,7 @@ public class StatsContentProvider extends ContentProvider {
         registerTable(Paths.TOP_COMMENTERS, StatsTopCommentersTable.getInstance());
         registerTable(Paths.TOP_POSTS_AND_PAGES, StatsTopPostsAndPagesTable.getInstance());
         registerTable(Paths.VIDEOS, StatsVideosTable.getInstance());
-        registerTable(Paths.BAR_CHART_DAYS, StatsBarChartDaysTable.getInstance());
-        registerTable(Paths.BAR_CHART_WEEKS, StatsBarChartWeeksTable.getInstance());
-        registerTable(Paths.BAR_CHART_MONTHS, StatsBarChartMonthsTable.getInstance());
+        registerTable(Paths.BAR_CHART_DATA, StatsBarChartDataTable.getInstance());
         return false;
     }
     

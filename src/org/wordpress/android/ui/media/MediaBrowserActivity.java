@@ -420,7 +420,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             
             return true;
         } else if (itemId == R.id.menu_search) {
-
+            stopAnimatingRefreshButton(mRefreshMenuItem);
             mSearchMenuItem = item;
             mSearchMenuItem.setOnActionExpandListener(this);
             mSearchMenuItem.expandActionView();

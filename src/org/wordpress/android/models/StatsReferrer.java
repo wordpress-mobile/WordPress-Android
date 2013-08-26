@@ -1,8 +1,8 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.util.StatUtils;
 
@@ -10,28 +10,25 @@ public class StatsReferrer {
 
     private String mBlogId;
     private long mDate;
-    private String mTitle;
-    private int mViews;
-    private String mUrl;
-    private String mImageUrl;
+    private String mGroupId;
+    private String mName;
+    private int mTotal;
 
-    public StatsReferrer(String blogId, long date, String title, int views, String url, String imageUrl) {
-        this.mBlogId = blogId;
-        this.mDate = date;
-        this.mTitle = title;
-        this.mViews = views;
-        this.mUrl = url;
-        this.mImageUrl = imageUrl;
+    public StatsReferrer(String blogId, long date, String groupId, String name, int total) {
+        this.setBlogId(blogId);
+        this.setDate(date);
+        this.setGroupId(groupId);
+        this.setName(name);
+        this.setTotal(total);
     }
 
-    public StatsReferrer(String blogId, JSONObject result) throws JSONException {
+    public StatsReferrer(String blogId, String date, String groupId, JSONArray result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
-        setTitle(result.getString("title"));
-        setViews(result.getInt("views"));
-        setUrl(result.getString("url"));
-        if (result.has("imageUrl"))
-            setImageUrl(result.getString("imageUrl"));
+        setDate(StatUtils.toMs(date));
+        setGroupId(groupId);
+        
+        setName(result.getString(0));
+        setTotal(result.getInt(1));
     }
 
     public String getBlogId() {
@@ -50,35 +47,27 @@ public class StatsReferrer {
         this.mDate = date;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getGroupId() {
+        return mGroupId;
     }
 
-    public void setTitle(String title) {
-        this.mTitle = title;
+    public void setGroupId(String groupId) {
+        this.mGroupId = groupId;
     }
 
-    public int getViews() {
-        return mViews;
+    public int getTotal() {
+        return mTotal;
     }
 
-    public void setViews(int views) {
-        this.mViews = views;
+    public void setTotal(int total) {
+        this.mTotal = total;
     }
 
-    public String getUrl() {
-        return mUrl;
+    public String getName() {
+        return mName;
     }
 
-    public void setUrl(String url) {
-        this.mUrl = url;
-    }
-
-    public String getImageUrl() {
-        return mImageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.mImageUrl = imageUrl;
+    public void setName(String name) {
+        this.mName = name;
     }
 }

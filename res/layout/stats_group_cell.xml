@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp" >
+
+    <FrameLayout
+        android:id="@+id/stats_group_cell_image_frame"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" >
+
+        <org.wordpress.android.ui.FadeInNetworkImageView
+            android:id="@+id/stats_group_cell_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/stats_group_cell_blank_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/stats_blank_image"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/stats_group_cell_chevron_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_toRightOf="@id/stats_group_cell_image_frame" >
+
+        <ImageView
+            android:id="@+id/stats_group_cell_chevron_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/stats_chevron_down" />
+
+        <ImageView
+            android:id="@+id/stats_group_cell_chevron_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/stats_chevron_up"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/stats_group_cell_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="4dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/stats_group_cell_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@id/stats_group_cell_total"
+        android:layout_toRightOf="@id/stats_group_cell_chevron_frame"
+        android:drawablePadding="4dp"
+        android:paddingLeft="4dp"
+        android:textColorLink="@color/wordpress_blue"
+        android:textSize="14sp" />
+
+</RelativeLayout>

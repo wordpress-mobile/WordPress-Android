@@ -3,9 +3,9 @@
 
     <item
         android:id="@+id/media_multiselect_actionbar_post"
-        android:icon="@drawable/tab_icon_newpost"
+        android:icon="@drawable/tab_icon_create_gallery"
         android:showAsAction="always"
-        android:title="@string/new_post"/>
+        android:title="@string/media_add_new_media_gallery"/>
     
     <item
         android:id="@+id/media_multiselect_actionbar_trash"

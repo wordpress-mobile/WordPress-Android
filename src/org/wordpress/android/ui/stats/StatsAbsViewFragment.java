@@ -65,8 +65,6 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
     }
     
     public abstract String getTitle();
- 
-    public abstract void refresh();
     
     protected String getCurrentBlogId() {
         if (WordPress.getCurrentBlog() != null)
@@ -74,9 +72,4 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
         return null;
     }
     
-    @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
-    }
 }

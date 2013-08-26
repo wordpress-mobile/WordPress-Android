@@ -148,7 +148,7 @@
         
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >
-            <intent-filter android:label="@string/new_media">
+            <intent-filter android:label="@string/media_add_popup_title">
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 

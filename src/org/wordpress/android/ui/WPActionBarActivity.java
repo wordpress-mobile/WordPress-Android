@@ -127,7 +127,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         mMenuItems.add(new PagesMenuItem());
         mMenuItems.add(new CommentsMenuItem());
         mMenuItems.add(new ThemesMenuItem());
-        mMenuItems.add(new OldStatsMenuItem());
+        mMenuItems.add(new StatsMenuItem());
         mMenuItems.add(new QuickPhotoMenuItem());
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());

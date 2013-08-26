@@ -1,6 +1,7 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,11 +21,11 @@ public class StatsSearchEngineTerm {
         this.mViews = views;
     }
 
-    public StatsSearchEngineTerm(String blogId, JSONObject result) throws JSONException {
+    public StatsSearchEngineTerm(String blogId, String date, JSONArray result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
-        setSearch(result.getString("search"));
-        setViews(result.getInt("views"));
+        setDate(StatUtils.toMs(date));
+        setSearch(result.getString(0));
+        setViews(result.getInt(1));
     }
 
     public String getBlogId() {

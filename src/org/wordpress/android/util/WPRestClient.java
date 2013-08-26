@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import android.os.AsyncTask;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.stats.StatsBarChartUnit;
 
 public class WPRestClient {
     
@@ -200,11 +202,9 @@ public class WPRestClient {
     /**
      * Get a site's stats for clicks
      */
-    public void getStatsClicks(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/clicks";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsClicks(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/clicks?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
@@ -240,21 +240,17 @@ public class WPRestClient {
     /**
      * Get a site's stats for referrers
      */
-    public void getStatsReferrers(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/referrers";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsReferrers(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/referrers?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
      * Get a site's stats for search engine terms
      */
-    public void getStatsSearchEngineTerms(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/search_engine_terms";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+    public void getStatsSearchEngineTerms(String siteId, String date, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/search-terms?date=%s", siteId, date);
+        get(path, listener, errorListener);
     }
 
     /**
@@ -301,22 +297,9 @@ public class WPRestClient {
      * Get a site's stats summary
      */
     public void getStatsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+        String path = String.format("sites/%s/stats", siteId);
+        get(path, listener, errorListener);
     }
-
-    /**
-     * Get a site's stats summary for visitors and views
-     */
-    public void getStatsVisitorsAndViewsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/visitors_and_views_summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-    
 
     /**
      * Get a site's stats summary for videos
@@ -329,53 +312,21 @@ public class WPRestClient {
     }
 
     /**
-     * Get a site's stats summary for comments
+     * Get a site's views and visitors stats for days, weeks, and months
+     * Use -1 to get a default value for quantity
+     * Use empty string for unit to get default value
      */
-    public void getStatsCommentsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/comments_summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
+    public void getStatsBarChartData(String siteId, StatsBarChartUnit statsBarChartUnit, int quantity, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/stats/visits", siteId);
 
-    /**
-     * Get a site's stats totals, followers and shares
-     */
-    public void getStatsTotalsFollowersAndShares(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/totals_followers_shares";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-    
-    /**
-     * Get a site's views and visitors stats for the recent days  
-     */
-    public void getStatsBarChartDays(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/visitors_and_views/days";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's views and visitors stats for the recent weeks
-     */
-    public void getStatsBarChartWeeks(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/visitors_and_views/weeks";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's views and visitors stats for the recent months  
-     */
-    public void getStatsBarChartMonths(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/visitors_and_views/months";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
+        String unit = statsBarChartUnit.name().toLowerCase(Locale.ENGLISH);
+        path += String.format("?unit=%s", unit);
+        
+        if (quantity > 0) {
+            path += String.format("&quantity=%d", quantity);
+        }
+        
+        get(path, listener, errorListener);
     }
     
     public void getXL(String path, Map<String, String> params, final Listener listener, final ErrorListener errorListener) {

@@ -1,39 +1,34 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsClicksTable;
-import org.wordpress.android.models.StatsClick;
+import org.wordpress.android.datasets.StatsReferrerGroupsTable;
+import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
-public class StatsClicksFragment extends StatsAbsListViewFragment implements TabListener {
+public class StatsClicksFragment extends StatsAbsPagedViewFragment implements TabListener {
 
+    private static final Uri STATS_CLICK_GROUP_URI = StatsContentProvider.STATS_CLICK_GROUP_URI;
     private static final Uri STATS_CLICKS_URI = StatsContentProvider.STATS_CLICKS_URI;
 
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -78,51 +73,6 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
         return getString(R.string.stats_view_clicks);
     }
     
-    public static class CustomCursorAdapter extends CursorAdapter {
-
-        public CustomCursorAdapter(Context context, Cursor c) {
-            super(context, c, true);
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            
-            String entry = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.URL));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsClicksTable.Columns.CLICKS));
-            String imageUrl = cursor.getString(cursor.getColumnIndex(StatsClicksTable.Columns.IMAGE_URL));
-
-            // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
-            
-            // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(total + "");
-            
-            // image
-            view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
-            NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-            ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
-            if (imageUrl != null && imageUrl.length() > 0) {
-                imageView.setErrorImageResId(R.drawable.stats_blank_image);
-                imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                imageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                imageView.setVisibility(View.VISIBLE);
-                errorImageView.setVisibility(View.GONE);
-            } else {
-                imageView.setVisibility(View.GONE);
-                errorImageView.setVisibility(View.VISIBLE);
-            }
-            
-        }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
-        }
-
-    }
 
     @Override
     protected Fragment getFragment(int position) {
@@ -130,63 +80,134 @@ public class StatsClicksFragment extends StatsAbsListViewFragment implements Tab
         int totalsLabelResId = R.string.stats_totals_clicks;
         int emptyLabelResId = R.string.stats_empty_clicks;
         
-        Uri uri = Uri.parse(STATS_CLICKS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        Uri groupUri = Uri.parse(STATS_CLICK_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+        Uri childrenUri = STATS_CLICKS_URI;
         
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
-        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        CustomAdapter adapter = new CustomAdapter(null, getActivity());
+        adapter.setCursorLoaderCallback(fragment);
+        fragment.setListAdapter(adapter);
         return fragment;
     }
 
-    @Override
-    public void refresh(final int position) {
-        final String blogId = getCurrentBlogId();
-        if (getCurrentBlogId() == null)
-            return;
-                    
-        WordPress.restClient.getStatsClicks(blogId, 
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        new ParseJsonTask().execute(blogId, response, position);
-                    }
-                }, 
-                new ErrorListener() {
-                    
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("WordPress Stats", StatsClicksFragment.class.getSimpleName() + ": " + error.toString());
-                    }
-                });
-    }
-    
-    private static class ParseJsonTask extends AsyncTask<Object, Void, Void> {
+    public class CustomAdapter extends CursorTreeAdapter {
+
+        private StatsCursorLoaderCallback mCallback;
+
+        public CustomAdapter(Cursor cursor, Context context) {
+            super(cursor, context, true);
+        }
+
+        public void setCursorLoaderCallback(StatsCursorLoaderCallback callback) {
+            mCallback = callback;
+        }
 
         @Override
-        protected Void doInBackground(Object... params) {
-            String blogId = (String) params[0];
-            JSONObject response = (JSONObject) params[1];
-            
-            Context context = WordPress.getContext();
-            
-            if (response != null && response.has("result")) {
-                try {
-                    JSONArray results = response.getJSONArray("result");
-                    
-                    int count = results.length();
-                    for (int i = 0; i < count; i++ ) {
-                        JSONObject result = results.getJSONObject(i);
-                        StatsClick stat = new StatsClick(blogId, result);
-                        ContentValues values = StatsClicksTable.getContentValues(stat);
-                        context.getContentResolver().insert(STATS_CLICKS_URI, values);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                
+        protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
+            String name = cursor.getString(cursor.getColumnIndex(StatsReferrersTable.Columns.NAME));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrersTable.Columns.TOTAL));
+
+            // name, url
+            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+            if (name.startsWith("http")) {
+                Spanned link = Html.fromHtml("<a href=\"" + name + "\">" + name + "</a>");
+                entryTextView.setText(link);
+                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            } else {
+                entryTextView.setText(name);
             }
+            
+            // totals
+            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
+            totalsTextView.setText(total + "");
+
+            // no icon
+        }
+
+        @Override
+        protected void bindGroupView(View view, Context context, Cursor cursor, boolean isExpanded) {
+            String name = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.NAME));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.TOTAL));
+            String url = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.URL));
+            String icon = cursor.getString(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.ICON));
+            int children = cursor.getInt(cursor.getColumnIndex(StatsReferrerGroupsTable.Columns.CHILDREN));
+
+            boolean urlValid = (url != null && url.length() > 0); 
+            
+            // chevron
+            toggleChevrons(children > 0, isExpanded, view);
+            
+            // name, url
+            TextView entryTextView = (TextView) view.findViewById(R.id.stats_group_cell_entry);
+            if (urlValid) {
+                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + name + "</a>");
+                entryTextView.setText(link);
+                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            } else {
+                entryTextView.setText(name);
+                entryTextView.setMovementMethod(null);
+            }
+            
+            // totals
+            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_group_cell_total);
+            totalsTextView.setText(total + "");
+
+            // icon
+            view.findViewById(R.id.stats_group_cell_image_frame).setVisibility(View.VISIBLE);
+            NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_group_cell_image);
+            ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_group_cell_blank_image);
+            if (icon != null && icon.length() > 0) {
+                imageView.setErrorImageResId(R.drawable.stats_blank_image);
+                imageView.setDefaultImageResId(R.drawable.stats_blank_image);
+                imageView.setImageUrl(icon, WordPress.imageLoader);
+                imageView.setVisibility(View.VISIBLE);
+                errorImageView.setVisibility(View.GONE);
+            } else {
+                imageView.setVisibility(View.GONE);
+                errorImageView.setVisibility(View.VISIBLE);
+            }   
+        }
+
+        @Override
+        protected Cursor getChildrenCursor(Cursor groupCursor) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(StatsCursorLoaderCallback.BUNDLE_DATE, groupCursor.getLong(groupCursor.getColumnIndex("date")));
+            bundle.putString(StatsCursorLoaderCallback.BUNDLE_GROUP_ID, groupCursor.getString(groupCursor.getColumnIndex("groupId")));
+            mCallback.onUriRequested(groupCursor.getPosition(), STATS_CLICKS_URI, bundle);
             return null;
-        }        
+        }
+        
+        @Override
+        protected View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return inflater.inflate(R.layout.stats_list_cell, parent, false);
+        }
+
+        @Override
+        protected View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return inflater.inflate(R.layout.stats_group_cell, parent, false);
+        }
+
+        private void toggleChevrons(boolean isVisible, boolean isExpanded, View view) {
+            ImageView chevronUp = (ImageView) view.findViewById(R.id.stats_group_cell_chevron_up);
+            ImageView chevronDown = (ImageView) view.findViewById(R.id.stats_group_cell_chevron_down);
+            View frame = view.findViewById(R.id.stats_group_cell_chevron_frame);
+            
+            if (isVisible) {
+                frame.setVisibility(View.VISIBLE);  
+                if (isExpanded) {
+                    chevronUp.setVisibility(View.VISIBLE);
+                    chevronDown.setVisibility(View.GONE);
+                } else {
+                    chevronUp.setVisibility(View.GONE);
+                    chevronDown.setVisibility(View.VISIBLE);
+                }
+            } else {
+                frame.setVisibility(View.GONE);
+            }
+        }
+        
     }
 
 }

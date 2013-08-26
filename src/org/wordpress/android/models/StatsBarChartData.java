@@ -1,28 +1,25 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-public class StatsBarChartDay {
+import org.wordpress.android.ui.stats.StatsBarChartUnit;
+
+public class StatsBarChartData {
 
     private String mBlogId;
     private String mDate;
     private int mViews;
     private int mVisitors;
+    private StatsBarChartUnit mBarChartUnit;
 
-    public StatsBarChartDay(String blogId, String date, int views, int visitors) {
-        this.setBlogId(blogId);
-        this.setDate(date);
-        this.setViews(views);
-        this.setVisitors(visitors);
-    }
-
-    public StatsBarChartDay(String blogId, JSONObject result) throws JSONException {
+    public StatsBarChartData(String blogId, StatsBarChartUnit unit, JSONArray result) throws JSONException {
         setBlogId(blogId);
-        setDate(result.getString("date"));
-        setViews(result.getInt("views"));
-        setVisitors(result.getInt("visitors"));
+        setBarChartUnit(unit);
+        setDate(result.getString(0));
+        setViews(result.getInt(1));
+        setVisitors(result.getInt(2));
     }
 
     public String getBlogId() {
@@ -55,6 +52,14 @@ public class StatsBarChartDay {
 
     public void setVisitors(int visitors) {
         this.mVisitors = visitors;
+    }
+
+    public StatsBarChartUnit getBarChartUnit() {
+        return mBarChartUnit;
+    }
+
+    public void setBarChartUnit(StatsBarChartUnit unit) {
+        this.mBarChartUnit = unit;
     }
 
 }

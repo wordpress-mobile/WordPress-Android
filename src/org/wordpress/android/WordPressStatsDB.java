@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.wordpress.android.datasets.StatsBarChartDaysTable;
-import org.wordpress.android.datasets.StatsBarChartMonthsTable;
-import org.wordpress.android.datasets.StatsBarChartWeeksTable;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.datasets.StatsClickGroupsTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.datasets.StatsMostCommentedTable;
+import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
@@ -33,9 +33,11 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
     
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(StatsClickGroupsTable.getInstance().toCreateQuery());
         db.execSQL(StatsClicksTable.getInstance().toCreateQuery());
         db.execSQL(StatsGeoviewsTable.getInstance().toCreateQuery());
         db.execSQL(StatsMostCommentedTable.getInstance().toCreateQuery());
+        db.execSQL(StatsReferrerGroupsTable.getInstance().toCreateQuery());
         db.execSQL(StatsReferrersTable.getInstance().toCreateQuery());
         db.execSQL(StatsSearchEngineTermsTable.getInstance().toCreateQuery());
         db.execSQL(StatsTagsAndCategoriesTable.getInstance().toCreateQuery());
@@ -43,9 +45,7 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         db.execSQL(StatsTopCommentersTable.getInstance().toCreateQuery());
         db.execSQL(StatsTopPostsAndPagesTable.getInstance().toCreateQuery());
         db.execSQL(StatsVideosTable.getInstance().toCreateQuery());
-        db.execSQL(StatsBarChartDaysTable.getInstance().toCreateQuery());
-        db.execSQL(StatsBarChartWeeksTable.getInstance().toCreateQuery());
-        db.execSQL(StatsBarChartMonthsTable.getInstance().toCreateQuery());
+        db.execSQL(StatsBarChartDataTable.getInstance().toCreateQuery());
     }
 
     @Override
@@ -53,9 +53,11 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         
         onCreate(db);
         
+        StatsClickGroupsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsClicksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsGeoviewsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsMostCommentedTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsReferrerGroupsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsReferrersTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsSearchEngineTermsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsTagsAndCategoriesTable.getInstance().onUpgrade(db, oldVersion, newVersion);
@@ -63,9 +65,7 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         StatsTopCommentersTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsTopPostsAndPagesTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsVideosTable.getInstance().onUpgrade(db, oldVersion, newVersion);
-        StatsBarChartDaysTable.getInstance().onUpgrade(db, oldVersion, newVersion);
-        StatsBarChartWeeksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
-        StatsBarChartMonthsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
+        StatsBarChartDataTable.getInstance().onUpgrade(db, oldVersion, newVersion);
     }
 
 }

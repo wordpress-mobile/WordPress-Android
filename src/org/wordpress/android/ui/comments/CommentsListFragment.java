@@ -99,6 +99,12 @@ public class CommentsListFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        hideModerationBar(); //The app doesn't remember the selection state on resume, so don't show the bar.
+    }
+    
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
@@ -629,7 +635,7 @@ public class CommentsListFragment extends ListFragment {
                 public void onClick(View arg0) {
                     checkedComments.set(position,
                             String.valueOf(getBulkCheck().isChecked()));
-                    showOrHideModerateButtons();
+                    showOrHideModerationBar();
                 }
             });
 
@@ -702,27 +708,12 @@ public class CommentsListFragment extends ListFragment {
             return (bulkEditGroup);
         }
 
-        protected void showOrHideModerateButtons() {
-            int previousTotal = checkedCommentTotal;
-            checkedCommentTotal = 0;
-            for (int i = 0; i < checkedComments.size(); i++) {
-                if (checkedComments.get(i).equals("true")) {
-                    checkedCommentTotal++;
-                }
-            }
-            if (checkedCommentTotal > 0 && previousTotal == 0) {
-                showModerationBar();
-            }
-            if (checkedCommentTotal == 0 && previousTotal > 0) {
-
-                hideModerationBar();
-
-            }
-
-        }
     }
 
-    public void hideModerationBar() {
+    protected void hideModerationBar() {
+        RelativeLayout moderationBar = (RelativeLayout) getActivity().findViewById(R.id.moderationBar);
+        if( moderationBar.getVisibility() == View.INVISIBLE )
+            return;
         AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(1.0f, 0.0f);
         animation.setDuration(500);
@@ -732,17 +723,34 @@ public class CommentsListFragment extends ListFragment {
                 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
         animation.setDuration(500);
         set.addAnimation(animation);
-        RelativeLayout moderationBar = (RelativeLayout) getActivity()
-                .findViewById(R.id.moderationBar);
         moderationBar.clearAnimation();
         moderationBar.startAnimation(set);
         moderationBar.setVisibility(View.INVISIBLE);
-
     }
 
-    public void showModerationBar() {
-        AnimationSet set = new AnimationSet(true);
+    protected void showOrHideModerationBar() {
+        if( checkedComments == null )
+            return;
+        
+        boolean shouldShowModerationBar = false;
+        for (int i = 0; i < checkedComments.size(); i++) {
+            if (checkedComments.get(i).equals("true")) {
+                shouldShowModerationBar = true;
+                break;
+            }
+        }
 
+        if (shouldShowModerationBar)
+            showModerationBar();
+        else
+            hideModerationBar();
+    }
+    
+    protected void showModerationBar() {
+        RelativeLayout moderationBar = (RelativeLayout) getActivity().findViewById(R.id.moderationBar);
+        if( moderationBar.getVisibility() == View.VISIBLE )
+            return;
+        AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(500);
         set.addAnimation(animation);
@@ -751,8 +759,6 @@ public class CommentsListFragment extends ListFragment {
                 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         animation.setDuration(500);
         set.addAnimation(animation);
-        RelativeLayout moderationBar = (RelativeLayout) getActivity()
-                .findViewById(R.id.moderationBar);
         moderationBar.setVisibility(View.VISIBLE);
         moderationBar.startAnimation(set);
     }
@@ -989,7 +995,6 @@ public class CommentsListFragment extends ListFragment {
                 if (pd.isShowing()) {
                     pd.dismiss();
                 }
-                onAnimateRefreshButton.onAnimateRefreshButton(false);
             } else {
 
                 allComments.putAll(commentsResult);
@@ -997,17 +1002,18 @@ public class CommentsListFragment extends ListFragment {
                 if (!doInBackground) {
                     loadComments(refreshOnly, loadMore);
                 }
-
-                onAnimateRefreshButton.onAnimateRefreshButton(false);
-
             }
 
-            if (!loadMore && !doInBackground) {
-                onAnimateRefreshButton.onAnimateRefreshButton(false);
-            } else if (loadMore) {
+            onAnimateRefreshButton.onAnimateRefreshButton(false);
+            
+            if (loadMore) {
                 switcher.showPrevious();
             }
-
+             
+            if (!doInBackground) {
+                showOrHideModerationBar();
+            } 
+            
         }
 
         @Override

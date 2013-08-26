@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -398,6 +399,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         } else {
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
+            getSupportFragmentManager().executePendingTransactions();
+            Display display = getWindow().getDecorView().getDisplay();
+            int minWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
+            int height = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_height);
+            int width = Math.max((int) (display.getWidth() * 0.6), minWidth);
+            mDetailsFragment.getDialog().getWindow().setLayout(width, height);
         }
     }
 

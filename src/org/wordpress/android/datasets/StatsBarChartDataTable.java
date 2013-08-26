@@ -8,28 +8,29 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import org.wordpress.android.models.StatsBarChartMonth;
+import org.wordpress.android.models.StatsBarChartData;
 
-public class StatsBarChartMonthsTable extends SQLTable {
+public class StatsBarChartDataTable extends SQLTable {
 
-    private static final String NAME = "bar_chart_months";
+    private static final String NAME = "bar_chart_data";
     
     public static final class Columns {
         public static final String BLOG_ID = "blogId";
         public static final String DATE = "date";
         public static final String VIEWS = "views";
         public static final String VISITORS = "visitors";
+        public static final String UNIT = "unit";
     }
     
     private static final class Holder {
-        public static final StatsBarChartMonthsTable INSTANCE = new StatsBarChartMonthsTable();
+        public static final StatsBarChartDataTable INSTANCE = new StatsBarChartDataTable();
     }
 
-    public static synchronized StatsBarChartMonthsTable getInstance() {
+    public static synchronized StatsBarChartDataTable getInstance() {
         return Holder.INSTANCE;
     }
 
-    private StatsBarChartMonthsTable() {}
+    private StatsBarChartDataTable() {}
     
     @Override
     public String getName() {
@@ -38,7 +39,7 @@ public class StatsBarChartMonthsTable extends SQLTable {
 
     @Override
     protected String getUniqueConstraint() {
-        return "UNIQUE (" + Columns.BLOG_ID + ", " + Columns.DATE + ") ON CONFLICT REPLACE";
+        return "UNIQUE (" + Columns.BLOG_ID + ", " + Columns.DATE + ", " + Columns.UNIT + ") ON CONFLICT REPLACE";
     }
 
     @Override
@@ -49,6 +50,7 @@ public class StatsBarChartMonthsTable extends SQLTable {
         map.put(Columns.DATE, "DATE");
         map.put(Columns.VIEWS, "INTEGER");
         map.put(Columns.VISITORS, "INTEGER");
+        map.put(Columns.UNIT, "TEXT");
         return map;
     }
 
@@ -58,12 +60,13 @@ public class StatsBarChartMonthsTable extends SQLTable {
 
     }
     
-    public static ContentValues getContentValues(StatsBarChartMonth stat) {
+    public static ContentValues getContentValues(StatsBarChartData item) {
         ContentValues values = new ContentValues();
-        values.put(Columns.BLOG_ID, stat.getBlogId());
-        values.put(Columns.DATE, stat.getDate());
-        values.put(Columns.VIEWS, stat.getViews());
-        values.put(Columns.VISITORS, stat.getVisitors());
+        values.put(Columns.BLOG_ID, item.getBlogId());
+        values.put(Columns.DATE, item.getDate());
+        values.put(Columns.VIEWS, item.getViews());
+        values.put(Columns.VISITORS, item.getVisitors());
+        values.put(Columns.UNIT, item.getBarChartUnit().name());
         return values;
     }
 

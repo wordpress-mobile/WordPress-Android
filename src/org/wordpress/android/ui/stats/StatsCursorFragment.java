@@ -43,11 +43,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     private CursorAdapter mAdapter;
     private ContentObserver mContentObserver = new MyObserver(new Handler());
     
-    public interface StatsCursorFragmentInterface {
-        public void onCursorLoaded(Uri uri, Cursor cursor);
-    }
-    
-    private StatsCursorFragmentInterface mCallback;
+    private StatsCursorInterface mCallback;
     
     public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
         
@@ -63,7 +59,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         return fragment;
     }
     
-    public Uri getUri() {
+    private Uri getUri() {
         return Uri.parse(getArguments().getString(ARGS_URI));
     }
     
@@ -72,15 +68,15 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
         super.onAttach(activity);
         
         try {
-            mCallback = (StatsCursorFragmentInterface) getParentFragment();
+            mCallback = (StatsCursorInterface) getParentFragment();
         } catch (ClassCastException e) {
-            throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorFragmentInterface.class.getSimpleName());
+            throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorInterface.class.getSimpleName());
         }
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.stats_list_sub_fragment, container, false);
+        View view = inflater.inflate(R.layout.stats_list_fragment, container, false);
         
         mEntryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
         mEntryLabel.setText(getEntryLabelResId());
@@ -122,6 +118,9 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (WordPress.getCurrentBlog() == null)
+            return null;
+        
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         CursorLoader cursorLoader = new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
         return cursorLoader;
@@ -131,7 +130,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCallback.onCursorLoaded(getUri(), data);
         if (mAdapter != null)
-            mAdapter.swapCursor(data);
+            mAdapter.changeCursor(data);
         configureEmptyLabel();
         if (isTablet()) {
             reloadLinearLayout();
@@ -141,7 +140,7 @@ public class StatsCursorFragment extends SherlockFragment implements LoaderManag
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (mAdapter != null)
-            mAdapter.swapCursor(null);
+            mAdapter.changeCursor(null);
         configureEmptyLabel();
         if (isTablet()) {
             reloadLinearLayout();

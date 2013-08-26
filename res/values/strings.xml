@@ -18,6 +18,7 @@
   <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
   <string name="sign_out_confirm">Are you sure you want to sign out?</string>
   <string name="please_sign_in">Please sign in again.</string>
+  <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Please open WordPress.com in your browser, and generate an application-specific passwords to use with this app.\n(Log in to WordPress, and go to Settings->security).</string>
   
   <!-- form labels -->
   <string name="select_categories">Select Categories</string>
@@ -101,12 +102,15 @@
   <string name="unattached">Unattached</string>
   <string name="custom_date">Custom Date</string>
   <string name="upload">Upload</string>
+  <string name="please_wait_refresh_done">Please wait, loading items.</string>
+  <string name="info">Info</string>
   
   <!-- Media Gallery Action Bar -->
   <string name="media_add_popup_title">Add to Media Library</string>
   <string name="media_add_popup_capture_photo">Capture photo</string>
   <string name="media_add_popup_capture_video">Capture video</string>
   <string name="media_add_popup_pick_from_gallery">Pick from gallery</string>
+  <string name="media_add_new_media_gallery">New Media Gallery</string>
   
   <!-- Media Gallery -->
   <string name="media_gallery_settings_title">Gallery Settings</string>
@@ -162,6 +166,7 @@
   <!-- themes -->
   <string name="themes_live_preview">Live Preview</string>
   <string name="themes_details_label">Details</string>
+  <string name="themes_features_label">Features</string>
   <string name="theme_activate_button">Activate</string>
   <string name="theme_activating_button">Activating</string>
   <string name="theme_fetch_failed">Failed to fetch themes. Please try again</string>
@@ -187,7 +192,6 @@
   <!-- posts tab -->
   <string name="untitled">Untitled</string>
   <string name="local_draft">Local Draft</string>
-
   <string name="local_drafts">Local Drafts</string>
 
   <!-- post view -->

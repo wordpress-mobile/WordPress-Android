@@ -584,6 +584,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         mPost.setQuickPostType("QuickVideo");
                 }
                 WordPress.currentPost = mPost;
+                PostUploadService.addPostToUpload(mPost);
                 startService(new Intent(this, PostUploadService.class));
                 Intent i = new Intent();
                 i.putExtra("shouldRefresh", true);
@@ -686,6 +687,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                     }
 
                     WordPress.currentPost = mPost;
+                    PostUploadService.addPostToUpload(mPost);
                     startService(new Intent(this, PostUploadService.class));
                 }
                 finish();

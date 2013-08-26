@@ -1,7 +1,11 @@
 package org.wordpress.android.ui.stats;
 
-import android.os.AsyncTask;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -9,15 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONObject;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.StatsTotalsFollowersAndShares;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.util.StatUtils;
 
 public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
@@ -30,7 +27,19 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
     private TextView mFollowersCountView;
     private TextView mCommentsCountView;
     private TextView mSharesCountView;
-
+    
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
+                StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
+                refreshViews(stats);
+            }
+        }
+    };
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_totals_followers_shares, container, false);
@@ -50,77 +59,29 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
+    }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
+    }
+    
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_totals_followers_and_shares);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshStatsFromServer();
-    }
-    
-    @Override
-    public void refresh() {
-        if (WordPress.getCurrentBlog() == null)
-            return; 
-        
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        new AsyncTask<String, Void, StatsTotalsFollowersAndShares>() {
-
-            @Override
-            protected StatsTotalsFollowersAndShares doInBackground(String... params) {
-                final String blogId = params[0];
-                
-                StatsTotalsFollowersAndShares stats = StatUtils.getTotalsFollowersShares(blogId);
-
-                return stats;
-            }
-            
-            protected void onPostExecute(StatsTotalsFollowersAndShares result) {
-                refreshViews(result);
-            };
-        }.execute(blogId);
-    }
-
-
-    private void refreshStatsFromServer() {
-        if (WordPress.getCurrentBlog() == null)
-            return; 
-
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        WordPress.restClient.getStatsTotalsFollowersAndShares(blogId, 
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        StatUtils.saveTotalsFollowersShares(blogId, response);
-                        if (getActivity() != null)
-                            getActivity().runOnUiThread(new Runnable() {
-                                
-                                @Override
-                                public void run() {
-                                    refresh();
-                                    
-                                }
-                            });
-                    }
-                }, 
-                new ErrorListener() {
-                    
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                });
-    }
-    
-    protected void refreshViews(StatsTotalsFollowersAndShares result) {
+    protected void refreshViews(StatsSummary stats) {
         int posts = 0;
         int categories = 0;
         int tags = 0;
@@ -128,13 +89,13 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         int comments = 0;
         int shares = 0;
         
-        if (result != null) {
-            posts = result.getPosts();
-            categories = result.getCategories();
-            tags = result.getTags();
-            followers = result.getFollowers();
-            comments = result.getComments();
-            shares = result.getShares();
+        if (stats != null) {
+            posts = stats.getPosts();
+            categories = stats.getCategories();
+            tags = stats.getTags();
+            followers = stats.getFollowersBlog();
+            comments = stats.getFollowersComments();
+            shares = stats.getShares();
         }
 
          mPostsCountView.setText(posts + "");

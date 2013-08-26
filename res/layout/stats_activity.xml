@@ -3,75 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/stats_header"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#BCC3C5" >
-
-        <TextView
-            android:id="@+id/stats_header_views_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/stats_header_views_total"
-            android:layout_marginLeft="16dp"
-            android:text="@string/stats_totals_views"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/stats_header_views_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:layout_toRightOf="@id/stats_header_views_label"
-            android:text="0"
-            android:textSize="17sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/stats_header_comments_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/stats_phone_icon_comment"
-                android:drawablePadding="4dp"
-                android:text="0"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/stats_header_favs_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:drawableLeft="@drawable/stats_phone_icon_fav"
-                android:drawablePadding="4dp"
-                android:text="0"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/stats_header_reblog_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:drawableLeft="@drawable/stats_phone_icon_reblog"
-                android:drawablePadding="4dp"
-                android:text="0"
-                android:textSize="17sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
     <FrameLayout
         android:id="@+id/stats_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/stats_header" >
+        android:layout_height="match_parent" >
     </FrameLayout>
 
 </RelativeLayout>

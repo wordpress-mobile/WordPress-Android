@@ -22,11 +22,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.HorizontalTabView;
 import org.wordpress.android.ui.HorizontalTabView.Tab;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentInterface;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
-public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorFragmentInterface {
+public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorInterface {
 
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -134,14 +133,6 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
     public void onTabSelected(Tab tab) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
-    
-    @Override
-    public void refresh() {
-        int count = getTabTitles().length;
-        for (int i = 0; i < count; i++){
-            refresh(i);
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -155,8 +146,6 @@ public abstract class StatsAbsListViewFragment extends StatsAbsViewFragment impl
 
     protected abstract Fragment getFragment(int position);
         
-    public abstract void refresh(int position);
-    
     @Override
     public void onCursorLoaded(Uri uri, Cursor cursor) {
         if (!cursor.moveToFirst())

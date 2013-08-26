@@ -598,7 +598,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mGridView.setSelection(0);
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
-        mGridAdapter.swapCursor(null);
+        mGridAdapter.changeCursor(null);
 
         resetSpinnerAdapter();
         

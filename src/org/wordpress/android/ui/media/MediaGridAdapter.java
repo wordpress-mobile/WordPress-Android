@@ -12,6 +12,7 @@ import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private boolean mIsRefreshing;
     private int mCursorDataCount;
     Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
+    private Handler mHandler;
     
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -61,6 +63,7 @@ public class MediaGridAdapter extends CursorAdapter {
         super(context, c, flags);
         mCheckedItems = checkedItems;
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
+        mHandler = new Handler();
     }
     
     public ArrayList<String> getCheckedItems() {
@@ -292,7 +295,10 @@ public class MediaGridAdapter extends CursorAdapter {
                     fetchBitmap(filePath);
                 }
             }
-        }        
+        } else {
+            // if not image, for now show no image.
+            imageView.setImageBitmap(null);
+        }
     }
 
     private void fetchBitmap(final String filePath) {
@@ -301,16 +307,22 @@ public class MediaGridAdapter extends CursorAdapter {
         BitmapWorkerTask task = new BitmapWorkerTask(null, width, width, new BitmapWorkerCallback() {
             
             @Override
-            public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
+            public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
+                mHandler.post(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
+                        for (BitmapReadyCallback callback : callbacks) {
+                            callback.onBitmapReady(bitmap);
+                        }
+                        
+                        WordPress.localImageCache.put(path, bitmap);
+                        callbacks.clear();
+                        mFilePathToCallbackMap.remove(path);        
+                    }
+                });
                 
-                List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
-                for (BitmapReadyCallback callback : callbacks) {
-                    callback.onBitmapReady(bitmap);
-                }
-                
-                WordPress.localImageCache.put(path, bitmap);
-                callbacks.clear();
-                mFilePathToCallbackMap.remove(path);
             }
         });
         task.execute(filePath);

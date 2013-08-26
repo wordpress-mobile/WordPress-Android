@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -11,10 +16,12 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.Utils;
 
 public class StatsActivityTablet extends WPActionBarActivity {
@@ -25,6 +32,27 @@ public class StatsActivityTablet extends WPActionBarActivity {
     private LinearLayout mColumnLeft;
     private LinearLayout mColumnRight;
 
+    private MenuItem mRefreshMenuItem;
+    
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(StatsRestHelper.REFRESH_VIEW_TYPE)) {
+                
+                if (mRefreshMenuItem == null)
+                    return;
+                
+                boolean started = intent.getBooleanExtra(StatsRestHelper.REFRESH_VIEW_TYPE_STARTED, false);
+                if (started)
+                    startAnimatingRefreshButton(mRefreshMenuItem);
+                else
+                    stopAnimatingRefreshButton(mRefreshMenuItem);
+            }
+        }
+    };
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +72,7 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         loadStatsFragments();
     }
-
+    
     private void loadStatsFragments() {
 
         FragmentManager fm = getSupportFragmentManager();
@@ -109,6 +137,7 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         ft.commit();
         
+        // split layout into two for 720DP tablets and 600DP tablets in landscape
         if (Utils.getSmallestWidthDP() >= TABLET_720DP || (Utils.getSmallestWidthDP() == TABLET_600DP && isInLandscape()))
             loadSplitLayout();
         
@@ -175,7 +204,62 @@ public class StatsActivityTablet extends WPActionBarActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.stats, menu);
+        mRefreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_refresh) {
+            refreshStats();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.unregisterReceiver(mReceiver);
+    }
+    
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
+
+        refreshStats();
+    }
+    
+    @Override
+    public void onBlogChanged() {
+        super.onBlogChanged();
+        refreshStats();
+    }
+
+    private void refreshStats() {
+        if (WordPress.getCurrentBlog() == null)
+            return; 
+        
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        StatsRestHelper.getStatsSummary(blogId);
+        StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
+        StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
+        StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
+        StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
+        StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
+        // data for total followers and shares will already be fetched 
+        StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
+        StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
+        StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
+        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
+        StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
     }
     
 }

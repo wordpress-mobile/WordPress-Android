@@ -33,6 +33,7 @@
     <color name="theme_details_name">@color/black</color>
     <color name="theme_details_button">#FFFFFF</color>
     <color name="theme_details_premium">#B0710E</color>
+    <color name="theme_feature_text">#555555</color>
     
     <!-- Horizontal Tab View colors -->
     <color name="tab_divider">#565656</color>

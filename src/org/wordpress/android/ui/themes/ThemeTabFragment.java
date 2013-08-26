@@ -193,7 +193,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         
         if (mNoResultText.isShown())
             mNoResultText.setVisibility(View.GONE);
-        mAdapter.swapCursor(cursor);
+        mAdapter.changeCursor(cursor);
     }
     
     protected String getBlogId() {

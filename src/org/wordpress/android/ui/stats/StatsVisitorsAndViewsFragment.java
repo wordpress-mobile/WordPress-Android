@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.ContentValues;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,40 +16,28 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsBarChartDaysTable;
-import org.wordpress.android.datasets.StatsBarChartMonthsTable;
-import org.wordpress.android.datasets.StatsBarChartWeeksTable;
-import org.wordpress.android.models.StatsBarChartDay;
-import org.wordpress.android.models.StatsBarChartMonth;
-import org.wordpress.android.models.StatsBarChartWeek;
-import org.wordpress.android.models.StatsVisitorsAndViewsSummary;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
-public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
+public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
 
-    private static final String[] TITLES = new String [] { StatsTimeframe.DAYS.getLabel(), StatsTimeframe.WEEKS.getLabel(), StatsTimeframe.MONTHS.getLabel() };
+    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
     
@@ -63,17 +53,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        StatsTimeframe timeframe = StatsTimeframe.DAYS;
+        StatsBarChartUnit unit = StatsBarChartUnit.DAY;
         if (position == 1)
-            timeframe = StatsTimeframe.WEEKS;
+            unit = StatsBarChartUnit.WEEK;
         else if (position == 2) 
-            timeframe = StatsTimeframe.MONTHS;
-        return InnerFragment.newInstance(timeframe);
-    }
-    
-    @Override
-    public void refresh(int position) {
-
+            unit = StatsBarChartUnit.MONTH;
+        return InnerFragment.newInstance(unit);
     }
     
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
@@ -106,23 +91,35 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
 
     public static class InnerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-        private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
+        private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
         private LinearLayout mBarGraphLayout;
         
         private TextView mVisitorsToday;
         private TextView mViewsToday;
-        private TextView mVisitorsBestEver;
+        private TextView mViewsBestEver;
         private TextView mViewsAllTime;
         private TextView mCommentsAllTime;
         private View mLegend;
         private ContentObserver mContentObserver = new MyObserver(new Handler());
         
-        public static InnerFragment newInstance(StatsTimeframe timeframe) {
+        private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+            
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
+                    StatsSummary summary = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
+                    refreshViews(summary);
+                }
+            }
+        };
+        
+        public static InnerFragment newInstance(StatsBarChartUnit unit) {
             
             InnerFragment fragment = new InnerFragment();
             
             Bundle args = new Bundle();
-            args.putInt(ARGS_TIMEFRAME, timeframe.ordinal());
+            args.putInt(ARGS_BAR_CHART_UNIT, unit.ordinal());
             fragment.setArguments(args);
             
             return fragment;
@@ -137,9 +134,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
             
             mVisitorsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_visitors_count);
             mViewsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_views_count);
-            mVisitorsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_visitor_count);
+            mViewsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
             mViewsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_view_count);
             mCommentsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_comment_count);
+            mLegend = view.findViewById(R.id.stats_bar_graph_legend);
             
             return view;
         }
@@ -148,209 +146,96 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         @Override
         public void onResume() {
             super.onResume();
-            refreshSummary();
-            refreshSummaryFromServer();
-            refreshChartsFromServer();
             getActivity().getContentResolver().registerContentObserver(getUri(), true, mContentObserver);
+            
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
+            
+            refreshSummary();
         }
 
+        private void refreshSummary() {
+            if (WordPress.getCurrentBlog() == null)
+                return;
+               
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            new AsyncTask<Void, Void, StatsSummary>() {
+
+                @Override
+                protected StatsSummary doInBackground(Void... params) {
+                    return StatUtils.getSummary(blogId);
+                }
+                
+                protected void onPostExecute(final StatsSummary result) {
+                    if (getActivity() == null)
+                        return;
+                    getActivity().runOnUiThread(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            refreshViews(result);      
+                        }
+                    });
+                };
+                
+            }.execute();
+            
+        }
 
         @Override
         public void onPause() {
             super.onPause();
             getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+            
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+            lbm.unregisterReceiver(mReceiver);
         }
         
-        private int getTimeframeOrdinal() {
-            return getArguments().getInt(ARGS_TIMEFRAME);
+        private StatsBarChartUnit getBarChartUnit() {
+            int ordinal = getArguments().getInt(ARGS_BAR_CHART_UNIT);
+            return StatsBarChartUnit.values()[ordinal];
         }
 
-        private void refreshSummary() {
-            if (WordPress.getCurrentBlog() == null)
-                return; 
-            
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            
-            new AsyncTask<String, Void, StatsVisitorsAndViewsSummary>() {
-
-                @Override
-                protected StatsVisitorsAndViewsSummary doInBackground(String... params) {
-                    final String blogId = params[0];
-                    
-                    StatsVisitorsAndViewsSummary stats = StatUtils.getVisitorsAndViewsSummary(blogId);
-                    
-                    return stats;
-                }
-                
-                protected void onPostExecute(StatsVisitorsAndViewsSummary result) {
-                    refreshViews(result);
-                };
-            }.execute(blogId);
-        }
-
-
-        private void refreshSummaryFromServer() {
-            if (WordPress.getCurrentBlog() == null)
-                return; 
-            
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            
-            WordPress.restClient.getStatsVisitorsAndViewsSummary(blogId, 
-                    new Listener() {
-                        
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            StatUtils.saveVisitorsAndViewsSummary(blogId, response);
-                            if (getActivity() != null)
-                                getActivity().runOnUiThread(new Runnable() {
-                                    
-                                    @Override
-                                    public void run() {
-                                        refreshSummary();
-                                        
-                                    }
-                                });
-                        }
-                    }, 
-                    new ErrorListener() {
-                        
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                            
-                        }
-                    });
-        }
-        
-        protected void refreshViews(StatsVisitorsAndViewsSummary result) {
+        protected void refreshViews(StatsSummary stats) {
             int visitorsToday = 0;
             int viewsToday = 0;
             int visitorsBestEver = 0;
             int viewsAllTime = 0;
             int commentsAllTime = 0;
             
-            if (result != null) {
-                visitorsToday = result.getVisitorsToday();
-                viewsToday = result.getViewsToday();
-                visitorsBestEver = result.getVisitorsBestEver();
-                viewsAllTime = result.getViewsAllTime();
-                commentsAllTime = result.getCommentsAllTime();
+            if (stats != null) {
+                visitorsToday = stats.getVisitorsToday();
+                viewsToday = stats.getViewsToday();
+                visitorsBestEver = stats.getViewsBestDayTotal();
+                viewsAllTime = stats.getViewsAllTime();
+                commentsAllTime = stats.getCommentsAllTime();
             }
 
             mVisitorsToday.setText(visitorsToday + "");
             mViewsToday.setText(viewsToday + "");
-            mVisitorsBestEver.setText(visitorsBestEver + "");
+            mViewsBestEver.setText(visitorsBestEver + "");
             mViewsAllTime.setText(viewsAllTime + "");
             mCommentsAllTime.setText(commentsAllTime + "");
         }
-
-        private void refreshChartsFromServer() {
-            if (WordPress.getCurrentBlog() == null)
-                return;
-            
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            
-            Listener listener = new Listener() {
-                
-                @Override
-                public void onResponse(JSONObject response) {
-                    new ParseJsonTask().execute(blogId, response, getUri());
-                }
-            }; 
-            
-            ErrorListener errorListener = new ErrorListener() {
-                
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("WordPress Stats", StatsVisitorsAndViewsFragment.class.getSimpleName() + ": " + error.toString());
-                }
-            };
-            
-            int ordinal = getTimeframeOrdinal();
-            if (ordinal == StatsTimeframe.DAYS.ordinal())
-                WordPress.restClient.getStatsBarChartDays(blogId, listener, errorListener);
-            else if (ordinal == StatsTimeframe.WEEKS.ordinal())
-                WordPress.restClient.getStatsBarChartWeeks(blogId, listener, errorListener);
-            else if (ordinal == StatsTimeframe.MONTHS.ordinal())
-                WordPress.restClient.getStatsBarChartMonths(blogId, listener, errorListener);
-                    
-        }
-        
-        private class ParseJsonTask extends AsyncTask<Object, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Object... params) {
-                String blogId = (String) params[0];
-                JSONObject response = (JSONObject) params[1];
-                Uri uri = (Uri) params[2];
-                
-                Context context = WordPress.getContext();
-                
-                if (response != null && response.has("result")) {
-                    try {
-                        JSONArray results = response.getJSONArray("result");
-                        
-                        int count = results.length();
-                        
-                        // delete old stats and insert new ones
-                        if (count > 0)
-                            context.getContentResolver().delete(uri, "blogId=?", new String[] { blogId });
-                        
-                        for (int i = 0; i < count; i++ ) {
-                            JSONObject result = results.getJSONObject(i);
-                            
-                            ContentValues values = null;
-                            
-                            int ordinal = getTimeframeOrdinal();
-                            if (ordinal == StatsTimeframe.DAYS.ordinal()) {
-                                StatsBarChartDay stat = new StatsBarChartDay(blogId, result);
-                                values = StatsBarChartDaysTable.getContentValues(stat);
-                            } else if (ordinal == StatsTimeframe.WEEKS.ordinal()) {
-                                StatsBarChartWeek stat = new StatsBarChartWeek(blogId, result);
-                                values = StatsBarChartWeeksTable.getContentValues(stat);
-                            } else if (ordinal == StatsTimeframe.MONTHS.ordinal()) {
-                                StatsBarChartMonth stat = new StatsBarChartMonth(blogId, result);
-                                values = StatsBarChartMonthsTable.getContentValues(stat);
-                            }
-                            
-                            if (values != null && uri != null) {
-                                context.getContentResolver().insert(uri, values);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    
-                }
-                return null;
-            }        
-        }
-
-        
         
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            getLoaderManager().restartLoader(getTimeframeOrdinal(), null, this);
+            getLoaderManager().restartLoader(getBarChartUnit().ordinal(), null, this);
         }
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            if (WordPress.getCurrentBlog() == null)
+                return null;
+            
             String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            return new CursorLoader(getActivity(), getUri(), null, "blogId=?", new String[] { blogId }, null);
+            StatsBarChartUnit unit = getBarChartUnit();
+            return new CursorLoader(getActivity(), getUri(), null, "blogId=? AND unit=?", new String[] { blogId, unit.name() }, null);
         }
 
         private Uri getUri() {
-            int ordinal = getTimeframeOrdinal();
-            Uri uri = null;
-            
-            if (ordinal == StatsTimeframe.DAYS.ordinal()) 
-                uri = StatsContentProvider.STATS_BAR_CHART_DAYS_URI;
-            else if (ordinal == StatsTimeframe.WEEKS.ordinal())
-                uri = StatsContentProvider.STATS_BAR_CHART_WEEKS_URI;
-            else if (ordinal == StatsTimeframe.MONTHS.ordinal())
-                uri = StatsContentProvider.STATS_BAR_CHART_MONTHS_URI;
-            return uri;
+            return StatsContentProvider.STATS_BAR_CHART_DATA_URI;
         }
 
         @Override
@@ -363,7 +248,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 Context context = mBarGraphLayout.getContext();
                 LayoutInflater inflater = LayoutInflater.from(context);
                 mBarGraphLayout.addView(inflater.inflate(R.layout.stats_bar_graph_empty, mBarGraphLayout, false));
-                mLegend.setVisibility(View.GONE);
                 
                 return;
             }
@@ -402,13 +286,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
         }
 
         private int getNumOfPoints() {
-            int ordinal = getTimeframeOrdinal();
-            
             if (Utils.isTablet()) {
                 return 30; 
             } 
             
-            if (ordinal == StatsTimeframe.DAYS.ordinal()) 
+            if (getBarChartUnit() == StatsBarChartUnit.DAY) 
                 return 7;
             else
                 return 12;
@@ -419,56 +301,32 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsListViewFragment {
                 return numPoints / 5;
             }
 
-            int ordinal = getTimeframeOrdinal();
-            if (ordinal == StatsTimeframe.DAYS.ordinal())
+            if (getBarChartUnit() == StatsBarChartUnit.DAY)
                 return numPoints / 2;
             else
                 return numPoints / 3;
         }
 
         private int getViews(Cursor cursor) {
-            int timeframe = getTimeframeOrdinal();
-            int views = 0;
-            
-            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
-                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.VIEWS));
-            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
-                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.VIEWS));
-            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
-                views = cursor.getInt(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.VIEWS));
-            }
-            
-            return views;
+            return cursor.getInt(cursor.getColumnIndex(StatsBarChartDataTable.Columns.VIEWS));
         }
 
         private int getVisitors(Cursor cursor) {
-            int timeframe = getTimeframeOrdinal();
-            int visitors = 0;
-            
-            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
-                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.VISITORS));
-            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
-                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.VISITORS));
-            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
-                visitors = cursor.getInt(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.VISITORS));
-            }
-            
-            return visitors;
+            return cursor.getInt(cursor.getColumnIndex(StatsBarChartDataTable.Columns.VISITORS));
         }
 
         private String getDate(Cursor cursor) {
-            int timeframe = getTimeframeOrdinal();
+            StatsBarChartUnit unit = getBarChartUnit();
             
             String date = "";
+
+            String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE));
             
-            if (timeframe == StatsTimeframe.DAYS.ordinal()) {
-                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartDaysTable.Columns.DATE));
+            if (unit == StatsBarChartUnit.DAY) {
                 date = StatUtils.parseDate(temp, "yyyy-MM-dd", "MMM d");
-            } else if (timeframe == StatsTimeframe.WEEKS.ordinal()) {
-                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartWeeksTable.Columns.DATE));
-                date = StatUtils.parseDate(temp, "yyyy-'W'ww", "'Week' w");
-            } else if (timeframe == StatsTimeframe.MONTHS.ordinal()) {
-                String temp = cursor.getString(cursor.getColumnIndex(StatsBarChartMonthsTable.Columns.DATE));
+            } else if (unit == StatsBarChartUnit.WEEK) {
+                date = StatUtils.parseDate(temp, "yyyy'W'ww", "'Week' w");
+            } else if (unit == StatsBarChartUnit.MONTH) {
                 date = StatUtils.parseDate(temp, "yyyy-MM", "MMM yyyy");
             }
             

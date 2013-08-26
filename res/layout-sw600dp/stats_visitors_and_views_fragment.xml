@@ -21,8 +21,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="right"
                 android:paddingBottom="4dp"
-                android:paddingTop="4dp" 
-                android:visibility="gone">
+                android:paddingTop="4dp"
+                android:visibility="gone" >
 
                 <View
                     android:id="@+id/stats_bar_graph_legend_marker_views"
@@ -168,7 +168,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/stats_visitors_and_views_best_ever_visitor_count"
+                    android:id="@+id/stats_visitors_and_views_best_ever_views_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/stats_totals_visitors" />
+                    android:text="@string/stats_totals_views" />
             </LinearLayout>
 
             <include layout="@layout/stats_vertical_line" />

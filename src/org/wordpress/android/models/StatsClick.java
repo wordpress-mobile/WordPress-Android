@@ -1,8 +1,8 @@
 
 package org.wordpress.android.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.util.StatUtils;
 
@@ -10,25 +10,25 @@ public class StatsClick {
 
     private String mBlogId;
     private long mDate;
-    private int mClicks;
-    private String mUrl;
-    private String mImageUrl;
+    private String mGroupId;
+    private String mName;
+    private int mTotal;
 
-    public StatsClick(String blogId, long date, int clicks, String url, String imageUrl) {
-        this.mBlogId = blogId;
-        this.mDate = date;
-        this.mClicks = clicks;
-        this.mUrl = url;
-        this.mImageUrl = imageUrl;
+    public StatsClick(String blogId, long date, String groupId, String name, int total) {
+        this.setBlogId(blogId);
+        this.setDate(date);
+        this.setGroupId(groupId);
+        this.setName(name);
+        this.setTotal(total);
     }
 
-    public StatsClick(String blogId, JSONObject result) throws JSONException {
+    public StatsClick(String blogId, String date, String groupId, JSONArray result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
-        setClicks(result.getInt("clicks"));
-        setUrl(result.getString("url"));
-        if (result.has("imageUrl"))
-            setImageUrl(result.getString("imageUrl"));
+        setDate(StatUtils.toMs(date));
+        setGroupId(groupId);
+        
+        setName(result.getString(0));
+        setTotal(result.getInt(1));
     }
 
     public String getBlogId() {
@@ -47,28 +47,27 @@ public class StatsClick {
         this.mDate = date;
     }
 
-    public int getClicks() {
-        return mClicks;
+    public String getGroupId() {
+        return mGroupId;
     }
 
-    public void setClicks(int clicks) {
-        this.mClicks = clicks;
+    public void setGroupId(String groupId) {
+        this.mGroupId = groupId;
     }
 
-    public String getUrl() {
-        return mUrl;
+    public int getTotal() {
+        return mTotal;
     }
 
-    public void setUrl(String url) {
-        this.mUrl = url;
+    public void setTotal(int total) {
+        this.mTotal = total;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public String getName() {
+        return mName;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.mImageUrl = imageUrl;
+    public void setName(String name) {
+        this.mName = name;
     }
-
 }

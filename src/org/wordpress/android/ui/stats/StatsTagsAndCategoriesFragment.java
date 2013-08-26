@@ -3,39 +3,25 @@ package org.wordpress.android.ui.stats;
 
 import java.util.Locale;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
-import org.wordpress.android.models.StatsTagsandCategories;
 import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsCursorFragment.StatsCursorFragmentInterface;
 import org.wordpress.android.util.Utils;
 
-public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment implements StatsCursorFragmentInterface {
+public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment implements StatsCursorInterface {
 
     private static final Uri STATS_TAGS_AND_CATEGORIES_URI = StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI;
 
@@ -109,62 +95,10 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
     public String getTitle() {
         return getString(R.string.stats_view_tags_and_categories);
     }
-
-    @Override
-    public void refresh() {
-        final String blogId = getCurrentBlogId();
-        if (getCurrentBlogId() == null)
-            return;
-                    
-        WordPress.restClient.getStatsTagsAndCategories(blogId, 
-                new Listener() {
-                    
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        new ParseJsonTask().execute(blogId, response);
-                    }
-                }, 
-                new ErrorListener() {
-                    
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("WordPress Stats", StatsTagsAndCategoriesFragment.class.getSimpleName() + ": " + error.toString());
-                    }
-                });
-    }
     
-    private static class ParseJsonTask extends AsyncTask<Object, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            String blogId = (String) params[0];
-            JSONObject response = (JSONObject) params[1];
-            
-            Context context = WordPress.getContext();
-            
-            if (response != null && response.has("result")) {
-                try {
-                    JSONArray results = response.getJSONArray("result");
-
-                    int count = results.length();
-                    for (int i = 0; i < count; i++ ) {
-                        JSONObject result = results.getJSONObject(i);
-                        StatsTagsandCategories stat = new StatsTagsandCategories(blogId, result);
-                        ContentValues values = StatsTagsAndCategoriesTable.getContentValues(stat);
-                        context.getContentResolver().insert(STATS_TAGS_AND_CATEGORIES_URI, values);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                
-            }
-            return null;
-        }        
-    }
-
     @Override
     public void onCursorLoaded(Uri uri, Cursor cursor) {
-        // do nothing
+        // StatsCursorInterface callback: do nothing
     }
 
 }
