@@ -28,6 +28,9 @@
     <color name="media_gallery_image_bg">#FFFFFF</color>
     <color name="media_gallery_shadow">#E2E2E2</color>
 	<color name="media_gallery_bg">#75797C</color>
+	<color name="media_gallery_option_selected">#333333</color>
+	<color name="media_gallery_option_default">#EEEEEE</color>
+	
     
     <!-- Theme Details colors -->
     <color name="theme_details_name">@color/black</color>

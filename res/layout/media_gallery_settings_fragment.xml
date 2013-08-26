@@ -27,80 +27,33 @@
         android:layout_height="wrap_content"
         android:text="@string/media_gallery_image_order" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white" />
-
-    <TextView
-        style="@style/MediaGalleryText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/media_gallery_num_columns" />
-
-    
     <LinearLayout
-        android:id="@+id/media_gallery_num_columns_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal" >
-        <Button
+
+        <CheckBox
+            android:id="@+id/media_gallery_random_checkbox"
             style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"/>
-        
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="2"
+            android:button="@drawable/media_gallery_checkbox_selector"
+            android:padding="4dp"
+            android:text="@string/media_gallery_image_order_random" />
+
         <Button
+            android:id="@+id/media_gallery_reverse_button"
             style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="6"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="7"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="8"/>
-        <Button
-            style="@style/MediaGalleryText"
-            android:id="@+id/media_gallery_col9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="9"/>
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:background="@drawable/media_gallery_option_selector"
+            android:text="@string/media_gallery_image_order_reverse"
+            android:textColor="@color/media_grid_item_checkstate_text_selector" />
     </LinearLayout>
 
     <View
@@ -116,56 +69,108 @@
         android:layout_height="wrap_content"
         android:text="@string/media_gallery_type" />
 
-    <RadioGroup
+    <LinearLayout
         android:id="@+id/media_gallery_type_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:weightSum="4" >
+        android:weightSum="3" >
 
-        <RadioButton
-            android:id="@+id/media_gallery_type_squares"
-            style="@style/MediaGalleryTypeRadioButton"
+        <CheckBox
+            android:id="@+id/media_gallery_type_thumbnail_grid"
+            style="@style/MediaGalleryTypeCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ab_icon_edit"
-            android:text="@string/media_gallery_type_squares" />
+            android:drawableTop="@drawable/gallery_thumbnail_grid_selector"
+            android:text="@string/media_gallery_type_thumbnail_grid" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/media_gallery_type_tiled"
-            style="@style/MediaGalleryTypeRadioButton"
+            style="@style/MediaGalleryTypeCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ab_icon_edit"
+            android:drawableTop="@drawable/gallery_tiled_selector"
             android:text="@string/media_gallery_type_tiled" />
 
-        <RadioButton
-            android:id="@+id/media_gallery_type_circles"
-            style="@style/MediaGalleryTypeRadioButton"
+        <CheckBox
+            android:id="@+id/media_gallery_type_squares"
+            style="@style/MediaGalleryTypeCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ab_icon_edit"
+            android:drawableTop="@drawable/gallery_squares_selector"
+            android:text="@string/media_gallery_type_squares" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/media_gallery_type_circles"
+            style="@style/MediaGalleryTypeCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/gallery_circles_selector"
             android:text="@string/media_gallery_type_circles" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/media_gallery_type_slideshow"
-            style="@style/MediaGalleryTypeRadioButton"
+            style="@style/MediaGalleryTypeCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ab_icon_edit"
+            android:drawableTop="@drawable/gallery_slideshow_selector"
             android:text="@string/media_gallery_type_slideshow" />
-    </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/media_gallery_settings_num_columns_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/MediaGalleryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_num_columns" />
+
+        <GridView
+            android:id="@+id/media_gallery_num_columns_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:columnWidth="32dp"
+            android:horizontalSpacing="8dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="8dp" >
+        </GridView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/white" />
+    </LinearLayout>
 
 </LinearLayout>

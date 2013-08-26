@@ -115,11 +115,11 @@
   <!-- Media Gallery -->
   <string name="media_gallery_settings_title">Gallery Settings</string>
   <string name="media_gallery_image_order">Image Order</string>
-  <string name="media_gallery_image_order_custom">Custom</string>
   <string name="media_gallery_image_order_random">Random</string>
   <string name="media_gallery_image_order_reverse">Reverse</string>
   <string name="media_gallery_num_columns">Number of Columns</string>
   <string name="media_gallery_type">Type</string>
+  <string name="media_gallery_type_thumbnail_grid">Thumbnail Grid</string>
   <string name="media_gallery_type_squares">Squares</string>
   <string name="media_gallery_type_tiled">Tiled</string>
   <string name="media_gallery_type_circles">Circles</string>
