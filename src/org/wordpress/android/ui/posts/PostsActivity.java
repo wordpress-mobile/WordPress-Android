@@ -56,7 +56,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     private MenuItem refreshMenuItem;
     private static final int ACTIVITY_EDIT_POST = 0;
     private static final int ACTIVITY_ADD_COMMENT = 1;
-    private static final int ACTIVITY_LOCK_SCREEN = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
