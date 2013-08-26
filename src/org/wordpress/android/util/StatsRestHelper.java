@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClickGroupsTable;
 import org.wordpress.android.datasets.StatsClicksTable;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
@@ -26,6 +28,7 @@ import org.wordpress.android.datasets.StatsTopAuthorsTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.datasets.StatsVideosTable;
+import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.models.StatsClickGroup;
 import org.wordpress.android.models.StatsGeoview;
@@ -40,6 +43,7 @@ import org.wordpress.android.models.StatsTopCommenter;
 import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.models.StatsVideo;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.ui.stats.StatsGeoviewsFragment;
 import org.wordpress.android.ui.stats.StatsViewType;
 
@@ -89,6 +93,9 @@ public class StatsRestHelper {
                 break;
             case VISITORS_AND_VIEWS:
                 getStatsSummary(blogId);
+                getStatsBarChart(blogId, StatsBarChartUnit.DAY);
+                getStatsBarChart(blogId, StatsBarChartUnit.WEEK);
+                getStatsBarChart(blogId, StatsBarChartUnit.MONTH);
                 break;
             
         }
@@ -684,6 +691,68 @@ public class StatsRestHelper {
                         Log.e(TAG, "Stats: Failed to get summary");
                     }
                 });
+    }
+
+    public static void getStatsBarChart(final String blogId, final StatsBarChartUnit barChartUnit) {
+        
+
+        Listener listener = new Listener() {
+            
+            @Override
+            public void onResponse(JSONObject response) {
+                new ParseBarChartTask().execute(blogId, response, barChartUnit.ordinal());
+            }
+        }; 
+        
+        ErrorListener errorListener = new ErrorListener() {
+            
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Stats: Failed to get bar chart data");
+            }
+        };
+        
+        WordPress.restClient.getStatsBarChartData(blogId, barChartUnit, 30, listener, errorListener);
+        
+    }
+    
+    private static class ParseBarChartTask extends AsyncTask<Object, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            String blogId = (String) params[0];
+            JSONObject response = (JSONObject) params[1];
+            StatsBarChartUnit unit = StatsBarChartUnit.values()[(Integer) params[2]];
+            
+            Context context = WordPress.getContext();
+            Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
+            
+            if (response != null && response.has("data")) {
+                try {
+                    JSONArray results = response.getJSONArray("data");
+                    
+                    int count = results.length();
+
+                    // delete old stats and insert new ones
+                    if (count > 0)
+                        context.getContentResolver().delete(uri, "blogId=? AND unit=?", new String[] { blogId, unit.name() });
+
+                    for (int i = 0; i < count; i++ ) {
+                        JSONArray result = results.getJSONArray(i);
+                        StatsBarChartData stat = new StatsBarChartData(blogId, unit, result);
+                        ContentValues values = StatsBarChartDataTable.getContentValues(stat);
+                        
+                        if (values != null && uri != null) {
+                            context.getContentResolver().insert(uri, values);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                
+            }
+            return null;
+        }        
     }
     
     

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,28 +17,19 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
-import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.StatUtils;
@@ -162,9 +152,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
             lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
             
             refreshSummary();
-            refreshChartsFromServer();
         }
-
 
         private void refreshSummary() {
             if (WordPress.getCurrentBlog() == null)
@@ -229,73 +217,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
             mViewsAllTime.setText(viewsAllTime + "");
             mCommentsAllTime.setText(commentsAllTime + "");
         }
-
-        private void refreshChartsFromServer() {
-            if (WordPress.getCurrentBlog() == null)
-                return;
-            
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-            
-            Listener listener = new Listener() {
-                
-                @Override
-                public void onResponse(JSONObject response) {
-                    new ParseJsonTask().execute(blogId, response, getUri());
-                }
-            }; 
-            
-            ErrorListener errorListener = new ErrorListener() {
-                
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("WordPress Stats", StatsVisitorsAndViewsFragment.class.getSimpleName() + ": " + error.toString());
-                }
-            };
-            
-            WordPress.restClient.getStatsBarChartData(blogId, getBarChartUnit(), getNumOfPoints(), listener, errorListener);
-        }
-        
-        private class ParseJsonTask extends AsyncTask<Object, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Object... params) {
-                String blogId = (String) params[0];
-                JSONObject response = (JSONObject) params[1];
-                Uri uri = (Uri) params[2];
-                
-                Context context = WordPress.getContext();
-                
-                if (response != null && response.has("data")) {
-                    try {
-                        JSONArray results = response.getJSONArray("data");
-                        
-                        int count = results.length();
-
-                        StatsBarChartUnit unit = getBarChartUnit();
-                                                
-                        // delete old stats and insert new ones
-                        if (count > 0)
-                            context.getContentResolver().delete(uri, "blogId=? AND unit=?", new String[] { blogId, unit.name() });
-
-                        for (int i = 0; i < count; i++ ) {
-                            JSONArray result = results.getJSONArray(i);
-                            StatsBarChartData stat = new StatsBarChartData(blogId, unit, result);
-                            ContentValues values = StatsBarChartDataTable.getContentValues(stat);
-                            
-                            if (values != null && uri != null) {
-                                context.getContentResolver().insert(uri, values);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    
-                }
-                return null;
-            }        
-        }
-
-        
         
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {

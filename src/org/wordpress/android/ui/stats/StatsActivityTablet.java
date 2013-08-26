@@ -111,6 +111,7 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         ft.commit();
         
+        // split layout into two for 720DP tablets and 600DP tablets in landscape
         if (Utils.getSmallestWidthDP() >= TABLET_720DP || (Utils.getSmallestWidthDP() == TABLET_600DP && isInLandscape()))
             loadSplitLayout();
         
@@ -213,10 +214,12 @@ public class StatsActivityTablet extends WPActionBarActivity {
         StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
         StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
         StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
+        // data for total followers and shares will already be fetched 
         StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
         StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
         StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
         StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
+        StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
     }
     
 }
