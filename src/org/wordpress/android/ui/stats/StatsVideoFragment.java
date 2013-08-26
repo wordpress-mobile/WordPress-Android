@@ -204,17 +204,31 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
                     new Listener() {
                         
                         @Override
-                        public void onResponse(JSONObject response) {
-                            StatUtils.saveVideoSummary(blogId, response);
-                            if (getActivity() != null)
-                                getActivity().runOnUiThread(new Runnable() {
-                                    
-                                    @Override
-                                    public void run() {
-                                        refreshSummary();
+                        public void onResponse(final JSONObject response) {
+                            
+                            new AsyncTask<Void, Void, Void> () {
+
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    StatUtils.saveVideoSummary(blogId, response);
+                                    return null;
+                                }
+
+                                protected void onPostExecute(Void result) {
+                                    if (getActivity() == null)
+                                        return; 
                                         
-                                    }
-                                });
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        
+                                        @Override
+                                        public void run() {
+                                            refreshSummary();      
+                                        }
+                                    });
+                                };
+                                
+                            }.execute();
+                            
                         }
                     }, 
                     new ErrorListener() {

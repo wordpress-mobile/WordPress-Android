@@ -161,9 +161,38 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
             lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
             
+            refreshSummary();
             refreshChartsFromServer();
         }
 
+
+        private void refreshSummary() {
+            if (WordPress.getCurrentBlog() == null)
+                return;
+               
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            new AsyncTask<Void, Void, StatsSummary>() {
+
+                @Override
+                protected StatsSummary doInBackground(Void... params) {
+                    return StatUtils.getSummary(blogId);
+                }
+                
+                protected void onPostExecute(final StatsSummary result) {
+                    if (getActivity() == null)
+                        return;
+                    getActivity().runOnUiThread(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            refreshViews(result);      
+                        }
+                    });
+                };
+                
+            }.execute();
+            
+        }
 
         @Override
         public void onPause() {

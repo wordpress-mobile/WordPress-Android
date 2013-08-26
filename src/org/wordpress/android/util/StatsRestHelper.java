@@ -661,10 +661,20 @@ public class StatsRestHelper {
                 new Listener() {
                     
                     @Override
-                    public void onResponse(JSONObject response) {
-                        StatUtils.saveSummary(blogId, response);
-                        StatsSummary stats = StatUtils.getSummary(blogId);
-                        StatUtils.broadcastSummaryUpdated(stats);
+                    public void onResponse(final JSONObject response) {
+                        new AsyncTask<Void, Void, StatsSummary>() {
+
+                            @Override
+                            protected StatsSummary doInBackground(Void... params) {
+                                StatUtils.saveSummary(blogId, response);
+                                return StatUtils.getSummary(blogId);
+                            }
+                            
+                            protected void onPostExecute(StatsSummary result) {
+                                StatUtils.broadcastSummaryUpdated(result);
+                            };
+                            
+                        }.execute();
                     }
                 }, 
                 new ErrorListener() {
