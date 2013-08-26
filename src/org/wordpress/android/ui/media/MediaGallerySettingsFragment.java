@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,7 +118,6 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mNumColumns = savedInstanceState.getInt(STATE_NUM_COLUMNS);
         int galleryTypeOrdinal = savedInstanceState.getInt(STATE_GALLERY_TYPE_ORD);
         mType = GalleryType.values()[galleryTypeOrdinal];
-        Log.d("ASDF", "restored ordinal: " + mType.ordinal());
         mIsRandomOrder = savedInstanceState.getBoolean(STATE_RANDOM_ORDER);
     }
 
@@ -128,7 +126,6 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_NUM_COLUMNS, mNumColumns);
         outState.putBoolean(STATE_RANDOM_ORDER, mIsRandomOrder);
-        Log.d("ASDF", "saving ordinal: " + mType.ordinal());
         outState.putInt(STATE_GALLERY_TYPE_ORD, mType.ordinal());
     }
 
@@ -189,8 +186,6 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
                 mIsRandomOrder = checked;
                 break;
         }
-        
-        Log.d("ASDF", "type changed, ordinal: " + mType.ordinal());
         
         mNumColumnsContainer.setVisibility(numColumnsContainerVisible);
         
