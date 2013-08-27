@@ -76,6 +76,8 @@ import org.json.JSONException;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.lockmanager.DefaultAppLock;
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -1166,6 +1168,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         photoPickerIntent.setType("image/*");
         mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
         startActivityForResult(photoPickerIntent, ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchCamera() {
@@ -1201,6 +1204,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
             mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
             startActivityForResult(takePictureFromCameraIntent, ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
+            AppLockManager.getInstance().setExtendedTimeout();
         }
     }
 
@@ -1209,11 +1213,13 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         videoPickerIntent.setType("video/*");
         mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
         startActivityForResult(videoPickerIntent, ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
         mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
         startActivityForResult(new Intent(MediaStore.ACTION_VIDEO_CAPTURE), ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private LocationResult locationResult = new LocationResult() {

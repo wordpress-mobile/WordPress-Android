@@ -185,6 +185,8 @@
                 <category android:name="org.wordpress.android" />
             </intent-filter>
         </receiver>
+        <activity android:name="org.wordpress.android.lockmanager.AppUnlockActivity"></activity>
+        <activity android:name="org.wordpress.android.lockmanager.AppLockPreferencesActivity"></activity>
     </application>
 
 </manifest>

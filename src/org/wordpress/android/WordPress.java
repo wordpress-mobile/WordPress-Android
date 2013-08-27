@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -30,15 +29,12 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
 
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.WPRestClient;
 
 public class WordPress extends Application {
@@ -85,6 +81,9 @@ public class WordPress extends Application {
         restClient = new WPRestClient(requestQueue, new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
         registerForCloudMessaging(this);
         
+        //Uncomment this line if you want to test the app locking feature
+        //AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+
         loadNotifications(this);
         super.onCreate();
     }

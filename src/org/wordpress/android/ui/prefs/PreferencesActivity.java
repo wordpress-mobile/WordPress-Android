@@ -45,6 +45,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
@@ -118,7 +119,14 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                 }, this);
             }
         }
-
+        
+        //Passcode Lock not supported
+        if( AppLockManager.getInstance().isAppLockFeatureEnabled() == false ) {
+            PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
+            PreferenceGroup passcodeGroup = (PreferenceGroup)findPreference("wp_passcode_lock_category");
+            rootScreen.removePreference(passcodeGroup);
+        }
+        
         displayPreferences();
     }
 
@@ -128,9 +136,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         // the set of blogs may have changed while we were away
         updateBlogsPreferenceCategory();
+        updateAppLockPreferenceCategory();
     }
-    
-    
     
     @Override
     protected void onPause() {
@@ -147,6 +154,21 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void updateAppLockPreferenceCategory(){
+        AppLockManager appLockManager = AppLockManager.getInstance();
+        if( appLockManager.isAppLockFeatureEnabled() == false )
+            return;
+        
+        Preference passcodeLockPreference = (Preference) findPreference("wp_pref_passlock_enabled");
+        if(passcodeLockPreference == null)
+            return;
+        
+        if ( appLockManager.getCurrentAppLock().isPasswordLocked() ) 
+            passcodeLockPreference.setTitle("Turn posscode off");
+        else
+            passcodeLockPreference.setTitle("Turn posscode on");    
+    }
+    
     /**
      * Update the "blogs" preference category to contain a preference for each blog to configure
      * blog-specific settings. This also adds an "add blog" preference for setting up new blogs.
