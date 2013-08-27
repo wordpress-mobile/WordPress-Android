@@ -69,6 +69,7 @@ import org.xml.sax.XMLReader;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 
 /**
@@ -342,7 +343,18 @@ public class WPHtml {
                     out.append(((URLSpan) style[j]).getURL());
                     out.append("\">");
                 }
-                if (style[j] instanceof ImageSpan) {
+                if (style[j] instanceof MediaGalleryImageSpan) {
+                    MediaGallery gallery = ((MediaGalleryImageSpan) style[j]).getMediaGallery();
+                    out.append("[gallery ");
+                    if (gallery.isRandom())
+                        out.append(" orderby=\"rand\"");
+                    if (gallery.getType().equals(""))
+                        out.append(" columns=\"" + gallery.getNumColumns() + "\"");
+                    else 
+                        out.append(" type=\"" + gallery.getType() + "\"");
+                    out.append(" ids=\"" + gallery.getIdsStr() + "\"");
+                    out.append("]");
+                } else if (style[j] instanceof ImageSpan) {
                     out.append("<img src=\"");
                     out.append(((WPImageSpan) style[j]).getSource());
                     out.append("\" android-uri=\""

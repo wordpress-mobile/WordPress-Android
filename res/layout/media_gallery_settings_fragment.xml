@@ -61,7 +61,6 @@
                     android:layout_gravity="left|center_vertical"
                     android:layout_weight="2"
                     android:button="@drawable/media_gallery_checkbox_selector"
-                    android:padding="4dp"
                     android:text="@string/media_gallery_image_order_random" />
 
                 <Button
@@ -72,6 +71,7 @@
                     android:layout_gravity="right"
                     android:layout_weight="1"
                     android:background="@drawable/media_gallery_option_selector"
+                    android:padding="8dp"
                     android:text="@string/media_gallery_image_order_reverse"
                     android:textColor="@color/media_grid_item_checkstate_text_selector" />
             </LinearLayout>
@@ -104,6 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/gallery_thumbnail_grid_selector"
+                    android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_thumbnail_grid" />
 
                 <CheckBox
@@ -113,6 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/gallery_tiled_selector"
+                    android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_tiled" />
 
                 <CheckBox
@@ -122,6 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/gallery_squares_selector"
+                    android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_squares" />
             </LinearLayout>
 
@@ -138,6 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/gallery_circles_selector"
+                    android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_circles" />
 
                 <CheckBox
@@ -147,6 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/gallery_slideshow_selector"
+                    android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_slideshow" />
 
                 <View

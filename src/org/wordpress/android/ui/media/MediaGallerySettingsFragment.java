@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -52,6 +50,8 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
 
     private ScrollView mScrollView;
 
+    private CustomGridAdapter mGridAdapter;
+
 
     private enum GalleryType {
         DEFAULT(""),
@@ -69,6 +69,20 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         public String getTag() {
             return mTag;
         }
+        
+        public static GalleryType getTypeFromTag(String tag) {
+            if (tag.equals("rectangular"))
+                return TILED;
+            else if (tag.equals("square"))
+                return SQUARES;
+            else if (tag.equals("circle"))
+                return CIRCLES;
+            else if (tag.equals("slideshow"))
+                return SLIDESHOW;
+            else
+                return DEFAULT;
+        }
+        
     }
     
     @Override
@@ -99,26 +113,23 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         for (int i = 1; i <= 9; i++) {
             list.add(i + "");
         }
-        mNumColumnsGrid.setAdapter(new CustomGridAdapter(mNumColumns));
+        
+        mGridAdapter = new CustomGridAdapter(mNumColumns);
+        mNumColumnsGrid.setAdapter(mGridAdapter);
         
         mThumbnailCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_thumbnail_grid);
-        mThumbnailCheckbox.setChecked(mType == GalleryType.DEFAULT);
-        mThumbnailCheckbox.setOnCheckedChangeListener(this);
-        
         mTiledCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_tiled);
-        mTiledCheckbox.setChecked(mType == GalleryType.TILED);
-        mTiledCheckbox.setOnCheckedChangeListener(this);
-        
         mSquaresCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_squares);
-        mSquaresCheckbox.setChecked(mType == GalleryType.SQUARES);
-        mSquaresCheckbox.setOnCheckedChangeListener(this);
-        
         mCirclesCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_circles);
-        mCirclesCheckbox.setChecked(mType == GalleryType.CIRCLES);
+        mSlideshowCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_slideshow);
+        
+        setType(mType.getTag());
+        
+        mThumbnailCheckbox.setOnCheckedChangeListener(this);
+        mTiledCheckbox.setOnCheckedChangeListener(this);
+        mSquaresCheckbox.setOnCheckedChangeListener(this);
         mCirclesCheckbox.setOnCheckedChangeListener(this);
         
-        mSlideshowCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_slideshow);
-        mSlideshowCheckbox.setChecked(mType == GalleryType.SLIDESHOW);
         mSlideshowCheckbox.setOnCheckedChangeListener(this);
         
         mRandomOrderCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_random_checkbox);
@@ -217,6 +228,10 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         public CustomGridAdapter(int selection) {
             mAllowCheckChanged = true;
             mCheckedPositions = new SparseBooleanArray(9);
+            setSelection(selection);
+        }
+
+        private void setSelection(int selection) {
             for (int i = 0; i < 9; i++){
                 if (i + 1 <= selection)
                     mCheckedPositions.put(i, true);
@@ -290,4 +305,47 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.gallery_arrow_dropdown_closed, 0);
     }
 
+    public void setRandom(boolean random) {
+        mIsRandomOrder = random;
+        mRandomOrderCheckbox.setChecked(mIsRandomOrder);
+    }
+    
+    public boolean isRandom() {
+        return mIsRandomOrder;
+    }
+    
+    public void setType(String type) {
+        mType = GalleryType.getTypeFromTag(type);
+        switch (mType) {
+            case CIRCLES:
+                mCirclesCheckbox.setChecked(true);
+                break;
+            case DEFAULT:
+                mThumbnailCheckbox.setChecked(true);
+                break;
+            case SLIDESHOW:
+                mSlideshowCheckbox.setChecked(true);
+                break;
+            case SQUARES:
+                mSquaresCheckbox.setChecked(true);
+                break;
+            case TILED:
+                mTiledCheckbox.setChecked(true);
+                break;
+        }
+    }
+    
+    public String getType() {
+        return mType.getTag();
+    }
+    
+    public void setNumColumns(int numColumns) {
+        mNumColumns = numColumns;
+        mGridAdapter.setSelection(numColumns);
+        mGridAdapter.notifyDataSetChanged();
+    }
+    
+    public int getNumColumns() {
+        return mNumColumns;
+    }
 }

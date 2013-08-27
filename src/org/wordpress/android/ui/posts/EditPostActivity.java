@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Layout;
@@ -53,7 +52,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -97,10 +95,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
-import org.wordpress.android.ui.media.MediaGallerySettingsFragment;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
@@ -109,6 +107,7 @@ import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.MediaGalleryImageSpan;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
@@ -488,8 +487,16 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
 
     private void prepareMediaGallery() {
+        MediaGallery mediaGallery = new MediaGallery();
+        mediaGallery.setIds(getIntent().getStringArrayListExtra("NEW_MEDIA_GALLERY_EXTRA_IDS"));
+        
+        startMediaGalleryActivity(mediaGallery);
+    }
+
+    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
         Intent intent = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
-        startActivity(intent);
+        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
+        startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
     @Override
@@ -856,6 +863,15 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                     mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
                     mContentEditText.setSelection(mContentEditText.getSelectionStart());
                 }
+                
+                // get media gallery spans
+
+                MediaGalleryImageSpan[] gallerySpans = s.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
+                if (gallerySpans.length > 0) {
+                    final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
+                    startMediaGalleryActivity(gallerySpan.getMediaGallery());
+                }
+                
             }
         } else if (event.getAction() == 1) {
             mScrollDetected = false;
@@ -1251,6 +1267,11 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             Bundle extras;
 
             switch (requestCode) {
+                case MediaGalleryActivity.REQUEST_CODE:
+                    if (resultCode == RESULT_OK) {
+                        handleMediaGalleryResult(data);
+                    }
+                    break;
                 case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     verifyImage(imageUri);
@@ -1343,6 +1364,66 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         }// end null check
     }
     
+    private void handleMediaGalleryResult(Intent data) {
+        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
+        if (gallery == null) {
+            gallery = new MediaGallery();
+        }
+        
+
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+        
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+        
+        Editable s = mContentEditText.getText();
+        MediaGalleryImageSpan is = new MediaGalleryImageSpan(EditPostActivity.this, gallery);
+        
+        
+        int line = 0, column = 0;
+        try {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        } catch (Exception ex) {
+        }
+        
+        
+        MediaGalleryImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
+        if (gallerySpans.length != 0) {
+            for (int i = 0; i < gallerySpans.length; i++) {
+                if (gallerySpans[i].getMediaGallery().getUniqueId() == gallery.getUniqueId()) {
+                    
+                    // replace the existing span with a new gallery, re-add it to the same position.
+                    gallerySpans[i].setMediaGallery(gallery);
+                    int spanStart = s.getSpanStart(gallerySpans[i]);
+                    int spanEnd = s.getSpanEnd(gallerySpans[i]);
+                    s.setSpan(gallerySpans[i], spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            return;
+        } else if (column != 0) {
+            // insert one line break if the cursor is not at the first column
+            s.insert(selectionEnd, "\n");
+            selectionStart = selectionStart + 1;
+            selectionEnd = selectionEnd + 1;
+        }
+        
+        s.insert(selectionStart, " ");
+        s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.insert(selectionEnd + 1, "\n\n");
+        try {
+            mContentEditText.setSelection(s.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void verifyImage(Uri imageUri) {
         if (isPicasaImage(imageUri)) {
             // Create an AsyncTask to download the file

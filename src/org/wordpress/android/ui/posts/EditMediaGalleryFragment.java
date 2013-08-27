@@ -18,23 +18,15 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
 public class EditMediaGalleryFragment extends SherlockFragment implements MediaGridAdapterCallback {
 
-    private static final String ARGS_MEDIA_IDS = "ARGS_MEDIA_IDS";
     private DraggableGridView mGridView;
     private MediaGridAdapter mGridAdapter;
-
-    public static EditMediaGalleryFragment newInstance(ArrayList<String> mediaIds) {
-        EditMediaGalleryFragment fragment = new EditMediaGalleryFragment();
-        
-        Bundle args = new Bundle();
-        args.putStringArrayList(ARGS_MEDIA_IDS, mediaIds);
-        fragment.setArguments(args);
-        
-        return fragment;
-    }
+    private ArrayList<String> mIds;
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        
+        mIds = new ArrayList<String>();
         
         mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, new ArrayList<String>());
         mGridAdapter.setCallback(this);
@@ -47,14 +39,17 @@ public class EditMediaGalleryFragment extends SherlockFragment implements MediaG
         return view;
     }
 
+    public void setMediaIds(ArrayList<String> ids) {
+        mIds = ids;
+    }
+    
     private void addViews(DraggableGridView gridView) {
         if (WordPress.getCurrentBlog() == null)
             return;
         
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         
-        ArrayList<String> ids = getArguments().getStringArrayList(ARGS_MEDIA_IDS);
-        Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, ids);
+        Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
         mGridAdapter.swapCursor(cursor);
         
         for (int i = 0; i < mGridAdapter.getDataCount(); i++) {
@@ -80,6 +75,21 @@ public class EditMediaGalleryFragment extends SherlockFragment implements MediaG
         return false;
     }
     
-    
+    public ArrayList<String> getMediaIds() {
+        return mIds;
+    }
+
+    public String getMediaIdsAsString() {
+        String ids = "";
+        if (mIds.size() > 0) {
+            ids = "ids=\"";
+            for(String id : mIds) {
+                ids += id + ",";
+            }
+            ids = ids.substring(0, ids.length() - 1);
+            ids += "\"";
+        }
+        return ids;
+    }
     
 }
