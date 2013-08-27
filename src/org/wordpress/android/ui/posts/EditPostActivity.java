@@ -524,8 +524,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             savedInstanceState.putString("mediaCapturePath", mMediaCapturePath);
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
         if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
@@ -534,6 +533,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 3, 0, getResources().getText(R.string.take_video));
         }
+        
+        menu.add(0, 4, 0, getResources().getText(R.string.media_add_new_media_gallery));
     }
 
     @Override
@@ -551,6 +552,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             case 3:
                 launchVideoCamera();
                 return true;
+            case 4:
+                startMediaGalleryActivity(null);
         }
         return false;
     }
