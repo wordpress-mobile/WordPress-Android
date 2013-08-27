@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/media_browser_container"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/media_gallery_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <fragment
         android:id="@+id/mediaGalleryEditFragment"
@@ -13,7 +12,8 @@
 
     <fragment
         android:id="@+id/mediaGallerySettingsFragment"
-        android:name="org.wordpress.android.ui.media.MediaAddFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
-</RelativeLayout>
+        android:name="org.wordpress.android.ui.media.MediaGallerySettingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

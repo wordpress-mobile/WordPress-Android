@@ -53,6 +53,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -487,22 +488,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
 
     private void prepareMediaGallery() {
-//        ArrayList<String> mediaIds = getIntent().getStringArrayListExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
-//        EditMediaGalleryFragment mEditMediaGalleryFragment = EditMediaGalleryFragment.newInstance(mediaIds);
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(R.id.edit_fragment_container, mEditMediaGalleryFragment);
-//        ft.commit();
-        
-//        MediaGallerySettingsFragment gallerySettingsFragment = new MediaGallerySettingsFragment();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(R.id.edit_fragment_container, gallerySettingsFragment);
-//        ft.commit();
-        
-        Intent i = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
-        startActivity(i);
-        
-        
-        
+        Intent intent = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
+        startActivity(intent);
     }
 
     @Override

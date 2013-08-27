@@ -5,17 +5,22 @@ import java.util.ArrayList;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.GridView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.ExpandableHeightGridView;
+import org.wordpress.android.util.Utils;
 
 public class MediaGallerySettingsFragment extends SherlockFragment implements OnCheckedChangeListener {
 
@@ -35,12 +40,18 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
     private int mNumColumns;
     private boolean mIsRandomOrder;
     
-    private GridView mNumColumnsGrid;
+    private ExpandableHeightGridView mNumColumnsGrid;
     private View mNumColumnsContainer;
+    private View mHeader;
 
     private CheckBox mRandomOrderCheckbox;
 
     private boolean mAllowCheckChanged;
+
+    private TextView mTitleView;
+
+    private ScrollView mScrollView;
+
 
     private enum GalleryType {
         DEFAULT(""),
@@ -72,17 +83,23 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         
         View view = inflater.inflate(R.layout.media_gallery_settings_fragment, container, false);
         
+        mHeader = view.findViewById(R.id.media_gallery_settings_header);
+        mScrollView = (ScrollView) view.findViewById(R.id.media_gallery_settings_content_container);
+        mTitleView = (TextView) view.findViewById(R.id.media_gallery_settings_title);
+        if (!Utils.isTablet()) // show the arrow initially as collapsed when on phone
+            onPanelCollapsed();
+        
         mNumColumnsContainer = view.findViewById(R.id.media_gallery_settings_num_columns_container);
         int visible = (mType == GalleryType.DEFAULT) ? View.VISIBLE : View.GONE;
         mNumColumnsContainer.setVisibility(visible);
         
-        mNumColumnsGrid = (GridView) view.findViewById(R.id.media_gallery_num_columns_grid);
+        mNumColumnsGrid = (ExpandableHeightGridView) view.findViewById(R.id.media_gallery_num_columns_grid);
+        mNumColumnsGrid.setExpanded(true);
         ArrayList<String> list = new ArrayList<String>(9);
         for (int i = 1; i <= 9; i++) {
             list.add(i + "");
         }
         mNumColumnsGrid.setAdapter(new CustomGridAdapter(mNumColumns));
-        
         
         mThumbnailCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_thumbnail_grid);
         mThumbnailCheckbox.setChecked(mType == GalleryType.DEFAULT);
@@ -110,7 +127,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         
         return view;
     }
-    
+
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
@@ -259,5 +276,18 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         }
         
     }
-    
+
+    public View getDragView() {
+        return mHeader;
+    }
+
+    public void onPanelExpanded() {
+        mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.gallery_arrow_dropdown_open, 0);
+        mScrollView.scrollTo(0, 0);
+    }
+
+    public void onPanelCollapsed() {
+        mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.gallery_arrow_dropdown_closed, 0);
+    }
+
 }
