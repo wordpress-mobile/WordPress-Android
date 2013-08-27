@@ -742,12 +742,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return;
         
         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
-//        String galleryIds = "";
-//        for (String id : ids) {
-//            galleryIds += id + ",";
-//        }
-//        galleryIds = galleryIds.substring(0, galleryIds.length() - 1); // remove last comma
-         
         
         Intent i = new Intent(this, EditPostActivity.class);
         i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);

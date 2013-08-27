@@ -2,12 +2,15 @@ package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -18,6 +21,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ExpandableHeightGridView;
+import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.util.Utils;
 
 public class MediaGallerySettingsFragment extends SherlockFragment implements OnCheckedChangeListener {
@@ -52,6 +56,8 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
 
     private CustomGridAdapter mGridAdapter;
 
+    private MediaGallerySettingsCallback mCallback;
+
 
     private enum GalleryType {
         DEFAULT(""),
@@ -83,6 +89,21 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
                 return DEFAULT;
         }
         
+    }
+    
+    public interface MediaGallerySettingsCallback {
+        public void onReverseClicked();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (MediaGallerySettingsCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement MediaGallerySettingsCallback");
+        }
     }
     
     @Override
@@ -135,6 +156,15 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mRandomOrderCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_random_checkbox);
         mRandomOrderCheckbox.setChecked(mIsRandomOrder);
         mRandomOrderCheckbox.setOnCheckedChangeListener(this);
+        
+        Button reverseButton = (Button) view.findViewById(R.id.media_gallery_settings_reverse_button);
+        reverseButton.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                mCallback.onReverseClicked();
+            }
+        });
         
         return view;
     }

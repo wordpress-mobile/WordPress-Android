@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -90,6 +91,10 @@ public class EditMediaGalleryFragment extends SherlockFragment implements MediaG
             ids += "\"";
         }
         return ids;
+    }
+
+    public void reverseIds() {
+        Collections.reverse(mIds);
     }
     
 }

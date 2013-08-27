@@ -19,10 +19,11 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.ui.posts.EditMediaGalleryFragment;
 import org.wordpress.android.util.Utils;
 
-public class MediaGalleryActivity extends SherlockFragmentActivity {
+public class MediaGalleryActivity extends SherlockFragmentActivity implements MediaGallerySettingsCallback {
 
     public static final int REQUEST_CODE = 3000;
     
@@ -156,5 +157,11 @@ public class MediaGalleryActivity extends SherlockFragmentActivity {
                 super.onBackPressed();
         }
             
+    }
+
+
+    @Override
+    public void onReverseClicked() {
+        mMediaGalleryEditFragment.reverseIds();
     }
 }

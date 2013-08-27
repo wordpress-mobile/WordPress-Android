@@ -64,7 +64,7 @@
                     android:text="@string/media_gallery_image_order_random" />
 
                 <Button
-                    android:id="@+id/media_gallery_reverse_button"
+                    android:id="@+id/media_gallery_settings_reverse_button"
                     style="@style/MediaGalleryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -190,13 +190,6 @@
                     android:numColumns="auto_fit"
                     android:stretchMode="columnWidth"
                     android:verticalSpacing="8dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
