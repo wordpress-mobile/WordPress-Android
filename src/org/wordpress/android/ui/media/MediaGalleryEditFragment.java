@@ -55,9 +55,13 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
             return;
         
         
-        // map items from the cursor into the order of ids in mIds
+        SparseIntArray positions = mapIdsToCursorPositions(cursor);
+        mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
+    }
+
+
+    private SparseIntArray mapIdsToCursorPositions(Cursor cursor) {
         SparseIntArray positions = new SparseIntArray();
-        
         int size = mIds.size();
         for (int i = 0; i < size; i++) {
             while (cursor.moveToNext()) {
@@ -69,19 +73,17 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
                 }
             }
         }
-        mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
+        return positions;
     }
 
     @Override
     public void fetchMoreData(int offset) {
-        // TODO Auto-generated method stub
-        
+        // do nothing
     }
 
     @Override
     public void onRetryUpload(String mediaId) {
-        // TODO Auto-generated method stub
-        
+        // do nothing
     }
 
     @Override
