@@ -70,7 +70,8 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
             getSelectedItems().clear();
             getSelectedItems().add(mediaId);
             frameLayout.setChecked(true);
-            mOnItemClickListener.onItemClick(parent, view, position, id);
+            if (mOnItemClickListener != null)
+                mOnItemClickListener.onItemClick(parent, view, position, id);
             mAdapter.notifyDataSetChanged();
             return;
         }
@@ -105,10 +106,11 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
 
     private void notifyMultiSelectCountChanged() {
         if (mMultiSelectListener != null) {
-            mMultiSelectListener.onMultiSelectChange(getSelectedItems().size());
-            if (getSelectedItems().size() == 0) {
+            int size = getSelectedItems().size();
+            if (size == 0) {
                 mIsInMultiSelectMode = false;
             }
+            mMultiSelectListener.onMultiSelectChange(size);
         }
     }
 

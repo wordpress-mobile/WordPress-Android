@@ -163,6 +163,9 @@
         <activity android:name=".ui.media.MediaGalleryActivity">
         </activity>
         
+        <activity android:name=".ui.media.MediaGalleryAddActivity">
+        </activity>
+        
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
         </activity>

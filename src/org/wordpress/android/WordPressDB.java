@@ -1954,6 +1954,23 @@ public class WordPressDB {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY date_created_gmt DESC", new String[] { blogId, "image%" });
     }
+    
+    /** Ids in the filteredIds will not be selected **/
+    public Cursor getMediaImagesForBlog(String blogId, ArrayList<String> filteredIds) {
+        
+        String mediaIdsStr = "";
+        
+        if (filteredIds != null && filteredIds.size() > 0) {
+            mediaIdsStr = "AND mediaId NOT IN (";
+            for (String mediaId : filteredIds) {
+                mediaIdsStr += "'" + mediaId + "',";
+            }
+            mediaIdsStr = mediaIdsStr.subSequence(0, mediaIdsStr.length() - 1) + ")";
+        }
+        
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND "
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY date_created_gmt DESC", new String[] { blogId, "image%" });
+    }
 
     public int getMediaCountImages(String blogId) {
         return getMediaImagesForBlog(blogId).getCount();

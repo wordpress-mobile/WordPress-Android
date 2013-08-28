@@ -42,10 +42,6 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         return view;
     }
 
-    public void setMediaIds(ArrayList<String> ids) {
-        mIds = ids;
-        refreshGridView();
-    }
     
     private void refreshGridView() {
         if (WordPress.getCurrentBlog() == null)
@@ -92,22 +88,26 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
     public boolean isInMultiSelect() {
         return false;
     }
+
+    public void addMediaIds(ArrayList<String> ids) {
+        if (ids == null)
+            return;
+        
+        if (mIds == null) {
+            mIds = ids;
+        } else {
+            mIds.addAll(ids);
+        }
+        refreshGridView();
+    }
+
+    public void setMediaIds(ArrayList<String> ids) {
+        mIds = ids;
+        refreshGridView();
+    }
     
     public ArrayList<String> getMediaIds() {
         return mIds;
-    }
-
-    public String getMediaIdsAsString() {
-        String ids = "";
-        if (mIds.size() > 0) {
-            ids = "ids=\"";
-            for(String id : mIds) {
-                ids += id + ",";
-            }
-            ids = ids.substring(0, ids.length() - 1);
-            ids += "\"";
-        }
-        return ids;
     }
 
     public void reverseIds() {

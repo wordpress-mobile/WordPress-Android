@@ -33,6 +33,7 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
     
     private MediaGalleryEditFragment mMediaGalleryEditFragment;
     private MediaGallerySettingsFragment mMediaGallerySettingsFragment;
+    
     private SlidingUpPanelLayout mSlidingPanelLayout;
     private boolean mIsPanelCollapsed = true;
 
@@ -68,7 +69,7 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         mMediaGallerySettingsFragment.setRandom(mMediaGallery.isRandom());
         mMediaGallerySettingsFragment.setNumColumns(mMediaGallery.getNumColumns());
         mMediaGallerySettingsFragment.setType(mMediaGallery.getType());
-        
+    
         mSlidingPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.media_gallery_root);
         if (mSlidingPanelLayout != null) {
             mSlidingPanelLayout.setDragView(mMediaGallerySettingsFragment.getDragView());
@@ -95,7 +96,6 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         }
 
     }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,7 +103,6 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         getSupportMenuInflater().inflate(R.menu.media_gallery, menu);
         return true;
     }
-    
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -118,11 +117,26 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         return super.onOptionsItemSelected(item);
     }
     
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MediaGalleryAddActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryAddActivity.RESULT_IDS);
+                mMediaGalleryEditFragment.addMediaIds(ids);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    
     private void handleAddMedia() {
-        // TODO Auto-generated method stub
+        // need to make MediaGalleryAdd into an activity rather than a fragment because I can't add this fragment 
+        // on top of the slidingpanel layout (since it needs to be the root layout)
+        
+        Intent intent = new Intent(this, MediaGalleryAddActivity.class);
+        intent.putExtra(MediaGalleryAddActivity.PARAM_FILTERED_IDS, mMediaGalleryEditFragment.getMediaIds());
+        startActivityForResult(intent, MediaGalleryAddActivity.REQUEST_CODE);
         
     }
-
 
     private void handleSaveMedia() {
         
@@ -142,7 +156,6 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         finish();
     }
 
-
     @Override
     public void onBackPressed() {
         
@@ -157,9 +170,9 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
             
     }
 
-
     @Override
     public void onReverseClicked() {
         mMediaGalleryEditFragment.reverseIds();
     }
+
 }

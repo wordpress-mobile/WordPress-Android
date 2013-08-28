@@ -16,4 +16,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/media_gallery_add_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
