@@ -93,6 +93,7 @@ import org.xmlrpc.android.ApiHelper;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
@@ -1200,6 +1201,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     private void launchPictureLibrary() {
         mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
         MediaUtils.launchPictureLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchCamera() {
@@ -1209,6 +1211,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             public void onMediaCapturePathReady(String mediaCapturePath) {
                 mMediaCapturePath = mediaCapturePath;
                 mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
+                AppLockManager.getInstance().setExtendedTimeout();
             }
         });
     }
@@ -1216,11 +1219,13 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     private void launchVideoLibrary() {
         mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
         MediaUtils.launchVideoLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
         mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
         MediaUtils.launchVideoCamera(this);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private LocationResult locationResult = new LocationResult() {

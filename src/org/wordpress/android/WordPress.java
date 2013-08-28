@@ -52,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
@@ -120,6 +121,9 @@ public class WordPress extends Application {
         restClient = new WPRestClient(requestQueue, new OauthAuthenticator(), settings.getString(ACCESS_TOKEN_PREFERENCE, null));
         registerForCloudMessaging(this);
         
+        //Uncomment this line if you want to test the app locking feature
+        //AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+
         loadNotifications(this);
         super.onCreate();
     }

@@ -223,6 +223,9 @@
             </intent-filter>
         </receiver>
             
+        <activity android:name="org.wordpress.android.lockmanager.AppUnlockActivity"></activity>
+        <activity android:name="org.wordpress.android.lockmanager.AppLockPreferencesActivity"></activity>
+        
         <provider
             android:name=".providers.StatsContentProvider"
             android:authorities="org.wordpress.android.providers.StatsContentProvider"
