@@ -171,6 +171,7 @@
                 android:id="@+id/media_gallery_settings_num_columns_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:orientation="vertical" >
 
                 <TextView
