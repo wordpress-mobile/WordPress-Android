@@ -11,7 +11,7 @@ public class MediaGalleryImageSpan extends ImageSpan {
     private MediaGallery mMediaGallery;
 
     public MediaGalleryImageSpan(Context context, MediaGallery mediaGallery) {
-        super(context, R.drawable.app_icon);
+        super(context, R.drawable.icon_mediagallery_placeholder);
         setMediaGallery(mediaGallery);
     }
 
