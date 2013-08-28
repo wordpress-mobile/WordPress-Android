@@ -375,6 +375,7 @@
   <!--  Menu Buttons -->
   <string name="new_post">New Post</string>
   <string name="new_page">New Page</string>
+  <string name="search_post">Search</string>
   <string name="quick_photo">Quick Photo</string>
   <string name="quick_video">Quick Video</string>
   <string name="wp_admin">Dashboard</string>

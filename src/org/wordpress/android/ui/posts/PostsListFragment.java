@@ -699,6 +699,10 @@ public class PostsListFragment extends ListFragment {
     public interface OnPostSelectedListener {
         public void onPostSelected(Post post);
     }
+    
+    public interface OnSearchQueryListener{
+        public void updateList(String query);
+    }
 
     public interface OnRefreshListener {
         public void onRefresh(boolean start);

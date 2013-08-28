@@ -11,6 +11,9 @@ import java.util.Map;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +28,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -41,16 +45,21 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
+import org.wordpress.android.ui.posts.PostsListFragment.OnSearchQueryListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
-        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
+        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener,
+        OnDialogConfirmListener, OnSearchQueryListener, SearchView.OnQueryTextListener {
 
     private PostsListFragment postList;
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
     public  static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
     public ProgressDialog loadingDialog;
+    public SearchView searchView;
+    public SearchManager searchManager;
+    public SearchableInfo searchableInfo;
     public boolean isPage = false;
     public String errorMsg = "";
     public boolean isRefreshing = false;
@@ -281,6 +290,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
+       
+        searchManager  = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView)menu.findItem(R.id.menu_post_search).getActionView();
+        searchView.setIconifiedByDefault(true);
+        
+        searchView.setQueryHint("Search Posts...");
 
         if (isPage) {
             menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
@@ -859,5 +874,23 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         attemptToSelectPost();
         postList.loadPosts(false);
         new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        
+        return false;
+    }
+
+    @Override
+    public void updateList(String query) {
+        // TODO Auto-generated method stub
+        
     }
 }
