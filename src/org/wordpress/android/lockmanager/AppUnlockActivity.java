@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.AccountSetupActivity;
 
 public class AppUnlockActivity extends Activity implements OnClickListener {
 

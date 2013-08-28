@@ -12,19 +12,27 @@ import android.preference.PreferenceManager;
 import org.wordpress.android.util.StringUtils;
 
 public class DefaultAppLock extends AbstractAppLock {
-    
-    private Date lostFocusDate;
+
+    private Application currentApp; //Keep a reference to the app that invoked the locker
     private SharedPreferences settings;
+    private Date lostFocusDate;
     private static final String PASSWORD_SALT = "sadasauidhsuyeuihdahdiauhs";
 
     public DefaultAppLock(Application currentApp) {
         super();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(currentApp); 
         this.settings = settings;
-        currentApp.registerActivityLifecycleCallbacks(this);
+        this.currentApp = currentApp;
     }
 
-    public void disable(Application currentApp){
+    public void enable(){
+        if( isPasswordLocked() ) {
+            currentApp.unregisterActivityLifecycleCallbacks(this);
+            currentApp.registerActivityLifecycleCallbacks(this);
+        }
+    }
+    
+    public void disable( ){
         currentApp.unregisterActivityLifecycleCallbacks(this);
     }
     
@@ -49,12 +57,15 @@ public class DefaultAppLock extends AbstractAppLock {
 
         if(password == null) {
             editor.remove(APP_LOCK_PASSWORD_PREF_KEY);
+            editor.commit();
+            this.disable();
         } else {
             password = PASSWORD_SALT + password + PASSWORD_SALT;
             editor.putString(APP_LOCK_PASSWORD_PREF_KEY, StringUtils.getMd5Hash(password));
+            editor.commit();
+            this.enable();
         }
-
-        editor.commit();
+        
         return true;
     }
         

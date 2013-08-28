@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 
@@ -36,12 +37,15 @@ public class AppLockPreferencesActivity extends Activity implements OnClickListe
     @Override
     public void onClick(View arg0) {
         String pinCode = null;
-        if( mEnabledCheckBox.isChecked() )
-            pinCode = mPasswordField.getText().toString().trim();
-
+        if( mEnabledCheckBox.isChecked() ) {
+            String newPassword = mPasswordField.getText().toString().trim();
+            if(newPassword.length() < 3 ) {
+                Toast.makeText(AppLockPreferencesActivity.this, "Too short!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            pinCode = newPassword;
+        }
         AppLockManager.getInstance().getCurrentAppLock().setPassword(pinCode);
-
         finish();
     }
-
 }

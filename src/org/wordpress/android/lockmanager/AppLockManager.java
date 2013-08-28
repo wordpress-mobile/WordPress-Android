@@ -17,19 +17,20 @@ public class AppLockManager {
     public void enableDefaultAppLockIfAvailable(Application currentApp) {
         if (android.os.Build.VERSION.SDK_INT >= 14) {
             currentAppLocker = new DefaultAppLock(currentApp);
+            currentAppLocker.enable();
         }
     }
 
     /*
-    public void stopAppLock(Application currentApp) {
+    public void stopAppLock() {
         if ( currentAppLocker == null )
             return;
         if (android.os.Build.VERSION.SDK_INT >= 14) {
-            currentAppLocker.disable(currentApp);
+            currentAppLocker.disable();
             currentAppLocker = null;
         }
     }
-    */
+  */  
     
     /**
      * App lock is available on Android-v14 or higher.

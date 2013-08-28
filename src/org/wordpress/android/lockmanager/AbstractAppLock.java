@@ -18,7 +18,8 @@ public abstract class AbstractAppLock implements Application.ActivityLifecycleCa
         this.lockTimeOut = timeout;
     }
     
-    public abstract void disable(Application currentApp);
+    public abstract void enable();
+    public abstract void disable();
     public abstract void forcePasswordLock();
     public abstract boolean verifyPassword( String password );
     public abstract boolean isPasswordLocked();

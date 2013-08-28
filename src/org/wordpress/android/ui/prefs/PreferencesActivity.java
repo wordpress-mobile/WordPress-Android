@@ -164,9 +164,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             return;
         
         if ( appLockManager.getCurrentAppLock().isPasswordLocked() ) 
-            passcodeLockPreference.setTitle("Turn posscode off");
+            passcodeLockPreference.setTitle("Turn passcode off");
         else
-            passcodeLockPreference.setTitle("Turn posscode on");    
+            passcodeLockPreference.setTitle("Turn passcode on");    
     }
     
     /**
