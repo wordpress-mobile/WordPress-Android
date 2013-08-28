@@ -10,17 +10,17 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.CustomGridView;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
 public class MediaGalleryEditFragment extends SherlockFragment implements MediaGridAdapterCallback {
 
-    private GridView mGridView;
+    private CustomGridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ArrayList<String> mIds;
     
@@ -35,7 +35,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
         
-        mGridView = (GridView) view.findViewById(R.id.edit_media_gallery_gridview);
+        mGridView = (CustomGridView) view.findViewById(R.id.edit_media_gallery_gridview);
         mGridView.setAdapter(mGridAdapter);
         refreshGridView();
         

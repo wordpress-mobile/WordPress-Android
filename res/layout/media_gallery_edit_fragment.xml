@@ -3,11 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <GridView
+    <org.wordpress.android.ui.CustomGridView
         android:id="@+id/edit_media_gallery_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="@integer/media_grid_num_columns" >
-    </GridView>
+        android:numColumns="@integer/media_grid_num_columns" />
 
 </FrameLayout>
