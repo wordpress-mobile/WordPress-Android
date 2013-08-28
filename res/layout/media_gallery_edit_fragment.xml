@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/wordpress_blue" >
+    android:layout_height="match_parent" >
 
-	<org.wordpress.android.ui.DraggableGridView
+    <GridView
         android:id="@+id/edit_media_gallery_gridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </org.wordpress.android.ui.DraggableGridView>
+        android:layout_height="match_parent"
+        android:numColumns="@integer/media_grid_num_columns" >
+    </GridView>
 
 </FrameLayout>

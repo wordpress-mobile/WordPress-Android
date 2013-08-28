@@ -1979,6 +1979,9 @@ public class WordPressDB {
     
     public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
         
+        if (mediaIds == null || mediaIds.size() == 0)
+            return null;
+        
         String mediaIdsStr = "(";
         for (String mediaId : mediaIds) {
             mediaIdsStr += "'" + mediaId + "',";

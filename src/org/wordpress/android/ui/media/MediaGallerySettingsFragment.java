@@ -21,7 +21,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ExpandableHeightGridView;
-import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.util.Utils;
 
 public class MediaGallerySettingsFragment extends SherlockFragment implements OnCheckedChangeListener {

@@ -13,7 +13,7 @@
 
         <fragment
             android:id="@+id/mediaGalleryEditFragment"
-            android:name="org.wordpress.android.ui.posts.EditMediaGalleryFragment"
+            android:name="org.wordpress.android.ui.media.MediaGalleryEditFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

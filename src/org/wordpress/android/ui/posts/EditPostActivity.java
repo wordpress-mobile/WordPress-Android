@@ -1374,9 +1374,10 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     
     private void handleMediaGalleryResult(Intent data) {
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
-        if (gallery == null) {
-            gallery = new MediaGallery();
-        }
+        
+        // if blank gallery returned, don't add to span
+        if (gallery == null || gallery.getIds().size() == 0)
+            return;
         
 
         int selectionStart = mContentEditText.getSelectionStart();

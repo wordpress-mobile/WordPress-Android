@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,7 +19,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
-import org.wordpress.android.ui.posts.EditMediaGalleryFragment;
 import org.wordpress.android.util.Utils;
 
 public class MediaGalleryActivity extends SherlockFragmentActivity implements MediaGallerySettingsCallback {
@@ -33,7 +31,7 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
     // result of the gallery
     public static final String RESULT_MEDIA_GALLERY = "RESULT_MEDIA_GALLERY";
     
-    private EditMediaGalleryFragment mMediaGalleryEditFragment;
+    private MediaGalleryEditFragment mMediaGalleryEditFragment;
     private MediaGallerySettingsFragment mMediaGallerySettingsFragment;
     private SlidingUpPanelLayout mSlidingPanelLayout;
     private boolean mIsPanelCollapsed = true;
@@ -63,7 +61,7 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         if (mMediaGallery == null)
             mMediaGallery = new MediaGallery();
 
-        mMediaGalleryEditFragment = (EditMediaGalleryFragment) fm.findFragmentById(R.id.mediaGalleryEditFragment);
+        mMediaGalleryEditFragment = (MediaGalleryEditFragment) fm.findFragmentById(R.id.mediaGalleryEditFragment);
         mMediaGalleryEditFragment.setMediaIds(mMediaGallery.getIds());
         
         mMediaGallerySettingsFragment = (MediaGallerySettingsFragment) fm.findFragmentById(R.id.mediaGallerySettingsFragment);
