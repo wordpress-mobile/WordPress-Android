@@ -314,6 +314,20 @@ public class CommentsActivity extends WPActionBarActivity implements
                     Toast.makeText(CommentsActivity.this,
                             getResources().getText(R.string.comment_moderated),
                             Toast.LENGTH_SHORT).show();
+                    
+                    //Update the UI of the details view
+                    FragmentManager fm = getSupportFragmentManager();
+                    CommentFragment f = (CommentFragment) fm
+                            .findFragmentById(R.id.commentDetail);
+
+                    if (f != null) { //tablets
+                        if(f.isInLayout())
+                            f.processCommentStatus();
+                    } else {//phone
+                        f = (CommentFragment) fm.findFragmentById(R.id.commentDetailFragmentContainer);
+                        if (f != null) 
+                            f.processCommentStatus();
+                    }
                 }
             };
             runOnUiThread(action);

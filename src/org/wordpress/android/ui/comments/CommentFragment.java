@@ -133,7 +133,7 @@ public class CommentFragment extends Fragment {
 
     }
 
-    private void processCommentStatus() {
+    protected void processCommentStatus() {
 
         Button approve = (Button) getActivity().findViewById(R.id.approveComment);
         Button unapprove = (Button) getActivity().findViewById(R.id.unapproveComment);
