@@ -22,6 +22,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.util.StringUtils;
 
@@ -211,6 +212,12 @@ public class CommentFragment extends Fragment {
         if (!comment.authorEmail.equals("")) {
             tvEmail.setText(comment.authorEmail);
             Linkify.addLinks(tvEmail, Linkify.ALL);
+            tvEmail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppLockManager.getInstance().setExtendedTimeout();
+                }
+            });
         } else {
             tvEmail.setVisibility(View.GONE);
         }
@@ -220,6 +227,12 @@ public class CommentFragment extends Fragment {
         if (!comment.authorURL.equals("")) {
             tvURL.setText(comment.authorURL);
             Linkify.addLinks(tvURL, Linkify.ALL);
+            tvURL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppLockManager.getInstance().setExtendedTimeout();
+                }
+            });
         } else {
             tvURL.setVisibility(View.GONE);
         }
