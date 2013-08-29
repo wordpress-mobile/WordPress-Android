@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,10 +23,11 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     private int lastY;
     private View activeView;
     private int activePos;
-    protected ArrayList<Integer> newPositions;
+    private ArrayList<Integer> newPositions;
     private int activePosPrevX;
     private int activePosPrevY;
-    protected ArrayList<Rect> coords; 
+    private ArrayList<Rect> coords; 
+    private Handler handler;
 
     public CustomGridView(Context context) {
         super(context);
@@ -45,6 +47,7 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     private void init() {
         newPositions = new ArrayList<Integer>();
         coords = new ArrayList<Rect>();
+        handler = new Handler();
         
         setOnItemLongClickListener(this);
         setOnTouchListener(this);
@@ -98,15 +101,82 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
                 
                 lastX = (int) event.getX();
                 lastY = (int) event.getY();
+                
+                int[] pos = getLocationOnScreen();
+                int bottom = pos[1] + getHeight();
+                
+                if (y >= 0.66 * bottom)
+                    startScrollDown();
+                else if (y <= 0.33 * bottom)
+                    startScrollUp();
+                else
+                    stopScroll();
+                
                 break;
             case MotionEvent.ACTION_UP:
+                stopScroll();
                 activeView = null;
                 activePos = -1;
                 break;
         }
         return false;
     }
+    
+    private int[] getLocationOnScreen() {
+        int[] pos = new int[] {0,0};
+        getLocationOnScreen(pos);
+        return pos;
+    }
 
+    private void startScrollDown() {
+        handler.removeCallbacks(scrollUpRunner);
+        handler.post(scrollDownRunner);
+    }
+
+    private void startScrollUp() {
+        handler.removeCallbacks(scrollDownRunner);
+        handler.post(scrollUpRunner);
+    }
+    
+    private void stopScroll() {
+
+        int[] pos = getLocationOnScreen();
+        Log.d("ASDF", "top: " + pos[1] + " bottom: " + (pos[1] + getHeight()));
+        handler.removeCallbacks(scrollUpRunner);
+        handler.removeCallbacks(scrollDownRunner);
+    }
+
+    private Runnable scrollDownRunner = new Runnable() {
+        
+        @Override
+        public void run() {
+            int[] pos = getLocationOnScreen();
+            int bottom = pos[1] + getHeight();
+            
+            if (getScrollY() + 3 <= bottom)
+                scrollBy(0, 3);
+            else
+                scrollTo(0, bottom);
+            handler.postDelayed(this, 50);
+        }
+    };
+    
+    private Runnable scrollUpRunner = new Runnable() {
+        
+        @Override
+        public void run() {
+            int[] pos = getLocationOnScreen();
+            int top = pos[1];
+            
+            if (getScrollY() - 3 >= top)
+                scrollBy(0, -3);
+            else
+                scrollTo(0, top);
+            handler.postDelayed(this, 50);
+        }
+    };
+    
+    
     private int getGap(int x, int y) {
         for (int i = 0; i < coords.size(); i++) {
             if (coords.get(i).contains(x, y))
@@ -129,18 +199,21 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
             else if (target < activePos && i >= target && i < activePos)
                 newPos++;
             
+            
             //animate
             int oldPos = i;
             if (newPositions.get(i) != -1)
                 oldPos = newPositions.get(i);
             if (oldPos == newPos)
                 continue;
+
             
             Point oldXY = getCoorFromIndex(oldPos);
             Point newXY = getCoorFromIndex(newPos);
             Point oldOffset = new Point(oldXY.x - v.getLeft(), oldXY.y - v.getTop());
             Point newOffset = new Point(newXY.x - v.getLeft(), newXY.y - v.getTop());
-            
+
+            Log.d("ASD", "GAP: " + target + " i: " + i + " oldPos: " + oldPos + " newPos: " + newPos + " oldY: " + oldOffset.y + " newY: " + newOffset.y);            
             
             TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, oldOffset.x,
                                                                   Animation.ABSOLUTE, newOffset.x,
@@ -157,8 +230,14 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     }
 
     private Point getCoorFromIndex(int oldPos) {
+        int[] pos = getLocationOnScreen();
+        if (oldPos < 0)
+            return new Point(pos[0], pos[1]);
+        else if (oldPos >= coords.size())
+            return new Point(pos[0], pos[1] + getHeight());
+
         Rect rect = coords.get(oldPos);
-        return new Point(rect.left, rect.bottom);
+        return new Point(rect.left, rect.top);
     }
 
     @Override
