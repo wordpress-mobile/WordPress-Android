@@ -24,7 +24,9 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
     private OnItemClickListener mOnItemClickListener;
     private MultiSelectListener mMultiSelectListener;
     private MediaGridAdapter mAdapter;
-    private boolean mIsInMultiSelectMode ;
+    private boolean mIsInMultiSelectMode;
+    private boolean mIsMultiSelectModeEnabled;
+    private boolean mIsHighlightSelectModeEnabled;
     
     public interface MultiSelectListener {
         public void onMultiSelectChange(int count);
@@ -48,14 +50,32 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
     private void init() {
         super.setOnItemClickListener(this);
         super.setOnItemLongClickListener(this);
+        mIsMultiSelectModeEnabled = true;
+        mIsHighlightSelectModeEnabled = false;
     }
 
-    public void setMultiSelectModeEnabled(boolean enabled) {
-        mIsInMultiSelectMode = enabled;
+    public void setMultiSelectModeActive(boolean active) {
+        mIsInMultiSelectMode = active;
     }
     
     public boolean isInMultiSelectMode(){
         return mIsInMultiSelectMode ;
+    }
+    
+    public void setMultiSelectModeEnabled(boolean enabled) {
+        mIsMultiSelectModeEnabled = enabled;
+    }
+    
+    public boolean isMultiSelectModeEnabled() {
+        return mIsMultiSelectModeEnabled;
+    }
+    
+    public void setHighlightSelectModeEnabled(boolean enabled) {
+        mIsHighlightSelectModeEnabled = enabled;
+    }
+    
+    public boolean isHighlightSelectModeEnabled() {
+        return mIsHighlightSelectModeEnabled;
     }
     
     @Override
@@ -73,6 +93,10 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
             if (mOnItemClickListener != null)
                 mOnItemClickListener.onItemClick(parent, view, position, id);
             mAdapter.notifyDataSetChanged();
+            
+            if (isHighlightSelectModeEnabled())
+                notifyMultiSelectCountChanged();
+            
             return;
         }
         
@@ -89,6 +113,10 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        
+        // do not allow item long clicks if multi-select is disabled
+        if (!mIsMultiSelectModeEnabled)
+            return true;
         
         mIsInMultiSelectMode = true;
 

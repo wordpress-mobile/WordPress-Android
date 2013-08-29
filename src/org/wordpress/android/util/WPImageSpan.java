@@ -20,7 +20,20 @@ public class WPImageSpan extends ImageSpan {
         private boolean isVideo;
         private boolean featured = false;
         private boolean featuredInPost = false;
+        private String mediaId;
+        private int height;
+        private String mimeType;
 
+        public WPImageSpan(Context context, Bitmap b, Uri src) {
+            super(context, b);
+            this.imageSource = src;
+        }
+
+        public WPImageSpan(Context context, int resId, Uri src) {
+            super(context, resId);
+            this.imageSource = src;
+        }
+        
         public String getTitle() {
             return title;
         }
@@ -49,17 +62,8 @@ public class WPImageSpan extends ImageSpan {
             this.imageSource = imageSource;
         }
 
-        public WPImageSpan(Context context, Bitmap b, Uri src) {
-        super(context, b);
-        this.imageSource = src;
-    }
-
         public Uri getImageSource() {
                 return imageSource;
-        }
-
-        public void setSrc(Uri src) {
-                this.imageSource = src;
         }
 
         public int getWidth() {
@@ -102,4 +106,27 @@ public class WPImageSpan extends ImageSpan {
             this.isVideo = isVideo;
         }
 
+        public String getMediaId() {
+            return mediaId;
+        }
+
+        public void setMediaId(String mediaId) {
+            this.mediaId = mediaId;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+        
+        public int getHeight() {
+            return height;
+        }
+
+        public void setMimeType(String mimeType) {
+            this.mimeType = mimeType;
+        }
+        
+        public String getMimeType() {
+            return mimeType;
+        }
 }

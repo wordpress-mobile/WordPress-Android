@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -100,6 +101,7 @@ import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.MediaUtils.RequestCode;
@@ -499,6 +501,12 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
         startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
+    
+    private void startMediaGalleryAddActivity() {
+        Intent intent = new Intent(EditPostActivity.this, MediaGalleryPickerActivity.class);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+    }
 
     @Override
     protected void onResume() {
@@ -536,6 +544,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         }
         
         menu.add(0, 4, 0, getResources().getText(R.string.media_add_new_media_gallery));
+        menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
     }
 
     @Override
@@ -555,6 +564,10 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 return true;
             case 4:
                 startMediaGalleryActivity(null);
+                return true;
+            case 5:
+                startMediaGalleryAddActivity();
+                return true;
         }
         return false;
     }
@@ -1280,6 +1293,11 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         handleMediaGalleryResult(data);
                     }
                     break;
+                case MediaGalleryPickerActivity.REQUEST_CODE:
+                    if (resultCode == RESULT_OK) {
+                        handleMediaGalleryPickerResult(data);
+                    }
+                    break;
                 case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     verifyImage(imageUri);
@@ -1372,6 +1390,91 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         }// end null check
     }
     
+    private void handleMediaGalleryPickerResult(Intent data) {
+        if (WordPress.getCurrentBlog() == null)
+            return;
+        
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+        if (ids == null || ids.size() == 0)
+            return;
+
+        String mediaId = ids.get(0);
+        
+        WPImageSpan imageSpan = prepareWPImageSpan(blogId, mediaId);
+        if (imageSpan == null)
+            return;
+        
+
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+        
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+        
+        int line = 0, column = 0;
+        try {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        } catch (Exception ex) {
+        }
+        
+        Editable s = mContentEditText.getText();
+        WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+        if (gallerySpans.length != 0) {
+            // insert a few line breaks if the cursor is already on an image
+            s.insert(selectionEnd, "\n\n");
+            selectionStart = selectionStart + 2;
+            selectionEnd = selectionEnd + 2;
+        } else if (column != 0) {
+            // insert one line break if the cursor is not at the first column
+            s.insert(selectionEnd, "\n");
+            selectionStart = selectionStart + 1;
+            selectionEnd = selectionEnd + 1;
+        }
+        
+        s.insert(selectionStart, " ");
+        s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.insert(selectionEnd + 1, "\n\n");
+        try {
+            mContentEditText.setSelection(s.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private WPImageSpan prepareWPImageSpan(String blogId, String mediaId) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+        if (cursor == null || !cursor.moveToFirst())
+            return null; 
+
+        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        Uri uri = Uri.parse(url);
+        WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.app_icon, uri);
+        imageSpan.setMediaId(mediaId);
+        imageSpan.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
+        imageSpan.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+        imageSpan.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        imageSpan.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
+        imageSpan.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        imageSpan.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        
+        boolean isVideo = false;
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        if (mimeType != null && mimeType.contains("video"))
+            isVideo = true;
+        imageSpan.setVideo(isVideo);
+        cursor.close();
+        
+        return imageSpan;
+    }
+
     private void handleMediaGalleryResult(Intent data) {
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
         
@@ -1389,10 +1492,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             selectionStart = temp;
         }
         
-        Editable s = mContentEditText.getText();
-        MediaGalleryImageSpan is = new MediaGalleryImageSpan(EditPostActivity.this, gallery);
-        
-        
         int line = 0, column = 0;
         try {
             line = mContentEditText.getLayout().getLineForOffset(selectionStart);
@@ -1400,7 +1499,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         } catch (Exception ex) {
         }
         
-        
+        Editable s = mContentEditText.getText();
         MediaGalleryImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
         if (gallerySpans.length != 0) {
             for (int i = 0; i < gallerySpans.length; i++) {
@@ -1422,6 +1521,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         }
         
         s.insert(selectionStart, " ");
+        MediaGalleryImageSpan is = new MediaGalleryImageSpan(EditPostActivity.this, gallery);
         s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1673,34 +1773,36 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             dialogBuilder.create().show();
         } else {
 
+            
             if (!mIsNew) {
                 // update the images
                 mPost.deleteMediaFiles();
+
                 Editable s = mContentEditText.getText();
                 WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-
                 if (click_spans.length != 0) {
 
                     for (int i = 0; i < click_spans.length; i++) {
                         WPImageSpan wpIS = click_spans[i];
                         images += wpIS.getImageSource().toString() + ",";
 
-                        MediaFile mf = new MediaFile();
-                        mf.setPostID(mPost.getId());
-                        mf.setTitle(wpIS.getTitle());
-                        mf.setCaption(wpIS.getCaption());
-                        mf.setDescription(wpIS.getDescription());
-                        mf.setFeatured(wpIS.isFeatured());
-                        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-                        mf.setFileName(wpIS.getImageSource().toString());
-                        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-                        mf.setWidth(wpIS.getWidth());
-                        mf.save();
+                        if (wpIS.getMediaId() != null) {
+                            MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
+                            updateMediaFileOnServer(mf);
+                        }
 
                         int tagStart = s.getSpanStart(wpIS);
-                        if (!isAutoSave) {
+                        if (!isAutoSave) {  
+
                             s.removeSpan(wpIS);
-                            s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                            
+                            // network image has a mediaId 
+                            if (wpIS.getMediaId() != null && wpIS.getMediaId().length() > 0) {
+                                s.insert(tagStart, WPHtml.getContent(wpIS));
+                                
+                            } else { // local image for upload
+                                s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                            }
                             if (mLocalDraft)
                                 content = WPHtml.toHtml(s);
                             else
@@ -1708,7 +1810,27 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         }
                     }
                 }
+            } else {
+
+                Editable s = mContentEditText.getText();
+                WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                
+                // update the description, caption and title of media files on the server
+                if (click_spans.length != 0) {
+
+                    for (int i = 0; i < click_spans.length; i++) {
+                        WPImageSpan wpIS = click_spans[i];
+                        images += wpIS.getImageSource().toString() + ",";
+
+                        if (wpIS.getMediaId() != null) {
+                            MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
+                            updateMediaFileOnServer(mf);
+                        }
+                        
+                    }
+                }
             }
+            
 
             final String moreTag = "<!--more-->";
             int selectedStatus = mStatusSpinner.getSelectedItemPosition();
@@ -1822,6 +1944,55 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             }
         }
         return success;
+    }
+
+    private MediaFile getMediaFileFromWPImageSpan(WPImageSpan wpIS) {
+        MediaFile mf = new MediaFile();
+        mf.setMediaId(wpIS.getMediaId());
+        if (mPost != null)
+            mf.setPostID(mPost.getId());
+        mf.setTitle(wpIS.getTitle());
+        mf.setCaption(wpIS.getCaption());
+        mf.setDescription(wpIS.getDescription());
+        mf.setFeatured(wpIS.isFeatured());
+        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
+        mf.setFileName(wpIS.getImageSource().toString());
+        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+        mf.setWidth(wpIS.getWidth());
+        mf.save();
+        return mf;
+    }
+    
+
+    private void updateMediaFileOnServer(MediaFile mf) {
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog == null)
+            return;
+
+        final String mediaId = mf.getMediaId();
+        final String title = mf.getTitle();
+        final String description = mf.getDescription();
+        final String caption = mf.getCaption();
+        
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
+                mf.getDescription(), mf.getCaption(), 
+                new ApiHelper.EditMediaItemTask.Callback() {
+
+                    @Override
+                    public void onSuccess() {
+                        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Toast.makeText(EditPostActivity.this, R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        List<Object> apiArgs = new ArrayList<Object>();
+        apiArgs.add(currentBlog);
+        task.execute(apiArgs);
     }
 
     private class getAddressTask extends AsyncTask<Double, Void, String> {

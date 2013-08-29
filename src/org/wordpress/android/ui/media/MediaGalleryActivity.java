@@ -122,9 +122,9 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MediaGalleryAddActivity.REQUEST_CODE) {
+        if (requestCode == MediaGalleryPickerActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryAddActivity.RESULT_IDS);
+                ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
                 mMediaGalleryEditFragment.addMediaIds(ids);
             }
         }
@@ -135,9 +135,9 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
         // need to make MediaGalleryAdd into an activity rather than a fragment because I can't add this fragment 
         // on top of the slidingpanel layout (since it needs to be the root layout)
         
-        Intent intent = new Intent(this, MediaGalleryAddActivity.class);
-        intent.putExtra(MediaGalleryAddActivity.PARAM_FILTERED_IDS, mMediaGalleryEditFragment.getMediaIds());
-        startActivityForResult(intent, MediaGalleryAddActivity.REQUEST_CODE);
+        Intent intent = new Intent(this, MediaGalleryPickerActivity.class);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_FILTERED_IDS, mMediaGalleryEditFragment.getMediaIds());
+        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
         
     }
 

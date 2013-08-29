@@ -316,6 +316,7 @@
   <string name="select_video">Select a video from gallery</string>
   <string name="take_video">Take a new video</string>
   <string name="media_remove_from_queue">Remove from queue</string>
+  <string name="select_from_media_library">Select from Media Library</string>
 
   <!-- category management -->
   <string name="categories">Categories</string>

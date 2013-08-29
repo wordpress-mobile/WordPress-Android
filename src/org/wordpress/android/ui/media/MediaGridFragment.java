@@ -182,7 +182,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                 mListener.onMultiSelectChange(mCheckedItems.size());
                 onMultiSelectChange(mCheckedItems.size());
             }
-            mGridView.setMultiSelectModeEnabled(isInMultiSelectMode);
+            mGridView.setMultiSelectModeActive(isInMultiSelectMode);
         }
         
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));

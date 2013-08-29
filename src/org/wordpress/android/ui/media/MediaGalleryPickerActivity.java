@@ -17,21 +17,24 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 
-public class MediaGalleryAddActivity extends SherlockActivity implements MultiSelectListener, Callback {
+public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback {
 
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mAdapter;
     private ActionMode mActionMode;
 
     private ArrayList<String> mFilteredItems;
+    private boolean mIsSelectOneItem;
     
     private static final String STATE_FILTERED_ITEMS = "STATE_FILTERED_ITEMS";
     private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
+    private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
     
-    public static final int REQUEST_CODE = 1000;
+    public static final int REQUEST_CODE = 4000;
+    public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
-    public static final String TAG = MediaGalleryAddActivity.class.getSimpleName();
+    public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +42,22 @@ public class MediaGalleryAddActivity extends SherlockActivity implements MultiSe
 
         ArrayList<String> checkedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
+        mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
         if (savedInstanceState != null) {
             checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
+            mIsSelectOneItem =  savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
         
-        setContentView(R.layout.media_gallery_add_layout);
-        mGridView = (MultiSelectGridView) findViewById(R.id.media_gallery_add_gridview);
-        mGridView.setMultiSelectModeEnabled(true);
+        setContentView(R.layout.media_gallery_picker_layout);
+        mGridView = (MultiSelectGridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiSelectListener(this);
+        if (mIsSelectOneItem) {
+            mGridView.setHighlightSelectModeEnabled(true);
+            mGridView.setMultiSelectModeEnabled(false);
+        } else {
+            mGridView.setMultiSelectModeActive(true);
+        }
         mAdapter = new MediaGridAdapter(this, null, 0, checkedItems);
         mGridView.setAdapter(mAdapter);
         
@@ -66,6 +76,7 @@ public class MediaGalleryAddActivity extends SherlockActivity implements MultiSe
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(STATE_SELECTED_ITEMS, mAdapter.getCheckedItems());
         outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
+        outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
 
     private void refereshViews() {
@@ -83,8 +94,8 @@ public class MediaGalleryAddActivity extends SherlockActivity implements MultiSe
         mActionMode.setTitle(count + " selected");
         
         // stay always in multi-select mode, even when count reaches 0
-        if (count == 0)
-            mGridView.setMultiSelectModeEnabled(true);
+        if (count == 0 && !mIsSelectOneItem)
+            mGridView.setMultiSelectModeActive(true);
     }
 
     @Override

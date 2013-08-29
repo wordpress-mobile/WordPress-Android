@@ -354,6 +354,8 @@ public class WPHtml {
                         out.append(" type=\"" + gallery.getType() + "\"");
                     out.append(" ids=\"" + gallery.getIdsStr() + "\"");
                     out.append("]");
+                } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaId() != null) {
+                    out.append(getContent((WPImageSpan) style[j]));
                 } else if (style[j] instanceof ImageSpan) {
                     out.append("<img src=\"");
                     out.append(((WPImageSpan) style[j]).getSource());
@@ -441,6 +443,60 @@ public class WPHtml {
         }
     }
 
+
+    /** Retrieve an image span content for a media file that exists on the server **/
+    public static String getContent(WPImageSpan imageSpan) {
+        // based on PostUploadService
+        
+        String content = "";
+        
+        String mediaId = imageSpan.getMediaId();
+        if (mediaId == null || mediaId.length() == 0)
+            return content;
+        
+        boolean isVideo = imageSpan.isVideo();
+        String url = imageSpan.getImageSource().toString();
+        
+        if (isVideo) {
+            int xRes = imageSpan.getWidth();
+            int yRes = imageSpan.getHeight();
+            String mimeType = imageSpan.getMimeType();
+            content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                    xRes, yRes, url, mimeType, url);
+        } else {
+            String alignment = "";
+            switch (imageSpan.getHorizontalAlignment()) {
+            case 0:
+                alignment = "alignnone";
+                break;
+            case 1:
+                alignment = "alignleft";
+                break;
+            case 2:
+                alignment = "aligncenter";
+                break;
+            case 3:
+                alignment = "alignright";
+                break;
+            }
+            String alignmentCSS = "class=\"" + alignment + " size-full\" ";
+            String title = imageSpan.getTitle();
+            String caption = imageSpan.getCaption();
+            int width = imageSpan.getWidth();
+            
+            
+            content = content + "<a href=\"" + url + "\"><img title=\"" + title + "\" "
+                    + alignmentCSS + "alt=\"image\" src=\"" + url + "\" /></a>";
+
+            if (!caption.equals("")) {
+                content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+                        alignment, width, TextUtils.htmlEncode(caption), content);
+            }
+        }
+        
+        return content;
+    }
+    
     private static void processWPImage(StringBuilder out, Spanned text,
             int start, int end) {
         int next;
