@@ -8,7 +8,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,6 +27,7 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     private int activePosPrevY;
     private ArrayList<Rect> coords; 
     private Handler handler;
+    private int mHeight;
 
     public CustomGridView(Context context) {
         super(context);
@@ -139,9 +139,6 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     }
     
     private void stopScroll() {
-
-        int[] pos = getLocationOnScreen();
-        Log.d("ASDF", "top: " + pos[1] + " bottom: " + (pos[1] + getHeight()));
         handler.removeCallbacks(scrollUpRunner);
         handler.removeCallbacks(scrollDownRunner);
     }
@@ -150,10 +147,11 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
         
         @Override
         public void run() {
-            int[] pos = getLocationOnScreen();
-            int bottom = pos[1] + getHeight();
-            
-            if (getScrollY() + 3 <= bottom)
+            int[] pos = new int[]{0,0};
+            getLocationInWindow(pos);
+            int bottom = mHeight;
+
+            if (getScrollY() + getHeight() + 3 <= bottom)
                 scrollBy(0, 3);
             else
                 scrollTo(0, bottom);
@@ -213,8 +211,6 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
             Point oldOffset = new Point(oldXY.x - v.getLeft(), oldXY.y - v.getTop());
             Point newOffset = new Point(newXY.x - v.getLeft(), newXY.y - v.getTop());
 
-            Log.d("ASD", "GAP: " + target + " i: " + i + " oldPos: " + oldPos + " newPos: " + newPos + " oldY: " + oldOffset.y + " newY: " + newOffset.y);            
-            
             TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, oldOffset.x,
                                                                   Animation.ABSOLUTE, newOffset.x,
                                                                   Animation.ABSOLUTE, oldOffset.y,
@@ -244,9 +240,12 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     protected void layoutChildren() {
         super.layoutChildren();
         coords.clear();
+        mHeight = 0;
         for (int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
-            coords.add(new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom()));
+            Rect rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
+            coords.add(rect);
+            mHeight += rect.bottom - rect.top;
         }
     }
 }

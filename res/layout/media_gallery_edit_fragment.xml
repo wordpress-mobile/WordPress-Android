@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <org.wordpress.android.ui.CustomGridView
+    <GridView
         android:id="@+id/edit_media_gallery_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

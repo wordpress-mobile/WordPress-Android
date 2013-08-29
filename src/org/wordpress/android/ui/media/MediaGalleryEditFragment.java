@@ -7,20 +7,24 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;
 import android.util.SparseIntArray;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.CustomGridView;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
 public class MediaGalleryEditFragment extends SherlockFragment implements MediaGridAdapterCallback {
 
-    private CustomGridView mGridView;
+    private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ArrayList<String> mIds;
     
@@ -35,8 +39,9 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
         
-        mGridView = (CustomGridView) view.findViewById(R.id.edit_media_gallery_gridview);
+        mGridView = (GridView) view.findViewById(R.id.edit_media_gallery_gridview);
         mGridView.setAdapter(mGridAdapter);
+        mGridView.setOnCreateContextMenuListener(this);
         refreshGridView();
         
         return view;
@@ -165,5 +170,25 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
 
         
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        Cursor cursor = mGridAdapter.getCursor();
+        if (cursor == null)
+            return;
+        cursor.moveToPosition(info.position);
+        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+
+        menu.add(ContextMenu.NONE, mIds.indexOf(mediaId), ContextMenu.NONE, R.string.delete);
+    }
     
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int index = item.getItemId();
+        mIds.remove(index);
+        refreshGridView();
+        return true;
+    }
 }
