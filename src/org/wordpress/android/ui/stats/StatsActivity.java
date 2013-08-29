@@ -121,6 +121,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
+        
+        stopAnimatingRefreshButton(mRefreshMenuItem);
     }
 
     private void restoreState(Bundle savedInstanceState) {

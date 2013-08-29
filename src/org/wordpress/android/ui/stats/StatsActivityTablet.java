@@ -223,6 +223,8 @@ public class StatsActivityTablet extends WPActionBarActivity {
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
+        
+        stopAnimatingRefreshButton(mRefreshMenuItem);
     }
     
     

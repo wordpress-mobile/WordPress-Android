@@ -291,7 +291,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
     @Override
     public void onUriRequested(int id, Uri uri, Bundle bundle) {
-        if (uri.equals(getChildrenUri())) {
+        if (isAdded() && uri.equals(getChildrenUri())) {
             getLoaderManager().restartLoader(id, bundle, StatsCursorTreeFragment.this);
         }
     }
