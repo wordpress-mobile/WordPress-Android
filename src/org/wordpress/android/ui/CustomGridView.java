@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 
 public class CustomGridView extends GridView implements AdapterView.OnItemLongClickListener, OnTouchListener {
 
@@ -23,8 +24,6 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     private View activeView;
     private int activePos;
     private ArrayList<Integer> newPositions;
-    private int activePosPrevX;
-    private int activePosPrevY;
     private ArrayList<Rect> coords; 
     private Handler handler;
     private int mHeight;
@@ -57,8 +56,6 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         activeView = view;
         activePos = position;
-        activePosPrevX = (int) view.getLeft();
-        activePosPrevY = (int) view.getTop();
         newPositions.set(activePos, -1);
         return true;
     }
@@ -74,19 +71,20 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
+
+        int x = (int) event.getX(); 
+        int y = (int) event.getY();
         
         int action = event.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                lastX = (int) event.getX();
-                lastY = (int) event.getY();
+                lastX = x;
+                lastY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (activeView == null)
                     return super.onTouchEvent(event);
-                
-                int x = (int) event.getX(); 
-                int y = (int) event.getY();
                 
                 int delta_x = x - lastX;
                 int delta_y = y - lastY;
@@ -99,22 +97,24 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
                 int gap = getGap(x, y);
                 animateGap(gap);
                 
-                lastX = (int) event.getX();
-                lastY = (int) event.getY();
                 
                 int[] pos = getLocationOnScreen();
                 int bottom = pos[1] + getHeight();
                 
-                if (y >= 0.66 * bottom)
+                if (y >= 0.66 * bottom && y > lastY)
                     startScrollDown();
-                else if (y <= 0.33 * bottom)
+                else if (y <= 0.33 * bottom && y < lastY)
                     startScrollUp();
                 else
                     stopScroll();
-                
+
+                lastX = x;
+                lastY = y;
                 break;
             case MotionEvent.ACTION_UP:
                 stopScroll();
+                gap = getGap(x, y);
+                animateActiveViewToGap(gap);
                 activeView = null;
                 activePos = -1;
                 break;
@@ -151,10 +151,9 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
             getLocationInWindow(pos);
             int bottom = mHeight;
 
-            if (getScrollY() + getHeight() + 3 <= bottom)
-                scrollBy(0, 3);
-            else
-                scrollTo(0, bottom);
+            if (getScrollY() + getHeight() + 3 <= bottom) {
+                smoothScrollBy(3, 50);
+            }
             handler.postDelayed(this, 50);
         }
     };
@@ -163,24 +162,44 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
         
         @Override
         public void run() {
-            int[] pos = getLocationOnScreen();
-            int top = pos[1];
-            
-            if (getScrollY() - 3 >= top)
-                scrollBy(0, -3);
-            else
-                scrollTo(0, top);
+            if (getScrollY() - 3 >= 0)
+                smoothScrollBy(-3, 50);
             handler.postDelayed(this, 50);
         }
     };
     
-    
     private int getGap(int x, int y) {
+        if (y < 0)
+            return 0;
+        
+        if (y > mHeight)
+            return Integer.MAX_VALUE;
+        
+        y +=  getScrollY();
         for (int i = 0; i < coords.size(); i++) {
             if (coords.get(i).contains(x, y))
                 return i;
         }
-        return -1;
+        return 0;
+    }
+    
+    protected void animateActiveViewToGap(int gap) {
+        if (activeView == null)
+            return;
+
+        Point newXY = getCoorFromIndex(gap);
+        Point newOffset = new Point(newXY.x - activeView.getLeft(), newXY.y - activeView.getTop());
+
+        TranslateAnimation translate = new TranslateAnimation(Animation.ABSOLUTE, 0,
+                                                              Animation.ABSOLUTE, newOffset.x,
+                                                              Animation.ABSOLUTE, 0,
+                                                              Animation.ABSOLUTE, newOffset.y);
+        translate.setDuration(150);
+        translate.setFillEnabled(true);
+        translate.setFillAfter(true);
+        activeView.clearAnimation();
+        activeView.startAnimation(translate);
+
     }
     
     protected void animateGap(int target) {
@@ -225,14 +244,16 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
         }
     }
 
-    private Point getCoorFromIndex(int oldPos) {
+    private Point getCoorFromIndex(int index) {
         int[] pos = getLocationOnScreen();
-        if (oldPos < 0)
+        if (index < 0 || coords.size() == 0) {
             return new Point(pos[0], pos[1]);
-        else if (oldPos >= coords.size())
-            return new Point(pos[0], pos[1] + getHeight());
+        } else if (index >= coords.size()) {
+            Rect r = coords.get(coords.size() - 1);
+            return new Point(r.left, r.top);
+        }
 
-        Rect rect = coords.get(oldPos);
+        Rect rect = coords.get(index);
         return new Point(rect.left, rect.top);
     }
 
@@ -240,12 +261,50 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     protected void layoutChildren() {
         super.layoutChildren();
         coords.clear();
-        mHeight = 0;
-        for (int i = 0; i < getChildCount(); i++) {
-            View v = getChildAt(i);
-            Rect rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
-            coords.add(rect);
-            mHeight += rect.bottom - rect.top;
+        
+        int cols = getNumColumns();
+        
+        ListAdapter adapter = getAdapter();
+        int count = adapter.getCount();
+        
+        int left = 0;
+        int top = 0;
+        int width = 0;
+        int height = 0;
+        
+        // assume visible children have same width and height
+        View firstChild = getChildAt(0);
+        int baseW = firstChild.getWidth();
+        int baseH = firstChild.getHeight();
+        
+        for (int i = 0; i < count; i++) {
+            
+            for (int j = 0; j < cols; j++) {
+            
+                View view = adapter.getView(i, null, this);
+                if (view.getVisibility() != View.GONE) {
+                    width = baseW;
+                    height = baseH;
+                    Rect rect = new Rect(left, top, left + width, top + height);
+                    coords.add(rect);
+                } else {
+                    width = 0;
+                    height = 0;
+                }
+                
+                
+                left += width;
+            }
+            
+            left = 0;
+            top += height;
+
         }
+
+        if (coords.size() > 0)
+            mHeight = coords.get(coords.size() - 1).bottom;
+        else
+            mHeight = 0;
     }
+    
 }
