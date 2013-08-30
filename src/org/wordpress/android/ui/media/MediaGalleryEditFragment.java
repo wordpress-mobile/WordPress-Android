@@ -24,6 +24,7 @@ import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
 public class MediaGalleryEditFragment extends SherlockFragment implements MediaGridAdapterCallback {
 
+    private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
     private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ArrayList<String> mIds;
@@ -33,7 +34,9 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         super.onCreateView(inflater, container, savedInstanceState);
         
         mIds = new ArrayList<String>();
-        
+        if (savedInstanceState != null)
+            mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
+            
         mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, new ArrayList<String>());
         mGridAdapter.setCallback(this);
         
@@ -45,6 +48,12 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         refreshGridView();
         
         return view;
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(SAVED_MEDIA_IDS, mIds);
     }
 
     

@@ -63,14 +63,14 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
             mMediaGallery = new MediaGallery();
 
         mMediaGalleryEditFragment = (MediaGalleryEditFragment) fm.findFragmentById(R.id.mediaGalleryEditFragment);
-        mMediaGalleryEditFragment.setMediaIds(mMediaGallery.getIds());
-        
         mMediaGallerySettingsFragment = (MediaGallerySettingsFragment) fm.findFragmentById(R.id.mediaGallerySettingsFragment);
         if (savedInstanceState == null) {
-            // if not null, the gallery settings fragment will remember its state
+            // if not null, the fragments will remember its state
             mMediaGallerySettingsFragment.setRandom(mMediaGallery.isRandom());
             mMediaGallerySettingsFragment.setNumColumns(mMediaGallery.getNumColumns());
             mMediaGallerySettingsFragment.setType(mMediaGallery.getType());
+
+            mMediaGalleryEditFragment.setMediaIds(mMediaGallery.getIds());
         }
     
         mSlidingPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.media_gallery_root);

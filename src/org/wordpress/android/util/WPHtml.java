@@ -26,9 +26,12 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
@@ -53,10 +56,6 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.view.Display;
 import android.view.WindowManager;
-import android.text.Layout;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.os.Build;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
@@ -484,9 +483,8 @@ public class WPHtml {
             String caption = imageSpan.getCaption();
             int width = imageSpan.getWidth();
             
-            
             content = content + "<a href=\"" + url + "\"><img title=\"" + title + "\" "
-                    + alignmentCSS + "alt=\"image\" src=\"" + url + "\" /></a>";
+                    + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
             if (!caption.equals("")) {
                 content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",

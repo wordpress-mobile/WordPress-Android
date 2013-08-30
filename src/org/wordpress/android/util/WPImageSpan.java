@@ -23,6 +23,8 @@ public class WPImageSpan extends ImageSpan {
         private String mediaId;
         private int height;
         private String mimeType;
+        private String thumbnailURL;
+        private boolean networkImageLoaded = false;
 
         public WPImageSpan(Context context, Bitmap b, Uri src) {
             super(context, b);
@@ -106,6 +108,8 @@ public class WPImageSpan extends ImageSpan {
             this.isVideo = isVideo;
         }
 
+        // methods below for use when WPImageSpan uses media files from the server
+        
         public String getMediaId() {
             return mediaId;
         }
@@ -129,4 +133,22 @@ public class WPImageSpan extends ImageSpan {
         public String getMimeType() {
             return mimeType;
         }
+
+        public String getThumbnailURL() {
+            return thumbnailURL;
+        }
+
+        public void setThumbnailURL(String thumbnailURL) {
+            this.thumbnailURL = thumbnailURL;
+        }
+
+        public boolean isNetworkImageLoaded() {
+            return networkImageLoaded;
+        }
+
+        public void setNetworkImageLoaded(boolean networkImageLoaded) {
+            this.networkImageLoaded = networkImageLoaded;
+        }
+        
+        // -- end of methods for media files from the server
 }

@@ -53,6 +53,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -85,6 +86,9 @@ import android.widget.ToggleButton;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -1406,6 +1410,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         if (imageSpan == null)
             return;
         
+        // based on addMedia()
 
         int selectionStart = mContentEditText.getSelectionStart();
         int selectionEnd = mContentEditText.getSelectionEnd();
@@ -1447,16 +1452,19 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        // load image from server
+        loadWPImageSpanThumbnail(imageSpan);
     }
 
-    private WPImageSpan prepareWPImageSpan(String blogId, String mediaId) {
+    private WPImageSpan prepareWPImageSpan(String blogId, final String mediaId) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
         if (cursor == null || !cursor.moveToFirst())
             return null; 
 
         String url = cursor.getString(cursor.getColumnIndex("fileURL"));
         Uri uri = Uri.parse(url);
-        WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.app_icon, uri);
+        WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.remote_image, uri);
         imageSpan.setMediaId(mediaId);
         imageSpan.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
         imageSpan.setDescription(cursor.getString(cursor.getColumnIndex("description")));
@@ -1464,6 +1472,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         imageSpan.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
         imageSpan.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
         imageSpan.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        imageSpan.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         
         boolean isVideo = false;
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
@@ -1475,6 +1484,61 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         return imageSpan;
     }
 
+    /** Loads the thumbnail url in the imagespan from a server **/
+    private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
+        final String mediaId = imageSpan.getMediaId();
+        final String thumbnailUrl = imageSpan.getThumbnailURL();
+        
+        if (thumbnailUrl == null || mediaId == null)
+            return;
+
+        WordPress.imageLoader.get(thumbnailUrl, new ImageListener() {
+            
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+                
+            }
+            
+            @Override
+            public void onResponse(ImageContainer container, boolean arg1) {
+                if (container.getBitmap() != null) {
+
+                    Bitmap bitmap = container.getBitmap();
+
+                    Editable s = mContentEditText.getText();
+                    WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                    if (spans.length != 0) {
+                        for (WPImageSpan is : spans) {
+                            if (mediaId != null && mediaId.equals(is.getMediaId()) && !is.isNetworkImageLoaded()) {
+                                    
+                                // replace the existing span with a new one with the correct image, re-add it to the same position.
+                                int spanStart = s.getSpanStart(is);
+                                int spanEnd = s.getSpanEnd(is);
+                                WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, bitmap, is.getImageSource());
+                                imageSpan.setCaption(is.getCaption());
+                                imageSpan.setDescription(is.getDescription());
+                                imageSpan.setFeatured(is.isFeatured());
+                                imageSpan.setFeaturedInPost(is.isFeaturedInPost());
+                                imageSpan.setHeight(is.getHeight());
+                                imageSpan.setHorizontalAlignment(is.getHorizontalAlignment());
+                                imageSpan.setMediaId(is.getMediaId());
+                                imageSpan.setMimeType(is.getMimeType());
+                                imageSpan.setTitle(is.getTitle());
+                                imageSpan.setVideo(is.isVideo());
+                                imageSpan.setWidth(is.getWidth());
+                                imageSpan.setNetworkImageLoaded(true);
+                                s.removeSpan(is);
+                                s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }, 0, 0);
+        
+    }
+    
     private void handleMediaGalleryResult(Intent data) {
         MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
         
@@ -1787,8 +1851,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         images += wpIS.getImageSource().toString() + ",";
 
                         if (wpIS.getMediaId() != null) {
-                            MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
-                            updateMediaFileOnServer(mf);
+                            updateMediaFileOnServer(wpIS);
                         }
 
                         int tagStart = s.getSpanStart(wpIS);
@@ -1823,8 +1886,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         images += wpIS.getImageSource().toString() + ",";
 
                         if (wpIS.getMediaId() != null) {
-                            MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
-                            updateMediaFileOnServer(mf);
+                            updateMediaFileOnServer(wpIS);
                         }
                         
                     }
@@ -1964,11 +2026,14 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
     
 
-    private void updateMediaFileOnServer(MediaFile mf) {
+    private void updateMediaFileOnServer(WPImageSpan wpIS) {
+
         Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null)
+        if (currentBlog == null || wpIS == null)
             return;
 
+        MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
+        
         final String mediaId = mf.getMediaId();
         final String title = mf.getTitle();
         final String description = mf.getDescription();
