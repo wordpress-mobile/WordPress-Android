@@ -208,7 +208,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
             if (getSupportFragmentManager().getBackStackEntryCount() == 0){
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
                 searchView.setVisibility(View.VISIBLE);
-                searchView.setIconified(true);
             }
                 
         }
@@ -376,6 +375,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
+        searchView.setIconified(true);
         searchView.setVisibility(View.GONE);
         if (post != null) {
 
