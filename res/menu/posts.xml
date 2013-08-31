@@ -12,7 +12,9 @@
     <item
         android:id="@+id/menu_new_post"
         android:icon="@drawable/ab_icon_new"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
+        android:menuCategory="container"
+        android:orderInCategory="3"
         android:title="@string/new_post"/>
     <item
         android:id="@+id/menu_post_search"

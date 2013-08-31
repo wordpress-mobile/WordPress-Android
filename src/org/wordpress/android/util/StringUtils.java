@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,18 +13,16 @@ import android.util.Log;
 
 public class StringUtils {
 
-    public static String[] mergeStringArrays(String array1[], String array2[]) {
-        if (array1 == null || array1.length == 0)
-            return array2;
-        if (array2 == null || array2.length == 0)
-            return array1;
-        List<String> array1List = Arrays.asList(array1);
-        List<String> array2List = Arrays.asList(array2);
-        List<String> result = new ArrayList<String>(array1List);
-        List<String> tmp = new ArrayList<String>(array1List);
-        tmp.retainAll(array2List);
-        result.addAll(array2List);
-        return ((String[]) result.toArray(new String[result.size()]));
+    public static ArrayList<String> mergeArrayList(ArrayList<String> a1, ArrayList<String> a2) {
+        if(a1.isEmpty())
+            return a2;
+        if(a2.isEmpty())
+            return a1;
+        ArrayList<String> result = new ArrayList<String>(a1);
+        ArrayList<String> tmp = new ArrayList<String>(a1);
+        tmp.retainAll(a2);
+        result.addAll(a2);
+        return result;
     }
 
     public static String convertHTMLTagsForUpload(String source) {

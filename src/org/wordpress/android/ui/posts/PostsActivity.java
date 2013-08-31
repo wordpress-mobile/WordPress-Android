@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -45,13 +46,12 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
-import org.wordpress.android.ui.posts.PostsListFragment.OnSearchQueryListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener,
-        OnDialogConfirmListener, OnSearchQueryListener, SearchView.OnQueryTextListener {
+        OnDialogConfirmListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     private PostsListFragment postList;
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
@@ -202,8 +202,12 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
+                searchView.setVisibility(View.VISIBLE);
+                searchView.setIconified(true);
+            }
+                
         }
     };
 
@@ -294,9 +298,9 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         searchManager  = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView)menu.findItem(R.id.menu_post_search).getActionView();
         searchView.setIconifiedByDefault(true);
-        
-        searchView.setQueryHint("Search Posts...");
-
+        searchView.setQueryHint(getResources().getString(R.string.search_post_hint));
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(this);
         if (isPage) {
             menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
         }
@@ -361,7 +365,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
-
+        
         if (f != null && f.isInLayout()) {
             postList.shouldSelectAfterLoad = true;
         }
@@ -373,7 +377,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
-
+        searchView.setVisibility(View.GONE);
         if (post != null) {
 
             WordPress.currentPost = post;
@@ -878,19 +882,19 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        // TODO Auto-generated method stub
+        postList.filter(query);
         return false;
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        
+    public boolean onQueryTextChange(String query) {
+        postList.filter(query);
         return false;
     }
 
     @Override
-    public void updateList(String query) {
-        // TODO Auto-generated method stub
-        
+    public boolean onClose() {
+        postList.closeSearch();
+        return false;
     }
 }
