@@ -2,6 +2,8 @@ package org.wordpress.android.lockmanager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,8 +28,37 @@ public class AppLockPreferencesActivity extends Activity implements OnClickListe
         mSaveButton.setOnClickListener(this);
         mEnabledCheckBox = (CheckBox) findViewById(R.id.applock_checkbox);
         mEnabledCheckBox.setChecked(AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked());
+        
+        InputFilter[] filters = new InputFilter[2];
+        filters[0]= new InputFilter.LengthFilter(4);
+        filters[1] = onlyNumber;
+        
+        mPasswordField.setFilters(filters);
     }
 
+    
+    private InputFilter onlyNumber = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            
+            if( source.length() > 1 )
+                return "";
+
+            if( source.length() == 0 ) //erase
+                return null;
+
+            try {
+                int number = Integer.parseInt(source.toString());
+                if( ( number >= 0 ) && ( number <= 9 ) )
+                    return String.valueOf(number);
+                else
+                    return "";
+            } catch (NumberFormatException e) {
+                return "";
+            }
+        }
+    };
+    
     /*
     @Override
     public void onBackPressed() {
@@ -39,8 +70,8 @@ public class AppLockPreferencesActivity extends Activity implements OnClickListe
         String pinCode = null;
         if( mEnabledCheckBox.isChecked() ) {
             String newPassword = mPasswordField.getText().toString().trim();
-            if(newPassword.length() < 3 ) {
-                Toast.makeText(AppLockPreferencesActivity.this, "Too short!", Toast.LENGTH_SHORT).show();
+            if(newPassword.length() != 4 ) {
+                Toast.makeText(AppLockPreferencesActivity.this, "4 numbers please!", Toast.LENGTH_SHORT).show();
                 return;
             }
             pinCode = newPassword;

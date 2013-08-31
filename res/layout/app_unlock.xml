@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF" >
+    android:layout_gravity="center"
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:id="@+id/AppUnlockLinearLayout1"
@@ -14,25 +15,163 @@
         android:paddingRight="16dp" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/top_message"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Enter your password" />
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="Enter your passcode"
+            android:gravity="center"
+            android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/pincode"
+        <LinearLayout
+            android:id="@+id/pin_code_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:minHeight="40dp"
-            android:singleLine="true" />
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/pincode_1"
+                style="@style/PinLockInputItemStyle">
+                <requestFocus />
+            </EditText>
+
+             <EditText
+                android:id="@+id/pincode_2"
+				style="@style/PinLockInputItemStyle">
+            </EditText>
+            
+            <EditText
+                android:id="@+id/pincode_3"
+				style="@style/PinLockInputItemStyle">
+            </EditText>
+                        
+           <EditText
+                android:id="@+id/pincode_4"
+				style="@style/PinLockInputItemStyle">
+            </EditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pin_code_virtual_keyboard"
+             android:paddingBottom="16dp"
+            android:paddingTop="30dp"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+           
+           <LinearLayout
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal" 
+               android:gravity="center">
+
+               <Button
+                   android:id="@+id/button1"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="1" />
+               
+               <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3" />
+			</LinearLayout>
+
+           
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                
+              <Button
+                   android:id="@+id/button4"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="4" />
+               
+               <Button
+                    android:id="@+id/button5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5" />
+
+                <Button
+                    android:id="@+id/button6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6" />
+                
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                
+               <Button
+                   android:id="@+id/button7"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="7" />
+               
+               <Button
+                    android:id="@+id/button8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8" />
+
+                <Button
+                    android:id="@+id/button9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9" />
+                
+
+            </LinearLayout>
+            
+              <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                
+               <Button
+                   android:id="@+id/button_none"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:clickable="false"
+                   android:focusable="false"
+                   android:focusableInTouchMode="false"
+                   android:text="" />
+               
+               <Button
+                    android:id="@+id/button0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <Button
+                    android:id="@+id/button_erase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Del" />
+                
+
+            </LinearLayout>
+            
+		</LinearLayout>
         
-        <Button
-            android:id="@+id/unlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ok" />
-    
     </LinearLayout>
 </ScrollView>
