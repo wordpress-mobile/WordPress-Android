@@ -315,11 +315,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
-            return true;
-        } else if (itemId == R.id.menu_new_post) {
+        if (itemId == R.id.menu_new_post) {
             Intent i = new Intent(this, EditPostActivity.class);
             i.putExtra("id", WordPress.currentBlog.getId());
             i.putExtra("isNew", true);
