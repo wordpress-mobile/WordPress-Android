@@ -11,6 +11,9 @@ import java.util.Map;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,12 +22,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
@@ -44,17 +49,23 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
-        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener, OnDialogConfirmListener {
+        OnRefreshListener, OnPostActionListener, OnDetailPostActionListener,
+        OnDialogConfirmListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener, PullToRefreshAttacher.OnRefreshListener {
 
     private PostsListFragment postList;
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
     public  static final int POST_DELETE = 0, POST_SHARE = 1, POST_EDIT = 2, POST_CLEAR = 3, POST_COMMENT = 4;
     public ProgressDialog loadingDialog;
+    public SearchView searchView;
+    public SearchManager searchManager;
+    public SearchableInfo searchableInfo;
+    public PullToRefreshAttacher pullToRefreshAttacher;
     public boolean isPage = false;
     public String errorMsg = "";
     public boolean isRefreshing = false;
-    private MenuItem refreshMenuItem;
     private static final int ACTIVITY_EDIT_POST = 0;
     private static final int ACTIVITY_ADD_COMMENT = 1;
 
@@ -109,7 +120,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         postList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
-
+        pullToRefreshAttacher = PullToRefreshAttacher.get(this);
+        pullToRefreshAttacher.addRefreshableView(postList.getListView(), this);
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
             String errorMessage = extras.getString("errorMessage");
@@ -193,8 +205,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
+                searchView.setVisibility(View.VISIBLE);
+            }
+                
         }
     };
 
@@ -265,7 +280,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     protected void onPause() {
         super.onPause();
         if (isRefreshing)
-            stopAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(false);
+            //stopAnimatingRefreshButton(refreshMenuItem);
     }
 
     @Override
@@ -280,15 +296,20 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
-        refreshMenuItem = menu.findItem(R.id.menu_refresh);
-
+       
+        searchManager  = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView)menu.findItem(R.id.menu_post_search).getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setQueryHint(getResources().getString(R.string.search_post_hint));
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(this);
         if (isPage) {
             menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
         }
 
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(!shouldAnimateRefreshButton);
         }
         return true;
     }
@@ -296,11 +317,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
-            return true;
-        } else if (itemId == R.id.menu_new_post) {
+        if (itemId == R.id.menu_new_post) {
             Intent i = new Intent(this, EditPostActivity.class);
             i.putExtra("id", WordPress.currentBlog.getId());
             i.putExtra("isNew", true);
@@ -346,7 +363,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
-
+        
         if (f != null && f.isInLayout()) {
             postList.shouldSelectAfterLoad = true;
         }
@@ -358,7 +375,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
-
+        searchView.setIconified(true);
+        searchView.setVisibility(View.GONE);
         if (post != null) {
 
             WordPress.currentPost = post;
@@ -382,10 +400,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (start) {
             attemptToSelectPost();
             shouldAnimateRefreshButton = true;
-            startAnimatingRefreshButton(refreshMenuItem);
+           // startAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(true);
             isRefreshing = true;
         } else {
-            stopAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshComplete();
             isRefreshing = false;
         }
 
@@ -858,6 +877,30 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         popPostDetail();
         attemptToSelectPost();
         postList.loadPosts(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        postList.filter(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        postList.filter(query);
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        postList.closeSearch();
+        return false;
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        checkForLocalChanges(true);
         new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
     }
 }

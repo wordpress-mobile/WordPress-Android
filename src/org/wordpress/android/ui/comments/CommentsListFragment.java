@@ -499,6 +499,7 @@ public class CommentsListFragment extends ListFragment {
 
         if (!loadMore && !doInBackground) {
             onAnimateRefreshButton.onAnimateRefreshButton(true);
+            
         }
         client = new XMLRPCClient(WordPress.currentBlog.getUrl(),
                 WordPress.currentBlog.getHttpuser(),

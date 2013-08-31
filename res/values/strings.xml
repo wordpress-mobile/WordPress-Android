@@ -87,7 +87,6 @@
   <string name="uploading">Uploading</string>
   <string name="uploading_media_item">Uploading media item #</string>
   <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
-  <string name="refresh">Refresh</string>
   <string name="home">Home</string>
   <string name="more_tag">More</string>
   <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
@@ -375,6 +374,8 @@
   <!--  Menu Buttons -->
   <string name="new_post">New Post</string>
   <string name="new_page">New Page</string>
+  <string name="search_post">Search</string>
+  <string name="search_post_hint">Search Posts...</string>
   <string name="quick_photo">Quick Photo</string>
   <string name="quick_video">Quick Video</string>
   <string name="wp_admin">Dashboard</string>
