@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +47,8 @@ import org.wordpress.android.util.WPAlertDialogFragment;
 
 public class PostsListFragment extends ListFragment {
     /** Called when the activity is first created. */
-    private String[] mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted,
-            mDraftIDs, mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses;
+    private ArrayList<String> mPostIDs, mTitles, mDateCreated, mDateCreatedFormatted, mDraftIDs,
+                mDraftTitles, mDraftDateCreated, mStatuses, mDraftStatuses, s_mPostIDs, s_mTitles, s_mDateCreatedFormatted, s_mStatuses;
     private int[] mUploaded;
     private int mRowID = 0;
     private long mSelectedID;
@@ -181,71 +182,71 @@ public class PostsListFragment extends ListFragment {
 
         if (loadedPosts != null) {
             numRecords = loadedPosts.size();
-            mTitles = new String[loadedPosts.size()];
-            mPostIDs = new String[loadedPosts.size()];
-            mDateCreated = new String[loadedPosts.size()];
-            mDateCreatedFormatted = new String[loadedPosts.size()];
-            mStatuses = new String[loadedPosts.size()];
+            mTitles = new ArrayList<String>(loadedPosts.size());
+            mPostIDs = new ArrayList<String>(loadedPosts.size());
+            mDateCreated = new ArrayList<String>(loadedPosts.size());
+            mDateCreatedFormatted = new ArrayList<String>(loadedPosts.size());
+            mStatuses = new ArrayList<String>(loadedPosts.size());
         } else {
-            mTitles = new String[0];
-            mPostIDs = new String[0];
-            mDateCreated = new String[0];
-            mDateCreatedFormatted = new String[0];
-            mStatuses = new String[0];
+            mTitles = new ArrayList<String>();
+            mPostIDs = new ArrayList<String>();
+            mDateCreated = new ArrayList<String>();
+            mDateCreatedFormatted = new ArrayList<String>();
+            mStatuses = new ArrayList<String>();
             if (mPostListAdapter != null) {
-                mPostListAdapter.notifyDataSetChanged();
+                mPostListAdapter.notifyDataChanged();
             }
         }
         if (loadedPosts != null) {
             Date d = new Date();
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
-                mTitles[i] = StringUtils.unescapeHTML(contentHash.get("title")
-                        .toString());
+                mTitles.add(i, StringUtils.unescapeHTML(contentHash.get("title")
+                        .toString()));
 
-                mPostIDs[i] = contentHash.get("id").toString();
-                mDateCreated[i] = contentHash.get("date_created_gmt").toString();
+                mPostIDs.add(i, contentHash.get("id").toString());
+                mDateCreated.add(i, contentHash.get("date_created_gmt").toString());
 
                 if (contentHash.get("post_status") != null) {
                     String api_status = contentHash.get("post_status")
                             .toString();
                     if (api_status.equals("publish")) {
-                        mStatuses[i] = getResources()
-                                .getText(R.string.published).toString();
+                        mStatuses.add(i, getResources()
+                                .getText(R.string.published).toString());
                     } else if (api_status.equals("draft")) {
-                        mStatuses[i] = getResources().getText(R.string.draft)
-                                .toString();
+                        mStatuses.add(i, getResources().getText(R.string.draft)
+                                .toString());
                     } else if (api_status.equals("pending")) {
-                        mStatuses[i] = getResources().getText(
-                                R.string.pending_review).toString();
+                        mStatuses.add(i, getResources().getText(
+                                R.string.pending_review).toString());
                     } else if (api_status.equals("private")) {
-                        mStatuses[i] = getResources().getText(
-                                R.string.post_private).toString();
+                        mStatuses.add(i, getResources().getText(
+                                R.string.post_private).toString());
                     }
 
                     if ((Long) contentHash.get("date_created_gmt") > d
                             .getTime() && api_status.equals("publish")) {
-                        mStatuses[i] = getResources()
-                                .getText(R.string.scheduled).toString();
+                        mStatuses.add(i, getResources()
+                                .getText(R.string.scheduled).toString());
                     }
                 }
 
                 long localTime = (Long) contentHash.get("date_created_gmt");
-                mDateCreatedFormatted[i] = getFormattedDate(localTime);
+                mDateCreatedFormatted.add(i, getFormattedDate(localTime));
             }
         }
         // load drafts
         boolean drafts = loadDrafts();
 
         if (drafts) {
-            mPostIDs = StringUtils.mergeStringArrays(mDraftIDs, mPostIDs);
-            mTitles = StringUtils.mergeStringArrays(mDraftTitles, mTitles);
-            mDateCreatedFormatted = StringUtils.mergeStringArrays(
+            mPostIDs = StringUtils.mergeArrayList(mDraftIDs, mPostIDs);
+            mTitles = StringUtils.mergeArrayList(mDraftTitles, mTitles);
+            mDateCreatedFormatted = StringUtils.mergeArrayList(
                     mDraftDateCreated, mDateCreatedFormatted);
-            mStatuses = StringUtils.mergeStringArrays(mDraftStatuses, mStatuses);
+            mStatuses = StringUtils.mergeArrayList(mDraftStatuses, mStatuses);
         } else {
             if (mPostListAdapter != null) {
-                mPostListAdapter.notifyDataSetChanged();
+                mPostListAdapter.notifyDataChanged();
             }
         }
 
@@ -263,16 +264,19 @@ public class PostsListFragment extends ListFragment {
             }
 
             if (loadMore) {
-                mPostListAdapter.notifyDataSetChanged();
+                mPostListAdapter.notifyDataChanged();
             } else {
+                
                 mPostListAdapter = new PostListAdapter(getActivity().getBaseContext());
+                //Calling to initialize the ArrayList
+                initArrayList();
                 listView.setAdapter(mPostListAdapter);
 
                 listView.setOnItemClickListener(new OnItemClickListener() {
 
                     public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {
                         
-                        if (position >= mPostIDs.length) //out of bounds
+                        if (position >= mPostIDs.size()) //out of bounds
                             return;
 
                         if (v == null) //view is gone
@@ -285,7 +289,7 @@ public class PostsListFragment extends ListFragment {
                             if (post.getId() >= 0) {
                                 WordPress.currentPost = post;
                                 mOnPostSelectedListener.onPostSelected(post);
-                                mPostListAdapter.notifyDataSetChanged();
+                                mPostListAdapter.notifyDataChanged();
                             } else {
                                 if (!getActivity().isFinishing()) {
                                     FragmentTransaction ft = getFragmentManager()
@@ -374,10 +378,10 @@ public class PostsListFragment extends ListFragment {
 
             if (this.shouldSelectAfterLoad) {
                 if (mPostIDs != null) {
-                    if (mPostIDs.length >= 1) {
+                    if (mPostIDs.size() >= 1) {
 
                         Post post = new Post(WordPress.currentBlog.getId(),
-                                Integer.valueOf(mPostIDs[0]), isPage);
+                                Integer.valueOf(mPostIDs.get(0)), isPage);
                         if (post.getId() >= 0) {
                             WordPress.currentPost = post;
                             mOnPostSelectedListener.onPostSelected(post);
@@ -408,6 +412,13 @@ public class PostsListFragment extends ListFragment {
             return false;
         }
 
+    }
+
+    private void initArrayList() {
+        s_mPostIDs = new ArrayList<String>(mPostIDs);
+        s_mTitles = new ArrayList<String>(mTitles);
+        s_mStatuses = new ArrayList<String>(mStatuses);
+        s_mDateCreatedFormatted = new ArrayList<String>(mDateCreatedFormatted);
     }
 
     private String getFormattedDate(long localTime) {
@@ -465,21 +476,21 @@ public class PostsListFragment extends ListFragment {
                     WordPress.currentBlog.getId(), false);
         }
         if (loadedPosts != null) {
-            mDraftIDs = new String[loadedPosts.size()];
-            mDraftTitles = new String[loadedPosts.size()];
-            mDraftDateCreated = new String[loadedPosts.size()];
+            mDraftIDs = new ArrayList<String>(loadedPosts.size());
+            mDraftTitles = new ArrayList<String>(loadedPosts.size());
+            mDraftDateCreated = new ArrayList<String>(loadedPosts.size());
             mUploaded = new int[loadedPosts.size()];
             totalDrafts = loadedPosts.size();
-            mDraftStatuses = new String[loadedPosts.size()];
+            mDraftStatuses = new ArrayList<String>(loadedPosts.size());
 
             for (int i = 0; i < loadedPosts.size(); i++) {
                 Map<String, Object> contentHash = loadedPosts.get(i);
-                mDraftIDs[i] = contentHash.get("id").toString();
-                mDraftTitles[i] = StringUtils.unescapeHTML(contentHash.get(
-                        "title").toString());
-                mDraftDateCreated[i] = "";
+                mDraftIDs.add(i, contentHash.get("id").toString());
+                mDraftTitles.add(i, StringUtils.unescapeHTML(contentHash.get(
+                        "title").toString()));
+                mDraftDateCreated.add(i, "");
                 mUploaded[i] = (Integer) contentHash.get("uploaded");
-                mDraftStatuses[i] = getString(R.string.local_draft);
+                mDraftStatuses.add(i, getString(R.string.local_draft));
             }
 
             return true;
@@ -490,12 +501,12 @@ public class PostsListFragment extends ListFragment {
     }
 
     private class PostListAdapter extends BaseAdapter {
-
+        
         public PostListAdapter(Context context) {
         }
 
         public int getCount() {
-            return mPostIDs.length;
+            return s_mTitles.size();
         }
 
         public Object getItem(int position) {
@@ -506,6 +517,7 @@ public class PostsListFragment extends ListFragment {
             return position;
         }
 
+        
 		public View getView(int position, View convertView, ViewGroup parent) {
             View pv = convertView;
             ViewWrapper wrapper = null;
@@ -520,12 +532,12 @@ public class PostsListFragment extends ListFragment {
                 wrapper = (ViewWrapper) pv.getTag();
             }
 
-            String date = mDateCreatedFormatted[position];
-            String status_text = mStatuses[position];
+            String date = s_mDateCreatedFormatted.get(position);
+            String status_text = s_mStatuses.get(position);
 
-            pv.setTag(R.id.row_post_id, mPostIDs[position]);
-            pv.setId(Integer.valueOf(mPostIDs[position]));
-            String titleText = mTitles[position];
+            pv.setTag(R.id.row_post_id, s_mPostIDs.get(position));
+            pv.setId(Integer.valueOf(s_mPostIDs.get(position)));
+            String titleText = s_mTitles.get(position);
             if (titleText.equals(""))
                 titleText = "(" + getResources().getText(R.string.untitled) + ")";
             wrapper.getTitle().setText(titleText);
@@ -534,7 +546,12 @@ public class PostsListFragment extends ListFragment {
 
             return pv;
         }
+		
 
+        public void notifyDataChanged() {
+            initArrayList();
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -670,7 +687,7 @@ public class PostsListFragment extends ListFragment {
                                 WordPress.currentBlog.getId(), isPage);
                     } else {
                         if (mPostListAdapter != null) {
-                            if (mPostIDs.length == 2) {
+                            if (mPostIDs.size() == 2) {
                                 try {
                                     WordPress.wpDB.deleteUploadedPosts(
                                             WordPress.currentBlog.getId(),
@@ -694,6 +711,42 @@ public class PostsListFragment extends ListFragment {
 
             return success;
         }
+    }
+    
+    public void filter(String query){
+        String charText = query.toLowerCase();
+        s_mPostIDs.clear();
+        s_mTitles.clear();
+        s_mStatuses.clear();
+        s_mDateCreatedFormatted.clear();
+        s_mPostIDs = new ArrayList<String>();
+        s_mTitles = new ArrayList<String>();
+        s_mStatuses = new ArrayList<String>();
+        s_mDateCreatedFormatted = new ArrayList<String>();
+        if (charText.length() == 0) {
+            s_mPostIDs.addAll(mPostIDs);
+            s_mTitles.addAll(mTitles);
+            s_mStatuses.addAll(mStatuses);
+            s_mDateCreatedFormatted.addAll(mDateCreatedFormatted);
+        } else {
+            for (int i=0;i<mTitles.size();i++) {
+                if(mTitles.get(i).toLowerCase().contains(charText)){
+                    s_mPostIDs.add(mPostIDs.get(i));
+                    s_mTitles.add(mTitles.get(i));
+                    s_mStatuses.add(mStatuses.get(i));
+                    s_mDateCreatedFormatted.add(mDateCreatedFormatted.get(i));
+                }
+            }
+        }
+        mPostListAdapter.notifyDataSetChanged();
+    }
+    
+    public void closeSearch(){
+        s_mPostIDs.addAll(mPostIDs);
+        s_mTitles.addAll(mTitles);
+        s_mStatuses.addAll(mStatuses);
+        s_mDateCreatedFormatted.addAll(mDateCreatedFormatted);
+        mPostListAdapter.notifyDataSetChanged();
     }
 
     public interface OnPostSelectedListener {
