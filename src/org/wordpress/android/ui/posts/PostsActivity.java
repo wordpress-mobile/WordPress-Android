@@ -49,9 +49,11 @@ import org.wordpress.android.ui.posts.PostsListFragment.OnRefreshListener;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+
 public class PostsActivity extends WPActionBarActivity implements OnPostSelectedListener,
         OnRefreshListener, OnPostActionListener, OnDetailPostActionListener,
-        OnDialogConfirmListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+        OnDialogConfirmListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener, PullToRefreshAttacher.OnRefreshListener {
 
     private PostsListFragment postList;
     private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2, ID_DIALOG_COMMENT = 3;
@@ -60,10 +62,10 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public SearchView searchView;
     public SearchManager searchManager;
     public SearchableInfo searchableInfo;
+    public PullToRefreshAttacher pullToRefreshAttacher;
     public boolean isPage = false;
     public String errorMsg = "";
     public boolean isRefreshing = false;
-    private MenuItem refreshMenuItem;
     private static final int ACTIVITY_EDIT_POST = 0;
     private static final int ACTIVITY_ADD_COMMENT = 1;
 
@@ -118,7 +120,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         postList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         postList.setListShown(true);
-
+        pullToRefreshAttacher = PullToRefreshAttacher.get(this);
+        pullToRefreshAttacher.addRefreshableView(postList.getListView(), this);
         if (extras != null) {
             isPage = extras.getBoolean("viewPages");
             String errorMessage = extras.getString("errorMessage");
@@ -278,7 +281,8 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     protected void onPause() {
         super.onPause();
         if (isRefreshing)
-            stopAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(false);
+            //stopAnimatingRefreshButton(refreshMenuItem);
     }
 
     @Override
@@ -293,7 +297,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.posts, menu);
-        refreshMenuItem = menu.findItem(R.id.menu_refresh);
        
         searchManager  = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView)menu.findItem(R.id.menu_post_search).getActionView();
@@ -307,7 +310,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
 
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(!shouldAnimateRefreshButton);
         }
         return true;
     }
@@ -401,10 +404,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (start) {
             attemptToSelectPost();
             shouldAnimateRefreshButton = true;
-            startAnimatingRefreshButton(refreshMenuItem);
+           // startAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(true);
             isRefreshing = true;
         } else {
-            stopAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshComplete();
             isRefreshing = false;
         }
 
@@ -896,5 +900,11 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     public boolean onClose() {
         postList.closeSearch();
         return false;
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        checkForLocalChanges(true);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
     }
 }

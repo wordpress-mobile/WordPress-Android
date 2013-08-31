@@ -57,7 +57,7 @@ public class PostsListFragment extends ListFragment {
     private OnRefreshListener mOnRefreshListener;
     private OnPostActionListener mOnPostActionListener;
     private PostsActivity mParentActivity;
-    
+    private ListView listView;
     public boolean inDrafts = false;
     public List<String> imageUrl = new Vector<String>();
     public String errorMsg = "";
@@ -251,7 +251,7 @@ public class PostsListFragment extends ListFragment {
         }
 
         if (loadedPosts != null || drafts == true) {
-            ListView listView = getListView();
+            listView = getListView();
             listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             listView.setBackgroundColor(getResources().getColor(R.color.list_row_bg));
             listView.setDivider(getResources().getDrawable(R.drawable.list_divider));

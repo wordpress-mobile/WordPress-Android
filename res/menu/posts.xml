@@ -3,18 +3,11 @@
 
     
     <item
-        android:id="@+id/menu_refresh"
-        android:icon="@drawable/ab_icon_refresh"
-        android:showAsAction="always"
-        android:menuCategory="container"
-        android:orderInCategory="2"
-        android:title="@string/refresh"/>
-    <item
         android:id="@+id/menu_new_post"
         android:icon="@drawable/ab_icon_new"
         android:showAsAction="always"
         android:menuCategory="container"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:title="@string/new_post"/>
     <item
         android:id="@+id/menu_post_search"

@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -33,9 +34,11 @@ import org.wordpress.android.ui.comments.CommentsListFragment.OnAnimateRefreshBu
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnContextCommentStatusChangeListener;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+
 public class CommentsActivity extends WPActionBarActivity implements
         OnCommentSelectedListener, OnCommentStatusChangeListener,
-        OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener {
+        OnAnimateRefreshButtonListener, OnContextCommentStatusChangeListener, PullToRefreshAttacher.OnRefreshListener {
 
     protected int id;
     public int ID_DIALOG_MODERATING = 1;
@@ -45,7 +48,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     public ProgressDialog pd;
     private CommentsListFragment commentList;
     private boolean fromNotification = false;
-    private MenuItem refreshMenuItem;
+    private PullToRefreshAttacher pullToRefreshAttacher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,7 @@ public class CommentsActivity extends WPActionBarActivity implements
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_comments));
-
+        
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             fromNotification = extras.getBoolean("fromNotification");
@@ -72,7 +75,8 @@ public class CommentsActivity extends WPActionBarActivity implements
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         commentList = (CommentsListFragment) fm.findFragmentById(R.id.commentList);
-
+        pullToRefreshAttacher = PullToRefreshAttacher.get(this);
+        pullToRefreshAttacher.addRefreshableView(commentList.getListView(), this);
         WordPress.currentComment = null;
 
         attemptToSelectComment();
@@ -94,10 +98,9 @@ public class CommentsActivity extends WPActionBarActivity implements
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.basic_menu, menu);
-        refreshMenuItem = menu.findItem(R.id.menu_refresh);
         if (shouldAnimateRefreshButton) {
             shouldAnimateRefreshButton = false;
-            startAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(true);
         }
         return true;
     }
@@ -105,12 +108,7 @@ public class CommentsActivity extends WPActionBarActivity implements
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            popCommentDetail();
-            attemptToSelectComment();
-            commentList.refreshComments(false, false, false);
-            return true;
-        } else if (itemId == android.R.id.home) {
+        if (itemId == android.R.id.home) {
             FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popCommentDetail();
@@ -569,9 +567,9 @@ public class CommentsActivity extends WPActionBarActivity implements
 
         if (start) {
             shouldAnimateRefreshButton = true;
-            this.startAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(true);
         } else {
-            this.stopAnimatingRefreshButton(refreshMenuItem);
+            pullToRefreshAttacher.setRefreshing(false);
         }
 
     }
@@ -594,5 +592,12 @@ public class CommentsActivity extends WPActionBarActivity implements
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        popCommentDetail();
+        attemptToSelectComment();
+        commentList.refreshComments(false, false, false);
     }
 }
