@@ -434,4 +434,17 @@
     <string name="prompt_save_changes">Would you like to save your changes?</string>
     <string name="error_downloading_image">Error downloading image. Please try again.</string>
 
+  
+   <!--  Application PassLock Messages -->
+   <string name="passcode_manage">Manage passcode</string>
+  <string name="passcode_enter_passcode">Enter your passcode</string>
+  <string name="passcode_enter_old_passcode">Enter your old passcode</string>
+  <string name="passcode_re_enter_passcode">Re-enter your passcode</string>
+  <string name="passcode_change_passcode">Change passcode</string>
+  <string name="passcode_set">Passcode set</string>
+  <string name="passcode_wrong_passcode">Wrong passcode, please try again.</string>
+  <string name="passcode_preference_title">Passcode lock</string>
+  <string name="passcode_turn_off">Turn passcode off</string>
+  <string name="passcode_turn_on">Turn passcode on</string>
+    
 </resources>

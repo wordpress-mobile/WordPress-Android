@@ -1,7 +1,6 @@
 package org.wordpress.android.lockmanager;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -11,26 +10,35 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 
-public class AppUnlockActivity extends Activity {
+public abstract class AbstractPasscodeKeyboardActivity extends Activity {
 
-    private EditText pinCodeField1 = null;
-    private EditText pinCodeField2 = null;
-    private EditText pinCodeField3 = null;
-    private EditText pinCodeField4 = null;
-    private InputFilter[] filters = null;
+    protected EditText pinCodeField1 = null;
+    protected EditText pinCodeField2 = null;
+    protected EditText pinCodeField3 = null;
+    protected EditText pinCodeField4 = null;
+    protected InputFilter[] filters = null;
+    protected TextView topMessage = null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_unlock);
+        setContentView(R.layout.app_passcode_keyboard);
+        
+        topMessage = (TextView) findViewById(R.id.top_message);
+        
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String message = extras.getString("message");
+            if (message != null) {
+                topMessage.setText(message);
+            }
+        }
         
         filters = new InputFilter[2];
         filters[0]= new InputFilter.LengthFilter(1);
@@ -84,7 +92,7 @@ public class AppUnlockActivity extends Activity {
     }
     
     
-    private void setupPinItem(EditText item){
+    protected void setupPinItem(EditText item){
         item.setInputType(InputType.TYPE_NULL); 
         item.setFilters(filters); 
         item.setOnTouchListener(otl);
@@ -156,30 +164,13 @@ public class AppUnlockActivity extends Activity {
                     pinCodeField2.getText().toString().length() > 0 &&
                     pinCodeField1.getText().toString().length() > 0
                     ) {
-                
-                String passLock = pinCodeField1.getText().toString() + pinCodeField2.getText().toString() +
-                        pinCodeField3.getText().toString() + pinCodeField4.getText();
-                if( AppLockManager.getInstance().getCurrentAppLock().verifyPassword(passLock) ) {
-                    finish();
-                } else {
-                    Thread shake = new Thread() {
-                        public void run() {
-                            Animation shake = AnimationUtils.loadAnimation(AppUnlockActivity.this, R.anim.shake);
-                            findViewById(R.id.AppUnlockLinearLayout1).startAnimation(shake);
-                            Toast.makeText(AppUnlockActivity.this, getString(R.string.invalid_login), Toast.LENGTH_SHORT).show();
-                            pinCodeField1.setText("");
-                            pinCodeField2.setText("");
-                            pinCodeField3.setText("");
-                            pinCodeField4.setText("");
-                            pinCodeField1.requestFocus();
-                        }
-                    };
-                    runOnUiThread(shake);
-                }
+                onPinLockInserted();
             }
         }
     };
 
+    
+    protected abstract void onPinLockInserted();
 
     private InputFilter onlyNumber = new InputFilter() {
         @Override
@@ -213,13 +204,4 @@ public class AppUnlockActivity extends Activity {
         }
     };
     
-    @Override
-    public void onBackPressed() {
-        AppLockManager.getInstance().getCurrentAppLock().forcePasswordLock();
-        Intent i = new Intent();
-        i.setAction(Intent.ACTION_MAIN);
-        i.addCategory(Intent.CATEGORY_HOME);
-        this.startActivity(i);
-        finish();
-    }
 }

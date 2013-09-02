@@ -58,11 +58,11 @@
     
     <PreferenceCategory
         android:key="wp_passcode_lock_category"
-        android:title="Passcode Lock" >
+        android:title="@string/passcode_preference_title" >
         <Preference
             android:key="wp_pref_passlock_enabled"
-            android:title="Turn passcode on">
-              <intent android:targetClass="org.wordpress.android.lockmanager.AppLockPreferencesActivity"
+            android:title="@string/passcode_manage">
+              <intent android:targetClass="org.wordpress.android.lockmanager.PasscodePreferencesActivity"
                 android:targetPackage="org.wordpress.android"/>
        </Preference>
     </PreferenceCategory>

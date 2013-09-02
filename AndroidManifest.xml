@@ -185,8 +185,10 @@
                 <category android:name="org.wordpress.android" />
             </intent-filter>
         </receiver>
-        <activity android:name="org.wordpress.android.lockmanager.AppUnlockActivity"></activity>
-        <activity android:name="org.wordpress.android.lockmanager.AppLockPreferencesActivity"></activity>
+        <activity android:name="org.wordpress.android.lockmanager.PasscodeUnlockActivity"></activity>
+        <activity android:name="org.wordpress.android.lockmanager.PasscodePreferencesActivity"></activity>
+        <activity android:name="org.wordpress.android.lockmanager.AbstractPasscodeKeyboardActivity"></activity>
+        <activity android:name="org.wordpress.android.lockmanager.PasscodeManagePasswordActivity"></activity>
     </application>
 
 </manifest>

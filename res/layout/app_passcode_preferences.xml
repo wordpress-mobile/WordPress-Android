@@ -13,27 +13,22 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp" >
 
-        <CheckBox
-            android:id="@+id/applock_checkbox"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/turn_passcode_on_off"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Enable Passcode Lock" />
+            android:text="@string/passcode_turn_on"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp" />
+            
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/change_passcode"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword|number"
-            android:maxLength="4"
-            android:minHeight="40dp"
-            android:singleLine="true" />
-        
-        <Button
-            android:id="@+id/save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ok" />
+            android:text="@string/passcode_change_passcode"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp" />
     
     </LinearLayout>
 </ScrollView>

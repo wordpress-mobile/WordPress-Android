@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:text="Enter your passcode"
+            android:text="@string/passcode_enter_passcode"
             android:gravity="center"
             android:textAlignment="center" />
 
