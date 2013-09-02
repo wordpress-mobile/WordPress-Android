@@ -1,7 +1,7 @@
 package org.wordpress.android.lockmanager;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,9 +9,12 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import org.wordpress.android.R;
 
-public class PasscodePreferencesActivity extends Activity {
+public class PasscodePreferencesActivity extends SherlockFragmentActivity {
     
     static final int ENABLE_PASSLOCK = 0;
     static final int DISABLE_PASSLOCK = 1;
@@ -25,6 +28,9 @@ public class PasscodePreferencesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_passcode_preferences);
         
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.passcode_manage);
+               
         turnPasscodeOnOff = (TextView) findViewById(R.id.turn_passcode_on_off);
         changePasscode = (TextView) findViewById(R.id.change_passcode);
         
@@ -40,6 +46,11 @@ public class PasscodePreferencesActivity extends Activity {
         
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        // ignore orientation change
+        super.onConfigurationChanged(newConfig);
+    }
     
     private OnTouchListener passcodeOnOffTouchListener = new OnTouchListener() {
         @Override
