@@ -14,19 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.mobeta.android.dslv.DragSortListView;
+import com.mobeta.android.dslv.DragSortListView.DropListener;
+import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
-public class MediaGalleryEditFragment extends SherlockFragment implements MediaGridAdapterCallback {
+public class MediaGalleryEditFragment extends SherlockFragment implements DropListener, RemoveListener {
 
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
-    private GridView mGridView;
-    private MediaGridAdapter mGridAdapter;
+    private DragSortListView mGridView;
+    private MediaGalleryAdapter mGridAdapter;
     private ArrayList<String> mIds;
     
     @Override
@@ -37,14 +38,15 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         if (savedInstanceState != null)
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
             
-        mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, new ArrayList<String>());
-        mGridAdapter.setCallback(this);
+        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true);
         
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
         
-        mGridView = (GridView) view.findViewById(R.id.edit_media_gallery_gridview);
+        mGridView = (DragSortListView) view.findViewById(R.id.edit_media_gallery_gridview);
         mGridView.setAdapter(mGridAdapter);
         mGridView.setOnCreateContextMenuListener(this);
+        mGridView.setDropListener(this);
+        mGridView.setRemoveListener(this);
         refreshGridView();
         
         return view;
@@ -88,21 +90,6 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
             }
         }
         return positions;
-    }
-
-    @Override
-    public void fetchMoreData(int offset) {
-        // do nothing
-    }
-
-    @Override
-    public void onRetryUpload(String mediaId) {
-        // do nothing
-    }
-
-    @Override
-    public boolean isInMultiSelect() {
-        return false;
     }
 
     public void addMediaIds(ArrayList<String> ids) {
@@ -199,5 +186,18 @@ public class MediaGalleryEditFragment extends SherlockFragment implements MediaG
         mIds.remove(index);
         refreshGridView();
         return true;
+    }
+
+    @Override
+    public void drop(int from, int to) {
+        String id = mIds.get(from);
+        mIds.remove(id);
+        mIds.add(to, id);
+        refreshGridView();
+    }
+
+    @Override
+    public void remove(int position) {
+        
     }
 }
