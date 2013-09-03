@@ -187,8 +187,8 @@
         </receiver>
         <activity android:name="org.wordpress.android.lockmanager.PasscodeUnlockActivity"
              android:screenOrientation="portrait"
-             android:windowSoftInputMode="stateHidden" 
-             >
+             android:windowSoftInputMode="stateHidden"
+             android:theme="@style/Theme.Sherlock.Light.NoActionBar">
         </activity>
         <activity
             android:name="org.wordpress.android.lockmanager.PasscodePreferencesActivity"
