@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -98,12 +101,14 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
             shares = stats.getShares();
         }
 
-         mPostsCountView.setText(posts + "");
-         mCategoriesCountView.setText(categories + "");
-         mTagsCountView.setText(tags + "");
-         mFollowersCountView.setText(followers + "");
-         mCommentsCountView.setText(comments + "");
-         mSharesCountView.setText(shares + "");
+         DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+         
+         mPostsCountView.setText(formatter.format(posts));
+         mCategoriesCountView.setText(formatter.format(categories));
+         mTagsCountView.setText(formatter.format(tags));
+         mFollowersCountView.setText(formatter.format(followers));
+         mCommentsCountView.setText(formatter.format(comments));
+         mSharesCountView.setText(formatter.format(shares));
     }
 
 }

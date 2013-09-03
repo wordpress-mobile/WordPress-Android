@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -116,10 +119,12 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment implements Ta
             } else {
                 entryTextView.setText(name);
             }
+
+            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
             
             // totals
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(total + "");
+            totalsTextView.setText(formatter.format(total));
 
             // no icon
         }
@@ -147,10 +152,12 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment implements Ta
                 entryTextView.setText(name);
                 entryTextView.setMovementMethod(null);
             }
+
+            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
             
             // totals
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_group_cell_total);
-            totalsTextView.setText(total + "");
+            totalsTextView.setText(formatter.format(total));
 
             // icon
             view.findViewById(R.id.stats_group_cell_image_frame).setVisibility(View.VISIBLE);

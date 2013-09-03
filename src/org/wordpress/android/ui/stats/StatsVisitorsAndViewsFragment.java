@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -211,11 +214,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
                 commentsAllTime = stats.getCommentsAllTime();
             }
 
-            mVisitorsToday.setText(visitorsToday + "");
-            mViewsToday.setText(viewsToday + "");
-            mViewsBestEver.setText(visitorsBestEver + "");
-            mViewsAllTime.setText(viewsAllTime + "");
-            mCommentsAllTime.setText(commentsAllTime + "");
+            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+
+            mVisitorsToday.setText(formatter.format(visitorsToday));
+            mViewsToday.setText(formatter.format(viewsToday));
+            mViewsBestEver.setText(formatter.format(visitorsBestEver));
+            mViewsAllTime.setText(formatter.format(viewsAllTime));
+            mCommentsAllTime.setText(formatter.format(commentsAllTime));
         }
         
         @Override

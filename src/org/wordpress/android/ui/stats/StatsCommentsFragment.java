@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stats;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -119,6 +122,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
             entryTextView.setText(entry);
 
+
+            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
             
             // totals
             int total;
@@ -128,7 +133,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
                 total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
             
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(total + "");
+            totalsTextView.setText(formatter.format(total));
             
             // image 
             String imageUrl;
@@ -261,8 +266,10 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             }
     
 
-            mPerMonthText.setText(perMonth + "");
-            mTotalText.setText(total + "");
+            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+
+            mPerMonthText.setText(formatter.format(perMonth));
+            mTotalText.setText(formatter.format(total));
             mActiveDayText.setText(activeDay);
             mActiveTimeText.setText(activeTime);
             

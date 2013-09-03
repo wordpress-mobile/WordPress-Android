@@ -1,6 +1,7 @@
 
 package org.wordpress.android.ui.stats;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 import android.content.Context;
@@ -77,9 +78,11 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
                 entryTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
             
+            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+            
             // totals
             TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(total + "");
+            totalsTextView.setText(formatter.format(total));
             
         }
 
