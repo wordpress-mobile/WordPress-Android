@@ -11,9 +11,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
@@ -27,6 +29,7 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
     private ArrayList<Rect> coords; 
     private Handler handler;
     private int mHeight;
+    private int scrollY;
 
     public CustomGridView(Context context) {
         super(context);
@@ -96,8 +99,7 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
 
                 int gap = getGap(x, y);
                 animateGap(gap);
-                
-                
+
                 int[] pos = getLocationOnScreen();
                 int bottom = pos[1] + getHeight();
                 
@@ -112,11 +114,13 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
                 lastY = y;
                 break;
             case MotionEvent.ACTION_UP:
-                stopScroll();
-                gap = getGap(x, y);
-                animateActiveViewToGap(gap);
-                activeView = null;
-                activePos = -1;
+                if (activeView != null) {
+                    stopScroll();
+                    gap = getGap(x, y);
+                    animateActiveViewToGap(gap);
+                    activeView = null;
+                    activePos = -1;
+                }
                 break;
         }
         return false;
@@ -147,13 +151,8 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
         
         @Override
         public void run() {
-            int[] pos = new int[]{0,0};
-            getLocationInWindow(pos);
-            int bottom = mHeight;
-
-            if (getScrollY() + getHeight() + 3 <= bottom) {
+            if (getScrollY() + getHeight() + 3 <= mHeight)
                 smoothScrollBy(3, 50);
-            }
             handler.postDelayed(this, 50);
         }
     };
@@ -174,13 +173,19 @@ public class CustomGridView extends GridView implements AdapterView.OnItemLongCl
         
         if (y > mHeight)
             return Integer.MAX_VALUE;
-        
-        y +=  getScrollY();
+
+        y +=  getScrollYOffset();
         for (int i = 0; i < coords.size(); i++) {
             if (coords.get(i).contains(x, y))
                 return i;
         }
         return 0;
+    }
+    
+    private int getScrollYOffset() {
+        // assumes children are all same height
+        View c = getChildAt(0);
+        return -c.getTop() + getFirstVisiblePosition() * c.getHeight();
     }
     
     protected void animateActiveViewToGap(int gap) {
