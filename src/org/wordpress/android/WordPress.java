@@ -122,7 +122,7 @@ public class WordPress extends Application {
         registerForCloudMessaging(this);
         
         //Uncomment this line if you want to test the app locking feature
-        //AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
 
         loadNotifications(this);
         super.onCreate();
