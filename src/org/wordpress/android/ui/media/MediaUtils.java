@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 
 import android.app.Activity;
@@ -24,26 +22,6 @@ import org.wordpress.android.R;
 
 public class MediaUtils {
 
-    private static final Set<String> sSupportedFiles = new HashSet<String>();
-    static {
-        sSupportedFiles.add(".jpg");
-        sSupportedFiles.add(".jpeg");
-        sSupportedFiles.add(".png");
-        sSupportedFiles.add(".gif");
-        sSupportedFiles.add(".doc");
-        sSupportedFiles.add(".pdf");
-        sSupportedFiles.add(".ppt");
-        sSupportedFiles.add(".odt");
-        sSupportedFiles.add(".pptx");
-        sSupportedFiles.add(".docx");
-        sSupportedFiles.add(".pps");
-        sSupportedFiles.add(".ppsx");
-        sSupportedFiles.add(".xls");
-        sSupportedFiles.add(".xlsx");
-        sSupportedFiles.add(".key");
-    }
-    
-    
     public class RequestCode {
         public static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 1000;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
@@ -64,6 +42,56 @@ public class MediaUtils {
         if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif"))
             return true;
         return false;
+    }
+    
+    public static boolean isDocument(String url) {
+        if (url == null)
+            return false;
+        
+        if (url.endsWith(".doc") || url.endsWith(".docx") || url.endsWith(".odt") || url.endsWith(".pdf"))
+            return true;
+        return false;
+    }
+    
+    public static boolean isPowerpoint(String url) {
+        if (url == null)
+            return false;
+        
+        if (url.endsWith(".ppt") || url.endsWith(".pptx") || url.endsWith(".pps") || url.endsWith(".ppsx") || url.endsWith(".key"))
+            return true;
+        return false;
+    }
+    
+    public static boolean isSpreadsheet(String url) {
+        if (url == null)
+            return false;
+        
+        if (url.endsWith(".xls") || url.endsWith(".xlsx"))
+            return true;
+        return false;
+    }
+    
+    public static boolean isVideo(String url) {
+        if (url == null)
+            return false;
+        if (url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") || 
+                url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp") || url.endsWith(".3g2"))
+            return true;
+        return false;
+    }
+
+    public static int getPlaceholder(String url) {
+        if (isValidImage(url))
+            return R.drawable.media_image_placeholder;
+        else if(isDocument(url))
+            return R.drawable.media_document;
+        else if(isPowerpoint(url))
+            return R.drawable.media_powerpoint;
+        else if(isSpreadsheet(url))
+            return R.drawable.media_spreadsheet;
+        else if(isVideo(url))
+            return R.drawable.media_movieclip;
+        return 0;
     }
     
     /** E.g. Jul 2, 2013 @ 21:57 **/
@@ -187,15 +215,6 @@ public class MediaUtils {
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
     }
 
-    public static boolean isSupportedFile(String filePath) {
-        for(String extension : sSupportedFiles) {
-            if(filePath.endsWith(extension))
-                return true;
-        }
-        
-        return false;
-    }
-    
     public static boolean isLocalFile(String state) {
         if (state == null)
             return false;

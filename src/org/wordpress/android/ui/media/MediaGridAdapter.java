@@ -247,12 +247,18 @@ public class MediaGridAdapter extends CursorAdapter {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         
         Uri uri = Uri.parse(thumbnailURL);
+        String filepath = uri.getLastPathSegment();
         
-        if (thumbnailURL != null && MediaUtils.isValidImage(uri.getLastPathSegment())) { 
+
+        int placeholderResId = MediaUtils.getPlaceholder(filepath);
+        imageView.setErrorImageResId(placeholderResId);
+        imageView.setDefaultImageResId(placeholderResId);
+        
+        if (thumbnailURL != null && MediaUtils.isValidImage(filepath)) { 
             imageView.setTag(thumbnailURL);
             imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
         } else {
-            imageView.setImageUrl(null, null);
+            imageView.setImageUrl("http://fake_url", WordPress.imageLoader);
         }
         
     }
