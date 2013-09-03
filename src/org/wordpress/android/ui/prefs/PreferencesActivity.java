@@ -125,6 +125,18 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
             PreferenceGroup passcodeGroup = (PreferenceGroup)findPreference("wp_passcode_lock_category");
             rootScreen.removePreference(passcodeGroup);
+        } else {
+            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
+            //disable on-click changes on the property
+            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(
+                    new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            passcodeEnabledCheckBoxPreference.setChecked( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ); 
+                            return false;
+                        }
+                    }
+                    );
         }
         
         displayPreferences();
@@ -136,7 +148,16 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         // the set of blogs may have changed while we were away
         updateBlogsPreferenceCategory();
-        updateAppLockPreferenceCategory();
+        
+        //update Passcode lock row if available
+        if( AppLockManager.getInstance().isAppLockFeatureEnabled() ) {
+            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
+            if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) { 
+                passcodeEnabledCheckBoxPreference.setChecked(true);
+            } else {
+                passcodeEnabledCheckBoxPreference.setChecked(false);
+            }
+        }
     }
     
     @Override
@@ -154,21 +175,6 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void updateAppLockPreferenceCategory(){
-        AppLockManager appLockManager = AppLockManager.getInstance();
-        if( appLockManager.isAppLockFeatureEnabled() == false )
-            return;
-        
-        Preference passcodeLockPreference = (Preference) findPreference("wp_pref_passlock_enabled");
-        if(passcodeLockPreference == null)
-            return;
-        
-        if ( appLockManager.getCurrentAppLock().isPasswordLocked() ) 
-            passcodeLockPreference.setTitle("Turn passcode off");
-        else
-            passcodeLockPreference.setTitle("Turn passcode on");    
-    }
-    
     /**
      * Update the "blogs" preference category to contain a preference for each blog to configure
      * blog-specific settings. This also adds an "add blog" preference for setting up new blogs.

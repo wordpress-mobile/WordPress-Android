@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="wp_passlock_pref_root" >
+
+    <Preference
+        android:key="turn_passcode_on_off"
+        android:title="@string/passcode_turn_on"
+        android:persistent="false" />
+
+    <Preference
+        android:key="change_passcode"
+        android:persistent="false"
+        android:title="@string/passcode_change_passcode" />
+
+</PreferenceScreen>
