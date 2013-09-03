@@ -125,6 +125,18 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
             PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
             PreferenceGroup passcodeGroup = (PreferenceGroup)findPreference("wp_passcode_lock_category");
             rootScreen.removePreference(passcodeGroup);
+        } else {
+            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
+            //disable on-click changes on the property
+            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(
+                    new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            passcodeEnabledCheckBoxPreference.setChecked( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ); 
+                            return false;
+                        }
+                    }
+                    );
         }
         
         displayPreferences();
@@ -136,6 +148,18 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 
         // the set of blogs may have changed while we were away
         updateBlogsPreferenceCategory();
+        
+        //update Passcode lock row if available
+        if( AppLockManager.getInstance().isAppLockFeatureEnabled() ) {
+            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
+            if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) { 
+                passcodeEnabledCheckBoxPreference.setTitle(R.string.passcode_turn_off);
+                passcodeEnabledCheckBoxPreference.setChecked(true);
+            } else {
+                passcodeEnabledCheckBoxPreference.setTitle(R.string.passcode_turn_on);
+                passcodeEnabledCheckBoxPreference.setChecked(false);
+            }
+        }
     }
     
     @Override
