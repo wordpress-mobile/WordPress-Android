@@ -400,7 +400,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
             getSupportFragmentManager().executePendingTransactions();
-            Display display = getWindow().getDecorView().getDisplay();
+            Display display = getWindowManager().getDefaultDisplay();
             int minWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int height = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_height);
             int width = Math.max((int) (display.getWidth() * 0.6), minWidth);
