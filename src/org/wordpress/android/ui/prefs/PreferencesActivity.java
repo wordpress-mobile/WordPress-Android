@@ -153,10 +153,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         if( AppLockManager.getInstance().isAppLockFeatureEnabled() ) {
             CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
             if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) { 
-                passcodeEnabledCheckBoxPreference.setTitle(R.string.passcode_turn_off);
                 passcodeEnabledCheckBoxPreference.setChecked(true);
             } else {
-                passcodeEnabledCheckBoxPreference.setTitle(R.string.passcode_turn_on);
                 passcodeEnabledCheckBoxPreference.setChecked(false);
             }
         }

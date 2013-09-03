@@ -63,7 +63,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="wp_pref_passlock_enabled"
-            android:title="@string/passcode_manage">
+            android:title="@string/passcode_preference_title">
               <intent android:targetClass="org.wordpress.android.lockmanager.PasscodePreferencesActivity"
                 android:targetPackage="org.wordpress.android"/>
        </CheckBoxPreference>
