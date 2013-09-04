@@ -9,8 +9,8 @@
         android:id="@+id/AppUnlockLinearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
-  		android:layout_gravity="center"
         android:orientation="vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp" >
@@ -33,9 +33,9 @@
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:text="@string/passcode_enter_passcode"
+            android:textAlignment="center"
             android:textColor="#FF464646"
-            android:textSize="18sp"
-            android:textAlignment="center" />
+            android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/pin_code_row"
@@ -66,42 +66,30 @@
             </EditText>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/pin_code_virtual_keyboard"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingTop="30dp" >
+        <TableLayout
+            android:id="@+id/tableLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="30dp"
+            android:shrinkColumns="*"
+            android:stretchColumns="*" >
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
+            <TableRow>
                 <Button
                     android:id="@+id/button1"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="1" />
-
                 <Button
                     android:id="@+id/button2"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="2" />
-
                 <Button
                     android:id="@+id/button3"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="3" />
-            </LinearLayout>
+            </TableRow>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
+            <TableRow>
                 <Button
                     android:id="@+id/button4"
                     style="@style/PasscodeKeyboardButtonStyle"
@@ -116,36 +104,24 @@
                     android:id="@+id/button6"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="6" />
-            </LinearLayout>
+            </TableRow>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
+            <TableRow>
                 <Button
                     android:id="@+id/button7"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="7" />
-
                 <Button
                     android:id="@+id/button8"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="8" />
-
                 <Button
                     android:id="@+id/button9"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="9" />
-            </LinearLayout>
+            </TableRow>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
+            <TableRow>
                 <Button
                     android:id="@+id/button_none"
                     style="@style/PasscodeKeyboardButtonStyle"
@@ -153,18 +129,18 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:text="" />
-
                 <Button
                     android:id="@+id/button0"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="0" />
-
                 <Button
                     android:id="@+id/button_erase"
                     style="@style/PasscodeKeyboardButtonStyle"
                     android:text="Del" />
-            </LinearLayout>
-        </LinearLayout>
+            </TableRow>
+            
+        </TableLayout>
+        
     </LinearLayout>
 
 </ScrollView>

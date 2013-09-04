@@ -194,7 +194,7 @@
     </style>
     
     <style name="PasscodeKeyboardButtonStyle" parent="@android:style/Widget.Button">
-       <item name="android:textSize">15sp</item>
+       <item name="android:textSize">16sp</item>
   	   <item name="android:textColor">#FF464646</item>
        <item name="android:gravity">center</item>
        <item name="android:background">@drawable/passcode_keyboard_button</item>

@@ -3,7 +3,6 @@ package org.wordpress.android.lockmanager;
 import android.content.Intent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 
@@ -32,7 +31,7 @@ public class PasscodeUnlockActivity extends AbstractPasscodeKeyboardActivity {
                 public void run() {
                     Animation shake = AnimationUtils.loadAnimation(PasscodeUnlockActivity.this, R.anim.shake);
                     findViewById(R.id.AppUnlockLinearLayout1).startAnimation(shake);
-                    Toast.makeText(PasscodeUnlockActivity.this, getString(R.string.passcode_wrong_passcode), Toast.LENGTH_SHORT).show();
+                    showPasswordError();
                     pinCodeField1.setText("");
                     pinCodeField2.setText("");
                     pinCodeField3.setText("");
