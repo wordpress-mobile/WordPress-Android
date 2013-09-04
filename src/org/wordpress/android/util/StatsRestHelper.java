@@ -1,13 +1,18 @@
 package org.wordpress.android.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -191,20 +196,30 @@ public class StatsRestHelper {
                 try {
                     String date = response.getString("date");
                     long dateMs = StatUtils.toMs(date);
-                    
+
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+
                     // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                    context.getContentResolver().delete(StatsContentProvider.STATS_CLICK_GROUP_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" });
-                    context.getContentResolver().delete(StatsContentProvider.STATS_CLICKS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" });
+                    ContentProviderOperation delete_group = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICK_GROUP_URI).withSelection("blogId=? AND (date=? OR date<=?)", 
+                            new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                    ContentProviderOperation delete_child = ContentProviderOperation.newDelete(StatsContentProvider.STATS_CLICKS_URI).withSelection("blogId=? AND (date=? OR date<=?)", 
+                            new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                    
+                    operations.add(delete_group);
+                    operations.add(delete_child);
+                    
                     
                     JSONArray groups = response.getJSONArray("clicks");
                     int groupsCount = groups.length();
-                    
+
                     // insert groups
                     for (int i = 0; i < groupsCount; i++ ) {
                         JSONObject group = groups.getJSONObject(i);
                         StatsClickGroup statGroup = new StatsClickGroup(blogId, date, group);
                         ContentValues values = StatsClickGroupsTable.getContentValues(statGroup);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_CLICK_GROUP_URI, values);
+                        
+                        ContentProviderOperation insert_group = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICK_GROUP_URI).withValues(values).build();
+                        operations.add(insert_group);
                         
                         // insert children, only if there is more than one entry
                         JSONArray clicks = group.getJSONArray("results");
@@ -214,12 +229,23 @@ public class StatsRestHelper {
                             for (int j = 0; j < count; j++) {
                                 StatsClick stat = new StatsClick(blogId, date, statGroup.getGroupId(), clicks.getJSONArray(j));
                                 ContentValues v = StatsClicksTable.getContentValues(stat);
-                                context.getContentResolver().insert(StatsContentProvider.STATS_CLICKS_URI, v);
+                                ContentProviderOperation insert_child = ContentProviderOperation.newInsert(StatsContentProvider.STATS_CLICKS_URI).withValues(v).build();
+                                operations.add(insert_child);
                             }
                         }
                         
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_CLICK_GROUP_URI, null);
+                    resolver.notifyChange(StatsContentProvider.STATS_CLICKS_URI, null);
+                    
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 

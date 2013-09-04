@@ -26,7 +26,7 @@ import org.wordpress.android.datasets.StatsVideosTable;
 
 public class StatsContentProvider extends ContentProvider {
 
-    private static final String AUTHORITY = "org.wordpress.android.providers.StatsContentProvider";
+    public static final String AUTHORITY = "org.wordpress.android.providers.StatsContentProvider";
 
     public static final Uri STATS_CLICK_GROUP_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICK_GROUPS);
     public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + AUTHORITY + "/" + Paths.CLICKS);
@@ -107,12 +107,13 @@ public class StatsContentProvider extends ContentProvider {
     @Override
     public synchronized Uri insert(Uri uri, ContentValues values) {
         SQLTable table = getSQLTable(uri);
+        Uri result_uri = null;
         if (table != null) {
-            table.insert(getDB(), uri, values);
-            getContext().getContentResolver().notifyChange(uri, null);
+            long _id = table.insert(getDB(), uri, values);
+            result_uri = Uri.parse(uri.toString() + "/" + _id);
         }
         
-        return null;
+        return result_uri;
     }
 
     @Override
