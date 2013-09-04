@@ -13,6 +13,7 @@ import android.provider.Browser;
 import android.net.Uri;
 
 import org.wordpress.android.R;
+import org.wordpress.android.lockmanager.AppLockManager;
 
 public class DetailHeader extends LinearLayout {
     public DetailHeader(Context context){
@@ -44,6 +45,7 @@ public class DetailHeader extends LinearLayout {
                     Context context = getContext();
                     intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
                     context.startActivity(intent);
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             });
         }

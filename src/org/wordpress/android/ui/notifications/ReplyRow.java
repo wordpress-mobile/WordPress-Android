@@ -15,6 +15,7 @@ import android.provider.Browser;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.lockmanager.AppLockManager;
 
 class ReplyRow extends LinearLayout {
     private ImageView mButton, mErrorIndicator;
@@ -72,6 +73,7 @@ class ReplyRow extends LinearLayout {
                     Context context = getContext();
                     intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
                     context.startActivity(intent);
+                    AppLockManager.getInstance().setExtendedTimeout();
                 } 
             });
         }                

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import org.wordpress.android.R;
+import org.wordpress.android.lockmanager.AppLockManager;
 
 public class FollowRow extends LinearLayout {
     
@@ -170,6 +171,7 @@ public class FollowRow extends LinearLayout {
                         try {
                             Uri uri = Uri.parse(mBlogURL);
                             getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                            AppLockManager.getInstance().setExtendedTimeout();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
