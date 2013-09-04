@@ -84,7 +84,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         actionBar.setCustomView(mActionbarNav);
         
         mActionbarNavText = (TextView) mActionbarNav.findViewById(R.id.stats_ab_nav_text);
-        mActionbarNavText.setText(StatsViewType.values()[mNavPosition].getLabel());
+        mActionbarNavText.setText(StatsViewType.getImplemented()[mNavPosition].getLabel());
         mActionbarNavText.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -98,7 +98,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         FragmentManager fm = getSupportFragmentManager();
         mStatsViewFragment = (StatsAbsViewFragment) fm.findFragmentByTag(StatsAbsViewFragment.TAG);
         if (mStatsViewFragment == null) { 
-            mStatsViewFragment = StatsAbsViewFragment.newInstance(StatsViewType.values()[0]);
+            mStatsViewFragment = StatsAbsViewFragment.newInstance(StatsViewType.getImplemented()[0]);
             fm.beginTransaction().add(R.id.stats_container, mStatsViewFragment, StatsAbsViewFragment.TAG).commit();
         }
         
@@ -172,7 +172,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     @Override
     public void onItemClick(int position) {
         mNavPosition = position;
-        StatsViewType viewType = StatsViewType.values()[mNavPosition];
+        StatsViewType viewType = StatsViewType.getImplemented()[mNavPosition];
         mActionbarNavText.setText(viewType.getLabel());
 
         FragmentManager fm = getSupportFragmentManager();

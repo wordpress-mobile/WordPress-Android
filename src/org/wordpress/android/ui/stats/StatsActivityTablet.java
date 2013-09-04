@@ -80,6 +80,8 @@ public class StatsActivityTablet extends WPActionBarActivity {
         
         StatsAbsViewFragment fragment;
         
+        // TODO: lines commented out are awaiting stats apis
+
         if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
             ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
@@ -90,45 +92,45 @@ public class StatsActivityTablet extends WPActionBarActivity {
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
         }
         
-        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
-            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
-        }
+//        if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null) {
+//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.COMMENTS);
+//            ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
+//        }
 
-        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
-            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
-        }
+//        if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
+//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+//            ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
+//        }
 
         if (fm.findFragmentByTag(StatsSearchEngineTermsFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
             ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
         }
 
-        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
-            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
-        }
+//        if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null) {
+//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES);
+//            ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
+//        }
 
-        if (fm.findFragmentByTag(StatsTopAuthorsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
-            ft.replace(R.id.stats_top_authors_container, fragment, StatsTopAuthorsFragment.TAG);
-        }
+//        if (fm.findFragmentByTag(StatsTopAuthorsFragment.TAG) == null) {
+//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_AUTHORS);
+//            ft.replace(R.id.stats_top_authors_container, fragment, StatsTopAuthorsFragment.TAG);
+//        }
 
         if (fm.findFragmentByTag(StatsTotalsFollowersAndSharesFragment.TAG) == null) {
             fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
             ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
         }
 
-        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
-            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-        }
+//        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
+//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+//            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
+//        }
 
-        if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
-            ft.replace(R.id.stats_video_container, fragment, StatsVideoFragment.TAG);
-        }
+//        if (fm.findFragmentByTag(StatsVideoFragment.TAG) == null) {
+//            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIDEO_PLAYS);
+//            ft.replace(R.id.stats_video_container, fragment, StatsVideoFragment.TAG);
+//        }
 
         if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null) {
             fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
@@ -157,6 +159,8 @@ public class StatsActivityTablet extends WPActionBarActivity {
     private void loadSplitLayout() {
         FrameLayout frameView;
 
+        // TODO: lines commented out are awaiting stats apis
+
         frameView = (FrameLayout) findViewById(R.id.stats_geoviews_container);
         mFragmentContainer.removeView(frameView);
         mColumnLeft.addView(frameView);
@@ -169,29 +173,29 @@ public class StatsActivityTablet extends WPActionBarActivity {
         mFragmentContainer.removeView(frameView);
         mColumnLeft.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
+//        frameView = (FrameLayout) findViewById(R.id.stats_top_authors_container);
+//        mFragmentContainer.removeView(frameView);
+//        mColumnLeft.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnLeft.addView(frameView);
+//        frameView = (FrameLayout) findViewById(R.id.stats_video_container);
+//        mFragmentContainer.removeView(frameView);
+//        mColumnLeft.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
+//        frameView = (FrameLayout) findViewById(R.id.stats_top_posts_container);
+//        mFragmentContainer.removeView(frameView);
+//        mColumnRight.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
+//        frameView = (FrameLayout) findViewById(R.id.stats_comments_container);
+//        mFragmentContainer.removeView(frameView);
+//        mColumnRight.addView(frameView);
         
         frameView = (FrameLayout) findViewById(R.id.stats_clicks_container);
         mFragmentContainer.removeView(frameView);
         mColumnRight.addView(frameView);
 
-        frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
-        mFragmentContainer.removeView(frameView);
-        mColumnRight.addView(frameView);
+//        frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
+//        mFragmentContainer.removeView(frameView);
+//        mColumnRight.addView(frameView);
 
         frameView = (FrameLayout) findViewById(R.id.stats_searchengine_container);
         mFragmentContainer.removeView(frameView);
@@ -249,18 +253,19 @@ public class StatsActivityTablet extends WPActionBarActivity {
             return; 
         
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
+
+        // TODO: lines commented out are awaiting stats apis
         StatsRestHelper.getStatsSummary(blogId);
         StatsRestHelper.getStats(StatsViewType.CLICKS, blogId);
-        StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
+//        StatsRestHelper.getStats(StatsViewType.COMMENTS, blogId);
         StatsRestHelper.getStats(StatsViewType.REFERRERS, blogId);
         StatsRestHelper.getStats(StatsViewType.SEARCH_ENGINE_TERMS, blogId);
-        StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
+//        StatsRestHelper.getStats(StatsViewType.TAGS_AND_CATEGORIES, blogId);
         // data for total followers and shares will already be fetched 
-        StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
+//        StatsRestHelper.getStats(StatsViewType.TOP_AUTHORS, blogId);
         StatsRestHelper.getStats(StatsViewType.TOP_POSTS_AND_PAGES, blogId);
-        StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
-        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
+//        StatsRestHelper.getStats(StatsViewType.VIDEO_PLAYS, blogId);
+//        StatsRestHelper.getStats(StatsViewType.VIEWS_BY_COUNTRY, blogId);
         StatsRestHelper.getStats(StatsViewType.VISITORS_AND_VIEWS, blogId);
     }
     
