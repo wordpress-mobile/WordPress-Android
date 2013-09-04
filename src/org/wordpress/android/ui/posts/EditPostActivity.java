@@ -53,7 +53,6 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -103,7 +102,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaUtils;
@@ -211,8 +209,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // We arrived here from a share action
-            if (!selectBlogForShareAction())
-                return;
+            setupTitleForShareAction();
         } else {
             initBlog();
             if (extras != null) {
@@ -966,80 +963,17 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         }
     }
 
-    private boolean selectBlogForShareAction() {
-
+    private void setupTitleForShareAction() {
         mIsNew = true;
         mLocalDraft = true;
+        
+        mBlog = WordPress.getCurrentBlog();
+        mBlogID = mBlog.getId();
+        mAccountName = mBlog.getBlogName();
+        WordPress.wpDB.updateLastBlogId(mBlogID);
 
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
-
-        if (accounts.size() > 0) {
-
-            final String blogNames[] = new String[accounts.size()];
-            final int accountIDs[] = new int[accounts.size()];
-
-            for (int i = 0; i < accounts.size(); i++) {
-
-                Map<String, Object> curHash = accounts.get(i);
-                try {
-                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                } catch (Exception e) {
-                    blogNames[i] = curHash.get("url").toString();
-                }
-                accountIDs[i] = (Integer) curHash.get("id");
-                try {
-                    mBlog = new Blog(accountIDs[i]);
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                    return false;
-                }
-            }
-
-            // Don't prompt if they have one blog only
-            if (accounts.size() > 1) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditPostActivity.this);
-                builder.setCancelable(false);
-                builder.setTitle(getResources().getText(R.string.select_a_blog));
-                builder.setItems(blogNames, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        mBlogID = accountIDs[item];
-                        try {
-                            mBlog = new Blog(mBlogID);
-                        } catch (Exception e) {
-                            showBlogErrorAndFinish();
-                        }
-                        WordPress.currentBlog = mBlog;
-                        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-                        mAccountName = blogNames[item];
-                        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
-                                + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            } else {
-                mBlogID = accountIDs[0];
-                try {
-                    mBlog = new Blog(mBlogID);
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                    return false;
-                }
-                WordPress.currentBlog = mBlog;
-                WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-                mAccountName = blogNames[0];
-                setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
-                        + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
-            }
-            ;
-            return true;
-        } else {
-            // no account, load main view to load new account view
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, NewAccountActivity.class));
-            finish();
-            return false;
-        }
+        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
+                + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
     }
 
     private void showBlogErrorAndFinish() {

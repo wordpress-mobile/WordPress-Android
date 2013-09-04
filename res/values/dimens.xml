@@ -24,4 +24,6 @@
     <dimen name="action_bar_spinner_width">312dp</dimen>
     <dimen name="action_bar_spinner_y_offset">-8dp</dimen>
     <dimen name="graph_font_size">8sp</dimen>
+    
+    <dimen name="share_action_dialog_width">280dp</dimen>
 </resources>

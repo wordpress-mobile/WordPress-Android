@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <string name="app_name">WordPress</string>
+    
   <!-- account setup -->
   <string name="required_fields">Required Fields</string>
   <string name="required_field">Required Field</string>
@@ -336,6 +338,10 @@
 
   <!-- action from share intents -->
   <string name="select_a_blog">Select a Blog</string>
+  <string name="share_action_title">Add to &#8230;</string>
+  <string name="share_action_post">New Post</string>
+  <string name="share_action_media">Media Gallery</string>
+  <string name="share_action">Share</string>
   <string name="no_account">No WordPress account found, please add an account and try again.</string>
 
   <!-- file errors -->

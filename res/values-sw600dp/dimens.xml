@@ -2,4 +2,5 @@
 <resources>
     <dimen name="add_account_width">480dp</dimen>    
     <dimen name="graph_font_size">10sp</dimen>
+    <dimen name="share_action_dialog_width">480dp</dimen>
 </resources>

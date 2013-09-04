@@ -245,4 +245,11 @@
        <item name="android:layout_height">wrap_content</item>
    </style>
     
+    
+    <style name="FloatingActivityTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
 </resources>

@@ -118,77 +118,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         String action = getIntent().getAction(); 
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // We arrived here from a share action
-            if (!selectBlogForShareAction())
-                return;
-        }
-    }
-
-    private boolean selectBlogForShareAction() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
-        
-        if (accounts.size() > 0) {
-
-            final String blogNames[] = new String[accounts.size()];
-            final int accountIDs[] = new int[accounts.size()];
-
-            Blog blog;
-            
-            for (int i = 0; i < accounts.size(); i++) {
-
-                Map<String, Object> curHash = accounts.get(i);
-                try {
-                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                } catch (Exception e) {
-                    blogNames[i] = curHash.get("url").toString();
-                }
-                accountIDs[i] = (Integer) curHash.get("id");
-                try {
-                    blog = new Blog(accountIDs[i]);
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                    return false;
-                }
-            }
-
-            // Don't prompt if they have one blog only
-            if (accounts.size() > 1) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MediaBrowserActivity.this);
-                builder.setCancelable(false);
-                builder.setTitle(getResources().getText(R.string.select_a_blog));
-                builder.setItems(blogNames, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        try {
-                            WordPress.currentBlog = new Blog(accountIDs[item]);
-                        } catch (Exception e) {
-                            showBlogErrorAndFinish();
-                        }
-                        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-                        updateMenuDrawer();
-                        refreshMenuDrawer();
-                        uploadSharedFiles();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            } else {
-                try {
-                    WordPress.currentBlog = new Blog(accountIDs[0]);
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                }
-                WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-                updateMenuDrawer();
-                refreshMenuDrawer();
-                uploadSharedFiles();
-            }
-
-            return true;
-        } else {
-            // no account, load main view to load new account view
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, NewAccountActivity.class));
-            finish();
-            return false;
+            uploadSharedFiles();
         }
     }
     
@@ -206,11 +136,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         
         // clear the intent's action, so that in case the user rotates, we don't re-upload the same files
         getIntent().setAction(null);
-    }
-
-    private void showBlogErrorAndFinish() {
-        Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-        finish();
     }
     
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
