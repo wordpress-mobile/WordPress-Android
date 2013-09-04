@@ -20,6 +20,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.Utils;
@@ -71,6 +72,8 @@ public class StatsActivityTablet extends WPActionBarActivity {
         mColumnRight = (LinearLayout) findViewById(R.id.stats_tablet_col_right); 
         
         loadStatsFragments();
+        
+        setTitle(R.string.stats);
     }
     
     private void loadStatsFragments() {
@@ -216,6 +219,13 @@ public class StatsActivityTablet extends WPActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             refreshStats();
+            return true;
+        } else if (item.getItemId() == R.id.menu_view_stats_full_site) {
+            Intent intent = new Intent(this, OldStatsActivity.class);
+            intent.putExtra("id", WordPress.currentBlog.getId());
+            intent.putExtra("isNew", true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivityWithDelay(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

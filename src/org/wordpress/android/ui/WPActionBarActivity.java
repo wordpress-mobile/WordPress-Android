@@ -790,7 +790,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet))
+            if (!isSelected())
                 mShouldFinish = true;
             
             Intent intent;
@@ -799,30 +799,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             else 
                 intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
             intent.putExtra("id", WordPress.currentBlog.getId());
-            intent.putExtra("isNew",
-                    true);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
-        }
-    }
-    
-    private class OldStatsMenuItem extends MenuDrawerItem {
-        OldStatsMenuItem(){
-            super(STATS_ACTIVITY, R.string.tab_stats, R.drawable.dashboard_icon_stats);
-        }
-        @Override
-        public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof OldStatsActivity;
-        }
-        @Override
-        public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof OldStatsActivity))
-                mShouldFinish = true;
-            
-            Intent intent = new Intent(WPActionBarActivity.this, OldStatsActivity.class);
-            intent.putExtra("id", WordPress.currentBlog.getId());
-            intent.putExtra("isNew",
-                    true);
+            intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

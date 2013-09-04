@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,10 +27,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -38,11 +42,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -78,7 +84,7 @@ import org.wordpress.android.models.Blog;
  * @author Eric
  *
  */
-public class OldStatsActivity extends WPActionBarActivity {
+public class OldStatsActivity extends SherlockActivity {
 
     static String lastAuthedName = "";
 
@@ -94,11 +100,13 @@ public class OldStatsActivity extends WPActionBarActivity {
     private AsyncTask<String, Void, List<?>> currentTask = null;
     private MenuItem refreshMenuItem;
 
+    private boolean isAnimatingRefreshButton;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createMenuDrawer(R.layout.view_web_stats);
+        setContentView(R.layout.view_web_stats);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -187,7 +195,7 @@ public class OldStatsActivity extends WPActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.basic_menu, menu);
+        inflater.inflate(R.menu.old_stats_menu, menu);
         refreshMenuItem = menu.findItem(R.id.menu_refresh);
         return true;
     }
@@ -436,12 +444,6 @@ public class OldStatsActivity extends WPActionBarActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onBlogChanged() {
-        super.onBlogChanged();
-        initStats();
     }
 
     /*
@@ -822,6 +824,37 @@ public class OldStatsActivity extends WPActionBarActivity {
                 showLoginForm();
                 isRetrying = true;
             }
+        }
+    }
+    
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // disable animation when finishing
+        overridePendingTransition(0, 0);
+    }
+    
+    public void startAnimatingRefreshButton(MenuItem refreshItem) {
+        if (refreshItem != null && !isAnimatingRefreshButton) {
+            isAnimatingRefreshButton = true;
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView iv = (ImageView) inflater.inflate(
+                    getResources().getLayout(R.layout.menu_refresh_view), null);
+            RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF,
+                    0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setInterpolator(new LinearInterpolator());
+            anim.setRepeatCount(Animation.INFINITE);
+            anim.setDuration(1400);
+            iv.startAnimation(anim);
+            refreshItem.setActionView(iv);
+        }
+    }
+
+    public void stopAnimatingRefreshButton(MenuItem refreshItem) {
+        isAnimatingRefreshButton = false;
+        if (refreshItem != null && refreshItem.getActionView() != null) {
+            refreshItem.getActionView().clearAnimation();
+            refreshItem.setActionView(null);
         }
     }
 }
