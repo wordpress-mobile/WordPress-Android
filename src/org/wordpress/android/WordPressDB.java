@@ -1842,8 +1842,7 @@ public class WordPressDB {
         return commentCount;
     }
 
-    public boolean saveMediaFile(MediaFile mf) {
-        boolean returnValue = false;
+    public void saveMediaFile(MediaFile mf) {
         
         ContentValues values = new ContentValues();
         values.put("postID", mf.getPostID());
@@ -1868,15 +1867,21 @@ public class WordPressDB {
 
         synchronized (this) {
             int result = 0;
+            boolean isMarkedForDelete = false;
             if (mf.getMediaId() != null) {
-                result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", 
-                    new String[]{ mf.getBlogId(), String.valueOf(mf.getMediaId())});
+                Cursor cursor = db.rawQuery("SELECT uploadState FROM " + MEDIA_TABLE + " WHERE mediaId=?", new String[] { mf.getMediaId() });
+                if (cursor != null && cursor.moveToFirst()) {
+                    isMarkedForDelete = "delete".equals(cursor.getString(0));
+                }
+                
+                if (!isMarkedForDelete)
+                    result = db.update(MEDIA_TABLE, values, "blogId=? AND mediaId=?", new String[]{ mf.getBlogId(), mf.getMediaId()});
             }
-            if (result == 0)
-                returnValue = db.insert(MEDIA_TABLE, null, values) > 0;
+            
+            if (result == 0 && !isMarkedForDelete)
+                db.insert(MEDIA_TABLE, null, values);
         }
 
-        return (returnValue);
     }
 
     public MediaFile[] getMediaFilesForPost(Post p) {
