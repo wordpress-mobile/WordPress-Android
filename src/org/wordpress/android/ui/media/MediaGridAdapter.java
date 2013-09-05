@@ -258,7 +258,7 @@ public class MediaGridAdapter extends CursorAdapter {
             imageView.setTag(thumbnailURL);
             imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
         } else {
-            imageView.setImageUrl("http://fake_url", WordPress.imageLoader);
+            imageView.setImageResource(placeholderResId);
         }
         
     }
