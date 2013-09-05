@@ -97,7 +97,6 @@ public class StatsContentProvider extends ContentProvider {
         SQLTable table = getSQLTable(uri);
         if (table != null) {
             int count = table.delete(getDB(), uri, selection, selectionArgs); 
-            getContext().getContentResolver().notifyChange(uri, null);
             return count;
         }
         
@@ -131,7 +130,6 @@ public class StatsContentProvider extends ContentProvider {
         SQLTable table = getSQLTable(uri);
         if (table != null) {
             int count = table.update(getDB(), uri, values, selection, selectionArgs);
-            getContext().getContentResolver().notifyChange(uri, null);
             return count;
         }
         

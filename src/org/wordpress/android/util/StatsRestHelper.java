@@ -125,9 +125,8 @@ public class StatsRestHelper {
                 getStatsViewsByCountry(blogId, today);
                 break;
             case VISITORS_AND_VIEWS:
-                updateRefreshMap(type, 4);
-                getStatsVisitorsAndViews(blogId);
-                getStatsBarChart(blogId, StatsBarChartUnit.DAY);
+                updateRefreshMap(type, 3);
+                getStatsVisitorsAndViews(blogId); // this has bar chart data for days
                 getStatsBarChart(blogId, StatsBarChartUnit.WEEK);
                 getStatsBarChart(blogId, StatsBarChartUnit.MONTH);
                 break;
@@ -307,18 +306,30 @@ public class StatsRestHelper {
                 try {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
+
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
                     
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_MOST_COMMENTED_URI, "blogId=?", new String[] { blogId });
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_MOST_COMMENTED_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsMostCommented stat = new StatsMostCommented(blogId, result);
                         ContentValues values = StatsMostCommentedTable.getContentValues(stat);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_MOST_COMMENTED_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_MOST_COMMENTED_URI).withValues(values).build();
+                        operations.add(op);
                     }
-                    
+
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_MOST_COMMENTED_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -343,17 +354,29 @@ public class StatsRestHelper {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
 
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_TOP_COMMENTERS_URI, "blogId=?", new String[] { blogId });
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_COMMENTERS_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsTopCommenter stat = new StatsTopCommenter(blogId, result);
                         ContentValues values = StatsTopCommentersTable.getContentValues(stat);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_TOP_COMMENTERS_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_COMMENTERS_URI).withValues(values).build();
+                        operations.add(op);
                     }
-                    
+
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_TOP_COMMENTERS_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -397,10 +420,18 @@ public class StatsRestHelper {
                 try {
                     String date = response.getString("date");
                     long dateMs = StatUtils.toMs(date);
+
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
                     
                     // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                    context.getContentResolver().delete(StatsContentProvider.STATS_REFERRER_GROUP_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" });
-                    context.getContentResolver().delete(StatsContentProvider.STATS_REFERRERS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" });
+                    ContentProviderOperation delete_group_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRER_GROUP_URI)
+                            .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                    operations.add(delete_group_op);
+                    
+                    ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_REFERRERS_URI)
+                            .withSelection("blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
+                    operations.add(delete_op);
+
                     
                     JSONArray groups = response.getJSONArray("referrers");
                     int groupsCount = groups.length();
@@ -410,8 +441,8 @@ public class StatsRestHelper {
                         JSONObject group = groups.getJSONObject(i);
                         StatsReferrerGroup statGroup = new StatsReferrerGroup(blogId, date, group);
                         ContentValues values = StatsReferrerGroupsTable.getContentValues(statGroup);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_REFERRER_GROUP_URI, values);
-
+                        ContentProviderOperation insert_group_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRER_GROUP_URI).withValues(values).build();
+                        operations.add(insert_group_op);
                         
                         // insert children, only if there is more than one entry
                         JSONArray referrers = group.getJSONArray("results");
@@ -421,12 +452,22 @@ public class StatsRestHelper {
                             for (int j = 0; j < count; j++) {
                                 StatsReferrer stat = new StatsReferrer(blogId, date, statGroup.getGroupId(), referrers.getJSONArray(j));
                                 ContentValues v = StatsReferrersTable.getContentValues(stat);
-                                context.getContentResolver().insert(StatsContentProvider.STATS_REFERRERS_URI, v);
+                                ContentProviderOperation insert_child_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_REFERRERS_URI).withValues(v).build();
+                                operations.add(insert_child_op);
                             }
                         }
                         
                     }
+
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_REFERRER_GROUP_URI, null);
+                    resolver.notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -471,9 +512,13 @@ public class StatsRestHelper {
                 try {
                     String date = response.getString("date");
                     long dateMs = StatUtils.toMs(date);
+                    
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    ContentProviderOperation delete_op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withSelection("blogId=? AND (date=? OR date<=?)", 
+                            new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" }).build();
 
-                    // delete data with the same date, and data older than two days ago (keep yesterday's data)
-                    context.getContentResolver().delete(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, "blogId=? AND (date=? OR date<=?)", new String[] { blogId, dateMs + "", (dateMs - TWO_DAYS) + "" });
+                    operations.add(delete_op);
                     
                     JSONArray results = response.getJSONArray("search-terms");
 
@@ -483,13 +528,25 @@ public class StatsRestHelper {
                         StatsSearchEngineTerm stat = new StatsSearchEngineTerm(blogId, date, result);
                         ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);
                         context.getContentResolver().insert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, values);
+                        
+                        ContentProviderOperation insert_op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI).withValues(values).build();
+                        operations.add(insert_op);
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, null);
+                    
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
             }
-
+  
             updateRefreshMap(StatsViewType.SEARCH_ENGINE_TERMS, -1);
             return null;
         }        
@@ -529,16 +586,29 @@ public class StatsRestHelper {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
                     
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI, "blogId=?", new String[] { blogId });
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsTagsandCategories stat = new StatsTagsandCategories(blogId, result);
                         ContentValues values = StatsTagsAndCategoriesTable.getContentValues(stat);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI).withValues(values).build();
+                        operations.add(op);
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -584,16 +654,29 @@ public class StatsRestHelper {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
                     
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_TOP_AUTHORS_URI, "blogId=?", new String[] { blogId });
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_AUTHORS_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsTopAuthor stat = new StatsTopAuthor(blogId, result);
                         ContentValues values = StatsTopAuthorsTable.getContentValues(stat);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_TOP_AUTHORS_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_AUTHORS_URI).withValues(values).build();
+                        operations.add(op);
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_TOP_AUTHORS_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -639,16 +722,29 @@ public class StatsRestHelper {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
 
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, "blogId=?", new String[] { blogId });
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsTopPostsAndPages stat = new StatsTopPostsAndPages(blogId, result);
                         ContentValues values = StatsTopPostsAndPagesTable.getContentValues(stat);
-                        context.getApplicationContext().getContentResolver().insert(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI).withValues(values).build();
+                        operations.add(op);
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -692,16 +788,29 @@ public class StatsRestHelper {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
 
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_VIDEOS_URI, "blogId=?", new String[] { blogId });
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_VIDEOS_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsVideo stat = new StatsVideo(blogId, result);
                         ContentValues values = StatsVideosTable.getContentValues(stat);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_VIDEOS_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_VIDEOS_URI).withValues(values).build();
+                        operations.add(op);
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_VIDEOS_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -746,16 +855,29 @@ public class StatsRestHelper {
                     JSONArray results = response.getJSONArray("result");
                     int count = results.length();
 
-                    if (count > 0)
-                        context.getContentResolver().delete(StatsContentProvider.STATS_GEOVIEWS_URI, "blogId=?", new String[] { blogId });
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(StatsContentProvider.STATS_GEOVIEWS_URI).withSelection("blogId=?", new String[] { blogId }).build();
+                        operations.add(op);
+                    }
                     
                     for (int i = 0; i < count; i++ ) {
                         JSONObject result = results.getJSONObject(i);
                         StatsGeoview stat = new StatsGeoview(blogId, result);
                         ContentValues values = StatsGeoviewsTable.getContentValues(stat);
-                        context.getContentResolver().insert(StatsContentProvider.STATS_GEOVIEWS_URI, values);
+                        ContentProviderOperation op = ContentProviderOperation.newInsert(StatsContentProvider.STATS_GEOVIEWS_URI).withValues(values).build();
+                        operations.add(op);
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(StatsContentProvider.STATS_GEOVIEWS_URI, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 
@@ -881,9 +1003,13 @@ public class StatsRestHelper {
                     
                     int count = results.length();
 
+                    ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+                    
                     // delete old stats and insert new ones
-                    if (count > 0)
-                        context.getContentResolver().delete(uri, "blogId=? AND unit=?", new String[] { blogId, unit.name() });
+                    if (count > 0) {
+                        ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[] { blogId, unit.name() }).build();
+                        operations.add(op);
+                    }
 
                     for (int i = 0; i < count; i++ ) {
                         JSONArray result = results.getJSONArray(i);
@@ -891,10 +1017,19 @@ public class StatsRestHelper {
                         ContentValues values = StatsBarChartDataTable.getContentValues(stat);
                         
                         if (values != null && uri != null) {
-                            context.getContentResolver().insert(uri, values);
+                            ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
+                            operations.add(op);
                         }
                     }
+                    
+                    ContentResolver resolver = context.getContentResolver();
+                    resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+                    resolver.notifyChange(uri, null);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
                 

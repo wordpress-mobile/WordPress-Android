@@ -6,13 +6,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.net.Uri;
+import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
@@ -108,18 +113,31 @@ public class StatUtils {
             
             int length = data.length();
             
-            if (length > 0)
-                context.getContentResolver().delete(uri, "blogId=? AND unit=?", new String[] { blogId, StatsBarChartUnit.DAY.name() });
+            ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+            
+            if (length > 0) {
+                ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[] { blogId, StatsBarChartUnit.DAY.name() }).build();
+                operations.add(op);
+            }
             
             for (int i = 0; i < length; i++) {
                 StatsBarChartData item = new StatsBarChartData(blogId, StatsBarChartUnit.DAY, data.getJSONArray(i));
                 ContentValues values = StatsBarChartDataTable.getContentValues(item);
                 
                 if (values != null) {
-                    context.getContentResolver().insert(uri, values);
+                    ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
+                    operations.add(op);
                 }
             }
+            
+            ContentResolver resolver = context.getContentResolver();
+            resolver.applyBatch(StatsContentProvider.AUTHORITY, operations);
+            resolver.notifyChange(uri, null);
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
             e.printStackTrace();
         }
     }
