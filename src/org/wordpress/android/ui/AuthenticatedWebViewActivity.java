@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 
 /**
@@ -186,6 +187,7 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(uri);
                     startActivity(i);
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             }
             return true;

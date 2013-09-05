@@ -2,7 +2,6 @@ package org.wordpress.android.lockmanager;
 
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 
@@ -38,10 +37,10 @@ public class PasscodeManagePasswordActivity extends AbstractPasscodeKeyboardActi
                 if( AppLockManager.getInstance().getCurrentAppLock().verifyPassword(passLock) ) {
                     setResult(RESULT_OK);
                     AppLockManager.getInstance().getCurrentAppLock().setPassword(null);
+                    finish();
                 } else {
-                    setResult(RESULT_FIRST_USER);
+                    showPasswordError();
                 }
-                finish();
                 break;
                 
             case PasscodePreferencesActivity.ENABLE_PASSLOCK:
@@ -56,7 +55,7 @@ public class PasscodeManagePasswordActivity extends AbstractPasscodeKeyboardActi
                     } else {
                         unverifiedPasscode = null;
                         topMessage.setText(R.string.passcode_enter_passcode);
-                        Toast.makeText(PasscodeManagePasswordActivity.this, getString(R.string.passcode_wrong_passcode), Toast.LENGTH_SHORT).show();
+                        showPasswordError();
                     }
                 }
                 break;
@@ -67,7 +66,7 @@ public class PasscodeManagePasswordActivity extends AbstractPasscodeKeyboardActi
                     topMessage.setText(R.string.passcode_enter_passcode);
                     type = PasscodePreferencesActivity.ENABLE_PASSLOCK;
                 } else {
-                    Toast.makeText(PasscodeManagePasswordActivity.this, getString(R.string.passcode_wrong_passcode), Toast.LENGTH_SHORT).show();
+                    showPasswordError();
                 } 
                 break;
                 

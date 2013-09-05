@@ -80,20 +80,17 @@ public class PasscodePreferencesActivity extends SherlockPreferenceActivity {
 
         switch (requestCode) {
             case DISABLE_PASSLOCK:
-                if (resultCode == RESULT_OK) {
-                    updateUI();
-                } else  if (resultCode == RESULT_FIRST_USER ) {
-                    Toast.makeText(PasscodePreferencesActivity.this, getString(R.string.passcode_wrong_passcode), Toast.LENGTH_SHORT).show();
-                }
                 break;
             case ENABLE_PASSLOCK:
             case CHANGE_PASSWORD:
                 if (resultCode == RESULT_OK) {
                     Toast.makeText(PasscodePreferencesActivity.this, getString(R.string.passcode_set), Toast.LENGTH_SHORT).show();
                 } 
-                updateUI();
+                break;
+            default:
                 break;
         }
+        updateUI();
     }
     
     private void updateUI() {

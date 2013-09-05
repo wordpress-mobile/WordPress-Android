@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 
 import java.io.UnsupportedEncodingException;
@@ -248,6 +249,7 @@ public class DashboardActivity extends SherlockActivity {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(uri);
                     startActivity(i);
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             }
             return true;
