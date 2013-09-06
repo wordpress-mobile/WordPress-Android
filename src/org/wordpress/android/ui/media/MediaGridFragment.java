@@ -72,6 +72,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     
     private boolean mIsRefreshing = false;
     private boolean mHasRetrievedAllMedia = false;
+    private String mSearchTerm;
 
     private View mSpinnerContainer;
     private TextView mResultView;
@@ -306,6 +307,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         if(WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE)
             return; 
         
+        // do not refresh if in search
+        if (mSearchTerm != null && mSearchTerm.length() > 0)
+            return;
+        
         if(offset == 0 || !mIsRefreshing) {
             
             if (offset == mOldMediaSyncOffset) {
@@ -384,6 +389,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     }
 
     public void search(String searchTerm) {
+        mSearchTerm = searchTerm;
         Blog blog = WordPress.getCurrentBlog();
         if (blog != null) {
             String blogId = String.valueOf(blog.getBlogId());
