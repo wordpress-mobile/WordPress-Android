@@ -177,7 +177,15 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         } else {
             // cursor is for children
             if (mAdapter != null) {
-                mAdapter.setChildrenCursor(loader.getId(), data);
+                // due to a race condition that occurs when stats are refreshed, 
+                // it is possible to have more rows in the listview initially than when done refreshing,
+                // causing null pointer exceptions to occur. 
+                
+                try {
+                    mAdapter.setChildrenCursor(loader.getId(), data);
+                } catch (NullPointerException e) {
+                    // do nothing
+                }
             }
         }
         
