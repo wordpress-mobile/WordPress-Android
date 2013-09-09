@@ -142,6 +142,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
+    
+    public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
+    public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
 
     private Blog mBlog;
     private Post mPost;
@@ -355,6 +358,8 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                 setContent();
             else if (NEW_MEDIA_GALLERY.equals(action))
                 prepareMediaGallery();
+            else if (NEW_MEDIA_POST.equals(action))
+                prepareMediaPost();
             
         }
 
@@ -497,6 +502,11 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         startMediaGalleryActivity(mediaGallery);
     }
 
+    private void prepareMediaPost() {
+        String mediaId = getIntent().getStringExtra(NEW_MEDIA_POST_EXTRA);
+        addExistingMediaToEditor(mediaId);
+    }
+    
     private void startMediaGalleryActivity(MediaGallery mediaGallery) {
         Intent intent = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
         intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
@@ -1329,16 +1339,19 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
     }
     
     private void handleMediaGalleryPickerResult(Intent data) {
+        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+        if (ids == null || ids.size() == 0)
+            return;
+        
+        String mediaId = ids.get(0);
+        addExistingMediaToEditor(mediaId);
+    }
+    
+    private void addExistingMediaToEditor(String mediaId) {
         if (WordPress.getCurrentBlog() == null)
             return;
         
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
-        if (ids == null || ids.size() == 0)
-            return;
-
-        String mediaId = ids.get(0);
         
         WPImageSpan imageSpan = prepareWPImageSpan(blogId, mediaId);
         if (imageSpan == null)

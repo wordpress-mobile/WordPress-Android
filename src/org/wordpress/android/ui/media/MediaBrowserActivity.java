@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -42,10 +41,8 @@ import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.media.MediaAddFragment.MediaAddFragmentCallback;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -53,7 +50,6 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -75,6 +71,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private ActionMode mActionMode;
     
     private Handler mHandler;
+    private int mMultiSelectCount;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -547,6 +544,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMultiSelectChange(int count) {
+        mMultiSelectCount = count;
+        
         if (count > 0 && mActionMode == null) { 
             mActionMode = getSherlock().startActionMode(this);
         } else if (count == 0 && mActionMode != null) {
@@ -555,7 +554,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         if (count > 0 && mActionMode != null)
             mActionMode.setTitle(count + " selected");
-            
+
+        if (mActionMode != null)
+            mActionMode.invalidate();
+        
         invalidateOptionsMenu();
     }
     
@@ -617,6 +619,18 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        if (mActionMode != null) {
+            if (mMultiSelectCount == 1) {
+                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(true);
+                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(false);
+            } else if (mMultiSelectCount > 1) {
+                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(false);
+                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(true);
+            } else {
+                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(false);
+                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(false);
+            }
+        }
         return false;
     }
 
@@ -625,6 +639,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         int id = item.getItemId();
         switch (id) {
             case R.id.media_multiselect_actionbar_post:
+                handleNewPost();
+                return true;
+            case R.id.media_multiselect_actionbar_gallery:
                 handleMultiSelectPost();
                 return true;
             case R.id.media_multiselect_actionbar_trash:
@@ -644,6 +661,20 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         mMediaGridFragment.clearCheckedItems();
     }
 
+    private void handleNewPost() {
+        if (mMediaGridFragment == null)
+            return;
+        
+        ArrayList<String> ids = mMediaGridFragment.getCheckedItems();
+        
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.setAction(EditPostActivity.NEW_MEDIA_POST);
+        i.putExtra("id", WordPress.currentBlog.getId());
+        i.putExtra("isNew", true);
+        i.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, ids.get(0));
+        startActivity(i);
+    }
+    
     private void handleMultiSelectDelete() {
         Builder builder = new AlertDialog.Builder(this)
         .setMessage(R.string.confirm_delete_multi_media)
