@@ -376,6 +376,7 @@
   <string name="invalid_jp_login">Incorrect login, or blog is not linked to this WordPress.com account.</string>
   <string name="site_not_found">or site not found.</string>
   <string name="stats_service_error">Sorry. There was an error trying to connect to your stats. Please try again.</string>
+  <string name="view_stats_login">WordPress.com login</string>
   <string name="view_stats_full_site">View full site</string>
 
   <!-- stats: labels for the views -->

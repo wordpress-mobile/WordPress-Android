@@ -18,6 +18,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.OldStatsActivity;
@@ -27,6 +30,7 @@ import org.wordpress.android.util.StatsRestHelper;
 public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
+    private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     
     private StatsAbsViewFragment mStatsViewFragment;
     private View mActionbarNav;
@@ -35,6 +39,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     private int mNavPosition = 0;
 
     private MenuItem mRefreshMenuItem;
+    private int mResultCode = -1;
     
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         
@@ -113,7 +118,16 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
         
+        if (!WordPress.hasValidWPComCredentials(this) && mResultCode != RESULT_CANCELED) {
+            startWPComLoginActivity();
+        }
+        
         refreshStats();
+    }
+
+    private void startWPComLoginActivity() {
+        mResultCode = RESULT_CANCELED;
+        startActivityForResult(new Intent(this, WPComLoginActivity.class), WPComLoginActivity.REQUEST_CODE);
     }
     
     @Override
@@ -131,13 +145,27 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             return;
             
         mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
+        mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
     }
-
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
+        outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == WPComLoginActivity.REQUEST_CODE) {
+            
+            mResultCode = resultCode;
+            
+            if (resultCode == RESULT_OK)
+                refreshStats();
+        }
     }
     
     protected void showViews() {
@@ -162,6 +190,18 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (WordPress.hasValidWPComCredentials(this))
+            menu.findItem(R.id.menu_view_stats_login).setVisible(false);
+        else
+            menu.findItem(R.id.menu_view_stats_login).setVisible(true);
+        
+        // TODO what if credentials are incorrect?
+        
+        return super.onPrepareOptionsMenu(menu);
+    }
+    
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             refreshStats();
@@ -172,6 +212,11 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             intent.putExtra("isNew", true);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
+            finish();
+            overridePendingTransition(0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.menu_view_stats_login) {
+            startWPComLoginActivity();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -203,7 +248,12 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         if (WordPress.getCurrentBlog() == null)
             return;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = null;
+        
+        if (WordPress.getCurrentBlog().isDotcomFlag())
+            blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        else  
+            blogId = getBlogIdFromJetPack();
         
         StatsRestHelper.getStatsSummary(blogId);
         
@@ -211,5 +261,15 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             StatsViewType viewType = mStatsViewFragment.getViewType();
             StatsRestHelper.getStats(viewType, blogId);
         }
+    }
+
+    private String getBlogIdFromJetPack() {
+        try {
+            JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
+            return options.getJSONObject("jetpack_client_id").getString("value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

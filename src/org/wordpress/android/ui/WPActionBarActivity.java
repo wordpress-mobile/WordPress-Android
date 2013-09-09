@@ -786,7 +786,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet;
+            return WPActionBarActivity.this instanceof StatsActivity || WPActionBarActivity.this instanceof StatsActivityTablet || WPActionBarActivity.this instanceof OldStatsActivity;
         }
         @Override
         public void onSelectItem(){
@@ -794,7 +794,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 mShouldFinish = true;
             
             Intent intent;
-            if (Utils.isTablet()) 
+            if (!WordPress.currentBlog.isDotcomFlag()) // redirect to old stats activity as jetpack credentials currently don't work with new stats apis
+                intent = new Intent(WPActionBarActivity.this, OldStatsActivity.class);
+            else if (Utils.isTablet()) 
                 intent = new Intent(WPActionBarActivity.this, StatsActivityTablet.class);
             else 
                 intent = new Intent(WPActionBarActivity.this, StatsActivity.class);

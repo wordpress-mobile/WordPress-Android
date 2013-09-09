@@ -84,7 +84,7 @@ import org.wordpress.android.models.Blog;
  * @author Eric
  *
  */
-public class OldStatsActivity extends SherlockActivity {
+public class OldStatsActivity extends WPActionBarActivity {
 
     static String lastAuthedName = "";
 
@@ -106,7 +106,7 @@ public class OldStatsActivity extends SherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_web_stats);
+        createMenuDrawer(R.layout.view_web_stats);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);

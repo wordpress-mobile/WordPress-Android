@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="@dimen/share_action_dialog_width" >
+
+    <FrameLayout
+        android:layout_width="@dimen/share_action_dialog_width"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/dialog_full_holo_light" >
+
+        <include
+            layout="@layout/wp_dot_com_login"
+            android:visibility="visible" />
+    </FrameLayout>
+
+</RelativeLayout>
