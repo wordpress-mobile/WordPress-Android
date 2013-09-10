@@ -106,6 +106,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implement
                 entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
                 entryTextView.setText(name);
+                entryTextView.setMovementMethod(null);
             }
 
             DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
@@ -138,6 +139,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implement
                 entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
                 entryTextView.setText(name);
+                entryTextView.setMovementMethod(null);
             }
 
             DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());

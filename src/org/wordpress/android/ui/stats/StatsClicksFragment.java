@@ -118,6 +118,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment implements Ta
                 entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
                 entryTextView.setText(name);
+                entryTextView.setMovementMethod(null);
             }
 
             DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
