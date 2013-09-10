@@ -188,7 +188,8 @@ public class EditCommentActivity extends SherlockActivity {
         if(authorName.equals(comment.name) &&
                 authorEmail.equals(comment.authorEmail) &&
                 authorURL.equals(comment.authorURL) &&
-                content.equals(comment.comment)) {
+                content.equals(comment.comment) &&
+                status.equals(comment.status)) {
             return true;
         }
 

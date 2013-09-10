@@ -205,7 +205,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     String errorTitle = getString(R.string.theme_auth_error_title);
                     String errorMsg = getString(R.string.theme_auth_error_message);
 
-                    if (!isDestroyed()) {
+                    if (mIsRunning) {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         WPAlertDialogFragment fragment = WPAlertDialogFragment.newInstance(errorMsg, errorTitle, false);
                         ft.add(fragment, "alert");

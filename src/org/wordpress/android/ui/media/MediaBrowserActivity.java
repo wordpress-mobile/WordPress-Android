@@ -154,9 +154,10 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
         String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
-        String pickFromGallery = getResources().getString(R.string.media_add_popup_pick_from_gallery);
+        String pickPhotoFromGallery = getResources().getString(R.string.media_add_popup_pick_photo_from_gallery);
+        String pickVideoFromGallery = getResources().getString(R.string.media_add_popup_pick_video_from_gallery);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(MediaBrowserActivity.this, R.layout.actionbar_add_media_cell,  
-                new String[] {capturePhoto, captureVideo, pickFromGallery});
+                new String[] {capturePhoto, captureVideo, pickPhotoFromGallery, pickVideoFromGallery});
         
         View layoutView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
         ListView listView = (ListView) layoutView.findViewById(R.id.actionbar_add_media_listview);
@@ -179,10 +180,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                         showVideoPressUpgradeDialog();
                     }
                 } else if (position == 2) {
-                    if (isVideoEnabled)
-                        mMediaAddFragment.launchPictureVideoLibrary();
-                    else
-                        mMediaAddFragment.launchPictureLibrary();
+                    mMediaAddFragment.launchPictureLibrary();
+                } else if (position == 3) {
+                    if (isVideoEnabled) {
+                        mMediaAddFragment.launchVideoLibrary();
+                    } else {
+                        showVideoPressUpgradeDialog();
+                    }
                 }
 
                 mAddMediaPopup.dismiss();

@@ -58,6 +58,8 @@ public class StatsNavDialogFragment extends SherlockDialogFragment implements On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getDialog().setCanceledOnTouchOutside(true);
+        
         View view = inflater.inflate(R.layout.stats_nav_list, container, false);
         ListView lv = (ListView) view.findViewById(R.id.stats_nav_listview);  
         mAdapter = new CustomAdapter(StatsViewType.toStringArray());

@@ -1863,7 +1863,10 @@ public class WordPressDB {
         values.put("mediaId", mf.getMediaId());
         values.put("blogId", mf.getBlogId());
         values.put("date_created_gmt", mf.getDateCreatedGMT());
-        values.put("uploadState", mf.getUploadState());
+        if (mf.getUploadState() != null)
+            values.put("uploadState", mf.getUploadState());
+        else
+            values.putNull("uploadState");
 
         synchronized (this) {
             int result = 0;
@@ -1872,6 +1875,7 @@ public class WordPressDB {
                 Cursor cursor = db.rawQuery("SELECT uploadState FROM " + MEDIA_TABLE + " WHERE mediaId=?", new String[] { mf.getMediaId() });
                 if (cursor != null && cursor.moveToFirst()) {
                     isMarkedForDelete = "delete".equals(cursor.getString(0));
+                    cursor.close();
                 }
                 
                 if (!isMarkedForDelete)

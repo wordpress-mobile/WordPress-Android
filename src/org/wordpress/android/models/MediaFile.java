@@ -49,10 +49,15 @@ public class MediaFile {
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
         setMIMEType(mimeType);
         
-        setFileURL(resultMap.get("link").toString());
+        // make the file urls be https://... so that we can get these images with oauth when the blogs are private
+        String fileUrl = resultMap.get("link").toString().replace("http:", "https:"); 
+        setFileURL(fileUrl);
+        
         String thumbnailURL = resultMap.get("thumbnail").toString();
-        if(thumbnailURL != null && thumbnailURL.startsWith("http"))
+        if(thumbnailURL != null && thumbnailURL.startsWith("http")) {
+            thumbnailURL = thumbnailURL.replace("http:", "https:");
             setThumbnailURL(thumbnailURL);
+        }
 
         Date date = (Date) resultMap.get("date_created_gmt");
         setDateCreatedGMT(date.getTime());

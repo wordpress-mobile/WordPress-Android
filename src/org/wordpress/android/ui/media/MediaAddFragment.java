@@ -200,8 +200,8 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         MediaUtils.launchVideoCamera(this);
     }
     
-    public void launchPictureVideoLibrary() {
-        MediaUtils.launchPictureVideoLibrary(this);
+    public void launchVideoLibrary() {
+        MediaUtils.launchVideoLibrary(this);
     }
     
     public void launchPictureLibrary() {

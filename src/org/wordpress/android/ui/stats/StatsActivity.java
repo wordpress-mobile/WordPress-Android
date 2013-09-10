@@ -40,6 +40,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     private MenuItem mRefreshMenuItem;
     private int mResultCode = -1;
+    private boolean mIsRestoredFromState = false;
     
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         
@@ -122,7 +123,8 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             startWPComLoginActivity();
         }
         
-        refreshStats();
+        if (!mIsRestoredFromState)
+            refreshStats();
     }
 
     private void startWPComLoginActivity() {
@@ -146,6 +148,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
             
         mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
         mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
+        mIsRestoredFromState = true;
     }
     
     @Override

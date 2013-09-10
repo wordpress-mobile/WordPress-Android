@@ -111,7 +111,8 @@
   <string name="media_add_popup_title">Add to Media Library</string>
   <string name="media_add_popup_capture_photo">Capture photo</string>
   <string name="media_add_popup_capture_video">Capture video</string>
-  <string name="media_add_popup_pick_from_gallery">Pick from gallery</string>
+  <string name="media_add_popup_pick_photo_from_gallery">Pick photo from gallery</string>
+  <string name="media_add_popup_pick_video_from_gallery">Pick video from gallery</string>
   <string name="media_add_new_post">New Post</string>
   <string name="media_add_new_media_gallery">New Media Gallery</string>
   

@@ -1904,6 +1904,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                         images += wpIS.getImageSource().toString() + ",";
 
                         MediaFile mf = new MediaFile();
+                        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
                         mf.setPostID(mPost.getId());
                         mf.setTitle(wpIS.getTitle());
                         mf.setCaption(wpIS.getCaption());
@@ -1968,6 +1969,7 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         mf.setFileName(wpIS.getImageSource().toString());
         mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
         mf.setWidth(wpIS.getWidth());
+        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
         mf.save();
         return mf;
     }

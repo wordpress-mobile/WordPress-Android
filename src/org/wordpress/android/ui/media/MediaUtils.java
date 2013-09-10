@@ -110,6 +110,7 @@ public class MediaUtils {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        
         activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
     
@@ -117,6 +118,7 @@ public class MediaUtils {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
     }
     
@@ -189,20 +191,6 @@ public class MediaUtils {
         intent.setType("video/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
-    }
-    
-    public static void launchPictureVideoLibrary(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*, video/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        activity.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY);
-    }
-    
-    public static void launchPictureVideoLibrary(Fragment fragment) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*, video/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        fragment.startActivityForResult(intent, RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_VIDEO_LIBRARY);
     }
     
     public static void launchVideoCamera(Activity activity) {
