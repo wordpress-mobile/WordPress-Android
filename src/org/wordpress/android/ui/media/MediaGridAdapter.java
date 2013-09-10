@@ -251,6 +251,7 @@ public class MediaGridAdapter extends CursorAdapter {
         
 
         int placeholderResId = MediaUtils.getPlaceholder(filepath);
+        imageView.setImageResource(0);
         imageView.setErrorImageResId(placeholderResId);
         imageView.setDefaultImageResId(placeholderResId);
         
