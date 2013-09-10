@@ -29,7 +29,8 @@ import android.graphics.Color;
 public class GraphViewStyle {
 	private int verticalLabelsColor;
 	private int horizontalLabelsColor;
-	private int gridColor;
+	private int gridXColor;
+	private int gridYColor;
 	private float textSize = 30f;
 	private int verticalLabelsWidth;
 	private int numVerticalLabels;
@@ -38,17 +39,23 @@ public class GraphViewStyle {
 	public GraphViewStyle() {
 		verticalLabelsColor = Color.WHITE;
 		horizontalLabelsColor = Color.WHITE;
-		gridColor = Color.DKGRAY;
+		gridXColor = Color.DKGRAY;
+		gridYColor = Color.DKGRAY;
 	}
 
-	public GraphViewStyle(int vLabelsColor, int hLabelsColor, int gridColor) {
+	public GraphViewStyle(int vLabelsColor, int hLabelsColor, int gridXColor, int gridYColor) {
 		this.verticalLabelsColor = vLabelsColor;
 		this.horizontalLabelsColor = hLabelsColor;
-		this.gridColor = gridColor;
+		this.gridXColor = gridXColor;
+		this.gridYColor = gridYColor;
 	}
 
-	public int getGridColor() {
-		return gridColor;
+	public int getGridXColor() {
+		return gridXColor;
+	}
+
+	public int getGridYColor() {
+		return gridYColor;
 	}
 
 	public int getHorizontalLabelsColor() {
@@ -75,8 +82,12 @@ public class GraphViewStyle {
 		return verticalLabelsWidth;
 	}
 
-	public void setGridColor(int c) {
-		gridColor = c;
+	public void setGridXColor(int c) {
+		gridXColor = c;
+	}
+
+	public void setGridYColor(int c) {
+		gridYColor = c;
 	}
 
 	public void setHorizontalLabelsColor(int c) {
