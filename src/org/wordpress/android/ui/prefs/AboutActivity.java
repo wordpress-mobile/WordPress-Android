@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.util.DeviceUtils;
 
 public class AboutActivity extends Activity implements OnClickListener {

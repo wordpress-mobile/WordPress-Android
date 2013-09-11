@@ -32,7 +32,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;

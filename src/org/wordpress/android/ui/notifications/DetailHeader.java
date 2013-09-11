@@ -13,7 +13,7 @@ import android.provider.Browser;
 import android.net.Uri;
 
 import org.wordpress.android.R;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 
 public class DetailHeader extends LinearLayout {
     public DetailHeader(Context context){
