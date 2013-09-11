@@ -37,6 +37,7 @@ public class StatsActivityTablet extends WPActionBarActivity {
     private LinearLayout mColumnLeft;
     private LinearLayout mColumnRight;
     private int mResultCode = -1;
+    private boolean mIsRestoredFromState = false;
 
     private MenuItem mRefreshMenuItem;
     
@@ -289,8 +290,15 @@ public class StatsActivityTablet extends WPActionBarActivity {
         if (!WordPress.hasValidWPComCredentials(this) && mResultCode != RESULT_CANCELED) {
             startWPComLoginActivity();
         }
-        
-        refreshStats();
+
+        if (!mIsRestoredFromState)
+            refreshStats();
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mIsRestoredFromState = true;
     }
     
     private void startWPComLoginActivity() {

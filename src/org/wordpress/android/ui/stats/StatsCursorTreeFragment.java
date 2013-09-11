@@ -87,9 +87,14 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     }
     
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         mGroupIdToExpandedMap = new SparseBooleanArray();
+    }
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
         View view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
         
@@ -228,8 +233,6 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             boolean isExpanded = mGroupIdToExpandedMap.get(i);
             View view = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
             view.setTag(i);
-//            if (i % 2 == 1)
-//                view.setBackgroundColor(getResources().getColor(R.color.stats_alt_row));
             mLinearLayout.addView(view);
             view.setOnClickListener(new OnClickListener() {
                 

@@ -241,8 +241,16 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
                     return StatUtils.getSummary(blogId);
                 }
                 
-                protected void onPostExecute(StatsSummary result) {
-                    refreshStats(result);
+                protected void onPostExecute(final StatsSummary result) {
+                    if (getActivity() == null)
+                        return;
+                    getActivity().runOnUiThread(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            refreshStats(result);     
+                        }
+                    });
                 };
             }.execute();
         }

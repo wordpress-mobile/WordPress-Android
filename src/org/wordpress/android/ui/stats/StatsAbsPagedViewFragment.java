@@ -30,15 +30,18 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
-    
     private int mSelectedButtonIndex = 0;
+    
+    // the active fragment has the tag CHILD_TAG:<mChildIndex>
+    private static final String CHILD_TAG = "CHILD_TAG";
+    private int mChildIndex = -1;
     
     protected ViewPager mViewPager;
     protected HorizontalTabView mTabView;
     protected FragmentStatePagerAdapter mAdapter;
 
     private RadioGroup mRadioGroup;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
@@ -55,7 +58,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
         
         return view;
     }
-
+    
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
@@ -99,8 +102,11 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment imp
     }
     
     private void loadFragmentIndex(int index) {
-        Fragment fragment = getFragment(index);
-        getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment).commit();
+        mChildIndex = index;
+        if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + mChildIndex) == null) {
+            Fragment fragment = getFragment(index);
+            getChildFragmentManager().beginTransaction().replace(R.id.stats_pager_container, fragment, CHILD_TAG + ":" + mChildIndex).commit();
+        }
     }
     
     private void initPhoneLayout(View view) {
