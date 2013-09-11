@@ -246,20 +246,24 @@ public class MediaGridAdapter extends CursorAdapter {
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         
-        Uri uri = Uri.parse(thumbnailURL);
-        String filepath = uri.getLastPathSegment();
-        
+        if (thumbnailURL != null) {
+            Uri uri = Uri.parse(thumbnailURL);
+            String filepath = uri.getLastPathSegment();
+            
+    
+            int placeholderResId = MediaUtils.getPlaceholder(filepath);
+            imageView.setImageResource(0);
+            imageView.setErrorImageResId(placeholderResId);
+            imageView.setDefaultImageResId(placeholderResId);
 
-        int placeholderResId = MediaUtils.getPlaceholder(filepath);
-        imageView.setImageResource(0);
-        imageView.setErrorImageResId(placeholderResId);
-        imageView.setDefaultImageResId(placeholderResId);
-        
-        if (thumbnailURL != null && MediaUtils.isValidImage(filepath)) { 
-            imageView.setTag(thumbnailURL);
-            imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
+            if (MediaUtils.isValidImage(filepath)) { 
+                imageView.setTag(thumbnailURL);
+                imageView.setImageUrl(thumbnailURL, WordPress.imageLoader);
+            } else {
+                imageView.setImageResource(placeholderResId);
+            }
         } else {
-            imageView.setImageResource(placeholderResId);
+            imageView.setImageResource(0);
         }
         
     }

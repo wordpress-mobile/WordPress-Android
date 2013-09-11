@@ -54,6 +54,7 @@ import org.xmlrpc.android.XMLRPCFault;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
@@ -263,6 +264,9 @@ public class CommentsListFragment extends ListFragment {
                     checkedCommentTotal = 0;
                     hideModerationBar();
                     getListView().invalidateViews();
+                    
+                    // update the comment counter on the menu drawer 
+                    ((WPActionBarActivity) getActivity()).updateMenuDrawer();
                 } else {
                     // there was an xmlrpc error
                     if (!getActivity().isFinishing()) {

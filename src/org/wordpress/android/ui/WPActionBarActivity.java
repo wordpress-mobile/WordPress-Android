@@ -331,7 +331,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * Update all of the items in the menu drawer based on the current active
      * blog.
      */
-    protected void updateMenuDrawer() {
+    public void updateMenuDrawer() {
         mAdapter.clear();
         // iterate over the available menu items and only show the ones that should be visible
         Iterator<MenuDrawerItem> availableItems = mMenuItems.iterator();
