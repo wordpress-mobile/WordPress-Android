@@ -31,6 +31,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
+import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -78,6 +80,7 @@ public class CommentsListFragment extends ListFragment {
     private OnAnimateRefreshButtonListener onAnimateRefreshButton;
     private OnContextCommentStatusChangeListener onCommentStatusChangeListener;
     public getRecentCommentsTask getCommentsTask;
+    private View mFooterSpacer;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -124,6 +127,9 @@ public class CommentsListFragment extends ListFragment {
             }
         });
 
+        mFooterSpacer = new View(getActivity());
+        mFooterSpacer.setLayoutParams(new AbsListView.LayoutParams(10, 0));
+        
         View progress = View.inflate(getActivity().getApplicationContext(),
                 R.layout.list_footer_progress, null);
 
@@ -392,10 +398,13 @@ public class CommentsListFragment extends ListFragment {
             if (!refreshOnly) {
                 ListView listView = this.getListView();
                 listView.removeFooterView(switcher);
+                listView.removeFooterView(mFooterSpacer);
                 if (loadedComments.size() % 30 == 0) {
                     listView.addFooterView(switcher);
                 }
+                listView.addFooterView(mFooterSpacer);
                 setListAdapter(new CommentAdapter());
+                
 
                 listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -726,6 +735,7 @@ public class CommentsListFragment extends ListFragment {
         moderationBar.clearAnimation();
         moderationBar.startAnimation(set);
         moderationBar.setVisibility(View.INVISIBLE);
+        setFooterSpacerVisible(false);
     }
 
     protected void showOrHideModerationBar() {
@@ -761,6 +771,16 @@ public class CommentsListFragment extends ListFragment {
         set.addAnimation(animation);
         moderationBar.setVisibility(View.VISIBLE);
         moderationBar.startAnimation(set);
+        setFooterSpacerVisible(true);
+    }
+
+    private void setFooterSpacerVisible(boolean visible) {
+        LayoutParams params = (LayoutParams) mFooterSpacer.getLayoutParams();
+        if (visible)
+            params.height = getResources().getDimensionPixelSize(R.dimen.comments_moderation_bar_height);
+        else
+            params.height = 0;
+        mFooterSpacer.setLayoutParams(params);
     }
 
     interface XMLRPCMethodCallback {

@@ -32,7 +32,6 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 public class WordPressDB {
@@ -1928,13 +1927,13 @@ public class WordPressDB {
     /** For a given blogId, get the first media files **/
     public Cursor getFirstMediaFileForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND " 
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY date_created_gmt DESC LIMIT 1", new String[] { blogId });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC LIMIT 1", new String[] { blogId, "uploading" });
     }
     
     /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY date_created_gmt DESC", new String[] { blogId });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "uploading" });
     }
 
     /** For a given blogId, get all the media files with searchTerm **/
@@ -1943,7 +1942,7 @@ public class WordPressDB {
         // We'll match this.
         
         String term = searchTerm.toLowerCase(Locale.getDefault());
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY date_created_gmt DESC", new String[] { blogId, "%" + term + "%" });
+        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "%" + term + "%", "uploading" });
     }
     
     /** For a given blogId, get the media file with the given media_id **/
@@ -1961,7 +1960,7 @@ public class WordPressDB {
 
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY date_created_gmt DESC", new String[] { blogId, "image%" });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
     }
     
     /** Ids in the filteredIds will not be selected **/
@@ -1978,7 +1977,7 @@ public class WordPressDB {
         }
         
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY date_created_gmt DESC", new String[] { blogId, "image%" });
+                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "image%", "uploading" });
     }
 
     public int getMediaCountImages(String blogId) {
@@ -1987,7 +1986,7 @@ public class WordPressDB {
 
     public Cursor getMediaUnattachedForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND " +
-                "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND postId=0 ORDER BY date_created_gmt DESC", new String[] { blogId });
+                "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND postId=0 ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "uploading" });
     }
     
     public int getMediaCountUnattached(String blogId) {

@@ -21,7 +21,7 @@
     <RelativeLayout
         android:id="@+id/moderationBar"
         android:layout_width="fill_parent"
-        android:layout_height="52dp"
+        android:layout_height="@dimen/comments_moderation_bar_height"
         android:layout_alignParentBottom="true"
         android:background="#88000000"
         android:paddingTop="4dp"
