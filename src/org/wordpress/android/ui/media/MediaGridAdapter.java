@@ -133,18 +133,18 @@ public class MediaGridAdapter extends CursorAdapter {
         String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
         if (filePath == null)
             filePath = cursor.getString(cursor.getColumnIndex("fileURL"));
+        
+        if (filePath != null) {
+            fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
             
-        fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        
-        
-        // file type
-        TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-        if  (Utils.isXLarge(context)) {
-            fileTypeView.setText("File type: " + fileType);
-        } else {
-            fileTypeView.setText(fileType);
+            // file type
+            TextView fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
+            if  (Utils.isXLarge(context)) {
+                fileTypeView.setText("File type: " + fileType);
+            } else {
+                fileTypeView.setText(fileType);
+            }
         }
-        
 
         // dimensions
         TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);

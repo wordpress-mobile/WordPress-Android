@@ -653,12 +653,12 @@ public class WordPressDB {
 
     public boolean deactivateAccounts() {
 
-        ContentValues values = new ContentValues();
-        values.put("password", "");
+        List<Map<String, Object>> accounts = getAccounts();
+        for (Map<String, Object> account: accounts) {
+            deleteAccount(context, (Integer) account.get("id"));
+        }
 
-        boolean returnValue = db.update(SETTINGS_TABLE, values, null, null) > 0;
-
-        return (returnValue);
+        return true;
     }
 
     public List<Map<String, Object>> getAccounts() {
@@ -808,6 +808,7 @@ public class WordPressDB {
         int rowsAffected = 0;
         try {
             rowsAffected = db.delete(SETTINGS_TABLE, "id=" + id, null);
+            // you probably should delete the rest of the data..
         } finally {
 
         }

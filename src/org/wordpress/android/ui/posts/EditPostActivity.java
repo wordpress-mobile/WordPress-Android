@@ -1410,6 +1410,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             return null; 
 
         String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        if (url == null)
+            return null;
+        
         Uri uri = Uri.parse(url);
         WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.remote_image, uri);
         imageSpan.setMediaId(mediaId);
@@ -1419,7 +1422,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         imageSpan.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
         imageSpan.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
         imageSpan.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        imageSpan.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
         imageSpan.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
+        imageSpan.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         
         boolean isVideo = false;
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
@@ -1473,6 +1478,9 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
                                 imageSpan.setTitle(is.getTitle());
                                 imageSpan.setVideo(is.isVideo());
                                 imageSpan.setWidth(is.getWidth());
+                                imageSpan.setFileName(is.getFileName());
+                                imageSpan.setThumbnailURL(is.getThumbnailURL());
+                                imageSpan.setDateCreatedGMT(is.getDateCreatedGMT());
                                 imageSpan.setNetworkImageLoaded(true);
                                 s.removeSpan(is);
                                 s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1961,15 +1969,18 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
         mf.setMediaId(wpIS.getMediaId());
         if (mPost != null)
             mf.setPostID(mPost.getId());
+        mf.setMIMEType(wpIS.getMimeType());
+        mf.setHeight(wpIS.getHeight());
+        mf.setFileName(wpIS.getFileName());
         mf.setTitle(wpIS.getTitle());
         mf.setCaption(wpIS.getCaption());
         mf.setDescription(wpIS.getDescription());
         mf.setFeatured(wpIS.isFeatured());
         mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-        mf.setFileName(wpIS.getImageSource().toString());
         mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
         mf.setWidth(wpIS.getWidth());
         mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
+        mf.setDateCreatedGMT(wpIS.getDateCreatedGMT());
         mf.save();
         return mf;
     }

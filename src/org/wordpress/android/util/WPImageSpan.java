@@ -26,6 +26,10 @@ public class WPImageSpan extends ImageSpan {
         private String thumbnailURL;
         private boolean networkImageLoaded = false;
 
+        private String fileName;
+
+        private long date_created_gmt;
+
         public WPImageSpan(Context context, Bitmap b, Uri src) {
             super(context, b);
             this.imageSource = src;
@@ -148,6 +152,22 @@ public class WPImageSpan extends ImageSpan {
 
         public void setNetworkImageLoaded(boolean networkImageLoaded) {
             this.networkImageLoaded = networkImageLoaded;
+        }
+        
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setDateCreatedGMT(long date) {
+            this.date_created_gmt = date;
+        }
+        
+        public long getDateCreatedGMT() {
+            return date_created_gmt;
         }
         
         // -- end of methods for media files from the server
