@@ -34,7 +34,6 @@ public abstract class ReaderBaseFragment extends SherlockFragment {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setPluginsEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUserAgentString("wp-android-native");
         webSettings.setSavePassword(false);
