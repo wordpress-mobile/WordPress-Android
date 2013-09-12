@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import org.wordpress.android.R;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 
 public class FollowRow extends LinearLayout {
     

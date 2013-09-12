@@ -52,7 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;

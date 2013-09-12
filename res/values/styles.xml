@@ -180,7 +180,7 @@
     <style name="StatsHeader">
         <item name="android:textColor">@color/wordpress_blue</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:textAllCaps">true</item>
+        <!--  item name="android:textAllCaps">true</item -->
     </style>
 
     <style name="StatsHeaderTotals">
@@ -188,14 +188,14 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">top</item>
         <item name="android:singleLine">true</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+        <!--  item name="android:fontFamily">sans-serif-light</item -->
     </style>
 
     <style name="StatsHeaderTotalsLabel">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">bottom</item>
-        <item name="android:fontFamily">sans-serif-light</item>
+        <!--  item name="android:fontFamily">sans-serif-light</item -->
     </style>
 
     <style name="StatsTabletRadioButton">
@@ -225,27 +225,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="PasscodeInputItemStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:maxLength">1</item>
-        <item name="android:inputType">textPassword</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:singleLine">true</item>
-    </style>
-    
-    <style name="PasscodeKeyboardButtonStyle" parent="@android:style/Widget.Button">
-       <item name="android:textSize">16sp</item>
-  	   <item name="android:textColor">#FF464646</item>
-       <item name="android:gravity">center</item>
-       <item name="android:background">@drawable/passcode_keyboard_button</item>
-       <item name="android:layout_margin">5dp</item>
-       <item name="android:layout_width">wrap_content</item>
-       <item name="android:layout_height">wrap_content</item>
-   </style>
-    
-    
     <style name="FloatingActivityTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

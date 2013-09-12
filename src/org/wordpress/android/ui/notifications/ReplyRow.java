@@ -15,7 +15,7 @@ import android.provider.Browser;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 
 class ReplyRow extends LinearLayout {
     private ImageView mButton, mErrorIndicator;

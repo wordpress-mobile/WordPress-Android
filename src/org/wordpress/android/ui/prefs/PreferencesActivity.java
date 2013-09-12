@@ -45,7 +45,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.AccountSetupActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
