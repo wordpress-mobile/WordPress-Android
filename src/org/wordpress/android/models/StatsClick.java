@@ -1,4 +1,3 @@
-
 package org.wordpress.android.models;
 
 import org.json.JSONArray;
@@ -6,6 +5,9 @@ import org.json.JSONException;
 
 import org.wordpress.android.util.StatUtils;
 
+/**
+ * A model to represent a click child stat.
+ */
 public class StatsClick {
 
     private String mBlogId;

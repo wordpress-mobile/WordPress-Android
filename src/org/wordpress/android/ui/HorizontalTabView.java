@@ -18,6 +18,11 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.Utils;
 
+/**
+ * A view that mimics the action bar tabs. It can be placed anywhere and appears 
+ * under the sliding menu, unlike the action bar tabs 
+ */
+
 public class HorizontalTabView extends HorizontalScrollView implements OnClickListener {
 
     private static final String TAG_PREFIX = "tab:";

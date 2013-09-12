@@ -13,6 +13,9 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.ThemeHelper;
 
+/**
+ * A model to represent a theme
+ */
 public class Theme {
     
     private String themeId = null;

@@ -1,10 +1,11 @@
-
 package org.wordpress.android.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+/**
+ * A model to represent a for a tag or category stat
+ */
 public class StatsTagsandCategories {
 
     private String mBlogId;

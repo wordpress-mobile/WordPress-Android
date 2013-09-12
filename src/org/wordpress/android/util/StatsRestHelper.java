@@ -57,12 +57,20 @@ import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.ui.stats.StatsGeoviewsFragment;
 import org.wordpress.android.ui.stats.StatsViewType;
 
+/**
+ * A utility class to help with parsing json from the stats api.
+ * Deletes and inserts are done on the database in batches, by adding each operation into a list of {@link ContentProviderOperation}s.
+ * Once ready, a {@link ContentResolver} is used to apply the batch with the {@link StatsContentProvider#AUTHORITY} as the authority.
+ * The relevant URIs are then notified once the operation is complete.  
+ */
 public class StatsRestHelper {
 
     private static final String TAG = "WordPress";
     private static long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     // A map to keep track of the number of pending calls for each viewtype.
+    // A counter for each type is incremented before a call is executed. 
+    // When the result comes back, regardless of success or failure, the map should be decremented 
     private static Map<StatsViewType, Integer> sRefreshMap;
     
     // Listen to this intent for updates on the rest call

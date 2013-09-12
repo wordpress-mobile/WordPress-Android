@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -11,6 +10,9 @@ import android.net.Uri;
 
 import org.wordpress.android.models.StatsTopCommenter;
 
+/**
+ * A database table to represent the stats for top commenters.  
+ */
 public class StatsTopCommentersTable extends SQLTable {
 
     private static final String NAME = "top_commenters";

@@ -3,6 +3,9 @@ package org.wordpress.android.ui.stats;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+/**
+ * A enum of the different bar chart time frames. 
+ */
 public enum StatsBarChartUnit {
 
     DAY(R.string.stats_timeframe_days),

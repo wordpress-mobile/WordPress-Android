@@ -12,6 +12,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import org.wordpress.android.R;
 
 /**
+ * A Bar graph depicting the view and visitors.
  * Based on BarGraph from the GraphView library. 
  */
 public class StatsBarGraph extends GraphView {

@@ -16,6 +16,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+/**
+ * An activity to let the user specify their WordPress.com credentials.
+ * Should be used to get WordPress.com credentials for JetPack integration in self-hosted sites.
+ */
 public class WPComLoginActivity extends SherlockFragmentActivity {
 
     public static final int REQUEST_CODE = 5000;

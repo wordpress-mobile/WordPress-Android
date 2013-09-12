@@ -1,10 +1,14 @@
-
 package org.wordpress.android.ui.stats;
 
 import java.util.ArrayList;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+
+/**
+ * An enum of the different view types to appear on the stats view.
+ * The views of the APIs that have not been implemented should be hidden 
+ */
 
 public enum StatsViewType {
 

@@ -17,6 +17,9 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+/**
+ * A fragment for display the results of a theme search 
+ */
 public class ThemeSearchFragment extends ThemeTabFragment
     implements OnQueryTextListener, OnActionExpandListener {
 
@@ -27,7 +30,6 @@ public class ThemeSearchFragment extends ThemeTabFragment
 
         ThemeSearchFragment fragment = new ThemeSearchFragment();
         
-        // db calls use a-z sort
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
         fragment.setArguments(args);

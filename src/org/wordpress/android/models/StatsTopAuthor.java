@@ -1,4 +1,3 @@
-
 package org.wordpress.android.models;
 
 import org.json.JSONException;
@@ -6,6 +5,9 @@ import org.json.JSONObject;
 
 import org.wordpress.android.util.StatUtils;
 
+/**
+ * A model to represent a top author stat
+ */
 public class StatsTopAuthor {
 
     private String mBlogId;

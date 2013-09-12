@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
@@ -53,6 +52,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
+
+/**
+ * The main activity in which the user can browse their media.
+ * Accessible via the menu drawer as "Media"
+ */
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
         MediaItemFragmentCallback,
@@ -161,6 +165,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     };
 
     private void setupBaseLayout() {
+        // hide access to the drawer when there are fragments in the back stack
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             mMenuDrawer.setDrawerIndicatorEnabled(true);
         } else {
@@ -223,8 +228,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
 
-        mAddMediaPopup = new PopupWindow(layoutView, width, ViewGroup.LayoutParams.WRAP_CONTENT,
-                true);
+        mAddMediaPopup = new PopupWindow(layoutView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mAddMediaPopup.setBackgroundDrawable(new ColorDrawable());
     }
 
@@ -274,6 +278,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public void onBlogChanged() {
         super.onBlogChanged();
 
+        // clear edit fragment
         if (mMediaEditFragment != null) {
             mMediaEditFragment.loadMedia(null);
 
@@ -283,9 +288,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         }
 
         getSupportFragmentManager().executePendingTransactions();
+        
+        // clear item fragment (only visible on phone)
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible())
             getSupportFragmentManager().popBackStack();
 
+        // reset the media fragment
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reset();
 
@@ -295,6 +303,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             }
         }
 
+        // check what features (e.g. video) the user has
         getFeatureSet();
     };
 
@@ -304,12 +313,14 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mSearchView != null)
             mSearchView.clearFocus();
 
+        // collapse the search menu on phone
         if (mSearchMenuItem != null && !Utils.isTablet())
             mSearchMenuItem.collapseActionView();
 
         FragmentManager fm = getSupportFragmentManager();
 
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
+            // phone: hide the grid and show the item details
             if (fm.getBackStackEntryCount() == 0) {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mMediaGridFragment);
@@ -323,6 +334,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             }
         } else {
+            // tablet: update the edit fragment with the new item
             mMediaEditFragment.loadMedia(mediaId);
         }
 
@@ -342,8 +354,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     private void startAnimatingRefreshButton() {
-        if (mRefreshMenuItem != null && mMediaGridFragment != null
-                && mMediaGridFragment.isRefreshing())
+        if (mRefreshMenuItem != null && mMediaGridFragment != null && mMediaGridFragment.isRefreshing())
             startAnimatingRefreshButton(mRefreshMenuItem);
     }
 
@@ -365,8 +376,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             }
         } else if (itemId == R.id.menu_new_media) {
             View view = findViewById(R.id.menu_new_media);
-            int y_offset = getResources()
-                    .getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
+            int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
             int[] loc = new int[2];
             view.getLocationOnScreen(loc);
             mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
@@ -382,6 +392,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
 
+            // load last saved query
             if (!TextUtils.isEmpty(mQuery)) {
                 onQueryTextSubmit(mQuery);
                 mSearchView.setQuery(mQuery, true);
@@ -399,7 +410,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             FragmentManager fm = getSupportFragmentManager();
 
             if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-
+                // phone layout: hide item details, show and update edit fragment
                 FragmentTransaction ft = fm.beginTransaction();
 
                 if (mMediaItemFragment.isVisible())
@@ -411,6 +422,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 ft.commit();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
+                // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);
             }
 
@@ -515,6 +527,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mMediaGridFragment.setFilter(Filter.ALL);
         }
 
+        // load last search query
         if (!TextUtils.isEmpty(mQuery))
             onQueryTextChange(mQuery);
 
@@ -546,6 +559,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
 
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
+            // phone layout: pop the item fragment if it's visible
             getSupportFragmentManager().popBackStack();
         }
 
@@ -596,9 +610,11 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mActionMode.finish();
         }
 
+        // update contextual action bar title
         if (count > 0 && mActionMode != null)
             mActionMode.setTitle(count + " selected");
 
+        // update contextual action bar menu items
         if (mActionMode != null)
             mActionMode.invalidate();
 

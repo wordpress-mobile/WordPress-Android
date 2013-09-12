@@ -11,6 +11,11 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsClickGroup;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
+/**
+ * A database table to represent groups in the stats for clicks.
+ * A group may or may not have children. 
+ * See {@link StatsClicksTable} for the children table structure.  
+ */
 public class StatsClickGroupsTable extends SQLTable {
 
     private static final String NAME = "click_groups";

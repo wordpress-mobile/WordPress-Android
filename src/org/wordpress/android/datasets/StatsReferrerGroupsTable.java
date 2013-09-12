@@ -11,6 +11,11 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
+/**
+ * A database table to represent groups in the stats for referrers.
+ * A group may or may not have children. 
+ * See {@link StatsReferrersTable} for the children table structure.  
+ */
 public class StatsReferrerGroupsTable extends SQLTable {
 
     private static final String NAME = "referrer_groups";

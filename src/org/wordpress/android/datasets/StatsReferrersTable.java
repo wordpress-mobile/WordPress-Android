@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -12,6 +11,10 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
+/**
+ * A database table to represent the stats for referrers children. 
+ * See {@link StatsReferrerGroupsTable} for the parent table structure.
+ */
 public class StatsReferrersTable extends SQLTable {
 
     private static final String NAME = "referrers";

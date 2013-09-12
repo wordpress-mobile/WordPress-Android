@@ -28,6 +28,14 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 import org.wordpress.android.util.Utils;
 
+/**
+ * The native stats activity, accessible via the menu drawer.
+ * This activity is for tablet layout, see {@link StatsActivity} for the phone version. 
+ * <p>
+ * For tablets with a min width of 720DP or 600DP and landscape, the layout is split into two.
+ * Otherwise the layout is a long list of stats views
+ * </p>
+ */
 public class StatsActivityTablet extends WPActionBarActivity {
 
     private static final int TABLET_720DP = 720;
@@ -351,6 +359,8 @@ public class StatsActivityTablet extends WPActionBarActivity {
     }
 
     private String getBlogIdFromJetPack() {
+        // for self-hosted sites
+        
         try {
             JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
             return options.getJSONObject("jetpack_client_id").getString("value");

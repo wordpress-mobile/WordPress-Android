@@ -38,6 +38,10 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
+/**
+ * Fragment for visitors and views stats. Has three pages, for DAY, WEEK and MONTH stats.
+ * A summary of the blog's stats are also shown on each page.
+ */ 
 public class StatsVisitorsAndViewsFragment extends StatsAbsPagedViewFragment {
 
     private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(), StatsBarChartUnit.WEEK.getLabel(), StatsBarChartUnit.MONTH.getLabel() };

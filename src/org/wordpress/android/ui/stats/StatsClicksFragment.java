@@ -29,6 +29,10 @@ import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
+/**
+ * Fragment for click stats. Has two pages, for Today's and Yesterday's stats.
+ * Clicks contain expandable lists.
+ */
 public class StatsClicksFragment extends StatsAbsPagedViewFragment implements TabListener {
 
     private static final Uri STATS_CLICK_GROUP_URI = StatsContentProvider.STATS_CLICK_GROUP_URI;

@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.stats;
 
 import java.text.DecimalFormat;
@@ -22,6 +21,9 @@ import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.Utils;
 
+/**
+ * Fragment for tags and categories stats. Only a single page.
+ */
 public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment implements StatsCursorInterface {
 
     private static final Uri STATS_TAGS_AND_CATEGORIES_URI = StatsContentProvider.STATS_TAGS_AND_CATEGORIES_URI;

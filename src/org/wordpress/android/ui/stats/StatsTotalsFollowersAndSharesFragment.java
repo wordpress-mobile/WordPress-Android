@@ -22,6 +22,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.util.StatUtils;
 
+/**
+ * Fragment for summary stats. Only a single page.
+ */
 public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
 
     public static final String TAG = StatsTotalsFollowersAndSharesFragment.class.getSimpleName();

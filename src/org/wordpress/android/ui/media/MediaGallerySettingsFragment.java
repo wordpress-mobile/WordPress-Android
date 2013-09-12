@@ -23,6 +23,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.ExpandableHeightGridView;
 import org.wordpress.android.util.Utils;
 
+/**
+ * The fragment containing the settings for the media gallery
+ */
 public class MediaGallerySettingsFragment extends SherlockFragment implements OnCheckedChangeListener {
 
     private static final int DEFAULT_THUMBNAIL_COLUMN_COUNT = 3;
@@ -120,6 +123,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mHeader = view.findViewById(R.id.media_gallery_settings_header);
         mScrollView = (ScrollView) view.findViewById(R.id.media_gallery_settings_content_container);
         mTitleView = (TextView) view.findViewById(R.id.media_gallery_settings_title);
+        
         if (!Utils.isTablet()) // show the arrow initially as collapsed when on phone
             onPanelCollapsed();
         
@@ -191,7 +195,10 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         
         if (!mAllowCheckChanged)
             return;
-        
+
+        // the checkboxes for types are mutually exclusive, so when one is set,
+        // the others must be unset. Disable the checkChange listener during this time,
+        // and re-enable it once done.
         mAllowCheckChanged = false;
         
         int numColumnsContainerVisible = View.GONE;
@@ -260,6 +267,9 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
             setSelection(selection);
         }
 
+        // when a number of columns is checked, the numbers less than
+        // the one chose are also set to checked on the ui. 
+        // e.g. when 3 is checked, 1 and 2 are as well.
         private void setSelection(int selection) {
             for (int i = 0; i < 9; i++){
                 if (i + 1 <= selection)

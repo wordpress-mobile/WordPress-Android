@@ -38,6 +38,9 @@ import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StatsRestHelper;
 
+/**
+ * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
+ */
 public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements TabListener {
 
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;

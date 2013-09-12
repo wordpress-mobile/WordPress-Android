@@ -1,4 +1,3 @@
-
 package org.wordpress.android.models;
 
 import org.json.JSONArray;
@@ -6,6 +5,17 @@ import org.json.JSONException;
 
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
 
+/**
+ * A model to represent the bar chart data.
+ * <p>
+ * The bar chart unit is either:
+ * <ul>
+ *  <li> "DAY" where the date looks like "2013-09-12"
+ *  <li> "WEEK" where the date looks like "2013W26"
+ *  <li> "MONTH" where the date looks like "2013-09-01"
+ * </ul>
+ * </p>
+ */
 public class StatsBarChartData {
 
     private String mBlogId;

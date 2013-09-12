@@ -21,6 +21,9 @@ import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.util.Utils;
 
+/**
+ * An activity where the user can manage a media gallery
+ */
 public class MediaGalleryActivity extends SherlockFragmentActivity implements MediaGallerySettingsCallback {
 
     public static final int REQUEST_CODE = 3000;
@@ -75,6 +78,8 @@ public class MediaGalleryActivity extends SherlockFragmentActivity implements Me
     
         mSlidingPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.media_gallery_root);
         if (mSlidingPanelLayout != null) {
+            // sliding panel layout is on phone only
+            
             mSlidingPanelLayout.setDragView(mMediaGallerySettingsFragment.getDragView());
             mSlidingPanelLayout.setPanelHeight((int) Utils.dpToPx(48));
             mSlidingPanelLayout.setPanelSlideListener(new PanelSlideListener() {

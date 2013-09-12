@@ -27,6 +27,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ViewHolder;
 
+/**
+ * A fragment display the themes on a grid view. 
+ */
 public class ThemeTabFragment extends SherlockFragment implements OnItemClickListener, RecyclerListener {
 
     public enum ThemeSortType {

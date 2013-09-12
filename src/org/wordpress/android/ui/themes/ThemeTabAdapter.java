@@ -17,6 +17,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Utils;
 
+/**
+ * Adapter for the {@link ThemeTabFragment}'s gridview
+ *
+ */
 public class ThemeTabAdapter extends CursorAdapter {
 
     public ThemeTabAdapter(Context context, Cursor c, boolean autoRequery) {

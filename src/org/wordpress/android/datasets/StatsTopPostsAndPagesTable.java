@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -12,6 +11,9 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
+/**
+ * A database table to represent the stats for the top posts and pages.  
+ */
 public class StatsTopPostsAndPagesTable extends SQLTable {
 
     private static final String NAME = "top_post_and_pages";

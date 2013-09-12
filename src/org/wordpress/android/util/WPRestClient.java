@@ -328,8 +328,12 @@ public class WPRestClient {
         
         get(path, listener, errorListener);
     }
-    
+
+    /**
+     * This method is for simulating stats APIs using the XL Studio API simulator. It should be removed once the other APIs are implemented. 
+     **/
     public void getXL(String path, Map<String, String> params, final Listener listener, final ErrorListener errorListener) {
+        
         path = "https://simulator.xlstudio.com/apis/32/" + path;
 
         final String url_path = path;

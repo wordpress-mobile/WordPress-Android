@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.media;
 
 import java.util.ArrayList;
@@ -37,6 +36,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 
+/**
+ * A fragment for editing media on the Media tab 
+ */
 public class MediaEditFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
@@ -87,7 +89,7 @@ public class MediaEditFragment extends SherlockFragment {
         try {
             mCallback = (MediaEditFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + MediaEditFragmentCallback.class.getCanonicalName());
+            throw new ClassCastException(activity.toString() + " must implement " + MediaEditFragmentCallback.class.getSimpleName());
         }
     }
 

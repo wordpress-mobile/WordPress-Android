@@ -1,9 +1,11 @@
-
 package org.wordpress.android.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * A model to represent a top commenter stat
+ */
 public class StatsTopCommenter {
 
     private String mBlogId;

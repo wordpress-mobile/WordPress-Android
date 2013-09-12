@@ -6,6 +6,9 @@ import org.json.JSONObject;
 
 import org.wordpress.android.util.StatUtils;
 
+/**
+ * A model to represent a click group stat.
+ */
 public class StatsClickGroup {
 
     private String mBlogId;

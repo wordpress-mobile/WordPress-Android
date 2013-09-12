@@ -29,6 +29,10 @@ import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
+/**
+ * Fragment for referrer stats. Has two pages, for Today's and Yesterday's stats.
+ * Referrers contain expandable lists.
+ */
 public class StatsReferrersFragment extends StatsAbsPagedViewFragment  implements TabListener {
     
     private static final Uri STATS_REFERRER_GROUP_URI = StatsContentProvider.STATS_REFERRER_GROUP_URI;

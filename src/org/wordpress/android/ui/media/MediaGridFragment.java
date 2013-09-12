@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.media;
 
 import java.text.SimpleDateFormat;
@@ -45,6 +44,10 @@ import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 
+/**
+ * The grid displaying the media items. 
+ * It appears as 2 columns on phone and 1 column on tablet (essentially a listview) 
+ */
 public class MediaGridFragment extends Fragment implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, MultiSelectListener {
     
     private static final String BUNDLE_CHECKED_STATES = "BUNDLE_CHECKED_STATES";
@@ -328,6 +331,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
 
             Callback callback = new Callback() {
 
+                // refersh db from server. If returned count is 0, we've retrieved all the media.
+                // stop retrieving until the user manually refreshes
+                
                 @Override
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
@@ -336,7 +342,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                     
                     mIsRefreshing = false;
 
-                    if (getActivity() != null  && MediaGridFragment.this.isVisible()) {
+                    // the activity may be gone by the time this finishes, so check for it 
+                    if (getActivity() != null && MediaGridFragment.this.isVisible()) {
                         getActivity().runOnUiThread(new Runnable() {
                             
                             @Override
@@ -365,7 +372,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
                         mHasRetrievedAllMedia = true;
                         adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
                     }
-                    
+
+                    // the activity may be cone by the time we get this, so check for it
                     if (getActivity() != null  && MediaGridFragment.this.isVisible()) {
                         getActivity().runOnUiThread(new Runnable() {
 
@@ -607,7 +615,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
         mGridAdapter.changeCursor(null);
 
         resetSpinnerAdapter();
-        
         
         mHasRetrievedAllMedia = false;
     }

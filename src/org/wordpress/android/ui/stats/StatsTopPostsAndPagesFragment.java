@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-
 import java.text.DecimalFormat;
 import java.util.Locale;
 
@@ -24,6 +23,9 @@ import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
+/**
+ * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
+ */
 public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment  implements TabListener {
     
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;

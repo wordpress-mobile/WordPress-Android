@@ -6,6 +6,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.WordPress;
 
+/**
+ * A generic view for all the different stats views.
+ */
 public abstract class StatsAbsViewFragment extends SherlockFragment {
     
     public static final String TAG = StatsAbsViewFragment.class.getSimpleName();

@@ -18,6 +18,10 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import org.wordpress.android.R;
 
+/**
+ * A fragment to display the list of stats view types for the user to navigate to.
+ * Only visible on phone.
+ */
 public class StatsNavDialogFragment extends SherlockDialogFragment implements OnItemClickListener {
 
     private static final String ARGS_POSITION = "ARGS_POSITION";

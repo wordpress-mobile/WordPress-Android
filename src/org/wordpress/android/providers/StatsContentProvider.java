@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.SparseArray;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressStatsDB;
 import org.wordpress.android.datasets.SQLTable;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClickGroupsTable;
@@ -24,6 +25,10 @@ import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.datasets.StatsVideosTable;
 
+/**
+ * Content Provider for stats. Provides a common interface to the stats database. 
+ * See {@link WordPressStatsDB}
+ */
 public class StatsContentProvider extends ContentProvider {
 
     public static final String AUTHORITY = "org.wordpress.android.providers.StatsContentProvider";
@@ -77,7 +82,7 @@ public class StatsContentProvider extends ContentProvider {
         registerTable(Paths.TOP_POSTS_AND_PAGES, StatsTopPostsAndPagesTable.getInstance());
         registerTable(Paths.VIDEOS, StatsVideosTable.getInstance());
         registerTable(Paths.BAR_CHART_DATA, StatsBarChartDataTable.getInstance());
-        return false;
+        return true;
     }
     
     private void registerTable(String path, SQLTable table) {

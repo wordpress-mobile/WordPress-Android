@@ -25,6 +25,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 
+/**
+ * A fragment to display a preview of the theme being applied on a blog.
+ *
+ */
 public class ThemePreviewFragment extends SherlockFragment {
 
     public static final String TAG = ThemePreviewFragment.class.getName();

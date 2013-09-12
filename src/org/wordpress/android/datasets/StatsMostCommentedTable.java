@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -11,6 +10,9 @@ import android.net.Uri;
 
 import org.wordpress.android.models.StatsMostCommented;
 
+/**
+ * A database table to represent the stats for the most commented posts.   
+ */
 public class StatsMostCommentedTable extends SQLTable {
 
     private static final String NAME = "most_commented";

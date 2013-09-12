@@ -10,7 +10,10 @@ import android.util.AttributeSet;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-// from: https://gist.github.com/benvd/5683818
+/**
+ * A custom NetworkImageView that does a fade in animation when the bitmap is set 
+ * from: https://gist.github.com/benvd/5683818
+ */
 
 public class FadeInNetworkImageView extends NetworkImageView {
     

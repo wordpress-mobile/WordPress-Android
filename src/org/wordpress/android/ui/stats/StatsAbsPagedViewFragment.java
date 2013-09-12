@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-
 import java.util.Locale;
 
 import android.database.Cursor;
@@ -25,6 +24,19 @@ import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
+/**
+ * For stats that have multiple pages (e.g. Today, Yesterday).
+ * <p>
+ * This fragment appears as a viewpager on phone and as a frame layout with buttons on tablet.
+ * Each page is a child fragment.
+ * </p>
+ * <p>
+ * The viewpager's fragments are provided by subclasses implementing {@code getAdapter()}.
+ * </p>
+ * <p>
+ * The tablet fragments are provided by subclasses implementing {@code getFragment(int)}
+ * </p>
+ */
 public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment implements TabListener, OnCheckedChangeListener, StatsCursorInterface {
 
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;

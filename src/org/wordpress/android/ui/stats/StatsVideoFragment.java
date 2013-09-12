@@ -35,6 +35,9 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 import org.wordpress.android.util.StatUtils;
 
+/**
+ * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
+ */
 public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements TabListener {
     
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;

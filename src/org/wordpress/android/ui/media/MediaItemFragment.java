@@ -33,6 +33,10 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 
+/**
+ * A fragment display a media item's details. 
+ * Only appears on phone.
+ */
 public class MediaItemFragment extends SherlockFragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
@@ -153,7 +157,7 @@ public class MediaItemFragment extends SherlockFragment {
         if (!cursor.moveToFirst())
             return;
 
-        // check whetehr or not to show the edit button
+        // check whether or not to show the edit button
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         mIsLocal = MediaUtils.isLocalFile(state);
         if (mIsLocal)

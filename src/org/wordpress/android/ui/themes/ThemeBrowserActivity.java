@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.themes;
 
 import java.lang.ref.WeakReference;
@@ -46,6 +45,9 @@ import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 
+/**
+ * The theme browser. Accessible via side menu drawer. 
+ */
 public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         TabListener {
@@ -115,6 +117,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private boolean areThemesAccessible() {
+        // themes are only accessible to admin wordpress.com users
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
             Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -147,6 +150,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         super.onResume();
         if (areThemesAccessible()) {
             mIsRunning = true;
+            
+            // fetch themes if we don't have any
             if (WordPress.getCurrentBlog() != null && WordPress.wpDB.getThemeCount(getBlogId()) == 0)
                 fetchThemes();
         }
@@ -385,6 +390,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
 
+            // show details as a fragment on top
             FragmentTransaction ft = fm.beginTransaction();
 
             if (mSearchFragment != null && mSearchFragment.isVisible())
@@ -397,6 +403,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             ft.addToBackStack(null);
             ft.commit();
         } else {
+            
+            // show details as a dialog
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
             getSupportFragmentManager().executePendingTransactions();

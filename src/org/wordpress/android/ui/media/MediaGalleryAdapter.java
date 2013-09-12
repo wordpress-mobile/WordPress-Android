@@ -4,9 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -16,6 +14,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Utils;
 
+/**
+ * Adapter for a drag-sort listview where the user can drag media items to sort their order 
+ * for a media gallery
+ */
 public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
 
     public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery) {

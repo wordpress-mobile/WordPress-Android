@@ -23,6 +23,11 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
+/**
+ * Fragment where containing a drag-sort listview where the user can drag items
+ * to change their position in a media gallery
+ *
+ */
 public class MediaGalleryEditFragment extends SherlockFragment implements DropListener, RemoveListener {
 
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
@@ -75,7 +80,6 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
     }
 
-
     private SparseIntArray mapIdsToCursorPositions(Cursor cursor) {
         SparseIntArray positions = new SparseIntArray();
         int size = mIds.size();
@@ -118,6 +122,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         refreshGridView();
     }
  
+    
     private class OrderedCursor extends CursorWrapper {
 
         int mPos;
@@ -126,6 +131,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         // a map of custom position to cursor position
         private SparseIntArray mPositions;
         
+        /** A wrapper to allow for a custom order of items in a cursor **/
         public OrderedCursor(Cursor cursor, SparseIntArray positions) {
             super(cursor);
             cursor.moveToPosition(-1);

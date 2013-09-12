@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Html;
@@ -26,6 +28,23 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Utils;
 
+/**
+ * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
+ * except it is used for stats that have expandable groups, such as Referrers or Clicks.
+ * <p> 
+ * The fragment has a {@link ContentObserver} to listen for changes in the supplied group URIs.
+ * By implementing {@link LoaderCallbacks}, it asynchronously fetches new data to update itself. 
+ * It then restarts loaders on the children URI for each group id, which results in the children views being updated.   
+ * </p>
+ * <p>
+ * For phone layouts, this fragment appears as an expandable listview, with a CursorTreeAdapter supplying the group and children views.
+ * </p>
+ * <p>
+ * For tablet layouts, this fragment appears as a linearlayout, with a maximum of 10 entries. 
+ * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the tablet's root layout.
+ * The linearlayout also gets its group and children views from the CursorTreeAdapter.
+ * </p> 
+ */
 public class StatsCursorTreeFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
 
     private static final int MAX_ITEMS_ON_TABLET = 10;

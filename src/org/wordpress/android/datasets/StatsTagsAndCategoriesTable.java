@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -11,6 +10,10 @@ import android.net.Uri;
 
 import org.wordpress.android.models.StatsTagsandCategories;
 
+/**
+ * A database table to represent the stats for tags and categories.
+ * The type is either "tag" or "category"  
+ */
 public class StatsTagsAndCategoriesTable extends SQLTable {
 
     private static final String NAME = "tags_and_categories";

@@ -35,6 +35,9 @@ import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
 import org.wordpress.android.util.Utils;
 
+/**
+ * An adapter for the media gallery listviews.
+ */
 public class MediaGridAdapter extends CursorAdapter {
     
     private MediaGridAdapterCallback mCallback;
@@ -42,7 +45,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
     private int mCursorDataCount;
-    Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
+    private Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     private Handler mHandler;
     
     public interface MediaGridAdapterCallback {

@@ -34,6 +34,9 @@ import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
 
+/**
+ * A utility class to help with date parsing and saving summaries in stats
+ */
 public class StatUtils {
 
     public static final String STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";

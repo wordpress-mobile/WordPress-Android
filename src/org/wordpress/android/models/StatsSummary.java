@@ -1,4 +1,3 @@
-
 package org.wordpress.android.models;
 
 import java.io.Serializable;
@@ -7,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.wordpress.android.util.StatUtils;
 
+/**
+ * A model to represent the summary of a blog's stats.
+ */
 public class StatsSummary implements Serializable{
 
     private static final long serialVersionUID = 1951520106663020694L;

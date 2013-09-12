@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
@@ -24,6 +25,19 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Utils;
 
+/**
+ * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. 
+ * The fragment has a {@link ContentObserver} to listen for changes in the supplied URIs.
+ * By implementing {@link LoaderCallbacks}, it asynchronously fetches new data to update itself.
+ * <p>
+ * For phone layouts, this fragment appears as a listview, with the CursorAdapter supplying the cells.
+ * </p>
+ * <p>
+ * For tablet layouts, this fragment appears as a linearlayout, with a maximum of 10 entries. 
+ * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the tablet's root layout.
+ * The linearlayout also gets its views from the CursorAdapter.
+ * </p> 
+ */
 public class StatsCursorFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int MAX_ITEMS_ON_TABLET = 10;

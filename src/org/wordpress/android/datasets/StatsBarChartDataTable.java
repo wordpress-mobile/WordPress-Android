@@ -10,6 +10,18 @@ import android.net.Uri;
 
 import org.wordpress.android.models.StatsBarChartData;
 
+/**
+ * A database table for holding stats bar chart data.
+ * <p>
+ * As time of writing, this table holds data for three different timeframes:
+ * <ul>
+ *  <li> days (unit="DAY", date e.g. "2013-08-11")
+ *  <li> weeks (unit="WEEK", date e.g. "2013W26")
+ *  <li> months (unit="MONTH", date e.g. "2013-06-01")
+ * </ul>
+ * </p>  
+ */
+
 public class StatsBarChartDataTable extends SQLTable {
 
     private static final String NAME = "bar_chart_data";

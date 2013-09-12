@@ -4,6 +4,12 @@ package org.wordpress.android.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * A model representing a Media Gallery.
+ * A unique id is not used on the website, but only in this app.
+ * It is used to uniquely determining the instance of the object, as it is 
+ * passed between post and media gallery editor.  
+ */
 public class MediaGallery implements Serializable{
 
     private static final long serialVersionUID = 2359176987182027508L;

@@ -27,6 +27,13 @@ import org.wordpress.android.ui.OldStatsActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.StatsRestHelper;
 
+/**
+ * The native stats activity, accessible via the menu drawer.
+ * This activity is for phone layout, see {@link StatsActivityTablet} for the tablet version. 
+ * <p>
+ * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
+ * </p>
+ */
 public class StatsActivity extends WPActionBarActivity implements StatsNavDialogFragment.NavigationListener {
 
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
@@ -52,6 +59,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
                 if (mRefreshMenuItem == null)
                     return;
                 
+                // stop or start animating refresh button depending on result
                 boolean started = intent.getBooleanExtra(StatsRestHelper.REFRESH_VIEW_TYPE_STARTED, false);
                 int ordinal = intent.getIntExtra(StatsRestHelper.REFRESH_VIEW_TYPE_ORDINAL, -1);
                 if (ordinal == -1 && !started) {
@@ -119,6 +127,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsRestHelper.REFRESH_VIEW_TYPE));
         
+        // for self-hosted sites; launch the user into an activity where they can provide their credentials 
         if (!WordPress.hasValidWPComCredentials(this) && mResultCode != RESULT_CANCELED) {
             startWPComLoginActivity();
         }
@@ -194,6 +203,9 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        // if the user doesn't have wordpress.com credentials, e.g. self-hosted blog,
+        // show the option to let them login
+        
         if (WordPress.hasValidWPComCredentials(this))
             menu.findItem(R.id.menu_view_stats_login).setVisible(false);
         else
@@ -267,6 +279,7 @@ public class StatsActivity extends WPActionBarActivity implements StatsNavDialog
     }
 
     private String getBlogIdFromJetPack() {
+        // for self-hosted blogs
         try {
             JSONObject options = new JSONObject(WordPress.getCurrentBlog().getBlogOptions());
             return options.getJSONObject("jetpack_client_id").getString("value");

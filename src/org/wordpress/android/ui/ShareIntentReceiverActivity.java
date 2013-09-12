@@ -26,6 +26,12 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.StringUtils;
 
+/**
+ * An activity to handle share intents, since there are multiple actions possible. 
+ * If there are multiple blogs, it lets the user choose which blog to share to.
+ * It lists what actions that the user can perform and redirects them to the activity,
+ * along with the content passed in the intent
+ */
 public class ShareIntentReceiverActivity extends SherlockFragmentActivity implements OnItemSelectedListener {
 
     private IcsSpinner mBlogSpinner;

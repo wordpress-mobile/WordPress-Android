@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.themes;
 
 import java.util.ArrayList;
@@ -35,6 +34,9 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.util.Utils;
 
+/**
+ * A fragment to show the theme's details, including it's description and features.
+ */
 public class ThemeDetailsFragment extends SherlockDialogFragment {
 
     public static final String TAG = ThemeDetailsFragment.class.getName();
@@ -196,6 +198,20 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         mCallback.onPause(this);
     };
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.removeItem(R.id.menu_search);
+        menu.removeItem(R.id.menu_refresh);
+    }
+
+    public void onThemeActivated(boolean activated) {
+        mActivateThemeButton.setEnabled(true);
+        mActivateThemeButton.setText(R.string.theme_activate_button);
+        mActivatingProgressView.setVisibility(View.GONE);
+        if (activated)
+            showViewSite();
+    }
+    
     public void loadTheme(String themeId) {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
         Theme theme = WordPress.wpDB.getTheme(blogId, themeId);
@@ -237,6 +253,9 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
              tv.setText(featuresArray.get(i));
              views[i] = tv;
         }
+        
+        // make the list of features appear in such a way that the text appear on the next line
+        // when reaching the end of the current line
         populateViews(mFeaturesContainer, views, getActivity());
     }
 
@@ -250,7 +269,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
      **/
     private void populateViews(LinearLayout linearLayout, View[] views, Context context)
     {
-
 
         RelativeLayout.LayoutParams llParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
         
@@ -321,17 +339,4 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         linearLayout.addView(newLL);
     }
     
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.removeItem(R.id.menu_search);
-        menu.removeItem(R.id.menu_refresh);
-    }
-
-    public void onThemeActivated(boolean activated) {
-        mActivateThemeButton.setEnabled(true);
-        mActivateThemeButton.setText(R.string.theme_activate_button);
-        mActivatingProgressView.setVisibility(View.GONE);
-        if (activated)
-            showViewSite();
-    }
 }

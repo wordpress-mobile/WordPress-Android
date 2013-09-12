@@ -17,6 +17,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 
+/**
+ * An activity where the user can add new images to their media gallery or where the user 
+ * can choose a single image to embed into their post.
+ */
 public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback {
 
     private MultiSelectGridView mGridView;

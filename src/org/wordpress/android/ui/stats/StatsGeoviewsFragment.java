@@ -24,6 +24,9 @@ import org.wordpress.android.datasets.StatsGeoviewsTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.HorizontalTabView.TabListener;
 
+/**
+ * Fragment for geoview stats. Has two pages, for Today's and Yesterday's stats.
+ */
 public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment implements TabListener {
     
     private static final Uri STATS_GEOVIEWS_URI = StatsContentProvider.STATS_GEOVIEWS_URI;

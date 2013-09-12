@@ -1,4 +1,3 @@
-
 package org.wordpress.android.datasets;
 
 import java.util.LinkedHashMap;
@@ -12,6 +11,10 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
+/**
+ * A database table to represent the stats for clicks children. 
+ * See {@link StatsClickGroupsTable} for the parent table structure.
+ */
 public class StatsClicksTable extends SQLTable {
 
     private static final String NAME = "clicks";
