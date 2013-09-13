@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.util.FloatMath;
+import android.util.Log;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -416,7 +417,40 @@ public class ImageHelper {
             bfo.inSampleSize = calculateInSampleSize(bfo, targetWidth, targetHeight);
             bfo.inJustDecodeBounds = false;
             
-            return BitmapFactory.decodeFile(path, bfo);
+            // get proper rotation
+            try {
+                File f = new File(path);
+                ExifInterface exif = new ExifInterface(f.getPath());
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                int angle = 0;
+
+                if (orientation == ExifInterface.ORIENTATION_NORMAL) { // no need to rotate
+                    return BitmapFactory.decodeFile(path, bfo);
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    angle = 90;
+                } 
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                    angle = 180;
+                } 
+                else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    angle = 270;
+                }
+
+                Matrix mat = new Matrix();
+                mat.postRotate(angle);
+
+                Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f), null, bfo);
+                return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);                 
+            }
+            catch (IOException e) {
+                Log.w("WordPress", "-- Error in setting image");
+            }   
+            catch(OutOfMemoryError oom) {
+                Log.w("WordPress", "-- OOM Error in setting image");
+            }
+            
+            return null;
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
