@@ -178,10 +178,10 @@ public class CommentsActivity extends WPActionBarActivity implements
     public void onCommentSelected(Comment comment) {
 
         FragmentManager fm = getSupportFragmentManager();
-        CommentFragment f = (CommentFragment) fm
-                .findFragmentById(R.id.commentDetail);
-
-        if (comment != null) {
+        fm.executePendingTransactions();
+        CommentFragment f = (CommentFragment) fm.findFragmentById(R.id.commentDetail);
+        
+        if (comment != null && fm.getBackStackEntryCount() == 0) {
 
             if (f == null || !f.isInLayout()) {
                 WordPress.currentComment = comment;

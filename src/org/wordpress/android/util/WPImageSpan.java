@@ -20,7 +20,26 @@ public class WPImageSpan extends ImageSpan {
         private boolean isVideo;
         private boolean featured = false;
         private boolean featuredInPost = false;
+        private String mediaId;
+        private int height;
+        private String mimeType;
+        private String thumbnailURL;
+        private boolean networkImageLoaded = false;
 
+        private String fileName;
+
+        private long date_created_gmt;
+
+        public WPImageSpan(Context context, Bitmap b, Uri src) {
+            super(context, b);
+            this.imageSource = src;
+        }
+
+        public WPImageSpan(Context context, int resId, Uri src) {
+            super(context, resId);
+            this.imageSource = src;
+        }
+        
         public String getTitle() {
             return title;
         }
@@ -49,17 +68,8 @@ public class WPImageSpan extends ImageSpan {
             this.imageSource = imageSource;
         }
 
-        public WPImageSpan(Context context, Bitmap b, Uri src) {
-        super(context, b);
-        this.imageSource = src;
-    }
-
         public Uri getImageSource() {
                 return imageSource;
-        }
-
-        public void setSrc(Uri src) {
-                this.imageSource = src;
         }
 
         public int getWidth() {
@@ -102,4 +112,63 @@ public class WPImageSpan extends ImageSpan {
             this.isVideo = isVideo;
         }
 
+        // methods below for use when WPImageSpan uses media files from the server
+        
+        public String getMediaId() {
+            return mediaId;
+        }
+
+        public void setMediaId(String mediaId) {
+            this.mediaId = mediaId;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+        
+        public int getHeight() {
+            return height;
+        }
+
+        public void setMimeType(String mimeType) {
+            this.mimeType = mimeType;
+        }
+        
+        public String getMimeType() {
+            return mimeType;
+        }
+
+        public String getThumbnailURL() {
+            return thumbnailURL;
+        }
+
+        public void setThumbnailURL(String thumbnailURL) {
+            this.thumbnailURL = thumbnailURL;
+        }
+
+        public boolean isNetworkImageLoaded() {
+            return networkImageLoaded;
+        }
+
+        public void setNetworkImageLoaded(boolean networkImageLoaded) {
+            this.networkImageLoaded = networkImageLoaded;
+        }
+        
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setDateCreatedGMT(long date) {
+            this.date_created_gmt = date;
+        }
+        
+        public long getDateCreatedGMT() {
+            return date_created_gmt;
+        }
+        
+        // -- end of methods for media files from the server
 }

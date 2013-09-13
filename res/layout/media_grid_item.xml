@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <org.wordpress.android.ui.CheckableFrameLayout
+        android:id="@+id/media_grid_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:background="@drawable/media_gallery_grid_cell" >
+
+        <ViewStub
+            android:id="@+id/media_grid_image_stub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inflatedId="@+id/media_grid_item_image" />
+
+        <RelativeLayout
+            android:id="@+id/media_grid_item_upload_state_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:background="@color/wordpress_blue"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:id="@+id/media_grid_item_upload_progress"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp" />
+
+            <TextView
+                android:id="@+id/media_grid_item_upload_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/media_grid_item_upload_progress"
+                android:gravity="right"
+                android:paddingLeft="4dp"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/media_grid_item_checkstate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/media_grid_item_checkstate_selector"
+            android:button="@android:color/transparent"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:focusable="false" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/media_gallery_grid_label_bg"
+            android:padding="8dp" >
+
+            <TextView
+                android:id="@+id/media_grid_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/media_gallery_grid_label" />
+
+            <TextView
+                android:id="@+id/media_grid_item_filetype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/media_grid_item_name"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/media_gallery_grid_label" />
+        </RelativeLayout>
+    </org.wordpress.android.ui.CheckableFrameLayout>
+
+</RelativeLayout>

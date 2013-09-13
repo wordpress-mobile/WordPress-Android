@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp" >
+
+        <TextView
+            style="@style/StatsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="@string/stats_totals_followers_shares_header_content" />
+
+        <include layout="@layout/stats_header_line" />
+
+        <RelativeLayout
+            style="@style/StatsWhiteBackground"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:padding="16dp" >
+
+            <TextView
+                android:id="@+id/stats_totals_followers_shares_posts_count"
+                style="@style/StatsHeaderTotals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <TextView
+                style="@style/StatsHeaderTotalsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_totals_followers_shares_posts_count"
+                android:drawableLeft="@drawable/stats_icon_posts"
+                android:drawablePadding="8dp"
+                android:text="@string/stats_totals_followers_shares_label_posts" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_totals_followers_shares_categories_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stats_totals_followers_shares_categories_count"
+                    android:layout_centerHorizontal="true"
+                    android:drawableLeft="@drawable/stats_icon_categories"
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_categories" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_totals_followers_shares_tags_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stats_totals_followers_shares_tags_count"
+                    android:drawableLeft="@drawable/stats_icon_tags"
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_tags" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/StatsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/stats_totals_followers_shares_header_followers" />
+
+        <include layout="@layout/stats_header_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_totals_followers_shares_followers_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stats_totals_followers_shares_followers_count"
+                    android:drawableLeft="@drawable/stats_icon_plus"
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_blog" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_totals_followers_shares_comments_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stats_totals_followers_shares_comments_count"
+                    android:drawableLeft="@drawable/stats_icon_plus"
+                    android:drawablePadding="8dp"
+                    android:text="@string/stats_totals_followers_shares_label_comments" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/StatsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/stats_totals_followers_shares_header_shares" />
+
+        <include layout="@layout/stats_header_line" />
+
+        <RelativeLayout
+            style="@style/StatsWhiteBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp" >
+
+            <TextView
+                android:id="@+id/stats_totals_followers_shares_shares_count"
+                style="@style/StatsHeaderTotals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <TextView
+                style="@style/StatsHeaderTotalsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_totals_followers_shares_shares_count"
+                android:text="@string/stats_totals_followers_shares_label_shares" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

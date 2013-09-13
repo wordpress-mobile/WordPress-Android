@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_add_media"
+        android:icon="@drawable/ab_icon_new"
+        android:showAsAction="always"
+        android:title="@string/content_description_add_media"/>
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/ab_icon_save"
+        android:showAsAction="always"
+        android:title="@string/save"/>
+
+</menu>

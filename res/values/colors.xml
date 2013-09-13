@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Default colors -->
+    <color name="light_gray">#E5E5E5</color>
+    <color name="gray">#CCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    
     <color name="image_options_label">#CCCCCC</color>
     <color name="image_options_text">#FFFFFF</color>
     <color name="pressed_wordpress">#CC2EA2CC</color>
@@ -13,6 +19,36 @@
     <color name="md__shadowColor">#99000000</color>
     
     <color name="wordpress_blue">#21759B</color>
-    <color name="light_gray">#E5E5E5</color>
-    <color name="gray">#CCC</color>
+    
+    <!-- Media Gallery colors -->
+    <color name="media_gallery_grid_label_bg">#B3000000</color>
+    <color name="media_gallery_grid_label">#FFFFFF</color>
+    <color name="media_gallery_image_bg">#FFFFFF</color>
+    <color name="media_gallery_shadow">#E2E2E2</color>
+	<color name="media_gallery_bg">#75797C</color>
+	<color name="media_gallery_option_selected">#333333</color>
+	<color name="media_gallery_option_default">#EEEEEE</color>
+	
+    
+    <!-- Theme Details colors -->
+    <color name="theme_details_name">@color/black</color>
+    <color name="theme_details_button">#FFFFFF</color>
+    <color name="theme_details_premium">#B0710E</color>
+    <color name="theme_feature_text">#555555</color>
+    
+    <!-- Horizontal Tab View colors -->
+    <color name="tab_divider">#565656</color>
+    <color name="tab_background">#363636</color>
+    <color name="tab_text">@color/white</color>
+    
+    <!-- Stats bar graph colors -->
+    <color name="stats_bar_graph_views">#7CABC1</color>
+    <color name="stats_bar_graph_visitors">#124277</color>
+    <color name="stats_bar_graph_grid">#D9D9D9</color>
+    
+    <!-- Stats Tablet header -->
+    <color name="stats_tablet_header_title">#434343</color>
+    <color name="stats_alt_row">#EEF6F8</color>
+    <color name="stats_div_color">#B7B7B7</color>
 </resources>
+

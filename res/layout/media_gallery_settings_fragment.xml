@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/media_gallery_bg"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/media_gallery_settings_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/media_gallery_settings_title"
+            style="@style/MediaGalleryText"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:drawablePadding="8dp"
+            android:gravity="center"
+            android:text="@string/media_gallery_settings_title" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/white" />
+
+    <ScrollView
+        android:id="@+id/media_gallery_settings_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
+
+            <TextView
+                style="@style/MediaGalleryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/media_gallery_image_order" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/media_gallery_random_checkbox"
+                    style="@style/MediaGalleryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_weight="2"
+                    android:button="@drawable/media_gallery_checkbox_selector"
+                    android:text="@string/media_gallery_image_order_random" />
+
+                <Button
+                    android:id="@+id/media_gallery_settings_reverse_button"
+                    style="@style/MediaGalleryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:background="@drawable/media_gallery_option_selector"
+                    android:padding="8dp"
+                    android:text="@string/media_gallery_image_order_reverse"
+                    android:textColor="@color/media_grid_item_checkstate_text_selector" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white" />
+
+            <TextView
+                style="@style/MediaGalleryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media_gallery_type" />
+
+            <LinearLayout
+                android:id="@+id/media_gallery_type_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:weightSum="3" >
+
+                <CheckBox
+                    android:id="@+id/media_gallery_type_thumbnail_grid"
+                    style="@style/MediaGalleryTypeCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/gallery_thumbnail_grid_selector"
+                    android:paddingLeft="0dp"
+                    android:text="@string/media_gallery_type_thumbnail_grid" />
+
+                <CheckBox
+                    android:id="@+id/media_gallery_type_tiled"
+                    style="@style/MediaGalleryTypeCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/gallery_tiled_selector"
+                    android:paddingLeft="0dp"
+                    android:text="@string/media_gallery_type_tiled" />
+
+                <CheckBox
+                    android:id="@+id/media_gallery_type_squares"
+                    style="@style/MediaGalleryTypeCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/gallery_squares_selector"
+                    android:paddingLeft="0dp"
+                    android:text="@string/media_gallery_type_squares" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/media_gallery_type_circles"
+                    style="@style/MediaGalleryTypeCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/gallery_circles_selector"
+                    android:paddingLeft="0dp"
+                    android:text="@string/media_gallery_type_circles" />
+
+                <CheckBox
+                    android:id="@+id/media_gallery_type_slideshow"
+                    style="@style/MediaGalleryTypeCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/gallery_slideshow_selector"
+                    android:paddingLeft="0dp"
+                    android:text="@string/media_gallery_type_slideshow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:id="@+id/media_gallery_settings_num_columns_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/MediaGalleryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/media_gallery_num_columns" />
+
+                <org.wordpress.android.ui.ExpandableHeightGridView
+                    android:id="@+id/media_gallery_num_columns_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:columnWidth="32dp"
+                    android:horizontalSpacing="8dp"
+                    android:isScrollContainer="false"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/media_browser_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <fragment
+        android:id="@+id/mediaGridFragment"
+        android:name="org.wordpress.android.ui.media.MediaGridFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/mediaAddFragment"
+        android:name="org.wordpress.android.ui.media.MediaAddFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+</RelativeLayout>

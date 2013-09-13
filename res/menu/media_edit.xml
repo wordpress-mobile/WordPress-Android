@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item
+        android:id="@+id/menu_save_media"
+        android:icon="@drawable/ab_icon_save"
+        android:showAsAction="ifRoom"
+        android:title="@string/new_media"/>
+
+</menu>

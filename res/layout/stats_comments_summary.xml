@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp" >
+
+        <TextView
+            style="@style/StatsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="@string/stats_comments_summary_header_comments" />
+
+        <include layout="@layout/stats_header_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_comments_summary_per_month_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stats_comments_summary_per_month_count"
+                    android:text="@string/stats_comments_summary_label_per_month" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/StatsWhiteBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:padding="16dp" >
+
+                <TextView
+                    android:id="@+id/stats_comments_summary_total_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/stats_comments_summary_total_count"
+                    android:text="@string/stats_comments_summary_label_total" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/StatsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/stats_comments_summary_header_recent" />
+
+        <include layout="@layout/stats_header_line" />
+
+        <RelativeLayout
+            style="@style/StatsWhiteBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp" >
+
+            <TextView
+                android:id="@+id/stats_comments_summary_most_active_day_text"
+                style="@style/StatsHeaderTotals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/StatsHeaderTotalsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_comments_summary_most_active_day_text"
+                android:text="@string/stats_comments_summary_label_most_active_day" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/StatsWhiteBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp" >
+
+            <TextView
+                android:id="@+id/stats_comments_summary_most_active_time_text"
+                style="@style/StatsHeaderTotals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/StatsHeaderTotalsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_comments_summary_most_active_time_text"
+                android:text="@string/stats_comments_summary_label_most_active_time" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/StatsWhiteBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="16dp" >
+
+            <TextView
+                android:id="@+id/stats_comments_summary_most_commented_text"
+                style="@style/StatsHeaderTotals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                style="@style/StatsHeaderTotalsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stats_comments_summary_most_commented_text"
+                android:text="@string/stats_comments_summary_label_most_commented" />
+        </RelativeLayout>
+
+        <TextView
+            style="@style/StatsHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/stats_comments_summary_footer" />
+    </LinearLayout>
+
+</ScrollView>

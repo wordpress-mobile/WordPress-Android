@@ -25,7 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 
 import java.io.UnsupportedEncodingException;

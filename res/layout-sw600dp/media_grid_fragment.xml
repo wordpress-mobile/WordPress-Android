@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:id="@+id/media_filter_spinner_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/md_list_selector"
+        android:clickable="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="14dp" >
+
+        <org.wordpress.android.ui.CustomSpinner
+            android:id="@+id/media_filter_spinner"
+            style="@style/wordpress_DropDownNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:paddingLeft="0dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/media_filter_result_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/media_filter_spinner_container"
+        android:padding="7dp"
+        android:text="@string/empty_fields"
+        android:visibility="gone" />
+
+    <org.wordpress.android.ui.MultiSelectGridView
+        android:id="@+id/media_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/media_filter_result_text"
+        android:gravity="left"
+        android:numColumns="@integer/media_grid_num_columns"
+        android:padding="2dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:stretchMode="columnWidth" />
+
+</RelativeLayout>

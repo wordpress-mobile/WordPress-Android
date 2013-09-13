@@ -113,13 +113,15 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/comment_options_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         android:background="@drawable/format_bar_bg"
         android:gravity="bottom"
         android:paddingTop="6dp"
-        android:paddingRight="6dp" >
+        android:paddingRight="6dp" 
+        android:visibility="gone">
 
         <ImageButton
             android:id="@+id/deleteComment"
@@ -136,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="42dp" >
+            android:layout_marginLeft="42dp">
 
             <Button
                 android:id="@+id/editComment"
@@ -144,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/wp_button_small"
                 android:text="@string/edit"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/reply"
@@ -152,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/wp_button_small"
                 android:text="@string/reply"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/markSpam"
@@ -160,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/wp_button_small"
                 android:text="@string/spam"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/unapproveComment"
@@ -168,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/wp_button_small"
                 android:text="@string/unapprove"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/approveComment"
@@ -176,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/wp_button_small"
                 android:text="@string/approve"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
 

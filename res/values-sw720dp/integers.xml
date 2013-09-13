@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="content_editor_min_lines">4</integer>
+    <integer name="themes_grid_num_columns">3</integer>
+    <integer name="smallest_width_dp">720</integer>
+</resources>

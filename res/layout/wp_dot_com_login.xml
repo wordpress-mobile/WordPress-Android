@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dotcomLogin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#EEEEEE"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:visibility="invisible" >
+
+    <TextView
+        android:id="@+id/dotcom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy=".5"
+        android:shadowRadius="1"
+        android:text="WordPress.com login:"
+        android:textColor="#464646" />
+
+    <EditText
+        android:id="@+id/dotcomUsername"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dotcom"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/stats_username"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/dotcomPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dotcomUsername"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/stats_password"
+        android:inputType="textPassword"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/saveDotcom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/dotcomPassword"
+        android:background="@drawable/wp_button_small"
+        android:text="@string/save"
+        android:textColor="#464646" />
+
+    <TextView
+        android:id="@+id/wpcomHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/saveDotcom"
+        android:layout_gravity="left"
+        android:layout_marginBottom="16dip"
+        android:paddingLeft="4dip"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy=".5"
+        android:shadowRadius="1"
+        android:text="@string/help_stats"
+        android:textColor="#464646" />
+
+</RelativeLayout>
