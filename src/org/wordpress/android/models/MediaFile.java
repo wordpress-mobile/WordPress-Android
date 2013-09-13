@@ -34,6 +34,8 @@ public class MediaFile {
 
     public MediaFile(String blogId, Map<?, ?> resultMap) {
         
+        boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
+        
         setBlogId(blogId);
         setMediaId(resultMap.get("attachment_id").toString());
         setPostID(Long.parseLong(resultMap.get("parent").toString()));
@@ -41,7 +43,7 @@ public class MediaFile {
         setCaption(resultMap.get("caption").toString());
         setDescription(resultMap.get("description").toString());
         
-        // get the file name from the link - TODO: may have problem with unicode names
+        // get the file name from the link
         String link = resultMap.get("link").toString();
         setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
         
@@ -50,12 +52,16 @@ public class MediaFile {
         setMIMEType(mimeType);
         
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
-        String fileUrl = resultMap.get("link").toString().replace("http:", "https:"); 
+        // assume no https for images in self-hosted blogs
+        String fileUrl = resultMap.get("link").toString();
+        if (isDotCom)
+            fileUrl.replace("http:", "https:"); 
         setFileURL(fileUrl);
         
         String thumbnailURL = resultMap.get("thumbnail").toString();
         if(thumbnailURL != null && thumbnailURL.startsWith("http")) {
-            thumbnailURL = thumbnailURL.replace("http:", "https:");
+            if (isDotCom)
+                thumbnailURL = thumbnailURL.replace("http:", "https:");
             setThumbnailURL(thumbnailURL);
         }
 

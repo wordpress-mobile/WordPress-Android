@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,14 +16,18 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.AsyncTask;
+import android.net.http.AndroidHttpClient;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
@@ -32,27 +36,12 @@ import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestRequest;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
+import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
-import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
@@ -85,8 +74,6 @@ public class WordPress extends Application {
     public static BitmapLruCache localImageCache;
 
     private static Context mContext;
-    private static DefaultHttpClient mHttpClient;
-    private static CookieStore mCookieStore;
     
     public static final String TAG="WordPress";
 
@@ -99,13 +86,8 @@ public class WordPress extends Application {
         
         mContext = this;
 
-        // for storing cookies
-        mCookieStore = new BasicCookieStore();
-        mHttpClient = getThreadSafeClient();
-        mHttpClient.setCookieStore(mCookieStore);
-        
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this, new HttpClientStack(mHttpClient));
+        requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // Use a small slice of available memory for the image cache
         int cacheSize = maxMemory / 32;
@@ -259,7 +241,6 @@ public class WordPress extends Application {
     public static Blog setCurrentBlog(int id) {
         try {
             currentBlog = new Blog(id);
-            getLoginCookieForCurrentBlog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -461,71 +442,6 @@ public class WordPress extends Application {
         restClient.clearAccessToken();
     }
     
-    /**
-     * Logs in to get the "wordpress_logged_in" cookie
-     */
-    private static void getLoginCookieForCurrentBlog() {
-        
-        
-        final Blog blog = WordPress.getCurrentBlog();
-        
-        if (blog == null)
-            return;
-        
-        // clear previous cookies
-        clearCookieStore();
-        
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... p) {
-                
-                HttpClient httpclient = new DefaultHttpClient();
-                try {
-
-                    // Create local HTTP context
-                    HttpContext localContext = new BasicHttpContext();
-                    // Bind custom cookie store to the local context
-                    localContext.setAttribute(ClientContext.COOKIE_STORE, mCookieStore);
-
-                    String url = getLoginUrl(blog);
-                    
-                    HttpPost post = new HttpPost(url);
-
-                    HttpParams httpParams = new BasicHttpParams();
-                    httpParams.setParameter("http.protocol.handle-redirects",false);
-                    post.setParams(httpParams);
-                    
-                    List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-                    params.add(new BasicNameValuePair("log", blog.getUsername()));
-                    params.add(new BasicNameValuePair("pwd", blog.getPassword()));
-                    post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-
-                    // Pass local context as a parameter
-                    httpclient.execute(post, localContext);
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    // When HttpClient instance is no longer needed,
-                    // shut down the connection manager to ensure
-                    // immediate deallocation of all system resources
-                    httpclient.getConnectionManager().shutdown();
-                }
-                
-                return null;
-            }
-            
-        }.execute();
-        
-        
-    }
-    
-    public static void clearCookieStore() {
-        mCookieStore.clear();
-    }
-    
     public static String getLoginUrl(Blog blog) {
         String loginURL = null;
         Gson gson = new Gson();
@@ -549,13 +465,42 @@ public class WordPress extends Application {
         return loginURL;
     }
     
-    public static DefaultHttpClient getThreadSafeClient()  {
-        // Need this since volley throws errors when loading multiple images using the one http client.
-        // based on http://stackoverflow.com/a/6737645/524332
-        DefaultHttpClient client = new DefaultHttpClient();
-        ClientConnectionManager mgr = client.getConnectionManager();
-        HttpParams params = client.getParams();
-        client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
-        return client;
+    public static HttpStack getHttpClientStack() {
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            HurlStack stack = new HurlStack() {
+                @Override
+                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError { 
+
+                    HashMap<String, String> authParams = new HashMap<String, String>();
+                    authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                    
+                    headers.putAll(authParams);
+
+                    return super.performRequest(request, headers);
+                }
+            };
+
+            return stack;
+
+        } else {
+            HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
+                @Override
+                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError {
+                    
+                    HashMap<String, String> authParams = new HashMap<String, String>();
+                    authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                    
+                    headers.putAll(authParams);
+
+                    return super.performRequest(request, headers);
+                }
+            };
+
+            return stack;
+        }
     }
+    
 }
