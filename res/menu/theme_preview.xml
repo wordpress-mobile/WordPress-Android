@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_activate"
+        android:icon="@drawable/tab_icon_checkmark"
+        android:showAsAction="always"
+        android:title="@string/theme_activate_button"/>
+
+</menu>

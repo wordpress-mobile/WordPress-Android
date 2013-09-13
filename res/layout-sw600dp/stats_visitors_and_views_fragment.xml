@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/stats_bar_graph_legend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:visibility="gone" >
+
+                <View
+                    android:id="@+id/stats_bar_graph_legend_marker_views"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/stats_bar_graph_views" />
+
+                <TextView
+                    android:id="@+id/stats_bar_graph_legend_label_views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/stats_bar_graph_legend_marker_views"
+                    android:layout_toRightOf="@id/stats_bar_graph_legend_marker_views"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/stats_totals_views"
+                    android:textSize="12sp" />
+
+                <View
+                    android:id="@+id/stats_bar_graph_legend_marker_visitors"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_below="@id/stats_bar_graph_legend_marker_views"
+                    android:layout_margin="8dp"
+                    android:background="@color/stats_bar_graph_visitors" />
+
+                <TextView
+                    android:id="@+id/stats_bar_graph_legend_label_visitors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/stats_bar_graph_legend_marker_visitors"
+                    android:layout_below="@id/stats_bar_graph_legend_label_views"
+                    android:layout_toRightOf="@id/stats_bar_graph_legend_marker_visitors"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/stats_totals_visitors"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/stats_visitors_and_views_bar_graph_layout"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@id/stats_bar_graph_legend"
+                android:orientation="vertical" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <!-- TODAY -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/stats_visitors_and_views_header_today"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal" >
+
+                    <!-- TODAY: Visitors -->
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:id="@+id/stats_visitors_and_views_today_visitors_count"
+                            style="@style/StatsHeaderTotals"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+
+                        <TextView
+                            style="@style/StatsHeaderTotalsLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stats_visitors_and_views_today_visitors_count"
+                            android:text="@string/stats_totals_visitors" />
+                    </RelativeLayout>
+
+                    <!-- TODAY: Views -->
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:id="@+id/stats_visitors_and_views_today_views_count"
+                            style="@style/StatsHeaderTotals"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+
+                        <TextView
+                            style="@style/StatsHeaderTotalsLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stats_visitors_and_views_today_views_count"
+                            android:text="@string/stats_totals_views" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/stats_vertical_line" />
+
+            <!-- BEST EVER -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/stats_visitors_and_views_header_best_ever"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/stats_visitors_and_views_best_ever_views_count"
+                    style="@style/StatsHeaderTotals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="0" />
+
+                <TextView
+                    style="@style/StatsHeaderTotalsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/stats_totals_views" />
+            </LinearLayout>
+
+            <include layout="@layout/stats_vertical_line" />
+
+            <!-- ALL TIME -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/stats_visitors_and_views_header_all_time"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal" >
+
+                    <!-- ALL TIME: Views -->
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:id="@+id/stats_visitors_and_views_all_time_view_count"
+                            style="@style/StatsHeaderTotals"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+
+                        <TextView
+                            style="@style/StatsHeaderTotalsLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stats_visitors_and_views_all_time_view_count"
+                            android:text="@string/stats_totals_views" />
+                    </RelativeLayout>
+
+                    <!-- ALL TIME: Comments -->
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp" >
+
+                        <TextView
+                            android:id="@+id/stats_visitors_and_views_all_time_comment_count"
+                            style="@style/StatsHeaderTotals"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+
+                        <TextView
+                            style="@style/StatsHeaderTotalsLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stats_visitors_and_views_all_time_comment_count"
+                            android:text="@string/stats_totals_comments" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

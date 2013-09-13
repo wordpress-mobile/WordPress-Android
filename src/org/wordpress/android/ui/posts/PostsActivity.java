@@ -32,7 +32,7 @@ import org.xmlrpc.android.XMLRPCException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -378,17 +378,22 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
     }
 
     @Override
-    public void onRefresh(boolean start) {
-        if (start) {
-            attemptToSelectPost();
-            shouldAnimateRefreshButton = true;
-            startAnimatingRefreshButton(refreshMenuItem);
-            isRefreshing = true;
-        } else {
-            stopAnimatingRefreshButton(refreshMenuItem);
-            isRefreshing = false;
-        }
-
+    public void onRefresh(final boolean start) {
+        runOnUiThread(new Runnable() {
+            
+            @Override
+            public void run() {
+                if (start) {
+                    attemptToSelectPost();
+                    shouldAnimateRefreshButton = true;
+                    startAnimatingRefreshButton(refreshMenuItem);
+                    isRefreshing = true;
+                } else {
+                    stopAnimatingRefreshButton(refreshMenuItem);
+                    isRefreshing = false;
+                }     
+            }
+        });
     }
 
     @Override

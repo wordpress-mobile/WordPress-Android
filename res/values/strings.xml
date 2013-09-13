@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <string name="app_name">WordPress</string>
+    
   <!-- account setup -->
   <string name="required_fields">Required Fields</string>
   <string name="required_field">Required Field</string>
@@ -45,6 +47,8 @@
   <string name="post">Post</string>
   <string name="page">Page</string>
   <string name="posts">Posts</string>
+  <string name="media">Media</string>
+  <string name="themes">Themes</string>
   <string name="pages">Pages</string>
   <string name="about">About</string>
   <string name="username">Username</string>
@@ -95,9 +99,67 @@
   <string name="wpcom">WordPress.com</string>
   <string name="sign_in">Sign in</string>
   <string name="sign_out">Sign out</string>
+  <string name="all">All</string>
+  <string name="images">Images</string>
+  <string name="unattached">Unattached</string>
+  <string name="custom_date">Custom Date</string>
   <string name="upload">Upload</string>
   <string name="please_wait_refresh_done">Please wait, loading items.</string>
   <string name="info">Info</string>
+  
+  <!-- Media Gallery Action Bar -->
+  <string name="media_add_popup_title">Add to Media Library</string>
+  <string name="media_add_popup_capture_photo">Capture photo</string>
+  <string name="media_add_popup_capture_video">Capture video</string>
+  <string name="media_add_popup_pick_photo_from_gallery">Pick photo from gallery</string>
+  <string name="media_add_popup_pick_video_from_gallery">Pick video from gallery</string>
+  <string name="media_add_new_post">New Post</string>
+  <string name="media_add_new_media_gallery">New Media Gallery</string>
+  
+  <!-- Media Gallery -->
+  <string name="media_gallery_settings_title">Gallery Settings</string>
+  <string name="media_gallery_image_order">Image Order</string>
+  <string name="media_gallery_image_order_random">Random</string>
+  <string name="media_gallery_image_order_reverse">Reverse</string>
+  <string name="media_gallery_num_columns">Number of Columns</string>
+  <string name="media_gallery_type">Type</string>
+  <string name="media_gallery_type_thumbnail_grid">Thumbnail Grid</string>
+  <string name="media_gallery_type_squares">Squares</string>
+  <string name="media_gallery_type_tiled">Tiled</string>
+  <string name="media_gallery_type_circles">Circles</string>
+  <string name="media_gallery_type_slideshow">Slideshow</string>
+  <string name="media_gallery_edit">Edit Gallery</string>
+  
+  
+  <!-- Upload Media -->
+  <string name="media_upload_title">Upload New Media</string>
+  <string name="media_upload_image_button">Image</string>
+  <string name="media_upload_video_button">Video</string>
+  <string name="media_upload_other_button">Other</string>
+  <string name="media_upload_clear_uploaded">Clear Uploaded</string>
+  <string name="media_upload_edit_button">edit</string>
+  <string name="media_upload_queued_button">queued</string>
+  <string name="media_upload_retry_button">retry</string>
+  <string name="media_upload_uploading_button">uploading</string>
+  <string name="media_no_video_title">VideoPress unavailable</string>
+  <string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
+  
+  <!-- Edit Media -->
+  <string name="media_edit_title_text">Title</string>
+  <string name="media_edit_caption_text">Caption</string>
+  <string name="media_edit_description_text">Description</string>
+  <string name="media_edit_title_hint">Enter a title here</string>
+  <string name="media_edit_caption_hint">Enter a caption here</string>
+  <string name="media_edit_description_hint">Enter a description here</string>
+  <string name="media_edit_show_likes">Show Likes</string>
+  <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
+  <string name="media_edit_success">Updated</string>
+  <string name="media_edit_failure">Failed to update</string>
+  <string name="media_edit_fragment_tag">MediaEditFragment</string>
+  
+  <!-- Delete Media -->
+  <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
+  <string name="confirm_delete_multi_media">Are you sure you want to delete these item(s)?</string>
   
   <!-- tab titles -->
   <string name="tab_comments">Comments</string>
@@ -105,6 +167,21 @@
   <string name="tab_pages">Pages</string>
   <string name="tab_stats">Stats</string>
 
+  <!-- themes -->
+  <string name="themes_live_preview">Live Preview</string>
+  <string name="themes_details_label">Details</string>
+  <string name="themes_features_label">Features</string>
+  <string name="theme_activate_button">Activate</string>
+  <string name="theme_activating_button">Activating</string>
+  <string name="theme_fetch_failed">Failed to fetch themes. Please try again</string>
+  <string name="theme_fetch_success">Themes have been refreshed</string>
+  <string name="theme_set_failed">Failed to set theme. Please try again</string>
+  <string name="theme_set_success">Successfully set theme!</string>
+  <string name="theme_auth_error_title">Failed to fetch themes</string>
+  <string name="theme_auth_error_message">Ensure you have the privilege to set themes.</string>
+  <string name="theme_current_theme">Current Theme</string>
+  <string name="theme_premium_theme">Premium Theme</string>
+  <string name="theme_no_search_result_found">No results found.</string>
 
   <!-- link view -->
   <string name="link_enter_url">URL</string>
@@ -242,7 +319,8 @@
   <string name="take_photo">Take a new photo</string>
   <string name="select_video">Select a video from gallery</string>
   <string name="take_video">Take a new video</string>
-  <string name="media">Media</string>
+  <string name="media_remove_from_queue">Remove from queue</string>
+  <string name="select_from_media_library">Select from Media Library</string>
 
   <!-- category management -->
   <string name="categories">Categories</string>
@@ -262,6 +340,10 @@
 
   <!-- action from share intents -->
   <string name="select_a_blog">Select a Blog</string>
+  <string name="share_action_title">Add to &#8230;</string>
+  <string name="share_action_post">New Post</string>
+  <string name="share_action_media">Media Gallery</string>
+  <string name="share_action">Share</string>
   <string name="no_account">No WordPress account found, please add an account and try again.</string>
 
   <!-- file errors -->
@@ -286,6 +368,7 @@
   <string name="open_source_licenses">Open Source Licenses</string>
 
   <!-- stats -->
+  <string name="stats">Stats</string>
   <string name="username_password_required">Username and Password are required fields.</string>
   <string name="help_stats">Need help?</string>
   <string name="stats_username">Username</string>
@@ -294,7 +377,106 @@
   <string name="invalid_jp_login">Incorrect login, or blog is not linked to this WordPress.com account.</string>
   <string name="site_not_found">or site not found.</string>
   <string name="stats_service_error">Sorry. There was an error trying to connect to your stats. Please try again.</string>
+  <string name="view_stats_login">WordPress.com login</string>
+  <string name="view_stats_full_site">View full site</string>
 
+  <!-- stats: labels for the views -->
+  <string name="stats_view_visitors_and_views">Visitors and Views</string>
+  <string name="stats_view_views_by_country">Views by Country</string>
+  <string name="stats_view_top_posts_and_pages">Top Posts and Pages</string>
+  <string name="stats_view_totals_followers_and_shares">Totals, Followers, &amp; Shares</string>
+  <string name="stats_view_clicks">Clicks</string>
+  <string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
+  <string name="stats_view_top_authors">Top Authors</string>
+  <string name="stats_view_referrers">Referrers</string>
+  <string name="stats_view_video_plays">Video Plays</string>
+  <string name="stats_view_comments">Comments</string>
+  <string name="stats_view_search_engine_terms">Search Engine Terms</string>
+  
+  <!-- stats: labels for timeframes -->
+  <string name="stats_timeframe_today">Today</string>
+  <string name="stats_timeframe_yesterday">Yesterday</string>
+  <string name="stats_timeframe_week">Week</string>
+  <string name="stats_timeframe_month">Month</string>
+  <string name="stats_timeframe_quarter">Quarter</string>
+  <string name="stats_timeframe_year">Year</string>
+  <string name="stats_timeframe_all_time">All Time</string>
+  <string name="stats_timeframe_days">Days</string>
+  <string name="stats_timeframe_weeks">Weeks</string>
+  <string name="stats_timeframe_months">Months</string>
+  <string name="stats_summary">Summary</string>
+  
+  <!-- stats: label for the entries -->
+  <string name="stats_entry_country">Country</string>
+  <string name="stats_entry_posts_and_pages">Title</string>
+  <string name="stats_entry_clicks_url">URL</string>
+  <string name="stats_entry_tags_and_categories">Topic</string>
+  <string name="stats_entry_authors">Author</string>
+  <string name="stats_entry_referrers">Referrer</string>
+  <string name="stats_entry_video_plays">Video Name</string>
+  <string name="stats_entry_top_commenter">Commenter</string>
+  <string name="stats_entry_most_commented">Posts</string>
+  <string name="stats_entry_search_engine_terms">Search</string>
+  
+  <!-- stats: label for the totals -->
+  <string name="stats_totals_views">Views</string>
+  <string name="stats_totals_clicks">Clicks</string>
+  <string name="stats_totals_plays">Plays</string>
+  <string name="stats_totals_comments">Comments</string>
+  <string name="stats_totals_visitors">Visitors</string>
+  
+  <!-- stats: views and visitors -->
+  <string name="stats_visitors_and_views_header_today">Today</string>
+  <string name="stats_visitors_and_views_header_best_ever">Best Ever</string>
+  <string name="stats_visitors_and_views_header_all_time">All Time</string>
+  
+  <!-- stats: totals, followers, and shares -->
+  <string name="stats_totals_followers_shares_header_content">Content</string>
+  <string name="stats_totals_followers_shares_header_followers">Followers</string>
+  <string name="stats_totals_followers_shares_header_followers_publicize">
+      <![CDATA[
+      	Followers 
+      	<font color="#9E9E9E">(includes </font>
+      	<font color="#21759B"><a href="http://support.wordpress.com/publicize/">Publicize</a></font>
+      	<font color="#9E9E9E">)</font>
+    	]]>
+  </string>
+  <string name="stats_totals_followers_shares_header_shares">Shares</string>
+  <string name="stats_totals_followers_shares_label_posts">Posts</string>
+  <string name="stats_totals_followers_shares_label_categories">Categories</string>
+  <string name="stats_totals_followers_shares_label_tags">Tags</string>
+  <string name="stats_totals_followers_shares_label_blog">Blog</string>
+  <string name="stats_totals_followers_shares_label_comments">Comments</string>
+  <string name="stats_totals_followers_shares_label_shares">Shares</string>
+  
+  <!-- stats: comments summary -->
+  <string name="stats_comments_summary_header_comments">COMMENTS</string>
+  <string name="stats_comments_summary_header_recent">RECENT</string>
+  <string name="stats_comments_summary_label_per_month">Per Month</string>
+  <string name="stats_comments_summary_label_total">Total</string>
+  <string name="stats_comments_summary_label_most_active_day">Most active recent day</string>
+  <string name="stats_comments_summary_label_most_active_time">Most active time of day</string>
+  <string name="stats_comments_summary_label_most_commented">Most commented post</string>
+  <string name="stats_comments_summary_footer">* Based on the 1000 most recent comments</string>
+  
+  <!-- stats: video summary -->
+  <string name="stats_video_summary_label_plays">Plays</string>
+  <string name="stats_video_summary_label_impressions">Impressions</string>
+  <string name="stats_video_summary_label_bandwidth">Bandwidth</string>
+  <string name="stats_video_summary_header">Aggregated stats for %s</string>
+  
+  <!-- stats: empty list strings -->
+  <string name="stats_empty_geoviews">No posts viewed.</string>
+  <string name="stats_empty_top_posts"><![CDATA[<b>No top posts or pages.</b> This panel shows your most viewed posts and pages.]]></string>
+  <string name="stats_empty_referrers"><![CDATA[<b>No referrers.</b> A referrer is a click from another site that links to yours.]]></string>
+  <string name="stats_empty_clicks"><![CDATA[<b>No clicks recorded.</b> "Clicks" are viewers clicking outbound links on your site.]]></string>
+  <string name="stats_empty_top_authors">No posts viewed.</string>
+  <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet.</string>
+  <string name="stats_empty_video">No videos have been played yet.</string>
+  <string name="stats_empty_search_engine_terms"><![CDATA[<b>No search terms.</b> Search terms are words or phrases users find you with when they search.]]></string>
+  <string name="stats_empty_comments">No comments yet.</string>
+  <string name="stats_bar_graph_empty">No stats available.</string>
+  
   <!-- editor button -->
   <string name="strike"><strike>ABC</strike></string>
   <string name="link"><u>link</u></string>
@@ -375,6 +557,8 @@
   <!--  Menu Buttons -->
   <string name="new_post">New Post</string>
   <string name="new_page">New Page</string>
+  <string name="new_media">New Media</string>
+  <string name="menu_search">Search</string>
   <string name="quick_photo">Quick Photo</string>
   <string name="quick_video">Quick Video</string>
   <string name="wp_admin">Dashboard</string>
@@ -433,18 +617,5 @@
     <string name="discard">Discard</string>
     <string name="prompt_save_changes">Would you like to save your changes?</string>
     <string name="error_downloading_image">Error downloading image. Please try again.</string>
-
-  
-   <!--  Application PassLock Messages -->
-   <string name="passcode_manage">Manage passcode</string>
-  <string name="passcode_enter_passcode">Enter your passcode</string>
-  <string name="passcode_enter_old_passcode">Enter your old passcode</string>
-  <string name="passcode_re_enter_passcode">Re-enter your passcode</string>
-  <string name="passcode_change_passcode">Change passcode</string>
-  <string name="passcode_set">Passcode set</string>
-  <string name="passcode_wrong_passcode">Wrong passcode, please try again.</string>
-  <string name="passcode_preference_title">Passcode lock</string>
-  <string name="passcode_turn_off">Turn passcode off</string>
-  <string name="passcode_turn_on">Turn passcode on</string>
     
 </resources>

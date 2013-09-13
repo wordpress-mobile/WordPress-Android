@@ -624,8 +624,17 @@ public class PostsListFragment extends ListFragment {
             if (loadMore)
                 switcher.showPrevious();
             mOnRefreshListener.onRefresh(false);
-            if (isAdded())
-                loadPosts(loadMore);
+            if (isAdded()) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            loadPosts(loadMore);      
+                        }
+                    });
+                }
+            }
         }
 
         @Override

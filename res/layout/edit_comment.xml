@@ -2,9 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFFFF"
-    android:orientation="vertical"
-    android:scrollbars="none" >
+    android:background="#FFFFFFFF" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,50 +24,46 @@
             <TextView
                 android:id="@+id/l_section1"
                 style="@style/WordPressSectionHeader"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/comment_content" />
 
             <EditText
                 android:id="@+id/author_name"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/l_section1"
                 android:layout_marginBottom="8dp"
-                android:autoText="true"
-                android:capitalize="words"
+                android:inputType="textCapWords|textAutoCorrect"
                 android:hint="@string/author_name"
                 android:singleLine="true" />
 
             <EditText
                 android:id="@+id/author_email"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/author_name"
                 android:layout_marginBottom="8dp"
-                android:autoText="true"
-                android:capitalize="none"
+                android:inputType="textEmailAddress"
                 android:hint="@string/author_email"
                 android:singleLine="true" />
 
             <EditText
                 android:id="@+id/author_url"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/author_email"
                 android:layout_marginBottom="8dp"
-                android:autoText="true"
-                android:capitalize="none"
+                android:inputType="textUri"
                 android:hint="@string/author_url"
                 android:singleLine="true" />
 
             <EditText
                 android:id="@+id/comment_content"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/author_url"
-                android:autoText="true"
-                android:capitalize="sentences"
+                android:inputType="textCapSentences|textAutoCorrect"
                 android:gravity="top"
                 android:hint="@string/content"
                 android:minLines="2"
@@ -78,7 +72,7 @@
 
         <RelativeLayout
             android:id="@+id/section5"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
@@ -87,13 +81,13 @@
             <TextView
                 android:id="@+id/l_status"
                 style="@style/WordPressSectionHeader"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/settings" />
 
             <Spinner
                 android:id="@+id/status"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/l_status" />
         </RelativeLayout>

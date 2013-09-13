@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_full_holo_light"
+    android:padding="8dp" >
+
+    <ListView
+        android:id="@+id/stats_nav_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/wordpress_blue"
+        android:dividerHeight="0.5dp"
+        android:overScrollFooter="@null"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
+    </ListView>
+
+</FrameLayout>

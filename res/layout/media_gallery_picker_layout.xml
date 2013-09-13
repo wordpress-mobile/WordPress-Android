@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.ui.MultiSelectGridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/media_gallery_picker_gridview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:numColumns="@integer/media_grid_num_columns" />

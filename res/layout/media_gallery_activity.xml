@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/media_gallery_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <fragment
+        android:id="@+id/mediaGalleryEditFragment"
+        android:name="org.wordpress.android.ui.media.MediaGalleryEditFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/mediaGallerySettingsFragment"
+        android:name="org.wordpress.android.ui.media.MediaGallerySettingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/media_gallery_add_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

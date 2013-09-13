@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="8dp" >
+
+    <LinearLayout
+        android:id="@+id/theme_details_fragment_left_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_weight="0.6"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/theme_details_fragment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/theme_details_name"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:id="@+id/theme_details_fragment_attributes_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/theme_details_fragment_current_theme_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/theme_icon_current"
+                android:drawablePadding="8dp"
+                android:fontFamily="sans-serif-light"
+                android:paddingRight="16dp"
+                android:text="@string/theme_current_theme"
+                android:textColor="@color/wordpress_blue"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/theme_details_fragment_premium_theme_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/theme_icon_premium"
+                android:drawablePadding="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/theme_premium_theme"
+                android:textColor="@color/theme_details_premium"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <org.wordpress.android.ui.FadeInNetworkImageView
+            android:id="@+id/theme_details_fragment_image"
+            android:layout_width="300dp"
+            android:layout_height="225dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/theme_details_fragment_preview_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/media_blue_button_selector"
+            android:fontFamily="sans-serif-light"
+            android:padding="10dp"
+            android:text="@string/themes_live_preview"
+            android:textColor="@color/theme_details_button" />
+
+        <FrameLayout
+            android:id="@+id/theme_details_fragment_activate_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp" >
+
+            <Button
+                android:id="@+id/theme_details_fragment_activate_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/theme_activate_button_selector"
+                android:fontFamily="sans-serif-light"
+                android:padding="10dp"
+                android:text="@string/theme_activate_button"
+                android:textColor="@color/theme_details_button" />
+
+            <LinearLayout
+                android:id="@+id/theme_details_fragment_activating_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleSmallTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/theme_activating_button"
+                    android:textColor="@color/theme_details_button"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/theme_details_fragment_view_site_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/theme_activate_button_selector"
+            android:fontFamily="sans-serif-light"
+            android:padding="10dp"
+            android:text="@string/view_site"
+            android:textColor="@color/theme_details_button"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:fillViewport="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/theme_details_fragment_details_label"
+                style="@style/ThemeDetailsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/themes_details_label"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/theme_details_fragment_details_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/theme_details_fragment_details_label"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/theme_details_fragment_features_label"
+                style="@style/ThemeDetailsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/theme_details_fragment_details_description"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/themes_features_label"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/theme_details_fragment_features_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/theme_details_fragment_features_label"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

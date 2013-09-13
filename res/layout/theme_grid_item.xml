@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/theme_grid_image_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:background="@drawable/media_gallery_grid_cell" >
+
+        <RelativeLayout
+            android:id="@+id/theme_label_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/media_gallery_grid_label_bg" >
+
+            <TextView
+                android:id="@+id/theme_grid_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:padding="4dp"
+                android:singleLine="true"
+                android:textColor="@color/media_gallery_grid_label"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <org.wordpress.android.ui.FadeInNetworkImageView
+            android:id="@+id/theme_grid_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/theme_label_container"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/theme_grid_attributes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/theme_icon_tag_current"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+</RelativeLayout>

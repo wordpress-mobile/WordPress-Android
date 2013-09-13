@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/media_edit_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp" 
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/media_edit_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:text="@string/media_edit_title_text"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp" >
+
+            <Button
+                android:id="@+id/media_edit_save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/media_blue_button_selector"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:visibility="@integer/media_editor_save_button_visibility" />
+
+            <EditText
+                android:id="@+id/media_edit_fragment_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/media_edit_save_button"
+                android:layout_toLeftOf="@id/media_edit_save_button"
+                android:hint="@string/media_edit_title_hint"
+                android:inputType="textCapSentences|textAutoCorrect" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <include
+                android:id="@+id/media_edit_fragment_image_local"
+                layout="@layout/media_grid_image_local" />
+
+            <include
+                android:id="@+id/media_edit_fragment_image_network"
+                layout="@layout/media_grid_image_network" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/media_edit_caption_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="12dp"
+            android:text="@string/media_edit_caption_text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/media_edit_fragment_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/media_edit_caption_hint"
+            android:inputType="textCapSentences|textAutoCorrect" />
+
+        <TextView
+            android:id="@+id/media_edit_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingLeft="12dp"
+            android:text="@string/media_edit_description_text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/media_edit_fragment_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:hint="@string/media_edit_description_hint"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:lines="3" />
+    </LinearLayout>
+
+</ScrollView>

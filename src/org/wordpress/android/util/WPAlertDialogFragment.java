@@ -49,7 +49,7 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
       bundle.putString("alert-message", message);
       bundle.putString("alert-error", error);
       adf.setArguments(bundle);
-      isLoadMore = true;
+      isLoadMore = loadMore;
       return adf;
   }
 
@@ -151,10 +151,15 @@ public class WPAlertDialogFragment extends SherlockDialogFragment implements
             return b.create();
     }
     else {
-        b.setTitle(R.string.error);
+        String error = this.getArguments().getString("alert-error");
+        if (error != null) 
+            b.setTitle(error);
+        else
+            b.setTitle(R.string.error);
+        
         b.setPositiveButton("OK", this);
-        //b.setNegativeButton("Cancel", this);
         b.setMessage(this.getArguments().getString("alert-message"));
+        
         return b.create();
     }
   }

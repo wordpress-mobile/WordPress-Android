@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
@@ -7,36 +6,26 @@
         <item name="android:buttonStyle">@style/WordPressButtonAppearance</item>
         <item name="android:editTextStyle">@style/WordPressEditTextStyle</item>
         <item name="android:checkboxStyle">@style/WordPressCheckBoxStyle</item>
-        
         <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
-        
         <item name="popupMenuStyle">@style/wordpress_PopupMenu</item>
-        
         <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
         <item name="dropDownListViewStyle">@style/wordpress_DropDownListView</item>
-        
         <item name="actionBarTabStyle">@style/wordpress_ActionBarTabStyle</item>
-        
         <item name="actionDropDownStyle">@style/wordpress_DropDownNav</item>
-        
         <item name="actionBarStyle">@style/wordpress_solid_ActionBar</item>
-        
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
-                <!-- Light.DarkActionBar specific -->
+        <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.wordpress.widget</item>
-        
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
     </style>
-    
+
     <style name="wordpress_solid_ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_wordpress</item>
         <item name="background">@drawable/ab_solid_wordpress</item>
         <item name="android:icon">@drawable/ab_icon_wp</item>
         <item name="icon">@drawable/ab_icon_wp</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
-        
         <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
-        
         <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
         <item name="progressBarStyle">@style/wordpress_ProgressBar</item>
     </style>
@@ -44,13 +33,12 @@
     <style name="wordpress_transparent_ActionBar" parent="Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/ab_transparent_wordpress</item>
         <item name="background">@drawable/ab_transparent_wordpress</item>
-        
         <item name="android:progressBarStyle">@style/wordpress_ProgressBar</item>
         <item name="progressBarStyle">@style/wordpress_ProgressBar</item>
     </style>
 
     <style name="wordpress_PopupMenu" parent="Widget.Sherlock.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item> 
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
     <style name="wordpress_DropDownListView" parent="Widget.Sherlock.ListView.DropDown">
@@ -65,11 +53,10 @@
     <style name="wordpress_DropDownNav" parent="Widget.Sherlock.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
         <item name="background">@drawable/spinner_background_ab_wordpress</item>
-        
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
-    
+
     <style name="wordpress_ProgressBar" parent="Widget.Sherlock.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
     </style>
@@ -77,13 +64,12 @@
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.wordpress.widget" parent="Theme.Sherlock">
         <item name="popupMenuStyle">@style/wordpress_PopupMenu</item>
-        
         <item name="android:dropDownListViewStyle">@style/wordpress_DropDownListView</item>
         <item name="dropDownListViewStyle">@style/wordpress_DropDownListView</item>
     </style>
-    
+
     <style name="WordPress.Dialog" parent="@android:style/Theme.Dialog"></style>
-    
+
     <style name="WordPressSectionHeader">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginLeft">4dp</item>
@@ -94,13 +80,13 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
+
     <style name="WordPressSettingsSectionHeader" parent="WordPressSectionHeader">
         <item name="android:background">@drawable/section_header</item>
         <item name="android:textColor">#323232</item>
         <item name="android:paddingBottom">6dp</item>
     </style>
-    
+
     <style name="WordPressSubHeader">
         <item name="android:textSize">14sp</item>
         <item name="android:layout_marginTop">8dp</item>
@@ -108,7 +94,7 @@
         <item name="android:textColor">#AAAAAA</item>
         <item name="android:layout_marginBottom">-4dp</item>
     </style>
-    
+
     <style name="WordPress.ToggleButton">
         <item name="android:textSize">@dimen/format_bar_font_size</item>
         <item name="android:minWidth">26dp</item>
@@ -121,11 +107,11 @@
     <style name="WordPressTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">#FF464646</item>
     </style>
-    
+
     <style name="WordPressEditTextStyle" parent="@android:style/Widget.EditText">
         <item name="android:textColor">#464646</item>
     </style>
-    
+
     <style name="WordPressCheckBoxStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:textColor">#464646</item>
     </style>
@@ -142,13 +128,13 @@
     <style name="WordPressButtonAppearance" parent="@android:style/Widget.Button">
         <item name="android:textColor">#FF464646</item>
     </style>
-    
+
     <style name="WordPressListRowBackground">
         <item name="android:background">@null</item>
     </style>
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
-        <item name="mdMenuSize">250dp</item>
+        <item name="mdMenuSize">@dimen/menu_drawer_width</item>
     </style>
 
     <style name="MenuDrawer.Button">
@@ -178,29 +164,71 @@
         <item name="android:paddingRight">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
     </style>
-    
+
     <style name="WordPressWelcomeStyle">
         <item name="android:layout_gravity">center</item>
     </style>
 
-    <style name="PasscodeInputItemStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:maxLength">1</item>
-        <item name="android:inputType">textPassword</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:singleLine">true</item>
+    <style name="ThemeDetailsHeader">
+        <item name="android:textStyle">bold</item>
     </style>
-    
-    <style name="PasscodeKeyboardButtonStyle" parent="@android:style/Widget.Button">
-       <item name="android:textSize">16sp</item>
-  	   <item name="android:textColor">#FF464646</item>
-       <item name="android:gravity">center</item>
-       <item name="android:background">@drawable/passcode_keyboard_button</item>
-       <item name="android:layout_margin">5dp</item>
-       <item name="android:layout_width">wrap_content</item>
-       <item name="android:layout_height">wrap_content</item>
-   </style>
-    
+
+    <style name="StatsWhiteBackground">
+        <item name="android:background">@drawable/stats_white_background</item>
+    </style>
+
+    <style name="StatsHeader">
+        <item name="android:textColor">@color/wordpress_blue</item>
+        <item name="android:textSize">12sp</item>
+        <!--  item name="android:textAllCaps">true</item -->
+    </style>
+
+    <style name="StatsHeaderTotals">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:singleLine">true</item>
+        <!--  item name="android:fontFamily">sans-serif-light</item -->
+    </style>
+
+    <style name="StatsHeaderTotalsLabel">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">bottom</item>
+        <!--  item name="android:fontFamily">sans-serif-light</item -->
+    </style>
+
+    <style name="StatsTabletRadioButton">
+        <item name="android:background">@drawable/stats_button_selector</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="MediaGalleryText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediaGalleryNumOfColumns" parent="@style/MediaGalleryText">
+        <item name="android:textColor">@color/media_grid_item_checkstate_text_selector</item>
+        <item name="android:background">@drawable/media_gallery_option_selector</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <style name="MediaGalleryTypeCheckbox">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="FloatingActivityTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
 </resources>

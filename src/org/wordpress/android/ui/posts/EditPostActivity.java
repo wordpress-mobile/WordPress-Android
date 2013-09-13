@@ -1,5 +1,23 @@
 package org.wordpress.android.ui.posts;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -8,6 +26,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -19,7 +38,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Layout;
@@ -65,61 +83,53 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.xmlrpc.android.ApiHelper;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.lockmanager.AppLockManager;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.ui.accounts.NewAccountActivity;
+import org.wordpress.android.ui.media.MediaGalleryActivity;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaUtils;
+import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
+import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.LocationHelper.LocationResult;
+import org.wordpress.android.util.MediaGalleryImageSpan;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
-import org.xmlrpc.android.ApiHelper;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
-
-public class EditPostActivity extends SherlockActivity implements OnClickListener, OnTouchListener, TextWatcher,
+public class EditPostActivity extends SherlockFragmentActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
 
     private static final int AUTOSAVE_DELAY_MILLIS = 60000;
 
-    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
-    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
-    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
-    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
+    // Handled by MediaUtils
+//    private static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 0;
+//    private static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1;
+//    private static final int ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY = 2;
+//    private static final int ACTIVITY_REQUEST_CODE_TAKE_VIDEO = 3;
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
@@ -129,6 +139,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     private static final int ID_DIALOG_DOWNLOAD = 3;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
+
+    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
+    public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
+    
+    public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
+    public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
 
     private Blog mBlog;
     private Post mPost;
@@ -196,8 +212,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             // We arrived here from a share action
-            if (!selectBlogForShareAction())
-                return;
+            setupTitleForShareAction();
         } else {
             initBlog();
             if (extras != null) {
@@ -341,6 +356,11 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
 
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))
                 setContent();
+            else if (NEW_MEDIA_GALLERY.equals(action))
+                prepareMediaGallery();
+            else if (NEW_MEDIA_POST.equals(action))
+                prepareMediaPost();
+            
         }
 
         String[] items = new String[]{getResources().getString(R.string.publish_post), getResources().getString(R.string.draft),
@@ -475,6 +495,30 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         mMoreButton.setOnClickListener(this);
     }
 
+    private void prepareMediaGallery() {
+        MediaGallery mediaGallery = new MediaGallery();
+        mediaGallery.setIds(getIntent().getStringArrayListExtra("NEW_MEDIA_GALLERY_EXTRA_IDS"));
+        
+        startMediaGalleryActivity(mediaGallery);
+    }
+
+    private void prepareMediaPost() {
+        String mediaId = getIntent().getStringExtra(NEW_MEDIA_POST_EXTRA);
+        addExistingMediaToEditor(mediaId);
+    }
+    
+    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
+        Intent intent = new Intent(EditPostActivity.this, MediaGalleryActivity.class);
+        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
+        startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+    }
+    
+    private void startMediaGalleryAddActivity() {
+        Intent intent = new Intent(EditPostActivity.this, MediaGalleryPickerActivity.class);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -500,8 +544,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             savedInstanceState.putString("mediaCapturePath", mMediaCapturePath);
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, 0, 0, getResources().getText(R.string.select_photo));
         if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 1, 0, getResources().getText(R.string.take_photo));
@@ -510,6 +553,9 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         if (DeviceUtils.getInstance().hasCamera(getApplicationContext())) {
             menu.add(0, 3, 0, getResources().getText(R.string.take_video));
         }
+        
+        menu.add(0, 4, 0, getResources().getText(R.string.media_add_new_media_gallery));
+        menu.add(0, 5, 0, getResources().getText(R.string.select_from_media_library));
     }
 
     @Override
@@ -526,6 +572,12 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                 return true;
             case 3:
                 launchVideoCamera();
+                return true;
+            case 4:
+                startMediaGalleryActivity(null);
+                return true;
+            case 5:
+                startMediaGalleryAddActivity();
                 return true;
         }
         return false;
@@ -839,6 +891,15 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
                     mContentEditText.setSelection(mContentEditText.getSelectionStart());
                 }
+                
+                // get media gallery spans
+
+                MediaGalleryImageSpan[] gallerySpans = s.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
+                if (gallerySpans.length > 0) {
+                    final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
+                    startMediaGalleryActivity(gallerySpan.getMediaGallery());
+                }
+                
             }
         } else if (event.getAction() == 1) {
             mScrollDetected = false;
@@ -912,80 +973,17 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
         }
     }
 
-    private boolean selectBlogForShareAction() {
-
+    private void setupTitleForShareAction() {
         mIsNew = true;
         mLocalDraft = true;
+        
+        mBlog = WordPress.getCurrentBlog();
+        mBlogID = mBlog.getId();
+        mAccountName = mBlog.getBlogName();
+        WordPress.wpDB.updateLastBlogId(mBlogID);
 
-        List<Map<String, Object>> accounts = WordPress.wpDB.getAccounts();
-
-        if (accounts.size() > 0) {
-
-            final String blogNames[] = new String[accounts.size()];
-            final int accountIDs[] = new int[accounts.size()];
-
-            for (int i = 0; i < accounts.size(); i++) {
-
-                Map<String, Object> curHash = accounts.get(i);
-                try {
-                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                } catch (Exception e) {
-                    blogNames[i] = curHash.get("url").toString();
-                }
-                accountIDs[i] = (Integer) curHash.get("id");
-                try {
-                    mBlog = new Blog(accountIDs[i]);
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                    return false;
-                }
-            }
-
-            // Don't prompt if they have one blog only
-            if (accounts.size() > 1) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditPostActivity.this);
-                builder.setCancelable(false);
-                builder.setTitle(getResources().getText(R.string.select_a_blog));
-                builder.setItems(blogNames, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        mBlogID = accountIDs[item];
-                        try {
-                            mBlog = new Blog(mBlogID);
-                        } catch (Exception e) {
-                            showBlogErrorAndFinish();
-                        }
-                        WordPress.currentBlog = mBlog;
-                        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-                        mAccountName = blogNames[item];
-                        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
-                                + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            } else {
-                mBlogID = accountIDs[0];
-                try {
-                    mBlog = new Blog(mBlogID);
-                } catch (Exception e) {
-                    showBlogErrorAndFinish();
-                    return false;
-                }
-                WordPress.currentBlog = mBlog;
-                WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getId());
-                mAccountName = blogNames[0];
-                setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
-                        + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
-            }
-            ;
-            return true;
-        } else {
-            // no account, load main view to load new account view
-            Toast.makeText(getApplicationContext(), getResources().getText(R.string.no_account), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, NewAccountActivity.class));
-            finish();
-            return false;
-        }
+        setTitle(StringUtils.unescapeHTML(mAccountName) + " - "
+                + getResources().getText((mIsPage) ? R.string.new_page : R.string.new_post));
     }
 
     private void showBlogErrorAndFinish() {
@@ -1162,61 +1160,32 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
     }
 
     private void launchPictureLibrary() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
-        startActivityForResult(photoPickerIntent, ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY);
+        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY;
+        MediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchCamera() {
-        String state = android.os.Environment.getExternalStorageState();
-        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditPostActivity.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.sdcard_title));
-            dialogBuilder.setMessage(getResources().getText(R.string.sdcard_message));
-            dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    dialog.dismiss();
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            String dcimFolderName = Environment.DIRECTORY_DCIM;
-            if (dcimFolderName == null)
-                dcimFolderName = "DCIM";
-            mMediaCapturePath = Environment.getExternalStorageDirectory() + File.separator + dcimFolderName + File.separator + "Camera"
-                    + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
-            Intent takePictureFromCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureFromCameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mMediaCapturePath)));
-
-            // make sure the directory we plan to store the recording in exists
-            File directory = new File(mMediaCapturePath).getParentFile();
-            if (!directory.exists() && !directory.mkdirs()) {
-                try {
-                    throw new IOException("Path to file could not be created.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        MediaUtils.launchCamera(this, new LaunchCameraCallback() {
+            
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+                mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
+                AppLockManager.getInstance().setExtendedTimeout();
             }
-            mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_TAKE_PHOTO;
-            startActivityForResult(takePictureFromCameraIntent, ACTIVITY_REQUEST_CODE_TAKE_PHOTO);
-            AppLockManager.getInstance().setExtendedTimeout();
-        }
+        });
     }
 
     private void launchVideoLibrary() {
-        Intent videoPickerIntent = new Intent(Intent.ACTION_PICK);
-        videoPickerIntent.setType("video/*");
-        mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
-        startActivityForResult(videoPickerIntent, ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY);
+        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY;
+        MediaUtils.launchVideoLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
-        mCurrentActivityRequest = ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
-        startActivityForResult(new Intent(MediaStore.ACTION_VIDEO_CAPTURE), ACTIVITY_REQUEST_CODE_TAKE_VIDEO);
+        mCurrentActivityRequest = RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO;
+        MediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -1263,15 +1232,25 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             return;
         }
 
-        if (data != null || ((requestCode == ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO || requestCode == RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO))) {
             Bundle extras;
 
             switch (requestCode) {
-                case ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
+                case MediaGalleryActivity.REQUEST_CODE:
+                    if (resultCode == RESULT_OK) {
+                        handleMediaGalleryResult(data);
+                    }
+                    break;
+                case MediaGalleryPickerActivity.REQUEST_CODE:
+                    if (resultCode == RESULT_OK) {
+                        handleMediaGalleryPickerResult(data);
+                    }
+                    break;
+                case RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     verifyImage(imageUri);
                     break;
-                case ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
@@ -1288,14 +1267,14 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         }
                     }
                     break;
-                case ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
+                case RequestCode.ACTIVITY_REQUEST_CODE_VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
                     if (!addMedia(videoUri, null))
                         Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     break;
-                case ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
+                case RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = data.getData();
+                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
                         if (!addMedia(capturedVideoUri, null))
                             Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     }
@@ -1357,6 +1336,220 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                     break;
             }
         }// end null check
+    }
+    
+    private void handleMediaGalleryPickerResult(Intent data) {
+        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+        if (ids == null || ids.size() == 0)
+            return;
+        
+        String mediaId = ids.get(0);
+        addExistingMediaToEditor(mediaId);
+    }
+    
+    private void addExistingMediaToEditor(String mediaId) {
+        if (WordPress.getCurrentBlog() == null)
+            return;
+        
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        
+        WPImageSpan imageSpan = prepareWPImageSpan(blogId, mediaId);
+        if (imageSpan == null)
+            return;
+        
+        // based on addMedia()
+
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+        
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+        
+        int line = 0, column = 0;
+        try {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        } catch (Exception ex) {
+        }
+        
+        Editable s = mContentEditText.getText();
+        WPImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+        if (gallerySpans.length != 0) {
+            // insert a few line breaks if the cursor is already on an image
+            s.insert(selectionEnd, "\n\n");
+            selectionStart = selectionStart + 2;
+            selectionEnd = selectionEnd + 2;
+        } else if (column != 0) {
+            // insert one line break if the cursor is not at the first column
+            s.insert(selectionEnd, "\n");
+            selectionStart = selectionStart + 1;
+            selectionEnd = selectionEnd + 1;
+        }
+        
+        s.insert(selectionStart, " ");
+        s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.insert(selectionEnd + 1, "\n\n");
+        try {
+            mContentEditText.setSelection(s.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // load image from server
+        loadWPImageSpanThumbnail(imageSpan);
+    }
+
+    private WPImageSpan prepareWPImageSpan(String blogId, final String mediaId) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+        if (cursor == null || !cursor.moveToFirst())
+            return null; 
+
+        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        if (url == null)
+            return null;
+        
+        Uri uri = Uri.parse(url);
+        WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, R.drawable.remote_image, uri);
+        imageSpan.setMediaId(mediaId);
+        imageSpan.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
+        imageSpan.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+        imageSpan.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+        imageSpan.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
+        imageSpan.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        imageSpan.setMimeType(cursor.getString(cursor.getColumnIndex("mimeType")));
+        imageSpan.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
+        imageSpan.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
+        imageSpan.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
+        
+        boolean isVideo = false;
+        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
+        if (mimeType != null && mimeType.contains("video"))
+            isVideo = true;
+        imageSpan.setVideo(isVideo);
+        cursor.close();
+        
+        return imageSpan;
+    }
+
+    /** Loads the thumbnail url in the imagespan from a server **/
+    private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
+        final String mediaId = imageSpan.getMediaId();
+        final String thumbnailUrl = imageSpan.getThumbnailURL();
+        
+        if (thumbnailUrl == null || mediaId == null)
+            return;
+
+        WordPress.imageLoader.get(thumbnailUrl, new ImageListener() {
+            
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+                
+            }
+            
+            @Override
+            public void onResponse(ImageContainer container, boolean arg1) {
+                if (container.getBitmap() != null) {
+
+                    Bitmap bitmap = container.getBitmap();
+
+                    Editable s = mContentEditText.getText();
+                    WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                    if (spans.length != 0) {
+                        for (WPImageSpan is : spans) {
+                            if (mediaId != null && mediaId.equals(is.getMediaId()) && !is.isNetworkImageLoaded()) {
+                                    
+                                // replace the existing span with a new one with the correct image, re-add it to the same position.
+                                int spanStart = s.getSpanStart(is);
+                                int spanEnd = s.getSpanEnd(is);
+                                WPImageSpan imageSpan = new WPImageSpan(EditPostActivity.this, bitmap, is.getImageSource());
+                                imageSpan.setCaption(is.getCaption());
+                                imageSpan.setDescription(is.getDescription());
+                                imageSpan.setFeatured(is.isFeatured());
+                                imageSpan.setFeaturedInPost(is.isFeaturedInPost());
+                                imageSpan.setHeight(is.getHeight());
+                                imageSpan.setHorizontalAlignment(is.getHorizontalAlignment());
+                                imageSpan.setMediaId(is.getMediaId());
+                                imageSpan.setMimeType(is.getMimeType());
+                                imageSpan.setTitle(is.getTitle());
+                                imageSpan.setVideo(is.isVideo());
+                                imageSpan.setWidth(is.getWidth());
+                                imageSpan.setFileName(is.getFileName());
+                                imageSpan.setThumbnailURL(is.getThumbnailURL());
+                                imageSpan.setDateCreatedGMT(is.getDateCreatedGMT());
+                                imageSpan.setNetworkImageLoaded(true);
+                                s.removeSpan(is);
+                                s.setSpan(imageSpan, spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }, 0, 0);
+        
+    }
+    
+    private void handleMediaGalleryResult(Intent data) {
+        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
+        
+        // if blank gallery returned, don't add to span
+        if (gallery == null || gallery.getIds().size() == 0)
+            return;
+        
+
+        int selectionStart = mContentEditText.getSelectionStart();
+        int selectionEnd = mContentEditText.getSelectionEnd();
+        
+        if (selectionStart > selectionEnd) {
+            int temp = selectionEnd;
+            selectionEnd = selectionStart;
+            selectionStart = temp;
+        }
+        
+        int line = 0, column = 0;
+        try {
+            line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+            column = mContentEditText.getSelectionStart() - mContentEditText.getLayout().getLineStart(line);
+        } catch (Exception ex) {
+        }
+        
+        Editable s = mContentEditText.getText();
+        MediaGalleryImageSpan[] gallerySpans = s.getSpans(selectionStart, selectionEnd, MediaGalleryImageSpan.class);
+        if (gallerySpans.length != 0) {
+            for (int i = 0; i < gallerySpans.length; i++) {
+                if (gallerySpans[i].getMediaGallery().getUniqueId() == gallery.getUniqueId()) {
+                    
+                    // replace the existing span with a new gallery, re-add it to the same position.
+                    gallerySpans[i].setMediaGallery(gallery);
+                    int spanStart = s.getSpanStart(gallerySpans[i]);
+                    int spanEnd = s.getSpanEnd(gallerySpans[i]);
+                    s.setSpan(gallerySpans[i], spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            return;
+        } else if (column != 0) {
+            // insert one line break if the cursor is not at the first column
+            s.insert(selectionEnd, "\n");
+            selectionStart = selectionStart + 1;
+            selectionEnd = selectionEnd + 1;
+        }
+        
+        s.insert(selectionStart, " ");
+        MediaGalleryImageSpan is = new MediaGalleryImageSpan(EditPostActivity.this, gallery);
+        s.setSpan(is, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+        s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.insert(selectionEnd + 1, "\n\n");
+        try {
+            mContentEditText.setSelection(s.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void verifyImage(Uri imageUri) {
@@ -1599,34 +1792,35 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             dialogBuilder.create().show();
         } else {
 
+            
             if (!mIsNew) {
                 // update the images
                 mPost.deleteMediaFiles();
+
                 Editable s = mContentEditText.getText();
                 WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
-
                 if (click_spans.length != 0) {
 
                     for (int i = 0; i < click_spans.length; i++) {
                         WPImageSpan wpIS = click_spans[i];
                         images += wpIS.getImageSource().toString() + ",";
 
-                        MediaFile mf = new MediaFile();
-                        mf.setPostID(mPost.getId());
-                        mf.setTitle(wpIS.getTitle());
-                        mf.setCaption(wpIS.getCaption());
-                        mf.setDescription(wpIS.getDescription());
-                        mf.setFeatured(wpIS.isFeatured());
-                        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
-                        mf.setFileName(wpIS.getImageSource().toString());
-                        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
-                        mf.setWidth(wpIS.getWidth());
-                        mf.save();
+                        if (wpIS.getMediaId() != null) {
+                            updateMediaFileOnServer(wpIS);
+                        }
 
                         int tagStart = s.getSpanStart(wpIS);
-                        if (!isAutoSave) {
+                        if (!isAutoSave) {  
+
                             s.removeSpan(wpIS);
-                            s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                            
+                            // network image has a mediaId 
+                            if (wpIS.getMediaId() != null && wpIS.getMediaId().length() > 0) {
+                                s.insert(tagStart, WPHtml.getContent(wpIS));
+                                
+                            } else { // local image for upload
+                                s.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                            }
                             if (mLocalDraft)
                                 content = WPHtml.toHtml(s);
                             else
@@ -1634,7 +1828,26 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         }
                     }
                 }
+            } else {
+
+                Editable s = mContentEditText.getText();
+                WPImageSpan[] click_spans = s.getSpans(0, s.length(), WPImageSpan.class);
+                
+                // update the description, caption and title of media files on the server
+                if (click_spans.length != 0) {
+
+                    for (int i = 0; i < click_spans.length; i++) {
+                        WPImageSpan wpIS = click_spans[i];
+                        images += wpIS.getImageSource().toString() + ",";
+
+                        if (wpIS.getMediaId() != null) {
+                            updateMediaFileOnServer(wpIS);
+                        }
+                        
+                    }
+                }
             }
+            
 
             final String moreTag = "<!--more-->";
             int selectedStatus = mStatusSpinner.getSelectedItemPosition();
@@ -1699,6 +1912,7 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
                         images += wpIS.getImageSource().toString() + ",";
 
                         MediaFile mf = new MediaFile();
+                        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
                         mf.setPostID(mPost.getId());
                         mf.setTitle(wpIS.getTitle());
                         mf.setCaption(wpIS.getCaption());
@@ -1748,6 +1962,62 @@ public class EditPostActivity extends SherlockActivity implements OnClickListene
             }
         }
         return success;
+    }
+
+    private MediaFile getMediaFileFromWPImageSpan(WPImageSpan wpIS) {
+        MediaFile mf = new MediaFile();
+        mf.setMediaId(wpIS.getMediaId());
+        if (mPost != null)
+            mf.setPostID(mPost.getId());
+        mf.setMIMEType(wpIS.getMimeType());
+        mf.setHeight(wpIS.getHeight());
+        mf.setFileName(wpIS.getFileName());
+        mf.setTitle(wpIS.getTitle());
+        mf.setCaption(wpIS.getCaption());
+        mf.setDescription(wpIS.getDescription());
+        mf.setFeatured(wpIS.isFeatured());
+        mf.setFeaturedInPost(wpIS.isFeaturedInPost());
+        mf.setHorizontalAlignment(wpIS.getHorizontalAlignment());
+        mf.setWidth(wpIS.getWidth());
+        mf.setBlogId(WordPress.getCurrentBlog().getBlogId() + "");
+        mf.setDateCreatedGMT(wpIS.getDateCreatedGMT());
+        mf.save();
+        return mf;
+    }
+    
+
+    private void updateMediaFileOnServer(WPImageSpan wpIS) {
+
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog == null || wpIS == null)
+            return;
+
+        MediaFile mf = getMediaFileFromWPImageSpan(wpIS);
+        
+        final String mediaId = mf.getMediaId();
+        final String title = mf.getTitle();
+        final String description = mf.getDescription();
+        final String caption = mf.getCaption();
+        
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
+                mf.getDescription(), mf.getCaption(), 
+                new ApiHelper.EditMediaItemTask.Callback() {
+
+                    @Override
+                    public void onSuccess() {
+                        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        Toast.makeText(EditPostActivity.this, R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        List<Object> apiArgs = new ArrayList<Object>();
+        apiArgs.add(currentBlog);
+        task.execute(apiArgs);
     }
 
     private class getAddressTask extends AsyncTask<Double, Void, String> {

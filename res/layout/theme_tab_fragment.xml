@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <TextView
+        android:id="@+id/theme_no_search_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/theme_no_search_result_found"
+        android:visibility="gone"
+        android:layout_margin="16dp"/>
+        
+    <GridView
+        android:id="@+id/theme_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:numColumns="@integer/themes_grid_num_columns"
+        android:scrollbarStyle="outsideOverlay"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:stretchMode="columnWidth"
+        android:layout_below="@id/theme_no_search_result_text">
+    </GridView>
+    
+
+
+</RelativeLayout>

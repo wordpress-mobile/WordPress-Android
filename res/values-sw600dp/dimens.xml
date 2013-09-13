@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="add_account_width">480dp</dimen>    
+    <dimen name="graph_font_size">10sp</dimen>
+    <dimen name="share_action_dialog_width">480dp</dimen>
+    <dimen name="comments_moderation_bar_height">104dp</dimen>
+</resources>

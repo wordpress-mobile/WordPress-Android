@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,23 +16,32 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.http.AndroidHttpClient;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gcm.GCMRegistrar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.Oauth;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.WPComXMLRPCApi;
 
-import org.wordpress.android.lockmanager.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Post;
@@ -52,6 +63,7 @@ public class WordPress extends Application {
     public static Comment currentComment;
     public static Post currentPost;
     public static WordPressDB wpDB;
+    public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
@@ -59,7 +71,10 @@ public class WordPress extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
     public static JSONObject latestNotes;
+    public static BitmapLruCache localImageCache;
 
+    private static Context mContext;
+    
     public static final String TAG="WordPress";
 
     @Override
@@ -67,12 +82,19 @@ public class WordPress extends Application {
         versionName = getVersionName();
         wpDB = new WordPressDB(this);
         
+        wpStatsDB = new WordPressStatsDB(this);
+        
+        mContext = this;
+
         // Volley networking setup
-        requestQueue = Volley.newRequestQueue(this);
+        requestQueue = Volley.newRequestQueue(this, getHttpClientStack());
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // Use a small slice of available memory for the image cache
         int cacheSize = maxMemory / 32;
         imageLoader = new ImageLoader(requestQueue, new BitmapLruCache(cacheSize));
+
+        // Volley only caches images from network, not disk, so we'll use this instead for local disk image caching
+        localImageCache = new BitmapLruCache(cacheSize / 2);
         
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
         if (settings.getInt("wp_pref_last_activity", -1) >= 0)
@@ -86,6 +108,10 @@ public class WordPress extends Application {
 
         loadNotifications(this);
         super.onCreate();
+    }
+    
+    public static Context getContext(){
+        return mContext;
     }
     
     public static void registerForCloudMessaging(Context ctx) {
@@ -415,4 +441,66 @@ public class WordPress extends Application {
         currentBlog = null;
         restClient.clearAccessToken();
     }
+    
+    public static String getLoginUrl(Blog blog) {
+        String loginURL = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Map<?, ?> blogOptions = gson.fromJson(blog.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
+            if (homeURLMap != null)
+                loginURL = homeURLMap.get("value").toString();
+        }
+        // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
+        if( loginURL == null ) {
+            if (blog.getUrl().lastIndexOf("/") != -1) {
+                return blog.getUrl().substring(0, blog.getUrl().lastIndexOf("/"))
+                        + "/wp-login.php";
+            } else {
+                return blog.getUrl().replace("xmlrpc.php", "wp-login.php");
+            }
+        }
+        
+        return loginURL;
+    }
+    
+    public static HttpStack getHttpClientStack() {
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            HurlStack stack = new HurlStack() {
+                @Override
+                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError { 
+
+                    HashMap<String, String> authParams = new HashMap<String, String>();
+                    authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                    
+                    headers.putAll(authParams);
+
+                    return super.performRequest(request, headers);
+                }
+            };
+
+            return stack;
+
+        } else {
+            HttpClientStack stack = new HttpClientStack(AndroidHttpClient.newInstance("volley/0")) {
+                @Override
+                public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
+                    throws IOException, AuthFailureError {
+                    
+                    HashMap<String, String> authParams = new HashMap<String, String>();
+                    authParams.put("Authorization", "Bearer " + getWPComAuthToken(mContext));
+                    
+                    headers.putAll(authParams);
+
+                    return super.performRequest(request, headers);
+                }
+            };
+
+            return stack;
+        }
+    }
+    
 }

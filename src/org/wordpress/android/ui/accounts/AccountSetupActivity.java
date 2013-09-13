@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -268,6 +269,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                     final int[] blogIds = new int[result.length];
                     final boolean[] wpcoms = new boolean[result.length];
                     final String[] wpVersions = new String[result.length];
+                    final boolean[] isAdmins = new boolean[result.length];
                     Map<Object, Object> contentHash = new HashMap<Object, Object>();
                     mBlogCtr = 0;
                     // loop this!
@@ -286,6 +288,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             urls[mBlogCtr] = contentHash.get("xmlrpc").toString();
                         homeURLs[mBlogCtr] = contentHash.get("url").toString();
                         blogIds[mBlogCtr] = Integer.parseInt(contentHash.get("blogid").toString());
+                        isAdmins[mBlogCtr] = Boolean.parseBoolean(contentHash.get("isAdmin").toString());
                         String blogURL = urls[mBlogCtr];
 
                         mBlogNames.add(StringUtils.unescapeHTML(blogNames[mBlogCtr].toString()));
@@ -368,7 +371,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                             if (blogID == -1) {
                                                 blogID = WordPress.wpDB.addAccount(urls[rowID], homeURLs[rowID], blogNames[rowID], username, password, mHttpuser,
                                                         mHttppassword, "Above Text", false, false, DEFAULT_IMAGE_SIZE, 20, false, blogIds[rowID],
-                                                        wpcoms[rowID], wpVersions[rowID]);
+                                                        wpcoms[rowID], wpVersions[rowID], isAdmins[rowID]);
                                             }
                                             //Set the first blog in the list to the currentBlog
                                             if (i == 0) {
@@ -392,7 +395,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                                         blogID = WordPress.wpDB.checkMatch(blogNames[i], urls[i], username, password);
                                         if (blogID == -1) {
                                             blogID = WordPress.wpDB.addAccount(urls[i], homeURLs[i], blogNames[i], username, password, mHttpuser, mHttppassword,
-                                                    "Above Text", false, false, DEFAULT_IMAGE_SIZE, 5, false, blogIds[i], wpcoms[i], wpVersions[i]);
+                                                    "Above Text", false, false, DEFAULT_IMAGE_SIZE, 5, false, blogIds[i], wpcoms[i], wpVersions[i], isAdmins[i]);
                                         }
                                         //Set the first blog in the list to the currentBlog
                                         if (i == 0) {
@@ -404,6 +407,13 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
 
                                     setResult(RESULT_OK);
                                     finish();
+                                }
+                            });
+                            dialogBuilder.setOnCancelListener(new OnCancelListener() {
+                                
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    mBlogNames.clear();
                                 }
                             });
                             dialogBuilder.setCancelable(true);
@@ -436,7 +446,7 @@ public class AccountSetupActivity extends Activity implements OnClickListener {
                             blogID = WordPress.wpDB.checkMatch(blogNames[0], urls[0], username, password);
                             if (blogID == -1) {
                                 blogID = WordPress.wpDB.addAccount(urls[0], homeURLs[0], blogNames[0], username, password, mHttpuser, mHttppassword, "Above Text",
-                                    false, false, DEFAULT_IMAGE_SIZE, 5, false, blogIds[0], wpcoms[0], wpVersions[0]);
+                                    false, false, DEFAULT_IMAGE_SIZE, 5, false, blogIds[0], wpcoms[0], wpVersions[0], isAdmins[0]);
                             }
                             if (blogID >= 0) {
                                 WordPress.setCurrentBlog((int) blogID);

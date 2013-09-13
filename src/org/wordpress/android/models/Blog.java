@@ -35,6 +35,7 @@ public class Blog {
     private String httppassword;
     private String postFormats;
     private String blogOptions;
+    private boolean isAdmin;
 
     public Blog(int blog_id) throws Exception{
         //instantiate a new blog
@@ -79,6 +80,8 @@ public class Blog {
                 this.blogOptions = blogVals.get(25).toString();
             else
                 this.blogOptions = "";
+            if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
+                this.setAdmin(true);
         } else {
             throw new Exception();
         }
@@ -270,7 +273,7 @@ public class Blog {
 
     public void save(String originalUsername) {
         //save blog to db
-        WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions );
+        WordPress.wpDB.saveSettings(String.valueOf(this.id), this.url, this.homeURL, this.username, this.password, this.httpuser, this.httppassword, this.imagePlacement, this.featuredImageCapable, this.fullSizeImage, this.maxImageWidth, this.maxImageWidthId, this.location, this.dotcomFlag, originalUsername, this.postFormats, this.dotcom_username, this.dotcom_password, this.api_blogid, this.api_key, this.scaledImage, this.scaledImageWidth, this.blogOptions, this.isAdmin() );
     }
 
     public String getPostFormats() {
@@ -311,5 +314,13 @@ public class Blog {
 
     public boolean isActive() {
         return !password.equals("");
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }
