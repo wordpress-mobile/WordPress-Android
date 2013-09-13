@@ -83,7 +83,12 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
         CheckableFrameLayout frameLayout = ((CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout));
 
         Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
-        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        
+        int mediaIdCol = cursor.getColumnIndex("mediaId");
+        if (mediaIdCol == -1)
+            return;
+        
+        String mediaId = cursor.getString(mediaIdCol);
         
         // run the default behavior if not in multiselect mode
         if (!isInMultiSelectMode()) {            

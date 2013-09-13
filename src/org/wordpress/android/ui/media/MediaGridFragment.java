@@ -43,6 +43,7 @@ import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.util.Utils;
 
 /**
  * The grid displaying the media items. 
@@ -291,6 +292,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener, 
     @Override
     public void onResume() {
         super.onResume();
+
+        if (!Utils.isNetworkAvailable())
+            mHasRetrievedAllMedia = true;
+        
         refreshSpinnerAdapter();
         refreshMediaFromDB();
     }
