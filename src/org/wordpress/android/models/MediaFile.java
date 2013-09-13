@@ -55,7 +55,7 @@ public class MediaFile {
         // assume no https for images in self-hosted blogs
         String fileUrl = resultMap.get("link").toString();
         if (isDotCom)
-            fileUrl.replace("http:", "https:"); 
+            fileUrl = fileUrl.replace("http:", "https:"); 
         setFileURL(fileUrl);
         
         String thumbnailURL = resultMap.get("thumbnail").toString();
