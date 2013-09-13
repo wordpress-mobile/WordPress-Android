@@ -1,0 +1,111 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.5.+'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
+}
+
+dependencies {
+    // Provided by maven central
+    compile 'com.google.code.gson:gson:2.2.2'
+    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+    compile 'com.android.support:support-v4:18.0.+'
+
+    // These are provided by the WordPress-Android Repository
+    compile 'org.wordpress:actionbarsherlock:4.4.0'
+    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
+    compile 'org.wordpress:gcm:1.0.0'
+    compile 'org.wordpress:volley:wp-0.0.1'
+    compile 'com.automattic:wordpresscom-rest:0.0.3'
+    compile 'org.wordpress:httpmime:4.1.2'
+    compile 'org.wordpress:graphview:3.1'
+    compile 'org.wordpress:drag-sort-listview:0.6.1'
+    compile 'org.wordpress:slidinguppanel:1.0.0'
+    compile 'org.wordpress:android-passcodelock:0.0.1'
+}
+
+android {
+
+    compileSdkVersion 18
+    buildToolsVersion "18.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+
+}
+
+// Generates the Config.java class using properties defined in gradle.properties
+// or by other means provided by Gradle
+task wordpressConfig(group: "build", description: "Generate Config class") {
+    def dir = "${buildDir}/source/wordpress"
+    def file = new File(dir, "org/wordpress/android/Config.java")
+    android {
+        sourceSets {
+            main {
+                java {
+                    srcDir dir
+                }
+            }
+        }
+    }
+    outputs.file file
+    doLast {
+        file.getParentFile().mkdirs()
+        def properties = new Properties()
+        new File("${rootDir}/local.properties").withInputStream { stream ->
+            properties.load(stream)
+        }
+        def constants = [:]
+        properties.propertyNames().each { property ->
+            def keys = property.tokenize('.')
+            if (keys[0] == 'wp') {
+                def name = property.tokenize('.')[1..-1].collect { key -> key.toUpperCase()}.join('_')
+                constants[name] = properties.getProperty(property)
+            }
+        }
+        def writer = new FileWriter(file)
+        def config = constants.inject("") { consts, name, val ->
+            consts + "   public static final String ${name} = \"${val}\";\n"
+        }
+        writer.write("""/* auto-generated file do not modify */
+package org.wordpress.android;
+
+public final class Config {
+
+${config}
+}
+""")
+        writer.close()
+    }
+}
+
+// Add the wordpressConfig task to every flavor's compile tasks
+android.buildTypes.all { buildType ->
+    def name = "compile${buildType.name.capitalize()}"
+    tasks.whenTaskAdded { task ->
+        if (task.name == name) {
+            task.dependsOn(wordpressConfig)
+            task.mustRunAfter(wordpressConfig)
+        }
+    }
+}

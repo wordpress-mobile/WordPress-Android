@@ -19,8 +19,6 @@
     <color name="md__shadowColor">#99000000</color>
     
     <color name="wordpress_blue">#21759B</color>
-    <color name="light_gray">#E5E5E5</color>
-    <color name="gray">#CCC</color>
     
     <!-- Media Gallery colors -->
     <color name="media_gallery_grid_label_bg">#B3000000</color>

@@ -121,7 +121,6 @@ public class OldStatsActivity extends WPActionBarActivity {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setPluginsEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setSavePassword(false);
         clearCookies();
