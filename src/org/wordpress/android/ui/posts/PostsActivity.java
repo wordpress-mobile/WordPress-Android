@@ -80,7 +80,18 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null
                 && !(this instanceof PagesActivity)) {
             // Refresh blog content when returning to the app
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog()).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), new ApiHelper.RefreshBlogContentTask.Callback() {
+                @Override
+                public void onSuccess() {
+                    if (!isFinishing())
+                        updateMenuDrawer();
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            }).execute(false);
             
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -298,7 +309,7 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         int itemId = item.getItemId();
         if (itemId == R.id.menu_refresh) {
             checkForLocalChanges(true);
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
             return true;
         } else if (itemId == R.id.menu_new_post) {
             Intent i = new Intent(this, EditPostActivity.class);
@@ -863,6 +874,6 @@ public class PostsActivity extends WPActionBarActivity implements OnPostSelected
         popPostDetail();
         attemptToSelectPost();
         postList.loadPosts(false);
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog).execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.currentBlog, null).execute(false);
     }
 }

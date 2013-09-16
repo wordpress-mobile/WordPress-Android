@@ -402,7 +402,7 @@ public class PostsListFragment extends ListFragment {
             if (loadedPosts == null) {
                 refreshPosts(false);
                 if (!isPage)
-                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog()).execute(false);
+                    new ApiHelper.RefreshBlogContentTask(getActivity(), WordPress.getCurrentBlog(), null).execute(false);
             }
 
             return false;

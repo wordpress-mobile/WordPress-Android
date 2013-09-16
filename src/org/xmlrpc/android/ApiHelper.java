@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.HttpRequest;
 import org.wordpress.android.util.HttpRequest.HttpRequestException;
@@ -152,7 +153,6 @@ public class ApiHelper {
             }
 
             return result;
-
         }
 
     }
@@ -163,21 +163,30 @@ public class ApiHelper {
      */
     public static class RefreshBlogContentTask extends AsyncTask<Boolean, Void, Boolean> {
         /** Blog being refresh. */
-        private Blog blog;
+        private Blog mBlog;
 
         /** Application context. */
-        private Context context;
+        private Context mContext;
 
-        public RefreshBlogContentTask(Context context, Blog blog) {
-            this.blog = blog;
-            this.context = context;
+        /** Callback */
+        public interface Callback {
+            public void onSuccess();
+            public void onFailure();
+        }
+
+        private Callback mCallback;
+
+        public RefreshBlogContentTask(Context context, Blog blog, Callback callback) {
+            mBlog = blog;
+            mContext = context;
+            mCallback = callback;
         }
 
         @Override
         protected Boolean doInBackground(Boolean... params) {
             boolean commentsOnly = params[0];
-            XMLRPCClient client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(),
-                    blog.getHttppassword());
+            XMLRPCClient client = new XMLRPCClient(mBlog.getUrl(), mBlog.getHttpuser(),
+                    mBlog.getHttppassword());
 
             if (!commentsOnly) {
                 // check the WP number if self-hosted
@@ -191,7 +200,7 @@ public class ApiHelper {
                 hPost.put("login_url", "login_url");
                 
                 Object[] vParams = {
-                        blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost
+                        mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword(), hPost
                 };
                 Object versionResult = new Object();
                 try {
@@ -206,14 +215,14 @@ public class ApiHelper {
                         Gson gson = new Gson();
                         String blogOptionsJson = gson.toJson(blogOptions);
                         if (blogOptionsJson != null)
-                            blog.setBlogOptions(blogOptionsJson);
+                            mBlog.setBlogOptions(blogOptionsJson);
 
                         // Software version
-                        if (!blog.isDotcomFlag()) {
+                        if (!mBlog.isDotcomFlag()) {
                             Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
                             String wpVersion = sv.get("value").toString();
                             if (wpVersion.length() > 0) {
-                                blog.setWpVersion(wpVersion);
+                                mBlog.setWpVersion(wpVersion);
                             }
                         }
                         // Featured image support
@@ -222,37 +231,68 @@ public class ApiHelper {
                         if (featuredImageHash != null) {
                             boolean featuredImageCapable = Boolean.parseBoolean(featuredImageHash
                                     .get("value").toString());
-                            blog.setFeaturedImageCapable(featuredImageCapable);
+                            mBlog.setFeaturedImageCapable(featuredImageCapable);
                         } else {
-                            blog.setFeaturedImageCapable(false);
+                            mBlog.setFeaturedImageCapable(false);
                         }
                         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isActive())
-                            blog.save("");
+                            mBlog.save("");
                     } catch (Exception e) {
                     }
                 }
 
                 // get theme post formats
                 List<Object> args = new Vector<Object>();
-                args.add(blog);
-                args.add(context);
+                args.add(mBlog);
+                args.add(mContext);
                 new ApiHelper.getPostFormatsTask().execute(args);
+            }
+
+            // Check if user is an admin
+            Object[] userParams = {
+                    mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword()
+            };
+            try {
+                Map<String, Object> userInfo = (HashMap<String, Object>) client.call("wp.getProfile", userParams);
+                if (userInfo.containsKey("roles")) {
+                    Object[] userRoles = (Object[])userInfo.get("roles");
+                    mBlog.setAdmin(false);
+                    for (int i = 0; i < userRoles.length; i++) {
+                        if (userRoles[i].toString().equals("administrator")) {
+                            mBlog.setAdmin(true);
+                            break;
+                        }
+                    }
+                    mBlog.save("");
+                }
+            } catch (XMLRPCException e) {
+                return false;
             }
 
             // refresh the comments
             Map<String, Object> hPost = new HashMap<String, Object>();
             hPost.put("number", 30);
             Object[] commentParams = {
-                    blog.getBlogId(), blog.getUsername(), blog.getPassword(), hPost
+                    mBlog.getBlogId(), mBlog.getUsername(), mBlog.getPassword(), hPost
             };
 
             try {
-                ApiHelper.refreshComments(context, commentParams);
+                ApiHelper.refreshComments(mContext, commentParams);
             } catch (XMLRPCException e) {
                 return false;
             }
 
             return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if(mCallback != null) {
+                if(!success)
+                    mCallback.onFailure();
+                else
+                    mCallback.onSuccess();
+            }
         }
     }
 
@@ -872,5 +912,4 @@ public class ApiHelper {
             return null;
         }
     }
-
 }
