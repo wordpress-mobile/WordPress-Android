@@ -61,7 +61,12 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
         
         TextView followersHeader = (TextView) view.findViewById(R.id.stats_totals_followers_shares_header_followers);
         if (followersHeader != null) {
-            followersHeader.setText(Html.fromHtml(getString(R.string.stats_totals_followers_shares_header_followers_publicize)));
+            String headerText = getString(R.string.stats_totals_followers_shares_header_followers) +
+                    " <font color=\"#9E9E9E\">(" +
+                    String.format(getString(R.string.stats_totals_followers_shares_header_includes_publicize),
+                    "</font><font color=\"#21759B\"><a href=\"http://support.wordpress.com/publicize/\">") +
+                    "</font><font color=\"#9E9E9E\">)</font>";
+            followersHeader.setText(Html.fromHtml(headerText));
             followersHeader.setMovementMethod(LinkMovementMethod.getInstance());
         }
         
