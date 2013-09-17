@@ -111,8 +111,6 @@
     <string name="media_add_popup_title">Add to Media Library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
-    <string name="media_add_popup_pick_photo_from_gallery">Pick photo from gallery</string>
-    <string name="media_add_popup_pick_video_from_gallery">Pick video from gallery</string>
     <string name="media_add_new_media_gallery">New Media Gallery</string>
 
     <!-- Media Gallery -->
@@ -314,9 +312,7 @@
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
-    <string name="take_photo">Take a new photo</string>
     <string name="select_video">Select a video from gallery</string>
-    <string name="take_video">Take a new video</string>
     <string name="media_remove_from_queue">Remove from queue</string>
     <string name="select_from_media_library">Select from Media Library</string>
 
