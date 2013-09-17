@@ -30,7 +30,7 @@ dependencies {
     compile 'org.wordpress:graphview:3.1'
     compile 'org.wordpress:drag-sort-listview:0.6.1'
     compile 'org.wordpress:slidinguppanel:1.0.0'
-    compile 'org.wordpress:android-passcodelock:0.0.1'
+    compile 'org.wordpress:android-passcodelock:0.0.3'
 }
 
 android {
