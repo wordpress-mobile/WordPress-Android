@@ -40,8 +40,6 @@ public class WordPressDB {
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer, lastCommentId integer, runService boolean);";
-    private static final String CREATE_TABLE_EULA = "create table if not exists eula (id integer primary key autoincrement, "
-            + "read integer not null, interval text, statsdate integer);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
     private static final String SETTINGS_TABLE = "accounts";
@@ -62,32 +60,18 @@ public class WordPressDB {
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
             + "themeId text, name text, description text, screenshotURL text, trendingRank integer default 0, popularityRank integer default 0, launchDate date, previewURL text, blogId text, isCurrent boolean default false, isPremium boolean default false, features text);";
-    
-    // eula
-    private static final String EULA_TABLE = "eula";
 
     // categories
     private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
             + "blog_id text, wp_id integer, category_name text not null);";
     private static final String CATEGORIES_TABLE = "cats";
 
-    // for capturing blogID, trac ticket #
+    // for capturing blogID
     private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
     private static final String UPDATE_BLOGID = "update accounts set blogId = 1;";
 
-    // add notification options
-    private static final String ADD_SOUND_OPTION = "alter table eula add sound boolean default false;";
-    private static final String ADD_VIBRATE_OPTION = "alter table eula add vibrate boolean default false;";
-    private static final String ADD_LIGHT_OPTION = "alter table eula add light boolean default false;";
-    private static final String ADD_TAGLINE = "alter table eula add tagline text;";
-    private static final String ADD_TAGLINE_FLAG = "alter table eula add tagline_flag boolean default false;";
-
     // for capturing blogID, trac ticket #
     private static final String ADD_LOCATION_FLAG = "alter table accounts add location boolean default false;";
-
-    // fix commentID data type
-    private static final String ADD_NEW_COMMENT_ID = "ALTER TABLE comments ADD iCommentID INTEGER;";
-    private static final String COPY_COMMENT_IDS = "UPDATE comments SET iCommentID = commentID;";
 
     // add wordpress.com stats login info
     private static final String ADD_DOTCOM_USERNAME = "alter table accounts add dotcom_username text;";
@@ -103,15 +87,9 @@ public class WordPressDB {
     private static final String ADD_HTTPUSER = "alter table accounts add httpuser text;";
     private static final String ADD_HTTPPASSWORD = "alter table accounts add httppassword text;";
 
-    // add new unique identifier to no longer use device imei
-    private static final String ADD_UNIQUE_ID = "alter table eula add uuid text;";
-
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
     private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
-
-    // add field to store last used blog
-    private static final String ADD_LAST_BLOG_ID = "alter table eula add last_blog_id text;";
 
     // add field to store last used blog
     private static final String ADD_POST_FORMATS = "alter table accounts add postFormats text default '';";
@@ -149,8 +127,6 @@ public class WordPressDB {
 
     protected static final String PASSWORD_SECRET = Config.DB_SECRET;
 
-    public String defaultBlog = "";
-
     private Context context;
 
     public WordPressDB(Context ctx) {
@@ -163,446 +139,80 @@ public class WordPressDB {
             return;
         }
 
-        // db.execSQL("DROP TABLE IF EXISTS "+ SETTINGS_TABLE);
+        // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_SETTINGS);
-        // added eula to this class to fix trac #49
-        db.execSQL(CREATE_TABLE_EULA);
-
         db.execSQL(CREATE_TABLE_POSTS);
         db.execSQL(CREATE_TABLE_COMMENTS);
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
-        
+        db.execSQL(CREATE_TABLE_THEMES);
+
+        // Update tables for new installs and app updates
         try {
-            if (db.getVersion() < 1) { // user is new install
-                db.execSQL(ADD_BLOGID);
-                db.execSQL(UPDATE_BLOGID);
-                db.execSQL(ADD_SOUND_OPTION);
-                db.execSQL(ADD_VIBRATE_OPTION);
-                db.execSQL(ADD_LIGHT_OPTION);
-                db.execSQL(ADD_LOCATION_FLAG);
-                db.execSQL(ADD_TAGLINE);
-                db.execSQL(ADD_TAGLINE_FLAG);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
-                db.execSQL(ADD_MEDIA_FILE_URL);
-                db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
-                db.execSQL(ADD_MEDIA_UNIQUE_ID);
-                db.execSQL(ADD_MEDIA_BLOG_ID);
-                db.execSQL(ADD_MEDIA_DATE_GMT);
-                db.execSQL(ADD_MEDIA_UPLOAD_STATE);
-                db.execSQL(CREATE_TABLE_THEMES);
-                migratePasswords();
-                db.setVersion(DATABASE_VERSION); // set to latest revision
-            } else if (db.getVersion() == 1) { // v1.0 or v1.0.1
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_BLOGID);
-                db.execSQL(UPDATE_BLOGID);
-                db.execSQL(ADD_SOUND_OPTION);
-                db.execSQL(ADD_VIBRATE_OPTION);
-                db.execSQL(ADD_LIGHT_OPTION);
-                db.execSQL(ADD_LOCATION_FLAG);
-                db.execSQL(ADD_TAGLINE);
-                db.execSQL(ADD_TAGLINE_FLAG);
-                db.execSQL(ADD_NEW_COMMENT_ID);
-                db.execSQL(COPY_COMMENT_IDS);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 2) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_SOUND_OPTION);
-                db.execSQL(ADD_VIBRATE_OPTION);
-                db.execSQL(ADD_LIGHT_OPTION);
-                db.execSQL(ADD_LOCATION_FLAG);
-                db.execSQL(ADD_TAGLINE);
-                db.execSQL(ADD_TAGLINE_FLAG);
-                db.execSQL(ADD_NEW_COMMENT_ID);
-                db.execSQL(COPY_COMMENT_IDS);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 3) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_LOCATION_FLAG);
-                db.execSQL(ADD_TAGLINE);
-                db.execSQL(ADD_TAGLINE_FLAG);
-                db.execSQL(ADD_NEW_COMMENT_ID);
-                db.execSQL(COPY_COMMENT_IDS);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 4) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_LOCATION_FLAG);
-                db.execSQL(ADD_TAGLINE);
-                db.execSQL(ADD_TAGLINE_FLAG);
-                db.execSQL(ADD_NEW_COMMENT_ID);
-                db.execSQL(COPY_COMMENT_IDS);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 5) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_TAGLINE);
-                db.execSQL(ADD_TAGLINE_FLAG);
-                db.execSQL(ADD_NEW_COMMENT_ID);
-                db.execSQL(COPY_COMMENT_IDS);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 6) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_NEW_COMMENT_ID);
-                db.execSQL(COPY_COMMENT_IDS);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 7) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_UNIQUE_ID);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 8) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 9) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePasswords();
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 10) {
-                db.delete(POSTS_TABLE, null, null);
-                db.execSQL(CREATE_TABLE_POSTS);
-
-                try {
-                    // migrate drafts
-
-                    Cursor c = db.query("localdrafts", new String[] { "blogID",
-                            "title", "content", "picturePaths", "date",
-                            "categories", "tags", "status", "password",
-                            "latitude", "longitude" }, null, null, null, null,
-                            "id desc");
-                    int numRows = c.getCount();
-                    c.moveToFirst();
-
-                    for (int i = 0; i < numRows; ++i) {
-                        if (c.getString(0) != null) {
-                            Post post = new Post(c.getInt(0), c.getString(1),
-                                    c.getString(2), "", c.getString(3),
-                                    c.getLong(4), c.getString(5),
-                                    c.getString(6), c.getString(7),
-                                    c.getString(8), c.getDouble(9),
-                                    c.getDouble(10), false, "", false, false);
-                            post.setLocalDraft(true);
-                            post.setPost_status("localdraft");
-                            savePost(post, c.getInt(0));
-                        }
-                        c.moveToNext();
-                    }
-                    c.close();
-
-                    db.delete("localdrafts", null, null);
-
-                    // pages
-                    c = db.query("localpagedrafts", new String[] { "blogID",
-                            "title", "content", "picturePaths", "date",
-                            "status", "password" }, null, null, null, null,
-                            "id desc");
-                    numRows = c.getCount();
-                    c.moveToFirst();
-
-                    for (int i = 0; i < numRows; ++i) {
-                        if (c.getString(0) != null) {
-                            Post post = new Post(c.getInt(0), c.getString(1),
-                                    c.getString(2), "", c.getString(3),
-                                    c.getLong(4), c.getString(5), "", "",
-                                    c.getString(6), 0, 0, true, "", false, false);
-                            post.setLocalDraft(true);
-                            post.setPost_status("localdraft");
-                            post.setPage(true);
-                            savePost(post, c.getInt(0));
-                        }
-                        c.moveToNext();
-                    }
-                    c.close();
-                    db.delete("localpagedrafts", null, null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                db.execSQL(ADD_LAST_BLOG_ID);
-                db.execSQL(ADD_POST_FORMATS);
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 11) {
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
-                db.execSQL(ADD_LOCAL_POST_CHANGES);
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 12) {
-                db.execSQL(ADD_FEATURED_IN_POST);
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 13) {
-                db.execSQL(ADD_HOME_URL);
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 14) {
-                db.execSQL(ADD_BLOG_OPTIONS);
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 15) {
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migratePreferences(ctx);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 16) {
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                migrateWPComAccount();
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 17) {
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
-                db.setVersion(DATABASE_VERSION);
-            } else if (db.getVersion() == 18) {
-                db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
-                db.execSQL(ADD_MEDIA_FILE_URL);
-                db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
-                db.execSQL(ADD_MEDIA_UNIQUE_ID);
-                db.execSQL(ADD_MEDIA_BLOG_ID);
-                db.execSQL(ADD_MEDIA_DATE_GMT);
-                db.execSQL(ADD_MEDIA_UPLOAD_STATE);
-                db.execSQL(CREATE_TABLE_THEMES);
-                db.setVersion(DATABASE_VERSION);
+            int currentVersion = db.getVersion();
+            switch (currentVersion) {
+                case 0:
+                    // New install
+                    currentVersion++;
+                case 1:
+                    // Add columns that were added in very early releases, then move on to version 9
+                    db.execSQL(ADD_BLOGID);
+                    db.execSQL(UPDATE_BLOGID);
+                    db.execSQL(ADD_LOCATION_FLAG);
+                    db.execSQL(ADD_DOTCOM_USERNAME);
+                    db.execSQL(ADD_DOTCOM_PASSWORD);
+                    db.execSQL(ADD_API_KEY);
+                    db.execSQL(ADD_API_BLOGID);
+                    db.execSQL(ADD_DOTCOM_FLAG);
+                    db.execSQL(ADD_WP_VERSION);
+                    currentVersion = 9;
+                case 9:
+                    db.execSQL(ADD_HTTPUSER);
+                    db.execSQL(ADD_HTTPPASSWORD);
+                    migratePasswords();
+                    currentVersion++;
+                case 10:
+                    db.delete(POSTS_TABLE, null, null);
+                    db.execSQL(CREATE_TABLE_POSTS);
+                    migrateDrafts();
+                    db.execSQL(ADD_POST_FORMATS);
+                    currentVersion++;
+                case 11:
+                    db.execSQL(ADD_SCALED_IMAGE);
+                    db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
+                    db.execSQL(ADD_LOCAL_POST_CHANGES);
+                    currentVersion++;
+                case 12:
+                    db.execSQL(ADD_FEATURED_IN_POST);
+                    currentVersion++;
+                case 13:
+                    db.execSQL(ADD_HOME_URL);
+                    currentVersion++;
+                case 14:
+                    db.execSQL(ADD_BLOG_OPTIONS);
+                    currentVersion++;
+                case 15:
+                    // No longer used (preferences migration)
+                    currentVersion++;
+                case 16:
+                    migrateWPComAccount();
+                    currentVersion++;
+                case 17:
+                    db.execSQL(ADD_PARENTID_IN_CATEGORIES);
+                    currentVersion++;
+                case 18:
+                    db.execSQL(ADD_ACCOUNTS_ADMIN_FLAG);
+                    db.execSQL(ADD_MEDIA_FILE_URL);
+                    db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
+                    db.execSQL(ADD_MEDIA_UNIQUE_ID);
+                    db.execSQL(ADD_MEDIA_BLOG_ID);
+                    db.execSQL(ADD_MEDIA_DATE_GMT);
+                    db.execSQL(ADD_MEDIA_UPLOAD_STATE);
             }
+            db.setVersion(DATABASE_VERSION);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-
-    }
-
-    private void migratePreferences(Context ctx) {
-        // Migrate preferences out of the db
-        Map<?, ?> notificationOptions = getNotificationOptions();
-        if (notificationOptions != null) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-            SharedPreferences.Editor editor = settings.edit();
-            String interval = getInterval();
-            if (interval != "") {
-                editor.putString("wp_pref_notifications_interval", interval);
-            }
-            editor.putBoolean("wp_pref_notification_sound", (notificationOptions.get("sound").toString().equals("1")) ? true : false);
-            editor.putBoolean("wp_pref_notification_vibrate", (notificationOptions.get("vibrate").toString().equals("1")) ? true : false);
-            editor.putBoolean("wp_pref_notification_light", (notificationOptions.get("light").toString().equals("1")) ? true : false);
-            editor.putBoolean("wp_pref_signature_enabled", (notificationOptions.get("tagline_flag").toString().equals("1")) ? true : false);
-
-            String tagline = notificationOptions.get("tagline").toString();
-            if (tagline != "") {
-                editor.putString("wp_pref_post_signature", tagline);
-            }
-            editor.commit();
         }
     }
     
@@ -622,6 +232,63 @@ public class WordPressDB {
         }
         
         c.close();
+    }
+
+    private void migrateDrafts() {
+        try {
+            // Migrate drafts to unified posts table
+            Cursor c = db.query("localdrafts", new String[] { "blogID",
+                    "title", "content", "picturePaths", "date",
+                    "categories", "tags", "status", "password",
+                    "latitude", "longitude" }, null, null, null, null,
+                    "id desc");
+            int numRows = c.getCount();
+            c.moveToFirst();
+
+            for (int i = 0; i < numRows; ++i) {
+                if (c.getString(0) != null) {
+                    Post post = new Post(c.getInt(0), c.getString(1),
+                            c.getString(2), "", c.getString(3),
+                            c.getLong(4), c.getString(5),
+                            c.getString(6), c.getString(7),
+                            c.getString(8), c.getDouble(9),
+                            c.getDouble(10), false, "", false, false);
+                    post.setLocalDraft(true);
+                    post.setPost_status("localdraft");
+                    savePost(post, c.getInt(0));
+                }
+                c.moveToNext();
+            }
+            c.close();
+
+            db.delete("localdrafts", null, null);
+
+            // pages
+            c = db.query("localpagedrafts", new String[] { "blogID",
+                    "title", "content", "picturePaths", "date",
+                    "status", "password" }, null, null, null, null,
+                    "id desc");
+            numRows = c.getCount();
+            c.moveToFirst();
+
+            for (int i = 0; i < numRows; ++i) {
+                if (c.getString(0) != null) {
+                    Post post = new Post(c.getInt(0), c.getString(1),
+                            c.getString(2), "", c.getString(3),
+                            c.getLong(4), c.getString(5), "", "",
+                            c.getString(6), 0, 0, true, "", false, false);
+                    post.setLocalDraft(true);
+                    post.setPost_status("localdraft");
+                    post.setPage(true);
+                    savePost(post, c.getInt(0));
+                }
+                c.moveToNext();
+            }
+            c.close();
+            db.delete("localpagedrafts", null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public long addAccount(String url, String homeURL, String blogName, String username,
@@ -994,77 +661,6 @@ public class WordPressDB {
         if (returnValue) {
         }
 
-    }
-
-    public void updateNotificationSettings(String interval, boolean sound,
-            boolean vibrate, boolean light, boolean tagline_flag, String tagline) {
-
-        ContentValues values = new ContentValues();
-        values.put("interval", interval);
-        values.put("sound", sound);
-        values.put("vibrate", vibrate);
-        values.put("light", light);
-        values.put("tagline_flag", tagline_flag);
-        values.put("tagline", tagline);
-
-        boolean returnValue = db.update(EULA_TABLE, values, null, null) > 0;
-        if (returnValue) {
-        }
-        ;
-
-    }
-
-    public String getInterval() {
-
-        Cursor c = db.query("eula", new String[] { "interval" }, "id=0", null,
-                null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        String returnValue = "";
-        if (numRows == 1) {
-            if (c.getString(0) != null) {
-                returnValue = c.getString(0);
-            }
-        }
-        c.close();
-
-        return returnValue;
-
-    }
-
-    public Map<String, Object> getNotificationOptions() {
-
-        Cursor c = db.query(EULA_TABLE, new String[] { "id", "sound", "vibrate",
-                "light", "tagline_flag", "tagline" }, "id=0", null, null, null,
-                null);
-        int sound, vibrate, light;
-        String tagline;
-        Map<String, Object> thisHash = new HashMap<String, Object>();
-        int numRows = c.getCount();
-        if (numRows >= 1) {
-            c.moveToFirst();
-
-            sound = c.getInt(1);
-            vibrate = c.getInt(2);
-            light = c.getInt(3);
-            tagline = c.getString(5);
-            thisHash.put("sound", sound);
-            thisHash.put("vibrate", vibrate);
-            thisHash.put("light", light);
-            thisHash.put("tagline_flag", c.getInt(4));
-            if (tagline != null) {
-                thisHash.put("tagline", tagline);
-            } else {
-                thisHash.put("tagline", "");
-            }
-
-        } else {
-            return null;
-        }
-
-        c.close();
-
-        return thisHash;
     }
 
     /**
@@ -1580,35 +1176,7 @@ public class WordPressDB {
 
     }
 
-    // eula table
-
-    public void setStatsDate() {
-
-        ContentValues values = new ContentValues();
-        values.put("statsdate", System.currentTimeMillis()); // set to current
-                                                                // time
-        synchronized (this) {
-            db.update(EULA_TABLE, values, "id=0", null);
-        }
-
-    }
-
-    public long getStatsDate() {
-
-        Cursor c = db.query(EULA_TABLE, new String[] { "statsdate" }, "id=0",
-                null, null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        long returnValue = 0;
-        if (numRows == 1) {
-            returnValue = c.getLong(0);
-        }
-        c.close();
-
-        return returnValue;
-    }
-
-    // categories
+    // Categories
     public boolean insertCategory(int id, int wp_id, int parent_id, String category_name) {
 
         ContentValues values = new ContentValues();
@@ -1676,35 +1244,6 @@ public class WordPressDB {
 
         // clear out the table since we are refreshing the whole enchilada
         db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
-
-    }
-
-    // unique identifier queries
-    public void updateUUID(String uuid) {
-
-        ContentValues values = new ContentValues();
-        values.put("uuid", uuid);
-        synchronized (this) {
-            db.update("eula", values, null, null);
-        }
-
-    }
-
-    public String getUUID() {
-
-        Cursor c = db.query("eula", new String[] { "uuid" }, "id=0", null,
-                null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        String returnValue = "";
-        if (numRows == 1) {
-            if (c.getString(0) != null) {
-                returnValue = c.getString(0);
-            }
-        }
-        c.close();
-
-        return returnValue;
 
     }
 
