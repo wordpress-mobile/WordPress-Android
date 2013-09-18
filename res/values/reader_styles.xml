@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- activity themes -->
+    <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
+        <item name="android:windowAnimationStyle">@style/Animation.ReaderPopup</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <!-- window animations -->
+    <style name="Animation" />
+    <style name="Animation.ReaderPopup">
+        <item name="android:windowEnterAnimation">@anim/reader_flyin</item>
+        <item name="android:windowExitAnimation">@anim/reader_flyout</item>
+    </style>
+
+    <!-- TextViews -->
+    <style name="ReaderTextView" parent="android:Widget.TextView">
+        <item name="android:textColorLink">@color/reader_hyperlink</item>
+    </style>
+    <style name="ReaderTextView.Nux" parent="ReaderTextView">
+        <item name="android:textColor">@color/blue_medium</item>
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
+    </style>
+    <style name="ReaderTextView.Label" parent="ReaderTextView">
+        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textSize">@dimen/reader_text_sz_small</item>
+    </style>
+    <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+    </style>
+    <style name="ReaderTextView.Source" parent="ReaderTextView">
+        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textSize">@dimen/reader_text_sz_small</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">middle</item>
+        <!-- don't remove this - see https://code.google.com/p/android/issues/detail?id=33868 -->
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ReaderTextView.Source.Large" parent="ReaderTextView.Source">
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+    </style>
+    <style name="ReaderTextView.DialogTitle" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_extra_large</item>
+        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:layout_margin">@dimen/reader_margin_medium</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="ReaderTextView.DialogSubTitle" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
+        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
+        <item name="android:textColor">@color/grey_extra_dark</item>
+        <item name="android:maxLines">3</item>
+    </style>
+    <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
+        <item name="android:textSize">@dimen/reader_text_sz_extra_large</item>
+        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:maxLines">5</item>
+    </style>
+    <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:maxLines">4</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="ReaderTextView.Date" parent="ReaderTextView">
+        <item name="android:textSize">@dimen/reader_text_sz_small</item>
+        <item name="android:textColor">@color/grey_medium</item>
+    </style>
+    <style name="ReaderTextView.Comment.Title" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/blue_extra_dark</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+    </style>
+    <style name="ReaderTextView.Comment.Text" parent="ReaderTextView">
+        <item name="android:autoLink">web</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+    <style name="ReaderTextView.Action" parent="ReaderTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/blue_medium</item>
+    </style>
+    <style name="ReaderTextView.Count" parent="ReaderTextView.Action">
+        <item name="android:textColor">@color/grey_medium</item>
+    </style>
+    <style name="ReaderTextView.ActionButton" parent="ReaderTextView">
+        <item name="android:background">@drawable/reader_button_action_selector</item>
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+        <item name="android:textColor">@color/blue_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/reader_margin_medium</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_medium</item>
+        <item name="android:paddingLeft">@dimen/reader_margin_small</item>
+        <item name="android:paddingRight">@dimen/reader_margin_small</item>
+        <item name="android:layout_marginLeft">@dimen/reader_margin_extra_small</item>
+        <item name="android:layout_marginRight">@dimen/reader_margin_extra_small</item>
+        <item name="android:layout_marginTop">@dimen/reader_margin_extra_small</item>
+        <item name="android:layout_marginBottom">@dimen/reader_margin_extra_small</item>
+    </style>
+    <style name="ReaderTextView.ActionButton.Small" parent="ReaderTextView.ActionButton">
+        <item name="android:textSize">@dimen/reader_text_sz_small</item>
+        <item name="android:paddingTop">@dimen/reader_margin_small</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_small</item>
+    </style>
+    <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/grey_medium</item>
+    </style>
+    <style name="ReaderTextView.MessageBar" parent="ReaderTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/reader_margin_large</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_large</item>
+        <item name="android:background">@color/reader_message_bar_blue</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
+    </style>
+
+    <!-- EditTexts -->
+    <style name="ReaderEditText" parent="android:Widget.EditText">
+        <item name="android:textSize">@dimen/reader_text_sz_large</item>
+        <item name="android:textColorHint">@color/grey_medium</item>
+    </style>
+    <style name="ReaderEditText.Comment" parent="ReaderEditText">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:inputType">text|textCapSentences|textMultiLine</item>
+        <item name="android:lines">4</item>
+        <item name="android:imeOptions">actionSend</item>
+    </style>
+    <style name="ReaderEditText.Topic" parent="ReaderEditText">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:padding">@dimen/reader_margin_medium</item>
+        <item name="android:inputType">text|textCapWords</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:maxLength">@integer/reader_max_length_topic_name</item>
+    </style>
+
+    <!-- ListViews -->
+    <style name="ReaderListView" parent="android:Widget.ListView">
+        <item name="android:scrollbars">none</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    <style name="ReaderListView.NoDivider" parent="ReaderListView">
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+    <style name="ReaderListView.Posts" parent="ReaderListView">
+        <item name="android:divider">@color/reader_divider_grey</item>
+        <item name="android:dividerHeight">@dimen/reader_divider_size</item>
+        <item name="android:background">@color/reader_divider_grey</item>
+    </style>
+    <style name="ReaderListView.Topics" parent="ReaderListView">
+        <item name="android:divider">@drawable/reader_divider_blue_dash</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <!-- buttons -->
+    <style name="ReaderButton" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/reader_text_sz_medium</item>
+    </style>
+    <style name="ReaderButton.Blue" parent="ReaderButton">
+        <item name="android:paddingLeft">@dimen/reader_margin_large</item>
+        <item name="android:paddingRight">@dimen/reader_margin_large</item>
+        <item name="android:paddingTop">@dimen/reader_margin_medium</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_medium</item>
+        <item name="android:background">@drawable/reader_button_blue_selector</item>
+        <item name="android:textColor">@color/blue_medium</item>
+    </style>
+    <style name="ReaderButton.Blue.Small" parent="ReaderButton.Blue">
+        <item name="android:paddingLeft">@dimen/reader_margin_medium</item>
+        <item name="android:paddingRight">@dimen/reader_margin_medium</item>
+        <item name="android:paddingTop">@dimen/reader_margin_small</item>
+        <item name="android:paddingBottom">@dimen/reader_margin_small</item>
+        <item name="android:textSize">@dimen/reader_text_sz_small</item>
+    </style>
+    <style name="ReaderButton.Action" parent="@android:style/Widget.Button.Small">
+        <item name="android:background">@drawable/reader_button_action_selector</item>
+        <item name="android:textColor">@color/blue_medium</item>
+        <item name="android:layout_marginLeft">@dimen/reader_margin_extra_small</item>
+        <item name="android:layout_marginRight">@dimen/reader_margin_extra_small</item>
+        <item name="android:layout_marginTop">@dimen/reader_margin_extra_small</item>
+        <item name="android:layout_marginBottom">@dimen/reader_margin_extra_small</item>
+    </style>
+
+    <!-- images -->
+    <style name="ReaderImageView" />
+    <style name="ReaderImageView.Featured" parent="ReaderImageView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/reader_featured_image_height</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <style name="ReaderImageView.Avatar" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/reader_avatar_sz_medium</item>
+        <item name="android:layout_height">@dimen/reader_avatar_sz_medium</item>
+    </style>
+    <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView.Avatar">
+        <item name="android:layout_width">@dimen/reader_avatar_sz_small</item>
+        <item name="android:layout_height">@dimen/reader_avatar_sz_small</item>
+    </style>
+    <style name="ReaderImageView.Avatar.Like" parent="ReaderImageView.Avatar">
+        <item name="android:layout_width">@dimen/reader_avatar_sz_like</item>
+        <item name="android:layout_height">@dimen/reader_avatar_sz_like</item>
+    </style>
+    <style name="ReaderImageView.Avatar.Large" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/reader_avatar_sz_large</item>
+        <item name="android:layout_height">@dimen/reader_avatar_sz_large</item>
+    </style>
+
+    <!-- progress bars -->
+    <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />
+    <style name="ReaderProgressBar.Small" parent="@android:style/Widget.ProgressBar.Small" />
+    <style name="ReaderProgressBar.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal" />
+</resources>

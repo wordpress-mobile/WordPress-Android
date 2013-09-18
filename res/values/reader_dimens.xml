@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- all margins/padding in reader layouts rely on these values -->
+    <dimen name="reader_margin_extra_small">2dp</dimen>
+    <dimen name="reader_margin_small">4dp</dimen>
+    <dimen name="reader_margin_medium">10dp</dimen>
+    <dimen name="reader_margin_large">16dp</dimen>
+
+    <dimen name="actionbar_refresh_margin">12dp</dimen>
+
+    <!-- http://developer.android.com/design/style/typography.html -->
+    <dimen name="reader_text_sz_small">12sp</dimen>
+    <dimen name="reader_text_sz_medium">14sp</dimen>
+    <dimen name="reader_text_sz_large">18sp</dimen>
+    <dimen name="reader_text_sz_extra_large">22sp</dimen>
+
+    <dimen name="reader_avatar_sz_medium">56dp</dimen>
+    <dimen name="reader_avatar_sz_small">38dp</dimen>
+    <dimen name="reader_avatar_sz_like">28dp</dimen>
+    <dimen name="reader_avatar_sz_large">96dp</dimen>
+
+    <dimen name="reader_featured_image_height">240dp</dimen>
+    <dimen name="reader_divider_size">12dp</dimen>
+    <dimen name="reader_video_overlay_size">48dp</dimen>
+
+    <dimen name="reader_actionbar_height">45dp</dimen>
+
+    <!-- margin to use when indenting comment replies under their parents -->
+    <dimen name="reader_comment_indent_per_level">@dimen/reader_avatar_sz_small</dimen>
+</resources>

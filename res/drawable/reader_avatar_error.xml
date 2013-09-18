@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    default image when avatar fails to load
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval" >
+
+    <gradient
+            android:angle="270"
+            android:endColor="@color/grey_light"
+            android:startColor="@color/grey_medium"/>
+</shape>
