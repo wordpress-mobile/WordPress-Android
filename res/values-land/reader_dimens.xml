@@ -1,0 +1,4 @@
+<resources>
+    <!-- smaller featured image height for landscape (two-column) -->
+    <dimen name="reader_featured_image_height">180dp</dimen>
+</resources>

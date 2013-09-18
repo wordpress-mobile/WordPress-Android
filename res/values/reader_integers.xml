@@ -1,0 +1,3 @@
+<resources>
+    <integer name="reader_max_length_topic_name">96</integer>
+</resources>

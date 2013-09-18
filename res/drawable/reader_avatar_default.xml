@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    default image when avatar is still being loaded
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <stroke
+        android:color="@color/grey_light"
+        android:width="1dp" />
+    <solid android:color="@color/grey_extra_light" />
+</shape>
