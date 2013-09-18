@@ -1,23 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Vector;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -74,6 +56,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+<<<<<<< HEAD
+=======
+import android.widget.ScrollView;
+>>>>>>> c30d056... fix #32: removed a call to showFormatBar() on OnTouch events triggered when ContentText is touched
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -81,7 +67,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+<<<<<<< HEAD
 
+=======
+>>>>>>> c30d056... fix #32: removed a call to showFormatBar() on OnTouch events triggered when ContentText is touched
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
@@ -90,14 +79,10 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
-import org.xmlrpc.android.ApiHelper;
-
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
@@ -119,6 +104,26 @@ import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
 import org.wordpress.android.util.WPUnderlineSpan;
+import org.wordpress.passcodelock.AppLockManager;
+import org.xmlrpc.android.ApiHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.Vector;
 
 public class EditPostActivity extends SherlockFragmentActivity implements OnClickListener, OnTouchListener, TextWatcher,
         WPEditText.OnSelectionChangedListener, OnFocusChangeListener, WPEditText.EditTextImeBackListener {
@@ -476,6 +481,21 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
             }
         }
 
+<<<<<<< HEAD
+=======
+        final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+        scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        scrollView.setFocusable(true);
+        scrollView.setFocusableInTouchMode(true);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.requestFocusFromTouch();
+                return false;
+            }
+        });
+
+>>>>>>> c30d056... fix #32: removed a call to showFormatBar() on OnTouch events triggered when ContentText is touched
         populateSelectedCategories();
 
         registerForContextMenu(mAddPictureButton);
@@ -623,10 +643,11 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE)
+        if (hasFocus && mFormatBar.getVisibility() != View.VISIBLE) {
             showFormatBar();
-        else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE)
+        } else if (!hasFocus && mFormatBar.getVisibility() == View.VISIBLE) {
             hideFormatBar();
+        }
     }
 
     @Override
@@ -744,10 +765,6 @@ public class EditPostActivity extends SherlockFragmentActivity implements OnClic
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
-        if (mFormatBar.getVisibility() != View.VISIBLE)
-            showFormatBar();
-
         float pos = event.getY();
 
         if (event.getAction() == 0)
