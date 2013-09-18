@@ -93,4 +93,32 @@ public class StringUtils {
         else
             return "";
     }
+
+    /*
+     * returns empty string if passed string is null, otherwise returns passed string
+     */
+    public static String notNullStr(String s) {
+        if (s==null)
+            return "";
+        return s;
+    }
+
+    /*
+     * capitalizes the first letter in the passed string - based on Apache commons/lang3/StringUtils
+     * http://svn.apache.org/viewvc/commons/proper/lang/trunk/src/main/java/org/apache/commons/lang3/StringUtils.java?revision=1497829&view=markup
+     */
+    public static String capitalize(final String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0)
+            return str;
+
+        char firstChar = str.charAt(0);
+        if (Character.isTitleCase(firstChar))
+            return str;
+
+        return new StringBuilder(strLen)
+                .append(Character.toTitleCase(firstChar))
+                .append(str.substring(1))
+                .toString();
+    }
 }
