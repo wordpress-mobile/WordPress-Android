@@ -111,9 +111,6 @@
     <string name="media_add_popup_title">Add to Media Library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
-    <string name="media_add_popup_pick_photo_from_gallery">Pick photo from gallery</string>
-    <string name="media_add_popup_pick_video_from_gallery">Pick video from gallery</string>
-    <string name="media_add_new_post">New Post</string>
     <string name="media_add_new_media_gallery">New Media Gallery</string>
 
     <!-- Media Gallery -->
@@ -155,7 +152,6 @@
     <string name="media_edit_show_sharing_buttons">Show sharing buttons</string>
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
-    <string name="media_edit_fragment_tag">MediaEditFragment</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
@@ -316,9 +312,7 @@
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
-    <string name="take_photo">Take a new photo</string>
     <string name="select_video">Select a video from gallery</string>
-    <string name="take_video">Take a new video</string>
     <string name="media_remove_from_queue">Remove from queue</string>
     <string name="select_from_media_library">Select from Media Library</string>
 
@@ -433,14 +427,7 @@
     <!-- stats: totals, followers, and shares -->
     <string name="stats_totals_followers_shares_header_content">Content</string>
     <string name="stats_totals_followers_shares_header_followers">Followers</string>
-  <string name="stats_totals_followers_shares_header_followers_publicize">
-      <![CDATA[
-      	Followers 
-      	<font color="#9E9E9E">(includes </font>
-      	<font color="#21759B"><a href="http://support.wordpress.com/publicize/">Publicize</a></font>
-      	<font color="#9E9E9E">)</font>
-    	]]>
-  </string>
+    <string name="stats_totals_followers_shares_header_includes_publicize">includes %sPublicize</string>
     <string name="stats_totals_followers_shares_header_shares">Shares</string>
     <string name="stats_totals_followers_shares_label_posts">Posts</string>
     <string name="stats_totals_followers_shares_label_categories">Categories</string>
