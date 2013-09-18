@@ -630,4 +630,89 @@
     <string name="passcode_turn_off">Turn PIN lock off</string>
     <string name="passcode_turn_on">Turn PIN lock on</string>
 
+    <!--
+       ****
+       *  strings used by the native reader
+       ***
+    -->
+
+    <!-- timespan shown for posts/comments published within the past 60 seconds -->
+    <string name="reader_timespan_now">now</string>
+
+    <!-- title shown for untitled posts -->
+    <string name="reader_untitled_post">(Untitled)</string>
+
+    <!-- activity titles -->
+    <string name="reader_title_applog">Application Log</string>
+    <string name="reader_title_userlist_default">People</string>
+    <string name="reader_title_followed_topics">Followed Topics</string>
+    <string name="reader_title_popular_topics">Popular Topics</string>
+    <string name="reader_title_err_unable_to_load_post">Unable to load post</string>
+
+    <!-- menu text-->
+    <string name="reader_menu_topics">Topics</string>
+    <string name="reader_menu_log">View Log</string>
+    <string name="reader_menu_refresh">Refresh</string>
+    <string name="reader_menu_signout">Sign Out</string>
+    <string name="reader_menu_about">About</string>
+
+    <!-- button text -->
+    <string name="reader_btn_yes">Yes</string>
+    <string name="reader_btn_no">No</string>
+    <string name="reader_btn_share">Share</string>
+    <string name="reader_btn_comment">Comment</string>
+    <string name="reader_btn_like">Like</string>
+    <string name="reader_btn_unlike">Liked</string>
+    <string name="reader_btn_reblog">Reblog</string>
+    <string name="reader_btn_reblogged">Reblogged</string>
+    <string name="reader_btn_follow">Follow</string>
+    <string name="reader_btn_unfollow">Following</string>
+
+    <!-- EditText hints -->
+    <string name="reader_hint_comment_on_post">Add your comment</string>
+    <string name="reader_hint_comment_on_comment">Reply to comment</string>
+    <string name="reader_hint_add_topic">Add a topic</string>
+
+    <!-- TextView labels -->
+    <string name="label_toggle_show">SHOW</string>
+    <string name="label_toggle_hide">HIDE</string>
+    <string name="reader_label_new_posts_one">One new article</string>
+    <string name="reader_label_new_posts_multi">%d new articles</string>
+    <string name="reader_label_added_topic">Added %s</string>
+    <string name="reader_label_removed_topic">Removed %s</string>
+
+    <!-- like/comment counts in post list -->
+    <string name="reader_label_like_count_singular">1 like</string>
+    <string name="reader_label_like_count_plural">%d likes</string>
+    <string name="reader_label_comment_count_singular">1 comment</string>
+    <string name="reader_label_comment_count_plural">%d comments</string>
+
+    <!-- like counts in post detail and liking users activity-->
+    <string name="reader_likes_one">One person likes this</string>
+    <string name="reader_likes_multi">%d people like this</string>
+    <string name="reader_likes_only_you">You like this</string>
+    <string name="reader_likes_you_and_one_short">You and one other</string>
+    <string name="reader_likes_you_and_multi_short">You and %d others</string>
+    <string name="reader_likes_you_and_one_long">You and one other like this</string>
+    <string name="reader_likes_you_and_multi_long">You and %d others like this</string>
+
+    <!-- toast messages -->
+    <string name="reader_toast_comment_failed">Failed to post comment</string>
+    <string name="reader_toast_topic_exists">You already follow this topic</string>
+    <string name="reader_toast_topic_invalid">Sorry, this isn\'t a valid topic</string>
+    <string name="reader_toast_err_share_intent">Unable to share</string>
+    <string name="reader_toast_err_view_image">Unable to view image</string>
+    <string name="reader_toast_err_url_intent">Unable to open %s</string>
+
+    <!--
+        very important that this string resource is correct for all translations, since it's
+        the name of the default topic to display in the reader at startup
+    -->
+    <string name="reader_default_topic_name">Freshly Pressed</string>
+
+    <!-- empty list/grid text -->
+    <string name="reader_empty_posts_in_topic">No articles in this topic</string>
+    <string name="reader_empty_posts_in_topic_never_updated">No articles in this topic yet</string>
+    <string name="reader_empty_followed_topics">You don\'t follow any topics</string>
+    <string name="reader_empty_popular_topics">Sorry, no popular topics</string>
 </resources>

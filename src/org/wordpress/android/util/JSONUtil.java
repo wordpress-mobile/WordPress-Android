@@ -1,13 +1,13 @@
 package org.wordpress.android.util;
 
+import android.text.TextUtils;
 import android.util.Log;
 
-import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class JSONUtil {
     private static String QUERY_SEPERATOR=".";
@@ -15,6 +15,8 @@ public class JSONUtil {
     private static String QUERY_ARRAY_INDEX_END="]";
     private static String QUERY_ARRAY_FIRST="first";
     private static String QUERY_ARRAY_LAST="last";
+
+    private static final String JSON_NULL_STR = "null";
 
     private static final String TAG="JSONUtil";
     /**
@@ -154,5 +156,42 @@ public class JSONUtil {
             }
         
         return jsonArray;
+    }
+
+    /*
+     * wrapper for JSONObject.optString() which handles "null" values
+     */
+    public static String getString(JSONObject json, String name) {
+        String value = json.optString(name);
+        // return empty string for "null"
+        if (JSON_NULL_STR.equals(value))
+            return "";
+        return value;
+    }
+
+    /*
+     * use with strings that contain HTML entities
+     */
+    public static String getStringDecoded(JSONObject json, String name) {
+        String value = getString(json, name);
+        // return the value if it doesn't contain an ampersand, otherwise return the value with entities converted
+        if (!value.contains("&"))
+            return value;
+        return StringUtils.unescapeHTML(value);
+    }
+
+    /*
+     * replacement for JSONObject.optBoolean()  - optBoolean() only checks for "true" and "false",
+     * but our API sometimes uses "0" to denote false
+     */
+    public static boolean getBool(JSONObject json, String name) {
+        String value = getString(json, name);
+        if (TextUtils.isEmpty(value))
+            return false;
+        if (value.equals("0"))
+            return false;
+        if (value.equalsIgnoreCase("false"))
+            return false;
+        return true;
     }
 }
