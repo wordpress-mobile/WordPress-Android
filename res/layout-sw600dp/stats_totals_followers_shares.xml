@@ -125,8 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/stats_totals_followers_shares_header_followers_publicize" />
+            android:layout_marginTop="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

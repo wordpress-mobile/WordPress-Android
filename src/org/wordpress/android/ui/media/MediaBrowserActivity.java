@@ -179,9 +179,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
         String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
         String pickPhotoFromGallery = getResources().getString(
-                R.string.media_add_popup_pick_photo_from_gallery);
+                R.string.select_photo);
         String pickVideoFromGallery = getResources().getString(
-                R.string.media_add_popup_pick_video_from_gallery);
+                R.string.select_video);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(MediaBrowserActivity.this,
                 R.layout.actionbar_add_media_cell,
                 new String[] {
