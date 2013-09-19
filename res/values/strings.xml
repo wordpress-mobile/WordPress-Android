@@ -569,7 +569,6 @@
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="automattic_url"><u>www.automattic.com</u></string>
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local Changes</string>
