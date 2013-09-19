@@ -74,7 +74,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 }
             }
         });
-        
+
         mSelectedCategories = new HashSet<String>();
 
         Bundle extras = getIntent().getExtras();
@@ -88,6 +88,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             }
             if (extras.containsKey("categories"))
                 mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
+        }
+        if (mSelectedCategories == null) {
+            mSelectedCategories = new HashSet<String>();
         }
 
         populateOrFetchCategories();
