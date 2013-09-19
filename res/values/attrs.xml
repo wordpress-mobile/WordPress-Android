@@ -18,4 +18,13 @@
             <enum name="light" value="1"/>
         </attr>
     </declare-styleable>
+
+    <!--
+        StaggeredGridView attributes
+    -->
+    <declare-styleable name="StaggeredGridView">
+        <attr name="drawSelectorOnTop" format="boolean" />
+        <attr name="numColumns" format="integer" />
+        <attr name="itemMargin" format="dimension" />
+    </declare-styleable>
 </resources>
