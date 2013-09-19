@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/category_parent_spinner_row_height"
+        android:orientation="horizontal"
+        android:id="@+id/categoryRow" android:clickable="false">
+    <ImageView android:layout_width="@dimen/category_row_height"
+               android:layout_height="@dimen/category_row_height"
+               android:src="@drawable/ic_level_indicator"
+               android:id="@+id/categoryRowLevelIndicator" android:scaleType="fitEnd"/>
+    <TextView
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center_vertical"
+            android:textColor="#464646"
+            android:paddingLeft="6dip"
+            android:paddingRight="6dip"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+            android:id="@+id/categoryRowText"/>
+</LinearLayout>

@@ -13,6 +13,7 @@
     <dimen name="add_account_width">-1dp</dimen>
     <dimen name="refresh_icon_padding">12dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
+    <dimen name="category_parent_spinner_row_height">40dp</dimen>
 	<dimen name="menu_drawer_width">250dp</dimen>
 
 	<dimen name="media_grid_local_image_width">160dp</dimen>
