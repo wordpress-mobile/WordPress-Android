@@ -149,7 +149,28 @@
         <!-- Theme Activities -->
         <activity android:name=".ui.themes.ThemeBrowserActivity" >
         </activity>
-                
+
+        <!-- Native Reader Activities -->
+        <activity
+            android:name=".ui.reader_native.NativeReaderActivity"
+            android:label="@string/reader_title_main"/>
+        <activity
+            android:name=".ui.reader_native.ReaderPostDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.reader_native.ReaderLogViewerActivity"
+            android:label="@string/reader_title_applog" />
+        <activity
+            android:name=".ui.reader_native.ReaderUserListActivity"
+            android:theme="@style/ReaderTheme.Popup" />
+        <activity
+            android:name=".ui.reader_native.ReaderTopicActivity"
+            android:theme="@style/ReaderTheme.Popup"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ui.reader_native.ReaderPhotoViewerActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+
         <!-- Other activities -->
         
         <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/FloatingActivityTheme">

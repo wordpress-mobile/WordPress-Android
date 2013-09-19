@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="translucent">#80000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!--
+        most of these are from http://make.wordpress.org/mobile/handbook/pathways/design/colors/
+    -->
+    <color name="blue_extra_light">#c8eefc</color>
+    <color name="blue_light">#78c8e6</color>
+    <color name="blue_medium">#1e8cbe</color>
+    <color name="blue_dark">#0074a2</color>
+    <color name="blue_extra_dark">#005684</color>
+
+    <color name="orange_light">#fad2ae</color>
+    <color name="orange_medium">#f1831e</color>
+    <color name="orange_dark">#d54e21</color>
+
+    <color name="grey_extra_light">#eeeeee</color>
+    <color name="grey_light">#dddddd</color>
+    <color name="grey_medium">#999999</color>
+    <color name="grey_dark">#333333</color>
+    <color name="grey_extra_dark">#222222</color>
+
 
     <!-- Default colors -->
     <color name="light_gray">#E5E5E5</color>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ListView footer which includes a progress bar, shown when loading more data - note that the
+    background color will be set by the host
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_progress_footer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone">
+
+    <ProgressBar
+        android:id="@+id/progress_footer"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/reader_margin_small"
+        android:layout_marginTop="@dimen/reader_margin_small" />
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:paddingLeft="@dimen/reader_margin_large"
+                android:paddingRight="@dimen/reader_margin_medium"
+                android:paddingTop="@dimen/reader_margin_medium"
+                android:paddingBottom="@dimen/reader_margin_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <org.wordpress.android.widgets.WPTextView
+            android:text="text_topic"
+            android:textSize="@dimen/reader_text_sz_large"
+            android:textColor="@color/grey_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btn_add_remove"
+            android:layout_marginLeft="@dimen/reader_margin_medium"
+            android:id="@+id/text_topic"/>
+
+    <ImageButton
+            android:id="@+id/btn_add_remove"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/reader_button_transparent_selector"
+            android:src="@drawable/ic_remove_topic"/>
+</RelativeLayout>

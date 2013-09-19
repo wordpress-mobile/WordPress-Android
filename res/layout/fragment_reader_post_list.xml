@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@android:id/list"
+        style="@style/ReaderListView.Posts"
+        tools:listitem="@layout/listitem_reader_post_excerpt" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_new_posts"
+        style="@style/ReaderTextView.MessageBar"
+        android:text="@string/reader_label_new_posts_one"
+        android:visibility="gone" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/ReaderTextView.Label.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/reader_empty_posts_in_topic"
+        android:visibility="gone" />
+
+</RelativeLayout>

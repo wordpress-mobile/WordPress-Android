@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    landscape tablet version of post list
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:staggered="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.StaggeredGridView.StaggeredGridView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/reader_divider_grey"
+        staggered:drawSelectorOnTop="false"
+        staggered:itemMargin="@dimen/reader_divider_size"
+        staggered:numColumns="2" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_new_posts"
+        style="@style/ReaderTextView.MessageBar"
+        android:text="@string/reader_label_new_posts_one"
+        android:visibility="gone" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/ReaderTextView.Label.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/reader_empty_posts_in_topic"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    action icons for post detail
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:visibility="gone">
+
+    <org.wordpress.android.widgets.WPTextView
+            style="@style/ReaderTextView.ActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/btn_like"
+            android:text="@string/reader_btn_like"/>
+
+    <org.wordpress.android.widgets.WPTextView
+            style="@style/ReaderTextView.ActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/reader_btn_comment"
+            android:id="@+id/btn_comment"/>
+
+    <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/btn_follow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/reader_btn_follow"
+            style="@style/ReaderTextView.ActionButton"/>
+
+    <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/btn_reblog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/reader_btn_reblog"
+            style="@style/ReaderTextView.ActionButton"/>
+</LinearLayout>

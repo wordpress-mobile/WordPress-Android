@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    single avatar image inserted into post detail when showing liking users
+-->
+<org.wordpress.android.widgets.WPNetworkImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_like_avatar"
+        android:layout_marginLeft="@dimen/reader_margin_small"
+        style="@style/ReaderImageView.Avatar.Like" />

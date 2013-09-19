@@ -630,6 +630,7 @@
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
+    <string name="reader_title_main">Reader</string>
     <string name="reader_title_applog">Application Log</string>
     <string name="reader_title_userlist_default">People</string>
     <string name="reader_title_followed_topics">Followed Topics</string>

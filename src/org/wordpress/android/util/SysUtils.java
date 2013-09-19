@@ -31,4 +31,12 @@ public class SysUtils {
         return (Build.VERSION.SDK_INT >= 17);
     }
 
+    /*
+     * returns true on API 11 and above - called to determine whether
+     * AsyncTask.executeOnExecutor() can be used
+     */
+    public static boolean canUseExecuteOnExecutor() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB);
+    }
+
 }

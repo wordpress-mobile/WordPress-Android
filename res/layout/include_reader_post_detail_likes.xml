@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    like count & avatars for post detail
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_likes"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone">
+
+    <!-- liking avatars are inserted into this LinearLayout at runtime -->
+    <LinearLayout
+        android:id="@+id/layout_liking_users"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_avatar_sz_like"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/reader_margin_medium"
+        android:layout_toLeftOf="@+id/text_likes"
+        android:orientation="horizontal" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_likes"
+        style="@style/ReaderTextView.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/reader_margin_medium"
+        android:layout_marginRight="@dimen/reader_margin_large" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layout_liking_users"
+        android:layout_marginBottom="@dimen/reader_margin_medium"
+        android:layout_marginTop="@dimen/reader_margin_large"
+        android:background="@color/reader_divider_blue" />
+
+</RelativeLayout>

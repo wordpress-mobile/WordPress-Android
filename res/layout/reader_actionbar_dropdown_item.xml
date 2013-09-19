@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/layout_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/spinnerDropDownItemStyle"
+                android:padding="6dp">
+
+    <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text"
+            style="?android:attr/spinnerDropDownItemStyle"
+            android:textColor="@color/reader_actionbar_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/reader_margin_medium"
+            android:paddingBottom="@dimen/reader_margin_medium"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:maxWidth="175dp"
+            android:text="text_name"/>
+
+</RelativeLayout>
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    comment box at bottom of post detail
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <EditText
+            android:id="@+id/edit_comment"
+            style="@style/ReaderEditText.Comment"
+            android:paddingLeft="@dimen/reader_margin_large"
+            android:layout_toLeftOf="@+id/image_post_comment"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/reader_hint_comment_on_post"/>
+
+    <ImageView
+            android:id="@+id/image_post_comment"
+            android:paddingRight="@dimen/reader_margin_medium"
+            android:paddingTop="@dimen/reader_margin_large"
+            android:paddingBottom="@dimen/reader_margin_large"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/edit_comment"
+            android:layout_alignBottom="@+id/edit_comment"
+            android:src="@drawable/ic_send"/>
+
+</RelativeLayout>

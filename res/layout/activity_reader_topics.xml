@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        style="@style/ReaderTextView.DialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/ic_navigate_next"
+        android:text="@string/reader_title_followed_topics" />
+
+    <View
+        android:id="@+id/divider_title"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_title"
+        android:layout_marginTop="@dimen/reader_margin_small"
+        android:background="@color/reader_divider_blue" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/ReaderTextView.EmptyList"
+        android:layout_below="@+id/divider_title"
+        android:paddingBottom="@dimen/reader_margin_large"
+        android:paddingTop="@dimen/reader_margin_large"
+        android:text="@string/reader_empty_followed_topics"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@id/android:list"
+        style="@style/ReaderListView.Topics"
+        android:layout_above="@+id/divider_list"
+        android:layout_below="@+id/divider_title"
+        tools:listitem="@layout/listitem_reader_topic" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_message_bar"
+        style="@style/ReaderTextView.MessageBar"
+        android:layout_alignBottom="@id/android:list"
+        android:text="@string/reader_label_added_topic"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/divider_list"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/layout_add_topic"
+        android:layout_alignWithParentIfMissing="true"
+        android:background="@color/reader_divider_blue" />
+
+    <RelativeLayout
+        android:id="@+id/layout_add_topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/reader_margin_medium"
+        android:layout_marginRight="@dimen/reader_margin_medium"
+        android:paddingBottom="@dimen/reader_margin_medium"
+        android:paddingTop="@dimen/reader_margin_small">
+
+        <EditText
+            android:id="@+id/edit_add"
+            style="@style/ReaderEditText.Topic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btn_add"
+            android:hint="@string/reader_hint_add_topic" />
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/reader_button_transparent_selector"
+            android:src="@drawable/ic_add_topic_dark" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
