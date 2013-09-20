@@ -3,23 +3,25 @@
  */
 package org.wordpress.android.models;
 
+import android.os.Bundle;
 import android.text.Html;
-import android.text.Spanned;
-import android.util.Log;
-import android.text.style.QuoteSpan;
 import android.text.SpannableStringBuilder;
-
-import java.util.Map;
-import java.util.HashMap;
-
-import org.json.JSONObject;
+import android.text.Spanned;
+import android.text.style.QuoteSpan;
+import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import org.wordpress.android.util.JSONUtil;
+import org.json.JSONObject;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Emoticons;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPHtmlTagHandler;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class Note {
     protected static final String TAG="NoteModel";
@@ -35,10 +37,16 @@ public class Note {
     private static final String NOTE_ACTION_REPLY="replyto-comment";
     private static final String REPLY_CONTENT_PARAM_KEY="content";
 
+    private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
+        put("c", "comment");
+    }};
+
+
     private Map<String,JSONObject> mActions;
     private Reply mReply;
     private JSONObject mNoteJSON;
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
+
     /**
      * Create a note using JSON from REST API
      */
@@ -48,10 +56,58 @@ public class Note {
         cleanupComment();
     }
 
+    /**
+     * Create a placeholder note from a Push Notification payload
+     */
+    public Note(Bundle extras) {
+        JSONObject tmpNoteJSON = new JSONObject();
+        String type = extras.getString("type");
+        String finalType = UNKNOWN_TYPE;
+        if (pnType2type.containsKey(type)) {
+            finalType = pnType2type.get(type);
+        }
+        JSONObject subject = new JSONObject();
+        JSONObject body = new JSONObject();
+        JSONObject html = new JSONObject();
+        JSONArray items = new JSONArray();
+        try {
+            // subject
+            if (finalType.equals(COMMENT_TYPE)) {
+                subject.put("text", extras.get("title"));
+            } else {
+                subject.put("text", extras.get("msg"));
+            }
+            subject.put("icon", extras.get("icon"));
+            subject.put("noticon", extras.get("noticon"));
+
+            html.put("html", extras.get("msg"));
+            items.put(html);
+            body.put("items", items);
+
+            // fake timestamp to put it in top of the list
+            String timestamp = extras.getString("note_timestamp", "");
+            if (timestamp.equals("")) {
+                timestamp = "" + (System.currentTimeMillis() / 1000);
+            }
+            tmpNoteJSON.put("timestamp", timestamp);
+
+            // root
+            tmpNoteJSON.put("id", extras.get("note_id"));
+            tmpNoteJSON.put("subject", subject);
+            tmpNoteJSON.put("body", body);
+            tmpNoteJSON.put("type", finalType);
+            tmpNoteJSON.put("unread", 1);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to put key in noteJSON", e);
+        }
+        mNoteJSON = tmpNoteJSON;
+        Log.d(WordPress.TAG, "tmpNoteJSON= " + tmpNoteJSON.toString());
+    }
+
     public String toString(){
         return getSubject();
     }
-    
+
     public JSONObject toJSONObject(){
         return mNoteJSON;
     }
@@ -191,6 +247,14 @@ public class Note {
     public <U> U queryJSON(String query, U defaultObject){
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
     }
+
+    public static class TimeStampComparator implements Comparator<Note> {
+        @Override
+        public int compare(Note a, Note b) {
+            return b.getTimestamp().compareTo(a.getTimestamp());
+        }
+    }
+
     /**
      * Represents a user replying to a note. Holds
      */
