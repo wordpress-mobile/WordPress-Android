@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui;
 
 import java.io.UnsupportedEncodingException;
@@ -28,6 +27,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.android.models.Blog;
 
+import android.net.ConnectivityManager;
+
 /**
  * Activity for displaying WordPress content in a webview which may require authentication.
  * Currently, this activity can only load content for the {@link WordPress.currentBlog}.
@@ -38,6 +39,8 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
      * Blog for which this activity is loading content.
      */
     protected Blog mBlog;
+    public Activity activity = this;
+    private ConnectivityManager mSystemService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,10 +53,29 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
             finish();
         }
 
-        mWebView.setWebViewClient(new WordPressWebViewClient(mBlog));
+        mSystemService = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        
+        if (mSystemService.getActiveNetworkInfo() == null) {
+            AlertDialog alert = new AlertDialog.Builder(AuthenticatedWebViewActivity.this).create();
+            alert.setTitle(R.string.no_network_title);
+            alert.setMessage(getString(R.string.no_network_message));
+            alert.setButton(-1, getString(R.string.ok), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    mWebView.clearView();
+                }
+            });
+            try {
+                alert.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            mWebView.setWebViewClient(new WordPressWebViewClient(mBlog));
 
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mWebView.getSettings().setSavePassword(false);
+            mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            mWebView.getSettings().setSavePassword(false);
+        }
     }
 
     /**
@@ -171,8 +193,26 @@ public class AuthenticatedWebViewActivity extends WebViewActivity {
         
         int itemID = item.getItemId();
         if (itemID == R.id.menu_refresh) {
-            mWebView.reload();
-            return true;
+            if (mSystemService.getActiveNetworkInfo() == null) {
+                AlertDialog alert = new AlertDialog.Builder(AuthenticatedWebViewActivity.this).create();
+                alert.setTitle(R.string.no_network_title);
+                alert.setMessage(getString(R.string.no_network_message));
+                alert.setButton(-1, getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mWebView.clearView();
+                    }
+                });
+                try {
+                    alert.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                loadAuthenticatedUrl(mWebView.getUrl());
+                mWebView.reload();
+                return true;
+            }
         } else if (itemID == R.id.menu_share) {
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
