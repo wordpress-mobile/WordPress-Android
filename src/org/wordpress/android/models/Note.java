@@ -85,7 +85,7 @@ public class Note {
             body.put("items", items);
 
             // fake timestamp to put it in top of the list
-            String timestamp = extras.getString("timestamp", "");
+            String timestamp = extras.getString("note_timestamp", "");
             if (timestamp.equals("")) {
                 timestamp = "" + (System.currentTimeMillis() / 1000);
             }
