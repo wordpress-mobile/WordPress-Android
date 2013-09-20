@@ -160,6 +160,7 @@ public class NotificationsActivity extends WPActionBarActivity {
                 openNote(note);
             }
         } else if (intent.hasExtra(NOTE_ID_EXTRA)) {
+            // FIXME: check if in DB and not placeholder...
             // find it/load it etc
             Map<String, String> params = new HashMap<String, String>();
             params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));

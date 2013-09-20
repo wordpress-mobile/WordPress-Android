@@ -12,7 +12,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.WPHtml;
@@ -46,6 +45,7 @@ public class Note {
     private Reply mReply;
     private JSONObject mNoteJSON;
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
+    private boolean mPlaceholder = false;
 
     /**
      * Create a note using JSON from REST API
@@ -96,12 +96,19 @@ public class Note {
             tmpNoteJSON.put("subject", subject);
             tmpNoteJSON.put("body", body);
             tmpNoteJSON.put("type", finalType);
-            tmpNoteJSON.put("unread", 1);
+            tmpNoteJSON.put("unread", "1");
         } catch (JSONException e) {
             Log.e(TAG, "Failed to put key in noteJSON", e);
         }
         mNoteJSON = tmpNoteJSON;
-        Log.d(WordPress.TAG, "tmpNoteJSON= " + tmpNoteJSON.toString());
+    }
+
+    public boolean isPlaceholder() {
+        return mPlaceholder;
+    }
+
+    public void setPlaceholder(boolean placeholder) {
+        this.mPlaceholder = placeholder;
     }
 
     public String toString(){

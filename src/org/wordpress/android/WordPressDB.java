@@ -1874,14 +1874,17 @@ public class WordPressDB {
     }
 
     public ArrayList<Note> loadNotes(int limit) {
-        Cursor cursor = db.query(NOTES_TABLE, new String[] {"note_id", "raw_note_data"},
+        Cursor cursor = db.query(NOTES_TABLE, new String[] {"note_id", "raw_note_data", "placeholder"},
                 null, null, null, null, "timestamp DESC", "" + limit);
         ArrayList<Note> notes = new ArrayList<Note>();
         while (cursor.moveToNext()) {
             String note_id = cursor.getString(0);
             String raw_note_data = cursor.getString(1);
+            boolean placeholder = cursor.getInt(2) == 1;
             try {
-                notes.add(new Note(new JSONObject(raw_note_data)));
+                Note note = new Note(new JSONObject(raw_note_data));
+                note.setPlaceholder(placeholder);
+                notes.add(note);
             } catch (JSONException e) {
                 Log.e(WordPress.TAG, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
             }

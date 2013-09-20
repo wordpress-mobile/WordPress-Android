@@ -60,5 +60,11 @@
         android:textColor="#777777"
         android:textSize="16sp"
         android:visibility="gone" />
+    <ProgressBar
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:id="@+id/placeholder_loading" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="false" android:layout_alignParentBottom="true"
+            />
 
 </RelativeLayout>
